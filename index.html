@@ -1315,8 +1315,8 @@
     width: 56px; height: 56px;
     margin: 0 auto 14px;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(61,155,143,0.12);
-    color: var(--teal-dark);
+    background: rgba(198,123,92,0.14);
+    color: var(--terracotta);
     border-radius: 16px;
   }
   .privacy-icon svg { width: 28px; height: 28px; }
@@ -1343,14 +1343,17 @@
   /* Cards mirror the "Guidance that grows with your child" benefits pattern:
      icon centered above the text, text centered below. */
   .privacy-card {
-    background: white;
+    /* 70% opaque white (30% transparent) lets the warm sand background
+       breathe through, softens the card boundary against the section. */
+    background: rgba(255,255,255,0.7);
     border-radius: 20px;
     padding: 32px 26px 28px;
     box-shadow: 0 4px 20px rgba(44,62,64,0.05);
     text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
   }
   .privacy-card:hover {
+    background: rgba(255,255,255,0.92);
     transform: translateY(-3px);
     box-shadow: 0 8px 32px rgba(44,62,64,0.10);
   }
@@ -1358,8 +1361,8 @@
     width: 56px; height: 56px;
     border-radius: 16px;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(61,155,143,0.12);
-    color: var(--teal-dark);
+    background: rgba(198,123,92,0.14);
+    color: var(--terracotta);
     margin: 0 auto 18px;
   }
   .privacy-card-icon svg { width: 26px; height: 26px; }
@@ -2096,7 +2099,7 @@
           </svg>
         </div>
         <h3>Family-only by default</h3>
-        <p>Your child's milestones, photos, and notes are visible only to the family members you invite. No public profiles, no social feed, no shareable links unless you create one.</p>
+        <p>Your child's milestones, photos, and notes are visible only to the family members you invite. No public profiles, no social feed.</p>
       </div>
 
       <div class="privacy-card">
@@ -2107,7 +2110,7 @@
           </svg>
         </div>
         <h3>Memory for you, not the AI</h3>
-        <p>PebblePath remembers your child so every answer gets more personal over time. The AI provider behind Pebble (Anthropic) doesn't &mdash; your child is never an example in someone else's AI.</p>
+        <p>PebblePath remembers your child so every answer gets more personal over time. The AI provider behind Pebble (Anthropic) doesn't.</p>
       </div>
 
       <div class="privacy-card">
