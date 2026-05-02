@@ -1204,29 +1204,86 @@
     background: rgba(61,155,143,0.15);
   }
 
-  /* TESTIMONIALS */
-  .testimonials {
-    padding: 36px 48px;
+  /* PRIVACY & SAFETY — replaces testimonials. Calmer surface (sand-light) so
+     it reads "grounded, trustworthy" against the warmer rest of the page. */
+  .privacy {
+    padding: 56px 48px;
+    background: var(--sand-light);
     opacity: 0; transform: translateY(30px);
     transition: opacity 0.6s ease, transform 0.6s ease;
   }
-  .testimonials.visible { opacity: 1; transform: translateY(0); }
-  .testimonials h2 {
+  .privacy.visible { opacity: 1; transform: translateY(0); }
+  .privacy-inner { max-width: 1060px; margin: 0 auto; }
+  .privacy-header { text-align: center; max-width: 720px; margin: 0 auto 36px; }
+  .privacy-icon {
+    width: 56px; height: 56px;
+    margin: 0 auto 14px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(61,155,143,0.12);
+    color: var(--teal-dark);
+    border-radius: 16px;
+  }
+  .privacy-icon svg { width: 28px; height: 28px; }
+  .privacy-header .feature-label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 2px; color: var(--terracotta);
+    margin-bottom: 8px;
+  }
+  .privacy h2 {
     font-family: 'Nunito'; font-size: 36px; font-weight: 800;
-    text-align: center; color: var(--teal-deep); margin-bottom: 28px;
+    color: var(--teal-deep); line-height: 1.2;
+    margin-bottom: 14px;
   }
-  .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; max-width: 1060px; margin: 0 auto; }
-  .testimonial-card {
-    border-radius: 20px; padding: 24px; color: white; position: relative; overflow: hidden;
+  .privacy-lede {
+    font-size: 16px; line-height: 1.65; color: var(--charcoal);
+    opacity: 0.85;
   }
-  .testimonial-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 60%); pointer-events: none; }
-  .testimonial-card:nth-child(1) { background: linear-gradient(135deg, var(--teal-dark), var(--teal-deep)); }
-  .testimonial-card:nth-child(2) { background: linear-gradient(135deg, var(--terracotta), var(--terracotta-dark)); }
-  .testimonial-card:nth-child(3) { background: linear-gradient(135deg, var(--blue), #4A7FAA); }
-  .testimonial-quote { font-size: 40px; font-family: 'Nunito'; font-weight: 800; opacity: 0.2; line-height: 1; margin-bottom: 4px; }
-  .testimonial-card p { font-size: 15px; line-height: 1.6; margin-bottom: 14px; position: relative; z-index: 1; }
-  .testimonial-author { font-size: 13px; font-weight: 600; opacity: 0.85; position: relative; z-index: 1; }
-  .testimonial-stars { color: #FFD700; margin-bottom: 8px; font-size: 13px; position: relative; z-index: 1; }
+  .privacy-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  .privacy-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px 26px;
+    box-shadow: 0 4px 20px rgba(44,62,64,0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .privacy-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(44,62,64,0.10);
+  }
+  .privacy-card-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(61,155,143,0.10);
+    color: var(--teal-dark);
+    margin-bottom: 16px;
+  }
+  .privacy-card-icon svg { width: 22px; height: 22px; }
+  .privacy-card h3 {
+    font-family: 'Nunito'; font-size: 19px; font-weight: 800;
+    color: var(--charcoal); line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .privacy-card p {
+    font-size: 14px; line-height: 1.6; color: var(--warm-gray);
+  }
+  .privacy-foot {
+    text-align: center; margin-top: 32px;
+    font-size: 14px; color: var(--warm-gray);
+  }
+  .privacy-foot a {
+    color: var(--teal-dark); text-decoration: none;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(45,122,112,0.25);
+    padding-bottom: 1px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .privacy-foot a:hover { color: var(--teal); border-bottom-color: var(--teal); }
+  .privacy-foot-sep { margin: 0 8px; opacity: 0.45; }
 
   /* "EVERY PEBBLE MATTERS" CTA — no logo */
   .cta-final {
@@ -1363,7 +1420,7 @@
     .intelligence-text h2,
     .intelligence-text p,
     .founders h2, .founders-subtitle,
-    .testimonials h2,
+    .privacy h2,
     .cta-final-content p { text-align: center; }
     .intelligence-text { text-align: center; }
     .intelligence-points { display: inline-block; text-align: left; }
@@ -1373,7 +1430,7 @@
     .how-it-works h2,
     .intelligence-text h2,
     .founders h2,
-    .testimonials h2 { font-size: 24px; line-height: 1.2; }
+    .privacy h2 { font-size: 24px; line-height: 1.2; }
     .benefits .subtitle,
     .how-subtitle,
     .founders-subtitle { font-size: 14px; }
@@ -1408,8 +1465,13 @@
     .mobile-break { display: inline; }
     .founders { padding: 28px 20px; }
     .founders-grid { grid-template-columns: 1fr; gap: 16px; }
-    .testimonials { padding: 28px 20px; }
-    .testimonial-grid { grid-template-columns: 1fr; gap: 12px; }
+    .privacy { padding: 36px 20px; }
+    .privacy-header { margin-bottom: 26px; }
+    .privacy-grid { grid-template-columns: 1fr; gap: 12px; }
+    .privacy-card { padding: 22px 20px; }
+    .privacy-card h3 { font-size: 17px; }
+    .privacy-lede { font-size: 14px; }
+    .privacy-foot { font-size: 13px; margin-top: 24px; }
     .cta-final { padding: 20px; }
     .cta-final-card { padding: 28px 20px; }
     .cta-final-content .pp-wordmark { font-size: 36px !important; margin-bottom: 4px !important; }
@@ -1987,28 +2049,77 @@
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
-<section class="testimonials reveal">
-  <h2>What parents are saying.</h2>
-  <div class="testimonial-grid">
-    <div class="testimonial-card">
-      <div class="testimonial-quote">&ldquo;</div>
-      <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-      <p>I wish I'd had this with my first. Pebble actually told me things my pediatrician didn't have time to cover.</p>
-      <div class="testimonial-author">&mdash; Sarah, mom of two (beta tester)</div>
+<!-- PRIVACY & SAFETY -->
+<section class="privacy reveal" id="privacy">
+  <div class="privacy-inner">
+    <div class="privacy-header">
+      <div class="privacy-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L4 5v7c0 5 3.5 9 8 10 4.5-1 8-5 8-10V5l-8-3z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+      </div>
+      <div class="feature-label">Privacy &amp; Safety</div>
+      <h2>Built with your child's privacy at the center.</h2>
+      <p class="privacy-lede">PebblePath was built parent-first. Every milestone, photo, and conversation about your child is treated as something we're holding for you, not collecting from you. Here's exactly how that works.</p>
     </div>
-    <div class="testimonial-card">
-      <div class="testimonial-quote">&ldquo;</div>
-      <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-      <p>I walked into our 15-month visit with the PDF summary. Our pediatrician asked which app generated it.</p>
-      <div class="testimonial-author">&mdash; Marcus, first-time dad (beta tester)</div>
+
+    <div class="privacy-grid">
+      <div class="privacy-card">
+        <div class="privacy-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <h3>Family-only by default</h3>
+        <p>Your child's milestones, photos, and notes are visible only to the family members you invite. No public profiles, no social feed, no shareable links unless you create one.</p>
+      </div>
+
+      <div class="privacy-card">
+        <div class="privacy-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="12" r="4" fill="currentColor"/>
+          </svg>
+        </div>
+        <h3>Pebble doesn't train on your child</h3>
+        <p>When you ask Pebble a question, your child's context is sent to Anthropic's Claude API for that single answer, then forgotten. By contract, Anthropic does not train its models on customer data. Your child is never an example in someone else's AI.</p>
+      </div>
+
+      <div class="privacy-card">
+        <div class="privacy-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+          </svg>
+        </div>
+        <h3>Never sold. Never advertised against.</h3>
+        <p>We don't sell your data. We don't show ads. The only way we make money is the optional Premium subscription. Your child is the user, not the product.</p>
+      </div>
+
+      <div class="privacy-card">
+        <div class="privacy-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6"/>
+            <path d="M14 11v6"/>
+            <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>
+          </svg>
+        </div>
+        <h3>Yours to delete, anytime</h3>
+        <p>One tap in Settings deletes your account, your children's profiles, your photos, and your history. Permanently. No support-ticket gymnastics.</p>
+      </div>
     </div>
-    <div class="testimonial-card">
-      <div class="testimonial-quote">&ldquo;</div>
-      <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-      <p>Finally — one app that doesn't expire when my kid turns five. It focuses on what's next and how to support him.</p>
-      <div class="testimonial-author">&mdash; Priya, mom of one (beta tester)</div>
-    </div>
+
+    <p class="privacy-foot">
+      Full details in our <a href="/privacy">Privacy Policy</a>
+      <span class="privacy-foot-sep">&middot;</span>
+      Questions? <a href="mailto:thomas@pebblepath.ai">thomas@pebblepath.ai</a>
+    </p>
   </div>
 </section>
 
