@@ -1579,11 +1579,14 @@
       flex-direction: column;
       align-items: center;
     }
-    /* Phone-shaped frame around each screenshot — slim bezel, soft shadow */
+    /* Phone-shaped frame around each screenshot — slim bezel, soft shadow.
+       Width 75% of slide so the phone is ~25% smaller than the slide,
+       leaving real estate below for the caption to be readable on one
+       screen without scrolling past the phone first. */
     .ms-phone {
-      width: 100%;
+      width: 75%;
       aspect-ratio: 700 / 1520;
-      border-radius: 32px;
+      border-radius: 28px;
       overflow: hidden;
       background: #000;
       box-shadow:
@@ -2101,6 +2104,14 @@
   <div class="ms-carousel" aria-roledescription="carousel" aria-label="App screenshots">
     <div class="ms-track" id="msTrack">
       <div class="ms-slide">
+        <div class="ms-phone"><img src="assets/screens/welcome.jpg" alt="PebblePath welcome screen" loading="lazy"></div>
+        <div class="ms-text">
+          <div class="feature-label">Welcome</div>
+          <h3>For every little milestone.</h3>
+          <p>The parenting companion built for the early years &mdash; calm, evidence-based, family-first.</p>
+        </div>
+      </div>
+      <div class="ms-slide">
         <div class="ms-phone"><img src="assets/screens/dashboard.jpg" alt="PebblePath dashboard" loading="lazy"></div>
         <div class="ms-text">
           <div class="feature-label">Dashboard</div>
@@ -2147,6 +2158,7 @@
       <button type="button" class="ms-dot" data-index="2"></button>
       <button type="button" class="ms-dot" data-index="3"></button>
       <button type="button" class="ms-dot" data-index="4"></button>
+      <button type="button" class="ms-dot" data-index="5"></button>
     </div>
   </div>
 
