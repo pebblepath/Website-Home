@@ -1649,37 +1649,29 @@
       width: 22px;
       border-radius: 4px;
     }
-    /* Swipe hint pill — animated chevron on the right of the first slide,
-       fades out on first user interaction with the carousel. */
+    /* Swipe hint — a small chevron-right arrow that mirrors the hero's
+       scroll-cue (line + chevron), just rotated to point right and bouncing
+       horizontally. No background, just a drop-shadowed teal icon. */
     .ms-swipe-hint {
       position: absolute;
-      right: 12px;
+      right: 14px;
       top: 38%;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 7px 11px;
-      border-radius: 18px;
-      background: rgba(31, 92, 84, 0.92);
-      color: white;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+      color: var(--teal-dark);
       pointer-events: none;
       z-index: 4;
-      box-shadow: 0 6px 16px rgba(31, 92, 84, 0.30);
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.18));
       animation: msSwipeNudge 1.6s ease-in-out infinite;
       transition: opacity 0.4s ease, transform 0.4s ease;
     }
-    .ms-swipe-hint svg { width: 11px; height: 11px; }
+    .ms-swipe-hint svg { width: 22px; height: 22px; display: block; }
     .ms-swipe-hint.is-hidden {
       opacity: 0;
-      transform: translateX(8px);
+      transform: translateX(10px);
       animation: none;
     }
     @keyframes msSwipeNudge {
       0%, 100% { transform: translateX(0); }
-      50%      { transform: translateX(-6px); }
+      50%      { transform: translateX(8px); }
     }
     @media (prefers-reduced-motion: reduce) {
       .ms-track { scroll-behavior: auto; }
@@ -2199,10 +2191,13 @@
       <button type="button" class="ms-dot" data-index="4"></button>
       <button type="button" class="ms-dot" data-index="5"></button>
     </div>
-    <!-- Swipe affordance — pulses on first slide, fades out on first interaction -->
+    <!-- Swipe affordance — small chevron, pulses on first slide, fades out on
+         first interaction. Same visual style as the hero's scroll-cue arrow. -->
     <div class="ms-swipe-hint" id="msSwipeHint" aria-hidden="true">
-      <span>Swipe</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14"/>
+        <path d="M12 5l7 7-7 7"/>
+      </svg>
     </div>
   </div>
 
