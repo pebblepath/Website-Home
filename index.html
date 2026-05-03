@@ -1424,7 +1424,10 @@
      screenshots. Default display:none so it never shows on desktop;
      the mobile media query (max-width:768px) flips it on. Uses native
      CSS scroll-snap-x for the swipe; tiny JS just updates dot state. */
-  .ms-carousel { display: none; }
+  .ms-carousel { display: none; position: relative; }
+  /* "Scroll/Swipe" verb swap: desktop shows "Scroll", mobile shows "Swipe" */
+  .ss-verb-mobile { display: none; }
+  .ss-verb-desktop { display: inline; }
   /* ============================================================ */
 
   /* MOBILE FEATURE CARDS (replaces parallax on mobile) */
@@ -1550,6 +1553,9 @@
     .showcase-section .showcase-subhead { font-size: 14px; margin-bottom: 12px; }
 
     /* ===== Mobile horizontal carousel ===== */
+    /* Desktop "Scroll" hidden, mobile "Swipe" shown */
+    .ss-verb-desktop { display: none; }
+    .ss-verb-mobile { display: inline; }
     .ms-carousel {
       display: block;
       position: relative;
@@ -1643,9 +1649,42 @@
       width: 22px;
       border-radius: 4px;
     }
+    /* Swipe hint pill — animated chevron on the right of the first slide,
+       fades out on first user interaction with the carousel. */
+    .ms-swipe-hint {
+      position: absolute;
+      right: 12px;
+      top: 38%;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 7px 11px;
+      border-radius: 18px;
+      background: rgba(31, 92, 84, 0.92);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      pointer-events: none;
+      z-index: 4;
+      box-shadow: 0 6px 16px rgba(31, 92, 84, 0.30);
+      animation: msSwipeNudge 1.6s ease-in-out infinite;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .ms-swipe-hint svg { width: 11px; height: 11px; }
+    .ms-swipe-hint.is-hidden {
+      opacity: 0;
+      transform: translateX(8px);
+      animation: none;
+    }
+    @keyframes msSwipeNudge {
+      0%, 100% { transform: translateX(0); }
+      50%      { transform: translateX(-6px); }
+    }
     @media (prefers-reduced-motion: reduce) {
       .ms-track { scroll-behavior: auto; }
       .ms-dot { transition: none; }
+      .ms-swipe-hint { animation: none; }
     }
 
     .how-it-works { padding: 28px 20px; }
@@ -1789,7 +1828,7 @@
        band on desktop while you scroll through the feature steps below. -->
   <div class="showcase-head">
     <h2 class="showcase-heading">See it in action.</h2>
-    <p class="showcase-subhead">Scroll to explore the app experience.</p>
+    <p class="showcase-subhead"><span class="ss-verb-desktop">Scroll</span><span class="ss-verb-mobile">Swipe</span> to explore the app experience.</p>
     <div class="scroll-hint">
       <span>Scroll to explore</span>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
@@ -2159,6 +2198,11 @@
       <button type="button" class="ms-dot" data-index="3"></button>
       <button type="button" class="ms-dot" data-index="4"></button>
       <button type="button" class="ms-dot" data-index="5"></button>
+    </div>
+    <!-- Swipe affordance — pulses on first slide, fades out on first interaction -->
+    <div class="ms-swipe-hint" id="msSwipeHint" aria-hidden="true">
+      <span>Swipe</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
   </div>
 
@@ -2545,9 +2589,24 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
 (function () {
   const track = document.getElementById('msTrack');
   const dotsEl = document.getElementById('msDots');
+  const hint = document.getElementById('msSwipeHint');
   if (!track || !dotsEl) return;
   const slides = Array.from(track.querySelectorAll('.ms-slide'));
   const dots = Array.from(dotsEl.querySelectorAll('.ms-dot'));
+
+  // Hide the swipe hint as soon as the user actually swipes/scrolls (or taps a dot).
+  // Auto-fade after 6s anyway in case they read the page without interacting.
+  let hintHidden = false;
+  function hideHint() {
+    if (hintHidden || !hint) return;
+    hintHidden = true;
+    hint.classList.add('is-hidden');
+  }
+  if (hint) {
+    track.addEventListener('scroll', hideHint, { passive: true, once: true });
+    track.addEventListener('touchstart', hideHint, { passive: true, once: true });
+    setTimeout(hideHint, 6000);
+  }
 
   // IntersectionObserver: watch which slide is most-visible, mark its dot active
   const io = new IntersectionObserver((entries) => {
@@ -2556,6 +2615,8 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
         const idx = slides.indexOf(entry.target);
         if (idx === -1) return;
         dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
+        // If user navigated past the first slide, kill the hint
+        if (idx > 0) hideHint();
       }
     });
   }, {
@@ -2569,8 +2630,8 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
     dot.addEventListener('click', () => {
       const slide = slides[i];
       if (!slide) return;
-      // scrollIntoView with {inline: 'center'} respects scroll-snap
       slide.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      hideHint();
     });
   });
 })();
