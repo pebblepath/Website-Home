@@ -1,0 +1,18 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["HPDBBJHJC2.ai.pebblepath.app"],
+        "components": [
+          {
+            "/": "/join/*",
+            "comment": "Family invite codes — opens the app's join-family flow with the code prefilled. Falls back to the website otherwise."
+          }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["HPDBBJHJC2.ai.pebblepath.app"]
+  }
+}
