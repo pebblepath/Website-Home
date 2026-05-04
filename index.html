@@ -495,19 +495,38 @@
     50%      { transform: scale(1.28); opacity: 0.82; }
   }
 
-  /* Card 3 — Report rows appear in sequence, hold, then fade and reset.
-     scaleX from 0 → 1 with origin at left = "typing on" feel. */
+  /* Card 3 — Report rows appear softly IN ORDER (1, 2, 3) within a
+     single shared 6s timeline. Each row has its own keyframes so the
+     order is guaranteed (no out-of-order flashing from independent
+     animation cycles). */
   .bi-report-row {
     transform-box: fill-box;
-    transform-origin: 8px center;  /* left-anchor at the bullet x-coord */
-    animation: biReportRow 4s ease-in-out infinite;
-    animation-delay: calc(var(--i, 0) * 0.5s);
+    transform-origin: 8px center;
+    opacity: 0;
   }
-  @keyframes biReportRow {
-    0%, 90%   { transform: scaleX(0); opacity: 0; }
-    8%        { transform: scaleX(1); opacity: 1; }
-    75%       { transform: scaleX(1); opacity: 1; }
-    85%       { transform: scaleX(1); opacity: 0.4; }
+  .bi-report-row.r1 { animation: biReportR1 6s ease-in-out infinite; }
+  .bi-report-row.r2 { animation: biReportR2 6s ease-in-out infinite; }
+  .bi-report-row.r3 { animation: biReportR3 6s ease-in-out infinite; }
+  /* Row 1 appears at ~5%, holds, fades at ~92% */
+  @keyframes biReportR1 {
+    0%             { opacity: 0; transform: scaleX(0); }
+    8%             { opacity: 1; transform: scaleX(1); }
+    88%            { opacity: 1; transform: scaleX(1); }
+    96%, 100%      { opacity: 0; transform: scaleX(0); }
+  }
+  /* Row 2 appears at ~22% */
+  @keyframes biReportR2 {
+    0%, 18%        { opacity: 0; transform: scaleX(0); }
+    26%            { opacity: 1; transform: scaleX(1); }
+    88%            { opacity: 1; transform: scaleX(1); }
+    96%, 100%      { opacity: 0; transform: scaleX(0); }
+  }
+  /* Row 3 appears at ~40% */
+  @keyframes biReportR3 {
+    0%, 36%        { opacity: 0; transform: scaleX(0); }
+    44%            { opacity: 1; transform: scaleX(1); }
+    88%            { opacity: 1; transform: scaleX(1); }
+    96%, 100%      { opacity: 0; transform: scaleX(0); }
   }
 
   /* Privacy card — AI eyes blink subtly every ~4s. */
@@ -521,21 +540,89 @@
     95%           { transform: scaleY(0.1); }
   }
 
+  /* === Privacy section icon animations =================== */
+  /* Section header lock — shackle bounces gently as if "clicking shut" */
+  .pv-lock-shackle {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+    animation: pvLockBounce 3.6s ease-in-out infinite;
+  }
+  @keyframes pvLockBounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    70%           { transform: translateY(-1.2px); }
+    78%           { transform: translateY(0); }
+    86%           { transform: translateY(-0.6px); }
+    92%           { transform: translateY(0); }
+  }
+
+  /* Family-shield — shield gently pulses (scale + glow) suggesting active
+     protection. Family silhouettes inside stay fixed. */
+  .pv-shield-outline {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pvShieldPulse 3.2s ease-in-out infinite;
+  }
+  @keyframes pvShieldPulse {
+    0%, 100% { transform: scale(1);    opacity: 1; }
+    50%      { transform: scale(1.06); opacity: 0.85; }
+  }
+
+  /* Never sold — diagonal slash strokes itself in firmly, holds, then resets */
+  .pv-noads-slash {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: pvNoAdsDraw 3.4s ease-in-out infinite;
+  }
+  @keyframes pvNoAdsDraw {
+    0%        { stroke-dashoffset: 100; }
+    25%       { stroke-dashoffset: 0; }
+    78%       { stroke-dashoffset: 0; }
+    95%, 100% { stroke-dashoffset: 100; }
+  }
+
+  /* Trash — lid (rim + handle) lifts up briefly, then closes */
+  .pv-trash-lid {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+    animation: pvTrashLid 3.2s ease-in-out infinite;
+  }
+  @keyframes pvTrashLid {
+    0%, 60%, 100% { transform: translateY(0) rotate(0deg); }
+    72%           { transform: translateY(-2px) rotate(-8deg); }
+    85%           { transform: translateY(0) rotate(0deg); }
+  }
+  /* === end privacy animations =========================== */
+
+  /* Bump the AI-box render size so the contained face reads clearly.
+     The other privacy icons stay at their default 26×26. */
+  .privacy-card-icon .bi-aibox { width: 34px; height: 34px; }
+  .privacy-card-icon .pv-shield-family { width: 32px; height: 32px; }
+
   /* Card hover amplifies the motion (faster cycles) */
   .benefit-card:hover .bi-pebble-inner   { animation-duration: 1.4s; }
   .benefit-card:hover .bi-trail-dot      { animation-duration: 1.8s; }
-  .benefit-card:hover .bi-report-row     { animation-duration: 2.4s; }
+  .benefit-card:hover .bi-report-row.r1,
+  .benefit-card:hover .bi-report-row.r2,
+  .benefit-card:hover .bi-report-row.r3  { animation-duration: 3.6s; }
   .privacy-card:hover .bi-ai-eye         { animation-duration: 2.5s; }
+  .privacy-card:hover .pv-shield-outline { animation-duration: 1.8s; }
+  .privacy-card:hover .pv-noads-slash    { animation-duration: 2s; }
+  .privacy-card:hover .pv-trash-lid      { animation-duration: 1.8s; }
 
   @media (prefers-reduced-motion: reduce) {
     .bi-trail-dot,
     .bi-pebble-inner,
     .bi-report-row,
-    .bi-ai-eye {
+    .bi-ai-eye,
+    .pv-lock-shackle,
+    .pv-shield-outline,
+    .pv-noads-slash,
+    .pv-trash-lid {
       animation: none;
     }
     .bi-trail-dot { opacity: 1; }
     .bi-report-row { transform: scaleX(1); opacity: 1; }
+    .pv-noads-slash { stroke-dashoffset: 0; }
   }
 
   .benefit-icon.motor { background: linear-gradient(135deg, rgba(107,154,196,0.15), rgba(107,154,196,0.05)); }
@@ -1882,15 +1969,15 @@
   <div class="benefits-grid">
     <div class="benefit-card">
       <div class="benefit-icon motor">
-        <!-- Milestone trail — connected dots ascending in an arc, lighting
-             up sequentially to suggest progression over time. -->
+        <!-- Milestone curve — 4 dots along a pronounced upward bezier, like
+             a growth/development chart. Dots brighten in sequence to suggest
+             progression over time. -->
         <svg class="bi-svg bi-trail" width="32" height="28" viewBox="0 0 32 24" fill="none" aria-hidden="true">
-          <path d="M3 19 Q9 14 16 11 Q23 8 29 4" stroke="#6B9AC4" stroke-width="1.5" stroke-linecap="round" opacity="0.35" fill="none"/>
-          <circle class="bi-trail-dot" cx="3"  cy="19" r="2.2" fill="#6B9AC4" style="--i: 0"/>
-          <circle class="bi-trail-dot" cx="9.5" cy="14.5" r="2.2" fill="#6B9AC4" style="--i: 1"/>
-          <circle class="bi-trail-dot" cx="16" cy="11" r="2.2" fill="#6B9AC4" style="--i: 2"/>
-          <circle class="bi-trail-dot" cx="22.5" cy="7.5" r="2.2" fill="#6B9AC4" style="--i: 3"/>
-          <circle class="bi-trail-dot" cx="29" cy="4" r="2.2" fill="#6B9AC4" style="--i: 4"/>
+          <path d="M3 21 Q11 21 17 13 Q24 6 29 3" stroke="#6B9AC4" stroke-width="1.5" stroke-linecap="round" opacity="0.35" fill="none"/>
+          <circle class="bi-trail-dot" cx="3"  cy="21" r="2.4" fill="#6B9AC4" style="--i: 0"/>
+          <circle class="bi-trail-dot" cx="11" cy="19" r="2.4" fill="#6B9AC4" style="--i: 1"/>
+          <circle class="bi-trail-dot" cx="20" cy="9.5" r="2.4" fill="#6B9AC4" style="--i: 2"/>
+          <circle class="bi-trail-dot" cx="29" cy="3" r="2.4" fill="#6B9AC4" style="--i: 3"/>
         </svg>
       </div>
       <h3>Personalized milestones</h3>
@@ -1908,21 +1995,21 @@
     </div>
     <div class="benefit-card">
       <div class="benefit-icon social">
-        <!-- Pediatrician report — page outline with three bullet items
-             that appear one after another (a clinician's eye scanning the
-             summary line by line). -->
-        <svg class="bi-svg bi-report" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C98A8A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <!-- Pediatrician report — page outline with 3 bullet items that
+             appear softly in order (1, 2, 3) within a single shared 6s
+             timeline. Bigger viewBox for prominence. -->
+        <svg class="bi-svg bi-report" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C98A8A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
           <polyline points="14 2 14 8 20 8"/>
-          <g class="bi-report-row" style="--i: 0">
+          <g class="bi-report-row r1">
             <circle cx="8" cy="13" r="0.9" fill="#C98A8A" stroke="none"/>
             <line x1="10.5" y1="13" x2="16" y2="13"/>
           </g>
-          <g class="bi-report-row" style="--i: 1">
+          <g class="bi-report-row r2">
             <circle cx="8" cy="16.5" r="0.9" fill="#C98A8A" stroke="none"/>
             <line x1="10.5" y1="16.5" x2="16" y2="16.5"/>
           </g>
-          <g class="bi-report-row" style="--i: 2">
+          <g class="bi-report-row r3">
             <circle cx="8" cy="20" r="0.9" fill="#C98A8A" stroke="none"/>
             <line x1="10.5" y1="20" x2="14" y2="20"/>
           </g>
@@ -2403,9 +2490,9 @@
   <div class="privacy-inner">
     <div class="privacy-header">
       <div class="privacy-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="pv-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <rect x="4" y="11" width="16" height="10" rx="2"/>
-          <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+          <path class="pv-lock-shackle" d="M8 11V7a4 4 0 0 1 8 0v4"/>
           <circle cx="12" cy="16" r="1.4" fill="currentColor"/>
         </svg>
       </div>
@@ -2417,11 +2504,20 @@
     <div class="privacy-grid">
       <div class="privacy-card">
         <div class="privacy-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          <!-- Family inside a shield: visual cue that the family unit is
+               the protected boundary. Shield outline + 3 silhouettes
+               (two parents + one child). Shield gently pulses. -->
+          <svg class="pv-shield-family" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path class="pv-shield-outline" d="M12 2 L4 5 v6 c0 5 3.5 9 8 10 4.5-1 8-5 8-10 V5 z"/>
+            <!-- Parent left -->
+            <circle cx="9" cy="9.5" r="1.4" fill="currentColor" stroke="none"/>
+            <path d="M6.6 15 v-1.4 a2.4 2.4 0 0 1 4.8 0 V15" fill="currentColor" stroke="none"/>
+            <!-- Parent right -->
+            <circle cx="15" cy="9.5" r="1.4" fill="currentColor" stroke="none"/>
+            <path d="M12.6 15 v-1.4 a2.4 2.4 0 0 1 4.8 0 V15" fill="currentColor" stroke="none"/>
+            <!-- Child center -->
+            <circle cx="12" cy="13.5" r="0.95" fill="currentColor" stroke="none"/>
+            <path d="M10.5 17.5 v-0.9 a1.5 1.5 0 0 1 3 0 V17.5" fill="currentColor" stroke="none"/>
           </svg>
         </div>
         <h3>Family only</h3>
@@ -2432,18 +2528,19 @@
         <div class="privacy-card-icon">
           <!-- AI face contained inside a rounded box — visual metaphor for
                "the AI is here for you and CONTAINED in your family's space."
-               Eyes blink subtly to show it's alive without being unsettling. -->
-          <svg class="bi-aibox" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <!-- Containment box (the "private" perimeter) -->
-            <rect x="3" y="6" width="26" height="22" rx="5"/>
+               Bigger viewBox + bigger features so the face reads clearly at
+               icon scale. Eyes blink subtly. -->
+          <svg class="bi-aibox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <!-- Antenna up top — signals "AI" -->
-            <line x1="16" y1="6" x2="16" y2="3"/>
-            <circle cx="16" cy="2.4" r="1" fill="currentColor" stroke="none"/>
-            <!-- Friendly face inside (rounded inner area + eyes + smile) -->
-            <rect x="8" y="11" width="16" height="13" rx="2.5" fill="currentColor" opacity="0.16" stroke="none"/>
-            <circle class="bi-ai-eye" cx="13" cy="16.5" r="1.4" fill="currentColor" stroke="none"/>
-            <circle class="bi-ai-eye" cx="19" cy="16.5" r="1.4" fill="currentColor" stroke="none"/>
-            <path d="M13 20.5 Q16 22.5 19 20.5" stroke-width="1.4"/>
+            <line x1="12" y1="5" x2="12" y2="2.5"/>
+            <circle cx="12" cy="2" r="0.9" fill="currentColor" stroke="none"/>
+            <!-- Containment box (the "private" perimeter) -->
+            <rect x="3" y="5" width="18" height="17" rx="3.5"/>
+            <!-- Friendly face inside (subtle inner fill + eyes + smile) -->
+            <rect x="6.5" y="9" width="11" height="10" rx="2" fill="currentColor" opacity="0.14" stroke="none"/>
+            <circle class="bi-ai-eye" cx="9.5" cy="13.2" r="1.5" fill="currentColor" stroke="none"/>
+            <circle class="bi-ai-eye" cx="14.5" cy="13.2" r="1.5" fill="currentColor" stroke="none"/>
+            <path d="M9.5 17 Q12 18.5 14.5 17" stroke-width="1.5"/>
           </svg>
         </div>
         <h3>Private AI memory</h3>
@@ -2452,9 +2549,10 @@
 
       <div class="privacy-card">
         <div class="privacy-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Forbidden circle — slash strokes itself in firmly, then resets -->
+          <svg class="pv-noads" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"/>
-            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+            <line class="pv-noads-slash" x1="4.93" y1="4.93" x2="19.07" y2="19.07" pathLength="100"/>
           </svg>
         </div>
         <h3>Never sold, no ads.</h3>
@@ -2463,12 +2561,15 @@
 
       <div class="privacy-card">
         <div class="privacy-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="3 6 5 6 21 6"/>
+          <!-- Trash can with a lifting lid — suggests one-tap deletion. -->
+          <svg class="pv-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <g class="pv-trash-lid">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>
+            </g>
             <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
             <path d="M10 11v6"/>
             <path d="M14 11v6"/>
-            <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/>
           </svg>
         </div>
         <h3>Yours to delete, anytime</h3>
