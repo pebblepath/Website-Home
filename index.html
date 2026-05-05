@@ -1539,12 +1539,10 @@
     font-family: 'Nunito'; font-size: 40px; font-weight: 800;
     color: var(--teal-deep); line-height: 1.15;
     margin-bottom: 12px;
-    text-shadow: 0 1px 4px rgba(255,255,255,0.45); /* tiny halo for contrast */
   }
   .pricing-lede {
     font-size: 17px; line-height: 1.6;
     color: var(--charcoal);
-    text-shadow: 0 1px 3px rgba(255,255,255,0.40);
   }
   .pricing-grid {
     display: grid;
@@ -1859,6 +1857,14 @@
     vertical-align: middle;
   }
   footer .footer-linkedin svg { display: block; }
+
+  /* RESPONSIVE — medium desktops / shorter laptops */
+  @media (min-width: 769px) and (max-width: 1199px) {
+    .pricing { padding: 56px 40px; }
+    .pricing h2 { font-size: 34px; }
+    .pricing-header { margin-bottom: 32px; }
+    .pricing-lede { font-size: 16px; }
+  }
 
   /* RESPONSIVE */
   @media (max-width: 768px) {
@@ -2572,8 +2578,7 @@
   <img class="pricing-bg" src="assets/pebble-beach-bg.jpg" alt="" aria-hidden="true">
   <div class="pricing-inner">
     <div class="pricing-header">
-      <div class="feature-label">Pricing</div>
-      <h2>Free to start.</h2>
+      <h2>Join the family.</h2>
       <p class="pricing-lede">All milestones, dashboard, tips, and one pediatrician PDF a month &mdash; on the house. Premium unlocks unlimited Pebble AI.</p>
     </div>
 
