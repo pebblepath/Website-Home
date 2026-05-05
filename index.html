@@ -2778,8 +2778,12 @@
 <!-- PRICING — Free + Premium, video-backed. Replaces Getting Started
      temporarily; un-comment that block (and comment this one) to revert. -->
 <section class="pricing reveal" id="pricing">
-  <video class="pricing-video" autoplay muted loop playsinline>
-    <source src="assets/pebble-beach-bg.mp4" type="video/mp4">
+  <video class="pricing-video" autoplay muted loop playsinline preload="metadata">
+    <!-- HEVC first — Safari, modern Chrome/Edge pick this and download
+         only this file. Older browsers fall through to the H.264 source.
+         Each browser only fetches one file, never both. -->
+    <source src="assets/pebble-beach-bg.hevc.mp4" type='video/mp4; codecs="hvc1"'>
+    <source src="assets/pebble-beach-bg.h264.mp4" type="video/mp4">
   </video>
   <div class="pricing-inner">
     <div class="pricing-header">
