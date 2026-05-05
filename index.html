@@ -1474,6 +1474,181 @@
     transform: translateY(-2px);
   }
 
+  /* ============================================================
+     PRICING — Free + Premium two-card section, video-backed.
+     Replaces "Getting started" temporarily. Crisp design: pebble-beach
+     video underneath, soft teal scrim for legibility, two cards in a
+     glass-card style. Mobile stacks. */
+  .pricing {
+    position: relative;
+    padding: 88px 48px;
+    overflow: hidden;
+    background: var(--teal-deep); /* fallback before video paints */
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    color: white;
+  }
+  .pricing.visible { opacity: 1; transform: translateY(0); }
+  .pricing-video {
+    position: absolute; top: 50%; left: 50%;
+    min-width: 100%; min-height: 100%;
+    width: auto; height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.55;
+    pointer-events: none;
+  }
+  /* Teal-deep scrim so headline + card text stay legible regardless of
+     which frame of the video is rendered. */
+  .pricing-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg,
+      rgba(31, 92, 84, 0.65) 0%,
+      rgba(31, 92, 84, 0.50) 45%,
+      rgba(45, 122, 112, 0.55) 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .pricing-inner {
+    position: relative; z-index: 2;
+    max-width: 1060px; margin: 0 auto;
+  }
+  .pricing-header {
+    text-align: center;
+    max-width: 640px; margin: 0 auto 44px;
+  }
+  .pricing-header .feature-label {
+    color: rgba(232,220,200,0.95);
+    margin-bottom: 10px;
+  }
+  .pricing h2 {
+    font-family: 'Nunito'; font-size: 40px; font-weight: 800;
+    color: white; line-height: 1.15;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 14px rgba(0,0,0,0.18);
+  }
+  .pricing-lede {
+    font-size: 17px; line-height: 1.6;
+    color: rgba(255,255,255,0.92);
+  }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+  /* Glass-style cards: translucent white with frosted blur over the video. */
+  .pricing-card {
+    background: rgba(255,255,255,0.94);
+    color: var(--charcoal);
+    border-radius: 22px;
+    padding: 36px 30px 30px;
+    box-shadow:
+      0 18px 50px rgba(31,92,84,0.18),
+      0 0 0 1px rgba(255,255,255,0.30) inset;
+    display: flex; flex-direction: column;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .pricing-card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 24px 60px rgba(31,92,84,0.26),
+      0 0 0 1px rgba(255,255,255,0.40) inset;
+  }
+  /* Premium card gets a teal-accent ring to mark it as the upsell. */
+  .pricing-premium {
+    background: linear-gradient(180deg, #ffffff 0%, #F4FAF8 100%);
+    box-shadow:
+      0 18px 50px rgba(31,92,84,0.24),
+      0 0 0 2px var(--teal-light) inset;
+  }
+  .pricing-eyebrow {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1.6px;
+    color: var(--teal-dark);
+    margin-bottom: 12px;
+  }
+  .pricing-premium .pricing-eyebrow { color: var(--terracotta); }
+  .pricing-price {
+    display: flex; align-items: baseline; gap: 8px;
+    margin-bottom: 8px;
+  }
+  .pp-amount {
+    font-family: 'Nunito', sans-serif;
+    font-size: 44px; font-weight: 900;
+    color: var(--charcoal);
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+  .pp-period {
+    font-size: 14px; font-weight: 600;
+    color: var(--warm-gray);
+  }
+  .pricing-headline {
+    font-family: 'Nunito';
+    font-size: 16px; font-weight: 700;
+    color: var(--teal-dark);
+    margin-bottom: 18px;
+    line-height: 1.35;
+  }
+  .pricing-list {
+    list-style: none; padding: 0; margin: 0 0 28px;
+    flex: 1;
+  }
+  .pricing-list li {
+    position: relative;
+    padding: 8px 0 8px 26px;
+    font-size: 14px; line-height: 1.5;
+    color: var(--charcoal);
+    border-bottom: 1px solid rgba(44,62,64,0.06);
+  }
+  .pricing-list li:last-child { border-bottom: 0; }
+  .pricing-list li::before {
+    content: '';
+    position: absolute; left: 0; top: 14px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: rgba(61,155,143,0.15);
+  }
+  .pricing-list li::after {
+    content: '';
+    position: absolute; left: 4px; top: 18px;
+    width: 8px; height: 4px;
+    border-left: 2px solid var(--teal-dark);
+    border-bottom: 2px solid var(--teal-dark);
+    transform: rotate(-45deg);
+  }
+  .pricing-cta {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 14px 24px;
+    border-radius: 50px;
+    font-family: 'Inter';
+    font-size: 15px; font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .pricing-cta.primary {
+    background: var(--terracotta);
+    color: white;
+    box-shadow: 0 6px 20px rgba(198,123,92,0.40);
+  }
+  .pricing-cta.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(198,123,92,0.50);
+  }
+  .pricing-cta.secondary {
+    background: transparent;
+    color: var(--teal-dark);
+    border: 2px solid rgba(45,122,112,0.30);
+  }
+  .pricing-cta.secondary:hover {
+    background: rgba(61,155,143,0.08);
+    border-color: var(--teal-dark);
+  }
+  /* ========== end PRICING ============================== */
+
   /* PRIVACY & SAFETY — replaces testimonials. Light sand surface reads as
      "calm, trustworthy" while staying gentle against the off-white
      intelligence section above. */
@@ -1877,6 +2052,15 @@
     .privacy-card { padding: 22px 20px; }
     .privacy-card h3 { font-size: 17px; }
     .privacy-lede { font-size: 14px; }
+
+    /* Pricing — stack the two cards on mobile, smaller hero text */
+    .pricing { padding: 56px 20px; }
+    .pricing h2 { font-size: 26px; line-height: 1.2; }
+    .pricing-lede { font-size: 14px; }
+    .pricing-header { margin-bottom: 28px; }
+    .pricing-grid { grid-template-columns: 1fr; gap: 14px; }
+    .pricing-card { padding: 28px 22px 24px; }
+    .pp-amount { font-size: 36px; }
     .cta-final { padding: 20px; }
     .cta-final-card { padding: 28px 20px; }
     .cta-final-content .pp-wordmark { font-size: 36px !important; margin-bottom: 4px !important; }
@@ -2580,7 +2764,60 @@
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
+<!-- PRICING — Free + Premium, video-backed. Replaces Getting Started
+     temporarily; un-comment that block (and comment this one) to revert. -->
+<section class="pricing reveal" id="pricing">
+  <video class="pricing-video" autoplay muted loop playsinline>
+    <source src="assets/pebble-beach-bg.mp4" type="video/mp4">
+  </video>
+  <div class="pricing-overlay"></div>
+  <div class="pricing-inner">
+    <div class="pricing-header">
+      <div class="feature-label">Pricing</div>
+      <h2>Free for every family.</h2>
+      <p class="pricing-lede">All milestones, dashboard, tips, and one pediatrician PDF a month &mdash; on the house. Premium unlocks unlimited Pebble AI.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="pricing-card pricing-free">
+        <div class="pricing-eyebrow">Free</div>
+        <div class="pricing-price">
+          <span class="pp-amount">$0</span>
+          <span class="pp-period">forever</span>
+        </div>
+        <ul class="pricing-list">
+          <li>200+ developmental milestones</li>
+          <li>Daily dashboard &amp; weekly tips</li>
+          <li>Pebble Daily &mdash; a fresh observation every morning</li>
+          <li>Co-parent sharing across devices</li>
+          <li>One pediatrician PDF per month</li>
+        </ul>
+        <a href="https://apps.apple.com/app/pebblepath-ai/" class="pricing-cta secondary" target="_blank" rel="noopener">Download free</a>
+      </div>
+
+      <div class="pricing-card pricing-premium">
+        <div class="pricing-eyebrow">Premium</div>
+        <div class="pricing-price">
+          <span class="pp-amount">$19.99</span>
+          <span class="pp-period">/year</span>
+        </div>
+        <div class="pricing-headline">12 months of unlimited Pebble AI.</div>
+        <ul class="pricing-list">
+          <li>Unlimited Pebble AI questions, anytime</li>
+          <li>Cross-domain pattern detection &amp; insights</li>
+          <li>Unlimited pediatrician PDFs</li>
+          <li>Weekend Planner &mdash; location-aware activity ideas</li>
+          <li>1-week free trial &middot; cancel anytime</li>
+        </ul>
+        <a href="https://apps.apple.com/app/pebblepath-ai/" class="pricing-cta primary" target="_blank" rel="noopener">Start free trial</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS — temporarily hidden (Thomas, May 2026). To restore,
+     remove the surrounding comment delimiters and comment out the
+     <section class="pricing"> block above.
 <section class="how-it-works reveal" id="how-it-works">
   <h2>Getting started</h2>
   <p class="how-subtitle">Set up your family in four steps.</p>
@@ -2599,7 +2836,7 @@
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
       </div>
       <h3>Track milestones</h3>
-      <p>Age-appropriate checklists across four<span class="hide-on-mobile"> developmental</span> domains.</p>
+      <p>Age-appropriate checklists across four developmental domains.</p>
     </div>
     <div class="step">
       <div class="step-badge">3</div>
@@ -2619,6 +2856,8 @@
     </div>
   </div>
 </section>
+-->
+
 
 <!-- FOUNDERS — Atlassian-leadership-style: portraits over organic pebble-shape
      backdrops, no card chrome, hover shifts the backdrop color + rotation.
