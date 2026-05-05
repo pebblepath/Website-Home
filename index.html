@@ -1520,8 +1520,20 @@
     pointer-events: none;
     user-select: none;
   }
-  /* Video plays raw, no scrim — frosted-glass cards do all the legibility
-     work via their backdrop-filter blur. */
+  /* Top-down teal scrim — only covers the top 25% of the section so the
+     header sits on a hint of brand color while the rest of the photo
+     stays untouched (no blur, no color filter). */
+  .pricing::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 25%;
+    background: linear-gradient(to bottom,
+      rgba(31, 92, 84, 0.55) 0%,
+      rgba(31, 92, 84, 0) 100%);
+    z-index: 1;
+    pointer-events: none;
+  }
   .pricing-inner {
     position: relative; z-index: 2;
     max-width: 1060px; margin: 0 auto;
