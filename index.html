@@ -345,7 +345,7 @@
     min-width: 100%; min-height: 100%;
     width: auto; height: auto;
     transform: translate(-50%, -50%);
-    object-fit: cover; opacity: 0.6;  /* was 0.3 — color filter reduced -50% */
+    object-fit: cover; opacity: 0.3;
     z-index: 0; pointer-events: none;
     /* Smooth-out for the loop hard-cut: JS toggles .is-fading on the
        last 0.4s of each cycle so the seek-back is masked by a fade. */
@@ -1493,20 +1493,18 @@
     color: white;
   }
   .pricing.visible { opacity: 1; transform: translateY(0); }
-  .pricing-video {
+  /* Static photo background — was a video, swapped to an image so
+     there's no encode/decode cost or loop seam. */
+  .pricing-bg {
     position: absolute; top: 50%; left: 50%;
     min-width: 100%; min-height: 100%;
     width: auto; height: auto;
     transform: translate(-50%, -50%);
     object-fit: cover;
     z-index: 0;
-    opacity: 1;
     pointer-events: none;
-    /* Smooth-out for the loop hard-cut: JS toggles .is-fading on the
-       last 0.4s of each cycle so the seek-back is masked by a fade. */
-    transition: opacity 0.45s ease;
+    user-select: none;
   }
-  .pricing-video.is-fading { opacity: 0; }
   /* Video plays raw, no scrim — frosted-glass cards do all the legibility
      work via their backdrop-filter blur. */
   .pricing-inner {
@@ -1589,13 +1587,13 @@
     line-height: 1;
   }
   .pp-period {
-    font-size: 12px; font-weight: 600;
+    font-size: 16px; font-weight: 700;
     color: var(--warm-gray);
   }
   /* Premium "/year" gets the brand terracotta to emphasize the cost frame. */
   .pricing-premium .pp-period {
     color: var(--terracotta);
-    font-weight: 700;
+    font-weight: 800;
   }
   .pricing-headline {
     font-family: 'Nunito';
@@ -1605,7 +1603,8 @@
     line-height: 1.35;
   }
   .pricing-list {
-    list-style: none; padding: 0; margin: 0 0 18px;
+    list-style: none; padding: 0;
+    margin: 16px 0 18px;     /* extra top space between price and first bullet */
     flex: 1;
   }
   .pricing-list li {
@@ -2693,7 +2692,7 @@
       </div>
       <div class="feature-label">Privacy &amp; Safety</div>
       <h2>Built with your child's<br class="mobile-break"> privacy at the center.</h2>
-      <p class="privacy-lede">PebblePath was built parent-first. Every milestone, photo, and conversation about your child is treated as something we're holding for you, not collecting from you.</p>
+      <p class="privacy-lede">PebblePath was built parent-first.</p>
     </div>
 
     <div class="privacy-grid">
@@ -2778,13 +2777,7 @@
 <!-- PRICING — Free + Premium, video-backed. Replaces Getting Started
      temporarily; un-comment that block (and comment this one) to revert. -->
 <section class="pricing reveal" id="pricing">
-  <video class="pricing-video" autoplay muted loop playsinline preload="metadata">
-    <!-- HEVC first — Safari, modern Chrome/Edge pick this and download
-         only this file. Older browsers fall through to the H.264 source.
-         Each browser only fetches one file, never both. -->
-    <source src="assets/pebble-beach-bg.hevc.mp4" type='video/mp4; codecs="hvc1"'>
-    <source src="assets/pebble-beach-bg.h264.mp4" type="video/mp4">
-  </video>
+  <img class="pricing-bg" src="assets/pebble-beach-bg.jpg" alt="" aria-hidden="true">
   <div class="pricing-inner">
     <div class="pricing-header">
       <div class="feature-label">Pricing</div>
@@ -2800,11 +2793,11 @@
           <span class="pp-period">forever</span>
         </div>
         <ul class="pricing-list">
+          <li>5 Pebble AI questions per week</li>
           <li>200+ developmental milestones</li>
-          <li>Daily dashboard &amp; weekly tips</li>
-          <li>Pebble Daily &mdash; a fresh observation every morning</li>
-          <li>Co-parent sharing across devices</li>
-          <li>One pediatrician PDF per month</li>
+          <li>Pebble Daily &mdash; insights every morning</li>
+          <li>Family access across devices</li>
+          <li>1 pediatrician summary per month</li>
         </ul>
         <a href="https://apps.apple.com/app/pebblepath-ai/" class="pricing-cta secondary" target="_blank" rel="noopener">Download free</a>
       </div>
@@ -2815,13 +2808,12 @@
           <span class="pp-amount">$19.99</span>
           <span class="pp-period">/year</span>
         </div>
-        <div class="pricing-headline">12 months of unlimited Pebble AI.</div>
         <ul class="pricing-list">
-          <li>Unlimited Pebble AI questions, anytime</li>
+          <li>Unlimited Pebble AI questions</li>
+          <li>Premium Benefits are shared</li>
+          <li>Weekend Planner &mdash; local activity ideas</li>
           <li>Cross-domain pattern detection &amp; insights</li>
-          <li>Weekend Planner &mdash; location-aware activity ideas</li>
-          <li>Unlimited pediatrician PDFs</li>
-          <li>1-week free trial &middot; cancel anytime</li>
+          <li>Unlimited pediatrician summaries</li>
         </ul>
         <a href="https://apps.apple.com/app/pebblepath-ai/" class="pricing-cta primary" target="_blank" rel="noopener">Start free trial</a>
       </div>
@@ -2897,9 +2889,9 @@
     <div class="founder">
       <div class="founder-portrait">
         <span class="founder-blob blob-2" aria-hidden="true"></span>
-        <img src="assets/ellie-founder.png" alt="Ellie Paris Chandet">
+        <img src="assets/ellie-founder.png" alt="Ellie Paris">
       </div>
-      <div class="founder-name">Ellie Paris Chandet</div>
+      <div class="founder-name">Ellie Paris</div>
       <div class="founder-role">Pedagogy &amp; UX</div>
       <div class="founder-context">Global M&amp;A at Google &middot; ESCP Business School</div>
       <a href="https://www.linkedin.com/in/elliechandet/" class="founder-linkedin" title="Ellie on LinkedIn" target="_blank" rel="noopener">
@@ -3068,9 +3060,10 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
 // Looping video smooth-out — toggles .is-fading on the last ~0.4s of each
 // cycle so the seek-back to t=0 is masked by a soft fade. CSS sets
 // transition: opacity 0.45s on each video. 'seeked' fires when loop jumps
-// back; we remove the class then. Applies to .hero-video AND .pricing-video.
+// back; we remove the class then. Applies to .hero-video (the pricing
+// section is now a static image, no longer a looping video).
 (function () {
-  document.querySelectorAll('.hero-video, .pricing-video').forEach(function (video) {
+  document.querySelectorAll('.hero-video').forEach(function (video) {
     let fading = false;
     video.addEventListener('timeupdate', function () {
       if (!isFinite(video.duration) || video.duration <= 0) return;
