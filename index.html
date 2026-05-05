@@ -659,7 +659,7 @@
       position: sticky;
       top: 68px;          /* sits flush below the fixed nav (68px tall) */
       z-index: 6;          /* above .showcase-center which is z-index: 5 */
-      padding: 36px 48px 18px;
+      padding: 20px 48px 14px;
       /* Subtle elevation when pinned, in case page content scrolls behind */
       box-shadow: 0 6px 14px -6px rgba(44,62,64,0.06);
     }
@@ -700,9 +700,9 @@
   .showcase-center {
     display: flex; justify-content: center;
     position: sticky;
-    /* top must clear the nav (68px) + sticky showcase-head (~140px) so the
+    /* top must clear the nav (68px) + sticky showcase-head (~120px) so the
        phone sits below the pinned "See it in action" band, not behind it. */
-    top: 220px;
+    top: 195px;
     align-self: flex-start;
     padding: 16px 0;
     z-index: 5;
@@ -711,13 +711,12 @@
     display: flex; flex-direction: column;
   }
 
-  /* Phone-shaped screen card — fluid width, aspect ratio locked so the
-     screenshot keeps its proportions on any desktop size. Scales 280 →
-     360px width as the viewport grows past ~1170px wide, capped so it
-     never gets cartoonishly large on 4K monitors. */
+  /* Phone-shaped screen card — fluid width, aspect-ratio matched to the
+     real iPhone screenshot (700×1520) so each shot fits edge-to-edge with
+     no bottom crop. Scales 280 → 360px width as the viewport grows. */
   .s-phone {
     width: clamp(280px, 24vw, 360px);
-    aspect-ratio: 280 / 450;
+    aspect-ratio: 700 / 1520;
     height: auto;
     border-radius: clamp(28px, 2.4vw, 34px);
     background: var(--off-white);
@@ -1963,6 +1962,10 @@
       flex-direction: column;
       align-items: center;
     }
+    /* Class+attribute override — .ms-slide's display:flex was beating the
+       UA's [hidden] {display:none}, leaving the Welcome slide visible. */
+    .ms-slide[hidden],
+    .ms-slide.ms-slide-hidden { display: none !important; }
     /* Phone-shaped frame around each screenshot — slim bezel, soft shadow.
        Width 75% of slide so the phone is ~25% smaller than the slide,
        leaving real estate below for the caption to be readable on one
