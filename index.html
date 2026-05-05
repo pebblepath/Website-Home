@@ -1498,7 +1498,11 @@
     z-index: 0;
     opacity: 0.55;
     pointer-events: none;
+    /* Smooth-out for the loop hard-cut: JS toggles .is-fading on the
+       last 0.4s of each cycle so the seek-back is masked by a fade. */
+    transition: opacity 0.4s ease;
   }
+  .pricing-video.is-fading { opacity: 0; }
   /* Light teal scrim — barely there (75% lighter than the previous deep
      overlay), letting the pebble-beach video read through clearly. The
      frosted-glass cards do most of the legibility work. */
@@ -1539,12 +1543,12 @@
     gap: 18px;
     justify-content: center;
   }
-  /* Frosted-glass cards: translucent so the pebble video shows through,
-     with a strong backdrop blur for legibility. Slimmed-down padding +
-     tighter typography so the cards feel like compact pricing pills,
-     not full feature blocks (Calm-style). */
+  /* Translucent cards — no backdrop blur so the pebble-beach video stays
+     crisp through the cards. White at ~62% gives enough opacity for legible
+     text; backdrop-filter: saturate alone keeps a hint of glass tint without
+     softening the video underneath. */
   .pricing-card {
-    background: rgba(255,255,255,0.50);
+    background: rgba(255,255,255,0.62);
     color: var(--charcoal);
     border-radius: 18px;
     padding: 22px 22px 20px;
@@ -1552,12 +1556,12 @@
       0 12px 36px rgba(31,92,84,0.22),
       0 0 0 1px rgba(255,255,255,0.45) inset;
     display: flex; flex-direction: column;
-    backdrop-filter: blur(18px) saturate(140%);
-    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    backdrop-filter: saturate(130%);
+    -webkit-backdrop-filter: saturate(130%);
     transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
   }
   .pricing-card:hover {
-    background: rgba(255,255,255,0.60);
+    background: rgba(255,255,255,0.74);
     transform: translateY(-3px);
     box-shadow:
       0 18px 48px rgba(31,92,84,0.30),
@@ -1565,13 +1569,13 @@
   }
   /* Premium card gets a teal-accent ring to mark it as the upsell. */
   .pricing-premium {
-    background: rgba(255,255,255,0.62);
+    background: rgba(255,255,255,0.74);
     box-shadow:
       0 14px 40px rgba(31,92,84,0.28),
       0 0 0 2px var(--teal-light) inset;
   }
   .pricing-premium:hover {
-    background: rgba(255,255,255,0.72);
+    background: rgba(255,255,255,0.82);
   }
   .pricing-eyebrow {
     font-size: 10px; font-weight: 700;
@@ -1594,6 +1598,11 @@
   .pp-period {
     font-size: 12px; font-weight: 600;
     color: var(--warm-gray);
+  }
+  /* Premium "/year" gets the brand terracotta to emphasize the cost frame. */
+  .pricing-premium .pp-period {
+    color: var(--terracotta);
+    font-weight: 700;
   }
   .pricing-headline {
     font-family: 'Nunito';
@@ -3059,6 +3068,30 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
     container.appendChild(clone);
   }
 });
+
+// Pricing video — soften the loop seek-back with a quick fade. CSS sets
+// `transition: opacity 0.4s` on .pricing-video; we toggle .is-fading on the
+// last 0.4s of each cycle, then remove it on the `seeked` event when the
+// video jumps back to 0. Net effect: a soft pulse instead of a hard cut.
+(function () {
+  const video = document.querySelector('.pricing-video');
+  if (!video) return;
+  let fading = false;
+  function tick() {
+    if (!isFinite(video.duration) || video.duration <= 0) return;
+    const remaining = video.duration - video.currentTime;
+    if (remaining < 0.4 && !fading) {
+      fading = true;
+      video.classList.add('is-fading');
+    }
+  }
+  video.addEventListener('timeupdate', tick, { passive: true });
+  // 'seeked' fires when loop jumps back to t=0 (Safari, Chrome, FF all do this)
+  video.addEventListener('seeked', () => {
+    fading = false;
+    video.classList.remove('is-fading');
+  });
+})();
 
 // Mobile carousel — sync pagination dots with native scroll-snap position
 (function () {
