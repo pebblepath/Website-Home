@@ -1520,14 +1520,15 @@
     pointer-events: none;
     user-select: none;
   }
-  /* Top-down teal scrim — only covers the top 25% of the section so the
-     header sits on a hint of brand color while the rest of the photo
-     stays untouched (no blur, no color filter). */
+  /* Top-down teal scrim — covers the top portion of the section so the
+     header sits on a wash of brand color while the rest of the photo
+     stays untouched (no blur, no color filter).
+     Desktop: 40%. Mobile: 30% (override below in @media). */
   .pricing::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 25%;
+    height: 40%;
     background: linear-gradient(to bottom,
       rgba(31, 92, 84, 0.96) 0%,
       rgba(31, 92, 84, 0) 100%);
@@ -2110,6 +2111,7 @@
 
     /* Pricing — stack the two cards on mobile, smaller hero text */
     .pricing { padding: 56px 20px; }
+    .pricing::before { height: 30%; }
     .pricing h2 { font-size: 26px; line-height: 1.2; }
     .pricing-lede { font-size: 14px; }
     .pricing-header { margin-bottom: 28px; }
