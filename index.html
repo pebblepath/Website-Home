@@ -687,10 +687,12 @@
   }
   .showcase-grid {
     display: grid;
-    grid-template-columns: 300px 400px;
-    max-width: 800px; margin: 0 auto;
+    /* Phone column scales with viewport (300 → 400px); text column takes
+       a sensible width band so the layout breathes on big monitors. */
+    grid-template-columns: clamp(300px, 26vw, 400px) minmax(360px, 480px);
+    max-width: 1100px; margin: 0 auto;
     position: relative;
-    gap: 40px;
+    gap: clamp(32px, 4vw, 56px);
     justify-content: center;
   }
   .showcase-left, .showcase-right { display: flex; flex-direction: column; }
@@ -709,10 +711,15 @@
     display: flex; flex-direction: column;
   }
 
-  /* Phone-shaped screen card — no iPhone bezel, just rounded surface */
+  /* Phone-shaped screen card — fluid width, aspect ratio locked so the
+     screenshot keeps its proportions on any desktop size. Scales 280 →
+     360px width as the viewport grows past ~1170px wide, capped so it
+     never gets cartoonishly large on 4K monitors. */
   .s-phone {
-    width: 280px; height: 450px;
-    border-radius: 28px;
+    width: clamp(280px, 24vw, 360px);
+    aspect-ratio: 280 / 450;
+    height: auto;
+    border-radius: clamp(28px, 2.4vw, 34px);
     background: var(--off-white);
     box-shadow:
       0 30px 70px rgba(44,62,64,0.22),
@@ -2321,10 +2328,11 @@
       <button type="button" class="ms-dot" data-index="2"></button>
       <button type="button" class="ms-dot" data-index="3"></button>
       <button type="button" class="ms-dot" data-index="4"></button>
-      <button type="button" class="ms-dot" data-index="5"></button>
     </div>
     <div class="ms-track" id="msTrack">
-      <div class="ms-slide">
+      <!-- Welcome slide is hidden for now via display:none on .ms-slide-hidden;
+           swap that class out (or remove this comment + class) to bring it back. -->
+      <div class="ms-slide ms-slide-hidden" hidden>
         <div class="ms-phone"><img src="assets/screens/welcome.jpg" alt="PebblePath welcome screen" loading="lazy"></div>
         <div class="ms-text">
           <div class="feature-label">Welcome</div>
@@ -2867,7 +2875,7 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
   const dotsEl = document.getElementById('msDots');
   const hint = document.getElementById('msSwipeHint');
   if (!track || !dotsEl) return;
-  const slides = Array.from(track.querySelectorAll('.ms-slide'));
+  const slides = Array.from(track.querySelectorAll('.ms-slide:not([hidden])'));
   const dots = Array.from(dotsEl.querySelectorAll('.ms-dot'));
 
   // Hide the swipe hint as soon as the user actually swipes/scrolls (or taps a dot).
