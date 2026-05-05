@@ -727,13 +727,22 @@
   /* Custom mockup screens — cross-fade */
   .s-screen {
     width: 100%; height: 100%;
-    padding: 18px 14px 16px;
+    padding: 0;            /* screenshot fills the phone frame edge-to-edge */
     overflow: hidden;
     position: absolute; top: 0; left: 0;
     opacity: 0; transition: opacity 0.55s ease;
     background: var(--off-white);
   }
   .s-screen.active { opacity: 1; }
+  /* Real-screenshot images inside .s-screen — fill the entire frame so they
+     read as a phone showing the actual app. The phone wrapper (.s-phone-inner)
+     already provides the rounded-corner clip via overflow:hidden. */
+  .s-screen-img {
+    display: block;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
 
   /* === Mini app mockup primitives ============================== */
   .mk-status {
@@ -1515,19 +1524,21 @@
     text-align: center;
     max-width: 640px; margin: 0 auto 44px;
   }
+  /* Text colors darkened to read against the light pebble-beach photo. */
   .pricing-header .feature-label {
-    color: rgba(232,220,200,0.95);
+    color: var(--terracotta);
     margin-bottom: 10px;
   }
   .pricing h2 {
     font-family: 'Nunito'; font-size: 40px; font-weight: 800;
-    color: white; line-height: 1.15;
+    color: var(--teal-deep); line-height: 1.15;
     margin-bottom: 12px;
-    text-shadow: 0 2px 14px rgba(0,0,0,0.18);
+    text-shadow: 0 1px 4px rgba(255,255,255,0.45); /* tiny halo for contrast */
   }
   .pricing-lede {
     font-size: 17px; line-height: 1.6;
-    color: rgba(255,255,255,0.92);
+    color: var(--charcoal);
+    text-shadow: 0 1px 3px rgba(255,255,255,0.40);
   }
   .pricing-grid {
     display: grid;
@@ -2233,255 +2244,25 @@
       <div class="s-phone">
         <div class="s-phone-inner">
 
-          <!-- 0. Dashboard -->
+                    <!-- ss-0 screenshot -->
           <div class="s-screen active" id="ss-0">
-            <div class="mk-status"><span class="mk-time">9:41</span><span class="mk-icons">●●●</span></div>
-            <div class="mk-head">
-              <div>
-                <div class="mk-head-sub">Good afternoon, Thomas Paris</div>
-                <div class="mk-head-title">Felix's dashboard</div>
-              </div>
-              <div class="mk-avatar"><img src="assets/Thomas_Founder.jpeg" alt="" onerror="this.style.display='none'"></div>
-            </div>
-            <div class="mk-child">
-              <div class="mk-child-row">
-                <div class="mk-child-pic"><img src="assets/Felix_placeholder.jpg" alt="" onerror="this.style.display='none'"></div>
-                <div class="mk-child-block">
-                  <div class="mk-child-name">Felix</div>
-                  <div class="mk-child-age">2 yr 6 mo old</div>
-                </div>
-                <div class="mk-child-pct">17%</div>
-              </div>
-              <div class="mk-bar"><span style="width:17%"></span></div>
-              <div class="mk-bar-meta">7 of 40 active milestones</div>
-            </div>
-            <div class="mk-daily">
-              <div class="mk-daily-row">
-                <div class="mk-daily-body">
-                  <div class="mk-daily-tag">
-                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z" fill="currentColor"/></svg>
-                    Pebble's Daily
-                  </div>
-                  <div class="mk-daily-title">Felix's 'why' questions are on the horizon</div>
-                  <div class="mk-daily-sub">Felix is chatty and confident with 200+ words in&hellip;</div>
-                </div>
-                <div class="mk-daily-action">
-                  <div class="mk-daily-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-                  </div>
-                  <div class="mk-daily-chev">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="mk-section">Milestone areas <span>See all</span></div>
-            <div class="mk-tiles">
-              <div class="mk-tile motor">
-                <span class="mk-tile-bubble"></span>
-                <div class="mk-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><path d="M9 12l3-2 3 2-2 4 2 4"/><path d="M9 21l2-5"/></svg></div>
-                <div class="mk-tile-name">Motor</div>
-                <div class="pct">16/69</div>
-              </div>
-              <div class="mk-tile lang">
-                <span class="mk-tile-bubble"></span>
-                <div class="mk-tile-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-                <div class="mk-tile-name">Language</div>
-                <div class="pct">12/39</div>
-              </div>
-              <div class="mk-tile soc">
-                <span class="mk-tile-bubble"></span>
-                <div class="mk-tile-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
-                <div class="mk-tile-name">Social</div>
-                <div class="pct">9/41</div>
-              </div>
-              <div class="mk-tile cog">
-                <span class="mk-tile-bubble"></span>
-                <div class="mk-tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 22h6"/><path d="M10 18h4"/><path d="M12 2a7 7 0 0 0-4 12.7V18h8v-3.3A7 7 0 0 0 12 2z"/></svg></div>
-                <div class="mk-tile-name">Cognitive</div>
-                <div class="pct">9/23</div>
-              </div>
-            </div>
-            <div class="mk-section">Coming up <span>View all</span></div>
-            <div class="mk-mini">
-              <div class="mk-mini-dot" style="background:var(--blue);"></div>
-              <div class="mk-mini-text"><b>Self-feeds with a spoon</b><span>Motor · 24-30 mo</span></div>
-            </div>
+            <img class="s-screen-img" src="assets/screens/dashboard.jpg" alt="PebblePath dashboard" loading="lazy">
           </div>
-
-          <!-- 1. Milestones -->
+          <!-- ss-1 screenshot -->
           <div class="s-screen" id="ss-1">
-            <div class="mk-status"><span class="mk-time">9:41</span><span class="mk-icons">●●●</span></div>
-            <div class="mk-head">
-              <div>
-                <div class="mk-head-sub">Felix, 2 yr 6 mo old</div>
-                <div class="mk-head-title">Milestones</div>
-              </div>
-            </div>
-            <div class="mk-pills mk-pills-icon">
-              <span class="mk-pill on">All</span>
-              <span class="mk-pill mp-motor">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><path d="M9 12l3-2 3 2-2 4 2 4"/><path d="M9 21l2-5"/></svg>
-                Motor
-              </span>
-              <span class="mk-pill mp-lang">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                Language
-              </span>
-              <span class="mk-pill mp-soc">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                Social
-              </span>
-            </div>
-            <div class="mk-grouphdr" style="color:var(--teal);">Upcoming · 126</div>
-            <div class="mk-row"><div class="mk-check"></div><div class="mk-row-text"><div class="mk-row-title">Removes simple clothing</div><div class="mk-row-sub"><span class="dot" style="background:var(--blue);"></span>Motor · 24-30 mo</div></div><div class="mk-row-chev">›</div></div>
-            <div class="mk-row"><div class="mk-check"></div><div class="mk-row-text"><div class="mk-row-title">Washes hands when reminded</div><div class="mk-row-sub"><span class="dot" style="background:var(--blue);"></span>Motor · 24-30 mo</div></div><div class="mk-row-chev">›</div></div>
-            <div class="mk-row"><div class="mk-check"></div><div class="mk-row-text"><div class="mk-row-title">Recognizes need to use the toilet</div><div class="mk-row-sub"><span class="dot" style="background:var(--rose);"></span>Social · 24-36 mo</div></div><div class="mk-row-chev">›</div></div>
-            <div class="mk-row"><div class="mk-check"></div><div class="mk-row-text"><div class="mk-row-title">Self-feeds with a spoon</div><div class="mk-row-sub"><span class="dot" style="background:var(--blue);"></span>Motor · 24-30 mo</div></div><div class="mk-row-chev">›</div></div>
-            <div class="mk-row"><div class="mk-check"></div><div class="mk-row-text"><div class="mk-row-title">Brushes teeth with help</div><div class="mk-row-sub"><span class="dot" style="background:var(--blue);"></span>Motor · 24-36 mo</div></div><div class="mk-row-chev">›</div></div>
-            <div class="mk-row"><div class="mk-check"></div><div class="mk-row-text"><div class="mk-row-title">Helps put toys away when asked</div><div class="mk-row-sub"><span class="dot" style="background:var(--rose);"></span>Social · 24-36 mo</div></div><div class="mk-row-chev">›</div></div>
+            <img class="s-screen-img" src="assets/screens/milestones.jpg" alt="Milestones list" loading="lazy">
           </div>
-
-          <!-- 2. Tips -->
+          <!-- ss-2 screenshot -->
           <div class="s-screen" id="ss-2">
-            <div class="mk-status"><span class="mk-time">9:41</span><span class="mk-icons">●●●</span></div>
-            <div class="mk-head">
-              <div>
-                <div class="mk-head-sub">For Felix</div>
-                <div class="mk-head-title">Tips</div>
-              </div>
-              <div class="mk-tips-action">
-                <span class="mk-refresh-label">Next refresh at 5:17 PM</span>
-                <div class="mk-icon-btn mk-refresh-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/></svg>
-                </div>
-              </div>
-            </div>
-            <div class="mk-pills">
-              <span class="mk-pill on" style="background:var(--terracotta);">All</span>
-              <span class="mk-pill off">Proactive</span>
-              <span class="mk-pill off">Milestone</span>
-              <span class="mk-pill off">School</span>
-              <span class="mk-pill off">Health</span>
-            </div>
-            <div class="mk-tip">
-              <div class="mk-tip-bar" style="background:var(--teal-dark);"></div>
-              <div class="mk-tip-body">
-                <div class="mk-tip-meta">
-                  <span class="mk-tip-tag" style="color:var(--teal-dark);">MILESTONE</span>
-                  <span class="mk-tip-when">20h ago</span>
-                </div>
-                <div class="mk-tip-title">Felix's speech is taking off&mdash;here's how to fuel it further</div>
-                <div class="mk-tip-text">At 30 months, Felix is building toward those 200+ word sentences. Narrate what he's doing throughout the day&hellip;</div>
-                <div class="mk-tip-foot">
-                  <span class="mk-tip-author">Pebble advisor</span>
-                  <span class="mk-tip-badge">Actionable</span>
-                </div>
-              </div>
-            </div>
-            <div class="mk-tip">
-              <div class="mk-tip-bar" style="background:var(--terracotta);"></div>
-              <div class="mk-tip-body">
-                <div class="mk-tip-meta">
-                  <span class="mk-tip-tag" style="color:var(--terracotta);">PROACTIVE</span>
-                  <span class="mk-tip-when"><span class="mk-tip-unread"></span>20h ago</span>
-                </div>
-                <div class="mk-tip-title">Picky eating is developmentally normal&mdash;and you're doing fine</div>
-                <div class="mk-tip-text">Toddlers Felix's age often assert independence through food choices&hellip;</div>
-                <div class="mk-tip-foot">
-                  <span class="mk-tip-author">Pebble advisor</span>
-                </div>
-              </div>
-            </div>
-            <div class="mk-tip">
-              <div class="mk-tip-bar" style="background:var(--rose);"></div>
-              <div class="mk-tip-body">
-                <div class="mk-tip-meta">
-                  <span class="mk-tip-tag" style="color:var(--rose);">HEALTH</span>
-                  <span class="mk-tip-when"><span class="mk-tip-unread"></span>20h ago</span>
-                </div>
-                <div class="mk-tip-title">Born early, but Felix is right on track</div>
-              </div>
-            </div>
+            <img class="s-screen-img" src="assets/screens/tips.jpg" alt="Tips and guidance feed" loading="lazy">
           </div>
-
-          <!-- 3. Pebble Advisor -->
+          <!-- ss-3 screenshot -->
           <div class="s-screen" id="ss-3">
-            <div class="mk-status"><span class="mk-time">9:41</span><span class="mk-icons">●●●</span></div>
-            <div class="mk-head">
-              <div>
-                <div class="mk-head-sub">Your AI parenting advisor</div>
-                <div class="mk-head-title">Pebble</div>
-              </div>
-              <div class="mk-avatar mk-pebble-avatar">
-                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <circle cx="12" cy="12" r="10" stroke="white" stroke-width="1.6" fill="none"/>
-                  <circle cx="12" cy="12" r="5.5" fill="white"/>
-                </svg>
-              </div>
-            </div>
-            <div class="mk-quota">
-              <span>4 questions left this week</span>
-              <span class="mk-quota-pro">Premium · unlimited</span>
-            </div>
-            <div class="mk-context">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
-              Knows Felix · 2 yr 6 mo · 46 milestones tracked
-            </div>
-            <div class="mk-bubble user">Felix is starting to ask "why?" non-stop. Healthy?</div>
-            <div class="mk-bubble bot">
-              <div class="mk-bot-tag">Pebble Advisor</div>
-              Totally healthy. "Why?" questions at 2.5 years signal a growing curiosity loop and language confidence. Lean in, even when it's the tenth one in a row.
-            </div>
-            <div class="mk-bubble bot">
-              <div class="mk-bot-tag">Try this</div>
-              When you don't know the answer, say "Let's find out together" — turns it into a shared discovery, not a quiz.
-            </div>
-            <div class="mk-bubble user short">Love it.</div>
-            <div class="mk-bubble bot typing">
-              <span></span><span></span><span></span>
-            </div>
-            <div class="mk-suggest">
-              <span>Sleep regression?</span>
-              <span>Picky eating</span>
-              <span>Tantrums</span>
-              <span>Screen time</span>
-            </div>
+            <img class="s-screen-img" src="assets/screens/pebble.jpg" alt="Pebble AI advisor chat" loading="lazy">
           </div>
-
-          <!-- 4. Pediatrician PDF — mirrors the actual exported document -->
+          <!-- ss-4 screenshot -->
           <div class="s-screen" id="ss-4">
-            <div class="mk-pdf-banner">
-              <div class="mk-pdf-eyebrow">PEBBLEPATH &middot; PEDIATRICIAN SUMMARY</div>
-              <div class="mk-pdf-name">Felix</div>
-              <div class="mk-pdf-meta">2 yr 6 mo old &middot; Born October 11, 2023</div>
-              <div class="mk-pdf-family">The Paris Family</div>
-            </div>
-            <div class="mk-pdf-body">
-              <div class="mk-pdf-h2">OVERVIEW</div>
-              <div class="mk-pdf-para">Felix is thirty months old and tracking well across his early developmental milestones, with forty-six achieved skills spanning social, motor, and early communication&hellip;</div>
-
-              <div class="mk-pdf-h2">DEVELOPMENTAL DOMAINS</div>
-              <table class="mk-pdf-table">
-                <thead>
-                  <tr><th>Domain</th><th>Achieved</th><th>Emerging</th><th>Not yet</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td>Motor</td><td>16</td><td>0</td><td>14</td></tr>
-                  <tr><td>Language</td><td>12</td><td>0</td><td>2</td></tr>
-                  <tr><td>Social-emotional</td><td>9</td><td>0</td><td>4</td></tr>
-                  <tr><td>Cognitive</td><td>9</td><td>0</td><td>0</td></tr>
-                  <tr class="mk-pdf-total"><td>Total</td><td>46</td><td>0</td><td>20</td></tr>
-                </tbody>
-              </table>
-
-              <div class="mk-pdf-h2">PARENT-FLAGGED FOCUS AREAS</div>
-              <div class="mk-pdf-tags">
-                <span>Speech / language</span><span>&middot;</span>
-                <span>Eating / feeding</span><span>&middot;</span>
-                <span>Motor skills</span>
-              </div>
-            </div>
+            <img class="s-screen-img" src="assets/screens/pediatrician.jpg" alt="Pediatrician summary export" loading="lazy">
           </div>
 
         </div>
@@ -2691,7 +2472,7 @@
         </svg>
       </div>
       <div class="feature-label">Privacy &amp; Safety</div>
-      <h2>Built with your child's<br class="mobile-break"> privacy at the center.</h2>
+      <h2>Built with your child's<br> privacy at the center.</h2>
       <p class="privacy-lede">PebblePath was built parent-first.</p>
     </div>
 
@@ -2781,7 +2562,7 @@
   <div class="pricing-inner">
     <div class="pricing-header">
       <div class="feature-label">Pricing</div>
-      <h2>Free for every family.</h2>
+      <h2>Free to start.</h2>
       <p class="pricing-lede">All milestones, dashboard, tips, and one pediatrician PDF a month &mdash; on the house. Premium unlocks unlimited Pebble AI.</p>
     </div>
 
