@@ -347,7 +347,11 @@
     transform: translate(-50%, -50%);
     object-fit: cover; opacity: 0.3;
     z-index: 0; pointer-events: none;
+    /* Smooth-out for the loop hard-cut: JS toggles .is-fading on the
+       last 0.4s of each cycle so the seek-back is masked by a fade. */
+    transition: opacity 0.45s ease;
   }
+  .hero-video.is-fading { opacity: 0 !important; }
   .hero::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
@@ -1496,25 +1500,15 @@
     transform: translate(-50%, -50%);
     object-fit: cover;
     z-index: 0;
-    opacity: 0.55;
+    opacity: 1;
     pointer-events: none;
     /* Smooth-out for the loop hard-cut: JS toggles .is-fading on the
        last 0.4s of each cycle so the seek-back is masked by a fade. */
-    transition: opacity 0.4s ease;
+    transition: opacity 0.45s ease;
   }
   .pricing-video.is-fading { opacity: 0; }
-  /* Light teal scrim — barely there (75% lighter than the previous deep
-     overlay), letting the pebble-beach video read through clearly. The
-     frosted-glass cards do most of the legibility work. */
-  .pricing-overlay {
-    position: absolute; inset: 0;
-    background: linear-gradient(160deg,
-      rgba(31, 92, 84, 0.16) 0%,
-      rgba(31, 92, 84, 0.12) 45%,
-      rgba(45, 122, 112, 0.14) 100%);
-    z-index: 1;
-    pointer-events: none;
-  }
+  /* Video plays raw, no scrim — frosted-glass cards do all the legibility
+     work via their backdrop-filter blur. */
   .pricing-inner {
     position: relative; z-index: 2;
     max-width: 1060px; margin: 0 auto;
@@ -1543,12 +1537,11 @@
     gap: 18px;
     justify-content: center;
   }
-  /* Translucent cards — no backdrop blur so the pebble-beach video stays
-     crisp through the cards. White at ~62% gives enough opacity for legible
-     text; backdrop-filter: saturate alone keeps a hint of glass tint without
-     softening the video underneath. */
+  /* Frosted-glass cards: translucent so the pebble video shows through,
+     with a moderate backdrop blur for that "frosted" feel without
+     completely obliterating the video texture. */
   .pricing-card {
-    background: rgba(255,255,255,0.62);
+    background: rgba(255,255,255,0.55);
     color: var(--charcoal);
     border-radius: 18px;
     padding: 22px 22px 20px;
@@ -1556,8 +1549,8 @@
       0 12px 36px rgba(31,92,84,0.22),
       0 0 0 1px rgba(255,255,255,0.45) inset;
     display: flex; flex-direction: column;
-    backdrop-filter: saturate(130%);
-    -webkit-backdrop-filter: saturate(130%);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
     transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
   }
   .pricing-card:hover {
@@ -2788,7 +2781,6 @@
   <video class="pricing-video" autoplay muted loop playsinline>
     <source src="assets/pebble-beach-bg.mp4" type="video/mp4">
   </video>
-  <div class="pricing-overlay"></div>
   <div class="pricing-inner">
     <div class="pricing-header">
       <div class="feature-label">Pricing</div>
@@ -3069,27 +3061,25 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
   }
 });
 
-// Pricing video — soften the loop seek-back with a quick fade. CSS sets
-// `transition: opacity 0.4s` on .pricing-video; we toggle .is-fading on the
-// last 0.4s of each cycle, then remove it on the `seeked` event when the
-// video jumps back to 0. Net effect: a soft pulse instead of a hard cut.
+// Looping video smooth-out — toggles .is-fading on the last ~0.4s of each
+// cycle so the seek-back to t=0 is masked by a soft fade. CSS sets
+// transition: opacity 0.45s on each video. 'seeked' fires when loop jumps
+// back; we remove the class then. Applies to .hero-video AND .pricing-video.
 (function () {
-  const video = document.querySelector('.pricing-video');
-  if (!video) return;
-  let fading = false;
-  function tick() {
-    if (!isFinite(video.duration) || video.duration <= 0) return;
-    const remaining = video.duration - video.currentTime;
-    if (remaining < 0.4 && !fading) {
-      fading = true;
-      video.classList.add('is-fading');
-    }
-  }
-  video.addEventListener('timeupdate', tick, { passive: true });
-  // 'seeked' fires when loop jumps back to t=0 (Safari, Chrome, FF all do this)
-  video.addEventListener('seeked', () => {
-    fading = false;
-    video.classList.remove('is-fading');
+  document.querySelectorAll('.hero-video, .pricing-video').forEach(function (video) {
+    let fading = false;
+    video.addEventListener('timeupdate', function () {
+      if (!isFinite(video.duration) || video.duration <= 0) return;
+      const remaining = video.duration - video.currentTime;
+      if (remaining < 0.4 && !fading) {
+        fading = true;
+        video.classList.add('is-fading');
+      }
+    }, { passive: true });
+    video.addEventListener('seeked', function () {
+      fading = false;
+      video.classList.remove('is-fading');
+    });
   });
 })();
 
