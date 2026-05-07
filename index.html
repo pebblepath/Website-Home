@@ -80,10 +80,11 @@
 <!-- Canonical -->
 <link rel="canonical" href="https://pebblepath.ai/">
 
-<!-- Self-hosted font preloads — these all use font-display: optional, so
-     pre-fetching them here gets them onto the page before first paint
-     and eliminates the FOUT cycle. Only above-the-fold weights are
-     preloaded; the rest load lazily via @font-face below. -->
+<!-- Self-hosted font preloads — pre-fetching these gets them onto the
+     page before first paint, paired with font-display: block so we
+     never render in the wrong fallback font. Only the above-the-fold
+     critical weights are preloaded; the rest load lazily via @font-face
+     below when they're first needed. -->
 <link rel="preload" as="font" type="font/ttf"   href="assets/Ponari.ttf"             crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400.woff2"  crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-600.woff2"  crossorigin>
@@ -96,20 +97,15 @@
      across 9 weights, vs the previous Google Fonts request which was
      async-loaded and caused a visible flash on hard refresh.
 
-     font-display: optional means: if the font isn't ready before the
-     first paint window (~100ms), the fallback is used and we NEVER
-     swap mid-paint. Combined with the preload links above, fonts
-     arrive in time on virtually every refresh.
+     font-display: block means the browser waits up to ~3s for the font
+     with INVISIBLE text rather than swapping in a wrong fallback (e.g.
+     headings rendering in system serif when Nunito is slow to arrive).
+     Combined with the preload links above, fonts arrive in well under
+     100ms in practice — so the invisible window is imperceptible and
+     we never show a wrong-font flash.
   ============================================================ */
 
-  /* Ponari — handwritten script wordmark, matches the iOS Welcome screen.
-     font-display: block (vs the optional we use for Nunito + Inter): the
-     wordmark is unique enough that the system 'cursive' fallback (Apple
-     Chalkboard / Brush Script MT) reads as plainly wrong. Block waits up
-     to ~3s for the font with INVISIBLE text rather than swapping in a
-     fallback. With the preload above, Ponari usually arrives in <100ms,
-     so the invisible moment is imperceptible — and we never show the
-     wrong font. */
+  /* Ponari — handwritten script wordmark, matches the iOS Welcome screen. */
   @font-face {
     font-family: 'Ponari';
     src: url('assets/Ponari.ttf') format('truetype');
@@ -117,17 +113,17 @@
   }
 
   /* Nunito — headings (rounded, friendly). */
-  @font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: optional; }
-  @font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: optional; }
-  @font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: optional; }
-  @font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-800.woff2') format('woff2'); font-weight: 800; font-style: normal; font-display: optional; }
-  @font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-900.woff2') format('woff2'); font-weight: 900; font-style: normal; font-display: optional; }
+  @font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
+  @font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
+  @font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
+  @font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-800.woff2') format('woff2'); font-weight: 800; font-style: normal; font-display: block; }
+  @font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-900.woff2') format('woff2'); font-weight: 900; font-style: normal; font-display: block; }
 
   /* Inter — body, UI, buttons (clean, geometric). */
-  @font-face { font-family: 'Inter'; src: url('assets/fonts/inter-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: optional; }
-  @font-face { font-family: 'Inter'; src: url('assets/fonts/inter-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: optional; }
-  @font-face { font-family: 'Inter'; src: url('assets/fonts/inter-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: optional; }
-  @font-face { font-family: 'Inter'; src: url('assets/fonts/inter-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: optional; }
+  @font-face { font-family: 'Inter'; src: url('assets/fonts/inter-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
+  @font-face { font-family: 'Inter'; src: url('assets/fonts/inter-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
+  @font-face { font-family: 'Inter'; src: url('assets/fonts/inter-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
+  @font-face { font-family: 'Inter'; src: url('assets/fonts/inter-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
 
   :root {
     --teal: #3D9B8F;
