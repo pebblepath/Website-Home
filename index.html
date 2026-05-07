@@ -102,11 +102,18 @@
      arrive in time on virtually every refresh.
   ============================================================ */
 
-  /* Ponari — handwritten script wordmark, matches the iOS Welcome screen. */
+  /* Ponari — handwritten script wordmark, matches the iOS Welcome screen.
+     font-display: block (vs the optional we use for Nunito + Inter): the
+     wordmark is unique enough that the system 'cursive' fallback (Apple
+     Chalkboard / Brush Script MT) reads as plainly wrong. Block waits up
+     to ~3s for the font with INVISIBLE text rather than swapping in a
+     fallback. With the preload above, Ponari usually arrives in <100ms,
+     so the invisible moment is imperceptible — and we never show the
+     wrong font. */
   @font-face {
     font-family: 'Ponari';
     src: url('assets/Ponari.ttf') format('truetype');
-    font-weight: 400; font-style: normal; font-display: optional;
+    font-weight: 400; font-style: normal; font-display: block;
   }
 
   /* Nunito — headings (rounded, friendly). */
