@@ -1558,7 +1558,7 @@
      with a moderate backdrop blur for that "frosted" feel without
      completely obliterating the video texture. */
   .pricing-card {
-    background: rgba(255,255,255,0.55);
+    background: rgba(255,255,255,0.74);
     color: var(--charcoal);
     border-radius: 18px;
     padding: 22px 22px 20px;
@@ -1571,21 +1571,21 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
   }
   .pricing-card:hover {
-    background: rgba(255,255,255,0.74);
+    background: rgba(255,255,255,0.85);
     transform: translateY(-3px);
     box-shadow:
       0 18px 48px rgba(31,92,84,0.30),
       0 0 0 1px rgba(255,255,255,0.55) inset;
   }
-  /* Premium card gets a teal-accent ring to mark it as the upsell. */
+  /* Premium card keeps the teal-accent ring as the upsell signal — same
+     surface opacity as Free so neither card reads as "darker." */
   .pricing-premium {
-    background: rgba(255,255,255,0.74);
     box-shadow:
       0 14px 40px rgba(31,92,84,0.28),
       0 0 0 2px var(--teal-light) inset;
   }
   .pricing-premium:hover {
-    background: rgba(255,255,255,0.82);
+    background: rgba(255,255,255,0.85);
   }
   .pricing-eyebrow {
     font-size: 10px; font-weight: 700;
