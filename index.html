@@ -79,16 +79,24 @@
 
 <!-- Canonical -->
 <link rel="canonical" href="https://pebblepath.ai/">
+
+<!-- Preload the Ponari wordmark font so it's ready before first paint and
+     the nav doesn't flash through fallback fonts on hard refresh. -->
+<link rel="preload" as="font" type="font/ttf" href="assets/Ponari.ttf" crossorigin>
+
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  /* Ponari — handwritten script wordmark, matches the iOS Welcome screen */
+  /* Ponari — handwritten script wordmark, matches the iOS Welcome screen.
+     font-display: optional pairs with the preload above: if Ponari loads
+     before first paint (the common case with preload), the wordmark
+     renders in Ponari from frame 1; if not, the fallback is used and we
+     never swap mid-paint — eliminating the FOUT cycle. */
   @font-face {
     font-family: 'Ponari';
-    src: url('assets/Ponari.ttf') format('truetype'),
-         url('assets/Ponari.otf') format('opentype');
+    src: url('assets/Ponari.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
-    font-display: swap;
+    font-display: optional;
   }
 
   :root {
@@ -117,9 +125,12 @@
     .hide-on-mobile { display: none; }
   }
 
-  /* Wordmark — Ponari, matches iOS Welcome screen exactly */
+  /* Wordmark — Ponari, matches iOS Welcome screen exactly. Fallback is
+     plain `cursive` (system-resident) — Nunito is intentionally NOT in
+     this chain because it's also async-loaded from Google Fonts and
+     would itself flash before Ponari arrived. */
   .pp-wordmark {
-    font-family: 'Ponari', 'Nunito', cursive;
+    font-family: 'Ponari', cursive;
     font-weight: 400;
     color: white;
     letter-spacing: 0.04em;
@@ -1494,10 +1505,9 @@
   }
 
   /* ============================================================
-     PRICING — Free + Premium two-card section, video-backed.
-     Replaces "Getting started" temporarily. Crisp design: pebble-beach
-     video underneath, soft teal scrim for legibility, two cards in a
-     glass-card style. Mobile stacks. */
+     PRICING — Free + Premium two-card section. Stillwater illustration
+     anchored at top (dark teal sky meeting the nav), frosted-glass cards
+     floating over the lighter mid-section. Mobile stacks. */
   .pricing {
     position: relative;
     padding: 88px 48px;
@@ -1528,7 +1538,6 @@
     text-align: center;
     max-width: 640px; margin: 0 auto 44px;
   }
-  /* Text colors darkened to read against the light pebble-beach photo. */
   .pricing-header .feature-label {
     color: var(--terracotta);
     margin-bottom: 10px;
@@ -2404,11 +2413,10 @@
     </div>
   </div>
 
-  <!-- Legacy stacked-card mobile fallback (now hidden by default — kept in
-       DOM as a non-JS / no-snap fallback if scroll-snap fails). -->
-  <!-- Mobile feature cards (shown only on mobile, replacing parallax).
-       Each mf-phone-inner clones from #ss-N by ID; reorder these cards +
-       change the mf-screen-N id to update the mobile narrative. -->
+  <!-- Mobile feature cards — shown only at <=768px, replacing the desktop
+       sticky-parallax pattern. Each mf-phone-inner clones from #ss-N by ID;
+       reorder these cards + change the mf-screen-N id to update the mobile
+       narrative. -->
   <div class="mobile-features">
     <div class="mobile-feature-card">
       <div class="mf-phone"><div class="mf-phone-inner" id="mf-screen-0"></div></div>
@@ -2576,8 +2584,7 @@
   </div>
 </section>
 
-<!-- PRICING — Free + Premium, video-backed. Replaces Getting Started
-     temporarily; un-comment that block (and comment this one) to revert. -->
+<!-- PRICING — Free + Premium, Stillwater illustration background. -->
 <section class="pricing reveal" id="pricing">
   <img class="pricing-bg" src="assets/stillwater-bg.jpg" alt="" aria-hidden="true">
   <div class="pricing-inner">
@@ -2621,49 +2628,6 @@
     </div>
   </div>
 </section>
-
-<!-- HOW IT WORKS — temporarily hidden (Thomas, May 2026). To restore,
-     remove the surrounding comment delimiters and comment out the
-     <section class="pricing"> block above.
-<section class="how-it-works reveal" id="how-it-works">
-  <h2>Getting started</h2>
-  <p class="how-subtitle">Set up your family in four steps.</p>
-  <div class="steps-grid">
-    <div class="step">
-      <div class="step-badge">1</div>
-      <div class="step-icon">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><path d="M12 12v6M9 15h6"/></svg>
-      </div>
-      <h3>Add your child</h3>
-      <p>Name, birthday, and any notes. Takes 30 seconds.</p>
-    </div>
-    <div class="step">
-      <div class="step-badge">2</div>
-      <div class="step-icon">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-      </div>
-      <h3>Track milestones</h3>
-      <p>Age-appropriate checklists across four developmental domains.</p>
-    </div>
-    <div class="step">
-      <div class="step-badge">3</div>
-      <div class="step-icon">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
-      </div>
-      <h3>Get smart tips</h3>
-      <p>Personalized guidance based on your child's unique pattern.</p>
-    </div>
-    <div class="step">
-      <div class="step-badge">4</div>
-      <div class="step-icon">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      </div>
-      <h3>Walk in prepared</h3>
-      <p>Export a pediatrician-ready PDF summary before every visit.</p>
-    </div>
-  </div>
-</section>
--->
 
 
 <!-- FOUNDERS — Atlassian-leadership-style: portraits over organic pebble-shape
