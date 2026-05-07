@@ -9,11 +9,20 @@
 <link rel="canonical" href="https://pebblepath.ai/privacy">
 <meta name="robots" content="index, follow">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<!-- Self-hosted font preloads — eliminates the Google Fonts FOUT cycle. -->
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400.woff2"  crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/nunito-700.woff2" crossorigin>
 
 <style>
+@font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-600.woff2') format('woff2'); font-weight: 600; font-display: optional; }
+@font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-700.woff2') format('woff2'); font-weight: 700; font-display: optional; }
+@font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-800.woff2') format('woff2'); font-weight: 800; font-display: optional; }
+@font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-900.woff2') format('woff2'); font-weight: 900; font-display: optional; }
+@font-face { font-family: 'Inter';  src: url('assets/fonts/inter-400.woff2')  format('woff2'); font-weight: 400; font-display: optional; }
+@font-face { font-family: 'Inter';  src: url('assets/fonts/inter-500.woff2')  format('woff2'); font-weight: 500; font-display: optional; }
+@font-face { font-family: 'Inter';  src: url('assets/fonts/inter-600.woff2')  format('woff2'); font-weight: 600; font-display: optional; }
+@font-face { font-family: 'Inter';  src: url('assets/fonts/inter-700.woff2')  format('woff2'); font-weight: 700; font-display: optional; }
+
 :root {
   --teal: #3D9B8F;
   --teal-dark: #2D7A70;

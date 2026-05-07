@@ -80,24 +80,47 @@
 <!-- Canonical -->
 <link rel="canonical" href="https://pebblepath.ai/">
 
-<!-- Preload the Ponari wordmark font so it's ready before first paint and
-     the nav doesn't flash through fallback fonts on hard refresh. -->
-<link rel="preload" as="font" type="font/ttf" href="assets/Ponari.ttf" crossorigin>
+<!-- Self-hosted font preloads — these all use font-display: optional, so
+     pre-fetching them here gets them onto the page before first paint
+     and eliminates the FOUT cycle. Only above-the-fold weights are
+     preloaded; the rest load lazily via @font-face below. -->
+<link rel="preload" as="font" type="font/ttf"   href="assets/Ponari.ttf"             crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-400.woff2"  crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-600.woff2"  crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/nunito-700.woff2" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  /* Ponari — handwritten script wordmark, matches the iOS Welcome screen.
-     font-display: optional pairs with the preload above: if Ponari loads
-     before first paint (the common case with preload), the wordmark
-     renders in Ponari from frame 1; if not, the fallback is used and we
-     never swap mid-paint — eliminating the FOUT cycle. */
+  /* ============================================================
+     Self-hosted webfonts. WOFF2-subsetted to Latin glyphs from the
+     OFL-licensed source TTFs at ios/.../Fonts/. Total payload ~127 KB
+     across 9 weights, vs the previous Google Fonts request which was
+     async-loaded and caused a visible flash on hard refresh.
+
+     font-display: optional means: if the font isn't ready before the
+     first paint window (~100ms), the fallback is used and we NEVER
+     swap mid-paint. Combined with the preload links above, fonts
+     arrive in time on virtually every refresh.
+  ============================================================ */
+
+  /* Ponari — handwritten script wordmark, matches the iOS Welcome screen. */
   @font-face {
     font-family: 'Ponari';
     src: url('assets/Ponari.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-    font-display: optional;
+    font-weight: 400; font-style: normal; font-display: optional;
   }
+
+  /* Nunito — headings (rounded, friendly). */
+  @font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: optional; }
+  @font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: optional; }
+  @font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: optional; }
+  @font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-800.woff2') format('woff2'); font-weight: 800; font-style: normal; font-display: optional; }
+  @font-face { font-family: 'Nunito'; src: url('assets/fonts/nunito-900.woff2') format('woff2'); font-weight: 900; font-style: normal; font-display: optional; }
+
+  /* Inter — body, UI, buttons (clean, geometric). */
+  @font-face { font-family: 'Inter'; src: url('assets/fonts/inter-400.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: optional; }
+  @font-face { font-family: 'Inter'; src: url('assets/fonts/inter-500.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: optional; }
+  @font-face { font-family: 'Inter'; src: url('assets/fonts/inter-600.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: optional; }
+  @font-face { font-family: 'Inter'; src: url('assets/fonts/inter-700.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: optional; }
 
   :root {
     --teal: #3D9B8F;
