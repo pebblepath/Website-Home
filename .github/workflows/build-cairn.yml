@@ -5,6 +5,9 @@ name: Build Cairn
 on:
   push:
     branches: [main]
+    paths:
+      - "cairn-src/**"
+      - ".github/workflows/build-cairn.yml"
   workflow_dispatch:
 
 permissions:

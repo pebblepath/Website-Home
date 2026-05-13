@@ -375,6 +375,75 @@ export class HomeScreen extends LitElement {
       gap: 18px;
     }
 
+    /* Empty state for the Coming up panel — promoted from a one-line
+       "No trips yet" to something inviting since this is the first
+       thing a fresh family sees. */
+    .empty-hero {
+      text-align: center;
+      padding: 16px 12px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .empty-icon {
+      opacity: 0.85;
+      margin-bottom: 4px;
+    }
+    .empty-title {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+    }
+    .empty-sub {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.55;
+      max-width: 420px;
+      margin-bottom: 6px;
+    }
+    .empty-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .empty-cta {
+      padding: 10px 18px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: transform 160ms ease, background-image 240ms ease, box-shadow 240ms ease;
+      min-height: 40px;
+    }
+    .empty-cta.primary {
+      background-image: var(--gradient-cta);
+      color: #fff;
+      border: 1px solid rgba(255, 248, 235, 0.22);
+      text-shadow: 0 1px 1px rgba(20, 12, 6, 0.3);
+      box-shadow:
+        0 4px 14px rgba(139, 90, 62, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    }
+    .empty-cta.primary:hover {
+      background-image: var(--gradient-cta-hover);
+    }
+    .empty-cta.ghost {
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+    }
+    .empty-cta.ghost:hover {
+      background: var(--glass-fill-strong);
+      border-color: var(--glass-border-strong);
+    }
+    .empty-cta:active {
+      transform: translateY(1px) scale(0.99);
+    }
+
     .cal-row {
       display: grid;
       grid-template-columns: 1fr 1.2fr;
@@ -1095,21 +1164,32 @@ export class HomeScreen extends LitElement {
           ${filteredTrips.length === 0
             ? html`
                 <glass-panel padding="lg" variant="strong">
-                  <div style="text-align:center;color:var(--text-secondary);padding:14px 0;font-size:14.5px;line-height:1.5;">
-                    No trips yet for this circle.<br />
-                    <button
-                      style="margin-top:10px;background:transparent;border:none;color:var(--terracotta);cursor:pointer;font:inherit;text-decoration:underline;text-underline-offset:3px;"
-                      @click=${() => this._openCreate()}
-                    >
-                      Plan your first activity
-                    </button>
-                    <span style="color:var(--text-tertiary);"> · </span>
-                    <button
-                      style="background:transparent;border:none;color:var(--terracotta);cursor:pointer;font:inherit;text-decoration:underline;text-underline-offset:3px;"
-                      @click=${() => (this._importOpen = true)}
-                    >
-                      Import from Google Calendar
-                    </button>
+                  <div class="empty-hero">
+                    <div class="empty-icon" aria-hidden="true">
+                      <svg viewBox="0 0 28 28" width="40" height="40">
+                        <defs>
+                          <linearGradient id="es-grad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#3d9b8f" />
+                            <stop offset="1" stop-color="#c67b5c" />
+                          </linearGradient>
+                        </defs>
+                        <circle cx="14" cy="14" r="13" fill="none" stroke="url(#es-grad)" stroke-width="1.5" stroke-dasharray="2 3" />
+                        <path d="M14 8v6l4 2.5" fill="none" stroke="url(#es-grad)" stroke-width="2" stroke-linecap="round" />
+                      </svg>
+                    </div>
+                    <div class="empty-title">A blank calendar — full of room.</div>
+                    <div class="empty-sub">
+                      Plan a trip, weekend, or outing — or pull what's already
+                      in your Google Calendar.
+                    </div>
+                    <div class="empty-actions">
+                      <button class="empty-cta primary" @click=${() => this._openCreate()}>
+                        + New activity
+                      </button>
+                      <button class="empty-cta ghost" @click=${() => (this._importOpen = true)}>
+                        Import from Google Calendar
+                      </button>
+                    </div>
                   </div>
                 </glass-panel>
               `
