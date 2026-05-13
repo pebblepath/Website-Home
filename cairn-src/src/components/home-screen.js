@@ -922,12 +922,10 @@ export class HomeScreen extends LitElement {
           <cairn-mark size="38"></cairn-mark>
           <div class="brand-name">Cairn</div>
         </div>
-        <div class="spacer"></div>
         <circle-switcher
           .value=${this.circle}
           @circle-change=${(e) => (this.circle = e.detail.value)}
         ></circle-switcher>
-        <div class="spacer"></div>
         <div class="who">
           <span class="label">${this.user?.displayName ?? ''}</span>
           <member-chip

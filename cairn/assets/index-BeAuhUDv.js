@@ -5537,12 +5537,10 @@ This typically indicates that your device does not have a healthy Internet conne
           <cairn-mark size="38"></cairn-mark>
           <div class="brand-name">Cairn</div>
         </div>
-        <div class="spacer"></div>
         <circle-switcher
           .value=${this.circle}
           @circle-change=${M=>this.circle=M.detail.value}
         ></circle-switcher>
-        <div class="spacer"></div>
         <div class="who">
           <span class="label">${((f=this.user)==null?void 0:f.displayName)??""}</span>
           <member-chip
@@ -6211,4 +6209,4 @@ This typically indicates that your device does not have a healthy Internet conne
           .joinCode=${this.joinCode??""}
         ></sign-in-screen>
       `}}K(Nf,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0}});customElements.define("cairn-app",Nf);
-//# sourceMappingURL=index-Dtqpd8Ig.js.map
+//# sourceMappingURL=index-BeAuhUDv.js.map
