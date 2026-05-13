@@ -286,7 +286,7 @@ export class SignInScreen extends LitElement {
                 <br /><code>${this.joinCode}</code>
               </div>`
             : ''}
-          <h1>${this.joinCode ? 'Almost there.' : 'for every shared path.'}</h1>
+          <h1>${this.joinCode ? 'Almost there.' : 'for every little adventure'}</h1>
           <p class="lede">
             ${this.joinCode
               ? 'Sign in with the Google account you use with your family. You\'ll see a preview before joining.'
