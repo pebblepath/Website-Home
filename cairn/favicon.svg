@@ -1,0 +1,23 @@
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-label="Cairn">
+  <defs>
+    <linearGradient id="f-warm" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f0e3cf"/>
+      <stop offset="0.6" stop-color="#c9b89a"/>
+      <stop offset="1" stop-color="#8b5a3e"/>
+    </linearGradient>
+    <linearGradient id="f-clay" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d99a7a"/>
+      <stop offset="1" stop-color="#8b5a3e"/>
+    </linearGradient>
+    <linearGradient id="f-sage" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#aebfa6"/>
+      <stop offset="1" stop-color="#1f5c54"/>
+    </linearGradient>
+  </defs>
+  <!-- Stacked stones, simplified vs. cairn-mark for legibility at 16px. -->
+  <ellipse cx="16" cy="27"   rx="11"  ry="3.4" fill="url(#f-warm)"/>
+  <ellipse cx="14.5" cy="21" rx="8.5" ry="3"   fill="url(#f-clay)"/>
+  <ellipse cx="17"   cy="15" rx="6.5" ry="2.5" fill="url(#f-sage)"/>
+  <ellipse cx="15"   cy="10" rx="4.5" ry="2"   fill="url(#f-warm)"/>
+  <ellipse cx="16"   cy="5.5" rx="2.8" ry="1.5" fill="url(#f-clay)"/>
+</svg>
