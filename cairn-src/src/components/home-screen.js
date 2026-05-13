@@ -254,6 +254,21 @@ export class HomeScreen extends LitElement {
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }
+    .hello .smart {
+      font-family: var(--font-display);
+      font-size: clamp(15px, 1.8vw, 18px);
+      font-weight: 600;
+      letter-spacing: -0.005em;
+      margin: 10px 0 4px;
+      color: transparent;
+      background: linear-gradient(
+        90deg,
+        var(--terracotta) 0%,
+        var(--amber-glow) 100%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
 
     section {
       margin-bottom: 32px;
@@ -582,6 +597,75 @@ export class HomeScreen extends LitElement {
     return this._liveEvents().filter((e) => e.personIds.some((id) => memberIds.has(id)));
   }
 
+  /**
+   * Smart hero greeting — returns a relative-time callout for the next
+   * notable event (ongoing trip, upcoming trip, upcoming celebration).
+   * Returns null when nothing close enough warrants a callout, in which
+   * case the dashboard falls back to the plain stat line.
+   */
+  _smartCallout() {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const dayMs = 24 * 60 * 60 * 1000;
+    const daysFromToday = (d) => Math.round((d - today) / dayMs);
+
+    // 1. Ongoing trip wins above all (you're actually in it right now).
+    for (const t of this._circleTrips()) {
+      if (!t.start || !t.end) continue;
+      const s = new Date(t.start);
+      const e = new Date(t.end);
+      s.setHours(0, 0, 0, 0);
+      e.setHours(0, 0, 0, 0);
+      if (s <= today && today <= e) {
+        const dayN = daysFromToday(s) + 1;
+        const total = daysFromToday(e) - daysFromToday(s) + 1;
+        const where = t.location?.trim() || t.title;
+        return `Day ${dayN} of ${total} in ${where}.`;
+      }
+    }
+
+    // 2. Find the soonest upcoming trip OR event, whichever is closer.
+    let best = null;
+    let bestDays = Infinity;
+
+    for (const t of this._circleTrips()) {
+      if (!t.start) continue;
+      const s = new Date(t.start);
+      s.setHours(0, 0, 0, 0);
+      const d = daysFromToday(s);
+      if (d > 0 && d < bestDays) {
+        best = { kind: 'trip', item: t };
+        bestDays = d;
+      }
+    }
+    for (const ev of this._filteredEvents()) {
+      if (!ev.date) continue;
+      const d = new Date(ev.date);
+      d.setHours(0, 0, 0, 0);
+      const delta = daysFromToday(d);
+      if (delta >= 0 && delta < bestDays) {
+        best = { kind: 'event', item: ev };
+        bestDays = delta;
+      }
+    }
+    if (!best) return null;
+
+    if (best.kind === 'trip') {
+      const where = best.item.location?.trim() || best.item.title;
+      if (bestDays === 1) return `${where} starts tomorrow.`;
+      if (bestDays <= 14) return `${where} in ${bestDays} days.`;
+      // Anything 15+ days out is still worth a quiet preview but less
+      // urgent-feeling — keep it factual.
+      if (bestDays <= 60) return `Next trip: ${where} in ${bestDays} days.`;
+      return null;
+    }
+    // Event callouts: only louder when really close.
+    if (bestDays === 0) return `${best.item.title} — today.`;
+    if (bestDays === 1) return `${best.item.title} — tomorrow.`;
+    if (bestDays <= 7) return `${best.item.title} in ${bestDays} days.`;
+    return null;
+  }
+
   _tripDensityByDay(year) {
     const map = new Map();
     for (const t of this._filteredTrips()) {
@@ -871,6 +955,10 @@ export class HomeScreen extends LitElement {
         <div class="hello">
           <div>
             <h1>Hi ${firstName}.</h1>
+            ${(() => {
+              const callout = this._smartCallout();
+              return callout ? html`<div class="smart">${callout}</div>` : '';
+            })()}
             <div class="stat">
               <span>${filteredTrips.length}</span> trip${filteredTrips.length === 1 ? '' : 's'} ahead ·
               <span>${eventsThisMonth.length}</span> celebration${eventsThisMonth.length === 1 ? '' : 's'} this month
