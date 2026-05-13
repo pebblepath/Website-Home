@@ -17,6 +17,9 @@ export class SignInScreen extends LitElement {
   }
 
   static styles = css`
+    * {
+      box-sizing: border-box;
+    }
     :host {
       display: flex;
       align-items: center;
@@ -28,12 +31,19 @@ export class SignInScreen extends LitElement {
       width: 100%;
       max-width: 440px;
     }
-    .mark {
+
+    /* Brand block: stones + wordmark on one row, companion tag below */
+    .brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 28px;
+    }
+    .mark-row {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 28px;
-      justify-content: center;
+      gap: 12px;
     }
     .mark-name {
       font-family: var(--font-pebble);
@@ -42,13 +52,48 @@ export class SignInScreen extends LitElement {
       letter-spacing: 0.04em;
       line-height: 1;
       text-shadow: 0 2px 14px rgba(0, 0, 0, 0.25);
+      /* Script font's optical center sits above its baseline — nudge down
+         so it aligns with the visual middle of the stones. */
+      transform: translateY(4px);
     }
+    .companion {
+      font-family: var(--font-nunito);
+      font-weight: 600;
+      font-size: 11.5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      /* Sits below the wordmark in a quiet, "subtitle" voice — same
+         visual move the website uses for "for every little milestone"
+         under the PebblePath wordmark. */
+    }
+    .companion::before {
+      content: '';
+      display: inline-block;
+      width: 18px;
+      height: 1px;
+      background: var(--text-tertiary);
+      vertical-align: middle;
+      margin-right: 10px;
+      opacity: 0.6;
+    }
+    .companion::after {
+      content: '';
+      display: inline-block;
+      width: 18px;
+      height: 1px;
+      background: var(--text-tertiary);
+      vertical-align: middle;
+      margin-left: 10px;
+      opacity: 0.6;
+    }
+
     h1 {
       font-family: var(--font-display);
-      font-size: clamp(30px, 5vw, 42px);
-      line-height: 1.1;
-      letter-spacing: -0.025em;
-      margin: 0 0 12px;
+      font-size: clamp(28px, 4.5vw, 38px);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin: 0 0 14px;
       text-align: center;
       background: linear-gradient(180deg, #fff 0%, rgba(255, 248, 235, 0.7) 100%);
       -webkit-background-clip: text;
@@ -67,10 +112,48 @@ export class SignInScreen extends LitElement {
       flex-direction: column;
       gap: 10px;
     }
-    .gicon {
+
+    /* Google-spec "clean" button — white background, colored G logo,
+       matches Google's branding guidelines. Distinct from the rest of
+       the app's gradient pills so it reads instantly as a sign-in
+       affordance, not a generic CTA. */
+    .google-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      padding: 13px 22px;
+      background: #fff;
+      color: #1f1f1f;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: var(--radius-pill);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-weight: 500;
+      font-size: 15px;
+      letter-spacing: -0.005em;
+      cursor: pointer;
+      min-height: 48px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+      transition: box-shadow 200ms ease, background 200ms ease, transform 160ms ease;
+    }
+    .google-btn:hover:not(:disabled) {
+      background: #f8fafd;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.24);
+    }
+    .google-btn:active:not(:disabled) {
+      transform: translateY(1px) scale(0.995);
+    }
+    .google-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+    .google-btn svg {
       width: 18px;
       height: 18px;
+      flex-shrink: 0;
     }
+
     .config-hint {
       margin-top: 18px;
       padding: 12px 14px;
@@ -139,18 +222,43 @@ export class SignInScreen extends LitElement {
     }
   }
 
-  _enterPreview() {
-    const url = new URL(window.location.href);
-    url.searchParams.set('preview', '1');
-    window.location.href = url.toString();
+  /**
+   * Google's official multi-color G logo (per Google's branding guidelines).
+   * Inlined SVG so it works offline and renders crisp at any size.
+   */
+  _renderGoogleIcon() {
+    return html`
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <path
+          fill="#EA4335"
+          d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+        />
+        <path
+          fill="#4285F4"
+          d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+        />
+        <path
+          fill="#FBBC05"
+          d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+        />
+        <path
+          fill="#34A853"
+          d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+        />
+        <path fill="none" d="M0 0h48v48H0z" />
+      </svg>
+    `;
   }
 
   render() {
     return html`
       <div class="wrap">
-        <div class="mark">
-          <cairn-mark size="52"></cairn-mark>
-          <div class="mark-name">Cairn</div>
+        <div class="brand">
+          <div class="mark-row">
+            <cairn-mark size="52"></cairn-mark>
+            <div class="mark-name">Cairn</div>
+          </div>
+          <div class="companion">PebblePath companion</div>
         </div>
         <glass-panel padding="lg" lifted variant="strong">
           ${this.joinCode
@@ -160,31 +268,21 @@ export class SignInScreen extends LitElement {
                 <br /><code>${this.joinCode}</code>
               </div>`
             : ''}
-          <h1>${this.joinCode ? 'Almost there.' : 'Where your people gather.'}</h1>
+          <h1>${this.joinCode ? 'Almost there.' : 'for every shared path.'}</h1>
           <p class="lede">
             ${this.joinCode
               ? 'Sign in with the Google account you use with your family. You\'ll see a preview before joining.'
               : 'One quiet place for trips, birthdays, and anniversaries — across your immediate and extended family.'}
           </p>
           <div class="actions">
-            <glass-button
-              variant="primary"
-              size="lg"
-              full
+            <button
+              class="google-btn"
               ?disabled=${this.busy || !isConfigured}
               @click=${this._handleSignIn}
             >
-              <svg class="gicon" viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  fill="#fff"
-                  d="M21.35 11.1H12v2.94h5.35c-.23 1.4-1.66 4.1-5.35 4.1-3.22 0-5.85-2.66-5.85-5.94S8.78 6.26 12 6.26c1.83 0 3.06.78 3.76 1.45l2.57-2.48C16.78 3.78 14.58 2.8 12 2.8 6.95 2.8 2.85 6.9 2.85 11.96S6.95 21.1 12 21.1c6.93 0 9.5-4.86 9.5-7.4 0-.5-.05-.88-.15-1.6z"
-                />
-              </svg>
+              ${this._renderGoogleIcon()}
               ${this.busy ? 'Signing in…' : 'Continue with Google'}
-            </glass-button>
-            <glass-button variant="ghost" size="lg" full @click=${this._enterPreview}>
-              Preview the app
-            </glass-button>
+            </button>
           </div>
           ${!isConfigured
             ? html`<div class="config-hint">
