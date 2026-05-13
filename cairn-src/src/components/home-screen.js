@@ -11,6 +11,7 @@ import './trip-form.js';
 import './event-form.js';
 import './manage-members-modal.js';
 import './all-trips-modal.js';
+import './import-calendar-modal.js';
 import './discover-pebblepath.js';
 import {
   mockUser,
@@ -59,6 +60,7 @@ export class HomeScreen extends LitElement {
     _displayMonth: { state: true },
     _allTripsOpen: { state: true },
     _editingFamilyName: { state: true },
+    _importOpen: { state: true },
   };
 
   constructor() {
@@ -80,6 +82,7 @@ export class HomeScreen extends LitElement {
     this._eventFormBusy = false;
     this._allTripsOpen = false;
     this._editingFamilyName = false;
+    this._importOpen = false;
     // Calendar nav state — initialized to "today" at first paint, then
     // user-controlled via prev/next or yearly month-tap.
     const t = new Date();
@@ -1082,11 +1085,16 @@ export class HomeScreen extends LitElement {
         <section>
           <div class="section-head">
             <h2>Coming up</h2>
-            ${this._circleTrips().length > 0
-              ? html`<button class="link" @click=${() => (this._allTripsOpen = true)}>
-                  All trips →
-                </button>`
-              : ''}
+            <div style="display:flex;gap:14px;align-items:baseline;">
+              <button class="link" @click=${() => (this._importOpen = true)}>
+                Import from Calendar
+              </button>
+              ${this._circleTrips().length > 0
+                ? html`<button class="link" @click=${() => (this._allTripsOpen = true)}>
+                    All trips →
+                  </button>`
+                : ''}
+            </div>
           </div>
           ${filteredTrips.length === 0
             ? html`
@@ -1098,6 +1106,13 @@ export class HomeScreen extends LitElement {
                       @click=${() => this._openCreate()}
                     >
                       Plan your first activity
+                    </button>
+                    <span style="color:var(--text-tertiary);"> · </span>
+                    <button
+                      style="background:transparent;border:none;color:var(--terracotta);cursor:pointer;font:inherit;text-decoration:underline;text-underline-offset:3px;"
+                      @click=${() => (this._importOpen = true)}
+                    >
+                      Import from Google Calendar
                     </button>
                   </div>
                 </glass-panel>
@@ -1284,6 +1299,11 @@ export class HomeScreen extends LitElement {
         }}
         @cancel=${() => (this._allTripsOpen = false)}
       ></all-trips-modal>
+
+      <import-calendar-modal
+        ?open=${this._importOpen}
+        @cancel=${() => (this._importOpen = false)}
+      ></import-calendar-modal>
     `;
   }
 }
