@@ -56,10 +56,38 @@ export { app as firebaseApp, httpsCallable };
 
 const googleProvider = isConfigured ? new GoogleAuthProvider() : null;
 if (googleProvider) {
-  // Phase 1: profile + email only. Calendar scopes added in Phase 3
-  // (gated behind a separate "Connect calendar" action so first sign-in
-  // doesn't trip the sensitive-scope consent screen).
+  // Phase 1: profile + email only. Calendar scope is added on-demand
+  // via connectGoogleCalendar() below.
   googleProvider.setCustomParameters({ prompt: 'select_account' });
+}
+
+const calendarProvider = isConfigured ? new GoogleAuthProvider() : null;
+if (calendarProvider) {
+  calendarProvider.addScope('https://www.googleapis.com/auth/calendar.readonly');
+}
+
+// Memory-only cache for the Google OAuth access token. ~60-min lifetime.
+let _calendarAccessToken = null;
+let _calendarTokenExpiresAt = 0;
+
+/** On-demand calendar scope grant + access-token return. */
+export async function connectGoogleCalendar() {
+  if (!auth || !calendarProvider) throw new Error('Firebase not configured.');
+  if (_calendarAccessToken && Date.now() < _calendarTokenExpiresAt - 60_000) {
+    return _calendarAccessToken;
+  }
+  const result = await signInWithPopup(auth, calendarProvider);
+  const credential = GoogleAuthProvider.credentialFromResult(result);
+  const token = credential?.accessToken;
+  if (!token) throw new Error("Couldn't get a Calendar access token — try again.");
+  _calendarAccessToken = token;
+  _calendarTokenExpiresAt = Date.now() + 60 * 60 * 1000;
+  return token;
+}
+
+export function clearCalendarToken() {
+  _calendarAccessToken = null;
+  _calendarTokenExpiresAt = 0;
 }
 
 export function signIn() {

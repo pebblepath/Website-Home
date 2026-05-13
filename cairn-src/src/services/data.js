@@ -200,6 +200,7 @@ class FamilyDataStore extends EventTarget {
     await deleteDoc(doc(db, 'families', this._currentFamilyId, 'familyEvents', eventId));
   }
 
+
   /**
    * Phase 3C: server-side URL preview (OG image + title scrape). Calls the
    * `previewUrl` Cloud Function in the `cairn` functions codebase.
@@ -506,6 +507,59 @@ const TRIP_GRADIENT_PALETTE = [
   'linear-gradient(135deg, #8b7bb5 0%, #c98a8a 60%, #d4a843 100%)',
   'linear-gradient(135deg, #6b9ac4 0%, #3d9b8f 100%)',
 ];
+
+/**
+ * Tier 2: fetch the user's upcoming Google Calendar events. Accepts a
+ * raw OAuth access token (from connectGoogleCalendar in firebase.js).
+ */
+export async function fetchUpcomingCalendarEvents(accessToken, daysAhead = 90, maxResults = 100) {
+  const now = new Date();
+  const future = new Date(now.getTime() + daysAhead * 24 * 60 * 60 * 1000);
+  const url = new URL('https://www.googleapis.com/calendar/v3/calendars/primary/events');
+  url.searchParams.set('timeMin', now.toISOString());
+  url.searchParams.set('timeMax', future.toISOString());
+  url.searchParams.set('maxResults', String(maxResults));
+  url.searchParams.set('singleEvents', 'true');
+  url.searchParams.set('orderBy', 'startTime');
+  const res = await fetch(url.toString(), {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(`Google Calendar: ${res.status} ${txt.slice(0, 160)}`);
+  }
+  const json = await res.json();
+  return (json.items ?? []).filter(
+    (e) => e.status !== 'cancelled' && (e.start?.date || e.start?.dateTime),
+  );
+}
+
+/**
+ * Map a Google Calendar event to a Cairn trip-shaped doc. All-day events
+ * have exclusive end.date (Google convention) — shift back one day so the
+ * displayed range matches the user's intent.
+ */
+export function normalizeCalendarEventToTrip(event, uid) {
+  const startDate = event.start?.date ?? event.start?.dateTime?.slice(0, 10) ?? '';
+  let endDate = event.end?.date ?? event.end?.dateTime?.slice(0, 10) ?? startDate;
+  if (event.start?.date && event.end?.date) {
+    const e = new Date(endDate);
+    e.setDate(e.getDate() - 1);
+    endDate = e.toISOString().slice(0, 10);
+  }
+  return {
+    title: event.summary || '(untitled)',
+    location: event.location ?? '',
+    start: startDate,
+    end: endDate,
+    attendees: uid ? [uid] : [],
+    viewers: [],
+    visibility: 'family',
+    notes: (event.description ?? '').slice(0, 1000),
+    gcalEventId: event.id,
+    gcalEventLink: event.htmlLink ?? null,
+  };
+}
 
 export function gradientForTrip(trip) {
   if (trip?.coverGradient) return trip.coverGradient;
