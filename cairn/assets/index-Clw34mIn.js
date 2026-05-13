@@ -2703,7 +2703,7 @@ var Pe=Object.defineProperty;var Ye=(o,e,t)=>e in o?Pe(o,e,{enumerable:!0,config
                 Sign in to continue — we'll show you the family next.
                 <br /><code>${this.joinCode}</code>
               </div>`:""}
-          <h1>${this.joinCode?"Almost there.":"for every shared path."}</h1>
+          <h1>${this.joinCode?"Almost there.":"for every little adventure"}</h1>
           <p class="lede">
             ${this.joinCode?"Sign in with the Google account you use with your family. You'll see a preview before joining.":"One quiet place for trips, birthdays, and anniversaries — across your immediate and extended family."}
           </p>
@@ -3929,4 +3929,4 @@ var Pe=Object.defineProperty;var Ye=(o,e,t)=>e in o?Pe(o,e,{enumerable:!0,config
           .joinCode=${this.joinCode??""}
         ></sign-in-screen>
       `}}g(Oe,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0}});customElements.define("cairn-app",Oe);
-//# sourceMappingURL=index-Bf8R-eFl.js.map
+//# sourceMappingURL=index-Clw34mIn.js.map
