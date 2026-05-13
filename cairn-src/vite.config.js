@@ -12,5 +12,21 @@ export default defineConfig(({ command }) => ({
   build: {
     outDir: 'dist',
     sourcemap: true,
+    // Peel Firebase SDK + Lit into their own chunks so they cache
+    // independently. First-load total stays the same; repeat visits +
+    // parallel HTTP/2 streams benefit when only the app code changes.
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/@firebase') || id.includes('node_modules/firebase')) {
+            return 'firebase';
+          }
+          if (id.includes('node_modules/lit') || id.includes('node_modules/@lit')) {
+            return 'lit';
+          }
+        },
+      },
+    },
+    chunkSizeWarningLimit: 800,
   },
 }));
