@@ -980,10 +980,23 @@ export class HomeScreen extends LitElement {
     const allMembers = immediate.concat(extended);
     const firstName = (this.user?.displayName ?? 'there').split(' ')[0];
     const today = new Date();
+    // "Activities this month" = trips overlapping the current month +
+    // events landing in the current month. Trip-overlap counts the trip
+    // once even if it spans multiple months.
+    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+    const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
     const eventsThisMonth = filteredEvents.filter((e) => {
       const d = new Date(e.date);
       return d.getFullYear() === today.getFullYear() && d.getMonth() === today.getMonth();
     });
+    const tripsThisMonth = this._circleTrips().filter((t) => {
+      if (!t.start || !t.end) return false;
+      const s = new Date(t.start);
+      const e = new Date(t.end);
+      if (Number.isNaN(s.getTime()) || Number.isNaN(e.getTime())) return false;
+      return s <= monthEnd && e >= monthStart;
+    });
+    const activitiesThisMonth = tripsThisMonth.length + eventsThisMonth.length;
 
     return html`
       <div class="topbar">
@@ -1036,8 +1049,7 @@ export class HomeScreen extends LitElement {
               return callout ? html`<div class="smart">${callout}</div>` : '';
             })()}
             <div class="stat">
-              <span>${filteredTrips.length}</span> trip${filteredTrips.length === 1 ? '' : 's'} ahead ·
-              <span>${eventsThisMonth.length}</span> celebration${eventsThisMonth.length === 1 ? '' : 's'} this month
+              <span>${activitiesThisMonth}</span> ${activitiesThisMonth === 1 ? 'activity' : 'activities'} this month
             </div>
             ${this.family
               ? this._editingFamilyName
