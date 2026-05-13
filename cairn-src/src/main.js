@@ -5,6 +5,7 @@ import './components/yearly-view.js';
 import './components/trip-form.js';
 import './components/event-form.js';
 import './components/manage-members-modal.js';
+import './components/all-trips-modal.js';
 import './components/discover-pebblepath.js';
 import './components/join-family-screen.js';
 import './components/sign-in-screen.js';

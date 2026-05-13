@@ -10,6 +10,7 @@ import './yearly-view.js';
 import './trip-form.js';
 import './event-form.js';
 import './manage-members-modal.js';
+import './all-trips-modal.js';
 import './discover-pebblepath.js';
 import {
   mockUser,
@@ -56,6 +57,7 @@ export class HomeScreen extends LitElement {
     _eventFormEvent: { state: true },
     _eventFormBusy: { state: true },
     _displayMonth: { state: true },
+    _allTripsOpen: { state: true },
   };
 
   constructor() {
@@ -75,6 +77,7 @@ export class HomeScreen extends LitElement {
     this._eventFormOpen = false;
     this._eventFormEvent = null;
     this._eventFormBusy = false;
+    this._allTripsOpen = false;
     // Calendar nav state — initialized to "today" at first paint, then
     // user-controlled via prev/next or yearly month-tap.
     const t = new Date();
@@ -553,7 +556,8 @@ export class HomeScreen extends LitElement {
     return [...immediate, ...extended];
   }
 
-  _filteredTrips() {
+  /** All trips for the current circle (past + future). */
+  _circleTrips() {
     const trips = this._liveTrips();
     const uid = this.user?.uid ?? 'thomas';
     if (this.circle === 'personal') {
@@ -561,6 +565,16 @@ export class HomeScreen extends LitElement {
     }
     if (this.circle === 'family') return trips.filter((t) => t.visibility !== 'extended');
     return trips;
+  }
+
+  /** Upcoming + ongoing trips only — for the "Coming up" feed. */
+  _filteredTrips() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return this._circleTrips().filter((t) => {
+      if (!t.end) return true;
+      return new Date(t.end) >= today;
+    });
   }
 
   _filteredEvents() {
@@ -870,8 +884,10 @@ export class HomeScreen extends LitElement {
         <section>
           <div class="section-head">
             <h2>Coming up</h2>
-            ${filteredTrips.length > 0
-              ? html`<button class="link" @click=${() => toast('Trip list view is coming in Phase 3.')}>All trips →</button>`
+            ${this._circleTrips().length > 0
+              ? html`<button class="link" @click=${() => (this._allTripsOpen = true)}>
+                  All trips →
+                </button>`
               : ''}
           </div>
           ${filteredTrips.length === 0
@@ -1065,6 +1081,17 @@ export class HomeScreen extends LitElement {
           this._eventFormEvent = null;
         }}
       ></event-form>
+
+      <all-trips-modal
+        ?open=${this._allTripsOpen}
+        .trips=${this._circleTrips()}
+        .members=${allMembers}
+        @edit-trip=${(e) => {
+          this._allTripsOpen = false;
+          this._openEdit(e.detail);
+        }}
+        @cancel=${() => (this._allTripsOpen = false)}
+      ></all-trips-modal>
     `;
   }
 }
