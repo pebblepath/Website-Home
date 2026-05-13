@@ -329,6 +329,35 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
+   * Sub-groups (Phase 5): create, rename, or update the member list of a
+   * named sub-group under "extended" (e.g. Grandparents, In-laws). Stored
+   * as a map on the family doc: `subGroups: { [id]: { name, memberIds } }`.
+   * Pass an `id` to update; omit for a new sub-group.
+   */
+  async saveSubGroup({ id, name, memberIds }) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    const groupId = id ?? `g_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
+    await updateDoc(doc(db, 'families', this._currentFamilyId), {
+      [`subGroups.${groupId}`]: {
+        name: name.trim(),
+        memberIds: Array.isArray(memberIds) ? [...memberIds] : [],
+        updatedAt: serverTimestamp(),
+      },
+      updatedAt: serverTimestamp(),
+    });
+    return groupId;
+  }
+
+  async deleteSubGroup(groupId) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    const { deleteField } = await import('firebase/firestore');
+    await updateDoc(doc(db, 'families', this._currentFamilyId), {
+      [`subGroups.${groupId}`]: deleteField(),
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  /**
    * Phase 3A: generate or regenerate the Cairn invite code. Caller must be
    * a PP member (rules enforce). 30-day expiry — extended-family invites
    * move on human time, not the 7-day co-parent timeline.

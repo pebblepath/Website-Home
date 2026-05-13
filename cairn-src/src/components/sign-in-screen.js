@@ -63,11 +63,13 @@ export class SignInScreen extends LitElement {
     }
     .mark-name {
       font-family: var(--font-pebble);
-      font-weight: 400;
+      font-weight: 300;
+      font-synthesis: weight;
       font-size: 44px;
       letter-spacing: 0.04em;
       line-height: 1;
-      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.25);
+      color: rgba(255, 248, 235, 0.92);
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.18);
       /* Script font's optical center sits above its baseline — nudge down
          so it aligns with the visual middle of the stones. */
       transform: translateY(4px);

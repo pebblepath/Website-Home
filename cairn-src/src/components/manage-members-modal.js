@@ -25,6 +25,8 @@ export class ManageMembersModal extends LitElement {
     immediate: { type: Array },
     extended: { type: Array },
     _busy: { state: true },
+    _newGroupName: { state: true },
+    _editingGroupId: { state: true },
   };
 
   constructor() {
@@ -34,6 +36,8 @@ export class ManageMembersModal extends LitElement {
     this.immediate = [];
     this.extended = [];
     this._busy = false;
+    this._newGroupName = '';
+    this._editingGroupId = null;
   }
 
   static styles = css`
@@ -194,10 +198,139 @@ export class ManageMembersModal extends LitElement {
       display: flex;
       justify-content: flex-end;
     }
+
+    /* Sub-groups */
+    .subgroup {
+      padding: 12px 14px;
+      border-radius: var(--radius-tile);
+      background: rgba(255, 248, 235, 0.04);
+      border: 1px solid rgba(255, 248, 235, 0.1);
+      margin-bottom: 10px;
+    }
+    .subgroup-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .subgroup-name {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 14.5px;
+      letter-spacing: -0.005em;
+    }
+    .subgroup-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .icon-btn {
+      background: transparent;
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--glass-border-strong);
+    }
+    .icon-btn.danger:hover {
+      color: var(--rose-soft);
+      border-color: rgba(201, 138, 138, 0.5);
+    }
+    .chip-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 11px 4px 4px;
+      border-radius: 999px;
+      background: rgba(255, 248, 235, 0.05);
+      border: 1px solid rgba(255, 248, 235, 0.12);
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 160ms ease;
+      margin: 0 6px 6px 0;
+    }
+    .chip-toggle:hover {
+      color: var(--text-primary);
+    }
+    .chip-toggle.on {
+      background: rgba(61, 155, 143, 0.18);
+      border-color: rgba(61, 155, 143, 0.45);
+      color: var(--text-primary);
+    }
+    .new-group-input {
+      width: 100%;
+      background: rgba(255, 248, 235, 0.06);
+      border: 1px solid rgba(255, 248, 235, 0.18);
+      border-radius: var(--radius-input);
+      padding: 9px 12px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 14.5px;
+    }
+    .new-group-input:focus {
+      outline: none;
+      border-color: var(--terracotta);
+    }
+    .add-group-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
   `;
 
   _onCancel() {
     this.dispatchEvent(new Event('cancel'));
+  }
+
+  async _createSubGroup() {
+    const name = this._newGroupName.trim();
+    if (!name || this._busy) return;
+    this._busy = true;
+    try {
+      const id = await dataStore.saveSubGroup({ name, memberIds: [] });
+      this._newGroupName = '';
+      this._editingGroupId = id; // open it for adding members
+      toast(`Sub-group "${name}" created.`);
+    } catch (e) {
+      toast(`Couldn't create: ${e.code ?? e.message}`, { duration: 5000 });
+    } finally {
+      this._busy = false;
+    }
+  }
+
+  async _toggleSubGroupMember(groupId, memberUid) {
+    const group = this.family?.subGroups?.[groupId];
+    if (!group) return;
+    const memberIds = group.memberIds ?? [];
+    const next = memberIds.includes(memberUid)
+      ? memberIds.filter((id) => id !== memberUid)
+      : [...memberIds, memberUid];
+    try {
+      await dataStore.saveSubGroup({ id: groupId, name: group.name, memberIds: next });
+    } catch (e) {
+      toast(`Couldn't update: ${e.code ?? e.message}`, { duration: 5000 });
+    }
+  }
+
+  async _deleteSubGroup(groupId, groupName) {
+    if (!confirm(`Delete the "${groupName}" sub-group?`)) return;
+    try {
+      await dataStore.deleteSubGroup(groupId);
+      if (this._editingGroupId === groupId) this._editingGroupId = null;
+      toast('Sub-group deleted.');
+    } catch (e) {
+      toast(`Couldn't delete: ${e.code ?? e.message}`, { duration: 5000 });
+    }
   }
 
   async _regenerate() {
@@ -325,6 +458,106 @@ export class ManageMembersModal extends LitElement {
                   </div>
                 `,
               )}
+
+          ${this.extended.length > 0 || Object.keys(this.family?.subGroups ?? {}).length > 0
+            ? html`
+                <h3>Sub-groups</h3>
+                ${Object.entries(this.family?.subGroups ?? {}).map(
+                  ([groupId, group]) => html`
+                    <div class="subgroup">
+                      <div class="subgroup-head">
+                        <div>
+                          <span class="subgroup-name">${group.name}</span>
+                          <span class="count">${(group.memberIds ?? []).length} ${(group.memberIds ?? []).length === 1 ? 'member' : 'members'}</span>
+                        </div>
+                        <div class="subgroup-actions">
+                          <button
+                            class="icon-btn"
+                            title=${this._editingGroupId === groupId ? 'Done' : 'Edit members'}
+                            @click=${() =>
+                              (this._editingGroupId =
+                                this._editingGroupId === groupId ? null : groupId)}
+                          >
+                            ${this._editingGroupId === groupId ? '✓' : '✎'}
+                          </button>
+                          <button
+                            class="icon-btn danger"
+                            title="Delete"
+                            @click=${() => this._deleteSubGroup(groupId, group.name)}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      </div>
+                      ${this._editingGroupId === groupId
+                        ? html`
+                            <div style="margin-top:4px;">
+                              ${this.extended.map(
+                                (m) => html`
+                                  <span
+                                    class="chip-toggle ${(group.memberIds ?? []).includes(m.uid) ? 'on' : ''}"
+                                    @click=${() => this._toggleSubGroupMember(groupId, m.uid)}
+                                  >
+                                    <member-chip
+                                      .name=${m.displayName}
+                                      .photo=${m.photoURL ?? ''}
+                                      .hue=${m.hue}
+                                      size="20"
+                                    ></member-chip>
+                                    ${m.displayName}
+                                  </span>
+                                `,
+                              )}
+                              ${this.extended.length === 0
+                                ? html`<span style="color:var(--text-tertiary);font-size:13px;">
+                                    Invite extended family first, then group them here.
+                                  </span>`
+                                : ''}
+                            </div>
+                          `
+                        : (group.memberIds ?? []).length > 0
+                        ? html`<div style="margin-top:4px;">
+                            ${(group.memberIds ?? []).map((uid) => {
+                              const m = this.extended.find((x) => x.uid === uid);
+                              if (!m) return '';
+                              return html`<span class="chip-toggle on" style="cursor:default;">
+                                <member-chip
+                                  .name=${m.displayName}
+                                  .photo=${m.photoURL ?? ''}
+                                  .hue=${m.hue}
+                                  size="20"
+                                ></member-chip>
+                                ${m.displayName}
+                              </span>`;
+                            })}
+                          </div>`
+                        : html`<div style="color:var(--text-tertiary);font-size:12.5px;margin-top:4px;">
+                            No members yet — tap ✎ to add.
+                          </div>`}
+                    </div>
+                  `,
+                )}
+                <div class="add-group-row">
+                  <input
+                    class="new-group-input"
+                    type="text"
+                    placeholder="New sub-group (e.g. Grandparents, In-laws)"
+                    .value=${this._newGroupName}
+                    @input=${(e) => (this._newGroupName = e.target.value)}
+                    @keydown=${(e) => {
+                      if (e.key === 'Enter') this._createSubGroup();
+                    }}
+                  />
+                  <glass-button
+                    variant="primary"
+                    ?disabled=${this._busy || !this._newGroupName.trim()}
+                    @click=${this._createSubGroup}
+                  >
+                    Create
+                  </glass-button>
+                </div>
+              `
+            : ''}
 
           <h3>Cairn invite code</h3>
           ${code && !codeExpired

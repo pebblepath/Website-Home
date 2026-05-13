@@ -203,12 +203,14 @@ export class HomeScreen extends LitElement {
     }
     .brand-name {
       font-family: var(--font-pebble);
-      font-weight: 400;
+      font-weight: 300;
+      font-synthesis: weight;
       font-size: 24px;
       letter-spacing: 0.04em;
       line-height: 1;
+      color: rgba(255, 248, 235, 0.94);
       transform: translateY(2px);
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.22);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
     }
     .who {
       display: flex;
