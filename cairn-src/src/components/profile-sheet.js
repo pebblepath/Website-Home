@@ -2,7 +2,19 @@ import { LitElement, html, css } from 'lit';
 import './glass-panel.js';
 import './glass-button.js';
 import './member-chip.js';
-import { signOutUser, db, doc, updateDoc, serverTimestamp, auth } from '../services/firebase.js';
+import {
+  signOutUser,
+  db,
+  doc,
+  updateDoc,
+  serverTimestamp,
+  auth,
+  storage,
+  storageRef,
+  uploadBytes,
+  getDownloadURL,
+} from '../services/firebase.js';
+import { dataStore } from '../services/data.js';
 import { toast } from '../services/toast.js';
 
 /**
@@ -24,6 +36,7 @@ export class ProfileSheet extends LitElement {
     pebbleUser: { type: Object },
     _name: { state: true },
     _savingName: { state: true },
+    _uploadingPhoto: { state: true },
   };
 
   constructor() {
@@ -33,6 +46,7 @@ export class ProfileSheet extends LitElement {
     this.pebbleUser = null;
     this._name = '';
     this._savingName = false;
+    this._uploadingPhoto = false;
   }
 
   willUpdate(changed) {
@@ -68,6 +82,48 @@ export class ProfileSheet extends LitElement {
     if (!confirm('Sign out of Cairn?')) return;
     this.dispatchEvent(new Event('cancel'));
     await signOutUser();
+  }
+
+  _triggerPhotoPicker() {
+    this.renderRoot.querySelector('#photo-file')?.click();
+  }
+
+  async _onPhotoChosen(e) {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // allow re-selecting the same file later
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast('Pick an image file (JPG, PNG, etc.).');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast('Photo is too big — keep it under 5 MB.');
+      return;
+    }
+    const uid = auth?.currentUser?.uid;
+    const familyId = dataStore.familyId;
+    if (!uid || !familyId || !storage) {
+      toast("Can't upload yet — you need to be in a family first.");
+      return;
+    }
+    this._uploadingPhoto = true;
+    try {
+      // Path matches PP's Build 14 cross-device avatar sync rule, so an
+      // upload from Cairn flows to PP iOS without extra plumbing.
+      const ref = storageRef(storage, `families/${familyId}/avatars/users/${uid}`);
+      await uploadBytes(ref, file, { contentType: file.type });
+      const url = await getDownloadURL(ref);
+      await updateDoc(doc(db, 'users', uid), {
+        profilePhotoURL: url,
+        updatedAt: serverTimestamp(),
+      });
+      toast('Photo updated.');
+    } catch (err) {
+      console.error('Photo upload failed', err);
+      toast(`Upload failed: ${err.code ?? err.message}`, { duration: 5000 });
+    } finally {
+      this._uploadingPhoto = false;
+    }
   }
 
   static styles = css`
@@ -245,10 +301,18 @@ export class ProfileSheet extends LitElement {
             ></member-chip>
             <button
               class="change-photo"
-              @click=${() => toast('Photo override comes in the next polish pass.')}
+              ?disabled=${this._uploadingPhoto}
+              @click=${this._triggerPhotoPicker}
             >
-              Change photo
+              ${this._uploadingPhoto ? 'Uploading…' : 'Change photo'}
             </button>
+            <input
+              id="photo-file"
+              type="file"
+              accept="image/*"
+              style="display:none;"
+              @change=${this._onPhotoChosen}
+            />
           </div>
 
           <div class="field">

@@ -21,6 +21,7 @@ import {
   getDocs,
 } from 'firebase/firestore';
 import { getFunctions, httpsCallable } from 'firebase/functions';
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 export {
   doc,
@@ -51,8 +52,9 @@ export const app = isConfigured ? initializeApp(firebaseConfig) : null;
 export const auth = isConfigured ? getAuth(app) : null;
 export const db = isConfigured ? getFirestore(app) : null;
 export const functions = isConfigured ? getFunctions(app, 'us-central1') : null;
+export const storage = isConfigured ? getStorage(app) : null;
 
-export { app as firebaseApp, httpsCallable };
+export { app as firebaseApp, httpsCallable, storageRef, uploadBytes, getDownloadURL };
 
 const googleProvider = isConfigured ? new GoogleAuthProvider() : null;
 if (googleProvider) {

@@ -374,9 +374,15 @@ export const dataStore = new FamilyDataStore();
  * PebblePath MVP uses file:// URLs that don't load in browsers.
  */
 export function resolvePhoto(authUser, pebbleUser) {
-  if (authUser?.photoURL) return authUser.photoURL;
+  // User-uploaded photo (Storage URL on the user doc) wins — it's an
+  // explicit choice over the default Google avatar. Cairn writes this
+  // when the user picks "Change photo" in the profile sheet; PP iOS
+  // writes it via Build 14 cross-device avatar sync. Either way, a
+  // real https URL here is the chosen photo.
   const pp = pebbleUser?.profilePhotoURL;
   if (typeof pp === 'string' && /^https?:\/\//i.test(pp)) return pp;
+  // Fallback: Google's default profile photo.
+  if (authUser?.photoURL) return authUser.photoURL;
   return null;
 }
 
