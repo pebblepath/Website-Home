@@ -39,6 +39,22 @@ export class SignInScreen extends LitElement {
       align-items: center;
       gap: 4px;
       margin-bottom: 28px;
+      animation: brandIn 720ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    @keyframes brandIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .brand {
+        animation: none;
+      }
     }
     .mark-row {
       display: flex;
