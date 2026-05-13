@@ -148,8 +148,3 @@ cairn-app {
   min-height: 100vh;
 }
 
-/* iOS safe-area for full-bleed body, plus prevent horizontal scroll. */
-html,
-body {
-  overscroll-behavior-y: none;
-}
