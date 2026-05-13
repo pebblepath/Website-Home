@@ -124,7 +124,7 @@ export class HomeScreen extends LitElement {
       padding: 0 48px;
       height: 68px;
       display: grid;
-      grid-template-columns: auto auto 1fr auto;
+      grid-template-columns: auto 1fr auto;
       align-items: center;
       column-gap: 14px;
       background: rgba(20, 12, 6, 0.42);
@@ -166,7 +166,7 @@ export class HomeScreen extends LitElement {
     }
     @media (max-width: 768px) {
       .topbar {
-        grid-template-columns: auto 1fr auto;
+        grid-template-columns: auto 1fr;
         grid-template-rows: auto auto;
         height: auto;
         padding: 10px 20px;
@@ -176,22 +176,15 @@ export class HomeScreen extends LitElement {
         grid-column: 1;
         grid-row: 1;
       }
-      .topbar .activity-btn {
+      .topbar .who {
         grid-column: 2;
         grid-row: 1;
         justify-self: end;
-      }
-      .topbar .who {
-        grid-column: 3;
-        grid-row: 1;
       }
       .topbar circle-switcher {
         grid-column: 1 / -1;
         grid-row: 2;
         justify-self: center;
-      }
-      .topbar .who .label {
-        display: none;
       }
       .activity-btn-label {
         display: none;
@@ -219,35 +212,9 @@ export class HomeScreen extends LitElement {
       align-items: center;
       gap: 10px;
     }
-    .who .label {
-      font-size: 13px;
-      color: var(--text-secondary);
-      max-width: 180px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .signout {
-      background: transparent;
-      border: 1px solid var(--glass-border);
-      color: var(--text-tertiary);
-      font: inherit;
-      font-size: 12px;
-      padding: 6px 12px;
-      border-radius: var(--radius-pill);
-      cursor: pointer;
-      transition: color 200ms ease, border-color 200ms ease;
-    }
-    .signout:hover {
-      color: var(--text-primary);
-      border-color: var(--glass-border-strong);
-    }
-    @media (max-width: 768px) {
-      .signout {
-        padding: 6px 10px;
-        font-size: 11.5px;
-      }
-    }
+    /* member-chip is now the only persistent identity affordance; tap
+       will open a profile/settings sheet in a future phase. Display
+       name + sign-out moved behind the chip — still in onAuth state. */
     .preview-banner {
       padding: 10px 24px;
       background: linear-gradient(90deg, rgba(212, 168, 67, 0.18), rgba(198, 123, 92, 0.18));
@@ -1008,31 +975,26 @@ export class HomeScreen extends LitElement {
           <cairn-mark size="38"></cairn-mark>
           <div class="brand-name">Cairn</div>
         </div>
-        <button
-          class="activity-btn"
-          @click=${() => this._openCreate()}
-          title="New activity"
-        >
-          <span aria-hidden="true">+</span>
-          <span class="activity-btn-label">Activity</span>
-        </button>
         <circle-switcher
           .value=${this.circle}
           @circle-change=${(e) => (this.circle = e.detail.value)}
         ></circle-switcher>
         <div class="who">
-          <span class="label">${this.user?.displayName ?? ''}</span>
+          <button
+            class="activity-btn"
+            @click=${() => this._openCreate()}
+            title="New activity"
+          >
+            <span aria-hidden="true">+</span>
+            <span class="activity-btn-label">Activity</span>
+          </button>
           <member-chip
             .name=${this.user?.displayName ?? 'You'}
             .photo=${this.user?.photoURL ?? ''}
             .hue=${198}
-            size="32"
+            size="36"
+            title=${`${this.user?.displayName ?? ''} — tap to manage (coming soon)`}
           ></member-chip>
-          ${this.preview
-            ? ''
-            : html`<button class="signout" @click=${() => signOutUser()} title="Sign out">
-                Sign out
-              </button>`}
         </div>
       </div>
 

@@ -72,6 +72,12 @@ export class TripForm extends LitElement {
       lodgingUrl: '',
       lodgingHost: '',
       lodgingTitle: '',
+      flightAirline: '',
+      flightNumber: '',
+      flightDepartAirport: '',
+      flightDepartTime: '',
+      flightArriveAirport: '',
+      flightArriveTime: '',
       notes: '',
     };
   }
@@ -90,6 +96,12 @@ export class TripForm extends LitElement {
       lodgingUrl: trip.lodgingUrl ?? '',
       lodgingHost: trip.lodgingHost ?? '',
       lodgingTitle: trip.lodgingTitle ?? '',
+      flightAirline: trip.flightAirline ?? '',
+      flightNumber: trip.flightNumber ?? '',
+      flightDepartAirport: trip.flightDepartAirport ?? '',
+      flightDepartTime: trip.flightDepartTime ?? '',
+      flightArriveAirport: trip.flightArriveAirport ?? '',
+      flightArriveTime: trip.flightArriveTime ?? '',
       coverImage: trip.coverImage ?? '',
       notes: trip.notes ?? '',
     };
@@ -631,6 +643,75 @@ export class TripForm extends LitElement {
                 : ''}
             </div>
           </div>
+
+          <fieldset class="flight-section">
+            <legend>Flight (optional)</legend>
+            <div class="row-2">
+              <div class="field" style="margin-bottom:0;">
+                <label>Airline</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Air France"
+                  .value=${d.flightAirline}
+                  @input=${(e) => this._set('flightAirline', e.target.value)}
+                />
+              </div>
+              <div class="field" style="margin-bottom:0;">
+                <label>Flight number</label>
+                <input
+                  type="text"
+                  placeholder="AF1234"
+                  .value=${d.flightNumber}
+                  @input=${(e) => this._set('flightNumber', e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div class="leg-label">Departure</div>
+            <div class="row-3">
+              <div class="field" style="margin-bottom:0;">
+                <input
+                  type="text"
+                  placeholder="CDG"
+                  maxlength="4"
+                  .value=${d.flightDepartAirport}
+                  @input=${(e) => this._set('flightDepartAirport', e.target.value)}
+                />
+              </div>
+              <div class="field" style="margin-bottom:0;display:flex;align-items:center;justify-content:center;color:var(--text-tertiary);font-size:18px;">→</div>
+              <div class="field" style="margin-bottom:0;">
+                <input
+                  type="datetime-local"
+                  .value=${d.flightDepartTime}
+                  @input=${(e) => this._set('flightDepartTime', e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div class="leg-label">Arrival</div>
+            <div class="row-3">
+              <div class="field" style="margin-bottom:0;">
+                <input
+                  type="text"
+                  placeholder="NCE"
+                  maxlength="4"
+                  .value=${d.flightArriveAirport}
+                  @input=${(e) => this._set('flightArriveAirport', e.target.value)}
+                />
+              </div>
+              <div class="field" style="margin-bottom:0;display:flex;align-items:center;justify-content:center;color:var(--text-tertiary);font-size:18px;">→</div>
+              <div class="field" style="margin-bottom:0;">
+                <input
+                  type="datetime-local"
+                  .value=${d.flightArriveTime}
+                  @input=${(e) => this._set('flightArriveTime', e.target.value)}
+                />
+              </div>
+            </div>
+            <div class="hint">
+              Auto-fill from confirmation email arrives in a later phase. Manual entry for now.
+            </div>
+          </fieldset>
 
           <div class="field">
             <label>Notes</label>

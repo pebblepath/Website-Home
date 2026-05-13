@@ -20,6 +20,28 @@ function formatTripForShare(t, memberMap) {
   if (t.lodgingHost || t.lodgingTitle) {
     lines.push(`Lodging: ${[t.lodgingHost, t.lodgingTitle].filter(Boolean).join(' — ')}`);
   }
+  if (t.flightNumber || t.flightAirline || t.flightDepartAirport) {
+    const parts = [];
+    const label = [t.flightAirline, t.flightNumber].filter(Boolean).join(' ');
+    if (label) parts.push(label);
+    if (t.flightDepartAirport && t.flightArriveAirport) {
+      parts.push(`${t.flightDepartAirport.toUpperCase()} → ${t.flightArriveAirport.toUpperCase()}`);
+    }
+    if (t.flightDepartTime) {
+      const dt = new Date(t.flightDepartTime);
+      if (!Number.isNaN(dt.getTime())) {
+        parts.push(
+          `Depart: ${dt.toLocaleString('en-GB', {
+            day: 'numeric',
+            month: 'short',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}`,
+        );
+      }
+    }
+    if (parts.length) lines.push(`Flight: ${parts.join(' · ')}`);
+  }
   const attendees = (t.attendees ?? [])
     .map((uid) => memberMap.get(uid)?.displayName)
     .filter(Boolean);
@@ -144,6 +166,23 @@ export class TripCard extends LitElement {
       font-weight: 500;
       color: var(--text-secondary);
     }
+    .flight-info {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .flight-info .plane {
+      color: var(--teal-pebble);
+    }
+    .flight-info .route {
+      font-family: 'SF Mono', ui-monospace, monospace;
+      font-size: 11.5px;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+    }
     .attendees {
       display: flex;
       align-items: center;
@@ -254,6 +293,15 @@ export class TripCard extends LitElement {
             ? html`<div class="lodging">
                 ${t.lodgingHost ? html`<span class="pill">${t.lodgingHost}</span>` : ''}
                 <span>${t.lodgingTitle || t.lodgingUrl || ''}</span>
+              </div>`
+            : ''}
+          ${t.flightNumber || t.flightDepartAirport
+            ? html`<div class="flight-info">
+                <span class="plane">✈</span>
+                <span>${[t.flightAirline, t.flightNumber].filter(Boolean).join(' ')}</span>
+                ${t.flightDepartAirport && t.flightArriveAirport
+                  ? html`<span class="route">${t.flightDepartAirport.toUpperCase()} → ${t.flightArriveAirport.toUpperCase()}</span>`
+                  : ''}
               </div>`
             : ''}
           <div class="footer">
