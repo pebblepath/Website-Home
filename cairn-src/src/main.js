@@ -7,6 +7,7 @@ import './components/event-form.js';
 import './components/manage-members-modal.js';
 import './components/all-trips-modal.js';
 import './components/import-calendar-modal.js';
+import './components/profile-sheet.js';
 import './components/discover-pebblepath.js';
 import './components/join-family-screen.js';
 import './components/sign-in-screen.js';

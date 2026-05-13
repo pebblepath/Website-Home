@@ -12,6 +12,7 @@ import './event-form.js';
 import './manage-members-modal.js';
 import './all-trips-modal.js';
 import './import-calendar-modal.js';
+import './profile-sheet.js';
 import './discover-pebblepath.js';
 import {
   mockUser,
@@ -61,6 +62,7 @@ export class HomeScreen extends LitElement {
     _allTripsOpen: { state: true },
     _editingFamilyName: { state: true },
     _importOpen: { state: true },
+    _profileOpen: { state: true },
   };
 
   constructor() {
@@ -83,6 +85,7 @@ export class HomeScreen extends LitElement {
     this._allTripsOpen = false;
     this._editingFamilyName = false;
     this._importOpen = false;
+    this._profileOpen = false;
     // Calendar nav state — initialized to "today" at first paint, then
     // user-controlled via prev/next or yearly month-tap.
     const t = new Date();
@@ -212,9 +215,22 @@ export class HomeScreen extends LitElement {
       align-items: center;
       gap: 10px;
     }
-    /* member-chip is now the only persistent identity affordance; tap
-       will open a profile/settings sheet in a future phase. Display
-       name + sign-out moved behind the chip — still in onAuth state. */
+    .avatar-tap {
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      border-radius: 999px;
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+    .avatar-tap:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 0 3px rgba(255, 248, 235, 0.14);
+    }
+    .avatar-tap:focus-visible {
+      outline: 2px solid var(--terracotta);
+      outline-offset: 2px;
+    }
     .preview-banner {
       padding: 10px 24px;
       background: linear-gradient(90deg, rgba(212, 168, 67, 0.18), rgba(198, 123, 92, 0.18));
@@ -988,13 +1004,19 @@ export class HomeScreen extends LitElement {
             <span aria-hidden="true">+</span>
             <span class="activity-btn-label">Activity</span>
           </button>
-          <member-chip
-            .name=${this.user?.displayName ?? 'You'}
-            .photo=${this.user?.photoURL ?? ''}
-            .hue=${198}
-            size="36"
-            title=${`${this.user?.displayName ?? ''} — tap to manage (coming soon)`}
-          ></member-chip>
+          <button
+            class="avatar-tap"
+            @click=${() => (this._profileOpen = true)}
+            title="${this.user?.displayName ?? 'Profile'} — open settings"
+            aria-label="Open profile settings"
+          >
+            <member-chip
+              .name=${this.user?.displayName ?? 'You'}
+              .photo=${this.user?.photoURL ?? ''}
+              .hue=${198}
+              size="36"
+            ></member-chip>
+          </button>
         </div>
       </div>
 
@@ -1266,6 +1288,13 @@ export class HomeScreen extends LitElement {
         ?open=${this._importOpen}
         @cancel=${() => (this._importOpen = false)}
       ></import-calendar-modal>
+
+      <profile-sheet
+        ?open=${this._profileOpen}
+        .user=${this.user}
+        .pebbleUser=${this.pebbleUser}
+        @cancel=${() => (this._profileOpen = false)}
+      ></profile-sheet>
     `;
   }
 }
