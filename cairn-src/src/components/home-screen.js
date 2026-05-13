@@ -58,6 +58,7 @@ export class HomeScreen extends LitElement {
     _eventFormBusy: { state: true },
     _displayMonth: { state: true },
     _allTripsOpen: { state: true },
+    _editingFamilyName: { state: true },
   };
 
   constructor() {
@@ -78,10 +79,31 @@ export class HomeScreen extends LitElement {
     this._eventFormEvent = null;
     this._eventFormBusy = false;
     this._allTripsOpen = false;
+    this._editingFamilyName = false;
     // Calendar nav state — initialized to "today" at first paint, then
     // user-controlled via prev/next or yearly month-tap.
     const t = new Date();
     this._displayMonth = new Date(t.getFullYear(), t.getMonth(), 1);
+  }
+
+  async _saveFamilyName(e) {
+    const input = e.target;
+    const newName = (input.value ?? '').trim();
+    const current = this.family?.name ?? '';
+    if (newName && newName !== current && this.family?.id) {
+      try {
+        const { db, doc, updateDoc, serverTimestamp } = await import('../services/firebase.js');
+        await updateDoc(doc(db, 'families', this.family.id), {
+          name: newName,
+          updatedAt: serverTimestamp(),
+        });
+        toast('Family name updated.');
+      } catch (err) {
+        console.error('Update family name failed:', err);
+        toast(`Couldn't save: ${err.code ?? err.message}`, { duration: 5000 });
+      }
+    }
+    this._editingFamilyName = false;
   }
 
   static styles = css`
@@ -99,9 +121,9 @@ export class HomeScreen extends LitElement {
       padding: 0 48px;
       height: 68px;
       display: grid;
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: auto auto 1fr auto;
       align-items: center;
-      column-gap: 16px;
+      column-gap: 14px;
       background: rgba(20, 12, 6, 0.42);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
@@ -113,9 +135,35 @@ export class HomeScreen extends LitElement {
     .topbar .who {
       justify-self: end;
     }
+    .activity-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      background-image: var(--gradient-cta);
+      color: #fff;
+      border: 1px solid rgba(255, 248, 235, 0.22);
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 13.5px;
+      letter-spacing: -0.005em;
+      text-shadow: 0 1px 1px rgba(20, 12, 6, 0.3);
+      box-shadow:
+        0 4px 14px rgba(139, 90, 62, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+      transition: background-image 240ms ease, transform 160ms ease, box-shadow 240ms ease;
+    }
+    .activity-btn:hover {
+      background-image: var(--gradient-cta-hover);
+    }
+    .activity-btn:active {
+      transform: translateY(1px) scale(0.98);
+    }
     @media (max-width: 768px) {
       .topbar {
-        grid-template-columns: auto 1fr;
+        grid-template-columns: auto 1fr auto;
         grid-template-rows: auto auto;
         height: auto;
         padding: 10px 20px;
@@ -125,8 +173,13 @@ export class HomeScreen extends LitElement {
         grid-column: 1;
         grid-row: 1;
       }
-      .topbar .who {
+      .topbar .activity-btn {
         grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+      }
+      .topbar .who {
+        grid-column: 3;
         grid-row: 1;
       }
       .topbar circle-switcher {
@@ -136,6 +189,12 @@ export class HomeScreen extends LitElement {
       }
       .topbar .who .label {
         display: none;
+      }
+      .activity-btn-label {
+        display: none;
+      }
+      .activity-btn {
+        padding: 8px 12px;
       }
     }
     .brand {
@@ -253,6 +312,31 @@ export class HomeScreen extends LitElement {
       margin-top: 6px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
+      cursor: pointer;
+      padding: 2px 4px;
+      margin-left: -4px;
+      border-radius: 4px;
+      transition: background 160ms ease, color 160ms ease;
+    }
+    .hello .family-name:hover {
+      color: var(--text-secondary);
+      background: rgba(255, 248, 235, 0.05);
+    }
+    .hello .family-name-input {
+      color: var(--text-primary);
+      font-size: 13px;
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-family: var(--font-body);
+      font-weight: 500;
+      background: rgba(255, 248, 235, 0.08);
+      border: 1px solid rgba(255, 248, 235, 0.25);
+      border-radius: 4px;
+      padding: 2px 6px;
+      margin-left: -6px;
+      outline: none;
+      min-width: 200px;
     }
     .hello .smart {
       font-family: var(--font-display);
@@ -504,18 +588,6 @@ export class HomeScreen extends LitElement {
       text-underline-offset: 3px;
     }
 
-    .fab {
-      position: fixed;
-      bottom: calc(24px + env(safe-area-inset-bottom));
-      right: calc(24px + env(safe-area-inset-right));
-      z-index: 20;
-    }
-    @media (max-width: 480px) {
-      .fab {
-        bottom: calc(16px + env(safe-area-inset-bottom));
-        right: 16px;
-      }
-    }
   `;
 
   _liveImmediate() {
@@ -590,6 +662,17 @@ export class HomeScreen extends LitElement {
       if (!t.end) return true;
       return new Date(t.end) >= today;
     });
+  }
+
+  /** Trip visibility resolver — true if the viewer should see it given
+   *  the trip's visibility ring, attendees, and explicit viewers list. */
+  _userCanSeeTrip(trip) {
+    const uid = this.user?.uid;
+    if (!uid) return false;
+    if (trip.attendees?.includes(uid)) return true;
+    if (trip.viewers?.includes(uid)) return true;
+    if (trip.visibility === 'family' || trip.visibility === 'extended') return true;
+    return false;
   }
 
   _filteredEvents() {
@@ -922,6 +1005,14 @@ export class HomeScreen extends LitElement {
           <cairn-mark size="38"></cairn-mark>
           <div class="brand-name">Cairn</div>
         </div>
+        <button
+          class="activity-btn"
+          @click=${() => this._openCreate()}
+          title="New activity"
+        >
+          <span aria-hidden="true">+</span>
+          <span class="activity-btn-label">Activity</span>
+        </button>
         <circle-switcher
           .value=${this.circle}
           @circle-change=${(e) => (this.circle = e.detail.value)}
@@ -961,8 +1052,29 @@ export class HomeScreen extends LitElement {
               <span>${filteredTrips.length}</span> trip${filteredTrips.length === 1 ? '' : 's'} ahead ·
               <span>${eventsThisMonth.length}</span> celebration${eventsThisMonth.length === 1 ? '' : 's'} this month
             </div>
-            ${this.family?.name
-              ? html`<div class="family-name">${this.family.name}</div>`
+            ${this.family
+              ? this._editingFamilyName
+                ? html`<input
+                    class="family-name-input"
+                    type="text"
+                    .value=${this.family.name ?? ''}
+                    autofocus
+                    @blur=${this._saveFamilyName}
+                    @keydown=${(e) => {
+                      if (e.key === 'Enter') e.target.blur();
+                      if (e.key === 'Escape') {
+                        e.target.value = this.family.name ?? '';
+                        this._editingFamilyName = false;
+                      }
+                    }}
+                  />`
+                : html`<div
+                    class="family-name"
+                    title="Click to rename"
+                    @click=${() => (this._editingFamilyName = true)}
+                  >
+                    ${this.family.name || 'Tap to name your family'}
+                  </div>`
               : ''}
           </div>
         </div>
@@ -985,7 +1097,7 @@ export class HomeScreen extends LitElement {
                       style="margin-top:10px;background:transparent;border:none;color:var(--terracotta);cursor:pointer;font:inherit;text-decoration:underline;text-underline-offset:3px;"
                       @click=${() => this._openCreate()}
                     >
-                      Plan your first trip
+                      Plan your first activity
                     </button>
                   </div>
                 </glass-panel>
@@ -1124,12 +1236,6 @@ export class HomeScreen extends LitElement {
 
         <discover-pebblepath></discover-pebblepath>
       </main>
-
-      <div class="fab">
-        <glass-button variant="primary" size="lg" @click=${() => this._openCreate()}>
-          + New trip
-        </glass-button>
-      </div>
 
       <trip-form
         ?open=${this._formOpen}

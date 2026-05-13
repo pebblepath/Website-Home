@@ -1,6 +1,33 @@
 import { LitElement, html, css } from 'lit';
 import './member-chip.js';
 import { gradientForTrip } from '../services/data.js';
+import { toast } from '../services/toast.js';
+
+/**
+ * Format a trip as plain text for sharing via Web Share / clipboard.
+ */
+function formatTripForShare(t, memberMap) {
+  const lines = [];
+  lines.push(t.title || 'Cairn activity');
+  if (t.location) lines.push(t.location);
+  if (t.start && t.end) {
+    const s = new Date(t.start);
+    const e = new Date(t.end);
+    const sm = s.toLocaleString('en-GB', { day: 'numeric', month: 'short' });
+    const em = e.toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    lines.push(t.start === t.end ? em : `${sm} – ${em}`);
+  }
+  if (t.lodgingHost || t.lodgingTitle) {
+    lines.push(`Lodging: ${[t.lodgingHost, t.lodgingTitle].filter(Boolean).join(' — ')}`);
+  }
+  const attendees = (t.attendees ?? [])
+    .map((uid) => memberMap.get(uid)?.displayName)
+    .filter(Boolean);
+  if (attendees.length) lines.push(`With: ${attendees.join(', ')}`);
+  if (t.notes) lines.push('', t.notes);
+  lines.push('', 'Shared from Cairn · pebblepath.ai/cairn');
+  return lines.join('\n');
+}
 
 /**
  * Trip card. Cover area uses lodging image when present, else a gradient.
@@ -129,6 +156,36 @@ export class TripCard extends LitElement {
       font-size: 12px;
       color: var(--text-tertiary);
     }
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .share-btn {
+      background: rgba(255, 248, 235, 0.06);
+      border: 1px solid rgba(255, 248, 235, 0.14);
+      color: var(--text-secondary);
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: color 200ms ease, border-color 200ms ease, background 200ms ease;
+    }
+    .share-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--glass-border-strong);
+      background: rgba(255, 248, 235, 0.1);
+    }
+    .share-btn svg {
+      width: 15px;
+      height: 15px;
+    }
   `;
 
   _fmtDates(start, end) {
@@ -140,6 +197,28 @@ export class TripCard extends LitElement {
       return `${s.getDate()}–${e.getDate()} ${sm}`;
     }
     return `${s.getDate()} ${sm} – ${e.getDate()} ${em}`;
+  }
+
+  async _onShare(t, memberMap, e) {
+    e.stopPropagation(); // don't trigger card edit
+    const text = formatTripForShare(t, memberMap);
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Cairn — ${t.title ?? 'activity'}`,
+          text,
+        });
+      } catch {
+        /* user cancelled the share sheet */
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(text);
+        toast('Itinerary copied to clipboard.');
+      } catch {
+        toast('Could not copy — try again from a browser tab.');
+      }
+    }
   }
 
   render() {
@@ -177,11 +256,25 @@ export class TripCard extends LitElement {
                 <span>${t.lodgingTitle || t.lodgingUrl || ''}</span>
               </div>`
             : ''}
-          <div class="attendees">
-            ${shown.map(
-              (m) => html`<member-chip name=${m.displayName} .hue=${m.hue} size="28"></member-chip>`,
-            )}
-            ${overflow > 0 ? html`<span class="more">+${overflow}</span>` : ''}
+          <div class="footer">
+            <div class="attendees">
+              ${shown.map(
+                (m) => html`<member-chip name=${m.displayName} .hue=${m.hue} size="28"></member-chip>`,
+              )}
+              ${overflow > 0 ? html`<span class="more">+${overflow}</span>` : ''}
+            </div>
+            <button
+              class="share-btn"
+              title="Share itinerary"
+              aria-label="Share itinerary"
+              @click=${(e) => this._onShare(t, memberMap, e)}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                <polyline points="16 6 12 2 8 6" />
+                <line x1="12" y1="2" x2="12" y2="15" />
+              </svg>
+            </button>
           </div>
         </div>
       </article>

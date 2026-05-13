@@ -68,6 +68,7 @@ export class TripForm extends LitElement {
       end: today,
       visibility: 'family',
       attendees: this.currentUid ? [this.currentUid] : [],
+      viewers: [],
       lodgingUrl: '',
       lodgingHost: '',
       lodgingTitle: '',
@@ -85,6 +86,7 @@ export class TripForm extends LitElement {
       end: trip.end ?? trip.start ?? new Date().toISOString().slice(0, 10),
       visibility: trip.visibility ?? 'family',
       attendees: Array.isArray(trip.attendees) ? [...trip.attendees] : [],
+      viewers: Array.isArray(trip.viewers) ? [...trip.viewers] : [],
       lodgingUrl: trip.lodgingUrl ?? '',
       lodgingHost: trip.lodgingHost ?? '',
       lodgingTitle: trip.lodgingTitle ?? '',
@@ -487,7 +489,7 @@ export class TripForm extends LitElement {
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
           <div class="header">
-            <h2>${isEdit ? 'Edit trip' : 'New trip'}</h2>
+            <h2>${isEdit ? 'Edit activity' : 'New activity'}</h2>
             <button class="close" @click=${this._onCancel} aria-label="Close">×</button>
           </div>
 
@@ -602,6 +604,35 @@ export class TripForm extends LitElement {
           </div>
 
           <div class="field">
+            <label>Also visible to <span style="text-transform:none;font-weight:400;color:var(--text-tertiary);letter-spacing:0.01em;">(without going)</span></label>
+            <div class="attendees">
+              ${this.members
+                .filter((m) => !d.attendees.includes(m.uid))
+                .map(
+                  (m) => html`
+                    <div
+                      class="att-chip ${(d.viewers ?? []).includes(m.uid) ? 'on' : ''}"
+                      @click=${() => this._toggleViewer(m.uid)}
+                    >
+                      <member-chip
+                        .name=${m.displayName}
+                        .photo=${m.photoURL ?? ''}
+                        .hue=${m.hue}
+                        size="22"
+                      ></member-chip>
+                      ${m.displayName}
+                    </div>
+                  `,
+                )}
+              ${this.members.filter((m) => !d.attendees.includes(m.uid)).length === 0
+                ? html`<span style="color:var(--text-tertiary);font-size:13px;">
+                    Everyone is going — no extra viewers needed.
+                  </span>`
+                : ''}
+            </div>
+          </div>
+
+          <div class="field">
             <label>Notes</label>
             <textarea
               placeholder="Reservations, packing list, who's bringing what…"
@@ -623,7 +654,7 @@ export class TripForm extends LitElement {
               Cancel
             </glass-button>
             <glass-button variant="primary" @click=${this._onSave} ?disabled=${this.busy}>
-              ${this.busy ? 'Saving…' : isEdit ? 'Save changes' : 'Create trip'}
+              ${this.busy ? 'Saving…' : isEdit ? 'Save changes' : 'Create activity'}
             </glass-button>
           </div>
         </glass-panel>
