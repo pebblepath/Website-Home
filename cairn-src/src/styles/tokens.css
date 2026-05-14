@@ -36,11 +36,14 @@
   --gradient-cta: linear-gradient(135deg, #c67b5c 0%, #8b5a3e 100%);
   --gradient-cta-hover: linear-gradient(135deg, #d18a6c 0%, #a06a48 100%);
 
-  /* Calendar accents — bright, readable on the dusk background */
-  --today-bg: linear-gradient(135deg, #4a90e2 0%, #2a6fb8 100%);
-  --today-fg: #fff;
-  --trip-day-bg: rgba(61, 155, 143, 0.55);
-  --trip-day-bg-strong: rgba(61, 155, 143, 0.75);
+  /* Calendar accents — bright, readable on the dusk background.
+     "Today" reverted to the original warm-sun orange (user preferred it).
+     Trip days switched from sage-green to bright blue so they read
+     distinctly from the warm Today indicator and pop on dark bg. */
+  --today-bg: var(--gradient-warmsun);
+  --today-fg: var(--charcoal);
+  --trip-day-bg: rgba(74, 144, 226, 0.55);
+  --trip-day-bg-strong: rgba(74, 144, 226, 0.78);
 
   /* ── Frosted glass primitives (warm-tinted) ──────────────────── */
   --glass-fill: rgba(255, 248, 235, 0.06);

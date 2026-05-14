@@ -284,6 +284,36 @@
   }
   .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.22); }
   .nav-cta svg { width: 16px; height: 16px; flex-shrink: 0; }
+  /* 2026-05-14 — translucent Login pill paired with the terracotta
+     Download pill. Same shape + size as nav-cta so they read as a
+     button cluster; ghost styling keeps Download as the primary
+     visual emphasis. */
+  .nav-login {
+    display: inline-flex; align-items: center;
+    padding: 9px 18px; border-radius: 50px;
+    background: rgba(255, 255, 255, 0.12);
+    color: white !important;
+    font-weight: 600 !important; font-size: 13px !important;
+    letter-spacing: 0.2px;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  .nav-login:hover {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+  }
+  /* Download pill — override the white default into terracotta when
+     it's part of the two-button cluster (alongside Login) so the
+     primary action carries brand weight. */
+  .nav-links .nav-cta {
+    background: var(--terracotta, #c67b5c);
+    color: white !important;
+  }
+  .nav-links .nav-cta:hover {
+    background: var(--terracotta-dark, #b56a4c);
+  }
 
   /* HERO */
   .hero {
@@ -2180,13 +2210,17 @@
   <a href="#" class="nav-logo" aria-label="PebblePath home">
     <img src="assets/app-icon.png" alt="PebblePath" class="nav-logo-icon">
   </a>
-  <!-- 2026-05-13: desktop nav collapsed to a single "Login" entry that
-       takes the user straight to Cairn (where Google sign-in lives).
-       The previous Features/The App/Insights/Founders anchors are
-       still navigable via the mobile menu overlay below. -->
+  <!-- 2026-05-14: desktop nav now shows BOTH affordances — "Login"
+       (translucent ghost pill → Cairn web sign-in) and "Download"
+       (terracotta primary pill → App Store) — same hierarchy as the
+       mobile menu so the two surfaces match. -->
   <div class="nav-links" id="nav-links">
-    <a href="/cairn/" class="nav-cta">
+    <a href="/cairn/" class="nav-login">
       Login
+    </a>
+    <a href="https://apps.apple.com/app/pebblepath-ai/" class="nav-cta" target="_blank" rel="noopener">
+      <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM248.6 84.7c33.5-39.8 30.4-76 29.4-89-29.6 1.7-63.8 20.1-83.3 42.7-21.5 24.2-34.1 54.1-31.4 87.6 32 2.5 61.1-13.9 85.3-41.3z"/></svg>
+      Download
     </a>
   </div>
   <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -2285,7 +2319,7 @@
         </svg>
       </div>
       <h3>Family Portal</h3>
-      <p>Cairn — the web companion for shared trips, weekend plans, birthdays &amp; anniversaries. Invite extended family without exposing your child's milestones.</p>
+      <p>Shared trips, weekend plans, birthdays &amp; anniversaries. Invite extended family to keep everyone organised.</p>
     </div>
   </div>
 </section>
@@ -2504,7 +2538,7 @@
         </li>
         <li>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          <span><b>Family Portal</b> &mdash; <a href="/cairn/" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Cairn</a>, the shared web companion for trips, weekend plans &amp; family celebrations.</span>
+          <span><b><a href="/cairn/" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Family Portal</a></b> &mdash; Shared trips, weekend plans, birthdays &amp; anniversaries.</span>
         </li>
         <li>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>

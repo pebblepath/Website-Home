@@ -127,16 +127,18 @@ export class HomeScreen extends LitElement {
       min-height: 100vh;
     }
     .topbar {
-      /* Padding + height match PebblePath website's <nav> exactly so the
-         logo sits at the same screen coordinates when tabbing between
-         pebblepath.ai and pebblepath.ai/cairn. */
+      /* Padding + height match PebblePath website's <nav> exactly.
+         Three-column grid where the centre column truly centres the
+         circle-switcher in the viewport, not just within the gap
+         between brand and the .who group. The two outer columns are
+         locked to equal width via the 1fr/auto-but-balanced trick. */
       position: sticky;
       top: 0;
       z-index: 10;
       padding: 0 48px;
       height: 68px;
       display: grid;
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
       column-gap: 14px;
       background: rgba(20, 12, 6, 0.42);
@@ -144,45 +146,79 @@ export class HomeScreen extends LitElement {
       -webkit-backdrop-filter: blur(28px) saturate(180%);
       border-bottom: 1px solid var(--glass-border);
     }
+    .topbar .brand {
+      justify-self: start;
+    }
     .topbar circle-switcher {
       justify-self: center;
     }
     .topbar .who {
       justify-self: end;
     }
-    .pebble-pill {
+    /* Pebble surfaces as a search-bar in the centre column (not a pill).
+       Always visible, invites a question rather than competing with the
+       + Activity primary CTA. Clicking anywhere on it opens the full
+       chat sheet, optionally pre-filling the textarea with whatever
+       was typed inline. */
+    .pebble-search {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
+      width: 320px;
+      max-width: 100%;
       padding: 7px 14px 7px 12px;
       border-radius: var(--radius-pill);
-      background: rgba(61, 155, 143, 0.18);
-      color: var(--text-primary);
-      border: 1px solid rgba(61, 155, 143, 0.42);
-      cursor: pointer;
-      font-family: var(--font-body);
-      font-weight: 600;
-      font-size: 13px;
-      letter-spacing: -0.005em;
-      transition: background 200ms ease, transform 160ms ease;
+      background: rgba(255, 248, 235, 0.08);
+      border: 1px solid var(--glass-border);
+      cursor: text;
+      transition: background 200ms ease, border-color 200ms ease;
     }
-    .pebble-pill:hover {
-      background: rgba(61, 155, 143, 0.3);
+    .pebble-search:hover,
+    .pebble-search:focus-within {
+      background: rgba(61, 155, 143, 0.14);
+      border-color: rgba(61, 155, 143, 0.4);
     }
-    .pebble-pill:active {
-      transform: translateY(1px) scale(0.98);
-    }
-    .pebble-pill svg {
-      width: 14px;
-      height: 14px;
+    .pebble-search-icon {
+      width: 16px;
+      height: 16px;
       color: var(--teal-pebble);
+      flex-shrink: 0;
+    }
+    .pebble-search-input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 14px;
+      padding: 2px 0;
+      outline: none;
+    }
+    .pebble-search-input::placeholder {
+      color: var(--text-tertiary);
+      font-style: italic;
+    }
+    .pebble-search-kbd {
+      font-family: 'SF Mono', ui-monospace, monospace;
+      font-size: 11px;
+      color: var(--text-tertiary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 248, 235, 0.06);
+      border: 1px solid rgba(255, 248, 235, 0.12);
+      flex-shrink: 0;
     }
     @media (max-width: 768px) {
-      .pebble-pill-label {
+      .pebble-search {
+        width: auto;
+        flex: 1;
+      }
+      .pebble-search-kbd {
         display: none;
       }
-      .pebble-pill {
-        padding: 7px 9px;
+      .pebble-search-input::placeholder {
+        font-size: 13px;
       }
     }
 
@@ -220,6 +256,7 @@ export class HomeScreen extends LitElement {
         padding: 10px 16px;
         height: 60px;
         column-gap: 8px;
+        grid-template-columns: auto 1fr auto;
       }
       .topbar .brand-name {
         display: none;
@@ -642,17 +679,17 @@ export class HomeScreen extends LitElement {
       color: var(--text-primary);
     }
     .cal-cell.has-trip {
-      background: rgba(61, 155, 143, 0.34);
-      border-color: rgba(61, 155, 143, 0.55);
+      background: rgba(74, 144, 226, 0.34);
+      border-color: rgba(74, 144, 226, 0.6);
       color: var(--text-primary);
     }
     .cal-cell.has-trip.has-event {
       background: linear-gradient(
         135deg,
-        rgba(61, 155, 143, 0.22) 0%,
-        rgba(212, 168, 67, 0.22) 100%
+        rgba(74, 144, 226, 0.32) 0%,
+        rgba(212, 168, 67, 0.28) 100%
       );
-      border-color: rgba(201, 138, 138, 0.4);
+      border-color: rgba(212, 168, 67, 0.5);
     }
 
     .circle-block {
@@ -1203,23 +1240,42 @@ export class HomeScreen extends LitElement {
           />
           <div class="brand-name">Cairn</div>
         </div>
-        <circle-switcher
-          .value=${this.circle}
-          @circle-change=${(e) => (this.circle = e.detail.value)}
-        ></circle-switcher>
-        <div class="who">
-          <button
-            class="pebble-pill"
-            @click=${() => (this._pebbleOpen = true)}
-            title="Ask Pebble"
+        <div
+          class="pebble-search"
+          @click=${(e) => {
+            // Clicking the bar focuses the input. If the user types and
+            // hits Enter, hand the seed query to the chat modal.
+            if (e.target.tagName !== 'INPUT') {
+              this.renderRoot.querySelector('.pebble-search-input')?.focus();
+            }
+          }}
+        >
+          <svg class="pebble-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" />
+          </svg>
+          <input
+            class="pebble-search-input"
+            type="text"
+            placeholder="Ask Pebble — weekend plans, trip ideas…"
+            @focus=${() => {
+              // Open chat sheet on focus (sheet has its own composer);
+              // blur the inline input so the modal's textarea can take
+              // focus cleanly.
+              this._pebbleOpen = true;
+              this.renderRoot.querySelector('.pebble-search-input')?.blur();
+            }}
+            @keydown=${(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                this._pebbleOpen = true;
+              }
+            }}
             aria-label="Ask Pebble"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" />
-              <circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" />
-            </svg>
-            <span class="pebble-pill-label">Pebble</span>
-          </button>
+          />
+          <span class="pebble-search-kbd">⏎</span>
+        </div>
+        <div class="who">
           <button
             class="activity-btn"
             @click=${() => this._openCreate()}

@@ -516,16 +516,16 @@ export function deriveBirthdayEvents(children) {
   const out = [];
   for (const child of children ?? []) {
     if (!child.dateOfBirth) continue;
-    // PP iOS stores dateOfBirth as a Date at local-midnight (e.g. "Oct 11
-    // 00:00 Paris"). That becomes a UTC-shifted instant in the Firestore
-    // doc ("Oct 10 22:00 UTC"). `.toISOString()` returns UTC components,
-    // which gives the day-before in eastward TZs. We use LOCAL components
-    // here so the displayed date matches what was originally entered in
-    // the PP iOS picker (assuming the user is in the same TZ both apps).
+    // Cairn writes child birthdays as `new Date("YYYY-MM-DD")` which
+    // is UTC-midnight. PP iOS may also be writing UTC-midnight in
+    // recent builds. Either way, the *intent* of the stored value is
+    // a calendar day. UTC components decode it consistently regardless
+    // of the viewer's timezone (LOCAL components drift by ±1 day when
+    // viewing from a TZ west of where the date was originally entered).
     const d = child.dateOfBirth;
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
+    const y = d.getUTCFullYear();
+    const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+    const dd = String(d.getUTCDate()).padStart(2, '0');
     out.push({
       id: `bday:${child.id}`,
       type: 'birthday',
