@@ -703,77 +703,172 @@ export class HomeScreen extends LitElement {
       color: var(--charcoal);
     }
 
-    .circle-block {
-      padding: 14px 0;
-      border-top: 1px solid rgba(255, 248, 235, 0.08);
-    }
-    .circle-block:first-child {
-      border-top: none;
-      padding-top: 0;
-    }
-    .circle-head {
+    /* ── Cairn stack: stones tapered from a single pebble at top down
+       to a wide base of sub-group stones, mirroring a real cairn. Each
+       stone is a flat lozenge (border-radius via x/y ratio) with a
+       warm-sand gradient + glass highlights, sitting on a soft cast
+       shadow so the stones feel stacked rather than floated. */
+    .cairn-stack {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
+      gap: 10px;
+      padding: 18px 6px 14px;
     }
-    .circle-head .name {
+    .stone {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 10px 18px;
+      cursor: pointer;
+      background: var(--gradient-stone);
+      border-radius: 999px / 60%;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow:
+        0 8px 16px rgba(0, 0, 0, 0.38),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -8px 18px rgba(0, 0, 0, 0.22);
+      transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 220ms ease;
+    }
+    .stone::after {
+      /* Subtle dust-grain so the stones don't read as glass */
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background-image: radial-gradient(
+        rgba(255, 255, 255, 0.06) 1px,
+        transparent 1px
+      );
+      background-size: 4px 4px;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+    .stone:hover {
+      transform: translateY(-2px) rotate(var(--lean, 0deg));
+      box-shadow:
+        0 12px 22px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45),
+        inset 0 -8px 18px rgba(0, 0, 0, 0.22);
+    }
+    .stone-self {
+      transform: rotate(-1.5deg);
+      --lean: -1.5deg;
+      padding: 8px 16px;
+    }
+    .stone-family {
+      transform: rotate(1deg);
+      --lean: 1deg;
+      min-width: 240px;
+    }
+    .stone-extended {
+      transform: rotate(-1deg);
+      --lean: -1deg;
+      min-width: 320px;
+    }
+    .stone-label {
       font-family: var(--font-display);
       font-weight: 600;
-      font-size: 15px;
+      font-size: 11px;
+      color: rgba(34, 22, 14, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      white-space: nowrap;
     }
-    .circle-head .count {
-      color: var(--text-tertiary);
-      font-size: 12px;
-      margin-left: 8px;
-      font-weight: 500;
+    .stone-chips {
+      display: inline-flex;
+      align-items: center;
     }
-    .invite-btn {
-      font-family: var(--font-body);
+    .stone-chips member-chip {
+      box-shadow: 0 0 0 2px rgba(232, 220, 200, 0.95);
+      border-radius: 999px;
+      margin-left: -8px;
+      transition: transform 180ms ease;
+    }
+    .stone-chips member-chip:first-child {
+      margin-left: 0;
+    }
+    .stone:hover .stone-chips member-chip {
+      transform: translateY(-1px);
+    }
+    .stone-more {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: rgba(34, 22, 14, 0.65);
+      margin-left: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+    /* Empty extended/subgroup stones: hollow + dashed so they invite
+       a click without looking finished. */
+    .stone-empty {
       background: transparent;
-      border: 1px solid var(--glass-border);
+      border: 1.5px dashed rgba(255, 248, 235, 0.22);
+      box-shadow: none;
+      color: var(--text-tertiary);
+      font-size: 12.5px;
+      font-style: italic;
+    }
+    .stone-empty:hover {
+      border-color: rgba(255, 248, 235, 0.4);
       color: var(--text-secondary);
-      border-radius: var(--radius-pill);
-      padding: 6px 12px;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
+      box-shadow: none;
     }
-    .invite-btn:hover {
-      border-color: var(--glass-border-strong);
-      color: var(--text-primary);
+    .stone-empty::after {
+      display: none;
     }
-    .members-row {
+    .subgroup-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      justify-content: center;
+      gap: 10px 14px;
+      margin-top: 4px;
+      max-width: 100%;
     }
-    .member-tile {
+    .stone-subgroup {
+      padding: 8px 14px;
+      min-width: 130px;
+    }
+    .stone-subgroup .stone-label {
+      font-size: 10.5px;
+    }
+    /* Mobile: stones get slimmer so they still fit the column */
+    @media (max-width: 560px) {
+      .stone-family {
+        min-width: 200px;
+      }
+      .stone-extended {
+        min-width: 240px;
+      }
+      .subgroup-row {
+        gap: 8px;
+      }
+      .stone-subgroup {
+        min-width: 110px;
+        padding: 7px 12px;
+      }
+    }
+    .cairn-meta {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 12px 6px 6px;
-      border-radius: var(--radius-pill);
-      background: rgba(255, 248, 235, 0.06);
-      border: 1px solid rgba(255, 248, 235, 0.1);
-      font-size: 13px;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(255, 248, 235, 0.1);
     }
-    .empty-extended {
-      color: var(--text-tertiary);
-      font-size: 13px;
-      padding: 8px 0;
-    }
-    .empty-extended button {
-      margin-left: 6px;
+    .cairn-meta button {
       background: transparent;
       border: none;
-      color: var(--terracotta);
-      cursor: pointer;
+      color: var(--text-secondary);
       font: inherit;
-      text-decoration: underline;
-      text-underline-offset: 3px;
+      font-size: 12.5px;
+      cursor: pointer;
     }
-
+    .cairn-meta button:hover {
+      color: var(--text-primary);
+    }
   `;
 
   _liveImmediate() {
@@ -997,6 +1092,46 @@ export class HomeScreen extends LitElement {
   _resetToToday() {
     const t = new Date();
     this._displayMonth = new Date(t.getFullYear(), t.getMonth(), 1);
+  }
+
+  /**
+   * Render a single cairn stone with overlapping member chips. Empty
+   * lists render as a dashed "invite" stone instead — the action lives
+   * on the stone itself so the user clicks the visual rather than
+   * hunting for a separate "+ Invite" button.
+   */
+  _renderStone({ label, members, klass, emptyLabel, onClick, maxChips = 6 }) {
+    if (!members || members.length === 0) {
+      return html`
+        <button
+          class="stone ${klass} stone-empty"
+          @click=${onClick}
+          title=${emptyLabel}
+        >
+          <span>${emptyLabel}</span>
+        </button>
+      `;
+    }
+    const shown = members.slice(0, maxChips);
+    const extra = members.length - shown.length;
+    return html`
+      <button class="stone ${klass}" @click=${onClick} title="${label} — manage members">
+        <span class="stone-chips">
+          ${shown.map(
+            (m) => html`
+              <member-chip
+                .name=${m.displayName}
+                .photo=${m.photoURL ?? ''}
+                .hue=${m.hue}
+                size="26"
+              ></member-chip>
+            `,
+          )}
+          ${extra > 0 ? html`<span class="stone-more">+${extra}</span>` : ''}
+        </span>
+        <span class="stone-label">${label}</span>
+      </button>
+    `;
   }
 
   _renderMonthly() {
@@ -1515,71 +1650,92 @@ export class HomeScreen extends LitElement {
 
         <section>
           <div class="section-head">
-            <h2>Your circles</h2>
+            <h2>Your cairn</h2>
             <button class="link" @click=${() => (this._membersOpen = true)}>
               Manage members
             </button>
           </div>
           <glass-panel padding="md" variant="strong">
-            <div class="circle-block">
-              <div class="circle-head">
-                <div>
-                  <span class="name">Immediate family</span>
-                  <span class="count">${immediate.length} ${immediate.length === 1 ? 'person' : 'people'}</span>
-                </div>
-                <button class="invite-btn" @click=${() => (this._membersOpen = true)}>
-                  Manage
-                </button>
-              </div>
-              <div class="members-row">
-                ${immediate.map(
-                  (m) => html`
-                    <div class="member-tile">
+            ${(() => {
+              const me = immediate.find((m) => m.uid === this.user?.uid);
+              const familyMembers = immediate.filter(
+                (m) => m.uid !== this.user?.uid,
+              );
+              const subGroupEntries = Object.entries(
+                this.family?.subGroups ?? {},
+              );
+              const memberById = new Map(
+                allMembers.map((m) => [m.uid, m]),
+              );
+              return html`
+                <div class="cairn-stack">
+                  <!-- Top: you -->
+                  <button
+                    class="stone stone-self"
+                    @click=${() => (this._profileOpen = true)}
+                    title="Your profile"
+                  >
+                    <span class="stone-chips">
                       <member-chip
-                        .name=${m.displayName}
-                        .photo=${m.photoURL ?? ''}
-                        .hue=${m.hue}
-                        size="24"
+                        .name=${me?.displayName ?? this.user?.displayName ?? 'You'}
+                        .photo=${me?.photoURL ?? this.user?.photoURL ?? ''}
+                        .hue=${me?.hue ?? 198}
+                        size="28"
                       ></member-chip>
-                      ${m.displayName}
-                    </div>
-                  `,
-                )}
-              </div>
-            </div>
-            <div class="circle-block">
-              <div class="circle-head">
-                <div>
-                  <span class="name">Extended family</span>
-                  <span class="count">${extended.length} ${extended.length === 1 ? 'person' : 'people'}</span>
-                </div>
-                <button class="invite-btn" @click=${() => (this._membersOpen = true)}>
-                  + Invite
-                </button>
-              </div>
-              ${extended.length === 0
-                ? html`<div class="empty-extended">
-                    No one yet —
-                    <button @click=${() => (this._membersOpen = true)}>
-                      invite the grandparents
-                    </button>
-                  </div>`
-                : html`<div class="members-row">
-                    ${extended.map(
-                      (m) => html`
-                        <div class="member-tile">
-                          <member-chip
-                            .name=${m.displayName}
-                            .photo=${m.photoURL ?? ''}
-                            .hue=${m.hue}
-                            size="24"
-                          ></member-chip>
-                          ${m.displayName}
+                    </span>
+                    <span class="stone-label">You</span>
+                  </button>
+
+                  <!-- Family (immediate minus self) -->
+                  ${this._renderStone({
+                    label: 'Family',
+                    members: familyMembers,
+                    klass: 'stone-family',
+                    emptyLabel: '+ Add co-parent or child',
+                    onClick: () => (this._membersOpen = true),
+                  })}
+
+                  <!-- Extended -->
+                  ${this._renderStone({
+                    label: 'Extended',
+                    members: extended,
+                    klass: 'stone-extended',
+                    emptyLabel: '+ Invite the grandparents',
+                    onClick: () => (this._membersOpen = true),
+                  })}
+
+                  <!-- Sub-group base row: one stone per named group -->
+                  ${subGroupEntries.length > 0
+                    ? html`
+                        <div class="subgroup-row">
+                          ${subGroupEntries.map(([gid, g]) => {
+                            const groupMembers = (g.memberIds ?? [])
+                              .map((uid) => memberById.get(uid))
+                              .filter(Boolean);
+                            return this._renderStone({
+                              label: g.name ?? 'Group',
+                              members: groupMembers,
+                              klass: 'stone-subgroup',
+                              emptyLabel: `${g.name ?? 'Group'} (empty)`,
+                              onClick: () => (this._membersOpen = true),
+                              maxChips: 4,
+                            });
+                          })}
                         </div>
-                      `,
-                    )}
-                  </div>`}
-            </div>
+                      `
+                    : ''}
+                </div>
+                <div class="cairn-meta">
+                  <button @click=${() => (this._membersOpen = true)}>
+                    + Invite
+                  </button>
+                  <span style="color:var(--text-tertiary);">·</span>
+                  <button @click=${() => (this._membersOpen = true)}>
+                    + Sub-group
+                  </button>
+                </div>
+              `;
+            })()}
           </glass-panel>
         </section>
 
