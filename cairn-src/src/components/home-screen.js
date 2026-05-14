@@ -228,12 +228,21 @@ export class HomeScreen extends LitElement {
       .pebble-search {
         width: auto;
         flex: 1;
+        /* Drop the icon + kbd hint so the placeholder can sit dead-centre
+           — short "Ask Pebble" copy looks off-balance hugging the left
+           edge with a leading icon. */
+        padding: 7px 14px;
       }
+      .pebble-search-icon,
       .pebble-search-kbd {
         display: none;
       }
+      .pebble-search-input {
+        text-align: center;
+      }
       .pebble-search-input::placeholder {
         font-size: 13px;
+        text-align: center;
       }
     }
 
@@ -464,6 +473,11 @@ export class HomeScreen extends LitElement {
     .section-head .link:hover {
       color: var(--text-primary);
     }
+    @media (max-width: 768px) {
+      .section-head .link.hide-mobile {
+        display: none;
+      }
+    }
 
     .trips-row {
       display: grid;
@@ -487,9 +501,8 @@ export class HomeScreen extends LitElement {
     .cel-col-head {
       display: flex;
       align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      padding-bottom: 8px;
+      margin-bottom: 4px;
+      padding-bottom: 6px;
       border-bottom: 1px solid rgba(255, 248, 235, 0.08);
     }
     .cel-col-title {
@@ -498,16 +511,20 @@ export class HomeScreen extends LitElement {
       font-size: 14.5px;
       letter-spacing: -0.005em;
     }
-    .cel-col-count {
-      font-size: 12px;
-      color: var(--text-tertiary);
-      font-variant-numeric: tabular-nums;
-    }
     .cel-empty {
       color: var(--text-tertiary);
       font-size: 13px;
-      padding: 12px 2px 4px;
+      padding: 8px 0 4px;
       line-height: 1.5;
+    }
+    @media (max-width: 720px) {
+      .cel-row {
+        gap: 12px;
+      }
+      .cel-col-head {
+        margin-bottom: 2px;
+        padding-bottom: 6px;
+      }
     }
 
     /* Empty state for the Coming up panel — promoted from a one-line
@@ -1480,6 +1497,10 @@ export class HomeScreen extends LitElement {
       this._eventFormOpen = true;
       return;
     }
+    if (type === 'import') {
+      this._importOpen = true;
+      return;
+    }
     // 'trip' or 'activity' both open trip-form, with different field sets.
     this._formMode = type;
     this._formTrip = null;
@@ -1762,10 +1783,13 @@ export class HomeScreen extends LitElement {
           <div class="section-head">
             <h2>Coming up</h2>
             <div style="display:flex;gap:14px;align-items:baseline;">
-              <button class="link" @click=${() => (this._importOpen = true)}>
+              <button
+                class="link hide-mobile"
+                @click=${() => (this._importOpen = true)}
+              >
                 Import from Calendar
               </button>
-              ${this._circleTrips().length > 0
+              ${this._circleTrips().length > 4
                 ? html`<button class="link" @click=${() => (this._allTripsOpen = true)}>
                     All trips →
                   </button>`
@@ -1855,10 +1879,9 @@ export class HomeScreen extends LitElement {
               (e) => e.type !== 'birthday' && e.type !== 'anniversary',
             );
             const renderColumn = (heading, list, emptyCopy) => html`
-              <glass-panel padding="md" variant="strong" class="cel-col">
+              <glass-panel padding="sm" variant="strong" class="cel-col">
                 <div class="cel-col-head">
                   <span class="cel-col-title">${heading}</span>
-                  <span class="cel-col-count">${list.length}</span>
                 </div>
                 ${list.length === 0
                   ? html`<div class="cel-empty">${emptyCopy}</div>`
@@ -1884,7 +1907,6 @@ export class HomeScreen extends LitElement {
                 ? html`<glass-panel padding="md" variant="strong" style="margin-top:18px;">
                     <div class="cel-col-head">
                       <span class="cel-col-title">Other</span>
-                      <span class="cel-col-count">${other.length}</span>
                     </div>
                     ${other.map(
                       (e) => html`<event-row

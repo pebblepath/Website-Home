@@ -341,7 +341,12 @@ export class TripCard extends LitElement {
           <div class="footer">
             <div class="attendees">
               ${shown.map(
-                (m) => html`<member-chip name=${m.displayName} .hue=${m.hue} size="28"></member-chip>`,
+                (m) => html`<member-chip
+                  .name=${m.displayName}
+                  .photo=${m.photoURL ?? ''}
+                  .hue=${m.hue}
+                  size="28"
+                ></member-chip>`,
               )}
               ${overflow > 0 ? html`<span class="more">+${overflow}</span>` : ''}
             </div>

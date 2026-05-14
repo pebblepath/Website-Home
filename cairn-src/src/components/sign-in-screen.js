@@ -37,7 +37,7 @@ export class SignInScreen extends LitElement {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 14px;
       margin-bottom: 28px;
       animation: brandIn 720ms cubic-bezier(0.2, 0.8, 0.2, 1);
     }

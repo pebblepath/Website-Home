@@ -28,7 +28,7 @@ export class EventRow extends LitElement {
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: 12px 14px;
+      padding: 12px 0;
       border-radius: var(--radius-tile);
       transition: background 200ms ease;
       cursor: pointer;
@@ -68,7 +68,7 @@ export class EventRow extends LitElement {
     .title-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 18px;
       min-width: 0;
     }
     .title {
@@ -87,8 +87,10 @@ export class EventRow extends LitElement {
       flex-shrink: 0;
     }
     .faces member-chip {
+      /* Match the cairn-stack thin halo — was a thick cream ring,
+         out of place vs the rest of the app's avatar treatment. */
       box-shadow:
-        0 0 0 1.5px rgba(255, 248, 235, 0.95),
+        0 0 0 1px rgba(255, 248, 235, 0.5),
         0 1px 3px rgba(0, 0, 0, 0.25);
       border-radius: 999px;
       margin-left: -7px;

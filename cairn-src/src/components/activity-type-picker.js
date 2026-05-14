@@ -56,6 +56,21 @@ export class ActivityTypePicker extends LitElement {
         label: 'Birthday or anniversary',
         desc: 'Recurring celebration on a specific date.',
       },
+      {
+        // Mobile-only option: on desktop this lives in the "Coming up"
+        // section header instead. Mobile hides that link to keep the
+        // section-head from getting cluttered, so we surface it here.
+        type: 'import',
+        tone: 'tide',
+        mobileOnly: true,
+        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="16" rx="2" />
+          <path d="M3 9h18M8 3v4M16 3v4" />
+          <path d="M9 14l3 3 4-5" />
+        </svg>`,
+        label: 'Import from Calendar',
+        desc: 'Pull recent events from your Google Calendar.',
+      },
     ];
   }
 
@@ -170,6 +185,12 @@ export class ActivityTypePicker extends LitElement {
     .icon-cell.sage { background: var(--gradient-sage); }
     .icon-cell.tide { background: var(--gradient-tide); }
     .icon-cell.amber { background: var(--gradient-amber); }
+    /* Mobile-only options (e.g. Import from Calendar) — hidden on
+       desktop where the equivalent affordance lives in the section
+       header. */
+    @media (min-width: 769px) {
+      .option.mobile-only { display: none; }
+    }
     .label {
       font-family: var(--font-display);
       font-weight: 600;
@@ -198,7 +219,10 @@ export class ActivityTypePicker extends LitElement {
           <div class="options">
             ${ActivityTypePicker.OPTIONS.map(
               (o) => html`
-                <button class="option" @click=${() => this._pick(o.type)}>
+                <button
+                  class="option ${o.mobileOnly ? 'mobile-only' : ''}"
+                  @click=${() => this._pick(o.type)}
+                >
                   <span class="icon-cell ${o.tone}" aria-hidden="true">${o.icon}</span>
                   <span>
                     <div class="label">${o.label}</div>
