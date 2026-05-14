@@ -683,9 +683,10 @@ export class HomeScreen extends LitElement {
       border-color: rgba(255, 248, 235, 0.5);
     }
     .cal-cell.has-event {
-      background: rgba(212, 168, 67, 0.18);
-      border-color: rgba(212, 168, 67, 0.4);
-      color: var(--text-primary);
+      background: var(--gradient-celebration);
+      border-color: rgba(255, 240, 215, 0.55);
+      color: var(--charcoal);
+      font-weight: 600;
     }
     .cal-cell.has-trip {
       background: var(--trip-day-bg);

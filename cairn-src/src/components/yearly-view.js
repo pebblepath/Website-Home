@@ -106,24 +106,22 @@ export class YearlyView extends LitElement {
     .cell.trip.dense {
       background: var(--trip-day-bg-strong);
     }
-    .cell.event::after {
-      content: '';
-      position: absolute;
-      bottom: 1.5px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 5px;
-      height: 5px;
-      border-radius: 999px;
+    /* Celebration day — solid colored cell, treated the same way as
+       trip and today instead of a tiny dot. */
+    .cell.event {
       background: var(--gradient-celebration);
-      box-shadow:
-        0 0 6px rgba(242, 154, 77, 0.85),
-        0 0 0 1px rgba(255, 240, 215, 0.6);
+      box-shadow: inset 0 0 0 1px rgba(255, 240, 215, 0.35);
     }
-    .cell.event.trip::after {
-      /* Trip + celebration day — white core so it pops on the tide blue. */
-      background: radial-gradient(circle at 35% 35%, #fff 0%, #ffd066 80%);
-      box-shadow: 0 0 6px rgba(255, 255, 255, 0.85);
+    /* Trip + celebration day — split diagonally so both signals read. */
+    .cell.event.trip {
+      background:
+        linear-gradient(135deg,
+          #6bb4e8 0%,
+          #4a90e2 45%,
+          #f29a4d 55%,
+          #ffd066 100%
+        );
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
     }
     .legend {
       display: flex;
@@ -152,8 +150,7 @@ export class YearlyView extends LitElement {
     }
     .swatch i.event {
       background: var(--gradient-celebration);
-      border-radius: 999px;
-      box-shadow: 0 0 4px rgba(242, 154, 77, 0.7);
+      border-radius: 2px;
     }
     .swatch i.today {
       background: var(--today-bg);
