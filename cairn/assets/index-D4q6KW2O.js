@@ -189,7 +189,7 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
       display: block;
       filter: drop-shadow(0 6px 18px rgba(20, 12, 6, 0.45));
     }
-  `);customElements.define("cairn-mark",re);const ot="modulepreload",lt=function(l){return"/cairn/"+l},Fe={},Ue=function(e,t,i){let r=Promise.resolve();if(t&&t.length>0){let o=function(p){return Promise.all(p.map(c=>Promise.resolve(c).then(h=>({status:"fulfilled",value:h}),h=>({status:"rejected",reason:h}))))};document.getElementsByTagName("link");const s=document.querySelector("meta[property=csp-nonce]"),d=(s==null?void 0:s.nonce)||(s==null?void 0:s.getAttribute("nonce"));r=o(t.map(p=>{if(p=lt(p),p in Fe)return;Fe[p]=!0;const c=p.endsWith(".css"),h=c?'[rel="stylesheet"]':"";if(document.querySelector(`link[href="${p}"]${h}`))return;const b=document.createElement("link");if(b.rel=c?"stylesheet":ot,c||(b.as="script"),b.crossOrigin="",b.href=p,d&&b.setAttribute("nonce",d),document.head.appendChild(b),c)return new Promise((v,f)=>{b.addEventListener("load",v),b.addEventListener("error",()=>f(new Error(`Unable to preload CSS for ${p}`)))})}))}function a(o){const s=new Event("vite:preloadError",{cancelable:!0});if(s.payload=o,window.dispatchEvent(s),!s.defaultPrevented)throw o}return r.then(o=>{for(const s of o||[])s.status==="rejected"&&a(s.reason);return e().catch(a)})},ae={apiKey:"AIzaSyA6NKZNLVBeeLrXcLJSXus5M832AxpI2wk",authDomain:"pebblepath-992b6.firebaseapp.com",projectId:"pebblepath-992b6",storageBucket:"pebblepath-992b6.firebasestorage.app",messagingSenderId:"497141667291",appId:"1:497141667291:web:ee84c186db54389d10c3fe"},I=!!(ae.apiKey&&ae.projectId),H=I?et(ae):null,y=I?tt(H):null,x=I?it(H):null,J=I?st(H,"us-central1"):null,se=I?nt(H):null,ne=I?new De:null;ne&&ne.setCustomParameters({prompt:"select_account"});const X=I?new De:null;X&&X.addScope("https://www.googleapis.com/auth/calendar.readonly");let V=null,oe=0;async function Le(){if(!y||!X)throw new Error("Firebase not configured.");if(V&&Date.now()<oe-6e4)return V;const l=await Ne(y,X),e=De.credentialFromResult(l),t=e==null?void 0:e.accessToken;if(!t)throw new Error("Couldn't get a Calendar access token — try again.");return V=t,oe=Date.now()+3600*1e3,t}function dt(){V=null,oe=0}function Re(){if(!y)throw new Error("Firebase not configured — fill in .env first.");return Ne(y,ne)}function He(){return y?rt(y):Promise.resolve()}function Je(l){return y?at(y,l):(l(null),()=>{})}const pt=Object.freeze(Object.defineProperty({__proto__:null,addDoc:Z,app:H,auth:y,clearCalendarToken:dt,collection:G,connectGoogleCalendar:Le,db:x,deleteDoc:Q,doc:z,firebaseApp:H,functions:J,getDocs:Pe,getDownloadURL:Ye,httpsCallable:ee,isConfigured:I,onAuth:Je,onSnapshot:U,query:Me,serverTimestamp:C,setDoc:je,signIn:Re,signOutUser:He,storage:se,storageRef:Ge,updateDoc:T,uploadBytes:Be,where:Oe},Symbol.toStringTag,{value:"Module"}));class ct extends EventTarget{constructor(){super(),this.state={user:null,family:null,children:[],trips:[],events:[]},this._uid=null,this._unsubUser=null,this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this._currentFamilyId=null}get familyId(){return this._currentFamilyId}start(e){!x||!e||this._uid!==e&&(this.stop(),this._uid=e,this._unsubUser=U(z(x,"users",e),t=>{var r,a,o,s,d,p;this.state.user=t.exists()?{id:t.id,...t.data()}:null;const i=((r=this.state.user)==null?void 0:r.familyId)??((a=this.state.user)==null?void 0:a.cairnFamilyId)??null;i!==this._currentFamilyId&&(this._currentFamilyId=i,(o=this._unsubFamily)==null||o.call(this),(s=this._unsubChildren)==null||s.call(this),(d=this._unsubTrips)==null||d.call(this),(p=this._unsubEvents)==null||p.call(this),this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this.state.family=null,this.state.children=[],this.state.trips=[],this.state.events=[],i&&this._subscribeFamily(i)),this._emit()}))}_subscribeFamily(e){this._unsubFamily=U(z(x,"families",e),t=>{this.state.family=t.exists()?{id:t.id,...t.data()}:null,this._emit()}),this._unsubChildren=U(G(x,"families",e,"children"),t=>{this.state.children=t.docs.map(i=>{var a,o;const r=i.data();return{id:i.id,...r,dateOfBirth:((o=(a=r.dateOfBirth)==null?void 0:a.toDate)==null?void 0:o.call(a))??(r.dateOfBirth?new Date(r.dateOfBirth):null)}}),this._emit()}),this._unsubTrips=U(G(x,"families",e,"trips"),t=>{this.state.trips=t.docs.map(i=>{var a,o,s,d;const r=i.data();return{id:i.id,...r,start:r.start??"",end:r.end??"",createdAt:((o=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:o.call(a))??null,updatedAt:((d=(s=r.updatedAt)==null?void 0:s.toDate)==null?void 0:d.call(s))??null}}).sort((i,r)=>String(i.start).localeCompare(String(r.start))),this._emit()},t=>{console.warn("[Cairn] trips subscription error:",t.code,t.message)}),this._unsubEvents=U(G(x,"families",e,"familyEvents"),t=>{this.state.events=t.docs.map(i=>{var a,o,s,d;const r=i.data();return{id:i.id,...r,date:r.date??"",createdAt:((o=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:o.call(a))??null,updatedAt:((d=(s=r.updatedAt)==null?void 0:s.toDate)==null?void 0:d.call(s))??null}}),this._emit()},t=>{console.warn("[Cairn] familyEvents subscription error:",t.code,t.message)})}async saveTrip(e){var p;if(!x||!this._currentFamilyId)throw new Error("No family yet.");const t=(p=y==null?void 0:y.currentUser)==null?void 0:p.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...o}=e,s={...o,updatedAt:C()};return i?(await T(z(x,"families",this._currentFamilyId,"trips",i),s),i):(s.createdBy=t,s.createdAt=C(),(await Z(G(x,"families",this._currentFamilyId,"trips"),s)).id)}async deleteTrip(e){if(!x||!this._currentFamilyId)throw new Error("No family yet.");await Q(z(x,"families",this._currentFamilyId,"trips",e))}async saveEvent(e){var p;if(!x||!this._currentFamilyId)throw new Error("No family yet.");const t=(p=y==null?void 0:y.currentUser)==null?void 0:p.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...o}=e,s={...o,updatedAt:C()};return i?(await T(z(x,"families",this._currentFamilyId,"familyEvents",i),s),i):(s.createdBy=t,s.createdAt=C(),(await Z(G(x,"families",this._currentFamilyId,"familyEvents"),s)).id)}async deleteEvent(e){if(!x||!this._currentFamilyId)throw new Error("No family yet.");await Q(z(x,"families",this._currentFamilyId,"familyEvents",e))}async previewUrl(e){if(!e||typeof e!="string"||!/^https?:\/\//i.test(e.trim()))return null;if(!J)throw new Error("Firebase functions not configured.");return(await ee(J,"previewUrl")({url:e.trim()})).data}async askPebble(e,t=[]){if(!J)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family yet.");return(await ee(J,"askPebbleAboutActivities")({question:e,familyId:this._currentFamilyId,history:t})).data}async updateChildBirthday(e,t){if(!x||!this._currentFamilyId)throw new Error("No family yet.");await T(z(x,"families",this._currentFamilyId,"children",e),{dateOfBirth:t,updatedAt:C()})}async findFamilyByCairnCode(e){if(!x)throw new Error("Firebase not configured.");const t=Me(G(x,"families"),Oe("cairnInviteCode","==",e)),i=await Pe(t);if(i.empty)return null;const r=i.docs[0];return{id:r.id,...r.data()}}async joinFamilyAsCairn(e){var c,h,b;if(!x)throw new Error("Firebase not configured.");const t=(c=y==null?void 0:y.currentUser)==null?void 0:c.uid;if(!t)throw new Error("Not signed in.");const i=await this.findFamilyByCairnCode(e);if(!i){const v=new Error("Invite code not found.");throw v.code="not-found",v}const r=((b=(h=i.cairnInviteCodeExpiresAt)==null?void 0:h.toDate)==null?void 0:b.call(h))??(i.cairnInviteCodeExpiresAt?new Date(i.cairnInviteCodeExpiresAt):null);if(!r||r<new Date){const v=new Error("This invite code has expired.");throw v.code="expired",v}const a=i.cairnMemberIds??[];if(a.includes(t)||(i.memberIds??[]).includes(t)){const v=new Error("You're already in this family on Cairn.");throw v.code="already-member",v}const o=i.cairnMaxMembers??20;if(a.length>=o){const v=new Error("This family's Cairn ring is full.");throw v.code="full",v}const s=y.currentUser,d=new Date,p={displayName:s.displayName??"",profilePhotoURL:s.photoURL??null,role:"member",joinedAt:d,updatedAt:d};return await T(z(x,"families",i.id),{cairnMemberIds:[...a,t],[`memberProfiles.${t}`]:p,updatedAt:C()}),await je(z(x,"users",t),{email:s.email??"",displayName:s.displayName??"",profilePhotoURL:s.photoURL??null,cairnFamilyId:i.id,role:"member",notificationPreferences:{milestoneReminders:!0,tipNotifications:!0,schoolDeadlines:!0},createdAt:C(),updatedAt:C()},{merge:!0}),i.id}async saveSubGroup({id:e,name:t,memberIds:i}){if(!x||!this._currentFamilyId)throw new Error("No family yet.");const r=e??`g_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,6)}`;return await T(z(x,"families",this._currentFamilyId),{[`subGroups.${r}`]:{name:t.trim(),memberIds:Array.isArray(i)?[...i]:[],updatedAt:C()},updatedAt:C()}),r}async deleteSubGroup(e){if(!x||!this._currentFamilyId)throw new Error("No family yet.");const{deleteField:t}=await Ue(async()=>{const{deleteField:i}=await import("./firebase-core-DVt9Aunh.js").then(r=>r.B);return{deleteField:i}},[]);await T(z(x,"families",this._currentFamilyId),{[`subGroups.${e}`]:t(),updatedAt:C()})}async regenerateCairnInviteCode(){if(!x||!this._currentFamilyId)throw new Error("No family yet.");const e=ht(),t=new Date(Date.now()+720*60*60*1e3);return await T(z(x,"families",this._currentFamilyId),{cairnInviteCode:e,cairnInviteCodeExpiresAt:t,updatedAt:C()}),{code:e,expiresAt:t}}stop(){var e,t,i,r,a;(e=this._unsubUser)==null||e.call(this),(t=this._unsubFamily)==null||t.call(this),(i=this._unsubChildren)==null||i.call(this),(r=this._unsubTrips)==null||r.call(this),(a=this._unsubEvents)==null||a.call(this),this._unsubUser=this._unsubFamily=this._unsubChildren=this._unsubTrips=this._unsubEvents=null,this._uid=null,this._currentFamilyId=null,this.state={user:null,family:null,children:[],trips:[],events:[]}}_emit(){this.dispatchEvent(new Event("change"))}}const w=new ct;function qe(l,e){const t=e==null?void 0:e.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:l!=null&&l.photoURL?l.photoURL:null}function ht(){const l="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let e="CAIRN-";for(let t=0;t<4;t++)e+=l[Math.floor(Math.random()*l.length)];return e}function ut(l,e,t,i,r){const a=[];a.push({uid:l,displayName:(e==null?void 0:e.displayName)??(t==null?void 0:t.displayName)??"You",photoURL:qe(e,t),role:"self",circles:["immediate"],hue:198});const o=(i==null?void 0:i.memberProfiles)??{};for(const[d,p]of Object.entries(o)){if(d===l)continue;const c=p.profilePhotoURL;a.push({uid:d,displayName:p.displayName??"Co-parent",photoURL:typeof c=="string"&&/^https?:\/\//i.test(c)?c:null,role:"co-parent",circles:["immediate"],hue:8})}let s=142;for(const d of r??[]){const p=d.profilePhotoURL;a.push({uid:`child:${d.id}`,displayName:d.name,photoURL:typeof p=="string"&&/^https?:\/\//i.test(p)?p:null,role:"child",circles:["immediate"],hue:s,dateOfBirth:d.dateOfBirth}),s=(s+58)%360}return a}function gt(l){const e=[];for(const t of l??[]){if(!t.dateOfBirth)continue;const i=t.dateOfBirth,r=i.getUTCFullYear(),a=String(i.getUTCMonth()+1).padStart(2,"0"),o=String(i.getUTCDate()).padStart(2,"0");e.push({id:`bday:${t.id}`,type:"birthday",date:`${r}-${a}-${o}`,personIds:[`child:${t.id}`],title:`${t.name}'s birthday`,_childId:t.id,_childName:t.name,recurring:!0})}return e}function mt(l,e=new Date){if(!(l!=null&&l.date))return{date:null,yearsElapsed:0};const t=_(l.date);if(!t||Number.isNaN(t.getTime()))return{date:null,yearsElapsed:0};if(!l.recurring)return{date:t,yearsElapsed:0};const i=new Date(e.getFullYear(),t.getMonth(),t.getDate()),r=i<new Date(e.getFullYear(),e.getMonth(),e.getDate())?new Date(e.getFullYear()+1,t.getMonth(),t.getDate()):i,a=r.getFullYear()-t.getFullYear();return{date:r,yearsElapsed:a}}const Ae=["linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)","linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)","linear-gradient(135deg, #3d9b8f 0%, #1f5c54 100%)","linear-gradient(135deg, #d4a843 0%, #c67b5c 55%, #c98a8a 100%)","linear-gradient(135deg, #8b7bb5 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #6b9ac4 0%, #3d9b8f 100%)"];function _(l){if(!l)return null;if(l instanceof Date)return l;const e=String(l).match(/^(\d{4})-(\d{2})-(\d{2})/);return e?new Date(Number(e[1]),Number(e[2])-1,Number(e[3])):new Date(l)}async function ft(l,e=90,t=100){const i=new Date,r=new Date(i.getTime()+e*24*60*60*1e3),a=new URL("https://www.googleapis.com/calendar/v3/calendars/primary/events");a.searchParams.set("timeMin",i.toISOString()),a.searchParams.set("timeMax",r.toISOString()),a.searchParams.set("maxResults",String(t)),a.searchParams.set("singleEvents","true"),a.searchParams.set("orderBy","startTime");const o=await fetch(a.toString(),{headers:{Authorization:`Bearer ${l}`}});if(!o.ok){const d=await o.text();throw new Error(`Google Calendar: ${o.status} ${d.slice(0,160)}`)}return((await o.json()).items??[]).filter(d=>{var p,c;return d.status!=="cancelled"&&(((p=d.start)==null?void 0:p.date)||((c=d.start)==null?void 0:c.dateTime))})}function bt(l,e){var r,a,o,s,d,p,c,h;const t=((r=l.start)==null?void 0:r.date)??((o=(a=l.start)==null?void 0:a.dateTime)==null?void 0:o.slice(0,10))??"";let i=((s=l.end)==null?void 0:s.date)??((p=(d=l.end)==null?void 0:d.dateTime)==null?void 0:p.slice(0,10))??t;if((c=l.start)!=null&&c.date&&((h=l.end)!=null&&h.date)){const b=new Date(i);b.setDate(b.getDate()-1),i=b.toISOString().slice(0,10)}return{title:l.summary||"(untitled)",location:l.location??"",start:t,end:i,attendees:e?[e]:[],viewers:[],visibility:"family",notes:(l.description??"").slice(0,1e3),gcalEventId:l.id,gcalEventLink:l.htmlLink??null}}function xt(l){if(l!=null&&l.coverGradient)return l.coverGradient;const e=((l==null?void 0:l.title)??(l==null?void 0:l.id)??"")+((l==null?void 0:l.location)??"");let t=0;for(let i=0;i<e.length;i++)t=t*31+e.charCodeAt(i)>>>0;return Ae[t%Ae.length]}class le extends ${constructor(){super(),this.year=new Date().getFullYear(),this.tripDays=new Map,this.events=[],this.today=new Date}_isLeap(e){return e%4===0&&e%100!==0||e%400===0}_daysInMonth(e,t){return[31,this._isLeap(e)?29:28,31,30,31,30,31,31,30,31,30,31][t]}_renderMonth(e){const t=this.year,r=(new Date(t,e,1).getDay()+6)%7,a=this._daysInMonth(t,e),o=new Set(this.events.filter(p=>{const c=_(p.date);return c&&c.getFullYear()===t&&c.getMonth()===e}).map(p=>_(p.date).getDate())),s=[];for(let p=0;p<r;p++)s.push(n`<div class="cell empty"></div>`);const d=this.today;for(let p=1;p<=a;p++){const c=`${String(e+1).padStart(2,"0")}-${String(p).padStart(2,"0")}`,h=this.tripDays.get(c)??0,b=d.getFullYear()===t&&d.getMonth()===e&&d.getDate()===p,v=o.has(p),f=["cell",b?"today":"",h>0?"trip":"",h>.6?"dense":"",v?"event":""].filter(Boolean).join(" ");s.push(n`<div class=${f}></div>`)}return s}_onSelect(e){this.dispatchEvent(new CustomEvent("month-select",{detail:{month:e,year:this.year},bubbles:!0,composed:!0}))}render(){const e=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],t=this.today.getMonth(),i=this.today.getFullYear()===this.year;return n`
+  `);customElements.define("cairn-mark",re);const ot="modulepreload",lt=function(l){return"/cairn/"+l},Fe={},Ue=function(e,t,i){let r=Promise.resolve();if(t&&t.length>0){let o=function(p){return Promise.all(p.map(c=>Promise.resolve(c).then(h=>({status:"fulfilled",value:h}),h=>({status:"rejected",reason:h}))))};document.getElementsByTagName("link");const s=document.querySelector("meta[property=csp-nonce]"),d=(s==null?void 0:s.nonce)||(s==null?void 0:s.getAttribute("nonce"));r=o(t.map(p=>{if(p=lt(p),p in Fe)return;Fe[p]=!0;const c=p.endsWith(".css"),h=c?'[rel="stylesheet"]':"";if(document.querySelector(`link[href="${p}"]${h}`))return;const f=document.createElement("link");if(f.rel=c?"stylesheet":ot,c||(f.as="script"),f.crossOrigin="",f.href=p,d&&f.setAttribute("nonce",d),document.head.appendChild(f),c)return new Promise((v,b)=>{f.addEventListener("load",v),f.addEventListener("error",()=>b(new Error(`Unable to preload CSS for ${p}`)))})}))}function a(o){const s=new Event("vite:preloadError",{cancelable:!0});if(s.payload=o,window.dispatchEvent(s),!s.defaultPrevented)throw o}return r.then(o=>{for(const s of o||[])s.status==="rejected"&&a(s.reason);return e().catch(a)})},ae={apiKey:"AIzaSyA6NKZNLVBeeLrXcLJSXus5M832AxpI2wk",authDomain:"pebblepath-992b6.firebaseapp.com",projectId:"pebblepath-992b6",storageBucket:"pebblepath-992b6.firebasestorage.app",messagingSenderId:"497141667291",appId:"1:497141667291:web:ee84c186db54389d10c3fe"},I=!!(ae.apiKey&&ae.projectId),H=I?et(ae):null,y=I?tt(H):null,x=I?it(H):null,J=I?st(H,"us-central1"):null,se=I?nt(H):null,ne=I?new De:null;ne&&ne.setCustomParameters({prompt:"select_account"});const X=I?new De:null;X&&X.addScope("https://www.googleapis.com/auth/calendar.readonly");let V=null,oe=0;async function Le(){if(!y||!X)throw new Error("Firebase not configured.");if(V&&Date.now()<oe-6e4)return V;const l=await Ne(y,X),e=De.credentialFromResult(l),t=e==null?void 0:e.accessToken;if(!t)throw new Error("Couldn't get a Calendar access token — try again.");return V=t,oe=Date.now()+3600*1e3,t}function dt(){V=null,oe=0}function Re(){if(!y)throw new Error("Firebase not configured — fill in .env first.");return Ne(y,ne)}function He(){return y?rt(y):Promise.resolve()}function Je(l){return y?at(y,l):(l(null),()=>{})}const pt=Object.freeze(Object.defineProperty({__proto__:null,addDoc:Z,app:H,auth:y,clearCalendarToken:dt,collection:G,connectGoogleCalendar:Le,db:x,deleteDoc:Q,doc:z,firebaseApp:H,functions:J,getDocs:Pe,getDownloadURL:Ye,httpsCallable:ee,isConfigured:I,onAuth:Je,onSnapshot:U,query:Me,serverTimestamp:C,setDoc:je,signIn:Re,signOutUser:He,storage:se,storageRef:Ge,updateDoc:T,uploadBytes:Be,where:Oe},Symbol.toStringTag,{value:"Module"}));class ct extends EventTarget{constructor(){super(),this.state={user:null,family:null,children:[],trips:[],events:[]},this._uid=null,this._unsubUser=null,this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this._currentFamilyId=null}get familyId(){return this._currentFamilyId}start(e){!x||!e||this._uid!==e&&(this.stop(),this._uid=e,this._unsubUser=U(z(x,"users",e),t=>{var r,a,o,s,d,p;this.state.user=t.exists()?{id:t.id,...t.data()}:null;const i=((r=this.state.user)==null?void 0:r.familyId)??((a=this.state.user)==null?void 0:a.cairnFamilyId)??null;i!==this._currentFamilyId&&(this._currentFamilyId=i,(o=this._unsubFamily)==null||o.call(this),(s=this._unsubChildren)==null||s.call(this),(d=this._unsubTrips)==null||d.call(this),(p=this._unsubEvents)==null||p.call(this),this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this.state.family=null,this.state.children=[],this.state.trips=[],this.state.events=[],i&&this._subscribeFamily(i)),this._emit()}))}_subscribeFamily(e){this._unsubFamily=U(z(x,"families",e),t=>{this.state.family=t.exists()?{id:t.id,...t.data()}:null,this._emit()}),this._unsubChildren=U(G(x,"families",e,"children"),t=>{this.state.children=t.docs.map(i=>{var a,o;const r=i.data();return{id:i.id,...r,dateOfBirth:((o=(a=r.dateOfBirth)==null?void 0:a.toDate)==null?void 0:o.call(a))??(r.dateOfBirth?new Date(r.dateOfBirth):null)}}),this._emit()}),this._unsubTrips=U(G(x,"families",e,"trips"),t=>{this.state.trips=t.docs.map(i=>{var a,o,s,d;const r=i.data();return{id:i.id,...r,start:r.start??"",end:r.end??"",createdAt:((o=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:o.call(a))??null,updatedAt:((d=(s=r.updatedAt)==null?void 0:s.toDate)==null?void 0:d.call(s))??null}}).sort((i,r)=>String(i.start).localeCompare(String(r.start))),this._emit()},t=>{console.warn("[Cairn] trips subscription error:",t.code,t.message)}),this._unsubEvents=U(G(x,"families",e,"familyEvents"),t=>{this.state.events=t.docs.map(i=>{var a,o,s,d;const r=i.data();return{id:i.id,...r,date:r.date??"",createdAt:((o=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:o.call(a))??null,updatedAt:((d=(s=r.updatedAt)==null?void 0:s.toDate)==null?void 0:d.call(s))??null}}),this._emit()},t=>{console.warn("[Cairn] familyEvents subscription error:",t.code,t.message)})}async saveTrip(e){var p;if(!x||!this._currentFamilyId)throw new Error("No family yet.");const t=(p=y==null?void 0:y.currentUser)==null?void 0:p.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...o}=e,s={...o,updatedAt:C()};return i?(await T(z(x,"families",this._currentFamilyId,"trips",i),s),i):(s.createdBy=t,s.createdAt=C(),(await Z(G(x,"families",this._currentFamilyId,"trips"),s)).id)}async deleteTrip(e){if(!x||!this._currentFamilyId)throw new Error("No family yet.");await Q(z(x,"families",this._currentFamilyId,"trips",e))}async saveEvent(e){var p;if(!x||!this._currentFamilyId)throw new Error("No family yet.");const t=(p=y==null?void 0:y.currentUser)==null?void 0:p.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...o}=e,s={...o,updatedAt:C()};return i?(await T(z(x,"families",this._currentFamilyId,"familyEvents",i),s),i):(s.createdBy=t,s.createdAt=C(),(await Z(G(x,"families",this._currentFamilyId,"familyEvents"),s)).id)}async deleteEvent(e){if(!x||!this._currentFamilyId)throw new Error("No family yet.");await Q(z(x,"families",this._currentFamilyId,"familyEvents",e))}async previewUrl(e){if(!e||typeof e!="string"||!/^https?:\/\//i.test(e.trim()))return null;if(!J)throw new Error("Firebase functions not configured.");return(await ee(J,"previewUrl")({url:e.trim()})).data}async askPebble(e,t=[]){if(!J)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family yet.");return(await ee(J,"askPebbleAboutActivities")({question:e,familyId:this._currentFamilyId,history:t})).data}async updateChildBirthday(e,t){if(!x||!this._currentFamilyId)throw new Error("No family yet.");await T(z(x,"families",this._currentFamilyId,"children",e),{dateOfBirth:t,updatedAt:C()})}async findFamilyByCairnCode(e){if(!x)throw new Error("Firebase not configured.");const t=Me(G(x,"families"),Oe("cairnInviteCode","==",e)),i=await Pe(t);if(i.empty)return null;const r=i.docs[0];return{id:r.id,...r.data()}}async joinFamilyAsCairn(e){var c,h,f;if(!x)throw new Error("Firebase not configured.");const t=(c=y==null?void 0:y.currentUser)==null?void 0:c.uid;if(!t)throw new Error("Not signed in.");const i=await this.findFamilyByCairnCode(e);if(!i){const v=new Error("Invite code not found.");throw v.code="not-found",v}const r=((f=(h=i.cairnInviteCodeExpiresAt)==null?void 0:h.toDate)==null?void 0:f.call(h))??(i.cairnInviteCodeExpiresAt?new Date(i.cairnInviteCodeExpiresAt):null);if(!r||r<new Date){const v=new Error("This invite code has expired.");throw v.code="expired",v}const a=i.cairnMemberIds??[];if(a.includes(t)||(i.memberIds??[]).includes(t)){const v=new Error("You're already in this family on Cairn.");throw v.code="already-member",v}const o=i.cairnMaxMembers??20;if(a.length>=o){const v=new Error("This family's Cairn ring is full.");throw v.code="full",v}const s=y.currentUser,d=new Date,p={displayName:s.displayName??"",profilePhotoURL:s.photoURL??null,role:"member",joinedAt:d,updatedAt:d};return await T(z(x,"families",i.id),{cairnMemberIds:[...a,t],[`memberProfiles.${t}`]:p,updatedAt:C()}),await je(z(x,"users",t),{email:s.email??"",displayName:s.displayName??"",profilePhotoURL:s.photoURL??null,cairnFamilyId:i.id,role:"member",notificationPreferences:{milestoneReminders:!0,tipNotifications:!0,schoolDeadlines:!0},createdAt:C(),updatedAt:C()},{merge:!0}),i.id}async saveSubGroup({id:e,name:t,memberIds:i}){if(!x||!this._currentFamilyId)throw new Error("No family yet.");const r=e??`g_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,6)}`;return await T(z(x,"families",this._currentFamilyId),{[`subGroups.${r}`]:{name:t.trim(),memberIds:Array.isArray(i)?[...i]:[],updatedAt:C()},updatedAt:C()}),r}async deleteSubGroup(e){if(!x||!this._currentFamilyId)throw new Error("No family yet.");const{deleteField:t}=await Ue(async()=>{const{deleteField:i}=await import("./firebase-core-DVt9Aunh.js").then(r=>r.B);return{deleteField:i}},[]);await T(z(x,"families",this._currentFamilyId),{[`subGroups.${e}`]:t(),updatedAt:C()})}async regenerateCairnInviteCode(){if(!x||!this._currentFamilyId)throw new Error("No family yet.");const e=ht(),t=new Date(Date.now()+720*60*60*1e3);return await T(z(x,"families",this._currentFamilyId),{cairnInviteCode:e,cairnInviteCodeExpiresAt:t,updatedAt:C()}),{code:e,expiresAt:t}}stop(){var e,t,i,r,a;(e=this._unsubUser)==null||e.call(this),(t=this._unsubFamily)==null||t.call(this),(i=this._unsubChildren)==null||i.call(this),(r=this._unsubTrips)==null||r.call(this),(a=this._unsubEvents)==null||a.call(this),this._unsubUser=this._unsubFamily=this._unsubChildren=this._unsubTrips=this._unsubEvents=null,this._uid=null,this._currentFamilyId=null,this.state={user:null,family:null,children:[],trips:[],events:[]}}_emit(){this.dispatchEvent(new Event("change"))}}const w=new ct;function qe(l,e){const t=e==null?void 0:e.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:l!=null&&l.photoURL?l.photoURL:null}function ht(){const l="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let e="CAIRN-";for(let t=0;t<4;t++)e+=l[Math.floor(Math.random()*l.length)];return e}function ut(l,e,t,i,r){const a=[];a.push({uid:l,displayName:(e==null?void 0:e.displayName)??(t==null?void 0:t.displayName)??"You",photoURL:qe(e,t),role:"self",circles:["immediate"],hue:198});const o=(i==null?void 0:i.memberProfiles)??{};for(const[d,p]of Object.entries(o)){if(d===l)continue;const c=p.profilePhotoURL;a.push({uid:d,displayName:p.displayName??"Co-parent",photoURL:typeof c=="string"&&/^https?:\/\//i.test(c)?c:null,role:"co-parent",circles:["immediate"],hue:8})}let s=142;for(const d of r??[]){const p=d.profilePhotoURL;a.push({uid:`child:${d.id}`,displayName:d.name,photoURL:typeof p=="string"&&/^https?:\/\//i.test(p)?p:null,role:"child",circles:["immediate"],hue:s,dateOfBirth:d.dateOfBirth}),s=(s+58)%360}return a}function gt(l){const e=[];for(const t of l??[]){if(!t.dateOfBirth)continue;const i=t.dateOfBirth,r=i.getUTCFullYear(),a=String(i.getUTCMonth()+1).padStart(2,"0"),o=String(i.getUTCDate()).padStart(2,"0");e.push({id:`bday:${t.id}`,type:"birthday",date:`${r}-${a}-${o}`,personIds:[`child:${t.id}`],title:`${t.name}'s birthday`,_childId:t.id,_childName:t.name,recurring:!0})}return e}function mt(l,e=new Date){if(!(l!=null&&l.date))return{date:null,yearsElapsed:0};const t=_(l.date);if(!t||Number.isNaN(t.getTime()))return{date:null,yearsElapsed:0};if(!l.recurring)return{date:t,yearsElapsed:0};const i=new Date(e.getFullYear(),t.getMonth(),t.getDate()),r=i<new Date(e.getFullYear(),e.getMonth(),e.getDate())?new Date(e.getFullYear()+1,t.getMonth(),t.getDate()):i,a=r.getFullYear()-t.getFullYear();return{date:r,yearsElapsed:a}}const Ae=["linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)","linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)","linear-gradient(135deg, #3d9b8f 0%, #1f5c54 100%)","linear-gradient(135deg, #d4a843 0%, #c67b5c 55%, #c98a8a 100%)","linear-gradient(135deg, #8b7bb5 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #6b9ac4 0%, #3d9b8f 100%)"];function _(l){if(!l)return null;if(l instanceof Date)return l;const e=String(l).match(/^(\d{4})-(\d{2})-(\d{2})/);return e?new Date(Number(e[1]),Number(e[2])-1,Number(e[3])):new Date(l)}async function bt(l,e=90,t=100){const i=new Date,r=new Date(i.getTime()+e*24*60*60*1e3),a=new URL("https://www.googleapis.com/calendar/v3/calendars/primary/events");a.searchParams.set("timeMin",i.toISOString()),a.searchParams.set("timeMax",r.toISOString()),a.searchParams.set("maxResults",String(t)),a.searchParams.set("singleEvents","true"),a.searchParams.set("orderBy","startTime");const o=await fetch(a.toString(),{headers:{Authorization:`Bearer ${l}`}});if(!o.ok){const d=await o.text();throw new Error(`Google Calendar: ${o.status} ${d.slice(0,160)}`)}return((await o.json()).items??[]).filter(d=>{var p,c;return d.status!=="cancelled"&&(((p=d.start)==null?void 0:p.date)||((c=d.start)==null?void 0:c.dateTime))})}function ft(l,e){var r,a,o,s,d,p,c,h;const t=((r=l.start)==null?void 0:r.date)??((o=(a=l.start)==null?void 0:a.dateTime)==null?void 0:o.slice(0,10))??"";let i=((s=l.end)==null?void 0:s.date)??((p=(d=l.end)==null?void 0:d.dateTime)==null?void 0:p.slice(0,10))??t;if((c=l.start)!=null&&c.date&&((h=l.end)!=null&&h.date)){const f=new Date(i);f.setDate(f.getDate()-1),i=f.toISOString().slice(0,10)}return{title:l.summary||"(untitled)",location:l.location??"",start:t,end:i,attendees:e?[e]:[],viewers:[],visibility:"family",notes:(l.description??"").slice(0,1e3),gcalEventId:l.id,gcalEventLink:l.htmlLink??null}}function xt(l){if(l!=null&&l.coverGradient)return l.coverGradient;const e=((l==null?void 0:l.title)??(l==null?void 0:l.id)??"")+((l==null?void 0:l.location)??"");let t=0;for(let i=0;i<e.length;i++)t=t*31+e.charCodeAt(i)>>>0;return Ae[t%Ae.length]}class le extends ${constructor(){super(),this.year=new Date().getFullYear(),this.tripDays=new Map,this.events=[],this.today=new Date}_isLeap(e){return e%4===0&&e%100!==0||e%400===0}_daysInMonth(e,t){return[31,this._isLeap(e)?29:28,31,30,31,30,31,31,30,31,30,31][t]}_renderMonth(e){const t=this.year,r=(new Date(t,e,1).getDay()+6)%7,a=this._daysInMonth(t,e),o=new Set(this.events.filter(p=>{const c=_(p.date);return c&&c.getFullYear()===t&&c.getMonth()===e}).map(p=>_(p.date).getDate())),s=[];for(let p=0;p<r;p++)s.push(n`<div class="cell empty"></div>`);const d=this.today;for(let p=1;p<=a;p++){const c=`${String(e+1).padStart(2,"0")}-${String(p).padStart(2,"0")}`,h=this.tripDays.get(c)??0,f=d.getFullYear()===t&&d.getMonth()===e&&d.getDate()===p,v=o.has(p),b=["cell",f?"today":"",h>0?"trip":"",h>.6?"dense":"",v?"event":""].filter(Boolean).join(" ");s.push(n`<div class=${b}></div>`)}return s}_onSelect(e){this.dispatchEvent(new CustomEvent("month-select",{detail:{month:e,year:this.year},bubbles:!0,composed:!0}))}render(){const e=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],t=this.today.getMonth(),i=this.today.getFullYear()===this.year;return n`
       <div class="grid">
         ${e.map((r,a)=>n`
             <div
@@ -364,10 +364,10 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
       font-weight: 500;
       color: var(--text-secondary);
     }
-  `);customElements.define("member-chip",de);class pe extends ${constructor(){super(),this.start="",this.end="",this._displayMonth=null,this._hoverDate=null}willUpdate(e){if(e.has("start")||this._displayMonth===null){const t=this.start?_(this.start):new Date;this._displayMonth=new Date(t.getFullYear(),t.getMonth(),1)}}_isoFor(e,t,i){return`${e}-${String(t+1).padStart(2,"0")}-${String(i).padStart(2,"0")}`}_emit(e,t){this.start=e,this.end=t,this._hoverDate=null,this.dispatchEvent(new CustomEvent("range-change",{detail:{start:e,end:t},bubbles:!0,composed:!0}))}_onDayClick(e){if(!this.start||this.start&&this.end){this._emit(e,"");return}e<this.start?this._emit(e,this.start):this._emit(this.start,e)}_onDayHover(e){this.start&&!this.end&&(this._hoverDate=e)}_onLeave(){this._hoverDate=null}_shiftMonth(e){const t=this._displayMonth;this._displayMonth=new Date(t.getFullYear(),t.getMonth()+e,1)}_isToday(e,t,i){const r=new Date;return r.getFullYear()===e&&r.getMonth()===t&&r.getDate()===i}_inSelectedRange(e){return!this.start||!this.end?!1:e>this.start&&e<this.end}_inHoverRange(e){if(!this.start||this.end||!this._hoverDate)return!1;const t=this._hoverDate<this.start?this._hoverDate:this.start,i=this._hoverDate<this.start?this.start:this._hoverDate;return e>t&&e<i}_summary(){if(!this.start&&!this.end)return"Pick a start date";const e=t=>{const i=_(t);return i?i.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"}):""};return this.start&&!this.end?`From ${e(this.start)} — pick an end date`:this.start===this.end?e(this.start):`${e(this.start)} – ${e(this.end)}`}_renderGrid(){const e=this._displayMonth.getFullYear(),t=this._displayMonth.getMonth(),r=(new Date(e,t,1).getDay()+6)%7,a=new Date(e,t+1,0).getDate(),o=[];for(let s=0;s<r;s++)o.push(n`<div class="empty"></div>`);for(let s=1;s<=a;s++){const d=this._isoFor(e,t,s),p=d===this.start,c=d===this.end&&d!==this.start,h=this._inSelectedRange(d),b=this._inHoverRange(d),v=this._isToday(e,t,s),f=["day",p?"start":"",c?"end":"",h?"in-range":"",b?"hover-range":"",v&&!p&&!c?"today":""].filter(Boolean).join(" ");o.push(n`
+  `);customElements.define("member-chip",de);class pe extends ${constructor(){super(),this.start="",this.end="",this._displayMonth=null,this._hoverDate=null}willUpdate(e){if(e.has("start")||this._displayMonth===null){const t=this.start?_(this.start):new Date;this._displayMonth=new Date(t.getFullYear(),t.getMonth(),1)}}_isoFor(e,t,i){return`${e}-${String(t+1).padStart(2,"0")}-${String(i).padStart(2,"0")}`}_emit(e,t){this.start=e,this.end=t,this._hoverDate=null,this.dispatchEvent(new CustomEvent("range-change",{detail:{start:e,end:t},bubbles:!0,composed:!0}))}_onDayClick(e){if(!this.start||this.start&&this.end){this._emit(e,"");return}e<this.start?this._emit(e,this.start):this._emit(this.start,e)}_onDayHover(e){this.start&&!this.end&&(this._hoverDate=e)}_onLeave(){this._hoverDate=null}_shiftMonth(e){const t=this._displayMonth;this._displayMonth=new Date(t.getFullYear(),t.getMonth()+e,1)}_isToday(e,t,i){const r=new Date;return r.getFullYear()===e&&r.getMonth()===t&&r.getDate()===i}_inSelectedRange(e){return!this.start||!this.end?!1:e>this.start&&e<this.end}_inHoverRange(e){if(!this.start||this.end||!this._hoverDate)return!1;const t=this._hoverDate<this.start?this._hoverDate:this.start,i=this._hoverDate<this.start?this.start:this._hoverDate;return e>t&&e<i}_summary(){if(!this.start&&!this.end)return"Pick a start date";const e=t=>{const i=_(t);return i?i.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"}):""};return this.start&&!this.end?`From ${e(this.start)} — pick an end date`:this.start===this.end?e(this.start):`${e(this.start)} – ${e(this.end)}`}_renderGrid(){const e=this._displayMonth.getFullYear(),t=this._displayMonth.getMonth(),r=(new Date(e,t,1).getDay()+6)%7,a=new Date(e,t+1,0).getDate(),o=[];for(let s=0;s<r;s++)o.push(n`<div class="empty"></div>`);for(let s=1;s<=a;s++){const d=this._isoFor(e,t,s),p=d===this.start,c=d===this.end&&d!==this.start,h=this._inSelectedRange(d),f=this._inHoverRange(d),v=this._isToday(e,t,s),b=["day",p?"start":"",c?"end":"",h?"in-range":"",f?"hover-range":"",v&&!p&&!c?"today":""].filter(Boolean).join(" ");o.push(n`
         <button
           type="button"
-          class=${f}
+          class=${b}
           @click=${()=>this._onDayClick(d)}
           @mouseover=${()=>this._onDayHover(d)}
         >
@@ -1673,7 +1673,7 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
                                   </span>`:""}
                             </div>
                           `:(p.memberIds??[]).length>0?n`<div style="margin-top:4px;">
-                            ${(p.memberIds??[]).map(c=>{const h=this.extended.find(b=>b.uid===c);return h?n`<span class="chip-toggle on" style="cursor:default;">
+                            ${(p.memberIds??[]).map(c=>{const h=this.extended.find(f=>f.uid===c);return h?n`<span class="chip-toggle on" style="cursor:default;">
                                 <member-chip
                                   .name=${h.displayName}
                                   .photo=${h.photoURL??""}
@@ -2320,7 +2320,7 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
       padding: 38px 12px;
       line-height: 1.55;
     }
-  `);customElements.define("all-trips-modal",me);class fe extends ${constructor(){super(),this.open=!1,this._events=[],this._selected=new Set,this._loading=!1,this._error="",this._importing=!1}willUpdate(e){e.has("open")&&this.open&&this._events.length===0&&!this._loading&&this._load()}async _load(){var e,t,i,r,a,o;this._loading=!0,this._error="";try{const s=await Le(),d=await ft(s,90),p=new Set((w.state.trips??[]).filter(h=>h.gcalEventId).map(h=>h.gcalEventId));this._events=d.map(h=>({...h,_alreadyImported:p.has(h.id)}));const c=new Set;for(const h of this._events){if(h._alreadyImported)continue;const b=((e=h.start)==null?void 0:e.date)??((i=(t=h.start)==null?void 0:t.dateTime)==null?void 0:i.slice(0,10)),v=((r=h.end)==null?void 0:r.date)??((o=(a=h.end)==null?void 0:a.dateTime)==null?void 0:o.slice(0,10));b&&v&&v!==b&&c.add(h.id)}this._selected=c}catch(s){console.error(s),this._error=(s==null?void 0:s.message)??"Could not load calendar events."}finally{this._loading=!1}}_toggle(e){const t=new Set(this._selected);t.has(e)?t.delete(e):t.add(e),this._selected=t}_toggleAll(){const e=this._events.filter(t=>!t._alreadyImported);this._selected.size===e.length?this._selected=new Set:this._selected=new Set(e.map(t=>t.id))}async _import(){var a;if(this._importing||this._selected.size===0)return;this._importing=!0;const e=(a=y==null?void 0:y.currentUser)==null?void 0:a.uid,t=this._events.filter(o=>this._selected.has(o.id));let i=0,r=0;for(const o of t){const s=bt(o,e);try{await w.saveTrip(s),i++}catch(d){console.error("Import failed for event",o.id,d),r++}}this._importing=!1,r===0?m(`Imported ${i} ${i===1?"activity":"activities"}.`):m(`Imported ${i}, ${r} failed.`,{duration:5e3}),this._events=[],this._selected=new Set,this.dispatchEvent(new Event("cancel"))}_onCancel(){this.dispatchEvent(new Event("cancel"))}_fmtRange(e){var c,h,b,v,f,E,S,N;const t=((c=e.start)==null?void 0:c.date)??((b=(h=e.start)==null?void 0:h.dateTime)==null?void 0:b.slice(0,10)),i=((v=e.end)==null?void 0:v.date)??((E=(f=e.end)==null?void 0:f.dateTime)==null?void 0:E.slice(0,10));if(!t)return"";const r=new Date(t);if(!i||i===t)return r.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});let a=new Date(i);(S=e.start)!=null&&S.date&&((N=e.end)!=null&&N.date)&&a.setDate(a.getDate()-1);const o=r.getMonth()===a.getMonth()&&r.getFullYear()===a.getFullYear(),s=r.getFullYear()===a.getFullYear();if(o)return`${r.getDate()}–${a.getDate()} ${r.toLocaleString("en-GB",{month:"short",year:"numeric"})}`;const d=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),p=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});return s?`${d} – ${p}`:`${r.toLocaleDateString()} – ${a.toLocaleDateString()}`}render(){if(!this.open)return n``;const e=this._events.filter(i=>!i._alreadyImported),t=e.length>0&&this._selected.size===e.length;return n`
+  `);customElements.define("all-trips-modal",me);class be extends ${constructor(){super(),this.open=!1,this._events=[],this._selected=new Set,this._loading=!1,this._error="",this._importing=!1}willUpdate(e){e.has("open")&&this.open&&this._events.length===0&&!this._loading&&this._load()}async _load(){var e,t,i,r,a,o;this._loading=!0,this._error="";try{const s=await Le(),d=await bt(s,90),p=new Set((w.state.trips??[]).filter(h=>h.gcalEventId).map(h=>h.gcalEventId));this._events=d.map(h=>({...h,_alreadyImported:p.has(h.id)}));const c=new Set;for(const h of this._events){if(h._alreadyImported)continue;const f=((e=h.start)==null?void 0:e.date)??((i=(t=h.start)==null?void 0:t.dateTime)==null?void 0:i.slice(0,10)),v=((r=h.end)==null?void 0:r.date)??((o=(a=h.end)==null?void 0:a.dateTime)==null?void 0:o.slice(0,10));f&&v&&v!==f&&c.add(h.id)}this._selected=c}catch(s){console.error(s),this._error=(s==null?void 0:s.message)??"Could not load calendar events."}finally{this._loading=!1}}_toggle(e){const t=new Set(this._selected);t.has(e)?t.delete(e):t.add(e),this._selected=t}_toggleAll(){const e=this._events.filter(t=>!t._alreadyImported);this._selected.size===e.length?this._selected=new Set:this._selected=new Set(e.map(t=>t.id))}async _import(){var a;if(this._importing||this._selected.size===0)return;this._importing=!0;const e=(a=y==null?void 0:y.currentUser)==null?void 0:a.uid,t=this._events.filter(o=>this._selected.has(o.id));let i=0,r=0;for(const o of t){const s=ft(o,e);try{await w.saveTrip(s),i++}catch(d){console.error("Import failed for event",o.id,d),r++}}this._importing=!1,r===0?m(`Imported ${i} ${i===1?"activity":"activities"}.`):m(`Imported ${i}, ${r} failed.`,{duration:5e3}),this._events=[],this._selected=new Set,this.dispatchEvent(new Event("cancel"))}_onCancel(){this.dispatchEvent(new Event("cancel"))}_fmtRange(e){var c,h,f,v,b,E,S,N;const t=((c=e.start)==null?void 0:c.date)??((f=(h=e.start)==null?void 0:h.dateTime)==null?void 0:f.slice(0,10)),i=((v=e.end)==null?void 0:v.date)??((E=(b=e.end)==null?void 0:b.dateTime)==null?void 0:E.slice(0,10));if(!t)return"";const r=new Date(t);if(!i||i===t)return r.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});let a=new Date(i);(S=e.start)!=null&&S.date&&((N=e.end)!=null&&N.date)&&a.setDate(a.getDate()-1);const o=r.getMonth()===a.getMonth()&&r.getFullYear()===a.getFullYear(),s=r.getFullYear()===a.getFullYear();if(o)return`${r.getDate()}–${a.getDate()} ${r.toLocaleString("en-GB",{month:"short",year:"numeric"})}`;const d=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),p=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});return s?`${d} – ${p}`:`${r.toLocaleDateString()} – ${a.toLocaleDateString()}`}render(){if(!this.open)return n``;const e=this._events.filter(i=>!i._alreadyImported),t=e.length>0&&this._selected.size===e.length;return n`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -2372,7 +2372,7 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
               `}
         </glass-panel>
       </div>
-    `}}u(fe,"properties",{open:{type:Boolean,reflect:!0},_events:{state:!0},_selected:{state:!0},_loading:{state:!0},_error:{state:!0},_importing:{state:!0}}),u(fe,"styles",k`
+    `}}u(be,"properties",{open:{type:Boolean,reflect:!0},_events:{state:!0},_selected:{state:!0},_loading:{state:!0},_error:{state:!0},_importing:{state:!0}}),u(be,"styles",k`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -2552,7 +2552,7 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
       display: flex;
       gap: 10px;
     }
-  `);customElements.define("import-calendar-modal",fe);class be extends ${constructor(){super(),this.open=!1,this.user=null,this.pebbleUser=null,this._name="",this._savingName=!1,this._uploadingPhoto=!1}willUpdate(e){var t;e.has("open")&&this.open&&(this._name=((t=this.user)==null?void 0:t.displayName)??"")}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _saveName(){var t,i;const e=this._name.trim();if(!(!e||e===(((t=this.user)==null?void 0:t.displayName)??""))&&!(!((i=y==null?void 0:y.currentUser)!=null&&i.uid)||!x)){this._savingName=!0;try{await T(z(x,"users",y.currentUser.uid),{displayName:e,updatedAt:C()}),m("Display name updated.")}catch(r){console.error(r),m(`Couldn't save: ${r.code??r.message}`,{duration:5e3})}finally{this._savingName=!1}}}async _signOut(){confirm("Sign out of Cairn?")&&(this.dispatchEvent(new Event("cancel")),await He())}_triggerPhotoPicker(){var e;(e=this.renderRoot.querySelector("#photo-file"))==null||e.click()}async _onPhotoChosen(e){var a,o;const t=(a=e.target.files)==null?void 0:a[0];if(e.target.value="",!t)return;if(!t.type.startsWith("image/")){m("Pick an image file (JPG, PNG, etc.).");return}if(t.size>5*1024*1024){m("Photo is too big — keep it under 5 MB.");return}const i=(o=y==null?void 0:y.currentUser)==null?void 0:o.uid,r=w.familyId;if(!i||!r||!se){m("Can't upload yet — you need to be in a family first.");return}this._uploadingPhoto=!0;try{const s=Ge(se,`families/${r}/avatars/users/${i}`);await Be(s,t,{contentType:t.type});const d=await Ye(s);await T(z(x,"users",i),{profilePhotoURL:d,updatedAt:C()}),m("Photo updated.")}catch(s){console.error("Photo upload failed",s),m(`Upload failed: ${s.code??s.message}`,{duration:5e3})}finally{this._uploadingPhoto=!1}}render(){if(!this.open)return n``;const e=this.user,t=this._name.trim()&&this._name.trim()!==((e==null?void 0:e.displayName)??"");return n`
+  `);customElements.define("import-calendar-modal",be);class fe extends ${constructor(){super(),this.open=!1,this.user=null,this.pebbleUser=null,this._name="",this._savingName=!1,this._uploadingPhoto=!1}willUpdate(e){var t;e.has("open")&&this.open&&(this._name=((t=this.user)==null?void 0:t.displayName)??"")}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _saveName(){var t,i;const e=this._name.trim();if(!(!e||e===(((t=this.user)==null?void 0:t.displayName)??""))&&!(!((i=y==null?void 0:y.currentUser)!=null&&i.uid)||!x)){this._savingName=!0;try{await T(z(x,"users",y.currentUser.uid),{displayName:e,updatedAt:C()}),m("Display name updated.")}catch(r){console.error(r),m(`Couldn't save: ${r.code??r.message}`,{duration:5e3})}finally{this._savingName=!1}}}async _signOut(){confirm("Sign out of Cairn?")&&(this.dispatchEvent(new Event("cancel")),await He())}_triggerPhotoPicker(){var e;(e=this.renderRoot.querySelector("#photo-file"))==null||e.click()}async _onPhotoChosen(e){var a,o;const t=(a=e.target.files)==null?void 0:a[0];if(e.target.value="",!t)return;if(!t.type.startsWith("image/")){m("Pick an image file (JPG, PNG, etc.).");return}if(t.size>5*1024*1024){m("Photo is too big — keep it under 5 MB.");return}const i=(o=y==null?void 0:y.currentUser)==null?void 0:o.uid,r=w.familyId;if(!i||!r||!se){m("Can't upload yet — you need to be in a family first.");return}this._uploadingPhoto=!0;try{const s=Ge(se,`families/${r}/avatars/users/${i}`);await Be(s,t,{contentType:t.type});const d=await Ye(s);await T(z(x,"users",i),{profilePhotoURL:d,updatedAt:C()}),m("Photo updated.")}catch(s){console.error("Photo upload failed",s),m(`Upload failed: ${s.code??s.message}`,{duration:5e3})}finally{this._uploadingPhoto=!1}}render(){if(!this.open)return n``;const e=this.user,t=this._name.trim()&&this._name.trim()!==((e==null?void 0:e.displayName)??"");return n`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -2610,7 +2610,7 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
           </div>
         </glass-panel>
       </div>
-    `}}u(be,"properties",{open:{type:Boolean,reflect:!0},user:{type:Object},pebbleUser:{type:Object},_name:{state:!0},_savingName:{state:!0},_uploadingPhoto:{state:!0}}),u(be,"styles",k`
+    `}}u(fe,"properties",{open:{type:Boolean,reflect:!0},user:{type:Object},pebbleUser:{type:Object},_name:{state:!0},_savingName:{state:!0},_uploadingPhoto:{state:!0}}),u(fe,"styles",k`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -2761,7 +2761,7 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
       background: rgba(201, 138, 138, 0.1);
       border-color: rgba(201, 138, 138, 0.5);
     }
-  `);customElements.define("profile-sheet",be);const L=class L extends ${constructor(){super(),this.open=!1}_pick(e){this.dispatchEvent(new CustomEvent("pick",{detail:{type:e}}))}_cancel(){this.dispatchEvent(new Event("cancel"))}render(){return this.open?n`
+  `);customElements.define("profile-sheet",fe);const L=class L extends ${constructor(){super(),this.open=!1}_pick(e){this.dispatchEvent(new CustomEvent("pick",{detail:{type:e}}))}_cancel(){this.dispatchEvent(new Event("cancel"))}render(){return this.open?n`
       <div class="backdrop" @click=${this._cancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -3942,32 +3942,31 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
       text-transform: uppercase;
       letter-spacing: 0.06em;
     }
-  `);customElements.define("event-row",$e);const wt={uid:"preview-user",displayName:"Thomas Paris",email:"thomas@example.com",photoURL:null},Ie=[{uid:"thomas",displayName:"Thomas",circles:["immediate"],hue:198},{uid:"partner",displayName:"Élise",circles:["immediate"],hue:8},{uid:"kid1",displayName:"Oscar",circles:["immediate"],hue:142},{uid:"kid2",displayName:"Mila",circles:["immediate"],hue:44},{uid:"mum",displayName:"Mum",circles:["extended"],hue:320},{uid:"dad",displayName:"Dad",circles:["extended"],hue:28},{uid:"sister",displayName:"Camille",circles:["extended"],hue:280},{uid:"bro-in-law",displayName:"Sam",circles:["extended"],hue:175},{uid:"niece",displayName:"Léa",circles:["extended"],hue:100}],_t=[{id:"t1",title:"Côte d’Azur, summer",location:"Antibes, France",start:"2026-07-12",end:"2026-07-21",coverGradient:"linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)",lodgingHost:"Airbnb",lodgingTitle:"Villa near Cap d’Antibes",attendees:["thomas","partner","kid1","kid2","mum","dad"],notes:"Mum + Dad arrive day 2. Dinner reservations at La Guérite booked.",visibility:"extended"},{id:"t2",title:"Half-term in the Alps",location:"Chamonix, France",start:"2026-10-24",end:"2026-10-31",coverGradient:"linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)",lodgingHost:"Booking.com",lodgingTitle:"Chalet Les Drus",attendees:["thomas","partner","kid1","kid2"],notes:"Need ski school for the kids — book by September.",visibility:"immediate"},{id:"t3",title:"Camille’s 40th",location:"Lisbon, Portugal",start:"2026-09-05",end:"2026-09-08",coverGradient:"linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)",lodgingHost:"Airbnb",lodgingTitle:"Alfama rooftop apartment",attendees:["thomas","partner","sister","bro-in-law"],notes:"Surprise. Don’t mention to Camille.",visibility:"family"}],$t=[{id:"e1",type:"birthday",date:"2026-05-24",personIds:["mum"],title:"Mum’s birthday"},{id:"e2",type:"anniversary",date:"2026-05-28",personIds:["mum","dad"],title:"Mum & Dad’s anniversary",subtitle:"38 years"},{id:"e3",type:"birthday",date:"2026-06-11",personIds:["kid1"],title:"Oscar turns 7"},{id:"e4",type:"birthday",date:"2026-06-30",personIds:["niece"],title:"Léa’s birthday"}];class ke extends ${constructor(){super(),this.user=wt,this.pebbleUser=null,this.family=null,this.children=[],this.trips=[],this.events=[],this.preview=!1,this.circle="extended",this._formOpen=!1,this._formTrip=null,this._formBusy=!1,this._membersOpen=!1,this._eventFormOpen=!1,this._eventFormEvent=null,this._eventFormBusy=!1,this._allTripsOpen=!1,this._editingFamilyName=!1,this._importOpen=!1,this._profileOpen=!1,this._typePickerOpen=!1,this._formMode="trip",this._pebbleOpen=!1;const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1)}async _saveFamilyName(e){var a,o;const i=(e.target.value??"").trim(),r=((a=this.family)==null?void 0:a.name)??"";if(i&&i!==r&&((o=this.family)!=null&&o.id))try{const{db:s,doc:d,updateDoc:p,serverTimestamp:c}=await Ue(async()=>{const{db:h,doc:b,updateDoc:v,serverTimestamp:f}=await Promise.resolve().then(()=>pt);return{db:h,doc:b,updateDoc:v,serverTimestamp:f}},void 0);await p(d(s,"families",this.family.id),{name:i,updatedAt:c()}),m("Family name updated.")}catch(s){console.error("Update family name failed:",s),m(`Couldn't save: ${s.code??s.message}`,{duration:5e3})}this._editingFamilyName=!1}_liveImmediate(){var e;return this.preview||!((e=this.user)!=null&&e.uid)?Ie.filter(t=>t.circles.includes("immediate")):ut(this.user.uid,this.user,this.pebbleUser,this.family,this.children)}_liveExtended(){return this.preview?Ie.filter(e=>e.circles.includes("extended")):[]}_liveTrips(){return this.preview?_t:this.trips??[]}_liveEvents(){if(this.preview)return $t;const e=gt(this.children),t=(this.events??[]).map(i=>{const{date:r,yearsElapsed:a}=mt(i);return{...i,date:r?r.toISOString().slice(0,10):i.date,_yearsElapsed:a,_originalDate:i.date}});return[...e,...t].sort((i,r)=>String(i.date).localeCompare(String(r.date)))}_filteredMembers(){const e=this._liveImmediate(),t=this._liveExtended();return this.circle==="personal"?e.filter(i=>{var r;return i.uid===((r=this.user)==null?void 0:r.uid)}):this.circle==="family"?e:[...e,...t]}_circleTrips(){var o;const e=this._liveTrips(),t=((o=this.user)==null?void 0:o.uid)??"thomas";let i;this.circle==="personal"?i=e.filter(s=>{var d;return(d=s.attendees)==null?void 0:d.includes(t)}):this.circle==="family"?i=e.filter(s=>s.visibility!=="extended"&&this._userCanSeeTrip(s)):i=e.filter(s=>this._userCanSeeTrip(s));const r=new Set,a=[];for(const s of i){const d=s.id??`${s.title}|${s.start}|${s.end}`;r.has(d)||(r.add(d),a.push(s))}return a}_filteredTrips(){const e=new Date;return e.setHours(0,0,0,0),this._circleTrips().filter(t=>t.end?_(t.end)>=e:!0)}_userCanSeeTrip(e){var i,r,a,o,s;const t=(i=this.user)==null?void 0:i.uid;if(!t)return!1;if((r=e.attendees)!=null&&r.includes(t)||(a=e.viewers)!=null&&a.includes(t)||e.visibility==="family")return!0;if(e.visibility==="extended"){if((((o=this.family)==null?void 0:o.memberIds)??[]).includes(t))return!0;const d=e.targetSubGroups??[];if(d.length===0)return!0;const p=Object.entries(((s=this.family)==null?void 0:s.subGroups)??{}).filter(([,c])=>(c.memberIds??[]).includes(t)).map(([c])=>c);return d.some(c=>p.includes(c))}return!1}_filteredEvents(){const e=new Set(this._filteredMembers().map(t=>t.uid));return this._liveEvents().filter(t=>t.personIds.some(i=>e.has(i)))}_smartCallout(){var s,d;const e=new Date,t=new Date(e.getFullYear(),e.getMonth(),e.getDate()),i=1440*60*1e3,r=p=>Math.round((p-t)/i);for(const p of this._circleTrips()){if(!p.start||!p.end)continue;const c=_(p.start),h=_(p.end);if(c.setHours(0,0,0,0),h.setHours(0,0,0,0),c<=t&&t<=h){const b=r(c)+1,v=r(h)-r(c)+1,f=((s=p.location)==null?void 0:s.trim())||p.title;return`Day ${b} of ${v} in ${f}.`}}let a=null,o=1/0;for(const p of this._circleTrips()){if(!p.start)continue;const c=_(p.start);if(!c)continue;const h=r(c);h>0&&h<o&&(a={kind:"trip",item:p},o=h)}for(const p of this._filteredEvents()){if(!p.date)continue;const c=_(p.date);if(!c)continue;const h=r(c);h>=0&&h<o&&(a={kind:"event",item:p},o=h)}if(!a)return null;if(a.kind==="trip"){const p=((d=a.item.location)==null?void 0:d.trim())||a.item.title;return o===1?`${p} starts tomorrow.`:o<=14?`${p} in ${o} days.`:o<=60?`Next trip: ${p} in ${o} days.`:null}return o===0?`${a.item.title} — today.`:o===1?`${a.item.title} — tomorrow.`:o<=7?`${a.item.title} in ${o} days.`:null}_tripDensityByDay(e){const t=new Map;for(const i of this._filteredTrips()){if(!i.start||!i.end)continue;const r=_(i.start),a=_(i.end);if(Number.isNaN(r.getTime())||Number.isNaN(a.getTime())||r.getFullYear()>e||a.getFullYear()<e)continue;const o=new Date(Math.max(r,new Date(e,0,1))),s=new Date(Math.min(a,new Date(e,11,31)));for(;o<=s;){const d=`${String(o.getMonth()+1).padStart(2,"0")}-${String(o.getDate()).padStart(2,"0")}`;t.set(d,Math.min(1,(t.get(d)??0)+.5)),o.setDate(o.getDate()+1)}}return t}_shiftMonth(e){const t=this._displayMonth;this._displayMonth=new Date(t.getFullYear(),t.getMonth()+e,1)}_jumpToMonth(e,t){this._displayMonth=new Date(e,t,1)}_resetToToday(){const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1)}_renderStone({label:e,members:t,klass:i,emptyLabel:r,onClick:a,maxChips:o=6}){if(!t||t.length===0)return n`
-        <button
-          class="stone ${i} stone-empty"
-          @click=${a}
-          title=${r}
-        >
-          <span>${r}</span>
+  `);customElements.define("event-row",$e);const wt={uid:"preview-user",displayName:"Thomas Paris",email:"thomas@example.com",photoURL:null},Ie=[{uid:"thomas",displayName:"Thomas",circles:["immediate"],hue:198},{uid:"partner",displayName:"Élise",circles:["immediate"],hue:8},{uid:"kid1",displayName:"Oscar",circles:["immediate"],hue:142},{uid:"kid2",displayName:"Mila",circles:["immediate"],hue:44},{uid:"mum",displayName:"Mum",circles:["extended"],hue:320},{uid:"dad",displayName:"Dad",circles:["extended"],hue:28},{uid:"sister",displayName:"Camille",circles:["extended"],hue:280},{uid:"bro-in-law",displayName:"Sam",circles:["extended"],hue:175},{uid:"niece",displayName:"Léa",circles:["extended"],hue:100}],_t=[{id:"t1",title:"Côte d’Azur, summer",location:"Antibes, France",start:"2026-07-12",end:"2026-07-21",coverGradient:"linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)",lodgingHost:"Airbnb",lodgingTitle:"Villa near Cap d’Antibes",attendees:["thomas","partner","kid1","kid2","mum","dad"],notes:"Mum + Dad arrive day 2. Dinner reservations at La Guérite booked.",visibility:"extended"},{id:"t2",title:"Half-term in the Alps",location:"Chamonix, France",start:"2026-10-24",end:"2026-10-31",coverGradient:"linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)",lodgingHost:"Booking.com",lodgingTitle:"Chalet Les Drus",attendees:["thomas","partner","kid1","kid2"],notes:"Need ski school for the kids — book by September.",visibility:"immediate"},{id:"t3",title:"Camille’s 40th",location:"Lisbon, Portugal",start:"2026-09-05",end:"2026-09-08",coverGradient:"linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)",lodgingHost:"Airbnb",lodgingTitle:"Alfama rooftop apartment",attendees:["thomas","partner","sister","bro-in-law"],notes:"Surprise. Don’t mention to Camille.",visibility:"family"}],$t=[{id:"e1",type:"birthday",date:"2026-05-24",personIds:["mum"],title:"Mum’s birthday"},{id:"e2",type:"anniversary",date:"2026-05-28",personIds:["mum","dad"],title:"Mum & Dad’s anniversary",subtitle:"38 years"},{id:"e3",type:"birthday",date:"2026-06-11",personIds:["kid1"],title:"Oscar turns 7"},{id:"e4",type:"birthday",date:"2026-06-30",personIds:["niece"],title:"Léa’s birthday"}];class ke extends ${constructor(){super(),this.user=wt,this.pebbleUser=null,this.family=null,this.children=[],this.trips=[],this.events=[],this.preview=!1,this.circle="extended",this._formOpen=!1,this._formTrip=null,this._formBusy=!1,this._membersOpen=!1,this._eventFormOpen=!1,this._eventFormEvent=null,this._eventFormBusy=!1,this._allTripsOpen=!1,this._editingFamilyName=!1,this._importOpen=!1,this._profileOpen=!1,this._typePickerOpen=!1,this._formMode="trip",this._pebbleOpen=!1;const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1)}async _saveFamilyName(e){var a,o;const i=(e.target.value??"").trim(),r=((a=this.family)==null?void 0:a.name)??"";if(i&&i!==r&&((o=this.family)!=null&&o.id))try{const{db:s,doc:d,updateDoc:p,serverTimestamp:c}=await Ue(async()=>{const{db:h,doc:f,updateDoc:v,serverTimestamp:b}=await Promise.resolve().then(()=>pt);return{db:h,doc:f,updateDoc:v,serverTimestamp:b}},void 0);await p(d(s,"families",this.family.id),{name:i,updatedAt:c()}),m("Family name updated.")}catch(s){console.error("Update family name failed:",s),m(`Couldn't save: ${s.code??s.message}`,{duration:5e3})}this._editingFamilyName=!1}_liveImmediate(){var e;return this.preview||!((e=this.user)!=null&&e.uid)?Ie.filter(t=>t.circles.includes("immediate")):ut(this.user.uid,this.user,this.pebbleUser,this.family,this.children)}_liveExtended(){return this.preview?Ie.filter(e=>e.circles.includes("extended")):[]}_liveTrips(){return this.preview?_t:this.trips??[]}_liveEvents(){if(this.preview)return $t;const e=gt(this.children),t=(this.events??[]).map(i=>{const{date:r,yearsElapsed:a}=mt(i);return{...i,date:r?r.toISOString().slice(0,10):i.date,_yearsElapsed:a,_originalDate:i.date}});return[...e,...t].sort((i,r)=>String(i.date).localeCompare(String(r.date)))}_filteredMembers(){const e=this._liveImmediate(),t=this._liveExtended();return this.circle==="personal"?e.filter(i=>{var r;return i.uid===((r=this.user)==null?void 0:r.uid)}):this.circle==="family"?e:[...e,...t]}_circleTrips(){var o;const e=this._liveTrips(),t=((o=this.user)==null?void 0:o.uid)??"thomas";let i;this.circle==="personal"?i=e.filter(s=>{var d;return(d=s.attendees)==null?void 0:d.includes(t)}):this.circle==="family"?i=e.filter(s=>s.visibility!=="extended"&&this._userCanSeeTrip(s)):i=e.filter(s=>this._userCanSeeTrip(s));const r=new Set,a=[];for(const s of i){const d=s.id??`${s.title}|${s.start}|${s.end}`;r.has(d)||(r.add(d),a.push(s))}return a}_filteredTrips(){const e=new Date;return e.setHours(0,0,0,0),this._circleTrips().filter(t=>t.end?_(t.end)>=e:!0)}_userCanSeeTrip(e){var i,r,a,o,s;const t=(i=this.user)==null?void 0:i.uid;if(!t)return!1;if((r=e.attendees)!=null&&r.includes(t)||(a=e.viewers)!=null&&a.includes(t)||e.visibility==="family")return!0;if(e.visibility==="extended"){if((((o=this.family)==null?void 0:o.memberIds)??[]).includes(t))return!0;const d=e.targetSubGroups??[];if(d.length===0)return!0;const p=Object.entries(((s=this.family)==null?void 0:s.subGroups)??{}).filter(([,c])=>(c.memberIds??[]).includes(t)).map(([c])=>c);return d.some(c=>p.includes(c))}return!1}_filteredEvents(){const e=new Set(this._filteredMembers().map(t=>t.uid));return this._liveEvents().filter(t=>t.personIds.some(i=>e.has(i)))}_smartCallout(){var s,d;const e=new Date,t=new Date(e.getFullYear(),e.getMonth(),e.getDate()),i=1440*60*1e3,r=p=>Math.round((p-t)/i);for(const p of this._circleTrips()){if(!p.start||!p.end)continue;const c=_(p.start),h=_(p.end);if(c.setHours(0,0,0,0),h.setHours(0,0,0,0),c<=t&&t<=h){const f=r(c)+1,v=r(h)-r(c)+1,b=((s=p.location)==null?void 0:s.trim())||p.title;return`Day ${f} of ${v} in ${b}.`}}let a=null,o=1/0;for(const p of this._circleTrips()){if(!p.start)continue;const c=_(p.start);if(!c)continue;const h=r(c);h>0&&h<o&&(a={kind:"trip",item:p},o=h)}for(const p of this._filteredEvents()){if(!p.date)continue;const c=_(p.date);if(!c)continue;const h=r(c);h>=0&&h<o&&(a={kind:"event",item:p},o=h)}if(!a)return null;if(a.kind==="trip"){const p=((d=a.item.location)==null?void 0:d.trim())||a.item.title;return o===1?`${p} starts tomorrow.`:o<=14?`${p} in ${o} days.`:o<=60?`Next trip: ${p} in ${o} days.`:null}return o===0?`${a.item.title} — today.`:o===1?`${a.item.title} — tomorrow.`:o<=7?`${a.item.title} in ${o} days.`:null}_tripDensityByDay(e){const t=new Map;for(const i of this._filteredTrips()){if(!i.start||!i.end)continue;const r=_(i.start),a=_(i.end);if(Number.isNaN(r.getTime())||Number.isNaN(a.getTime())||r.getFullYear()>e||a.getFullYear()<e)continue;const o=new Date(Math.max(r,new Date(e,0,1))),s=new Date(Math.min(a,new Date(e,11,31)));for(;o<=s;){const d=`${String(o.getMonth()+1).padStart(2,"0")}-${String(o.getDate()).padStart(2,"0")}`;t.set(d,Math.min(1,(t.get(d)??0)+.5)),o.setDate(o.getDate()+1)}}return t}_shiftMonth(e){const t=this._displayMonth;this._displayMonth=new Date(t.getFullYear(),t.getMonth()+e,1)}_jumpToMonth(e,t){this._displayMonth=new Date(e,t,1)}_resetToToday(){const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1)}_renderStone({label:e,members:t,pebbleClass:i,emptyLabel:r,onClick:a,maxChips:o=6}){if(!t||t.length===0)return n`
+        <button class="stone" @click=${a} title=${r}>
+          <span class="pebble ${i} pebble-empty">${r}</span>
+          <span class="stone-label">${e}</span>
         </button>
       `;const s=t.slice(0,o),d=t.length-s.length;return n`
-      <button class="stone ${i}" @click=${a} title="${e} — manage members">
-        <span class="stone-chips">
-          ${s.map(p=>n`
-              <member-chip
-                .name=${p.displayName}
-                .photo=${p.photoURL??""}
-                .hue=${p.hue}
-                size="26"
-              ></member-chip>
-            `)}
-          ${d>0?n`<span class="stone-more">+${d}</span>`:""}
+      <button class="stone" @click=${a} title="${e} — manage members">
+        <span class="pebble ${i}">
+          <span class="stone-chips">
+            ${s.map(p=>n`
+                <member-chip
+                  .name=${p.displayName}
+                  .photo=${p.photoURL??""}
+                  .hue=${p.hue}
+                  size="26"
+                ></member-chip>
+              `)}
+            ${d>0?n`<span class="stone-more">+${d}</span>`:""}
+          </span>
         </span>
         <span class="stone-label">${e}</span>
       </button>
-    `}_renderMonthly(){const e=new Date,t=this._displayMonth??e,i=t.getFullYear(),r=t.getMonth(),o=(new Date(i,r,1).getDay()+6)%7,s=new Date(i,r+1,0).getDate(),d=this._filteredEvents().map(f=>_(f.date)).filter(Boolean).filter(f=>f.getFullYear()===i&&f.getMonth()===r).map(f=>f.getDate()),p=new Set;for(const f of this._filteredTrips()){if(!f.start||!f.end)continue;const E=_(f.start),S=_(f.end);if(Number.isNaN(E.getTime())||Number.isNaN(S.getTime())||E.getFullYear()>i||S.getFullYear()<i||E.getMonth()>r&&S.getMonth()>r||E.getMonth()<r&&S.getMonth()<r)continue;const N=E.getMonth()===r?E.getDate():1,B=S.getMonth()===r?S.getDate():s;for(let Y=N;Y<=B;Y++)p.add(Y)}const c=[];for(let f=0;f<o;f++)c.push(n`<div class="cal-cell empty"></div>`);const h=e.getFullYear()===i&&e.getMonth()===r;for(let f=1;f<=s;f++){const E=h&&f===e.getDate(),S=d.includes(f),N=p.has(f),B=["cal-cell",E?"today":"",S?"has-event":"",N?"has-trip":""].filter(Boolean).join(" ");c.push(n`<div class=${B}>${f}</div>`)}const b=new Date(i,r,1).toLocaleString("en-GB",{month:"long",year:"numeric"});return n`
+    `}_renderMonthly(){const e=new Date,t=this._displayMonth??e,i=t.getFullYear(),r=t.getMonth(),o=(new Date(i,r,1).getDay()+6)%7,s=new Date(i,r+1,0).getDate(),d=this._filteredEvents().map(b=>_(b.date)).filter(Boolean).filter(b=>b.getFullYear()===i&&b.getMonth()===r).map(b=>b.getDate()),p=new Set;for(const b of this._filteredTrips()){if(!b.start||!b.end)continue;const E=_(b.start),S=_(b.end);if(Number.isNaN(E.getTime())||Number.isNaN(S.getTime())||E.getFullYear()>i||S.getFullYear()<i||E.getMonth()>r&&S.getMonth()>r||E.getMonth()<r&&S.getMonth()<r)continue;const N=E.getMonth()===r?E.getDate():1,B=S.getMonth()===r?S.getDate():s;for(let Y=N;Y<=B;Y++)p.add(Y)}const c=[];for(let b=0;b<o;b++)c.push(n`<div class="cal-cell empty"></div>`);const h=e.getFullYear()===i&&e.getMonth()===r;for(let b=1;b<=s;b++){const E=h&&b===e.getDate(),S=d.includes(b),N=p.has(b),B=["cal-cell",E?"today":"",S?"has-event":"",N?"has-trip":""].filter(Boolean).join(" ");c.push(n`<div class=${B}>${b}</div>`)}const f=new Date(i,r,1).toLocaleString("en-GB",{month:"long",year:"numeric"});return n`
       <div class="cal-head">
-        <h3>${b}</h3>
+        <h3>${f}</h3>
         <div class="nav">
           ${!h?n`<button
                 class="cal-nav-btn cal-today-btn"
@@ -3981,10 +3980,10 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
         </div>
       </div>
       <div class="cal-grid">
-        ${["Mo","Tu","We","Th","Fr","Sa","Su"].map(f=>n`<div class="cal-dow">${f}</div>`)}
+        ${["Mo","Tu","We","Th","Fr","Sa","Su"].map(b=>n`<div class="cal-dow">${b}</div>`)}
         ${c}
       </div>
-    `}_openCreate(){if(this.preview){m("Sign in to create real activities.");return}if(!w.familyId){m("You need a PebblePath family first.");return}this._typePickerOpen=!0}_onTypePicked(e){this._typePickerOpen=!1;const t=e.detail.type;if(t==="event"){this._eventFormEvent=null,this._eventFormOpen=!0;return}this._formMode=t,this._formTrip=null,this._formOpen=!0}_openEdit(e){if(this.preview){m("Sign in to edit real activities.");return}const t=e.lodgingUrl||e.lodgingHost||e.flightNumber||e.flightDepartAirport;this._formMode=t?"trip":"activity",this._formTrip=e,this._formOpen=!0}async _onSaveTrip(e){const t=e.detail;this._formBusy=!0;try{await w.saveTrip(t),this._formOpen=!1,this._formTrip=null,m(t.id?"Trip updated.":"Trip created.")}catch(i){console.error("Save trip failed:",i),m(`Couldn't save: ${i.code??i.message}`,{duration:5e3})}finally{this._formBusy=!1}}async _onDeleteTrip(e){this._formBusy=!0;try{await w.deleteTrip(e.detail.id),this._formOpen=!1,this._formTrip=null,m("Trip deleted.")}catch(t){console.error("Delete trip failed:",t),m(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._formBusy=!1}}_openCreateEvent(){if(this.preview){m("Sign in to add real events.");return}if(!w.familyId){m("You need a family first.");return}this._eventFormEvent=null,this._eventFormOpen=!0}_openEditEvent(e){if(this.preview){m("Sign in to edit real events.");return}if(e!=null&&e._childId){const t=prompt(`Edit ${e._childName}'s birthday (YYYY-MM-DD):`,e.date);if(!t)return;if(!/^\d{4}-\d{2}-\d{2}$/.test(t)){m("Use YYYY-MM-DD format.");return}w.updateChildBirthday(e._childId,new Date(t)).then(()=>m(`Updated ${e._childName}'s birthday.`)).catch(i=>{console.error("Update child birthday failed:",i),m(`Couldn't update: ${i.code??i.message}`,{duration:5e3})});return}this._eventFormEvent={...e,date:e._originalDate??e.date},this._eventFormOpen=!0}async _onSaveEvent(e){this._eventFormBusy=!0;try{await w.saveEvent(e.detail),this._eventFormOpen=!1,this._eventFormEvent=null,m(e.detail.id?"Event updated.":"Event added.")}catch(t){console.error("Save event failed:",t),m(`Couldn't save: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}async _onDeleteEvent(e){this._eventFormBusy=!0;try{await w.deleteEvent(e.detail.id),this._eventFormOpen=!1,this._eventFormEvent=null,m("Event deleted.")}catch(t){console.error("Delete event failed:",t),m(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}render(){var v,f,E,S,N,B,Y,ze,Ce,Ee,Se;const e=this._filteredTrips(),t=this._filteredEvents(),i=this._liveImmediate(),r=this._liveExtended(),a=i.concat(r),o=(((v=this.user)==null?void 0:v.displayName)??"there").split(" ")[0],s=new Date,d=new Date(s.getFullYear(),s.getMonth(),1),p=new Date(s.getFullYear(),s.getMonth()+1,0),c=t.filter(g=>{const D=_(g.date);return D&&D.getFullYear()===s.getFullYear()&&D.getMonth()===s.getMonth()}),b=this._circleTrips().filter(g=>{if(!g.start||!g.end)return!1;const D=_(g.start),M=_(g.end);return Number.isNaN(D.getTime())||Number.isNaN(M.getTime())?!1:D<=p&&M>=d}).length+c.length;return n`
+    `}_openCreate(){if(this.preview){m("Sign in to create real activities.");return}if(!w.familyId){m("You need a PebblePath family first.");return}this._typePickerOpen=!0}_onTypePicked(e){this._typePickerOpen=!1;const t=e.detail.type;if(t==="event"){this._eventFormEvent=null,this._eventFormOpen=!0;return}this._formMode=t,this._formTrip=null,this._formOpen=!0}_openEdit(e){if(this.preview){m("Sign in to edit real activities.");return}const t=e.lodgingUrl||e.lodgingHost||e.flightNumber||e.flightDepartAirport;this._formMode=t?"trip":"activity",this._formTrip=e,this._formOpen=!0}async _onSaveTrip(e){const t=e.detail;this._formBusy=!0;try{await w.saveTrip(t),this._formOpen=!1,this._formTrip=null,m(t.id?"Trip updated.":"Trip created.")}catch(i){console.error("Save trip failed:",i),m(`Couldn't save: ${i.code??i.message}`,{duration:5e3})}finally{this._formBusy=!1}}async _onDeleteTrip(e){this._formBusy=!0;try{await w.deleteTrip(e.detail.id),this._formOpen=!1,this._formTrip=null,m("Trip deleted.")}catch(t){console.error("Delete trip failed:",t),m(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._formBusy=!1}}_openCreateEvent(){if(this.preview){m("Sign in to add real events.");return}if(!w.familyId){m("You need a family first.");return}this._eventFormEvent=null,this._eventFormOpen=!0}_openEditEvent(e){if(this.preview){m("Sign in to edit real events.");return}if(e!=null&&e._childId){const t=prompt(`Edit ${e._childName}'s birthday (YYYY-MM-DD):`,e.date);if(!t)return;if(!/^\d{4}-\d{2}-\d{2}$/.test(t)){m("Use YYYY-MM-DD format.");return}w.updateChildBirthday(e._childId,new Date(t)).then(()=>m(`Updated ${e._childName}'s birthday.`)).catch(i=>{console.error("Update child birthday failed:",i),m(`Couldn't update: ${i.code??i.message}`,{duration:5e3})});return}this._eventFormEvent={...e,date:e._originalDate??e.date},this._eventFormOpen=!0}async _onSaveEvent(e){this._eventFormBusy=!0;try{await w.saveEvent(e.detail),this._eventFormOpen=!1,this._eventFormEvent=null,m(e.detail.id?"Event updated.":"Event added.")}catch(t){console.error("Save event failed:",t),m(`Couldn't save: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}async _onDeleteEvent(e){this._eventFormBusy=!0;try{await w.deleteEvent(e.detail.id),this._eventFormOpen=!1,this._eventFormEvent=null,m("Event deleted.")}catch(t){console.error("Delete event failed:",t),m(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}render(){var v,b,E,S,N,B,Y,ze,Ce,Ee,Se;const e=this._filteredTrips(),t=this._filteredEvents(),i=this._liveImmediate(),r=this._liveExtended(),a=i.concat(r),o=(((v=this.user)==null?void 0:v.displayName)??"there").split(" ")[0],s=new Date,d=new Date(s.getFullYear(),s.getMonth(),1),p=new Date(s.getFullYear(),s.getMonth()+1,0),c=t.filter(g=>{const D=_(g.date);return D&&D.getFullYear()===s.getFullYear()&&D.getMonth()===s.getMonth()}),f=this._circleTrips().filter(g=>{if(!g.start||!g.end)return!1;const D=_(g.start),M=_(g.end);return Number.isNaN(D.getTime())||Number.isNaN(M.getTime())?!1:D<=p&&M>=d}).length+c.length;return n`
       <div class="topbar">
         <div class="brand">
           <img
@@ -4027,7 +4026,7 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
           <button
             class="avatar-tap"
             @click=${()=>this._profileOpen=!0}
-            title="${((f=this.user)==null?void 0:f.displayName)??"Profile"} — open settings"
+            title="${((b=this.user)==null?void 0:b.displayName)??"Profile"} — open settings"
             aria-label="Open profile settings"
           >
             <member-chip
@@ -4051,7 +4050,7 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
             <h1>Hi ${o}.</h1>
             ${(()=>{const g=this._smartCallout();return g?n`<div class="smart">${g}</div>`:""})()}
             <div class="stat">
-              <span>${b}</span> ${b===1?"activity":"activities"} this month
+              <span>${f}</span> ${f===1?"activity":"activities"} this month
             </div>
             ${this.family?this._editingFamilyName?n`<input
                     class="family-name-input"
@@ -4190,33 +4189,35 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
           <glass-panel padding="md" variant="strong">
             ${(()=>{var F,P,W;const g=i.find(O=>{var A;return O.uid===((A=this.user)==null?void 0:A.uid)}),D=i.filter(O=>{var A;return O.uid!==((A=this.user)==null?void 0:A.uid)}),M=Object.entries(((F=this.family)==null?void 0:F.subGroups)??{}),q=new Map(a.map(O=>[O.uid,O]));return n`
                 <div class="cairn-stack">
-                  <!-- Top: you -->
+                  <!-- Top: you (terracotta pebble) -->
                   <button
-                    class="stone stone-self"
+                    class="stone"
                     @click=${()=>this._profileOpen=!0}
                     title="Your profile"
                   >
-                    <span class="stone-chips">
-                      <member-chip
-                        .name=${(g==null?void 0:g.displayName)??((P=this.user)==null?void 0:P.displayName)??"You"}
-                        .photo=${(g==null?void 0:g.photoURL)??((W=this.user)==null?void 0:W.photoURL)??""}
-                        .hue=${(g==null?void 0:g.hue)??198}
-                        size="28"
-                      ></member-chip>
+                    <span class="pebble pebble-self">
+                      <span class="stone-chips">
+                        <member-chip
+                          .name=${(g==null?void 0:g.displayName)??((P=this.user)==null?void 0:P.displayName)??"You"}
+                          .photo=${(g==null?void 0:g.photoURL)??((W=this.user)==null?void 0:W.photoURL)??""}
+                          .hue=${(g==null?void 0:g.hue)??198}
+                          size="28"
+                        ></member-chip>
+                      </span>
                     </span>
                     <span class="stone-label">You</span>
                   </button>
 
-                  <!-- Family (immediate minus self) -->
-                  ${this._renderStone({label:"Family",members:D,klass:"stone-family",emptyLabel:"+ Add co-parent or child",onClick:()=>this._membersOpen=!0})}
+                  <!-- Family (teal pebble) -->
+                  ${this._renderStone({label:"Family",members:D,pebbleClass:"pebble-family",emptyLabel:"+ Add co-parent or child",onClick:()=>this._membersOpen=!0})}
 
-                  <!-- Extended -->
-                  ${this._renderStone({label:"Extended",members:r,klass:"stone-extended",emptyLabel:"+ Invite the grandparents",onClick:()=>this._membersOpen=!0})}
+                  <!-- Extended (deeper teal, larger) -->
+                  ${this._renderStone({label:"Extended",members:r,pebbleClass:"pebble-extended",emptyLabel:"+ Invite the grandparents",onClick:()=>this._membersOpen=!0})}
 
-                  <!-- Sub-group base row: one stone per named group -->
+                  <!-- Sub-group base row -->
                   ${M.length>0?n`
                         <div class="subgroup-row">
-                          ${M.map(([O,A])=>{const Xe=(A.memberIds??[]).map(Ke=>q.get(Ke)).filter(Boolean);return this._renderStone({label:A.name??"Group",members:Xe,klass:"stone-subgroup",emptyLabel:`${A.name??"Group"} (empty)`,onClick:()=>this._membersOpen=!0,maxChips:4})})}
+                          ${M.map(([O,A])=>{const Xe=(A.memberIds??[]).map(Ke=>q.get(Ke)).filter(Boolean);return this._renderStone({label:A.name??"Group",members:Xe,pebbleClass:"pebble-subgroup",emptyLabel:`${A.name??"Group"} (empty)`,onClick:()=>this._membersOpen=!0,maxChips:4})})}
                         </div>
                       `:""}
                 </div>
@@ -4875,86 +4876,146 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
       color: var(--charcoal);
     }
 
-    /* ── Cairn stack: stones tapered from a single pebble at top down
-       to a wide base of sub-group stones, mirroring a real cairn. Each
-       stone is a flat lozenge (border-radius via x/y ratio) with a
-       warm-sand gradient + glass highlights, sitting on a soft cast
-       shadow so the stones feel stacked rather than floated. */
+    /* ── Cairn stack: flat polished pebbles in solid colors with
+       specular highlights, mirroring the app icon. Each stone is a
+       true ellipse (border-radius 50% on a wider-than-tall box),
+       solid-colored — terracotta on top, teal below — with a soft
+       elongated upper highlight + a small specular dot, and a
+       darker inner shadow on the bottom rim for 3D shading. */
     .cairn-stack {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      padding: 18px 6px 14px;
+      gap: 14px;
+      padding: 22px 6px 20px;
+      /* Faint ground-ring under the base, like the icon's drawn
+         arc. Drawn as a soft horizontal vignette. */
+      background:
+        radial-gradient(
+          ellipse 60% 14% at 50% calc(100% - 26px),
+          rgba(61, 155, 143, 0.16) 0%,
+          rgba(61, 155, 143, 0) 70%
+        );
     }
     .stone {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+    .pebble {
       position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      padding: 10px 18px;
-      cursor: pointer;
-      background: var(--gradient-stone);
-      border-radius: 999px / 60%;
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 50%;
+      /* Default pebble palette (teal); specific stones override. */
+      background:
+        radial-gradient(
+          ellipse 80% 60% at 50% 30%,
+          #4eb2a4 0%,
+          #3d9b8f 55%,
+          #1f5c54 100%
+        );
       box-shadow:
-        0 8px 16px rgba(0, 0, 0, 0.38),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4),
-        inset 0 -8px 18px rgba(0, 0, 0, 0.22);
-      transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 220ms ease;
+        0 14px 24px -8px rgba(0, 0, 0, 0.55),
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        inset 0 -10px 18px rgba(0, 0, 0, 0.32),
+        inset 0 6px 14px rgba(255, 255, 255, 0.06);
+      transition: transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+        filter 240ms ease;
     }
-    .stone::after {
-      /* Subtle dust-grain so the stones don't read as glass */
+    /* Elongated specular: soft white smear across the upper face. */
+    .pebble::before {
       content: '';
       position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background-image: radial-gradient(
-        rgba(255, 255, 255, 0.06) 1px,
-        transparent 1px
+      top: 16%;
+      left: 18%;
+      right: 18%;
+      height: 22%;
+      border-radius: 50%;
+      background: radial-gradient(
+        ellipse 100% 100% at 50% 50%,
+        rgba(255, 255, 255, 0.55) 0%,
+        rgba(255, 255, 255, 0.18) 55%,
+        rgba(255, 255, 255, 0) 100%
       );
-      background-size: 4px 4px;
-      mix-blend-mode: overlay;
+      filter: blur(2px);
       pointer-events: none;
     }
-    .stone:hover {
-      transform: translateY(-2px) rotate(var(--lean, 0deg));
-      box-shadow:
-        0 12px 22px rgba(0, 0, 0, 0.45),
-        inset 0 1px 0 rgba(255, 255, 255, 0.45),
-        inset 0 -8px 18px rgba(0, 0, 0, 0.22);
+    /* Small bright catchlight dot, upper-left. */
+    .pebble::after {
+      content: '';
+      position: absolute;
+      top: 18%;
+      left: 24%;
+      width: 8%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+      pointer-events: none;
     }
-    .stone-self {
-      transform: rotate(-1.5deg);
-      --lean: -1.5deg;
-      padding: 8px 16px;
+    .stone:hover .pebble {
+      transform: translateY(-2px);
+      filter: brightness(1.04);
     }
-    .stone-family {
-      transform: rotate(1deg);
-      --lean: 1deg;
-      min-width: 240px;
+    .pebble-self {
+      width: 120px;
+      height: 50px;
+      background:
+        radial-gradient(
+          ellipse 80% 60% at 50% 30%,
+          #c87a5e 0%,
+          #a05d3e 55%,
+          #6b3a25 100%
+        );
     }
-    .stone-extended {
-      transform: rotate(-1deg);
-      --lean: -1deg;
-      min-width: 320px;
+    .pebble-family {
+      width: 240px;
+      height: 78px;
     }
-    .stone-label {
-      font-family: var(--font-display);
-      font-weight: 600;
-      font-size: 11px;
-      color: rgba(34, 22, 14, 0.7);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      white-space: nowrap;
+    .pebble-extended {
+      width: 320px;
+      height: 92px;
+      background:
+        radial-gradient(
+          ellipse 80% 60% at 50% 30%,
+          #45a397 0%,
+          #348177 55%,
+          #194c45 100%
+        );
+    }
+    .pebble-subgroup {
+      width: 140px;
+      height: 54px;
+    }
+    /* Sub-group palette rotation — alternate terracotta + teal so the
+       base row reads as varied pebbles, not one repeated colour. */
+    .subgroup-row .stone:nth-child(odd) .pebble {
+      background:
+        radial-gradient(
+          ellipse 80% 60% at 50% 30%,
+          #c87a5e 0%,
+          #a05d3e 55%,
+          #6b3a25 100%
+        );
     }
     .stone-chips {
       display: inline-flex;
       align-items: center;
+      position: relative;
+      z-index: 1;
     }
     .stone-chips member-chip {
-      box-shadow: 0 0 0 2px rgba(232, 220, 200, 0.95);
+      box-shadow:
+        0 0 0 2px rgba(245, 232, 210, 0.95),
+        0 2px 4px rgba(0, 0, 0, 0.35);
       border-radius: 999px;
       margin-left: -8px;
       transition: transform 180ms ease;
@@ -4966,68 +5027,68 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
       transform: translateY(-1px);
     }
     .stone-more {
-      font-size: 11.5px;
-      font-weight: 600;
-      color: rgba(34, 22, 14, 0.65);
-      margin-left: 4px;
+      margin-left: 6px;
+      padding: 2px 7px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.28);
+      border-radius: 999px;
       font-variant-numeric: tabular-nums;
+      box-shadow: 0 0 0 2px rgba(245, 232, 210, 0.85);
     }
-    /* Empty extended/subgroup stones: hollow + dashed so they invite
-       a click without looking finished. */
-    .stone-empty {
+    .stone-label {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 10.5px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+    }
+    /* Empty stones: hollow dashed ellipse — invites a click without
+       breaking the pebble silhouette. */
+    .pebble-empty {
       background: transparent;
       border: 1.5px dashed rgba(255, 248, 235, 0.22);
       box-shadow: none;
       color: var(--text-tertiary);
-      font-size: 12.5px;
+      font-size: 12px;
       font-style: italic;
+      padding: 0 18px;
     }
-    .stone-empty:hover {
+    .pebble-empty::before,
+    .pebble-empty::after {
+      display: none;
+    }
+    .stone:hover .pebble-empty {
+      transform: none;
       border-color: rgba(255, 248, 235, 0.4);
       color: var(--text-secondary);
-      box-shadow: none;
-    }
-    .stone-empty::after {
-      display: none;
+      filter: none;
     }
     .subgroup-row {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 10px 14px;
+      gap: 16px 18px;
       margin-top: 4px;
       max-width: 100%;
     }
-    .stone-subgroup {
-      padding: 8px 14px;
-      min-width: 130px;
-    }
-    .stone-subgroup .stone-label {
-      font-size: 10.5px;
-    }
-    /* Mobile: stones get slimmer so they still fit the column */
     @media (max-width: 560px) {
-      .stone-family {
-        min-width: 200px;
-      }
-      .stone-extended {
-        min-width: 240px;
-      }
-      .subgroup-row {
-        gap: 8px;
-      }
-      .stone-subgroup {
-        min-width: 110px;
-        padding: 7px 12px;
-      }
+      .pebble-self { width: 100px; height: 44px; }
+      .pebble-family { width: 200px; height: 66px; }
+      .pebble-extended { width: 240px; height: 76px; }
+      .pebble-subgroup { width: 120px; height: 48px; }
+      .subgroup-row { gap: 12px; }
     }
     .cairn-meta {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 14px;
-      margin-top: 14px;
-      padding-top: 12px;
+      margin-top: 18px;
+      padding-top: 14px;
       border-top: 1px dashed rgba(255, 248, 235, 0.1);
     }
     .cairn-meta button {
@@ -5061,4 +5122,4 @@ var Ze=Object.defineProperty;var Qe=(l,e,t)=>e in l?Ze(l,e,{enumerable:!0,config
           .joinCode=${this.joinCode??""}
         ></sign-in-screen>
       `}}u(Ve,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0}});customElements.define("cairn-app",Ve);
-//# sourceMappingURL=index-CWZ2JOvZ.js.map
+//# sourceMappingURL=index-D4q6KW2O.js.map
