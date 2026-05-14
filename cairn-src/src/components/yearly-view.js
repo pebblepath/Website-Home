@@ -97,7 +97,7 @@ export class YearlyView extends LitElement {
       background: var(--today-bg);
       box-shadow:
         0 0 0 1px rgba(255, 255, 255, 0.4),
-        0 0 6px rgba(212, 168, 67, 0.6);
+        0 0 6px rgba(79, 194, 107, 0.7);
     }
     .cell.trip {
       background: var(--trip-day-bg);

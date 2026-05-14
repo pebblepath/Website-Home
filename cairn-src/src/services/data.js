@@ -217,6 +217,26 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
+   * Phase 4: server-side flight-number lookup (AviationStack via the
+   * `lookupFlight` Cloud Function). Returns null when no flight number
+   * is provided so callers can silently skip; surfaces structured
+   * errors (`functions/failed-precondition` when the API key secret
+   * isn't configured, `functions/not-found` when the number is unknown,
+   * `functions/unavailable` for transient API outages) so the form
+   * can show specific hints.
+   */
+  async lookupFlight(flightNumber, date) {
+    if (!flightNumber || typeof flightNumber !== 'string') return null;
+    if (!functions) throw new Error('Firebase functions not configured.');
+    const fn = httpsCallable(functions, 'lookupFlight');
+    const result = await fn({
+      flightNumber: flightNumber.trim(),
+      date: typeof date === 'string' ? date.trim() : '',
+    });
+    return result.data;
+  }
+
+  /**
    * Pebble inside Cairn (Tier 3). Calls the askPebbleAboutActivities
    * Cloud Function — same Firebase project secret as PP's Pebble,
    * different scope (family activities / trip planning, not child

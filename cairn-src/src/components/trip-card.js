@@ -97,11 +97,30 @@ export class TripCard extends LitElement {
       background-size: cover;
       background-position: center;
     }
+    /* When a real lodging photo is attached, give the cover more
+       vertical real estate + a stronger bottom vignette so the
+       overlay chips stay legible against any image. */
+    .cover.has-image {
+      aspect-ratio: 3 / 2;
+    }
     .cover::after {
       content: '';
       position: absolute;
       inset: 0;
       background: linear-gradient(180deg, rgba(0, 0, 0, 0) 50%, rgba(20, 12, 6, 0.55) 100%);
+    }
+    .cover.has-image::after {
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.15) 0%,
+        rgba(0, 0, 0, 0) 40%,
+        rgba(20, 12, 6, 0.72) 100%
+      );
+    }
+    article:hover .cover.has-image {
+      /* Subtle zoom on hover gives the photo a polaroid-like presence */
+      background-size: 105%;
+      transition: background-size 360ms ease;
     }
     .visibility {
       position: absolute;
@@ -280,6 +299,7 @@ export class TripCard extends LitElement {
     const cover = t.coverImage
       ? `background-image: url(${t.coverImage});`
       : `background: ${gradientForTrip(t)};`;
+    const coverClass = t.coverImage ? 'cover has-image' : 'cover';
     const memberMap = new Map(this.members.map((m) => [m.uid, m]));
     const attendees = (t.attendees ?? []).map((uid) => memberMap.get(uid)).filter(Boolean);
     const shown = attendees.slice(0, 4);
@@ -296,7 +316,7 @@ export class TripCard extends LitElement {
           }
         }}
       >
-        <div class="cover" style=${cover}>
+        <div class="${coverClass}" style=${cover}>
           <div class="visibility">${t.visibility ?? 'family'}</div>
           <div class="dates">${this._fmtDates(t.start, t.end)}</div>
         </div>

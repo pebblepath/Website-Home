@@ -22,6 +22,8 @@ export class PebbleChat extends LitElement {
     _input: { state: true },
     _loading: { state: true },
     _error: { state: true },
+    /** Suggested next-questions, set by the function on each assistant turn. */
+    _followUps: { state: true },
   };
 
   constructor() {
@@ -34,6 +36,7 @@ export class PebbleChat extends LitElement {
     this._input = '';
     this._loading = false;
     this._error = '';
+    this._followUps = [];
   }
 
   willUpdate(changed) {
@@ -70,6 +73,7 @@ export class PebbleChat extends LitElement {
     if (!question || this._loading) return;
     this._error = '';
     this._input = '';
+    this._followUps = [];
     this._messages = [...this._messages, { role: 'user', content: question }];
     this._loading = true;
     // Tee up scroll-to-bottom after Lit renders the new message.
@@ -84,6 +88,7 @@ export class PebbleChat extends LitElement {
         ...this._messages,
         { role: 'assistant', content: result.answer },
       ];
+      this._followUps = Array.isArray(result.followUps) ? result.followUps : [];
     } catch (e) {
       console.error(e);
       // functions/* error codes get a friendlier surface.
@@ -355,6 +360,34 @@ export class PebbleChat extends LitElement {
       background: rgba(255, 248, 235, 0.08);
       border-color: rgba(255, 248, 235, 0.22);
     }
+    /* Quick-reply chips Pebble offers after each answer — sit just
+       below the last assistant bubble, flex-wrap, click to send. */
+    .follow-ups {
+      align-self: flex-start;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: -4px;
+      max-width: 100%;
+    }
+    .follow-up {
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(61, 155, 143, 0.14);
+      border: 1px solid rgba(61, 155, 143, 0.4);
+      color: var(--text-primary);
+      font: inherit;
+      font-size: 12.5px;
+      cursor: pointer;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+    .follow-up:hover {
+      background: rgba(61, 155, 143, 0.24);
+      transform: translateY(-1px);
+    }
+    .follow-up:active {
+      transform: translateY(0);
+    }
 
     .composer {
       display: flex;
@@ -464,6 +497,18 @@ export class PebbleChat extends LitElement {
                   )}
                   ${this._loading
                     ? html`<div class="typing"><span></span><span></span><span></span></div>`
+                    : this._followUps.length > 0
+                    ? html`
+                        <div class="follow-ups">
+                          ${this._followUps.map(
+                            (q) => html`
+                              <button class="follow-up" @click=${() => this._send(q)}>
+                                ${q}
+                              </button>
+                            `,
+                          )}
+                        </div>
+                      `
                     : ''}
                 `}
           </div>

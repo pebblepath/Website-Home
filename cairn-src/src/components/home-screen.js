@@ -782,35 +782,44 @@ export class HomeScreen extends LitElement {
       transform: translateY(-2px);
       filter: brightness(1.04);
     }
+    /* Sizes follow the icon's progression — flatter + wider as the
+       stack descends, like real river stones balanced on each other. */
     .pebble-self {
       width: 120px;
-      height: 50px;
+      height: 44px;
       background:
         radial-gradient(
           ellipse 80% 60% at 50% 30%,
-          #c87a5e 0%,
-          #a05d3e 55%,
-          #6b3a25 100%
+          #d4866a 0%,
+          #a85f3e 55%,
+          #5e3220 100%
         );
     }
     .pebble-family {
-      width: 240px;
-      height: 78px;
-    }
-    .pebble-extended {
-      width: 320px;
-      height: 92px;
+      width: 260px;
+      height: 66px;
       background:
         radial-gradient(
           ellipse 80% 60% at 50% 30%,
-          #45a397 0%,
+          #52baad 0%,
+          #3d9b8f 55%,
+          #1f5c54 100%
+        );
+    }
+    .pebble-extended {
+      width: 340px;
+      height: 80px;
+      background:
+        radial-gradient(
+          ellipse 80% 60% at 50% 30%,
+          #46a89c 0%,
           #348177 55%,
           #194c45 100%
         );
     }
     .pebble-subgroup {
-      width: 140px;
-      height: 54px;
+      width: 150px;
+      height: 50px;
     }
     /* Sub-group palette rotation — alternate terracotta + teal so the
        base row reads as varied pebbles, not one repeated colour. */
@@ -893,10 +902,10 @@ export class HomeScreen extends LitElement {
       max-width: 100%;
     }
     @media (max-width: 560px) {
-      .pebble-self { width: 100px; height: 44px; }
-      .pebble-family { width: 200px; height: 66px; }
-      .pebble-extended { width: 240px; height: 76px; }
-      .pebble-subgroup { width: 120px; height: 48px; }
+      .pebble-self { width: 100px; height: 38px; }
+      .pebble-family { width: 220px; height: 58px; }
+      .pebble-extended { width: 270px; height: 68px; }
+      .pebble-subgroup { width: 130px; height: 46px; }
       .subgroup-row { gap: 12px; }
     }
     .cairn-meta {
@@ -918,6 +927,70 @@ export class HomeScreen extends LitElement {
     }
     .cairn-meta button:hover {
       color: var(--text-primary);
+    }
+
+    /* Onboarding hint shown when the cairn is mostly empty (just self).
+       Sits above the meta with a soft glow + gentle suggestion. */
+    .cairn-hint {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: var(--radius-tile);
+      background: linear-gradient(
+        135deg,
+        rgba(61, 155, 143, 0.16) 0%,
+        rgba(212, 168, 67, 0.12) 100%
+      );
+      border: 1px solid rgba(255, 248, 235, 0.14);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .cairn-hint-icon {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      background: var(--gradient-sage);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+    .cairn-hint-icon svg { width: 18px; height: 18px; }
+    .cairn-hint-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .cairn-hint-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 13.5px;
+      letter-spacing: -0.005em;
+    }
+    .cairn-hint-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+      line-height: 1.5;
+    }
+    .cairn-hint-cta {
+      flex-shrink: 0;
+      background: var(--gradient-cta);
+      color: #fff;
+      border: 1px solid rgba(255, 248, 235, 0.22);
+      border-radius: var(--radius-pill);
+      padding: 7px 14px;
+      font: inherit;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow:
+        0 3px 10px rgba(139, 90, 62, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+    .cairn-hint-cta:hover {
+      background: var(--gradient-cta-hover);
     }
   `;
 
@@ -1779,15 +1852,42 @@ export class HomeScreen extends LitElement {
                       `
                     : ''}
                 </div>
-                <div class="cairn-meta">
-                  <button @click=${() => (this._membersOpen = true)}>
-                    + Invite
-                  </button>
-                  <span style="color:var(--text-tertiary);">·</span>
-                  <button @click=${() => (this._membersOpen = true)}>
-                    + Sub-group
-                  </button>
-                </div>
+                ${familyMembers.length === 0 && extended.length === 0
+                  ? html`
+                      <div class="cairn-hint">
+                        <span class="cairn-hint-icon" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <ellipse cx="12" cy="6.5" rx="3.5" ry="1.5" />
+                            <ellipse cx="12" cy="12" rx="6" ry="2.4" />
+                            <ellipse cx="12" cy="18" rx="8" ry="3" />
+                          </svg>
+                        </span>
+                        <div class="cairn-hint-body">
+                          <div class="cairn-hint-title">Start stacking your cairn</div>
+                          <div class="cairn-hint-sub">
+                            Invite a partner, child or grandparent — every stone
+                            adds shared trips, celebrations, and circles.
+                          </div>
+                        </div>
+                        <button
+                          class="cairn-hint-cta"
+                          @click=${() => (this._membersOpen = true)}
+                        >
+                          Invite
+                        </button>
+                      </div>
+                    `
+                  : html`
+                      <div class="cairn-meta">
+                        <button @click=${() => (this._membersOpen = true)}>
+                          + Invite
+                        </button>
+                        <span style="color:var(--text-tertiary);">·</span>
+                        <button @click=${() => (this._membersOpen = true)}>
+                          + Sub-group
+                        </button>
+                      </div>
+                    `}
               `;
             })()}
           </glass-panel>
