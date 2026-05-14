@@ -685,9 +685,9 @@ export class HomeScreen extends LitElement {
       border: 1px solid rgba(255, 248, 235, 0.06);
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      padding: 4px 4px 5px;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 4px 5px 5px;
       font-size: 12px;
       color: var(--text-secondary);
       gap: 2px;
@@ -695,24 +695,21 @@ export class HomeScreen extends LitElement {
       overflow: hidden;
     }
     .cal-cell .cal-cell-day {
-      align-self: flex-start;
       font-weight: 600;
-      padding-left: 2px;
     }
     .cal-cell .cal-cell-label {
       font-size: 10px;
       line-height: 1.15;
       font-weight: 500;
-      max-width: 100%;
+      width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       line-clamp: 2;
       -webkit-box-orient: vertical;
-      padding: 0 2px 1px;
       opacity: 0.95;
-      text-align: center;
+      text-align: left;
       word-break: break-word;
     }
     @media (max-width: 480px) {

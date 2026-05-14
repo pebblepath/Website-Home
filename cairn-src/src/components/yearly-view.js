@@ -156,22 +156,22 @@ export class YearlyView extends LitElement {
     .legend {
       display: flex;
       align-items: center;
-      gap: 16px;
-      margin-top: 14px;
+      gap: 14px;
+      margin-top: 12px;
       padding: 0 4px;
-      font-size: 13px;
+      font-size: 11.5px;
       color: var(--text-secondary);
       flex-wrap: wrap;
     }
     .swatch {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
     .swatch i {
-      width: 14px;
-      height: 14px;
-      border-radius: 4px;
+      width: 9px;
+      height: 9px;
+      border-radius: 3px;
       display: inline-block;
     }
     .swatch i.trip {
