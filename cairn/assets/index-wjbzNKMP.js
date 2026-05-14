@@ -2504,7 +2504,15 @@ var Be=Object.defineProperty;var Ye=(n,e,t)=>e in n?Be(n,e,{enumerable:!0,config
   `);customElements.define("discover-pebblepath",Pe);class le extends ${constructor(){super(),this.code="",this._family=null,this._loading=!0,this._joining=!1,this._error=""}willUpdate(e){e.has("code")&&this.code&&this._lookup()}async _lookup(){var e,t;this._loading=!0,this._error="";try{const i=await w.findFamilyByCairnCode(this.code);if(!i)this._error="Invite code not found. Check it was typed correctly.",this._family=null;else{const r=((t=(e=i.cairnInviteCodeExpiresAt)==null?void 0:e.toDate)==null?void 0:t.call(e))??(i.cairnInviteCodeExpiresAt?new Date(i.cairnInviteCodeExpiresAt):null);!r||r<new Date?(this._error="This invite code has expired. Ask the family for a fresh one.",this._family=null):this._family=i}}catch(i){console.error(i),this._error=(i==null?void 0:i.message)??"Couldn't look up the invite."}finally{this._loading=!1}}async _join(){var e;if(!this._joining){this._joining=!0,this._error="";try{const t=await w.joinFamilyAsCairn(this.code);u(`Welcome to ${((e=this._family)==null?void 0:e.name)??"the family"}.`),this.dispatchEvent(new CustomEvent("joined",{detail:{familyId:t}}))}catch(t){console.error(t),this._error=(t==null?void 0:t.message)??"Could not join."}finally{this._joining=!1}}}_cancel(){this.dispatchEvent(new Event("cancel"))}_inviterFromFamily(e){var r;if(!e)return null;const t=(r=e.memberProfiles)==null?void 0:r[e.createdBy];if(!t)return null;const i=t.profilePhotoURL;return{displayName:t.displayName??"A family member",photoURL:typeof i=="string"&&/^https?:\/\//i.test(i)?i:null}}render(){var r,a,l;const e=this._inviterFromFamily(this._family),t=(((r=this._family)==null?void 0:r.cairnMemberIds)??((a=this._family)==null?void 0:a.memberIds)??[]).length,i=(((l=this._family)==null?void 0:l.memberIds)??[]).length;return o`
       <div class="wrap">
         <div class="mark">
-          <cairn-mark size="44"></cairn-mark>
+          <img
+            class="brand-icon"
+            src=${"/cairn/assets/cairn-icon.png"}
+            srcset=${"/cairn/assets/cairn-icon.png 1x, /cairn/assets/cairn-icon-2x.png 2x"}
+            alt="Cairn"
+            width="44"
+            height="44"
+            style="border-radius:11px;display:block;box-shadow:0 4px 16px rgba(0,0,0,0.25);"
+          />
           <div class="mark-name">Cairn</div>
         </div>
         <glass-panel padding="lg" variant="strong" lifted>
@@ -3957,4 +3965,4 @@ var Be=Object.defineProperty;var Ye=(n,e,t)=>e in n?Be(n,e,{enumerable:!0,config
           .joinCode=${this.joinCode??""}
         ></sign-in-screen>
       `}}g(Oe,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0}});customElements.define("cairn-app",Oe);
-//# sourceMappingURL=index-bHyTApWQ.js.map
+//# sourceMappingURL=index-wjbzNKMP.js.map
