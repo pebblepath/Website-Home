@@ -601,17 +601,28 @@ export function newCairnInviteCode() {
 
 export function deriveImmediateMembers(uid, authUser, pebbleUser, family, children) {
   const out = [];
+  const memberIds = new Set(family?.memberIds ?? []);
+  const isPPViewer = memberIds.has(uid);
+  // Self always appears first — the dashboard renders the "Self" pebble
+  // for PP viewers and uses this entry for any "is this me?" check.
+  // For Cairn-only viewers (not in memberIds) the cairn-stack render
+  // skips the self pebble and surfaces the viewer in the Extended row
+  // instead; this entry is still useful for greetings, profile pills.
   out.push({
     uid,
     displayName: authUser?.displayName ?? pebbleUser?.displayName ?? 'You',
     photoURL: resolvePhoto(authUser, pebbleUser),
-    role: 'self',
+    role: isPPViewer ? 'self' : 'self-extended',
     circles: ['immediate'],
     hue: 198,
   });
+  // memberProfiles includes Cairn joiners too (joinFamilyAsCairn writes
+  // an entry per joiner). Filter to PP `memberIds` only so the Family
+  // stone never surfaces extended-family members as "immediate".
   const profiles = family?.memberProfiles ?? {};
   for (const [otherUid, profile] of Object.entries(profiles)) {
     if (otherUid === uid) continue;
+    if (!memberIds.has(otherUid)) continue;
     const url = profile.profilePhotoURL;
     out.push({
       uid: otherUid,

@@ -1085,7 +1085,10 @@ export class HomeScreen extends LitElement {
 
   _liveExtended() {
     if (this.preview) return mockMembers.filter((m) => m.circles.includes('extended'));
-    return [];
+    // Previously hard-coded to [] — that was the bug where joined
+    // extended members never appeared on the dashboard. Read the
+    // cairn ring from the family doc instead.
+    return deriveExtendedMembers(this.user?.uid, this.family);
   }
 
   _liveTrips() {
@@ -1164,21 +1167,44 @@ export class HomeScreen extends LitElement {
     });
   }
 
-  /** Trip visibility resolver — true if the viewer should see it given
-   *  the trip's visibility ring, attendees, explicit viewers, and any
-   *  sub-group targeting (Phase 5+). PP family members see everything;
-   *  Cairn-only extended joiners only see trips that target an empty
-   *  set OR a sub-group they're in. */
+  /** Trip visibility resolver — decides whether the viewer should see
+   *  this trip in their feed.
+   *
+   *  PP family members (`memberIds`) see EVERY trip in their family
+   *  regardless of the visibility flag — they're the household; trips
+   *  scoped to "extended" or with no visibility set still belong to
+   *  them. This is also a safety net for legacy trips written before
+   *  the visibility field defaulted to 'family' in trip-form.
+   *
+   *  Cairn-only members (in `cairnMemberIds` but not `memberIds`) see
+   *  trips where they're explicitly named (attendees / viewers) OR
+   *  where visibility is `family` / `extended` — the whole point of
+   *  the Cairn ring is to share trips with extended family. Personal
+   *  trips stay creator-only.
+   */
   _userCanSeeTrip(trip) {
     const uid = this.user?.uid;
     if (!uid) return false;
     if (trip.attendees?.includes(uid)) return true;
     if (trip.viewers?.includes(uid)) return true;
-    if (trip.visibility === 'family') return true;
-    if (trip.visibility === 'extended') {
-      // PP family members (in memberIds) see all extended trips.
-      if ((this.family?.memberIds ?? []).includes(uid)) return true;
-      // Cairn-only members: must be in a targeted sub-group (or no target).
+
+    const memberIds = this.family?.memberIds ?? [];
+    const cairnIds = this.family?.cairnMemberIds ?? memberIds;
+    const isPPMember = memberIds.includes(uid);
+    const isCairnMember = cairnIds.includes(uid);
+
+    // PP family members see everything in their family.
+    if (isPPMember) return true;
+
+    // Outside the ring entirely: no read.
+    if (!isCairnMember) return false;
+
+    // Cairn-only members: family + extended trips, with optional
+    // sub-group targeting for extended.
+    const visibility = trip.visibility || 'family';
+    if (visibility === 'personal') return false;
+    if (visibility === 'family') return true;
+    if (visibility === 'extended') {
       const targets = trip.targetSubGroups ?? [];
       if (targets.length === 0) return true;
       const myGroups = Object.entries(this.family?.subGroups ?? {})
@@ -1985,9 +2011,26 @@ export class HomeScreen extends LitElement {
           <glass-panel padding="md" variant="strong">
             ${(() => {
               const me = immediate.find((m) => m.uid === this.user?.uid);
+              // Viewer can be a PP household member (in memberIds) or
+              // a Cairn-only joiner (cairnMemberIds only — extended
+              // family). The stack lays out differently:
+              //
+              //   PP viewer       → Self pebble at top, Family stone
+              //                     (co-parents + children), Extended
+              //                     stone (cairn-only joiners), sub-groups.
+              //   Extended viewer → No Self pebble. Family stone shows
+              //                     the PP household they joined; the
+              //                     viewer appears in the Extended stone
+              //                     alongside any other Cairn joiners.
+              const memberIdsSet = new Set(this.family?.memberIds ?? []);
+              const isPPViewer = memberIdsSet.has(this.user?.uid);
               const familyMembers = immediate.filter(
                 (m) => m.uid !== this.user?.uid,
               );
+              const extendedMembers =
+                !isPPViewer && me
+                  ? [{ ...me, role: 'extended' }, ...extended]
+                  : extended;
               const subGroupEntries = Object.entries(
                 this.family?.subGroups ?? {},
               );
@@ -1996,28 +2039,32 @@ export class HomeScreen extends LitElement {
               );
               return html`
                 <div class="cairn-stack">
-                  <!-- Top: you (terracotta pebble) -->
-                  <button
-                    class="stone"
-                    @click=${() => (this._profileOpen = true)}
-                    title="Your profile"
-                  >
-                    <span class="pebble pebble-self">
-                      <span class="stone-chips">
-                        <member-chip
-                          .name=${me?.displayName ?? this.user?.displayName ?? 'You'}
-                          .photo=${me?.photoURL ?? this.user?.photoURL ?? ''}
-                          .hue=${me?.hue ?? 198}
-                          size="28"
-                        ></member-chip>
-                      </span>
-                    </span>
-                    <span class="stone-label">You</span>
-                  </button>
+                  ${isPPViewer
+                    ? html`
+                        <!-- Top: you (terracotta pebble) — PP viewer only. -->
+                        <button
+                          class="stone"
+                          @click=${() => (this._profileOpen = true)}
+                          title="Your profile"
+                        >
+                          <span class="pebble pebble-self">
+                            <span class="stone-chips">
+                              <member-chip
+                                .name=${me?.displayName ?? this.user?.displayName ?? 'You'}
+                                .photo=${me?.photoURL ?? this.user?.photoURL ?? ''}
+                                .hue=${me?.hue ?? 198}
+                                size="28"
+                              ></member-chip>
+                            </span>
+                          </span>
+                          <span class="stone-label">You</span>
+                        </button>
+                      `
+                    : ''}
 
-                  <!-- Family (teal pebble) — read-only for drag-and-drop:
-                       its members are PP co-parents/children, not the Cairn
-                       ring, so they can't be moved into sub-groups. -->
+                  <!-- Family stone — for PP viewers this is co-parents +
+                       children; for extended-family viewers it shows the
+                       PP household they joined. -->
                   ${this._renderStone({
                     label: 'Family',
                     members: familyMembers,
@@ -2026,11 +2073,11 @@ export class HomeScreen extends LitElement {
                     onClick: () => (this._membersOpen = true),
                   })}
 
-                  <!-- Extended (deeper teal, larger) — drop here to strip
-                       a Cairn member from every sub-group. -->
+                  <!-- Extended (deeper teal, larger). For extended viewers
+                       this is where the viewer's own avatar appears. -->
                   ${this._renderStone({
                     label: 'Extended',
-                    members: extended,
+                    members: extendedMembers,
                     pebbleClass: 'pebble-extended',
                     emptyLabel: '+ Invite extended family',
                     onClick: () => (this._membersOpen = true),
