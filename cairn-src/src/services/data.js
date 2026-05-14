@@ -498,13 +498,23 @@ export function deriveBirthdayEvents(children) {
   const out = [];
   for (const child of children ?? []) {
     if (!child.dateOfBirth) continue;
+    // PP iOS stores dateOfBirth as a Date at local-midnight (e.g. "Oct 11
+    // 00:00 Paris"). That becomes a UTC-shifted instant in the Firestore
+    // doc ("Oct 10 22:00 UTC"). `.toISOString()` returns UTC components,
+    // which gives the day-before in eastward TZs. We use LOCAL components
+    // here so the displayed date matches what was originally entered in
+    // the PP iOS picker (assuming the user is in the same TZ both apps).
+    const d = child.dateOfBirth;
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
     out.push({
       id: `bday:${child.id}`,
       type: 'birthday',
-      date: child.dateOfBirth.toISOString().slice(0, 10),
+      date: `${y}-${m}-${dd}`,
       personIds: [`child:${child.id}`],
       title: `${child.name}'s birthday`,
-      _childId: child.id, // marker so the UI knows to route edits to /children/
+      _childId: child.id,
       _childName: child.name,
       recurring: true,
     });
@@ -521,8 +531,8 @@ export function deriveBirthdayEvents(children) {
  */
 export function resolveEventOccurrence(event, now = new Date()) {
   if (!event?.date) return { date: null, yearsElapsed: 0 };
-  const stored = new Date(event.date);
-  if (Number.isNaN(stored.getTime())) return { date: null, yearsElapsed: 0 };
+  const stored = parseLocalDate(event.date);
+  if (!stored || Number.isNaN(stored.getTime())) return { date: null, yearsElapsed: 0 };
   if (!event.recurring) return { date: stored, yearsElapsed: 0 };
   const thisYear = new Date(now.getFullYear(), stored.getMonth(), stored.getDate());
   const occurrence = thisYear < new Date(now.getFullYear(), now.getMonth(), now.getDate())
@@ -542,6 +552,23 @@ const TRIP_GRADIENT_PALETTE = [
   'linear-gradient(135deg, #8b7bb5 0%, #c98a8a 60%, #d4a843 100%)',
   'linear-gradient(135deg, #6b9ac4 0%, #3d9b8f 100%)',
 ];
+
+/**
+ * Parse a YYYY-MM-DD string as a LOCAL date (not UTC). `new Date('2026-08-01')`
+ * is parsed as UTC midnight by JS, which displays as the PREVIOUS day in
+ * westward timezones. This helper avoids that off-by-one by constructing
+ * the Date from explicit year/month/day components.
+ *
+ * Passes Date instances through unchanged; non-date-string inputs fall
+ * back to `new Date(input)`.
+ */
+export function parseLocalDate(input) {
+  if (!input) return null;
+  if (input instanceof Date) return input;
+  const m = String(input).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return new Date(input);
+  return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+}
 
 /**
  * Tier 2: fetch the user's upcoming Google Calendar events. Accepts a

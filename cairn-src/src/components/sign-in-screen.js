@@ -61,6 +61,13 @@ export class SignInScreen extends LitElement {
       align-items: center;
       gap: 12px;
     }
+    .brand-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: block;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+    }
     .mark-name {
       font-family: var(--font-pebble);
       font-weight: 300;
@@ -273,7 +280,14 @@ export class SignInScreen extends LitElement {
       <div class="wrap">
         <div class="brand">
           <div class="mark-row">
-            <cairn-mark size="52"></cairn-mark>
+            <img
+              class="brand-icon"
+              src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
+              srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
+              alt="Cairn"
+              width="56"
+              height="56"
+            />
             <div class="mark-name">Cairn</div>
           </div>
           <div class="companion">PebblePath companion</div>
@@ -290,7 +304,7 @@ export class SignInScreen extends LitElement {
           <p class="lede">
             ${this.joinCode
               ? 'Sign in with the Google account you use with your family. You\'ll see a preview before joining.'
-              : 'One quiet place for trips, birthdays, and anniversaries — across your immediate and extended family.'}
+              : 'Private portal for your trips, activities, birthdays and anniversaries — for your whole family.'}
           </p>
           <div class="actions">
             <button
@@ -311,7 +325,7 @@ export class SignInScreen extends LitElement {
             : ''}
           ${this.error ? html`<div class="error">${this.error}</div>` : ''}
         </glass-panel>
-        <div class="footnote">A private space for your family</div>
+        <div class="footnote">Beta Version</div>
       </div>
     `;
   }

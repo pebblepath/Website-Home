@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import './glass-panel.js';
 import './glass-button.js';
 import './trip-card.js';
+import { parseLocalDate } from '../services/data.js';
 
 /**
  * Phase 3E: chronological list of all trips (past, present, future)
@@ -151,9 +152,12 @@ export class AllTripsModal extends LitElement {
     const groups = new Map();
     for (const t of sorted) {
       if (!t.start) continue;
-      const year = new Date(t.start).getFullYear();
+      const startD = parseLocalDate(t.start);
+      const endD = parseLocalDate(t.end);
+      if (!startD) continue;
+      const year = startD.getFullYear();
       if (!groups.has(year)) groups.set(year, []);
-      const isPast = t.end ? new Date(t.end) < today : false;
+      const isPast = endD ? endD < today : false;
       groups.get(year).push({ trip: t, isPast });
     }
     return groups;

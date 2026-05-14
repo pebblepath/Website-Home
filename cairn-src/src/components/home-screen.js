@@ -26,6 +26,7 @@ import {
   deriveExtendedMembers,
   deriveBirthdayEvents,
   resolveEventOccurrence,
+  parseLocalDate,
 } from '../services/data.js';
 import { signOutUser } from '../services/firebase.js';
 import { toast } from '../services/toast.js';
@@ -200,6 +201,13 @@ export class HomeScreen extends LitElement {
       display: flex;
       align-items: center;
       gap: 10px;
+    }
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 9px;
+      display: block;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     }
     .brand-name {
       font-family: var(--font-pebble);
@@ -717,7 +725,7 @@ export class HomeScreen extends LitElement {
     today.setHours(0, 0, 0, 0);
     return this._circleTrips().filter((t) => {
       if (!t.end) return true;
-      return new Date(t.end) >= today;
+      return parseLocalDate(t.end) >= today;
     });
   }
 
@@ -752,8 +760,8 @@ export class HomeScreen extends LitElement {
     // 1. Ongoing trip wins above all (you're actually in it right now).
     for (const t of this._circleTrips()) {
       if (!t.start || !t.end) continue;
-      const s = new Date(t.start);
-      const e = new Date(t.end);
+      const s = parseLocalDate(t.start);
+      const e = parseLocalDate(t.end);
       s.setHours(0, 0, 0, 0);
       e.setHours(0, 0, 0, 0);
       if (s <= today && today <= e) {
@@ -770,8 +778,8 @@ export class HomeScreen extends LitElement {
 
     for (const t of this._circleTrips()) {
       if (!t.start) continue;
-      const s = new Date(t.start);
-      s.setHours(0, 0, 0, 0);
+      const s = parseLocalDate(t.start);
+      if (!s) continue;
       const d = daysFromToday(s);
       if (d > 0 && d < bestDays) {
         best = { kind: 'trip', item: t };
@@ -780,8 +788,8 @@ export class HomeScreen extends LitElement {
     }
     for (const ev of this._filteredEvents()) {
       if (!ev.date) continue;
-      const d = new Date(ev.date);
-      d.setHours(0, 0, 0, 0);
+      const d = parseLocalDate(ev.date);
+      if (!d) continue;
       const delta = daysFromToday(d);
       if (delta >= 0 && delta < bestDays) {
         best = { kind: 'event', item: ev };
@@ -810,8 +818,8 @@ export class HomeScreen extends LitElement {
     const map = new Map();
     for (const t of this._filteredTrips()) {
       if (!t.start || !t.end) continue;
-      const s = new Date(t.start);
-      const e = new Date(t.end);
+      const s = parseLocalDate(t.start);
+      const e = parseLocalDate(t.end);
       if (Number.isNaN(s.getTime()) || Number.isNaN(e.getTime())) continue;
       if (s.getFullYear() > year || e.getFullYear() < year) continue;
       const cursor = new Date(Math.max(s, new Date(year, 0, 1)));
@@ -848,14 +856,15 @@ export class HomeScreen extends LitElement {
     const offset = (firstDay + 6) % 7;
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const events = this._filteredEvents()
-      .map((e) => new Date(e.date))
+      .map((e) => parseLocalDate(e.date))
+      .filter(Boolean)
       .filter((d) => d.getFullYear() === year && d.getMonth() === month)
       .map((d) => d.getDate());
     const tripDays = new Set();
     for (const t of this._filteredTrips()) {
       if (!t.start || !t.end) continue;
-      const s = new Date(t.start);
-      const e = new Date(t.end);
+      const s = parseLocalDate(t.start);
+      const e = parseLocalDate(t.end);
       if (Number.isNaN(s.getTime()) || Number.isNaN(e.getTime())) continue;
       if (s.getFullYear() > year || e.getFullYear() < year) continue;
       if (s.getMonth() > month && e.getMonth() > month) continue;
@@ -1057,13 +1066,13 @@ export class HomeScreen extends LitElement {
     const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
     const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
     const eventsThisMonth = filteredEvents.filter((e) => {
-      const d = new Date(e.date);
-      return d.getFullYear() === today.getFullYear() && d.getMonth() === today.getMonth();
+      const d = parseLocalDate(e.date);
+      return d && d.getFullYear() === today.getFullYear() && d.getMonth() === today.getMonth();
     });
     const tripsThisMonth = this._circleTrips().filter((t) => {
       if (!t.start || !t.end) return false;
-      const s = new Date(t.start);
-      const e = new Date(t.end);
+      const s = parseLocalDate(t.start);
+      const e = parseLocalDate(t.end);
       if (Number.isNaN(s.getTime()) || Number.isNaN(e.getTime())) return false;
       return s <= monthEnd && e >= monthStart;
     });
@@ -1072,7 +1081,14 @@ export class HomeScreen extends LitElement {
     return html`
       <div class="topbar">
         <div class="brand">
-          <cairn-mark size="38"></cairn-mark>
+          <img
+            class="brand-icon"
+            src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
+            srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
+            alt="Cairn"
+            width="38"
+            height="38"
+          />
           <div class="brand-name">Cairn</div>
         </div>
         <circle-switcher

@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import './member-chip.js';
-import { gradientForTrip } from '../services/data.js';
+import { gradientForTrip, parseLocalDate } from '../services/data.js';
 import { toast } from '../services/toast.js';
 
 /**
@@ -11,8 +11,8 @@ function formatTripForShare(t, memberMap) {
   lines.push(t.title || 'Cairn activity');
   if (t.location) lines.push(t.location);
   if (t.start && t.end) {
-    const s = new Date(t.start);
-    const e = new Date(t.end);
+    const s = parseLocalDate(t.start);
+    const e = parseLocalDate(t.end);
     const sm = s.toLocaleString('en-GB', { day: 'numeric', month: 'short' });
     const em = e.toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
     lines.push(t.start === t.end ? em : `${sm} – ${em}`);
@@ -228,8 +228,9 @@ export class TripCard extends LitElement {
   `;
 
   _fmtDates(start, end) {
-    const s = new Date(start);
-    const e = new Date(end);
+    const s = parseLocalDate(start);
+    const e = parseLocalDate(end);
+    if (!s || !e) return '';
     const sm = s.toLocaleString('en-GB', { month: 'short' });
     const em = e.toLocaleString('en-GB', { month: 'short' });
     if (sm === em && s.getFullYear() === e.getFullYear()) {
