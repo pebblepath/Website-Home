@@ -1359,11 +1359,31 @@
 
   /* LONGITUDINAL INTELLIGENCE */
   .intelligence {
+    position: relative;
     padding: 36px 48px;
-    background: linear-gradient(160deg, var(--teal-deep) 0%, var(--teal-dark) 50%, var(--teal) 100%);
+    background:
+      /* Cairn-style mesh glows layered on top of the teal base — sage
+         glow top-left, amber middle-right, soft terracotta bottom — so
+         the two surfaces feel like sisters when you tab between them. */
+      radial-gradient(ellipse 50% 40% at 12% 22%, rgba(61, 155, 143, 0.45), transparent 65%),
+      radial-gradient(ellipse 45% 35% at 88% 30%, rgba(212, 168, 67, 0.28), transparent 65%),
+      radial-gradient(ellipse 60% 50% at 50% 100%, rgba(198, 123, 92, 0.32), transparent 65%),
+      linear-gradient(160deg, var(--teal-deep) 0%, var(--teal-dark) 50%, var(--teal) 100%);
     opacity: 0; transform: translateY(30px);
     transition: opacity 0.6s ease, transform 0.6s ease;
+    overflow: hidden;
   }
+  /* Subtle film-grain dot pattern over the whole section, same trick
+     Cairn uses for texture. */
+  .intelligence::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255, 248, 235, 0.05) 1px, transparent 1px);
+    background-size: 3px 3px;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .intelligence > * { position: relative; z-index: 1; }
   .intelligence.visible { opacity: 1; transform: translateY(0); }
   .intelligence-inner {
     max-width: 1060px; margin: 0 auto;
@@ -2160,15 +2180,13 @@
   <a href="#" class="nav-logo" aria-label="PebblePath home">
     <img src="assets/app-icon.png" alt="PebblePath" class="nav-logo-icon">
   </a>
+  <!-- 2026-05-13: desktop nav collapsed to a single "Login" entry that
+       takes the user straight to Cairn (where Google sign-in lives).
+       The previous Features/The App/Insights/Founders anchors are
+       still navigable via the mobile menu overlay below. -->
   <div class="nav-links" id="nav-links">
-    <a href="#features">Features</a>
-    <a href="#showcase">The App</a>
-    <a href="#intelligence">Insights</a>
-    <a href="#founders">Founders</a>
-    <!-- TODO: Once App Store ID is assigned, swap href to https://apps.apple.com/app/pebblepath-ai/id<XXXXXXXXX> -->
-    <a href="https://apps.apple.com/app/pebblepath-ai/" class="nav-cta" target="_blank" rel="noopener">
-      <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM248.6 84.7c33.5-39.8 30.4-76 29.4-89-29.6 1.7-63.8 20.1-83.3 42.7-21.5 24.2-34.1 54.1-31.4 87.6 32 2.5 61.1-13.9 85.3-41.3z"/></svg>
-      Download
+    <a href="/cairn/" class="nav-cta">
+      Login
     </a>
   </div>
   <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -2182,9 +2200,8 @@
   <a href="#showcase">The App</a>
   <a href="#intelligence">Insights</a>
   <a href="#founders">Founders</a>
-  <a href="https://apps.apple.com/app/pebblepath-ai/" class="mobile-menu-cta" target="_blank" rel="noopener">
-    <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM248.6 84.7c33.5-39.8 30.4-76 29.4-89-29.6 1.7-63.8 20.1-83.3 42.7-21.5 24.2-34.1 54.1-31.4 87.6 32 2.5 61.1-13.9 85.3-41.3z"/></svg>
-    Download
+  <a href="/cairn/" class="mobile-menu-cta">
+    Family Portal
   </a>
 </div>
 
@@ -2204,7 +2221,7 @@
           <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM248.6 84.7c33.5-39.8 30.4-76 29.4-89-29.6 1.7-63.8 20.1-83.3 42.7-21.5 24.2-34.1 54.1-31.4 87.6 32 2.5 61.1-13.9 85.3-41.3z"/></svg>
           Download
         </a>
-        <a href="#showcase" class="btn-secondary">See How It Works</a>
+        <a href="/cairn/" class="btn-secondary">Family Portal</a>
       </div>
     </div>
 
@@ -2255,28 +2272,20 @@
     </div>
     <div class="benefit-card">
       <div class="benefit-icon social">
-        <!-- Pediatrician report — page outline with 3 bullet items that
-             appear softly in order (1, 2, 3) within a single shared 6s
-             timeline. Bigger viewBox for prominence. -->
-        <svg class="bi-svg bi-report" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C98A8A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
-          <g class="bi-report-row r1">
-            <circle cx="8" cy="13" r="0.9" fill="#C98A8A" stroke="none"/>
-            <line x1="10.5" y1="13" x2="16" y2="13"/>
-          </g>
-          <g class="bi-report-row r2">
-            <circle cx="8" cy="16.5" r="0.9" fill="#C98A8A" stroke="none"/>
-            <line x1="10.5" y1="16.5" x2="16" y2="16.5"/>
-          </g>
-          <g class="bi-report-row r3">
-            <circle cx="8" cy="20" r="0.9" fill="#C98A8A" stroke="none"/>
-            <line x1="10.5" y1="20" x2="14" y2="20"/>
-          </g>
+        <!-- Family Portal — stacked stones glyph echoing Cairn's logo,
+             rendered in the same warm coral that Cairn's CTA gradient
+             uses so the two surfaces feel like sisters. -->
+        <svg class="bi-svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C98A8A" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <!-- Five stacked stones (base → top), filled, with gentle highlight strokes. -->
+          <ellipse cx="12" cy="20" rx="7" ry="1.8" fill="#C98A8A" opacity="0.9"/>
+          <ellipse cx="11" cy="16.5" rx="5.5" ry="1.6" fill="#C98A8A" opacity="0.85"/>
+          <ellipse cx="12.5" cy="13" rx="4.2" ry="1.4" fill="#C98A8A" opacity="0.8"/>
+          <ellipse cx="11.5" cy="9.8" rx="3" ry="1.2" fill="#C98A8A" opacity="0.75"/>
+          <ellipse cx="12" cy="7" rx="2" ry="1" fill="#C98A8A" opacity="0.7"/>
         </svg>
       </div>
-      <h3>Pediatrician reports</h3>
-      <p>Export a clinician-toned PDF covering all four domains: built for the 15-minute pediatrician visit, not against it.</p>
+      <h3>Family Portal</h3>
+      <p>Cairn — the web companion for shared trips, weekend plans, birthdays &amp; anniversaries. Invite extended family without exposing your child's milestones.</p>
     </div>
   </div>
 </section>
@@ -2495,7 +2504,7 @@
         </li>
         <li>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          <span><b>Weekend Planner</b> &mdash; Location-based suggestions for your city.</span>
+          <span><b>Family Portal</b> &mdash; <a href="/cairn/" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Cairn</a>, the shared web companion for trips, weekend plans &amp; family celebrations.</span>
         </li>
         <li>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
