@@ -61,8 +61,8 @@ export class YearlyView extends LitElement {
       }
     }
     .month {
-      padding: 8px 6px 6px;
-      border-radius: 10px;
+      padding: 6px 5px 4px;
+      border-radius: 9px;
       background: rgba(255, 248, 235, 0.06);
       border: 1px solid rgba(255, 248, 235, 0.14);
       transition: background 200ms ease, border-color 200ms ease;
@@ -125,9 +125,10 @@ export class YearlyView extends LitElement {
     }
     .cell.today {
       background: var(--today-bg);
-      box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.4),
-        0 0 6px rgba(79, 194, 107, 0.7);
+      /* No glow — let the meadow gradient stand on its own. The
+         outer rim and shadow were reading as a halo that competed
+         with the celebration + trip cells nearby. */
+      box-shadow: none;
     }
     .cell.trip {
       background: var(--trip-day-bg);

@@ -94,9 +94,15 @@ export class AppShell extends LitElement {
 
   _composeViewer() {
     const u = this.authUser;
+    // User-doc displayName wins over Firebase Auth's value: the user
+    // can edit it via the profile sheet (`/users/{uid}.displayName`),
+    // but the auth provider's displayName is fixed by Google and
+    // would otherwise mask the edit. Empty-string user-doc value
+    // falls back to auth → 'You'.
+    const pebbleName = this.pebbleUser?.displayName;
     return {
       uid: u.uid,
-      displayName: u.displayName ?? this.pebbleUser?.displayName ?? 'You',
+      displayName: (pebbleName && pebbleName.trim()) || u.displayName || 'You',
       email: u.email ?? this.pebbleUser?.email ?? '',
       photoURL: resolvePhoto(u, this.pebbleUser),
     };

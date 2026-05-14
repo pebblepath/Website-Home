@@ -677,20 +677,21 @@ export class HomeScreen extends LitElement {
       padding: 6px 0;
     }
     .cal-cell {
-      aspect-ratio: 1 / 1;
-      border-radius: 10px;
+      /* Shorter cells (3:2 ratio instead of square) so the monthly
+         card has less vertical weight — keeps trip cards as the
+         primary focus of the page. */
+      aspect-ratio: 3 / 2;
+      border-radius: 8px;
       background: rgba(255, 248, 235, 0.04);
       border: 1px solid rgba(255, 248, 235, 0.06);
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      /* Day number flush top-left, preview label pinned bottom-left
-         via margin-top:auto. */
       justify-content: flex-start;
-      padding: 4px 5px 5px;
-      font-size: 12px;
+      padding: 3px 5px 4px;
+      font-size: 11.5px;
       color: var(--text-secondary);
-      gap: 2px;
+      gap: 1px;
       position: relative;
       overflow: hidden;
     }

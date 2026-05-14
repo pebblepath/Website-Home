@@ -389,10 +389,12 @@ export class TripForm extends LitElement {
     textarea {
       width: 100%;
       min-width: 0;
+      min-height: 44px;
+      box-sizing: border-box;
       background: rgba(255, 248, 235, 0.06);
       border: 1px solid rgba(255, 248, 235, 0.16);
       border-radius: var(--radius-input);
-      padding: 11px 14px;
+      padding: 10px 14px;
       color: var(--text-primary);
       font-family: var(--font-body);
       /* 16px prevents iOS Safari auto-zoom on focus. */
@@ -471,9 +473,9 @@ export class TripForm extends LitElement {
       }
       /* Single-row, uniform-shape action buttons on mobile. All three
          (Delete / Cancel / Save) become equal-width pills with the
-         same height — Delete uses a destructive outline tint, Cancel
-         the standard ghost, Save the primary fill, but the silhouette
-         matches across all three so the row reads as a balanced set. */
+         exact same height + radius — Delete uses a destructive outline
+         tint, Cancel the standard ghost, Save the primary fill, but
+         the silhouette matches across all three. */
       .actions {
         flex-wrap: nowrap;
         gap: 8px;
@@ -483,34 +485,46 @@ export class TripForm extends LitElement {
       }
       .actions .delete-btn,
       .actions glass-button {
-        flex: 1;
+        flex: 1 1 0;
         min-width: 0;
-        padding: 11px 14px;
+        height: 44px;
+        padding: 0;
         font-size: 13.5px;
         text-align: center;
         white-space: nowrap;
-      }
-      .actions .delete-btn {
         border-radius: var(--radius-pill);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
       }
+      .save-long { display: none; }
+      .save-short { display: inline; }
     }
+    /* Segmented Visibility control — matches the text input shape
+       (14px radius, 44px min-height) so the trip-form fields all share
+       the same silhouette. The active segment is still pill-radius
+       inside the rounded-rect frame for affordance. */
     .seg {
       display: inline-flex;
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 44px;
       padding: 3px;
       gap: 2px;
       background: rgba(255, 248, 235, 0.06);
-      border: 1px solid rgba(255, 248, 235, 0.14);
-      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255, 248, 235, 0.16);
+      border-radius: var(--radius-input);
     }
     .seg button {
+      flex: 1;
       background: transparent;
       color: var(--text-secondary);
       border: none;
-      padding: 7px 14px;
+      padding: 0 12px;
       font: inherit;
       font-size: 13px;
       font-weight: 500;
-      border-radius: var(--radius-pill);
+      border-radius: calc(var(--radius-input) - 4px);
       cursor: pointer;
     }
     .seg button.active {
@@ -554,6 +568,10 @@ export class TripForm extends LitElement {
     .actions .spacer {
       flex: 1;
     }
+    /* Two labels on the Save button: full copy on desktop, terse copy
+       on mobile (so the three single-row pills fit even at narrow
+       widths). The mobile media-query below flips the visibility. */
+    .save-short { display: none; }
     .delete-btn {
       background: transparent;
       color: var(--rose-soft);
@@ -1310,7 +1328,8 @@ export class TripForm extends LitElement {
               Cancel
             </glass-button>
             <glass-button variant="primary" @click=${this._onSave} ?disabled=${this.busy}>
-              ${this.busy ? 'Saving…' : isEdit ? 'Save changes' : 'Create activity'}
+              <span class="save-long">${this.busy ? 'Saving…' : isEdit ? 'Save changes' : 'Create activity'}</span>
+              <span class="save-short">${this.busy ? 'Saving…' : isEdit ? 'Save' : 'Create'}</span>
             </glass-button>
           </div>
         </glass-panel>
