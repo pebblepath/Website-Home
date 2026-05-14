@@ -91,13 +91,14 @@ export class YearlyView extends LitElement {
       background: transparent;
     }
     .cell.today {
-      background: var(--gradient-warmsun);
+      background: var(--today-bg);
     }
     .cell.trip {
-      background: rgba(61, 155, 143, 0.38);
+      background: var(--trip-day-bg);
+      border-radius: 2px;
     }
     .cell.trip.dense {
-      background: rgba(61, 155, 143, 0.62);
+      background: var(--trip-day-bg-strong);
     }
     .cell.event::after {
       content: '';
@@ -105,15 +106,15 @@ export class YearlyView extends LitElement {
       bottom: 1px;
       left: 50%;
       transform: translateX(-50%);
-      width: 2.5px;
-      height: 2.5px;
+      width: 3px;
+      height: 3px;
       border-radius: 999px;
       background: var(--amber-glow);
-      box-shadow: 0 0 3px rgba(212, 168, 67, 0.6);
+      box-shadow: 0 0 4px rgba(212, 168, 67, 0.8);
     }
     .cell.event.trip::after {
-      background: var(--rose-soft);
-      box-shadow: 0 0 3px rgba(201, 138, 138, 0.6);
+      background: #fff;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.7);
     }
     .legend {
       display: flex;
@@ -137,14 +138,15 @@ export class YearlyView extends LitElement {
       display: inline-block;
     }
     .swatch i.trip {
-      background: rgba(61, 155, 143, 0.5);
+      background: var(--trip-day-bg-strong);
+      border-radius: 2px;
     }
     .swatch i.event {
       background: var(--amber-glow);
       border-radius: 999px;
     }
     .swatch i.today {
-      background: var(--gradient-warmsun);
+      background: var(--today-bg);
     }
   `;
 
