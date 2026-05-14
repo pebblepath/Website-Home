@@ -13,6 +13,7 @@ import './manage-members-modal.js';
 import './all-trips-modal.js';
 import './import-calendar-modal.js';
 import './profile-sheet.js';
+import './activity-type-picker.js';
 import './discover-pebblepath.js';
 import {
   mockUser,
@@ -64,6 +65,8 @@ export class HomeScreen extends LitElement {
     _editingFamilyName: { state: true },
     _importOpen: { state: true },
     _profileOpen: { state: true },
+    _typePickerOpen: { state: true },
+    _formMode: { state: true },
   };
 
   constructor() {
@@ -87,6 +90,8 @@ export class HomeScreen extends LitElement {
     this._editingFamilyName = false;
     this._importOpen = false;
     this._profileOpen = false;
+    this._typePickerOpen = false;
+    this._formMode = 'trip';
     // Calendar nav state — initialized to "today" at first paint, then
     // user-controlled via prev/next or yearly month-tap.
     const t = new Date();
@@ -951,22 +956,47 @@ export class HomeScreen extends LitElement {
 
   _openCreate() {
     if (this.preview) {
-      toast('Sign in to create real trips.');
+      toast('Sign in to create real activities.');
       return;
     }
     if (!dataStore.familyId) {
       toast('You need a PebblePath family first.');
       return;
     }
+    // Opens the type picker first; selection routes to the right form
+    // with the right field-set (trip form full vs. activity-only, or
+    // event form for birthdays/anniversaries).
+    this._typePickerOpen = true;
+  }
+
+  _onTypePicked(e) {
+    this._typePickerOpen = false;
+    const type = e.detail.type;
+    if (type === 'event') {
+      this._eventFormEvent = null;
+      this._eventFormOpen = true;
+      return;
+    }
+    // 'trip' or 'activity' both open trip-form, with different field sets.
+    this._formMode = type;
     this._formTrip = null;
     this._formOpen = true;
   }
 
   _openEdit(trip) {
     if (this.preview) {
-      toast('Sign in to edit real trips.');
+      toast('Sign in to edit real activities.');
       return;
     }
+    // For edits: infer field-set from existing data. If the trip has
+    // any lodging or flight info, treat it as a full Family Trip;
+    // otherwise it's a Group Activity (compact form).
+    const hasLodgingOrFlight =
+      trip.lodgingUrl ||
+      trip.lodgingHost ||
+      trip.flightNumber ||
+      trip.flightDepartAirport;
+    this._formMode = hasLodgingOrFlight ? 'trip' : 'activity';
     this._formTrip = trip;
     this._formOpen = true;
   }
@@ -1414,6 +1444,7 @@ export class HomeScreen extends LitElement {
         .currentUid=${this.user?.uid ?? ''}
         .familyId=${this.family?.id ?? ''}
         .busy=${this._formBusy}
+        .formMode=${this._formMode}
         @save=${this._onSaveTrip}
         @remove=${this._onDeleteTrip}
         @cancel=${() => {
@@ -1421,6 +1452,12 @@ export class HomeScreen extends LitElement {
           this._formTrip = null;
         }}
       ></trip-form>
+
+      <activity-type-picker
+        ?open=${this._typePickerOpen}
+        @pick=${this._onTypePicked}
+        @cancel=${() => (this._typePickerOpen = false)}
+      ></activity-type-picker>
 
       <manage-members-modal
         ?open=${this._membersOpen}

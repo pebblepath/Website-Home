@@ -29,6 +29,8 @@ export class TripForm extends LitElement {
     currentUid: { type: String },
     familyId: { type: String },
     busy: { type: Boolean },
+    /** 'trip' (full form, default) or 'activity' (hide lodging + flight). */
+    formMode: { type: String },
     _draft: { state: true },
     _error: { state: true },
     _previewing: { state: true },
@@ -43,6 +45,7 @@ export class TripForm extends LitElement {
     this.currentUid = '';
     this.familyId = '';
     this.busy = false;
+    this.formMode = 'trip';
     this._draft = this._blankDraft();
     this._error = '';
     this._previewing = false;
@@ -501,7 +504,13 @@ export class TripForm extends LitElement {
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
           <div class="header">
-            <h2>${isEdit ? 'Edit activity' : 'New activity'}</h2>
+            <h2>${
+              isEdit
+                ? 'Edit activity'
+                : this.formMode === 'activity'
+                ? 'New group activity'
+                : 'New family trip'
+            }</h2>
             <button class="close" @click=${this._onCancel} aria-label="Close">×</button>
           </div>
 
@@ -545,8 +554,8 @@ export class TripForm extends LitElement {
             </div>
           </div>
 
-          <div class="row-2">
-            <div class="field">
+          <div class=${this.formMode === 'activity' ? 'field' : 'row-2'}>
+            <div class="field" style=${this.formMode === 'activity' ? 'margin-bottom:0;' : ''}>
               <label>Visibility</label>
               <div class="seg">
                 ${['personal', 'family', 'extended'].map(
@@ -561,36 +570,37 @@ export class TripForm extends LitElement {
                 )}
               </div>
             </div>
-            <div class="field">
-              <label>Lodging URL</label>
-              <input
-                type="url"
-                placeholder="airbnb.com/… or booking.com/…"
-                .value=${d.lodgingUrl}
-                @input=${(e) => this._onLodgingChange(e.target.value)}
-              />
-              ${this._previewing
-                ? html`<div class="preview-loading">
-                    <div class="spinner"></div>
-                    Fetching preview…
-                  </div>`
-                : ''}
-              ${this._previewError
-                ? html`<div class="preview-error">${this._previewError}</div>`
-                : ''}
-              ${!this._previewing && d.coverImage
-                ? html`<div class="preview">
-                    <div
-                      class="thumb"
-                      style="background-image:url(${d.coverImage});"
-                    ></div>
-                    <div class="meta">
-                      <div class="meta-title">${d.lodgingTitle || d.lodgingUrl}</div>
-                      <div class="meta-host">${d.lodgingHost || ''}</div>
-                    </div>
-                  </div>`
-                : ''}
-            </div>
+            ${this.formMode !== 'activity'
+              ? html`
+                  <div class="field">
+                    <label>Lodging URL</label>
+                    <input
+                      type="url"
+                      placeholder="airbnb.com/… or booking.com/…"
+                      .value=${d.lodgingUrl}
+                      @input=${(e) => this._onLodgingChange(e.target.value)}
+                    />
+                    ${this._previewing
+                      ? html`<div class="preview-loading">
+                          <div class="spinner"></div>
+                          Fetching preview…
+                        </div>`
+                      : ''}
+                    ${this._previewError
+                      ? html`<div class="preview-error">${this._previewError}</div>`
+                      : ''}
+                    ${!this._previewing && d.coverImage
+                      ? html`<div class="preview">
+                          <div class="thumb" style="background-image:url(${d.coverImage});"></div>
+                          <div class="meta">
+                            <div class="meta-title">${d.lodgingTitle || d.lodgingUrl}</div>
+                            <div class="meta-host">${d.lodgingHost || ''}</div>
+                          </div>
+                        </div>`
+                      : ''}
+                  </div>
+                `
+              : ''}
           </div>
 
           <div class="field">
@@ -644,6 +654,9 @@ export class TripForm extends LitElement {
             </div>
           </div>
 
+          ${this.formMode === 'activity'
+            ? ''
+            : html`
           <fieldset class="flight-section">
             <legend>Flight (optional)</legend>
             <div class="row-2">
@@ -712,6 +725,7 @@ export class TripForm extends LitElement {
               Auto-fill from confirmation email arrives in a later phase. Manual entry for now.
             </div>
           </fieldset>
+          `}
 
           <div class="field">
             <label>Notes</label>
