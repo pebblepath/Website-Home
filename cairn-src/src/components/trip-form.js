@@ -60,7 +60,18 @@ export class TripForm extends LitElement {
 
   willUpdate(changed) {
     if (changed.has('trip') || changed.has('open')) {
-      if (this.open) this._draft = this._draftFromTrip(this.trip);
+      if (this.open) {
+        this._draft = this._draftFromTrip(this.trip);
+        // If we're opening an existing trip that has a lodging URL but
+        // no cover image, auto-refetch the preview. Catches trips that
+        // were created before the previewUrl Cloud Function was
+        // deployed — opening the form now will populate the cover
+        // image without the user re-typing the URL.
+        if (this._draft.lodgingUrl && !this._draft.coverImage) {
+          // Defer one frame so the form renders before the network call.
+          requestAnimationFrame(() => this._runPreview(this._draft.lodgingUrl));
+        }
+      }
       this._error = '';
     }
   }

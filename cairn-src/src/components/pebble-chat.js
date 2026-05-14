@@ -104,43 +104,65 @@ export class PebbleChat extends LitElement {
       inset: 0;
       z-index: 1000;
       display: none;
-      align-items: flex-end;
-      justify-content: center;
-      padding: 5vh 24px 24px;
+      pointer-events: none;
     }
-    @media (min-width: 720px) {
-      :host {
-        align-items: center;
-        padding: 6vh 24px;
-      }
+    :host([open]) {
+      display: block;
     }
-    :host([open]) { display: flex; }
+    /* Backdrop is subtle — dashboard stays legible behind the dropdown.
+       Catches outside-clicks to dismiss. */
     .backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(20, 12, 6, 0.55);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: -1;
+      background: rgba(20, 12, 6, 0.25);
+      pointer-events: auto;
+      animation: fadeIn 200ms ease;
     }
-    .sheet {
-      position: relative;
-      width: 100%;
-      max-width: 560px;
-      height: min(680px, 90vh);
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    /* Dropdown panel: anchored just below the topbar Pebble search bar.
+       Centred horizontally on desktop, near-edge on mobile. Internal
+       flex so the conversation thread can scroll while header + composer
+       stay pinned. */
+    .panel {
+      position: fixed;
+      top: 76px; /* below 68px topbar + 8px gap */
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(580px, calc(100vw - 32px));
+      max-height: min(640px, calc(100vh - 96px));
       display: flex;
       flex-direction: column;
-      animation: rise 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      background: rgba(34, 26, 32, 0.92);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid var(--glass-border-strong);
+      border-radius: var(--radius-card);
+      box-shadow: 0 24px 60px rgba(20, 12, 6, 0.55);
+      pointer-events: auto;
+      animation: dropIn 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      padding: 18px 20px 18px;
+      overflow: hidden;
     }
-    @keyframes rise {
-      from { transform: translateY(20px); opacity: 0; }
-      to   { transform: translateY(0); opacity: 1; }
+    @keyframes dropIn {
+      from { transform: translateX(-50%) translateY(-12px); opacity: 0; }
+      to   { transform: translateX(-50%) translateY(0); opacity: 1; }
     }
-    glass-panel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
+    @media (max-width: 768px) {
+      .panel {
+        top: 76px;
+        left: 16px;
+        right: 16px;
+        width: auto;
+        max-height: calc(100vh - 96px);
+        transform: none;
+      }
+      @keyframes dropIn {
+        from { transform: translateY(-12px); opacity: 0; }
+        to   { transform: translateY(0); opacity: 1; }
+      }
     }
 
     .header {
@@ -187,12 +209,24 @@ export class PebbleChat extends LitElement {
 
     .thread {
       flex: 1;
+      min-height: 0;
       overflow-y: auto;
       margin: 6px -8px;
       padding: 6px 8px 16px;
       display: flex;
       flex-direction: column;
       gap: 12px;
+      /* Thin scroll on webkit so it doesn't feel out-of-place on the
+         glass panel; Firefox uses scrollbar-width: thin. */
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 248, 235, 0.18) transparent;
+    }
+    .thread::-webkit-scrollbar {
+      width: 6px;
+    }
+    .thread::-webkit-scrollbar-thumb {
+      background: rgba(255, 248, 235, 0.18);
+      border-radius: 999px;
     }
     .bubble {
       max-width: 88%;
@@ -350,8 +384,7 @@ export class PebbleChat extends LitElement {
     const suggestions = this._suggestions();
     return html`
       <div class="backdrop" @click=${this._onCancel}></div>
-      <div class="sheet">
-        <glass-panel padding="lg" variant="strong" lifted>
+      <div class="panel" @keydown=${(e) => { if (e.key === 'Escape') this._onCancel(); }}>
           <div class="header">
             <span class="pebble-icon">${this._renderPebbleIcon()}</span>
             <div class="body">
@@ -425,7 +458,6 @@ export class PebbleChat extends LitElement {
               </svg>
             </button>
           </form>
-        </glass-panel>
       </div>
     `;
   }
