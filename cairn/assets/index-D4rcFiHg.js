@@ -1,8 +1,8 @@
-var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,configurable:!0,writable:!0,value:t}):o[e]=t;var g=(o,e,t)=>qe(o,typeof e!="symbol"?e+"":e,t);import{i as $,a as k,b as n}from"./lit-2GpawzfI.js";import{i as Ve,g as Ke,a as Xe,b as Ze,c as Qe,G as ve,s as Ce,d as et,e as z,u as I,f as E,o as tt,h as B,j as M,k as W,l as q,m as De,q as Ne,w as Se,n as Ie,p as Te,r as Ae,t as Fe,v as Me}from"./firebase-B_32xM1b.js";(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const r of document.querySelectorAll('link[rel="modulepreload"]'))i(r);new MutationObserver(r=>{for(const a of r)if(a.type==="childList")for(const l of a.addedNodes)l.tagName==="LINK"&&l.rel==="modulepreload"&&i(l)}).observe(document,{childList:!0,subtree:!0});function t(r){const a={};return r.integrity&&(a.integrity=r.integrity),r.referrerPolicy&&(a.referrerPolicy=r.referrerPolicy),r.crossOrigin==="use-credentials"?a.credentials="include":r.crossOrigin==="anonymous"?a.credentials="omit":a.credentials="same-origin",a}function i(r){if(r.ep)return;r.ep=!0;const a=t(r);fetch(r.href,a)}})();class V extends ${constructor(){super(),this.variant="default",this.lifted=!1,this.padding="md"}render(){const e=["panel",this.variant==="strong"?"strong":"",this.lifted?"lifted":"",`pad-${this.padding}`].filter(Boolean).join(" ");return n`
+var Ve=Object.defineProperty;var Ke=(o,e,t)=>e in o?Ve(o,e,{enumerable:!0,configurable:!0,writable:!0,value:t}):o[e]=t;var u=(o,e,t)=>Ke(o,typeof e!="symbol"?e+"":e,t);import{i as $,a as k,b as n}from"./lit-2GpawzfI.js";import{f as Xe,h as Ze,j as Qe,G as ye,s as Se,k as et,l as D,m as I,n as z,o as tt,q as P,t as M,v as W,w as q,x as Ne,y as Ie,z as Fe,A as Te}from"./firebase-core-DVt9Aunh.js";import{g as it,h as Ae}from"./firebase-functions-CfBtnn7v.js";import{g as rt,r as Me,u as je,a as Oe}from"./firebase-storage-C5Nl_r0j.js";(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const r of document.querySelectorAll('link[rel="modulepreload"]'))i(r);new MutationObserver(r=>{for(const a of r)if(a.type==="childList")for(const l of a.addedNodes)l.tagName==="LINK"&&l.rel==="modulepreload"&&i(l)}).observe(document,{childList:!0,subtree:!0});function t(r){const a={};return r.integrity&&(a.integrity=r.integrity),r.referrerPolicy&&(a.referrerPolicy=r.referrerPolicy),r.crossOrigin==="use-credentials"?a.credentials="include":r.crossOrigin==="anonymous"?a.credentials="omit":a.credentials="same-origin",a}function i(r){if(r.ep)return;r.ep=!0;const a=t(r);fetch(r.href,a)}})();class V extends ${constructor(){super(),this.variant="default",this.lifted=!1,this.padding="md"}render(){const e=["panel",this.variant==="strong"?"strong":"",this.lifted?"lifted":"",`pad-${this.padding}`].filter(Boolean).join(" ");return n`
       <div class=${e}>
         <div class="content"><slot></slot></div>
       </div>
-    `}}g(V,"properties",{variant:{type:String},lifted:{type:Boolean},padding:{type:String}}),g(V,"styles",k`
+    `}}u(V,"properties",{variant:{type:String},lifted:{type:Boolean},padding:{type:String}}),u(V,"styles",k`
     :host {
       display: block;
     }
@@ -62,7 +62,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       <button class=${e} ?disabled=${this.disabled}>
         <slot></slot>
       </button>
-    `}}g(K,"properties",{variant:{type:String},size:{type:String},full:{type:Boolean},disabled:{type:Boolean,reflect:!0}}),g(K,"styles",k`
+    `}}u(K,"properties",{variant:{type:String},size:{type:String},full:{type:Boolean},disabled:{type:Boolean,reflect:!0}}),u(K,"styles",k`
     * {
       box-sizing: border-box;
     }
@@ -180,7 +180,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
         <ellipse cx="33" cy="16" rx="6" ry="3.2" fill="url(#cm-stone-clay)" />
         <ellipse cx="33" cy="15.2" rx="5" ry="1.1" fill="url(#cm-highlight)" opacity="0.65" />
       </svg>
-    `}}g(X,"properties",{size:{type:Number}}),g(X,"styles",k`
+    `}}u(X,"properties",{size:{type:Number}}),u(X,"styles",k`
     :host {
       display: inline-block;
       line-height: 0;
@@ -189,7 +189,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       display: block;
       filter: drop-shadow(0 6px 18px rgba(20, 12, 6, 0.45));
     }
-  `);customElements.define("cairn-mark",X);class Z extends ${constructor(){super(),this.year=new Date().getFullYear(),this.tripDays=new Map,this.events=[],this.today=new Date}_isLeap(e){return e%4===0&&e%100!==0||e%400===0}_daysInMonth(e,t){return[31,this._isLeap(e)?29:28,31,30,31,30,31,31,30,31,30,31][t]}_renderMonth(e){const t=this.year,r=(new Date(t,e,1).getDay()+6)%7,a=this._daysInMonth(t,e),l=new Set(this.events.filter(c=>{const p=new Date(c.date);return p.getFullYear()===t&&p.getMonth()===e}).map(c=>new Date(c.date).getDate())),s=[];for(let c=0;c<r;c++)s.push(n`<div class="cell empty"></div>`);const d=this.today;for(let c=1;c<=a;c++){const p=`${String(e+1).padStart(2,"0")}-${String(c).padStart(2,"0")}`,h=this.tripDays.get(p)??0,b=d.getFullYear()===t&&d.getMonth()===e&&d.getDate()===c,y=l.has(c),m=["cell",b?"today":"",h>0?"trip":"",h>.6?"dense":"",y?"event":""].filter(Boolean).join(" ");s.push(n`<div class=${m}></div>`)}return s}_onSelect(e){this.dispatchEvent(new CustomEvent("month-select",{detail:{month:e,year:this.year},bubbles:!0,composed:!0}))}render(){const e=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],t=this.today.getMonth(),i=this.today.getFullYear()===this.year;return n`
+  `);customElements.define("cairn-mark",X);class Z extends ${constructor(){super(),this.year=new Date().getFullYear(),this.tripDays=new Map,this.events=[],this.today=new Date}_isLeap(e){return e%4===0&&e%100!==0||e%400===0}_daysInMonth(e,t){return[31,this._isLeap(e)?29:28,31,30,31,30,31,31,30,31,30,31][t]}_renderMonth(e){const t=this.year,r=(new Date(t,e,1).getDay()+6)%7,a=this._daysInMonth(t,e),l=new Set(this.events.filter(c=>{const p=new Date(c.date);return p.getFullYear()===t&&p.getMonth()===e}).map(c=>new Date(c.date).getDate())),s=[];for(let c=0;c<r;c++)s.push(n`<div class="cell empty"></div>`);const d=this.today;for(let c=1;c<=a;c++){const p=`${String(e+1).padStart(2,"0")}-${String(c).padStart(2,"0")}`,h=this.tripDays.get(p)??0,f=d.getFullYear()===t&&d.getMonth()===e&&d.getDate()===c,y=l.has(c),m=["cell",f?"today":"",h>0?"trip":"",h>.6?"dense":"",y?"event":""].filter(Boolean).join(" ");s.push(n`<div class=${m}></div>`)}return s}_onSelect(e){this.dispatchEvent(new CustomEvent("month-select",{detail:{month:e,year:this.year},bubbles:!0,composed:!0}))}render(){const e=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],t=this.today.getMonth(),i=this.today.getFullYear()===this.year;return n`
       <div class="grid">
         ${e.map((r,a)=>n`
             <div
@@ -206,7 +206,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
         <span class="swatch"><i class="event"></i> Celebration</span>
         <span class="swatch"><i class="today"></i> Today</span>
       </div>
-    `}}g(Z,"properties",{year:{type:Number},tripDays:{type:Object},events:{type:Array},today:{type:Object}}),g(Z,"styles",k`
+    `}}u(Z,"properties",{year:{type:Number},tripDays:{type:Object},events:{type:Array},today:{type:Object}}),u(Z,"styles",k`
     :host {
       display: block;
     }
@@ -330,7 +330,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
         ${this.photo?n`<img src=${this.photo} alt=${this.name} />`:n`<span>${this._initials()}</span>`}
       </div>
       ${this.showName?n`<span class="name">${this.name}</span>`:""}
-    `}}g(Q,"properties",{name:{type:String},hue:{type:Number},photo:{type:String},size:{type:Number},showName:{type:Boolean,attribute:"show-name"}}),g(Q,"styles",k`
+    `}}u(Q,"properties",{name:{type:String},hue:{type:Number},photo:{type:String},size:{type:Number},showName:{type:Boolean,attribute:"show-name"}}),u(Q,"styles",k`
     :host {
       display: inline-flex;
       align-items: center;
@@ -362,7 +362,142 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       font-weight: 500;
       color: var(--text-secondary);
     }
-  `);customElements.define("member-chip",Q);const it="modulepreload",rt=function(o){return"/cairn/"+o},$e={},je=function(e,t,i){let r=Promise.resolve();if(t&&t.length>0){let l=function(c){return Promise.all(c.map(p=>Promise.resolve(p).then(h=>({status:"fulfilled",value:h}),h=>({status:"rejected",reason:h}))))};document.getElementsByTagName("link");const s=document.querySelector("meta[property=csp-nonce]"),d=(s==null?void 0:s.nonce)||(s==null?void 0:s.getAttribute("nonce"));r=l(t.map(c=>{if(c=rt(c),c in $e)return;$e[c]=!0;const p=c.endsWith(".css"),h=p?'[rel="stylesheet"]':"";if(document.querySelector(`link[href="${c}"]${h}`))return;const b=document.createElement("link");if(b.rel=p?"stylesheet":it,p||(b.as="script"),b.crossOrigin="",b.href=c,d&&b.setAttribute("nonce",d),document.head.appendChild(b),p)return new Promise((y,m)=>{b.addEventListener("load",y),b.addEventListener("error",()=>m(new Error(`Unable to preload CSS for ${c}`)))})}))}function a(l){const s=new Event("vite:preloadError",{cancelable:!0});if(s.payload=l,window.dispatchEvent(s),!s.defaultPrevented)throw l}return r.then(l=>{for(const s of l||[])s.status==="rejected"&&a(s.reason);return e().catch(a)})},ee={apiKey:"AIzaSyA6NKZNLVBeeLrXcLJSXus5M832AxpI2wk",authDomain:"pebblepath-992b6.firebaseapp.com",projectId:"pebblepath-992b6",storageBucket:"pebblepath-992b6.firebasestorage.app",messagingSenderId:"497141667291",appId:"1:497141667291:web:ee84c186db54389d10c3fe"},T=!!(ee.apiKey&&ee.projectId),L=T?Ve(ee):null,x=T?Ke(L):null,v=T?Xe(L):null,te=T?Ze(L,"us-central1"):null,ie=T?Qe(L):null,re=T?new ve:null;re&&re.setCustomParameters({prompt:"select_account"});const H=T?new ve:null;H&&H.addScope("https://www.googleapis.com/auth/calendar.readonly");let R=null,ae=0;async function Oe(){if(!x||!H)throw new Error("Firebase not configured.");if(R&&Date.now()<ae-6e4)return R;const o=await Ce(x,H),e=ve.credentialFromResult(o),t=e==null?void 0:e.accessToken;if(!t)throw new Error("Couldn't get a Calendar access token — try again.");return R=t,ae=Date.now()+3600*1e3,t}function at(){R=null,ae=0}function Pe(){if(!x)throw new Error("Firebase not configured — fill in .env first.");return Ce(x,re)}function Be(){return x?et(x):Promise.resolve()}function Ye(o){return x?tt(x,o):(o(null),()=>{})}const st=Object.freeze(Object.defineProperty({__proto__:null,addDoc:W,app:L,auth:x,clearCalendarToken:at,collection:M,connectGoogleCalendar:Oe,db:v,deleteDoc:q,doc:z,firebaseApp:L,functions:te,getDocs:Ie,getDownloadURL:Me,httpsCallable:De,isConfigured:T,onAuth:Ye,onSnapshot:B,query:Ne,serverTimestamp:E,setDoc:Te,signIn:Pe,signOutUser:Be,storage:ie,storageRef:Ae,updateDoc:I,uploadBytes:Fe,where:Se},Symbol.toStringTag,{value:"Module"}));class nt extends EventTarget{constructor(){super(),this.state={user:null,family:null,children:[],trips:[],events:[]},this._uid=null,this._unsubUser=null,this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this._currentFamilyId=null}get familyId(){return this._currentFamilyId}start(e){!v||!e||this._uid!==e&&(this.stop(),this._uid=e,this._unsubUser=B(z(v,"users",e),t=>{var r,a,l,s,d,c;this.state.user=t.exists()?{id:t.id,...t.data()}:null;const i=((r=this.state.user)==null?void 0:r.familyId)??((a=this.state.user)==null?void 0:a.cairnFamilyId)??null;i!==this._currentFamilyId&&(this._currentFamilyId=i,(l=this._unsubFamily)==null||l.call(this),(s=this._unsubChildren)==null||s.call(this),(d=this._unsubTrips)==null||d.call(this),(c=this._unsubEvents)==null||c.call(this),this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this.state.family=null,this.state.children=[],this.state.trips=[],this.state.events=[],i&&this._subscribeFamily(i)),this._emit()}))}_subscribeFamily(e){this._unsubFamily=B(z(v,"families",e),t=>{this.state.family=t.exists()?{id:t.id,...t.data()}:null,this._emit()}),this._unsubChildren=B(M(v,"families",e,"children"),t=>{this.state.children=t.docs.map(i=>{var a,l;const r=i.data();return{id:i.id,...r,dateOfBirth:((l=(a=r.dateOfBirth)==null?void 0:a.toDate)==null?void 0:l.call(a))??(r.dateOfBirth?new Date(r.dateOfBirth):null)}}),this._emit()}),this._unsubTrips=B(M(v,"families",e,"trips"),t=>{this.state.trips=t.docs.map(i=>{var a,l,s,d;const r=i.data();return{id:i.id,...r,start:r.start??"",end:r.end??"",createdAt:((l=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:l.call(a))??null,updatedAt:((d=(s=r.updatedAt)==null?void 0:s.toDate)==null?void 0:d.call(s))??null}}).sort((i,r)=>String(i.start).localeCompare(String(r.start))),this._emit()},t=>{console.warn("[Cairn] trips subscription error:",t.code,t.message)}),this._unsubEvents=B(M(v,"families",e,"familyEvents"),t=>{this.state.events=t.docs.map(i=>{var a,l,s,d;const r=i.data();return{id:i.id,...r,date:r.date??"",createdAt:((l=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:l.call(a))??null,updatedAt:((d=(s=r.updatedAt)==null?void 0:s.toDate)==null?void 0:d.call(s))??null}}),this._emit()},t=>{console.warn("[Cairn] familyEvents subscription error:",t.code,t.message)})}async saveTrip(e){var c;if(!v||!this._currentFamilyId)throw new Error("No family yet.");const t=(c=x==null?void 0:x.currentUser)==null?void 0:c.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...l}=e,s={...l,updatedAt:E()};return i?(await I(z(v,"families",this._currentFamilyId,"trips",i),s),i):(s.createdBy=t,s.createdAt=E(),(await W(M(v,"families",this._currentFamilyId,"trips"),s)).id)}async deleteTrip(e){if(!v||!this._currentFamilyId)throw new Error("No family yet.");await q(z(v,"families",this._currentFamilyId,"trips",e))}async saveEvent(e){var c;if(!v||!this._currentFamilyId)throw new Error("No family yet.");const t=(c=x==null?void 0:x.currentUser)==null?void 0:c.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...l}=e,s={...l,updatedAt:E()};return i?(await I(z(v,"families",this._currentFamilyId,"familyEvents",i),s),i):(s.createdBy=t,s.createdAt=E(),(await W(M(v,"families",this._currentFamilyId,"familyEvents"),s)).id)}async deleteEvent(e){if(!v||!this._currentFamilyId)throw new Error("No family yet.");await q(z(v,"families",this._currentFamilyId,"familyEvents",e))}async previewUrl(e){if(!e||typeof e!="string"||!/^https?:\/\//i.test(e.trim()))return null;if(!te)throw new Error("Firebase functions not configured.");return(await De(te,"previewUrl")({url:e.trim()})).data}async updateChildBirthday(e,t){if(!v||!this._currentFamilyId)throw new Error("No family yet.");await I(z(v,"families",this._currentFamilyId,"children",e),{dateOfBirth:t,updatedAt:E()})}async findFamilyByCairnCode(e){if(!v)throw new Error("Firebase not configured.");const t=Ne(M(v,"families"),Se("cairnInviteCode","==",e)),i=await Ie(t);if(i.empty)return null;const r=i.docs[0];return{id:r.id,...r.data()}}async joinFamilyAsCairn(e){var p,h,b;if(!v)throw new Error("Firebase not configured.");const t=(p=x==null?void 0:x.currentUser)==null?void 0:p.uid;if(!t)throw new Error("Not signed in.");const i=await this.findFamilyByCairnCode(e);if(!i){const y=new Error("Invite code not found.");throw y.code="not-found",y}const r=((b=(h=i.cairnInviteCodeExpiresAt)==null?void 0:h.toDate)==null?void 0:b.call(h))??(i.cairnInviteCodeExpiresAt?new Date(i.cairnInviteCodeExpiresAt):null);if(!r||r<new Date){const y=new Error("This invite code has expired.");throw y.code="expired",y}const a=i.cairnMemberIds??[];if(a.includes(t)||(i.memberIds??[]).includes(t)){const y=new Error("You're already in this family on Cairn.");throw y.code="already-member",y}const l=i.cairnMaxMembers??20;if(a.length>=l){const y=new Error("This family's Cairn ring is full.");throw y.code="full",y}const s=x.currentUser,d=new Date,c={displayName:s.displayName??"",profilePhotoURL:s.photoURL??null,role:"member",joinedAt:d,updatedAt:d};return await I(z(v,"families",i.id),{cairnMemberIds:[...a,t],[`memberProfiles.${t}`]:c,updatedAt:E()}),await Te(z(v,"users",t),{email:s.email??"",displayName:s.displayName??"",profilePhotoURL:s.photoURL??null,cairnFamilyId:i.id,role:"member",notificationPreferences:{milestoneReminders:!0,tipNotifications:!0,schoolDeadlines:!0},createdAt:E(),updatedAt:E()},{merge:!0}),i.id}async saveSubGroup({id:e,name:t,memberIds:i}){if(!v||!this._currentFamilyId)throw new Error("No family yet.");const r=e??`g_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,6)}`;return await I(z(v,"families",this._currentFamilyId),{[`subGroups.${r}`]:{name:t.trim(),memberIds:Array.isArray(i)?[...i]:[],updatedAt:E()},updatedAt:E()}),r}async deleteSubGroup(e){if(!v||!this._currentFamilyId)throw new Error("No family yet.");const{deleteField:t}=await je(async()=>{const{deleteField:i}=await import("./firebase-B_32xM1b.js").then(r=>r.x);return{deleteField:i}},[]);await I(z(v,"families",this._currentFamilyId),{[`subGroups.${e}`]:t(),updatedAt:E()})}async regenerateCairnInviteCode(){if(!v||!this._currentFamilyId)throw new Error("No family yet.");const e=ot(),t=new Date(Date.now()+720*60*60*1e3);return await I(z(v,"families",this._currentFamilyId),{cairnInviteCode:e,cairnInviteCodeExpiresAt:t,updatedAt:E()}),{code:e,expiresAt:t}}stop(){var e,t,i,r,a;(e=this._unsubUser)==null||e.call(this),(t=this._unsubFamily)==null||t.call(this),(i=this._unsubChildren)==null||i.call(this),(r=this._unsubTrips)==null||r.call(this),(a=this._unsubEvents)==null||a.call(this),this._unsubUser=this._unsubFamily=this._unsubChildren=this._unsubTrips=this._unsubEvents=null,this._uid=null,this._currentFamilyId=null,this.state={user:null,family:null,children:[],trips:[],events:[]}}_emit(){this.dispatchEvent(new Event("change"))}}const w=new nt;function Ue(o,e){const t=e==null?void 0:e.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:o!=null&&o.photoURL?o.photoURL:null}function ot(){const o="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let e="CAIRN-";for(let t=0;t<4;t++)e+=o[Math.floor(Math.random()*o.length)];return e}function lt(o,e,t,i,r){const a=[];a.push({uid:o,displayName:(e==null?void 0:e.displayName)??(t==null?void 0:t.displayName)??"You",photoURL:Ue(e,t),role:"self",circles:["immediate"],hue:198});const l=(i==null?void 0:i.memberProfiles)??{};for(const[d,c]of Object.entries(l)){if(d===o)continue;const p=c.profilePhotoURL;a.push({uid:d,displayName:c.displayName??"Co-parent",photoURL:typeof p=="string"&&/^https?:\/\//i.test(p)?p:null,role:"co-parent",circles:["immediate"],hue:8})}let s=142;for(const d of r??[]){const c=d.profilePhotoURL;a.push({uid:`child:${d.id}`,displayName:d.name,photoURL:typeof c=="string"&&/^https?:\/\//i.test(c)?c:null,role:"child",circles:["immediate"],hue:s,dateOfBirth:d.dateOfBirth}),s=(s+58)%360}return a}function dt(o){const e=[];for(const t of o??[]){if(!t.dateOfBirth)continue;const i=t.dateOfBirth,r=i.getFullYear(),a=String(i.getMonth()+1).padStart(2,"0"),l=String(i.getDate()).padStart(2,"0");e.push({id:`bday:${t.id}`,type:"birthday",date:`${r}-${a}-${l}`,personIds:[`child:${t.id}`],title:`${t.name}'s birthday`,_childId:t.id,_childName:t.name,recurring:!0})}return e}function ct(o,e=new Date){if(!(o!=null&&o.date))return{date:null,yearsElapsed:0};const t=_(o.date);if(!t||Number.isNaN(t.getTime()))return{date:null,yearsElapsed:0};if(!o.recurring)return{date:t,yearsElapsed:0};const i=new Date(e.getFullYear(),t.getMonth(),t.getDate()),r=i<new Date(e.getFullYear(),e.getMonth(),e.getDate())?new Date(e.getFullYear()+1,t.getMonth(),t.getDate()):i,a=r.getFullYear()-t.getFullYear();return{date:r,yearsElapsed:a}}const ke=["linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)","linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)","linear-gradient(135deg, #3d9b8f 0%, #1f5c54 100%)","linear-gradient(135deg, #d4a843 0%, #c67b5c 55%, #c98a8a 100%)","linear-gradient(135deg, #8b7bb5 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #6b9ac4 0%, #3d9b8f 100%)"];function _(o){if(!o)return null;if(o instanceof Date)return o;const e=String(o).match(/^(\d{4})-(\d{2})-(\d{2})/);return e?new Date(Number(e[1]),Number(e[2])-1,Number(e[3])):new Date(o)}async function pt(o,e=90,t=100){const i=new Date,r=new Date(i.getTime()+e*24*60*60*1e3),a=new URL("https://www.googleapis.com/calendar/v3/calendars/primary/events");a.searchParams.set("timeMin",i.toISOString()),a.searchParams.set("timeMax",r.toISOString()),a.searchParams.set("maxResults",String(t)),a.searchParams.set("singleEvents","true"),a.searchParams.set("orderBy","startTime");const l=await fetch(a.toString(),{headers:{Authorization:`Bearer ${o}`}});if(!l.ok){const d=await l.text();throw new Error(`Google Calendar: ${l.status} ${d.slice(0,160)}`)}return((await l.json()).items??[]).filter(d=>{var c,p;return d.status!=="cancelled"&&(((c=d.start)==null?void 0:c.date)||((p=d.start)==null?void 0:p.dateTime))})}function ht(o,e){var r,a,l,s,d,c,p,h;const t=((r=o.start)==null?void 0:r.date)??((l=(a=o.start)==null?void 0:a.dateTime)==null?void 0:l.slice(0,10))??"";let i=((s=o.end)==null?void 0:s.date)??((c=(d=o.end)==null?void 0:d.dateTime)==null?void 0:c.slice(0,10))??t;if((p=o.start)!=null&&p.date&&((h=o.end)!=null&&h.date)){const b=new Date(i);b.setDate(b.getDate()-1),i=b.toISOString().slice(0,10)}return{title:o.summary||"(untitled)",location:o.location??"",start:t,end:i,attendees:e?[e]:[],viewers:[],visibility:"family",notes:(o.description??"").slice(0,1e3),gcalEventId:o.id,gcalEventLink:o.htmlLink??null}}function gt(o){if(o!=null&&o.coverGradient)return o.coverGradient;const e=((o==null?void 0:o.title)??(o==null?void 0:o.id)??"")+((o==null?void 0:o.location)??"");let t=0;for(let i=0;i<e.length;i++)t=t*31+e.charCodeAt(i)>>>0;return ke[t%ke.length]}class se extends ${constructor(){super(),this.open=!1,this.trip=null,this.members=[],this.currentUid="",this.familyId="",this.busy=!1,this.formMode="trip",this._draft=this._blankDraft(),this._error="",this._previewing=!1,this._previewError="",this._previewDebounce=null,this._lastPreviewedUrl=""}willUpdate(e){(e.has("trip")||e.has("open"))&&(this.open&&(this._draft=this._draftFromTrip(this.trip)),this._error="")}_blankDraft(){const e=new Date().toISOString().slice(0,10);return{id:null,title:"",location:"",start:e,end:e,visibility:"family",attendees:this.currentUid?[this.currentUid]:[],viewers:[],lodgingUrl:"",lodgingHost:"",lodgingTitle:"",flightAirline:"",flightNumber:"",flightDepartAirport:"",flightDepartTime:"",flightArriveAirport:"",flightArriveTime:"",notes:""}}_draftFromTrip(e){return e?{id:e.id??null,title:e.title??"",location:e.location??"",start:e.start??new Date().toISOString().slice(0,10),end:e.end??e.start??new Date().toISOString().slice(0,10),visibility:e.visibility??"family",attendees:Array.isArray(e.attendees)?[...e.attendees]:[],viewers:Array.isArray(e.viewers)?[...e.viewers]:[],lodgingUrl:e.lodgingUrl??"",lodgingHost:e.lodgingHost??"",lodgingTitle:e.lodgingTitle??"",flightAirline:e.flightAirline??"",flightNumber:e.flightNumber??"",flightDepartAirport:e.flightDepartAirport??"",flightDepartTime:e.flightDepartTime??"",flightArriveAirport:e.flightArriveAirport??"",flightArriveTime:e.flightArriveTime??"",coverImage:e.coverImage??"",notes:e.notes??""}:this._blankDraft()}_set(e,t){this._draft={...this._draft,[e]:t}}_onLodgingChange(e){this._set("lodgingUrl",e),this._previewError="",this._previewDebounce&&clearTimeout(this._previewDebounce);const t=e.trim();if(!t){this._set("coverImage",""),this._set("lodgingHost",""),this._set("lodgingTitle",""),this._lastPreviewedUrl="";return}/^https?:\/\//i.test(t)&&t!==this._lastPreviewedUrl&&(this._previewDebounce=setTimeout(()=>this._runPreview(t),700))}async _runPreview(e){this._previewing=!0,this._previewError="";try{const t=await w.previewUrl(e);if(!t)return;this._lastPreviewedUrl=e,this._draft={...this._draft,coverImage:t.image??this._draft.coverImage,lodgingHost:t.siteName??t.host??this._draft.lodgingHost,lodgingTitle:t.title??this._draft.lodgingTitle}}catch(t){console.warn("Preview failed:",t),(t==null?void 0:t.code)==="functions/unauthenticated"?this._previewError="Preview unavailable — sign in.":(t==null?void 0:t.code)==="functions/invalid-argument"?this._previewError="That URL doesn’t look right.":this._previewError="Preview unavailable — paste it again or skip."}finally{this._previewing=!1}}_toggleAttendee(e){const i=this._draft.attendees.includes(e)?this._draft.attendees.filter(r=>r!==e):[...this._draft.attendees,e];this._set("attendees",i)}_onSave(){const e=this._draft;if(!e.title.trim()){this._error="Give the trip a title.";return}if(!e.start||!e.end){this._error="Set both start and end dates.";return}if(e.end<e.start){this._error="End date can’t be before start date.";return}if(!this.familyId){this._error="You need to be in a family first.";return}this._error="",this.dispatchEvent(new CustomEvent("save",{detail:{...e,title:e.title.trim(),location:e.location.trim()}}))}_onDelete(){this._draft.id&&confirm("Delete this trip? This can’t be undone.")&&this.dispatchEvent(new CustomEvent("remove",{detail:{id:this._draft.id}}))}_onCancel(){this.dispatchEvent(new Event("cancel"))}render(){if(!this.open)return n``;const e=this._draft,t=!!e.id;return n`
+  `);customElements.define("member-chip",Q);const at="modulepreload",st=function(o){return"/cairn/"+o},De={},Ge=function(e,t,i){let r=Promise.resolve();if(t&&t.length>0){let l=function(c){return Promise.all(c.map(p=>Promise.resolve(p).then(h=>({status:"fulfilled",value:h}),h=>({status:"rejected",reason:h}))))};document.getElementsByTagName("link");const s=document.querySelector("meta[property=csp-nonce]"),d=(s==null?void 0:s.nonce)||(s==null?void 0:s.getAttribute("nonce"));r=l(t.map(c=>{if(c=st(c),c in De)return;De[c]=!0;const p=c.endsWith(".css"),h=p?'[rel="stylesheet"]':"";if(document.querySelector(`link[href="${c}"]${h}`))return;const f=document.createElement("link");if(f.rel=p?"stylesheet":at,p||(f.as="script"),f.crossOrigin="",f.href=c,d&&f.setAttribute("nonce",d),document.head.appendChild(f),p)return new Promise((y,m)=>{f.addEventListener("load",y),f.addEventListener("error",()=>m(new Error(`Unable to preload CSS for ${c}`)))})}))}function a(l){const s=new Event("vite:preloadError",{cancelable:!0});if(s.payload=l,window.dispatchEvent(s),!s.defaultPrevented)throw l}return r.then(l=>{for(const s of l||[])s.status==="rejected"&&a(s.reason);return e().catch(a)})},ee={apiKey:"AIzaSyA6NKZNLVBeeLrXcLJSXus5M832AxpI2wk",authDomain:"pebblepath-992b6.firebaseapp.com",projectId:"pebblepath-992b6",storageBucket:"pebblepath-992b6.firebasestorage.app",messagingSenderId:"497141667291",appId:"1:497141667291:web:ee84c186db54389d10c3fe"},F=!!(ee.apiKey&&ee.projectId),L=F?Xe(ee):null,x=F?Ze(L):null,v=F?Qe(L):null,te=F?it(L,"us-central1"):null,ie=F?rt(L):null,re=F?new ye:null;re&&re.setCustomParameters({prompt:"select_account"});const H=F?new ye:null;H&&H.addScope("https://www.googleapis.com/auth/calendar.readonly");let R=null,ae=0;async function Pe(){if(!x||!H)throw new Error("Firebase not configured.");if(R&&Date.now()<ae-6e4)return R;const o=await Se(x,H),e=ye.credentialFromResult(o),t=e==null?void 0:e.accessToken;if(!t)throw new Error("Couldn't get a Calendar access token — try again.");return R=t,ae=Date.now()+3600*1e3,t}function nt(){R=null,ae=0}function Be(){if(!x)throw new Error("Firebase not configured — fill in .env first.");return Se(x,re)}function Ye(){return x?et(x):Promise.resolve()}function Le(o){return x?tt(x,o):(o(null),()=>{})}const ot=Object.freeze(Object.defineProperty({__proto__:null,addDoc:W,app:L,auth:x,clearCalendarToken:nt,collection:M,connectGoogleCalendar:Pe,db:v,deleteDoc:q,doc:D,firebaseApp:L,functions:te,getDocs:Fe,getDownloadURL:Oe,httpsCallable:Ae,isConfigured:F,onAuth:Le,onSnapshot:P,query:Ne,serverTimestamp:z,setDoc:Te,signIn:Be,signOutUser:Ye,storage:ie,storageRef:Me,updateDoc:I,uploadBytes:je,where:Ie},Symbol.toStringTag,{value:"Module"}));class lt extends EventTarget{constructor(){super(),this.state={user:null,family:null,children:[],trips:[],events:[]},this._uid=null,this._unsubUser=null,this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this._currentFamilyId=null}get familyId(){return this._currentFamilyId}start(e){!v||!e||this._uid!==e&&(this.stop(),this._uid=e,this._unsubUser=P(D(v,"users",e),t=>{var r,a,l,s,d,c;this.state.user=t.exists()?{id:t.id,...t.data()}:null;const i=((r=this.state.user)==null?void 0:r.familyId)??((a=this.state.user)==null?void 0:a.cairnFamilyId)??null;i!==this._currentFamilyId&&(this._currentFamilyId=i,(l=this._unsubFamily)==null||l.call(this),(s=this._unsubChildren)==null||s.call(this),(d=this._unsubTrips)==null||d.call(this),(c=this._unsubEvents)==null||c.call(this),this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this.state.family=null,this.state.children=[],this.state.trips=[],this.state.events=[],i&&this._subscribeFamily(i)),this._emit()}))}_subscribeFamily(e){this._unsubFamily=P(D(v,"families",e),t=>{this.state.family=t.exists()?{id:t.id,...t.data()}:null,this._emit()}),this._unsubChildren=P(M(v,"families",e,"children"),t=>{this.state.children=t.docs.map(i=>{var a,l;const r=i.data();return{id:i.id,...r,dateOfBirth:((l=(a=r.dateOfBirth)==null?void 0:a.toDate)==null?void 0:l.call(a))??(r.dateOfBirth?new Date(r.dateOfBirth):null)}}),this._emit()}),this._unsubTrips=P(M(v,"families",e,"trips"),t=>{this.state.trips=t.docs.map(i=>{var a,l,s,d;const r=i.data();return{id:i.id,...r,start:r.start??"",end:r.end??"",createdAt:((l=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:l.call(a))??null,updatedAt:((d=(s=r.updatedAt)==null?void 0:s.toDate)==null?void 0:d.call(s))??null}}).sort((i,r)=>String(i.start).localeCompare(String(r.start))),this._emit()},t=>{console.warn("[Cairn] trips subscription error:",t.code,t.message)}),this._unsubEvents=P(M(v,"families",e,"familyEvents"),t=>{this.state.events=t.docs.map(i=>{var a,l,s,d;const r=i.data();return{id:i.id,...r,date:r.date??"",createdAt:((l=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:l.call(a))??null,updatedAt:((d=(s=r.updatedAt)==null?void 0:s.toDate)==null?void 0:d.call(s))??null}}),this._emit()},t=>{console.warn("[Cairn] familyEvents subscription error:",t.code,t.message)})}async saveTrip(e){var c;if(!v||!this._currentFamilyId)throw new Error("No family yet.");const t=(c=x==null?void 0:x.currentUser)==null?void 0:c.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...l}=e,s={...l,updatedAt:z()};return i?(await I(D(v,"families",this._currentFamilyId,"trips",i),s),i):(s.createdBy=t,s.createdAt=z(),(await W(M(v,"families",this._currentFamilyId,"trips"),s)).id)}async deleteTrip(e){if(!v||!this._currentFamilyId)throw new Error("No family yet.");await q(D(v,"families",this._currentFamilyId,"trips",e))}async saveEvent(e){var c;if(!v||!this._currentFamilyId)throw new Error("No family yet.");const t=(c=x==null?void 0:x.currentUser)==null?void 0:c.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...l}=e,s={...l,updatedAt:z()};return i?(await I(D(v,"families",this._currentFamilyId,"familyEvents",i),s),i):(s.createdBy=t,s.createdAt=z(),(await W(M(v,"families",this._currentFamilyId,"familyEvents"),s)).id)}async deleteEvent(e){if(!v||!this._currentFamilyId)throw new Error("No family yet.");await q(D(v,"families",this._currentFamilyId,"familyEvents",e))}async previewUrl(e){if(!e||typeof e!="string"||!/^https?:\/\//i.test(e.trim()))return null;if(!te)throw new Error("Firebase functions not configured.");return(await Ae(te,"previewUrl")({url:e.trim()})).data}async updateChildBirthday(e,t){if(!v||!this._currentFamilyId)throw new Error("No family yet.");await I(D(v,"families",this._currentFamilyId,"children",e),{dateOfBirth:t,updatedAt:z()})}async findFamilyByCairnCode(e){if(!v)throw new Error("Firebase not configured.");const t=Ne(M(v,"families"),Ie("cairnInviteCode","==",e)),i=await Fe(t);if(i.empty)return null;const r=i.docs[0];return{id:r.id,...r.data()}}async joinFamilyAsCairn(e){var p,h,f;if(!v)throw new Error("Firebase not configured.");const t=(p=x==null?void 0:x.currentUser)==null?void 0:p.uid;if(!t)throw new Error("Not signed in.");const i=await this.findFamilyByCairnCode(e);if(!i){const y=new Error("Invite code not found.");throw y.code="not-found",y}const r=((f=(h=i.cairnInviteCodeExpiresAt)==null?void 0:h.toDate)==null?void 0:f.call(h))??(i.cairnInviteCodeExpiresAt?new Date(i.cairnInviteCodeExpiresAt):null);if(!r||r<new Date){const y=new Error("This invite code has expired.");throw y.code="expired",y}const a=i.cairnMemberIds??[];if(a.includes(t)||(i.memberIds??[]).includes(t)){const y=new Error("You're already in this family on Cairn.");throw y.code="already-member",y}const l=i.cairnMaxMembers??20;if(a.length>=l){const y=new Error("This family's Cairn ring is full.");throw y.code="full",y}const s=x.currentUser,d=new Date,c={displayName:s.displayName??"",profilePhotoURL:s.photoURL??null,role:"member",joinedAt:d,updatedAt:d};return await I(D(v,"families",i.id),{cairnMemberIds:[...a,t],[`memberProfiles.${t}`]:c,updatedAt:z()}),await Te(D(v,"users",t),{email:s.email??"",displayName:s.displayName??"",profilePhotoURL:s.photoURL??null,cairnFamilyId:i.id,role:"member",notificationPreferences:{milestoneReminders:!0,tipNotifications:!0,schoolDeadlines:!0},createdAt:z(),updatedAt:z()},{merge:!0}),i.id}async saveSubGroup({id:e,name:t,memberIds:i}){if(!v||!this._currentFamilyId)throw new Error("No family yet.");const r=e??`g_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,6)}`;return await I(D(v,"families",this._currentFamilyId),{[`subGroups.${r}`]:{name:t.trim(),memberIds:Array.isArray(i)?[...i]:[],updatedAt:z()},updatedAt:z()}),r}async deleteSubGroup(e){if(!v||!this._currentFamilyId)throw new Error("No family yet.");const{deleteField:t}=await Ge(async()=>{const{deleteField:i}=await import("./firebase-core-DVt9Aunh.js").then(r=>r.B);return{deleteField:i}},[]);await I(D(v,"families",this._currentFamilyId),{[`subGroups.${e}`]:t(),updatedAt:z()})}async regenerateCairnInviteCode(){if(!v||!this._currentFamilyId)throw new Error("No family yet.");const e=dt(),t=new Date(Date.now()+720*60*60*1e3);return await I(D(v,"families",this._currentFamilyId),{cairnInviteCode:e,cairnInviteCodeExpiresAt:t,updatedAt:z()}),{code:e,expiresAt:t}}stop(){var e,t,i,r,a;(e=this._unsubUser)==null||e.call(this),(t=this._unsubFamily)==null||t.call(this),(i=this._unsubChildren)==null||i.call(this),(r=this._unsubTrips)==null||r.call(this),(a=this._unsubEvents)==null||a.call(this),this._unsubUser=this._unsubFamily=this._unsubChildren=this._unsubTrips=this._unsubEvents=null,this._uid=null,this._currentFamilyId=null,this.state={user:null,family:null,children:[],trips:[],events:[]}}_emit(){this.dispatchEvent(new Event("change"))}}const w=new lt;function Ue(o,e){const t=e==null?void 0:e.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:o!=null&&o.photoURL?o.photoURL:null}function dt(){const o="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let e="CAIRN-";for(let t=0;t<4;t++)e+=o[Math.floor(Math.random()*o.length)];return e}function ct(o,e,t,i,r){const a=[];a.push({uid:o,displayName:(e==null?void 0:e.displayName)??(t==null?void 0:t.displayName)??"You",photoURL:Ue(e,t),role:"self",circles:["immediate"],hue:198});const l=(i==null?void 0:i.memberProfiles)??{};for(const[d,c]of Object.entries(l)){if(d===o)continue;const p=c.profilePhotoURL;a.push({uid:d,displayName:c.displayName??"Co-parent",photoURL:typeof p=="string"&&/^https?:\/\//i.test(p)?p:null,role:"co-parent",circles:["immediate"],hue:8})}let s=142;for(const d of r??[]){const c=d.profilePhotoURL;a.push({uid:`child:${d.id}`,displayName:d.name,photoURL:typeof c=="string"&&/^https?:\/\//i.test(c)?c:null,role:"child",circles:["immediate"],hue:s,dateOfBirth:d.dateOfBirth}),s=(s+58)%360}return a}function pt(o){const e=[];for(const t of o??[]){if(!t.dateOfBirth)continue;const i=t.dateOfBirth,r=i.getFullYear(),a=String(i.getMonth()+1).padStart(2,"0"),l=String(i.getDate()).padStart(2,"0");e.push({id:`bday:${t.id}`,type:"birthday",date:`${r}-${a}-${l}`,personIds:[`child:${t.id}`],title:`${t.name}'s birthday`,_childId:t.id,_childName:t.name,recurring:!0})}return e}function ht(o,e=new Date){if(!(o!=null&&o.date))return{date:null,yearsElapsed:0};const t=_(o.date);if(!t||Number.isNaN(t.getTime()))return{date:null,yearsElapsed:0};if(!o.recurring)return{date:t,yearsElapsed:0};const i=new Date(e.getFullYear(),t.getMonth(),t.getDate()),r=i<new Date(e.getFullYear(),e.getMonth(),e.getDate())?new Date(e.getFullYear()+1,t.getMonth(),t.getDate()):i,a=r.getFullYear()-t.getFullYear();return{date:r,yearsElapsed:a}}const ze=["linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)","linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)","linear-gradient(135deg, #3d9b8f 0%, #1f5c54 100%)","linear-gradient(135deg, #d4a843 0%, #c67b5c 55%, #c98a8a 100%)","linear-gradient(135deg, #8b7bb5 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #6b9ac4 0%, #3d9b8f 100%)"];function _(o){if(!o)return null;if(o instanceof Date)return o;const e=String(o).match(/^(\d{4})-(\d{2})-(\d{2})/);return e?new Date(Number(e[1]),Number(e[2])-1,Number(e[3])):new Date(o)}async function ut(o,e=90,t=100){const i=new Date,r=new Date(i.getTime()+e*24*60*60*1e3),a=new URL("https://www.googleapis.com/calendar/v3/calendars/primary/events");a.searchParams.set("timeMin",i.toISOString()),a.searchParams.set("timeMax",r.toISOString()),a.searchParams.set("maxResults",String(t)),a.searchParams.set("singleEvents","true"),a.searchParams.set("orderBy","startTime");const l=await fetch(a.toString(),{headers:{Authorization:`Bearer ${o}`}});if(!l.ok){const d=await l.text();throw new Error(`Google Calendar: ${l.status} ${d.slice(0,160)}`)}return((await l.json()).items??[]).filter(d=>{var c,p;return d.status!=="cancelled"&&(((c=d.start)==null?void 0:c.date)||((p=d.start)==null?void 0:p.dateTime))})}function gt(o,e){var r,a,l,s,d,c,p,h;const t=((r=o.start)==null?void 0:r.date)??((l=(a=o.start)==null?void 0:a.dateTime)==null?void 0:l.slice(0,10))??"";let i=((s=o.end)==null?void 0:s.date)??((c=(d=o.end)==null?void 0:d.dateTime)==null?void 0:c.slice(0,10))??t;if((p=o.start)!=null&&p.date&&((h=o.end)!=null&&h.date)){const f=new Date(i);f.setDate(f.getDate()-1),i=f.toISOString().slice(0,10)}return{title:o.summary||"(untitled)",location:o.location??"",start:t,end:i,attendees:e?[e]:[],viewers:[],visibility:"family",notes:(o.description??"").slice(0,1e3),gcalEventId:o.id,gcalEventLink:o.htmlLink??null}}function mt(o){if(o!=null&&o.coverGradient)return o.coverGradient;const e=((o==null?void 0:o.title)??(o==null?void 0:o.id)??"")+((o==null?void 0:o.location)??"");let t=0;for(let i=0;i<e.length;i++)t=t*31+e.charCodeAt(i)>>>0;return ze[t%ze.length]}class se extends ${constructor(){super(),this.start="",this.end="",this._displayMonth=null,this._hoverDate=null}willUpdate(e){if(e.has("start")||this._displayMonth===null){const t=this.start?_(this.start):new Date;this._displayMonth=new Date(t.getFullYear(),t.getMonth(),1)}}_isoFor(e,t,i){return`${e}-${String(t+1).padStart(2,"0")}-${String(i).padStart(2,"0")}`}_emit(e,t){this.start=e,this.end=t,this._hoverDate=null,this.dispatchEvent(new CustomEvent("range-change",{detail:{start:e,end:t},bubbles:!0,composed:!0}))}_onDayClick(e){if(!this.start||this.start&&this.end){this._emit(e,"");return}e<this.start?this._emit(e,this.start):this._emit(this.start,e)}_onDayHover(e){this.start&&!this.end&&(this._hoverDate=e)}_onLeave(){this._hoverDate=null}_shiftMonth(e){const t=this._displayMonth;this._displayMonth=new Date(t.getFullYear(),t.getMonth()+e,1)}_isToday(e,t,i){const r=new Date;return r.getFullYear()===e&&r.getMonth()===t&&r.getDate()===i}_inSelectedRange(e){return!this.start||!this.end?!1:e>this.start&&e<this.end}_inHoverRange(e){if(!this.start||this.end||!this._hoverDate)return!1;const t=this._hoverDate<this.start?this._hoverDate:this.start,i=this._hoverDate<this.start?this.start:this._hoverDate;return e>t&&e<i}_summary(){if(!this.start&&!this.end)return"Pick a start date";const e=t=>{const i=_(t);return i?i.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"}):""};return this.start&&!this.end?`From ${e(this.start)} — pick an end date`:this.start===this.end?e(this.start):`${e(this.start)} – ${e(this.end)}`}_renderGrid(){const e=this._displayMonth.getFullYear(),t=this._displayMonth.getMonth(),r=(new Date(e,t,1).getDay()+6)%7,a=new Date(e,t+1,0).getDate(),l=[];for(let s=0;s<r;s++)l.push(n`<div class="empty"></div>`);for(let s=1;s<=a;s++){const d=this._isoFor(e,t,s),c=d===this.start,p=d===this.end&&d!==this.start,h=this._inSelectedRange(d),f=this._inHoverRange(d),y=this._isToday(e,t,s),m=["day",c?"start":"",p?"end":"",h?"in-range":"",f?"hover-range":"",y&&!c&&!p?"today":""].filter(Boolean).join(" ");l.push(n`
+        <button
+          type="button"
+          class=${m}
+          @click=${()=>this._onDayClick(d)}
+          @mouseover=${()=>this._onDayHover(d)}
+        >
+          ${s}
+        </button>
+      `)}return l}render(){if(!this._displayMonth)return n``;const e=this._displayMonth.toLocaleString("en-GB",{month:"long",year:"numeric"});return n`
+      <div class="summary">${this._summary()}</div>
+      <div class="head">
+        <button class="nav" type="button" @click=${()=>this._shiftMonth(-1)} aria-label="Previous month">‹</button>
+        <span class="month-label">${e}</span>
+        <button class="nav" type="button" @click=${()=>this._shiftMonth(1)} aria-label="Next month">›</button>
+      </div>
+      <div class="dow-row">
+        ${["Mo","Tu","We","Th","Fr","Sa","Su"].map(t=>n`<div class="dow">${t}</div>`)}
+      </div>
+      <div class="grid" @mouseleave=${this._onLeave}>${this._renderGrid()}</div>
+    `}}u(se,"properties",{start:{type:String},end:{type:String},_displayMonth:{state:!0},_hoverDate:{state:!0}}),u(se,"styles",k`
+    * { box-sizing: border-box; }
+    :host {
+      display: block;
+    }
+    .summary {
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+      padding: 11px 14px;
+      background: rgba(255, 248, 235, 0.06);
+      border: 1px solid rgba(255, 248, 235, 0.16);
+      border-radius: var(--radius-input);
+      margin-bottom: 10px;
+    }
+    .head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding: 0 4px;
+    }
+    .month-label {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: -0.005em;
+    }
+    .nav {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: rgba(255, 248, 235, 0.06);
+      border: 1px solid rgba(255, 248, 235, 0.14);
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 14px;
+      font-family: var(--font-body);
+      padding: 0;
+    }
+    .nav:hover {
+      color: var(--text-primary);
+      border-color: var(--glass-border-strong);
+    }
+    .dow-row {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+      margin-bottom: 4px;
+    }
+    .dow {
+      font-size: 10.5px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-align: center;
+      padding: 6px 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+    }
+    .empty {
+      aspect-ratio: 1 / 1;
+    }
+    .day {
+      aspect-ratio: 1 / 1;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      color: var(--text-primary);
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 140ms ease, color 140ms ease;
+      padding: 0;
+    }
+    .day:hover {
+      background: rgba(255, 248, 235, 0.06);
+    }
+    .day.today {
+      box-shadow: inset 0 -2px 0 var(--teal-pebble);
+    }
+    .day.in-range,
+    .day.hover-range {
+      background: rgba(61, 155, 143, 0.22);
+      border-radius: 0;
+    }
+    .day.hover-range {
+      background: rgba(61, 155, 143, 0.14);
+    }
+    .day.start,
+    .day.end {
+      background: var(--teal-pebble);
+      color: #fff;
+      font-weight: 600;
+      border-radius: 6px;
+    }
+    .day.start {
+      border-top-right-radius: 6px;
+      border-bottom-right-radius: 6px;
+    }
+    .day.end {
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
+    }
+    /* When start has an in-range neighbor on its right, square that edge
+       so the range bar visually connects. Same for end + left neighbor. */
+    .day.start + .in-range,
+    .day.start + .hover-range {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  `);customElements.define("date-range-picker",se);class ne extends ${constructor(){super(),this.open=!1,this.trip=null,this.members=[],this.currentUid="",this.familyId="",this.busy=!1,this.formMode="trip",this.subGroups={},this._draft=this._blankDraft(),this._error="",this._previewing=!1,this._previewError="",this._previewDebounce=null,this._lastPreviewedUrl=""}willUpdate(e){(e.has("trip")||e.has("open"))&&(this.open&&(this._draft=this._draftFromTrip(this.trip)),this._error="")}_blankDraft(){const e=new Date().toISOString().slice(0,10);return{id:null,title:"",location:"",start:e,end:e,visibility:"family",attendees:this.currentUid?[this.currentUid]:[],viewers:[],targetSubGroups:[],lodgingUrl:"",lodgingHost:"",lodgingTitle:"",flightAirline:"",flightNumber:"",flightDepartAirport:"",flightDepartTime:"",flightArriveAirport:"",flightArriveTime:"",notes:""}}_draftFromTrip(e){return e?{id:e.id??null,title:e.title??"",location:e.location??"",start:e.start??new Date().toISOString().slice(0,10),end:e.end??e.start??new Date().toISOString().slice(0,10),visibility:e.visibility??"family",attendees:Array.isArray(e.attendees)?[...e.attendees]:[],viewers:Array.isArray(e.viewers)?[...e.viewers]:[],targetSubGroups:Array.isArray(e.targetSubGroups)?[...e.targetSubGroups]:[],lodgingUrl:e.lodgingUrl??"",lodgingHost:e.lodgingHost??"",lodgingTitle:e.lodgingTitle??"",flightAirline:e.flightAirline??"",flightNumber:e.flightNumber??"",flightDepartAirport:e.flightDepartAirport??"",flightDepartTime:e.flightDepartTime??"",flightArriveAirport:e.flightArriveAirport??"",flightArriveTime:e.flightArriveTime??"",coverImage:e.coverImage??"",notes:e.notes??""}:this._blankDraft()}_set(e,t){this._draft={...this._draft,[e]:t}}_onLodgingChange(e){this._set("lodgingUrl",e),this._previewError="",this._previewDebounce&&clearTimeout(this._previewDebounce);const t=e.trim();if(!t){this._set("coverImage",""),this._set("lodgingHost",""),this._set("lodgingTitle",""),this._lastPreviewedUrl="";return}/^https?:\/\//i.test(t)&&t!==this._lastPreviewedUrl&&(this._previewDebounce=setTimeout(()=>this._runPreview(t),700))}async _runPreview(e){this._previewing=!0,this._previewError="";try{const t=await w.previewUrl(e);if(!t)return;this._lastPreviewedUrl=e,this._draft={...this._draft,coverImage:t.image??this._draft.coverImage,lodgingHost:t.siteName??t.host??this._draft.lodgingHost,lodgingTitle:t.title??this._draft.lodgingTitle}}catch(t){console.warn("Preview failed:",t),(t==null?void 0:t.code)==="functions/unauthenticated"?this._previewError="Preview unavailable — sign in.":(t==null?void 0:t.code)==="functions/invalid-argument"?this._previewError="That URL doesn’t look right.":this._previewError="Preview unavailable — paste it again or skip."}finally{this._previewing=!1}}_toggleAttendee(e){const t=this._draft.attendees.includes(e),i=t?this._draft.attendees.filter(a=>a!==e):[...this._draft.attendees,e];let r=this._draft.viewers??[];t||(r=r.filter(a=>a!==e)),this._draft={...this._draft,attendees:i,viewers:r}}_toggleViewer(e){if(this._draft.attendees.includes(e))return;const i=(this._draft.viewers??[]).includes(e)?this._draft.viewers.filter(r=>r!==e):[...this._draft.viewers??[],e];this._set("viewers",i)}_toggleSubGroup(e){const i=(this._draft.targetSubGroups??[]).includes(e)?this._draft.targetSubGroups.filter(r=>r!==e):[...this._draft.targetSubGroups??[],e];this._set("targetSubGroups",i)}_onSave(){const e=this._draft;if(!e.title.trim()){this._error="Give the trip a title.";return}if(!e.start||!e.end){this._error="Set both start and end dates.";return}if(e.end<e.start){this._error="End date can’t be before start date.";return}if(!this.familyId){this._error="You need to be in a family first.";return}this._error="",this.dispatchEvent(new CustomEvent("save",{detail:{...e,title:e.title.trim(),location:e.location.trim()}}))}_onDelete(){this._draft.id&&confirm("Delete this trip? This can’t be undone.")&&this.dispatchEvent(new CustomEvent("remove",{detail:{id:this._draft.id}}))}_onCancel(){this.dispatchEvent(new Event("cancel"))}render(){if(!this.open)return n``;const e=this._draft,t=!!e.id;return n`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -392,23 +527,13 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
             </div>
           </div>
 
-          <div class="row-dates">
-            <div class="field">
-              <label>Start</label>
-              <input
-                type="date"
-                .value=${e.start}
-                @input=${i=>this._set("start",i.target.value)}
-              />
-            </div>
-            <div class="field">
-              <label>End</label>
-              <input
-                type="date"
-                .value=${e.end}
-                @input=${i=>this._set("end",i.target.value)}
-              />
-            </div>
+          <div class="field">
+            <label>Dates</label>
+            <date-range-picker
+              .start=${e.start}
+              .end=${e.end}
+              @range-change=${i=>{this._draft={...this._draft,start:i.detail.start,end:i.detail.end||i.detail.start}}}
+            ></date-range-picker>
           </div>
 
           <div class=${this.formMode==="activity"?"field":"row-2"}>
@@ -469,6 +594,25 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
                 `)}
             </div>
           </div>
+
+          ${e.visibility==="extended"&&Object.keys(this.subGroups??{}).length>0?n`
+                <div class="field">
+                  <label>Limit to sub-groups <span style="text-transform:none;font-weight:400;color:var(--text-tertiary);letter-spacing:0.01em;">(optional — leave empty to show to all extended)</span></label>
+                  <div class="attendees">
+                    ${Object.entries(this.subGroups).map(([i,r])=>n`
+                        <div
+                          class="att-chip ${(e.targetSubGroups??[]).includes(i)?"on":""}"
+                          @click=${()=>this._toggleSubGroup(i)}
+                        >
+                          ${r.name}
+                          <span style="color:var(--text-tertiary);font-size:11px;margin-left:4px;">
+                            ${(r.memberIds??[]).length}
+                          </span>
+                        </div>
+                      `)}
+                  </div>
+                </div>
+              `:""}
 
           <div class="field">
             <label>Also visible to <span style="text-transform:none;font-weight:400;color:var(--text-tertiary);letter-spacing:0.01em;">(without going)</span></label>
@@ -589,7 +733,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
           </div>
         </glass-panel>
       </div>
-    `}}g(se,"properties",{open:{type:Boolean,reflect:!0},trip:{type:Object},members:{type:Array},currentUid:{type:String},familyId:{type:String},busy:{type:Boolean},formMode:{type:String},_draft:{state:!0},_error:{state:!0},_previewing:{state:!0},_previewError:{state:!0}}),g(se,"styles",k`
+    `}}u(ne,"properties",{open:{type:Boolean,reflect:!0},trip:{type:Object},members:{type:Array},currentUid:{type:String},familyId:{type:String},busy:{type:Boolean},formMode:{type:String},subGroups:{type:Object},_draft:{state:!0},_error:{state:!0},_previewing:{state:!0},_previewError:{state:!0}}),u(ne,"styles",k`
     * {
       box-sizing: border-box;
     }
@@ -876,7 +1020,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       animation: spin 700ms linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-  `);customElements.define("trip-form",se);class ne extends ${constructor(){super(),this.open=!1,this.event=null,this.members=[],this.familyId="",this.busy=!1,this._draft=this._blankDraft(),this._error=""}willUpdate(e){(e.has("event")||e.has("open"))&&(this.open&&(this._draft=this._draftFromEvent(this.event)),this._error="")}_blankDraft(){return{id:null,type:"birthday",title:"",date:new Date().toISOString().slice(0,10),personIds:[],recurring:!0,subtitle:"",notes:"",visibility:"family"}}_draftFromEvent(e){return e?{id:e.id??null,type:e.type??"birthday",title:e.title??"",date:e.date??new Date().toISOString().slice(0,10),personIds:Array.isArray(e.personIds)?[...e.personIds]:[],recurring:e.recurring??!0,subtitle:e.subtitle??"",notes:e.notes??"",visibility:e.visibility??"family"}:this._blankDraft()}_set(e,t){this._draft={...this._draft,[e]:t}}_toggleType(e){this._set("type",e)}_togglePerson(e){const t=this._draft.personIds.includes(e);this._set("personIds",t?this._draft.personIds.filter(i=>i!==e):[...this._draft.personIds,e])}_onSave(){const e=this._draft;if(!e.title.trim()){this._error="Give it a title.";return}if(!e.date){this._error="Pick a date.";return}if(!this.familyId){this._error="No family yet.";return}this._error="",this.dispatchEvent(new CustomEvent("save",{detail:{...e,title:e.title.trim(),subtitle:e.subtitle.trim(),notes:e.notes.trim()}}))}_onDelete(){this._draft.id&&confirm("Delete this event? This can't be undone.")&&this.dispatchEvent(new CustomEvent("remove",{detail:{id:this._draft.id}}))}_onCancel(){this.dispatchEvent(new Event("cancel"))}render(){if(!this.open)return n``;const e=this._draft,t=!!e.id;return n`
+  `);customElements.define("trip-form",ne);class oe extends ${constructor(){super(),this.open=!1,this.event=null,this.members=[],this.familyId="",this.busy=!1,this._draft=this._blankDraft(),this._error=""}willUpdate(e){(e.has("event")||e.has("open"))&&(this.open&&(this._draft=this._draftFromEvent(this.event)),this._error="")}_blankDraft(){return{id:null,type:"birthday",title:"",date:new Date().toISOString().slice(0,10),personIds:[],recurring:!0,subtitle:"",notes:"",visibility:"family"}}_draftFromEvent(e){return e?{id:e.id??null,type:e.type??"birthday",title:e.title??"",date:e.date??new Date().toISOString().slice(0,10),personIds:Array.isArray(e.personIds)?[...e.personIds]:[],recurring:e.recurring??!0,subtitle:e.subtitle??"",notes:e.notes??"",visibility:e.visibility??"family"}:this._blankDraft()}_set(e,t){this._draft={...this._draft,[e]:t}}_toggleType(e){this._set("type",e)}_togglePerson(e){const t=this._draft.personIds.includes(e);this._set("personIds",t?this._draft.personIds.filter(i=>i!==e):[...this._draft.personIds,e])}_onSave(){const e=this._draft;if(!e.title.trim()){this._error="Give it a title.";return}if(!e.date){this._error="Pick a date.";return}if(!this.familyId){this._error="No family yet.";return}this._error="",this.dispatchEvent(new CustomEvent("save",{detail:{...e,title:e.title.trim(),subtitle:e.subtitle.trim(),notes:e.notes.trim()}}))}_onDelete(){this._draft.id&&confirm("Delete this event? This can't be undone.")&&this.dispatchEvent(new CustomEvent("remove",{detail:{id:this._draft.id}}))}_onCancel(){this.dispatchEvent(new Event("cancel"))}render(){if(!this.open)return n``;const e=this._draft,t=!!e.id;return n`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -1006,7 +1150,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
           </div>
         </glass-panel>
       </div>
-    `}_monthDay(e){if(!e)return"";const t=new Date(e);return Number.isNaN(t.getTime())?"":t.toLocaleString("en-GB",{day:"numeric",month:"long"})}}g(ne,"properties",{open:{type:Boolean,reflect:!0},event:{type:Object},members:{type:Array},familyId:{type:String},busy:{type:Boolean},_draft:{state:!0},_error:{state:!0}}),g(ne,"styles",k`
+    `}_monthDay(e){if(!e)return"";const t=new Date(e);return Number.isNaN(t.getTime())?"":t.toLocaleString("en-GB",{day:"numeric",month:"long"})}}u(oe,"properties",{open:{type:Boolean,reflect:!0},event:{type:Object},members:{type:Array},familyId:{type:String},busy:{type:Boolean},_draft:{state:!0},_error:{state:!0}}),u(oe,"styles",k`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -1237,7 +1381,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       margin-top: 6px;
       line-height: 1.4;
     }
-  `);customElements.define("event-form",ne);let F=null,ze=null;function ut(){return F||(F=document.createElement("div"),F.id="cairn-toast-host",Object.assign(F.style,{position:"fixed",bottom:"24px",left:"50%",transform:"translateX(-50%)",zIndex:9999,pointerEvents:"none"}),document.body.appendChild(F),F)}function u(o,{duration:e=2800}={}){const t=ut();clearTimeout(ze),t.innerHTML="";const i=document.createElement("div");i.textContent=o,Object.assign(i.style,{padding:"12px 18px",background:"rgba(20, 12, 6, 0.78)",backdropFilter:"blur(24px) saturate(180%)",webkitBackdropFilter:"blur(24px) saturate(180%)",border:"1px solid rgba(255, 248, 235, 0.22)",borderRadius:"999px",color:"rgba(255, 248, 235, 0.96)",fontFamily:"'Inter', system-ui, sans-serif",fontSize:"13.5px",fontWeight:"500",letterSpacing:"0.005em",boxShadow:"0 12px 32px rgba(20, 12, 6, 0.45)",pointerEvents:"auto",transform:"translateY(8px)",opacity:"0",transition:"opacity 200ms ease, transform 240ms ease"}),t.appendChild(i),requestAnimationFrame(()=>{i.style.opacity="1",i.style.transform="translateY(0)"}),ze=setTimeout(()=>{i.style.opacity="0",i.style.transform="translateY(8px)",setTimeout(()=>i.remove(),260)},e)}class oe extends ${constructor(){super(),this.open=!1,this.family=null,this.immediate=[],this.extended=[],this._busy=!1,this._newGroupName="",this._editingGroupId=null}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _createSubGroup(){const e=this._newGroupName.trim();if(!(!e||this._busy)){this._busy=!0;try{const t=await w.saveSubGroup({name:e,memberIds:[]});this._newGroupName="",this._editingGroupId=t,u(`Sub-group "${e}" created.`)}catch(t){u(`Couldn't create: ${t.code??t.message}`,{duration:5e3})}finally{this._busy=!1}}}async _toggleSubGroupMember(e,t){var l,s;const i=(s=(l=this.family)==null?void 0:l.subGroups)==null?void 0:s[e];if(!i)return;const r=i.memberIds??[],a=r.includes(t)?r.filter(d=>d!==t):[...r,t];try{await w.saveSubGroup({id:e,name:i.name,memberIds:a})}catch(d){u(`Couldn't update: ${d.code??d.message}`,{duration:5e3})}}async _deleteSubGroup(e,t){if(confirm(`Delete the "${t}" sub-group?`))try{await w.deleteSubGroup(e),this._editingGroupId===e&&(this._editingGroupId=null),u("Sub-group deleted.")}catch(i){u(`Couldn't delete: ${i.code??i.message}`,{duration:5e3})}}async _regenerate(){if(!this._busy){this._busy=!0;try{await w.regenerateCairnInviteCode(),u("New invite code generated.")}catch(e){console.error(e),u(`Couldn't generate code: ${e.code??e.message}`,{duration:5e3})}finally{this._busy=!1}}}_inviteLink(e){return`${window.location.origin}/cairn/?join=${e}`}async _copyLink(){var t;const e=(t=this.family)==null?void 0:t.cairnInviteCode;if(e)try{await navigator.clipboard.writeText(this._inviteLink(e)),u("Invite link copied to clipboard.")}catch{u("Could not copy — try long-press the link instead.")}}async _share(){var i,r;const e=(i=this.family)==null?void 0:i.cairnInviteCode;if(!e)return;const t=this._inviteLink(e);if(navigator.share)try{await navigator.share({title:"Join my family on Cairn",text:`Join ${((r=this.family)==null?void 0:r.name)??"our family"} on Cairn — our shared family calendar.`,url:t})}catch{}else this._copyLink()}_expiryText(e){if(!e)return"";const t=e.toDate?e.toDate():new Date(e),r=Math.max(0,Math.round((t-new Date)/(1440*60*1e3)));return r===0?"Expires today":r===1?"Expires tomorrow":`Expires in ${r} days`}render(){var r,a,l,s;if(!this.open)return n``;const e=(r=this.family)==null?void 0:r.cairnInviteCode,t=(a=this.family)==null?void 0:a.cairnInviteCodeExpiresAt,i=t&&(t.toDate?t.toDate():new Date(t))<new Date;return n`
+  `);customElements.define("event-form",oe);let A=null,Ee=null;function ft(){return A||(A=document.createElement("div"),A.id="cairn-toast-host",Object.assign(A.style,{position:"fixed",bottom:"24px",left:"50%",transform:"translateX(-50%)",zIndex:9999,pointerEvents:"none"}),document.body.appendChild(A),A)}function g(o,{duration:e=2800}={}){const t=ft();clearTimeout(Ee),t.innerHTML="";const i=document.createElement("div");i.textContent=o,Object.assign(i.style,{padding:"12px 18px",background:"rgba(20, 12, 6, 0.78)",backdropFilter:"blur(24px) saturate(180%)",webkitBackdropFilter:"blur(24px) saturate(180%)",border:"1px solid rgba(255, 248, 235, 0.22)",borderRadius:"999px",color:"rgba(255, 248, 235, 0.96)",fontFamily:"'Inter', system-ui, sans-serif",fontSize:"13.5px",fontWeight:"500",letterSpacing:"0.005em",boxShadow:"0 12px 32px rgba(20, 12, 6, 0.45)",pointerEvents:"auto",transform:"translateY(8px)",opacity:"0",transition:"opacity 200ms ease, transform 240ms ease"}),t.appendChild(i),requestAnimationFrame(()=>{i.style.opacity="1",i.style.transform="translateY(0)"}),Ee=setTimeout(()=>{i.style.opacity="0",i.style.transform="translateY(8px)",setTimeout(()=>i.remove(),260)},e)}class le extends ${constructor(){super(),this.open=!1,this.family=null,this.immediate=[],this.extended=[],this._busy=!1,this._newGroupName="",this._editingGroupId=null}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _createSubGroup(){const e=this._newGroupName.trim();if(!(!e||this._busy)){this._busy=!0;try{const t=await w.saveSubGroup({name:e,memberIds:[]});this._newGroupName="",this._editingGroupId=t,g(`Sub-group "${e}" created.`)}catch(t){g(`Couldn't create: ${t.code??t.message}`,{duration:5e3})}finally{this._busy=!1}}}async _toggleSubGroupMember(e,t){var l,s;const i=(s=(l=this.family)==null?void 0:l.subGroups)==null?void 0:s[e];if(!i)return;const r=i.memberIds??[],a=r.includes(t)?r.filter(d=>d!==t):[...r,t];try{await w.saveSubGroup({id:e,name:i.name,memberIds:a})}catch(d){g(`Couldn't update: ${d.code??d.message}`,{duration:5e3})}}async _deleteSubGroup(e,t){if(confirm(`Delete the "${t}" sub-group?`))try{await w.deleteSubGroup(e),this._editingGroupId===e&&(this._editingGroupId=null),g("Sub-group deleted.")}catch(i){g(`Couldn't delete: ${i.code??i.message}`,{duration:5e3})}}async _regenerate(){if(!this._busy){this._busy=!0;try{await w.regenerateCairnInviteCode(),g("New invite code generated.")}catch(e){console.error(e),g(`Couldn't generate code: ${e.code??e.message}`,{duration:5e3})}finally{this._busy=!1}}}_inviteLink(e){return`${window.location.origin}/cairn/?join=${e}`}async _copyLink(){var t;const e=(t=this.family)==null?void 0:t.cairnInviteCode;if(e)try{await navigator.clipboard.writeText(this._inviteLink(e)),g("Invite link copied to clipboard.")}catch{g("Could not copy — try long-press the link instead.")}}async _share(){var i,r;const e=(i=this.family)==null?void 0:i.cairnInviteCode;if(!e)return;const t=this._inviteLink(e);if(navigator.share)try{await navigator.share({title:"Join my family on Cairn",text:`Join ${((r=this.family)==null?void 0:r.name)??"our family"} on Cairn — our shared family calendar.`,url:t})}catch{}else this._copyLink()}_expiryText(e){if(!e)return"";const t=e.toDate?e.toDate():new Date(e),r=Math.max(0,Math.round((t-new Date)/(1440*60*1e3)));return r===0?"Expires today":r===1?"Expires tomorrow":`Expires in ${r} days`}render(){var r,a,l,s;if(!this.open)return n``;const e=(r=this.family)==null?void 0:r.cairnInviteCode,t=(a=this.family)==null?void 0:a.cairnInviteCodeExpiresAt,i=t&&(t.toDate?t.toDate():new Date(t))<new Date;return n`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -1330,7 +1474,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
                                   </span>`:""}
                             </div>
                           `:(c.memberIds??[]).length>0?n`<div style="margin-top:4px;">
-                            ${(c.memberIds??[]).map(p=>{const h=this.extended.find(b=>b.uid===p);return h?n`<span class="chip-toggle on" style="cursor:default;">
+                            ${(c.memberIds??[]).map(p=>{const h=this.extended.find(f=>f.uid===p);return h?n`<span class="chip-toggle on" style="cursor:default;">
                                 <member-chip
                                   .name=${h.displayName}
                                   .photo=${h.photoURL??""}
@@ -1395,7 +1539,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
           </div>
         </glass-panel>
       </div>
-    `}}g(oe,"properties",{open:{type:Boolean,reflect:!0},family:{type:Object},immediate:{type:Array},extended:{type:Array},_busy:{state:!0},_newGroupName:{state:!0},_editingGroupId:{state:!0}}),g(oe,"styles",k`
+    `}}u(le,"properties",{open:{type:Boolean,reflect:!0},family:{type:Object},immediate:{type:Array},extended:{type:Array},_busy:{state:!0},_newGroupName:{state:!0},_editingGroupId:{state:!0}}),u(le,"styles",k`
     * {
       box-sizing: border-box;
     }
@@ -1641,8 +1785,8 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       gap: 8px;
       margin-top: 10px;
     }
-  `);customElements.define("manage-members-modal",oe);function mt(o,e){const t=[];if(t.push(o.title||"Cairn activity"),o.location&&t.push(o.location),o.start&&o.end){const r=_(o.start),a=_(o.end),l=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),s=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});t.push(o.start===o.end?s:`${l} – ${s}`)}if((o.lodgingHost||o.lodgingTitle)&&t.push(`Lodging: ${[o.lodgingHost,o.lodgingTitle].filter(Boolean).join(" — ")}`),o.flightNumber||o.flightAirline||o.flightDepartAirport){const r=[],a=[o.flightAirline,o.flightNumber].filter(Boolean).join(" ");if(a&&r.push(a),o.flightDepartAirport&&o.flightArriveAirport&&r.push(`${o.flightDepartAirport.toUpperCase()} → ${o.flightArriveAirport.toUpperCase()}`),o.flightDepartTime){const l=new Date(o.flightDepartTime);Number.isNaN(l.getTime())||r.push(`Depart: ${l.toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}`)}r.length&&t.push(`Flight: ${r.join(" · ")}`)}const i=(o.attendees??[]).map(r=>{var a;return(a=e.get(r))==null?void 0:a.displayName}).filter(Boolean);return i.length&&t.push(`With: ${i.join(", ")}`),o.notes&&t.push("",o.notes),t.push("","Shared from Cairn · pebblepath.ai/cairn"),t.join(`
-`)}class le extends ${constructor(){super(),this.trip=null,this.members=[]}_fmtDates(e,t){const i=_(e),r=_(t);if(!i||!r)return"";const a=i.toLocaleString("en-GB",{month:"short"}),l=r.toLocaleString("en-GB",{month:"short"});return a===l&&i.getFullYear()===r.getFullYear()?`${i.getDate()}–${r.getDate()} ${a}`:`${i.getDate()} ${a} – ${r.getDate()} ${l}`}async _onShare(e,t,i){i.stopPropagation();const r=mt(e,t);if(navigator.share)try{await navigator.share({title:`Cairn — ${e.title??"activity"}`,text:r})}catch{}else try{await navigator.clipboard.writeText(r),u("Itinerary copied to clipboard.")}catch{u("Could not copy — try again from a browser tab.")}}render(){const e=this.trip;if(!e)return n``;const t=e.coverImage?`background-image: url(${e.coverImage});`:`background: ${gt(e)};`,i=new Map(this.members.map(s=>[s.uid,s])),r=(e.attendees??[]).map(s=>i.get(s)).filter(Boolean),a=r.slice(0,4),l=Math.max(0,r.length-a.length);return n`
+  `);customElements.define("manage-members-modal",le);function bt(o,e){const t=[];if(t.push(o.title||"Cairn activity"),o.location&&t.push(o.location),o.start&&o.end){const r=_(o.start),a=_(o.end),l=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),s=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});t.push(o.start===o.end?s:`${l} – ${s}`)}if((o.lodgingHost||o.lodgingTitle)&&t.push(`Lodging: ${[o.lodgingHost,o.lodgingTitle].filter(Boolean).join(" — ")}`),o.flightNumber||o.flightAirline||o.flightDepartAirport){const r=[],a=[o.flightAirline,o.flightNumber].filter(Boolean).join(" ");if(a&&r.push(a),o.flightDepartAirport&&o.flightArriveAirport&&r.push(`${o.flightDepartAirport.toUpperCase()} → ${o.flightArriveAirport.toUpperCase()}`),o.flightDepartTime){const l=new Date(o.flightDepartTime);Number.isNaN(l.getTime())||r.push(`Depart: ${l.toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}`)}r.length&&t.push(`Flight: ${r.join(" · ")}`)}const i=(o.attendees??[]).map(r=>{var a;return(a=e.get(r))==null?void 0:a.displayName}).filter(Boolean);return i.length&&t.push(`With: ${i.join(", ")}`),o.notes&&t.push("",o.notes),t.push("","Shared from Cairn · pebblepath.ai/cairn"),t.join(`
+`)}class de extends ${constructor(){super(),this.trip=null,this.members=[]}_fmtDates(e,t){const i=_(e),r=_(t);if(!i||!r)return"";const a=i.toLocaleString("en-GB",{month:"short"}),l=r.toLocaleString("en-GB",{month:"short"});return a===l&&i.getFullYear()===r.getFullYear()?`${i.getDate()}–${r.getDate()} ${a}`:`${i.getDate()} ${a} – ${r.getDate()} ${l}`}async _onShare(e,t,i){i.stopPropagation();const r=bt(e,t);if(navigator.share)try{await navigator.share({title:`Cairn — ${e.title??"activity"}`,text:r})}catch{}else try{await navigator.clipboard.writeText(r),g("Itinerary copied to clipboard.")}catch{g("Could not copy — try again from a browser tab.")}}render(){const e=this.trip;if(!e)return n``;const t=e.coverImage?`background-image: url(${e.coverImage});`:`background: ${mt(e)};`,i=new Map(this.members.map(s=>[s.uid,s])),r=(e.attendees??[]).map(s=>i.get(s)).filter(Boolean),a=r.slice(0,4),l=Math.max(0,r.length-a.length);return n`
       <article
         tabindex="0"
         aria-label=${e.title}
@@ -1685,7 +1829,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
           </div>
         </div>
       </article>
-    `}}g(le,"properties",{trip:{type:Object},members:{type:Array}}),g(le,"styles",k`
+    `}}u(de,"properties",{trip:{type:Object},members:{type:Array}}),u(de,"styles",k`
     :host {
       display: block;
     }
@@ -1840,7 +1984,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       width: 15px;
       height: 15px;
     }
-  `);customElements.define("trip-card",le);class de extends ${constructor(){super(),this.open=!1,this.trips=[],this.members=[]}_onCancel(){this.dispatchEvent(new Event("cancel"))}_groupByYear(e){const t=[...e].sort((a,l)=>String(a.start).localeCompare(String(l.start))),i=new Date;i.setHours(0,0,0,0);const r=new Map;for(const a of t){if(!a.start)continue;const l=_(a.start),s=_(a.end);if(!l)continue;const d=l.getFullYear();r.has(d)||r.set(d,[]);const c=s?s<i:!1;r.get(d).push({trip:a,isPast:c})}return r}render(){var r;if(!this.open)return n``;const e=this._groupByYear(this.trips??[]),t=((r=this.trips)==null?void 0:r.length)??0,i=new Date().getFullYear();return n`
+  `);customElements.define("trip-card",de);class ce extends ${constructor(){super(),this.open=!1,this.trips=[],this.members=[]}_onCancel(){this.dispatchEvent(new Event("cancel"))}_groupByYear(e){const t=[...e].sort((a,l)=>String(a.start).localeCompare(String(l.start))),i=new Date;i.setHours(0,0,0,0);const r=new Map;for(const a of t){if(!a.start)continue;const l=_(a.start),s=_(a.end);if(!l)continue;const d=l.getFullYear();r.has(d)||r.set(d,[]);const c=s?s<i:!1;r.get(d).push({trip:a,isPast:c})}return r}render(){var r;if(!this.open)return n``;const e=this._groupByYear(this.trips??[]),t=((r=this.trips)==null?void 0:r.length)??0,i=new Date().getFullYear();return n`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -1865,7 +2009,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
                 `)}
         </glass-panel>
       </div>
-    `}}g(de,"properties",{open:{type:Boolean,reflect:!0},trips:{type:Array},members:{type:Array}}),g(de,"styles",k`
+    `}}u(ce,"properties",{open:{type:Boolean,reflect:!0},trips:{type:Array},members:{type:Array}}),u(ce,"styles",k`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -1977,7 +2121,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       padding: 38px 12px;
       line-height: 1.55;
     }
-  `);customElements.define("all-trips-modal",de);class ce extends ${constructor(){super(),this.open=!1,this._events=[],this._selected=new Set,this._loading=!1,this._error="",this._importing=!1}willUpdate(e){e.has("open")&&this.open&&this._events.length===0&&!this._loading&&this._load()}async _load(){var e,t,i,r,a,l;this._loading=!0,this._error="";try{const s=await Oe(),d=await pt(s,90),c=new Set((w.state.trips??[]).filter(h=>h.gcalEventId).map(h=>h.gcalEventId));this._events=d.map(h=>({...h,_alreadyImported:c.has(h.id)}));const p=new Set;for(const h of this._events){if(h._alreadyImported)continue;const b=((e=h.start)==null?void 0:e.date)??((i=(t=h.start)==null?void 0:t.dateTime)==null?void 0:i.slice(0,10)),y=((r=h.end)==null?void 0:r.date)??((l=(a=h.end)==null?void 0:a.dateTime)==null?void 0:l.slice(0,10));b&&y&&y!==b&&p.add(h.id)}this._selected=p}catch(s){console.error(s),this._error=(s==null?void 0:s.message)??"Could not load calendar events."}finally{this._loading=!1}}_toggle(e){const t=new Set(this._selected);t.has(e)?t.delete(e):t.add(e),this._selected=t}_toggleAll(){const e=this._events.filter(t=>!t._alreadyImported);this._selected.size===e.length?this._selected=new Set:this._selected=new Set(e.map(t=>t.id))}async _import(){var a;if(this._importing||this._selected.size===0)return;this._importing=!0;const e=(a=x==null?void 0:x.currentUser)==null?void 0:a.uid,t=this._events.filter(l=>this._selected.has(l.id));let i=0,r=0;for(const l of t){const s=ht(l,e);try{await w.saveTrip(s),i++}catch(d){console.error("Import failed for event",l.id,d),r++}}this._importing=!1,r===0?u(`Imported ${i} ${i===1?"activity":"activities"}.`):u(`Imported ${i}, ${r} failed.`,{duration:5e3}),this._events=[],this._selected=new Set,this.dispatchEvent(new Event("cancel"))}_onCancel(){this.dispatchEvent(new Event("cancel"))}_fmtRange(e){var p,h,b,y,m,C,D,A;const t=((p=e.start)==null?void 0:p.date)??((b=(h=e.start)==null?void 0:h.dateTime)==null?void 0:b.slice(0,10)),i=((y=e.end)==null?void 0:y.date)??((C=(m=e.end)==null?void 0:m.dateTime)==null?void 0:C.slice(0,10));if(!t)return"";const r=new Date(t);if(!i||i===t)return r.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});let a=new Date(i);(D=e.start)!=null&&D.date&&((A=e.end)!=null&&A.date)&&a.setDate(a.getDate()-1);const l=r.getMonth()===a.getMonth()&&r.getFullYear()===a.getFullYear(),s=r.getFullYear()===a.getFullYear();if(l)return`${r.getDate()}–${a.getDate()} ${r.toLocaleString("en-GB",{month:"short",year:"numeric"})}`;const d=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),c=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});return s?`${d} – ${c}`:`${r.toLocaleDateString()} – ${a.toLocaleDateString()}`}render(){if(!this.open)return n``;const e=this._events.filter(i=>!i._alreadyImported),t=e.length>0&&this._selected.size===e.length;return n`
+  `);customElements.define("all-trips-modal",ce);class pe extends ${constructor(){super(),this.open=!1,this._events=[],this._selected=new Set,this._loading=!1,this._error="",this._importing=!1}willUpdate(e){e.has("open")&&this.open&&this._events.length===0&&!this._loading&&this._load()}async _load(){var e,t,i,r,a,l;this._loading=!0,this._error="";try{const s=await Pe(),d=await ut(s,90),c=new Set((w.state.trips??[]).filter(h=>h.gcalEventId).map(h=>h.gcalEventId));this._events=d.map(h=>({...h,_alreadyImported:c.has(h.id)}));const p=new Set;for(const h of this._events){if(h._alreadyImported)continue;const f=((e=h.start)==null?void 0:e.date)??((i=(t=h.start)==null?void 0:t.dateTime)==null?void 0:i.slice(0,10)),y=((r=h.end)==null?void 0:r.date)??((l=(a=h.end)==null?void 0:a.dateTime)==null?void 0:l.slice(0,10));f&&y&&y!==f&&p.add(h.id)}this._selected=p}catch(s){console.error(s),this._error=(s==null?void 0:s.message)??"Could not load calendar events."}finally{this._loading=!1}}_toggle(e){const t=new Set(this._selected);t.has(e)?t.delete(e):t.add(e),this._selected=t}_toggleAll(){const e=this._events.filter(t=>!t._alreadyImported);this._selected.size===e.length?this._selected=new Set:this._selected=new Set(e.map(t=>t.id))}async _import(){var a;if(this._importing||this._selected.size===0)return;this._importing=!0;const e=(a=x==null?void 0:x.currentUser)==null?void 0:a.uid,t=this._events.filter(l=>this._selected.has(l.id));let i=0,r=0;for(const l of t){const s=gt(l,e);try{await w.saveTrip(s),i++}catch(d){console.error("Import failed for event",l.id,d),r++}}this._importing=!1,r===0?g(`Imported ${i} ${i===1?"activity":"activities"}.`):g(`Imported ${i}, ${r} failed.`,{duration:5e3}),this._events=[],this._selected=new Set,this.dispatchEvent(new Event("cancel"))}_onCancel(){this.dispatchEvent(new Event("cancel"))}_fmtRange(e){var p,h,f,y,m,E,C,T;const t=((p=e.start)==null?void 0:p.date)??((f=(h=e.start)==null?void 0:h.dateTime)==null?void 0:f.slice(0,10)),i=((y=e.end)==null?void 0:y.date)??((E=(m=e.end)==null?void 0:m.dateTime)==null?void 0:E.slice(0,10));if(!t)return"";const r=new Date(t);if(!i||i===t)return r.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});let a=new Date(i);(C=e.start)!=null&&C.date&&((T=e.end)!=null&&T.date)&&a.setDate(a.getDate()-1);const l=r.getMonth()===a.getMonth()&&r.getFullYear()===a.getFullYear(),s=r.getFullYear()===a.getFullYear();if(l)return`${r.getDate()}–${a.getDate()} ${r.toLocaleString("en-GB",{month:"short",year:"numeric"})}`;const d=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),c=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});return s?`${d} – ${c}`:`${r.toLocaleDateString()} – ${a.toLocaleDateString()}`}render(){if(!this.open)return n``;const e=this._events.filter(i=>!i._alreadyImported),t=e.length>0&&this._selected.size===e.length;return n`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -2029,7 +2173,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
               `}
         </glass-panel>
       </div>
-    `}}g(ce,"properties",{open:{type:Boolean,reflect:!0},_events:{state:!0},_selected:{state:!0},_loading:{state:!0},_error:{state:!0},_importing:{state:!0}}),g(ce,"styles",k`
+    `}}u(pe,"properties",{open:{type:Boolean,reflect:!0},_events:{state:!0},_selected:{state:!0},_loading:{state:!0},_error:{state:!0},_importing:{state:!0}}),u(pe,"styles",k`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -2209,7 +2353,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       display: flex;
       gap: 10px;
     }
-  `);customElements.define("import-calendar-modal",ce);class pe extends ${constructor(){super(),this.open=!1,this.user=null,this.pebbleUser=null,this._name="",this._savingName=!1,this._uploadingPhoto=!1}willUpdate(e){var t;e.has("open")&&this.open&&(this._name=((t=this.user)==null?void 0:t.displayName)??"")}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _saveName(){var t,i;const e=this._name.trim();if(!(!e||e===(((t=this.user)==null?void 0:t.displayName)??""))&&!(!((i=x==null?void 0:x.currentUser)!=null&&i.uid)||!v)){this._savingName=!0;try{await I(z(v,"users",x.currentUser.uid),{displayName:e,updatedAt:E()}),u("Display name updated.")}catch(r){console.error(r),u(`Couldn't save: ${r.code??r.message}`,{duration:5e3})}finally{this._savingName=!1}}}async _signOut(){confirm("Sign out of Cairn?")&&(this.dispatchEvent(new Event("cancel")),await Be())}_triggerPhotoPicker(){var e;(e=this.renderRoot.querySelector("#photo-file"))==null||e.click()}async _onPhotoChosen(e){var a,l;const t=(a=e.target.files)==null?void 0:a[0];if(e.target.value="",!t)return;if(!t.type.startsWith("image/")){u("Pick an image file (JPG, PNG, etc.).");return}if(t.size>5*1024*1024){u("Photo is too big — keep it under 5 MB.");return}const i=(l=x==null?void 0:x.currentUser)==null?void 0:l.uid,r=w.familyId;if(!i||!r||!ie){u("Can't upload yet — you need to be in a family first.");return}this._uploadingPhoto=!0;try{const s=Ae(ie,`families/${r}/avatars/users/${i}`);await Fe(s,t,{contentType:t.type});const d=await Me(s);await I(z(v,"users",i),{profilePhotoURL:d,updatedAt:E()}),u("Photo updated.")}catch(s){console.error("Photo upload failed",s),u(`Upload failed: ${s.code??s.message}`,{duration:5e3})}finally{this._uploadingPhoto=!1}}render(){if(!this.open)return n``;const e=this.user,t=this._name.trim()&&this._name.trim()!==((e==null?void 0:e.displayName)??"");return n`
+  `);customElements.define("import-calendar-modal",pe);class he extends ${constructor(){super(),this.open=!1,this.user=null,this.pebbleUser=null,this._name="",this._savingName=!1,this._uploadingPhoto=!1}willUpdate(e){var t;e.has("open")&&this.open&&(this._name=((t=this.user)==null?void 0:t.displayName)??"")}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _saveName(){var t,i;const e=this._name.trim();if(!(!e||e===(((t=this.user)==null?void 0:t.displayName)??""))&&!(!((i=x==null?void 0:x.currentUser)!=null&&i.uid)||!v)){this._savingName=!0;try{await I(D(v,"users",x.currentUser.uid),{displayName:e,updatedAt:z()}),g("Display name updated.")}catch(r){console.error(r),g(`Couldn't save: ${r.code??r.message}`,{duration:5e3})}finally{this._savingName=!1}}}async _signOut(){confirm("Sign out of Cairn?")&&(this.dispatchEvent(new Event("cancel")),await Ye())}_triggerPhotoPicker(){var e;(e=this.renderRoot.querySelector("#photo-file"))==null||e.click()}async _onPhotoChosen(e){var a,l;const t=(a=e.target.files)==null?void 0:a[0];if(e.target.value="",!t)return;if(!t.type.startsWith("image/")){g("Pick an image file (JPG, PNG, etc.).");return}if(t.size>5*1024*1024){g("Photo is too big — keep it under 5 MB.");return}const i=(l=x==null?void 0:x.currentUser)==null?void 0:l.uid,r=w.familyId;if(!i||!r||!ie){g("Can't upload yet — you need to be in a family first.");return}this._uploadingPhoto=!0;try{const s=Me(ie,`families/${r}/avatars/users/${i}`);await je(s,t,{contentType:t.type});const d=await Oe(s);await I(D(v,"users",i),{profilePhotoURL:d,updatedAt:z()}),g("Photo updated.")}catch(s){console.error("Photo upload failed",s),g(`Upload failed: ${s.code??s.message}`,{duration:5e3})}finally{this._uploadingPhoto=!1}}render(){if(!this.open)return n``;const e=this.user,t=this._name.trim()&&this._name.trim()!==((e==null?void 0:e.displayName)??"");return n`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -2267,7 +2411,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
           </div>
         </glass-panel>
       </div>
-    `}}g(pe,"properties",{open:{type:Boolean,reflect:!0},user:{type:Object},pebbleUser:{type:Object},_name:{state:!0},_savingName:{state:!0},_uploadingPhoto:{state:!0}}),g(pe,"styles",k`
+    `}}u(he,"properties",{open:{type:Boolean,reflect:!0},user:{type:Object},pebbleUser:{type:Object},_name:{state:!0},_savingName:{state:!0},_uploadingPhoto:{state:!0}}),u(he,"styles",k`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -2418,7 +2562,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       background: rgba(201, 138, 138, 0.1);
       border-color: rgba(201, 138, 138, 0.5);
     }
-  `);customElements.define("profile-sheet",pe);const Y=class Y extends ${constructor(){super(),this.open=!1}_pick(e){this.dispatchEvent(new CustomEvent("pick",{detail:{type:e}}))}_cancel(){this.dispatchEvent(new Event("cancel"))}render(){return this.open?n`
+  `);customElements.define("profile-sheet",he);const B=class B extends ${constructor(){super(),this.open=!1}_pick(e){this.dispatchEvent(new CustomEvent("pick",{detail:{type:e}}))}_cancel(){this.dispatchEvent(new Event("cancel"))}render(){return this.open?n`
       <div class="backdrop" @click=${this._cancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -2427,7 +2571,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
             <button class="close" @click=${this._cancel} aria-label="Close">×</button>
           </div>
           <div class="options">
-            ${Y.OPTIONS.map(e=>n`
+            ${B.OPTIONS.map(e=>n`
                 <button class="option" @click=${()=>this._pick(e.type)}>
                   <span class="icon-cell" aria-hidden="true">${e.icon}</span>
                   <span>
@@ -2439,7 +2583,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
           </div>
         </glass-panel>
       </div>
-    `:n``}};g(Y,"properties",{open:{type:Boolean,reflect:!0}}),g(Y,"OPTIONS",[{type:"activity",icon:"🌿",label:"Group activity",desc:"Weekend plans, outings, day trips — no lodging or flights needed."},{type:"trip",icon:"✈️",label:"Family trip",desc:"Multi-day travel with lodging, flight info, attendees."},{type:"event",icon:"🎂",label:"Birthday or anniversary",desc:"Recurring celebration on a specific date."}]),g(Y,"styles",k`
+    `:n``}};u(B,"properties",{open:{type:Boolean,reflect:!0}}),u(B,"OPTIONS",[{type:"activity",icon:"🌿",label:"Group activity",desc:"Weekend plans, outings, day trips — no lodging or flights needed."},{type:"trip",icon:"✈️",label:"Family trip",desc:"Multi-day travel with lodging, flight info, attendees."},{type:"event",icon:"🎂",label:"Birthday or anniversary",desc:"Recurring celebration on a specific date."}]),u(B,"styles",k`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -2546,7 +2690,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       line-height: 1.45;
       margin-top: 2px;
     }
-  `);let he=Y;customElements.define("activity-type-picker",he);class Le extends ${render(){return n`
+  `);let ue=B;customElements.define("activity-type-picker",ue);class Re extends ${render(){return n`
       <img class="icon" src=${"/cairn/assets/pebblepath-icon.png"} alt="" aria-hidden="true" />
       <div class="wordmark">PebblePath</div>
       <div class="tagline">for every little milestone</div>
@@ -2558,7 +2702,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       >
         Get the app on iPhone <span class="arrow">→</span>
       </a>
-    `}}g(Le,"styles",k`
+    `}}u(Re,"styles",k`
     :host {
       display: block;
       margin-top: 24px;
@@ -2630,7 +2774,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
     .cta:hover .arrow {
       transform: translateX(3px);
     }
-  `);customElements.define("discover-pebblepath",Le);class ge extends ${constructor(){super(),this.code="",this._family=null,this._loading=!0,this._joining=!1,this._error=""}willUpdate(e){e.has("code")&&this.code&&this._lookup()}async _lookup(){var e,t;this._loading=!0,this._error="";try{const i=await w.findFamilyByCairnCode(this.code);if(!i)this._error="Invite code not found. Check it was typed correctly.",this._family=null;else{const r=((t=(e=i.cairnInviteCodeExpiresAt)==null?void 0:e.toDate)==null?void 0:t.call(e))??(i.cairnInviteCodeExpiresAt?new Date(i.cairnInviteCodeExpiresAt):null);!r||r<new Date?(this._error="This invite code has expired. Ask the family for a fresh one.",this._family=null):this._family=i}}catch(i){console.error(i),this._error=(i==null?void 0:i.message)??"Couldn't look up the invite."}finally{this._loading=!1}}async _join(){var e;if(!this._joining){this._joining=!0,this._error="";try{const t=await w.joinFamilyAsCairn(this.code);u(`Welcome to ${((e=this._family)==null?void 0:e.name)??"the family"}.`),this.dispatchEvent(new CustomEvent("joined",{detail:{familyId:t}}))}catch(t){console.error(t),this._error=(t==null?void 0:t.message)??"Could not join."}finally{this._joining=!1}}}_cancel(){this.dispatchEvent(new Event("cancel"))}_inviterFromFamily(e){var r;if(!e)return null;const t=(r=e.memberProfiles)==null?void 0:r[e.createdBy];if(!t)return null;const i=t.profilePhotoURL;return{displayName:t.displayName??"A family member",photoURL:typeof i=="string"&&/^https?:\/\//i.test(i)?i:null}}render(){var r,a,l;const e=this._inviterFromFamily(this._family),t=(((r=this._family)==null?void 0:r.cairnMemberIds)??((a=this._family)==null?void 0:a.memberIds)??[]).length,i=(((l=this._family)==null?void 0:l.memberIds)??[]).length;return n`
+  `);customElements.define("discover-pebblepath",Re);class ge extends ${constructor(){super(),this.code="",this._family=null,this._loading=!0,this._joining=!1,this._error=""}willUpdate(e){e.has("code")&&this.code&&this._lookup()}async _lookup(){var e,t;this._loading=!0,this._error="";try{const i=await w.findFamilyByCairnCode(this.code);if(!i)this._error="Invite code not found. Check it was typed correctly.",this._family=null;else{const r=((t=(e=i.cairnInviteCodeExpiresAt)==null?void 0:e.toDate)==null?void 0:t.call(e))??(i.cairnInviteCodeExpiresAt?new Date(i.cairnInviteCodeExpiresAt):null);!r||r<new Date?(this._error="This invite code has expired. Ask the family for a fresh one.",this._family=null):this._family=i}}catch(i){console.error(i),this._error=(i==null?void 0:i.message)??"Couldn't look up the invite."}finally{this._loading=!1}}async _join(){var e;if(!this._joining){this._joining=!0,this._error="";try{const t=await w.joinFamilyAsCairn(this.code);g(`Welcome to ${((e=this._family)==null?void 0:e.name)??"the family"}.`),this.dispatchEvent(new CustomEvent("joined",{detail:{familyId:t}}))}catch(t){console.error(t),this._error=(t==null?void 0:t.message)??"Could not join."}finally{this._joining=!1}}}_cancel(){this.dispatchEvent(new Event("cancel"))}_inviterFromFamily(e){var r;if(!e)return null;const t=(r=e.memberProfiles)==null?void 0:r[e.createdBy];if(!t)return null;const i=t.profilePhotoURL;return{displayName:t.displayName??"A family member",photoURL:typeof i=="string"&&/^https?:\/\//i.test(i)?i:null}}render(){var r,a,l;const e=this._inviterFromFamily(this._family),t=(((r=this._family)==null?void 0:r.cairnMemberIds)??((a=this._family)==null?void 0:a.memberIds)??[]).length,i=(((l=this._family)==null?void 0:l.memberIds)??[]).length;return n`
       <div class="wrap">
         <div class="mark">
           <img
@@ -2697,7 +2841,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
               `}
         </glass-panel>
       </div>
-    `}}g(ge,"properties",{code:{type:String},_family:{state:!0},_loading:{state:!0},_joining:{state:!0},_error:{state:!0}}),g(ge,"styles",k`
+    `}}u(ge,"properties",{code:{type:String},_family:{state:!0},_loading:{state:!0},_joining:{state:!0},_error:{state:!0}}),u(ge,"styles",k`
     * { box-sizing: border-box; }
     :host {
       display: flex;
@@ -2805,7 +2949,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       background: rgba(255, 248, 235, 0.08);
       border-radius: 6px;
     }
-  `);customElements.define("join-family-screen",ge);class ue extends ${constructor(){super(),this.error="",this.busy=!1,this.joinCode=""}async _handleSignIn(){if(!this.busy){this.busy=!0,this.error="";try{await Pe()}catch(e){this.error=(e==null?void 0:e.message)??"Sign-in failed."}finally{this.busy=!1}}}_renderGoogleIcon(){return n`
+  `);customElements.define("join-family-screen",ge);class me extends ${constructor(){super(),this.error="",this.busy=!1,this.joinCode=""}async _handleSignIn(){if(!this.busy){this.busy=!0,this.error="";try{await Be()}catch(e){this.error=(e==null?void 0:e.message)??"Sign-in failed."}finally{this.busy=!1}}}_renderGoogleIcon(){return n`
       <svg viewBox="0 0 48 48" aria-hidden="true">
         <path
           fill="#EA4335"
@@ -2854,14 +2998,14 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
           <div class="actions">
             <button
               class="google-btn"
-              ?disabled=${this.busy||!T}
+              ?disabled=${this.busy||!F}
               @click=${this._handleSignIn}
             >
               ${this._renderGoogleIcon()}
               ${this.busy?"Signing in…":"Continue with Google"}
             </button>
           </div>
-          ${T?"":n`<div class="config-hint">
+          ${F?"":n`<div class="config-hint">
                 Sign-in is awaiting your Firebase config — copy
                 <code>.env.example</code> to <code>.env</code> and fill in the web-app
                 values from PebblePath's Firebase Console.
@@ -2870,7 +3014,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
         </glass-panel>
         <div class="footnote">Beta Version</div>
       </div>
-    `}}g(ue,"properties",{error:{state:!0},busy:{state:!0},joinCode:{type:String}}),g(ue,"styles",k`
+    `}}u(me,"properties",{error:{state:!0},busy:{state:!0},joinCode:{type:String}}),u(me,"styles",k`
     * {
       box-sizing: border-box;
     }
@@ -3086,9 +3230,9 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       letter-spacing: 0.04em;
       text-transform: uppercase;
     }
-  `);customElements.define("sign-in-screen",ue);const U=class U extends ${constructor(){super(),this.value="family"}_select(e){e!==this.value&&(this.value=e,this.dispatchEvent(new CustomEvent("circle-change",{detail:{value:e},bubbles:!0,composed:!0})))}render(){return n`
+  `);customElements.define("sign-in-screen",me);const Y=class Y extends ${constructor(){super(),this.value="family"}_select(e){e!==this.value&&(this.value=e,this.dispatchEvent(new CustomEvent("circle-change",{detail:{value:e},bubbles:!0,composed:!0})))}render(){return n`
       <div class="track" role="tablist" aria-label="Circle">
-        ${U.OPTIONS.map(e=>n`
+        ${Y.OPTIONS.map(e=>n`
             <button
               role="tab"
               aria-selected=${this.value===e.value}
@@ -3099,7 +3243,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
             </button>
           `)}
       </div>
-    `}};g(U,"properties",{value:{type:String,reflect:!0}}),g(U,"OPTIONS",[{value:"personal",label:"Just me"},{value:"family",label:"Family"},{value:"extended",label:"Extended"}]),g(U,"styles",k`
+    `}};u(Y,"properties",{value:{type:String,reflect:!0}}),u(Y,"OPTIONS",[{value:"personal",label:"Just me"},{value:"family",label:"Family"},{value:"extended",label:"Extended"}]),u(Y,"styles",k`
     * {
       box-sizing: border-box;
     }
@@ -3148,7 +3292,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
         inset 0 1px 0 rgba(255, 255, 255, 0.5);
       font-weight: 600;
     }
-  `);let me=U;customElements.define("circle-switcher",me);class fe extends ${constructor(){super(),this.event=null,this.members=[]}_icon(e){return e==="birthday"?"🎂":e==="anniversary"?"💕":"✨"}_fmtDate(e){const t=new Date(e);return{day:t.getDate(),month:t.toLocaleString("en-GB",{month:"short"})}}render(){const e=this.event;if(!e)return n``;const t=this._fmtDate(e.date);return n`
+  `);let fe=Y;customElements.define("circle-switcher",fe);class be extends ${constructor(){super(),this.event=null,this.members=[]}_icon(e){return e==="birthday"?"🎂":e==="anniversary"?"💕":"✨"}_fmtDate(e){const t=new Date(e);return{day:t.getDate(),month:t.toLocaleString("en-GB",{month:"short"})}}render(){const e=this.event;if(!e)return n``;const t=this._fmtDate(e.date);return n`
       <div
         class="row"
         @click=${()=>this.dispatchEvent(new CustomEvent("edit-event",{detail:e,bubbles:!0,composed:!0}))}
@@ -3163,7 +3307,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
           <small>${t.month}</small>
         </div>
       </div>
-    `}}g(fe,"properties",{event:{type:Object},members:{type:Array}}),g(fe,"styles",k`
+    `}}u(be,"properties",{event:{type:Object},members:{type:Array}}),u(be,"styles",k`
     :host {
       display: block;
     }
@@ -3230,9 +3374,9 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       text-transform: uppercase;
       letter-spacing: 0.06em;
     }
-  `);customElements.define("event-row",fe);const ft={uid:"preview-user",displayName:"Thomas Paris",email:"thomas@example.com",photoURL:null},Ee=[{uid:"thomas",displayName:"Thomas",circles:["immediate"],hue:198},{uid:"partner",displayName:"Élise",circles:["immediate"],hue:8},{uid:"kid1",displayName:"Oscar",circles:["immediate"],hue:142},{uid:"kid2",displayName:"Mila",circles:["immediate"],hue:44},{uid:"mum",displayName:"Mum",circles:["extended"],hue:320},{uid:"dad",displayName:"Dad",circles:["extended"],hue:28},{uid:"sister",displayName:"Camille",circles:["extended"],hue:280},{uid:"bro-in-law",displayName:"Sam",circles:["extended"],hue:175},{uid:"niece",displayName:"Léa",circles:["extended"],hue:100}],bt=[{id:"t1",title:"Côte d’Azur, summer",location:"Antibes, France",start:"2026-07-12",end:"2026-07-21",coverGradient:"linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)",lodgingHost:"Airbnb",lodgingTitle:"Villa near Cap d’Antibes",attendees:["thomas","partner","kid1","kid2","mum","dad"],notes:"Mum + Dad arrive day 2. Dinner reservations at La Guérite booked.",visibility:"extended"},{id:"t2",title:"Half-term in the Alps",location:"Chamonix, France",start:"2026-10-24",end:"2026-10-31",coverGradient:"linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)",lodgingHost:"Booking.com",lodgingTitle:"Chalet Les Drus",attendees:["thomas","partner","kid1","kid2"],notes:"Need ski school for the kids — book by September.",visibility:"immediate"},{id:"t3",title:"Camille’s 40th",location:"Lisbon, Portugal",start:"2026-09-05",end:"2026-09-08",coverGradient:"linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)",lodgingHost:"Airbnb",lodgingTitle:"Alfama rooftop apartment",attendees:["thomas","partner","sister","bro-in-law"],notes:"Surprise. Don’t mention to Camille.",visibility:"family"}],vt=[{id:"e1",type:"birthday",date:"2026-05-24",personIds:["mum"],title:"Mum’s birthday"},{id:"e2",type:"anniversary",date:"2026-05-28",personIds:["mum","dad"],title:"Mum & Dad’s anniversary",subtitle:"38 years"},{id:"e3",type:"birthday",date:"2026-06-11",personIds:["kid1"],title:"Oscar turns 7"},{id:"e4",type:"birthday",date:"2026-06-30",personIds:["niece"],title:"Léa’s birthday"}];class be extends ${constructor(){super(),this.user=ft,this.pebbleUser=null,this.family=null,this.children=[],this.trips=[],this.events=[],this.preview=!1,this.circle="family",this._formOpen=!1,this._formTrip=null,this._formBusy=!1,this._membersOpen=!1,this._eventFormOpen=!1,this._eventFormEvent=null,this._eventFormBusy=!1,this._allTripsOpen=!1,this._editingFamilyName=!1,this._importOpen=!1,this._profileOpen=!1,this._typePickerOpen=!1,this._formMode="trip";const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1)}async _saveFamilyName(e){var a,l;const i=(e.target.value??"").trim(),r=((a=this.family)==null?void 0:a.name)??"";if(i&&i!==r&&((l=this.family)!=null&&l.id))try{const{db:s,doc:d,updateDoc:c,serverTimestamp:p}=await je(async()=>{const{db:h,doc:b,updateDoc:y,serverTimestamp:m}=await Promise.resolve().then(()=>st);return{db:h,doc:b,updateDoc:y,serverTimestamp:m}},void 0);await c(d(s,"families",this.family.id),{name:i,updatedAt:p()}),u("Family name updated.")}catch(s){console.error("Update family name failed:",s),u(`Couldn't save: ${s.code??s.message}`,{duration:5e3})}this._editingFamilyName=!1}_liveImmediate(){var e;return this.preview||!((e=this.user)!=null&&e.uid)?Ee.filter(t=>t.circles.includes("immediate")):lt(this.user.uid,this.user,this.pebbleUser,this.family,this.children)}_liveExtended(){return this.preview?Ee.filter(e=>e.circles.includes("extended")):[]}_liveTrips(){return this.preview?bt:this.trips??[]}_liveEvents(){if(this.preview)return vt;const e=dt(this.children),t=(this.events??[]).map(i=>{const{date:r,yearsElapsed:a}=ct(i);return{...i,date:r?r.toISOString().slice(0,10):i.date,_yearsElapsed:a,_originalDate:i.date}});return[...e,...t].sort((i,r)=>String(i.date).localeCompare(String(r.date)))}_filteredMembers(){const e=this._liveImmediate(),t=this._liveExtended();return this.circle==="personal"?e.filter(i=>{var r;return i.uid===((r=this.user)==null?void 0:r.uid)}):this.circle==="family"?e:[...e,...t]}_circleTrips(){var i;const e=this._liveTrips(),t=((i=this.user)==null?void 0:i.uid)??"thomas";return this.circle==="personal"?e.filter(r=>{var a;return(a=r.attendees)==null?void 0:a.includes(t)}):this.circle==="family"?e.filter(r=>r.visibility!=="extended"):e}_filteredTrips(){const e=new Date;return e.setHours(0,0,0,0),this._circleTrips().filter(t=>t.end?_(t.end)>=e:!0)}_userCanSeeTrip(e){var i,r,a;const t=(i=this.user)==null?void 0:i.uid;return t?!!((r=e.attendees)!=null&&r.includes(t)||(a=e.viewers)!=null&&a.includes(t)||e.visibility==="family"||e.visibility==="extended"):!1}_filteredEvents(){const e=new Set(this._filteredMembers().map(t=>t.uid));return this._liveEvents().filter(t=>t.personIds.some(i=>e.has(i)))}_smartCallout(){var s,d;const e=new Date,t=new Date(e.getFullYear(),e.getMonth(),e.getDate()),i=1440*60*1e3,r=c=>Math.round((c-t)/i);for(const c of this._circleTrips()){if(!c.start||!c.end)continue;const p=_(c.start),h=_(c.end);if(p.setHours(0,0,0,0),h.setHours(0,0,0,0),p<=t&&t<=h){const b=r(p)+1,y=r(h)-r(p)+1,m=((s=c.location)==null?void 0:s.trim())||c.title;return`Day ${b} of ${y} in ${m}.`}}let a=null,l=1/0;for(const c of this._circleTrips()){if(!c.start)continue;const p=_(c.start);if(!p)continue;const h=r(p);h>0&&h<l&&(a={kind:"trip",item:c},l=h)}for(const c of this._filteredEvents()){if(!c.date)continue;const p=_(c.date);if(!p)continue;const h=r(p);h>=0&&h<l&&(a={kind:"event",item:c},l=h)}if(!a)return null;if(a.kind==="trip"){const c=((d=a.item.location)==null?void 0:d.trim())||a.item.title;return l===1?`${c} starts tomorrow.`:l<=14?`${c} in ${l} days.`:l<=60?`Next trip: ${c} in ${l} days.`:null}return l===0?`${a.item.title} — today.`:l===1?`${a.item.title} — tomorrow.`:l<=7?`${a.item.title} in ${l} days.`:null}_tripDensityByDay(e){const t=new Map;for(const i of this._filteredTrips()){if(!i.start||!i.end)continue;const r=_(i.start),a=_(i.end);if(Number.isNaN(r.getTime())||Number.isNaN(a.getTime())||r.getFullYear()>e||a.getFullYear()<e)continue;const l=new Date(Math.max(r,new Date(e,0,1))),s=new Date(Math.min(a,new Date(e,11,31)));for(;l<=s;){const d=`${String(l.getMonth()+1).padStart(2,"0")}-${String(l.getDate()).padStart(2,"0")}`;t.set(d,Math.min(1,(t.get(d)??0)+.5)),l.setDate(l.getDate()+1)}}return t}_shiftMonth(e){const t=this._displayMonth;this._displayMonth=new Date(t.getFullYear(),t.getMonth()+e,1)}_jumpToMonth(e,t){this._displayMonth=new Date(e,t,1)}_resetToToday(){const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1)}_renderMonthly(){const e=new Date,t=this._displayMonth??e,i=t.getFullYear(),r=t.getMonth(),l=(new Date(i,r,1).getDay()+6)%7,s=new Date(i,r+1,0).getDate(),d=this._filteredEvents().map(m=>_(m.date)).filter(Boolean).filter(m=>m.getFullYear()===i&&m.getMonth()===r).map(m=>m.getDate()),c=new Set;for(const m of this._filteredTrips()){if(!m.start||!m.end)continue;const C=_(m.start),D=_(m.end);if(Number.isNaN(C.getTime())||Number.isNaN(D.getTime())||C.getFullYear()>i||D.getFullYear()<i||C.getMonth()>r&&D.getMonth()>r||C.getMonth()<r&&D.getMonth()<r)continue;const A=C.getMonth()===r?C.getDate():1,j=D.getMonth()===r?D.getDate():s;for(let O=A;O<=j;O++)c.add(O)}const p=[];for(let m=0;m<l;m++)p.push(n`<div class="cal-cell empty"></div>`);const h=e.getFullYear()===i&&e.getMonth()===r;for(let m=1;m<=s;m++){const C=h&&m===e.getDate(),D=d.includes(m),A=c.has(m),j=["cal-cell",C?"today":"",D?"has-event":"",A?"has-trip":""].filter(Boolean).join(" ");p.push(n`<div class=${j}>${m}</div>`)}const b=new Date(i,r,1).toLocaleString("en-GB",{month:"long",year:"numeric"});return n`
+  `);customElements.define("event-row",be);const vt={uid:"preview-user",displayName:"Thomas Paris",email:"thomas@example.com",photoURL:null},Ce=[{uid:"thomas",displayName:"Thomas",circles:["immediate"],hue:198},{uid:"partner",displayName:"Élise",circles:["immediate"],hue:8},{uid:"kid1",displayName:"Oscar",circles:["immediate"],hue:142},{uid:"kid2",displayName:"Mila",circles:["immediate"],hue:44},{uid:"mum",displayName:"Mum",circles:["extended"],hue:320},{uid:"dad",displayName:"Dad",circles:["extended"],hue:28},{uid:"sister",displayName:"Camille",circles:["extended"],hue:280},{uid:"bro-in-law",displayName:"Sam",circles:["extended"],hue:175},{uid:"niece",displayName:"Léa",circles:["extended"],hue:100}],yt=[{id:"t1",title:"Côte d’Azur, summer",location:"Antibes, France",start:"2026-07-12",end:"2026-07-21",coverGradient:"linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)",lodgingHost:"Airbnb",lodgingTitle:"Villa near Cap d’Antibes",attendees:["thomas","partner","kid1","kid2","mum","dad"],notes:"Mum + Dad arrive day 2. Dinner reservations at La Guérite booked.",visibility:"extended"},{id:"t2",title:"Half-term in the Alps",location:"Chamonix, France",start:"2026-10-24",end:"2026-10-31",coverGradient:"linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)",lodgingHost:"Booking.com",lodgingTitle:"Chalet Les Drus",attendees:["thomas","partner","kid1","kid2"],notes:"Need ski school for the kids — book by September.",visibility:"immediate"},{id:"t3",title:"Camille’s 40th",location:"Lisbon, Portugal",start:"2026-09-05",end:"2026-09-08",coverGradient:"linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)",lodgingHost:"Airbnb",lodgingTitle:"Alfama rooftop apartment",attendees:["thomas","partner","sister","bro-in-law"],notes:"Surprise. Don’t mention to Camille.",visibility:"family"}],xt=[{id:"e1",type:"birthday",date:"2026-05-24",personIds:["mum"],title:"Mum’s birthday"},{id:"e2",type:"anniversary",date:"2026-05-28",personIds:["mum","dad"],title:"Mum & Dad’s anniversary",subtitle:"38 years"},{id:"e3",type:"birthday",date:"2026-06-11",personIds:["kid1"],title:"Oscar turns 7"},{id:"e4",type:"birthday",date:"2026-06-30",personIds:["niece"],title:"Léa’s birthday"}];class ve extends ${constructor(){super(),this.user=vt,this.pebbleUser=null,this.family=null,this.children=[],this.trips=[],this.events=[],this.preview=!1,this.circle="family",this._formOpen=!1,this._formTrip=null,this._formBusy=!1,this._membersOpen=!1,this._eventFormOpen=!1,this._eventFormEvent=null,this._eventFormBusy=!1,this._allTripsOpen=!1,this._editingFamilyName=!1,this._importOpen=!1,this._profileOpen=!1,this._typePickerOpen=!1,this._formMode="trip";const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1)}async _saveFamilyName(e){var a,l;const i=(e.target.value??"").trim(),r=((a=this.family)==null?void 0:a.name)??"";if(i&&i!==r&&((l=this.family)!=null&&l.id))try{const{db:s,doc:d,updateDoc:c,serverTimestamp:p}=await Ge(async()=>{const{db:h,doc:f,updateDoc:y,serverTimestamp:m}=await Promise.resolve().then(()=>ot);return{db:h,doc:f,updateDoc:y,serverTimestamp:m}},void 0);await c(d(s,"families",this.family.id),{name:i,updatedAt:p()}),g("Family name updated.")}catch(s){console.error("Update family name failed:",s),g(`Couldn't save: ${s.code??s.message}`,{duration:5e3})}this._editingFamilyName=!1}_liveImmediate(){var e;return this.preview||!((e=this.user)!=null&&e.uid)?Ce.filter(t=>t.circles.includes("immediate")):ct(this.user.uid,this.user,this.pebbleUser,this.family,this.children)}_liveExtended(){return this.preview?Ce.filter(e=>e.circles.includes("extended")):[]}_liveTrips(){return this.preview?yt:this.trips??[]}_liveEvents(){if(this.preview)return xt;const e=pt(this.children),t=(this.events??[]).map(i=>{const{date:r,yearsElapsed:a}=ht(i);return{...i,date:r?r.toISOString().slice(0,10):i.date,_yearsElapsed:a,_originalDate:i.date}});return[...e,...t].sort((i,r)=>String(i.date).localeCompare(String(r.date)))}_filteredMembers(){const e=this._liveImmediate(),t=this._liveExtended();return this.circle==="personal"?e.filter(i=>{var r;return i.uid===((r=this.user)==null?void 0:r.uid)}):this.circle==="family"?e:[...e,...t]}_circleTrips(){var i;const e=this._liveTrips(),t=((i=this.user)==null?void 0:i.uid)??"thomas";return this.circle==="personal"?e.filter(r=>{var a;return(a=r.attendees)==null?void 0:a.includes(t)}):this.circle==="family"?e.filter(r=>r.visibility!=="extended"):e}_filteredTrips(){const e=new Date;return e.setHours(0,0,0,0),this._circleTrips().filter(t=>t.end?_(t.end)>=e:!0)}_userCanSeeTrip(e){var i,r,a,l,s;const t=(i=this.user)==null?void 0:i.uid;if(!t)return!1;if((r=e.attendees)!=null&&r.includes(t)||(a=e.viewers)!=null&&a.includes(t)||e.visibility==="family")return!0;if(e.visibility==="extended"){if((((l=this.family)==null?void 0:l.memberIds)??[]).includes(t))return!0;const d=e.targetSubGroups??[];if(d.length===0)return!0;const c=Object.entries(((s=this.family)==null?void 0:s.subGroups)??{}).filter(([,p])=>(p.memberIds??[]).includes(t)).map(([p])=>p);return d.some(p=>c.includes(p))}return!1}_filteredEvents(){const e=new Set(this._filteredMembers().map(t=>t.uid));return this._liveEvents().filter(t=>t.personIds.some(i=>e.has(i)))}_smartCallout(){var s,d;const e=new Date,t=new Date(e.getFullYear(),e.getMonth(),e.getDate()),i=1440*60*1e3,r=c=>Math.round((c-t)/i);for(const c of this._circleTrips()){if(!c.start||!c.end)continue;const p=_(c.start),h=_(c.end);if(p.setHours(0,0,0,0),h.setHours(0,0,0,0),p<=t&&t<=h){const f=r(p)+1,y=r(h)-r(p)+1,m=((s=c.location)==null?void 0:s.trim())||c.title;return`Day ${f} of ${y} in ${m}.`}}let a=null,l=1/0;for(const c of this._circleTrips()){if(!c.start)continue;const p=_(c.start);if(!p)continue;const h=r(p);h>0&&h<l&&(a={kind:"trip",item:c},l=h)}for(const c of this._filteredEvents()){if(!c.date)continue;const p=_(c.date);if(!p)continue;const h=r(p);h>=0&&h<l&&(a={kind:"event",item:c},l=h)}if(!a)return null;if(a.kind==="trip"){const c=((d=a.item.location)==null?void 0:d.trim())||a.item.title;return l===1?`${c} starts tomorrow.`:l<=14?`${c} in ${l} days.`:l<=60?`Next trip: ${c} in ${l} days.`:null}return l===0?`${a.item.title} — today.`:l===1?`${a.item.title} — tomorrow.`:l<=7?`${a.item.title} in ${l} days.`:null}_tripDensityByDay(e){const t=new Map;for(const i of this._filteredTrips()){if(!i.start||!i.end)continue;const r=_(i.start),a=_(i.end);if(Number.isNaN(r.getTime())||Number.isNaN(a.getTime())||r.getFullYear()>e||a.getFullYear()<e)continue;const l=new Date(Math.max(r,new Date(e,0,1))),s=new Date(Math.min(a,new Date(e,11,31)));for(;l<=s;){const d=`${String(l.getMonth()+1).padStart(2,"0")}-${String(l.getDate()).padStart(2,"0")}`;t.set(d,Math.min(1,(t.get(d)??0)+.5)),l.setDate(l.getDate()+1)}}return t}_shiftMonth(e){const t=this._displayMonth;this._displayMonth=new Date(t.getFullYear(),t.getMonth()+e,1)}_jumpToMonth(e,t){this._displayMonth=new Date(e,t,1)}_resetToToday(){const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1)}_renderMonthly(){const e=new Date,t=this._displayMonth??e,i=t.getFullYear(),r=t.getMonth(),l=(new Date(i,r,1).getDay()+6)%7,s=new Date(i,r+1,0).getDate(),d=this._filteredEvents().map(m=>_(m.date)).filter(Boolean).filter(m=>m.getFullYear()===i&&m.getMonth()===r).map(m=>m.getDate()),c=new Set;for(const m of this._filteredTrips()){if(!m.start||!m.end)continue;const E=_(m.start),C=_(m.end);if(Number.isNaN(E.getTime())||Number.isNaN(C.getTime())||E.getFullYear()>i||C.getFullYear()<i||E.getMonth()>r&&C.getMonth()>r||E.getMonth()<r&&C.getMonth()<r)continue;const T=E.getMonth()===r?E.getDate():1,j=C.getMonth()===r?C.getDate():s;for(let O=T;O<=j;O++)c.add(O)}const p=[];for(let m=0;m<l;m++)p.push(n`<div class="cal-cell empty"></div>`);const h=e.getFullYear()===i&&e.getMonth()===r;for(let m=1;m<=s;m++){const E=h&&m===e.getDate(),C=d.includes(m),T=c.has(m),j=["cal-cell",E?"today":"",C?"has-event":"",T?"has-trip":""].filter(Boolean).join(" ");p.push(n`<div class=${j}>${m}</div>`)}const f=new Date(i,r,1).toLocaleString("en-GB",{month:"long",year:"numeric"});return n`
       <div class="cal-head">
-        <h3>${b}</h3>
+        <h3>${f}</h3>
         <div class="nav">
           ${!h?n`<button
                 class="cal-nav-btn cal-today-btn"
@@ -3249,7 +3393,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
         ${["Mo","Tu","We","Th","Fr","Sa","Su"].map(m=>n`<div class="cal-dow">${m}</div>`)}
         ${p}
       </div>
-    `}_openCreate(){if(this.preview){u("Sign in to create real activities.");return}if(!w.familyId){u("You need a PebblePath family first.");return}this._typePickerOpen=!0}_onTypePicked(e){this._typePickerOpen=!1;const t=e.detail.type;if(t==="event"){this._eventFormEvent=null,this._eventFormOpen=!0;return}this._formMode=t,this._formTrip=null,this._formOpen=!0}_openEdit(e){if(this.preview){u("Sign in to edit real activities.");return}const t=e.lodgingUrl||e.lodgingHost||e.flightNumber||e.flightDepartAirport;this._formMode=t?"trip":"activity",this._formTrip=e,this._formOpen=!0}async _onSaveTrip(e){const t=e.detail;this._formBusy=!0;try{await w.saveTrip(t),this._formOpen=!1,this._formTrip=null,u(t.id?"Trip updated.":"Trip created.")}catch(i){console.error("Save trip failed:",i),u(`Couldn't save: ${i.code??i.message}`,{duration:5e3})}finally{this._formBusy=!1}}async _onDeleteTrip(e){this._formBusy=!0;try{await w.deleteTrip(e.detail.id),this._formOpen=!1,this._formTrip=null,u("Trip deleted.")}catch(t){console.error("Delete trip failed:",t),u(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._formBusy=!1}}_openCreateEvent(){if(this.preview){u("Sign in to add real events.");return}if(!w.familyId){u("You need a family first.");return}this._eventFormEvent=null,this._eventFormOpen=!0}_openEditEvent(e){if(this.preview){u("Sign in to edit real events.");return}if(e!=null&&e._childId){const t=prompt(`Edit ${e._childName}'s birthday (YYYY-MM-DD):`,e.date);if(!t)return;if(!/^\d{4}-\d{2}-\d{2}$/.test(t)){u("Use YYYY-MM-DD format.");return}w.updateChildBirthday(e._childId,new Date(t)).then(()=>u(`Updated ${e._childName}'s birthday.`)).catch(i=>{console.error("Update child birthday failed:",i),u(`Couldn't update: ${i.code??i.message}`,{duration:5e3})});return}this._eventFormEvent={...e,date:e._originalDate??e.date},this._eventFormOpen=!0}async _onSaveEvent(e){this._eventFormBusy=!0;try{await w.saveEvent(e.detail),this._eventFormOpen=!1,this._eventFormEvent=null,u(e.detail.id?"Event updated.":"Event added.")}catch(t){console.error("Save event failed:",t),u(`Couldn't save: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}async _onDeleteEvent(e){this._eventFormBusy=!0;try{await w.deleteEvent(e.detail.id),this._eventFormOpen=!1,this._eventFormEvent=null,u("Event deleted.")}catch(t){console.error("Delete event failed:",t),u(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}render(){var y,m,C,D,A,j,O,ye,xe,we;const e=this._filteredTrips(),t=this._filteredEvents(),i=this._liveImmediate(),r=this._liveExtended(),a=i.concat(r),l=(((y=this.user)==null?void 0:y.displayName)??"there").split(" ")[0],s=new Date,d=new Date(s.getFullYear(),s.getMonth(),1),c=new Date(s.getFullYear(),s.getMonth()+1,0),p=t.filter(f=>{const N=_(f.date);return N&&N.getFullYear()===s.getFullYear()&&N.getMonth()===s.getMonth()}),b=this._circleTrips().filter(f=>{if(!f.start||!f.end)return!1;const N=_(f.start),P=_(f.end);return Number.isNaN(N.getTime())||Number.isNaN(P.getTime())?!1:N<=c&&P>=d}).length+p.length;return n`
+    `}_openCreate(){if(this.preview){g("Sign in to create real activities.");return}if(!w.familyId){g("You need a PebblePath family first.");return}this._typePickerOpen=!0}_onTypePicked(e){this._typePickerOpen=!1;const t=e.detail.type;if(t==="event"){this._eventFormEvent=null,this._eventFormOpen=!0;return}this._formMode=t,this._formTrip=null,this._formOpen=!0}_openEdit(e){if(this.preview){g("Sign in to edit real activities.");return}const t=e.lodgingUrl||e.lodgingHost||e.flightNumber||e.flightDepartAirport;this._formMode=t?"trip":"activity",this._formTrip=e,this._formOpen=!0}async _onSaveTrip(e){const t=e.detail;this._formBusy=!0;try{await w.saveTrip(t),this._formOpen=!1,this._formTrip=null,g(t.id?"Trip updated.":"Trip created.")}catch(i){console.error("Save trip failed:",i),g(`Couldn't save: ${i.code??i.message}`,{duration:5e3})}finally{this._formBusy=!1}}async _onDeleteTrip(e){this._formBusy=!0;try{await w.deleteTrip(e.detail.id),this._formOpen=!1,this._formTrip=null,g("Trip deleted.")}catch(t){console.error("Delete trip failed:",t),g(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._formBusy=!1}}_openCreateEvent(){if(this.preview){g("Sign in to add real events.");return}if(!w.familyId){g("You need a family first.");return}this._eventFormEvent=null,this._eventFormOpen=!0}_openEditEvent(e){if(this.preview){g("Sign in to edit real events.");return}if(e!=null&&e._childId){const t=prompt(`Edit ${e._childName}'s birthday (YYYY-MM-DD):`,e.date);if(!t)return;if(!/^\d{4}-\d{2}-\d{2}$/.test(t)){g("Use YYYY-MM-DD format.");return}w.updateChildBirthday(e._childId,new Date(t)).then(()=>g(`Updated ${e._childName}'s birthday.`)).catch(i=>{console.error("Update child birthday failed:",i),g(`Couldn't update: ${i.code??i.message}`,{duration:5e3})});return}this._eventFormEvent={...e,date:e._originalDate??e.date},this._eventFormOpen=!0}async _onSaveEvent(e){this._eventFormBusy=!0;try{await w.saveEvent(e.detail),this._eventFormOpen=!1,this._eventFormEvent=null,g(e.detail.id?"Event updated.":"Event added.")}catch(t){console.error("Save event failed:",t),g(`Couldn't save: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}async _onDeleteEvent(e){this._eventFormBusy=!0;try{await w.deleteEvent(e.detail.id),this._eventFormOpen=!1,this._eventFormEvent=null,g("Event deleted.")}catch(t){console.error("Delete event failed:",t),g(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}render(){var y,m,E,C,T,j,O,xe,we,_e,$e;const e=this._filteredTrips(),t=this._filteredEvents(),i=this._liveImmediate(),r=this._liveExtended(),a=i.concat(r),l=(((y=this.user)==null?void 0:y.displayName)??"there").split(" ")[0],s=new Date,d=new Date(s.getFullYear(),s.getMonth(),1),c=new Date(s.getFullYear(),s.getMonth()+1,0),p=t.filter(b=>{const S=_(b.date);return S&&S.getFullYear()===s.getFullYear()&&S.getMonth()===s.getMonth()}),f=this._circleTrips().filter(b=>{if(!b.start||!b.end)return!1;const S=_(b.start),G=_(b.end);return Number.isNaN(S.getTime())||Number.isNaN(G.getTime())?!1:S<=c&&G>=d}).length+p.length;return n`
       <div class="topbar">
         <div class="brand">
           <img
@@ -3264,7 +3408,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
         </div>
         <circle-switcher
           .value=${this.circle}
-          @circle-change=${f=>this.circle=f.detail.value}
+          @circle-change=${b=>this.circle=b.detail.value}
         ></circle-switcher>
         <div class="who">
           <button
@@ -3282,8 +3426,8 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
             aria-label="Open profile settings"
           >
             <member-chip
-              .name=${((C=this.user)==null?void 0:C.displayName)??"You"}
-              .photo=${((D=this.user)==null?void 0:D.photoURL)??""}
+              .name=${((E=this.user)==null?void 0:E.displayName)??"You"}
+              .photo=${((C=this.user)==null?void 0:C.photoURL)??""}
               .hue=${198}
               size="36"
             ></member-chip>
@@ -3300,9 +3444,9 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
         <div class="hello">
           <div>
             <h1>Hi ${l}.</h1>
-            ${(()=>{const f=this._smartCallout();return f?n`<div class="smart">${f}</div>`:""})()}
+            ${(()=>{const b=this._smartCallout();return b?n`<div class="smart">${b}</div>`:""})()}
             <div class="stat">
-              <span>${b}</span> ${b===1?"activity":"activities"} this month
+              <span>${f}</span> ${f===1?"activity":"activities"} this month
             </div>
             ${this.family?this._editingFamilyName?n`<input
                     class="family-name-input"
@@ -3310,7 +3454,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
                     .value=${this.family.name??""}
                     autofocus
                     @blur=${this._saveFamilyName}
-                    @keydown=${f=>{f.key==="Enter"&&f.target.blur(),f.key==="Escape"&&(f.target.value=this.family.name??"",this._editingFamilyName=!1)}}
+                    @keydown=${b=>{b.key==="Enter"&&b.target.blur(),b.key==="Escape"&&(b.target.value=this.family.name??"",this._editingFamilyName=!1)}}
                   />`:n`<div
                     class="family-name"
                     title="Click to rename"
@@ -3365,10 +3509,10 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
                 </glass-panel>
               `:n`
                 <div class="trips-row">
-                  ${e.map(f=>n`<trip-card
-                      .trip=${f}
+                  ${e.map(b=>n`<trip-card
+                      .trip=${b}
                       .members=${a}
-                      @edit-trip=${N=>this._openEdit(N.detail)}
+                      @edit-trip=${S=>this._openEdit(S.detail)}
                     ></trip-card>`)}
                 </div>
               `}
@@ -3381,7 +3525,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
             </glass-panel>
             <glass-panel padding="md" variant="strong" stretch>
               <div class="cal-head">
-                <h3>${((A=this._displayMonth)==null?void 0:A.getFullYear())??s.getFullYear()}</h3>
+                <h3>${((T=this._displayMonth)==null?void 0:T.getFullYear())??s.getFullYear()}</h3>
                 <div style="font-size:12px;color:var(--text-tertiary);">Yearly</div>
               </div>
               <yearly-view
@@ -3389,7 +3533,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
                 .tripDays=${this._tripDensityByDay(((O=this._displayMonth)==null?void 0:O.getFullYear())??s.getFullYear())}
                 .events=${this._liveEvents()}
                 .today=${s}
-                @month-select=${f=>this._jumpToMonth(f.detail.year,f.detail.month)}
+                @month-select=${b=>this._jumpToMonth(b.detail.year,b.detail.month)}
               ></yearly-view>
             </glass-panel>
           </div>
@@ -3400,32 +3544,32 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
             <h2>Celebrations</h2>
             <button class="link" @click=${()=>this._openCreateEvent()}>+ Add event</button>
           </div>
-          ${(()=>{const f=t.filter(S=>S.type==="birthday"),N=t.filter(S=>S.type==="anniversary"),P=t.filter(S=>S.type!=="birthday"&&S.type!=="anniversary"),_e=(S,G,Re)=>n`
+          ${(()=>{const b=t.filter(N=>N.type==="birthday"),S=t.filter(N=>N.type==="anniversary"),G=t.filter(N=>N.type!=="birthday"&&N.type!=="anniversary"),ke=(N,U,Je)=>n`
               <glass-panel padding="md" variant="strong" class="cel-col">
                 <div class="cel-col-head">
-                  <span class="cel-col-title">${S}</span>
-                  <span class="cel-col-count">${G.length}</span>
+                  <span class="cel-col-title">${N}</span>
+                  <span class="cel-col-count">${U.length}</span>
                 </div>
-                ${G.length===0?n`<div class="cel-empty">${Re}</div>`:G.map(He=>n`<event-row
-                        .event=${He}
+                ${U.length===0?n`<div class="cel-empty">${Je}</div>`:U.map(We=>n`<event-row
+                        .event=${We}
                         .members=${a}
-                        @edit-event=${Je=>this._openEditEvent(Je.detail)}
+                        @edit-event=${qe=>this._openEditEvent(qe.detail)}
                       ></event-row>`)}
               </glass-panel>
             `;return n`
               <div class="cel-row">
-                ${_e("Birthdays",f,"No birthdays yet.")}
-                ${_e("Anniversaries",N,"No anniversaries yet.")}
+                ${ke("Birthdays",b,"No birthdays yet.")}
+                ${ke("Anniversaries",S,"No anniversaries yet.")}
               </div>
-              ${P.length>0?n`<glass-panel padding="md" variant="strong" style="margin-top:18px;">
+              ${G.length>0?n`<glass-panel padding="md" variant="strong" style="margin-top:18px;">
                     <div class="cel-col-head">
                       <span class="cel-col-title">Other</span>
-                      <span class="cel-col-count">${P.length}</span>
+                      <span class="cel-col-count">${G.length}</span>
                     </div>
-                    ${P.map(S=>n`<event-row
-                        .event=${S}
+                    ${G.map(N=>n`<event-row
+                        .event=${N}
                         .members=${a}
-                        @edit-event=${G=>this._openEditEvent(G.detail)}
+                        @edit-event=${U=>this._openEditEvent(U.detail)}
                       ></event-row>`)}
                   </glass-panel>`:""}
             `})()}
@@ -3450,15 +3594,15 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
                 </button>
               </div>
               <div class="members-row">
-                ${i.map(f=>n`
+                ${i.map(b=>n`
                     <div class="member-tile">
                       <member-chip
-                        .name=${f.displayName}
-                        .photo=${f.photoURL??""}
-                        .hue=${f.hue}
+                        .name=${b.displayName}
+                        .photo=${b.photoURL??""}
+                        .hue=${b.hue}
                         size="24"
                       ></member-chip>
-                      ${f.displayName}
+                      ${b.displayName}
                     </div>
                   `)}
               </div>
@@ -3479,15 +3623,15 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
                       invite the grandparents
                     </button>
                   </div>`:n`<div class="members-row">
-                    ${r.map(f=>n`
+                    ${r.map(b=>n`
                         <div class="member-tile">
                           <member-chip
-                            .name=${f.displayName}
-                            .photo=${f.photoURL??""}
-                            .hue=${f.hue}
+                            .name=${b.displayName}
+                            .photo=${b.photoURL??""}
+                            .hue=${b.hue}
                             size="24"
                           ></member-chip>
-                          ${f.displayName}
+                          ${b.displayName}
                         </div>
                       `)}
                   </div>`}
@@ -3502,10 +3646,11 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
         ?open=${this._formOpen}
         .trip=${this._formTrip}
         .members=${i}
-        .currentUid=${((ye=this.user)==null?void 0:ye.uid)??""}
-        .familyId=${((xe=this.family)==null?void 0:xe.id)??""}
+        .currentUid=${((xe=this.user)==null?void 0:xe.uid)??""}
+        .familyId=${((we=this.family)==null?void 0:we.id)??""}
         .busy=${this._formBusy}
         .formMode=${this._formMode}
+        .subGroups=${((_e=this.family)==null?void 0:_e.subGroups)??{}}
         @save=${this._onSaveTrip}
         @remove=${this._onDeleteTrip}
         @cancel=${()=>{this._formOpen=!1,this._formTrip=null}}
@@ -3529,7 +3674,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
         ?open=${this._eventFormOpen}
         .event=${this._eventFormEvent}
         .members=${a}
-        .familyId=${((we=this.family)==null?void 0:we.id)??""}
+        .familyId=${(($e=this.family)==null?void 0:$e.id)??""}
         .busy=${this._eventFormBusy}
         @save=${this._onSaveEvent}
         @remove=${this._onDeleteEvent}
@@ -3540,7 +3685,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
         ?open=${this._allTripsOpen}
         .trips=${this._circleTrips()}
         .members=${a}
-        @edit-trip=${f=>{this._allTripsOpen=!1,this._openEdit(f.detail)}}
+        @edit-trip=${b=>{this._allTripsOpen=!1,this._openEdit(b.detail)}}
         @cancel=${()=>this._allTripsOpen=!1}
       ></all-trips-modal>
 
@@ -3555,7 +3700,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
         .pebbleUser=${this.pebbleUser}
         @cancel=${()=>this._profileOpen=!1}
       ></profile-sheet>
-    `}}g(be,"properties",{user:{type:Object},pebbleUser:{type:Object},family:{type:Object},children:{type:Array},trips:{type:Array},events:{type:Array},preview:{type:Boolean},circle:{state:!0},_formOpen:{state:!0},_formTrip:{state:!0},_formBusy:{state:!0},_membersOpen:{state:!0},_eventFormOpen:{state:!0},_eventFormEvent:{state:!0},_eventFormBusy:{state:!0},_displayMonth:{state:!0},_allTripsOpen:{state:!0},_editingFamilyName:{state:!0},_importOpen:{state:!0},_profileOpen:{state:!0},_typePickerOpen:{state:!0},_formMode:{state:!0}}),g(be,"styles",k`
+    `}}u(ve,"properties",{user:{type:Object},pebbleUser:{type:Object},family:{type:Object},children:{type:Array},trips:{type:Array},events:{type:Array},preview:{type:Boolean},circle:{state:!0},_formOpen:{state:!0},_formTrip:{state:!0},_formBusy:{state:!0},_membersOpen:{state:!0},_eventFormOpen:{state:!0},_eventFormEvent:{state:!0},_eventFormBusy:{state:!0},_displayMonth:{state:!0},_allTripsOpen:{state:!0},_editingFamilyName:{state:!0},_importOpen:{state:!0},_profileOpen:{state:!0},_typePickerOpen:{state:!0},_formMode:{state:!0}}),u(ve,"styles",k`
     :host {
       display: block;
       min-height: 100vh;
@@ -4124,7 +4269,7 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
       text-underline-offset: 3px;
     }
 
-  `);customElements.define("home-screen",be);const J="cairn:pendingJoinCode";class Ge extends ${constructor(){super(),this.authUser=null,this.loading=!0;const e=new URLSearchParams(window.location.search);this.preview=e.has("preview");const t=e.get("join");if(t)try{localStorage.setItem(J,t)}catch{}let i=null;try{i=localStorage.getItem(J)}catch{}this.joinCode=t??i??null,this.pebbleUser=null,this.family=null,this.children=[],this.trips=[],this.events=[],this._unsubAuth=null,this._onDataChange=()=>{this.pebbleUser=w.state.user,this.family=w.state.family,this.children=w.state.children,this.trips=w.state.trips,this.events=w.state.events}}_clearJoinState(){this.joinCode=null;try{localStorage.removeItem(J)}catch{}const e=new URL(window.location.href);e.searchParams.delete("join"),window.history.replaceState({},"",e.toString())}connectedCallback(){if(super.connectedCallback(),this.preview){this.loading=!1;return}w.addEventListener("change",this._onDataChange),this._unsubAuth=Ye(e=>{this.authUser=e,this.loading=!1,e?w.start(e.uid):w.stop()})}disconnectedCallback(){var e;super.disconnectedCallback(),(e=this._unsubAuth)==null||e.call(this),w.removeEventListener("change",this._onDataChange)}_composeViewer(){var t,i;const e=this.authUser;return{uid:e.uid,displayName:e.displayName??((t=this.pebbleUser)==null?void 0:t.displayName)??"You",email:e.email??((i=this.pebbleUser)==null?void 0:i.email)??"",photoURL:Ue(e,this.pebbleUser)}}render(){return this.loading?n``:this.preview?n`<home-screen preview></home-screen>`:this.authUser?this.joinCode?n`
+  `);customElements.define("home-screen",ve);const J="cairn:pendingJoinCode";class He extends ${constructor(){super(),this.authUser=null,this.loading=!0;const e=new URLSearchParams(window.location.search);this.preview=e.has("preview");const t=e.get("join");if(t)try{localStorage.setItem(J,t)}catch{}let i=null;try{i=localStorage.getItem(J)}catch{}this.joinCode=t??i??null,this.pebbleUser=null,this.family=null,this.children=[],this.trips=[],this.events=[],this._unsubAuth=null,this._onDataChange=()=>{this.pebbleUser=w.state.user,this.family=w.state.family,this.children=w.state.children,this.trips=w.state.trips,this.events=w.state.events}}_clearJoinState(){this.joinCode=null;try{localStorage.removeItem(J)}catch{}const e=new URL(window.location.href);e.searchParams.delete("join"),window.history.replaceState({},"",e.toString())}connectedCallback(){if(super.connectedCallback(),this.preview){this.loading=!1;return}w.addEventListener("change",this._onDataChange),this._unsubAuth=Le(e=>{this.authUser=e,this.loading=!1,e?w.start(e.uid):w.stop()})}disconnectedCallback(){var e;super.disconnectedCallback(),(e=this._unsubAuth)==null||e.call(this),w.removeEventListener("change",this._onDataChange)}_composeViewer(){var t,i;const e=this.authUser;return{uid:e.uid,displayName:e.displayName??((t=this.pebbleUser)==null?void 0:t.displayName)??"You",email:e.email??((i=this.pebbleUser)==null?void 0:i.email)??"",photoURL:Ue(e,this.pebbleUser)}}render(){return this.loading?n``:this.preview?n`<home-screen preview></home-screen>`:this.authUser?this.joinCode?n`
         <join-family-screen
           .code=${this.joinCode}
           @joined=${()=>this._clearJoinState()}
@@ -4143,5 +4288,5 @@ var We=Object.defineProperty;var qe=(o,e,t)=>e in o?We(o,e,{enumerable:!0,config
         <sign-in-screen
           .joinCode=${this.joinCode??""}
         ></sign-in-screen>
-      `}}g(Ge,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0}});customElements.define("cairn-app",Ge);
-//# sourceMappingURL=index-COAcYstG.js.map
+      `}}u(He,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0}});customElements.define("cairn-app",He);
+//# sourceMappingURL=index-D4rcFiHg.js.map
