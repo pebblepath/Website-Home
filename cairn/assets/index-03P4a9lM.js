@@ -270,13 +270,14 @@ var Ke=Object.defineProperty;var Xe=(o,e,t)=>e in o?Ke(o,e,{enumerable:!0,config
       background: transparent;
     }
     .cell.today {
-      background: var(--gradient-warmsun);
+      background: var(--today-bg);
     }
     .cell.trip {
-      background: rgba(61, 155, 143, 0.38);
+      background: var(--trip-day-bg);
+      border-radius: 2px;
     }
     .cell.trip.dense {
-      background: rgba(61, 155, 143, 0.62);
+      background: var(--trip-day-bg-strong);
     }
     .cell.event::after {
       content: '';
@@ -284,15 +285,15 @@ var Ke=Object.defineProperty;var Xe=(o,e,t)=>e in o?Ke(o,e,{enumerable:!0,config
       bottom: 1px;
       left: 50%;
       transform: translateX(-50%);
-      width: 2.5px;
-      height: 2.5px;
+      width: 3px;
+      height: 3px;
       border-radius: 999px;
       background: var(--amber-glow);
-      box-shadow: 0 0 3px rgba(212, 168, 67, 0.6);
+      box-shadow: 0 0 4px rgba(212, 168, 67, 0.8);
     }
     .cell.event.trip::after {
-      background: var(--rose-soft);
-      box-shadow: 0 0 3px rgba(201, 138, 138, 0.6);
+      background: #fff;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.7);
     }
     .legend {
       display: flex;
@@ -316,14 +317,15 @@ var Ke=Object.defineProperty;var Xe=(o,e,t)=>e in o?Ke(o,e,{enumerable:!0,config
       display: inline-block;
     }
     .swatch i.trip {
-      background: rgba(61, 155, 143, 0.5);
+      background: var(--trip-day-bg-strong);
+      border-radius: 2px;
     }
     .swatch i.event {
       background: var(--amber-glow);
       border-radius: 999px;
     }
     .swatch i.today {
-      background: var(--gradient-warmsun);
+      background: var(--today-bg);
     }
   `);customElements.define("yearly-view",ee);class te extends ${constructor(){super(),this.name="",this.hue=200,this.photo="",this.size=36,this.showName=!1}_initials(){return this.name.split(/\s+/).map(e=>e[0]).filter(Boolean).slice(0,2).join("").toUpperCase()}render(){const e=`linear-gradient(135deg, hsl(${this.hue}, 55%, 62%) 0%, hsl(${(this.hue+40)%360}, 50%, 42%) 100%)`,t=`width:${this.size}px;height:${this.size}px;background:${e};font-size:${this.size*.38}px;`;return s`
       <div class="avatar" style=${t} title=${this.name}>
@@ -4688,4 +4690,4 @@ var Ke=Object.defineProperty;var Xe=(o,e,t)=>e in o?Ke(o,e,{enumerable:!0,config
           .joinCode=${this.joinCode??""}
         ></sign-in-screen>
       `}}u(Je,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0}});customElements.define("cairn-app",Je);
-//# sourceMappingURL=index-N2jLwXtJ.js.map
+//# sourceMappingURL=index-03P4a9lM.js.map
