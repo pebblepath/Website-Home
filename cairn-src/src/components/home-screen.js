@@ -169,26 +169,16 @@ export class HomeScreen extends LitElement {
       transform: translateY(1px) scale(0.98);
     }
     @media (max-width: 768px) {
+      /* Mobile keeps the single-row desktop layout. Just hide the
+         wordmark text (icon carries identity) and tighten padding +
+         activity button so all 3 grid cells fit on a phone. */
       .topbar {
-        grid-template-columns: auto 1fr;
-        grid-template-rows: auto auto;
-        height: auto;
-        padding: 10px 20px;
-        row-gap: 10px;
+        padding: 10px 16px;
+        height: 60px;
+        column-gap: 8px;
       }
-      .topbar .brand {
-        grid-column: 1;
-        grid-row: 1;
-      }
-      .topbar .who {
-        grid-column: 2;
-        grid-row: 1;
-        justify-self: end;
-      }
-      .topbar circle-switcher {
-        grid-column: 1 / -1;
-        grid-row: 2;
-        justify-self: center;
+      .topbar .brand-name {
+        display: none;
       }
       .activity-btn-label {
         display: none;
@@ -259,13 +249,13 @@ export class HomeScreen extends LitElement {
     }
 
     main {
-      padding: 32px 24px 120px;
+      padding: 32px 24px 48px;
       max-width: 1280px;
       margin: 0 auto;
     }
     @media (max-width: 768px) {
       main {
-        padding: 20px 16px calc(110px + env(safe-area-inset-bottom));
+        padding: 20px 16px calc(32px + env(safe-area-inset-bottom));
       }
     }
 
@@ -383,6 +373,45 @@ export class HomeScreen extends LitElement {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 18px;
+    }
+
+    /* Celebrations — two-column layout (Birthdays | Anniversaries)
+       so the panels feel intentional even with sparse content,
+       instead of one wide low-density panel. */
+    .cel-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    @media (max-width: 720px) {
+      .cel-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .cel-col-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 248, 235, 0.08);
+    }
+    .cel-col-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 14.5px;
+      letter-spacing: -0.005em;
+    }
+    .cel-col-count {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      font-variant-numeric: tabular-nums;
+    }
+    .cel-empty {
+      color: var(--text-tertiary);
+      font-size: 13px;
+      padding: 12px 2px 4px;
+      line-height: 1.5;
     }
 
     /* Empty state for the Coming up panel — promoted from a one-line
@@ -558,19 +587,19 @@ export class HomeScreen extends LitElement {
       border-color: transparent;
     }
     .cal-cell.today {
-      background: var(--gradient-warmsun);
-      color: var(--charcoal);
+      background: var(--today-bg);
+      color: var(--today-fg);
       font-weight: 700;
       border-color: rgba(255, 248, 235, 0.5);
     }
     .cal-cell.has-event {
-      background: rgba(212, 168, 67, 0.12);
-      border-color: rgba(212, 168, 67, 0.3);
+      background: rgba(212, 168, 67, 0.18);
+      border-color: rgba(212, 168, 67, 0.4);
       color: var(--text-primary);
     }
     .cal-cell.has-trip {
-      background: rgba(61, 155, 143, 0.18);
-      border-color: rgba(61, 155, 143, 0.35);
+      background: rgba(61, 155, 143, 0.34);
+      border-color: rgba(61, 155, 143, 0.55);
       color: var(--text-primary);
     }
     .cal-cell.has-trip.has-event {
@@ -1252,25 +1281,57 @@ export class HomeScreen extends LitElement {
             <h2>Celebrations</h2>
             <button class="link" @click=${() => this._openCreateEvent()}>+ Add event</button>
           </div>
-          <glass-panel padding="md" variant="strong">
-            ${filteredEvents.length === 0
-              ? html`<div style="color:var(--text-tertiary);padding:18px 4px;font-size:13.5px;">
-                  No birthdays or anniversaries yet.
-                  <button
-                    style="background:transparent;border:none;color:var(--terracotta);cursor:pointer;font:inherit;text-decoration:underline;text-underline-offset:3px;margin-left:4px;"
-                    @click=${() => this._openCreateEvent()}
-                  >
-                    Add one
-                  </button>
-                </div>`
-              : filteredEvents.map(
-                  (e) => html`<event-row
-                    .event=${e}
-                    .members=${allMembers}
-                    @edit-event=${(ev) => this._openEditEvent(ev.detail)}
-                  ></event-row>`,
+          ${(() => {
+            const birthdays = filteredEvents.filter((e) => e.type === 'birthday');
+            const anniversaries = filteredEvents.filter(
+              (e) => e.type === 'anniversary',
+            );
+            const other = filteredEvents.filter(
+              (e) => e.type !== 'birthday' && e.type !== 'anniversary',
+            );
+            const renderColumn = (heading, list, emptyCopy) => html`
+              <glass-panel padding="md" variant="strong" class="cel-col">
+                <div class="cel-col-head">
+                  <span class="cel-col-title">${heading}</span>
+                  <span class="cel-col-count">${list.length}</span>
+                </div>
+                ${list.length === 0
+                  ? html`<div class="cel-empty">${emptyCopy}</div>`
+                  : list.map(
+                      (e) => html`<event-row
+                        .event=${e}
+                        .members=${allMembers}
+                        @edit-event=${(ev) => this._openEditEvent(ev.detail)}
+                      ></event-row>`,
+                    )}
+              </glass-panel>
+            `;
+            return html`
+              <div class="cel-row">
+                ${renderColumn('Birthdays', birthdays, 'No birthdays yet.')}
+                ${renderColumn(
+                  'Anniversaries',
+                  anniversaries,
+                  'No anniversaries yet.',
                 )}
-          </glass-panel>
+              </div>
+              ${other.length > 0
+                ? html`<glass-panel padding="md" variant="strong" style="margin-top:18px;">
+                    <div class="cel-col-head">
+                      <span class="cel-col-title">Other</span>
+                      <span class="cel-col-count">${other.length}</span>
+                    </div>
+                    ${other.map(
+                      (e) => html`<event-row
+                        .event=${e}
+                        .members=${allMembers}
+                        @edit-event=${(ev) => this._openEditEvent(ev.detail)}
+                      ></event-row>`,
+                    )}
+                  </glass-panel>`
+                : ''}
+            `;
+          })()}
         </section>
 
         <section>
