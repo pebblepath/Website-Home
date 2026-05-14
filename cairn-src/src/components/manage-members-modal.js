@@ -109,11 +109,10 @@ export class ManageMembersModal extends LitElement {
     }
     h3 {
       font-family: var(--font-display);
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-secondary);
+      letter-spacing: -0.005em;
+      color: var(--text-primary);
       margin: 22px 0 12px;
     }
     h3:first-of-type {
@@ -139,10 +138,9 @@ export class ManageMembersModal extends LitElement {
       color: var(--text-primary);
     }
     .member-row .role {
-      font-size: 11.5px;
+      font-size: 12.5px;
       color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: -0.005em;
       margin-top: 2px;
     }
     .empty {

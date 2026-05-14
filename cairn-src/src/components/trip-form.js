@@ -377,11 +377,10 @@ export class TripForm extends LitElement {
     }
     label {
       display: block;
-      font-size: 11.5px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--text-secondary);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      letter-spacing: -0.005em;
       margin-bottom: 6px;
     }
     input[type='text'],
@@ -430,9 +429,35 @@ export class TripForm extends LitElement {
       grid-template-columns: 1fr 1fr;
       gap: 20px;
     }
+    /* Top-of-form grid: Title + Dates on the left, Location + Visibility
+       + Who's going + Lodging URL on the right. Keeps the date-picker
+       size in proportion with the title field above, and tucks all the
+       smaller inputs into the right column so the form reads as two
+       balanced stacks. Falls back to a single column on phones. */
+    .form-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 20px 24px;
+      margin-bottom: 4px;
+    }
+    .form-col {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .form-col .field {
+      margin-bottom: 14px;
+    }
+    .form-col .field:last-child {
+      margin-bottom: 0;
+    }
     @media (max-width: 560px) {
       .row-2,
       .row-dates {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .form-grid {
         grid-template-columns: 1fr;
         gap: 0;
       }
@@ -444,18 +469,29 @@ export class TripForm extends LitElement {
       h2 {
         font-size: 21px;
       }
-      /* Keep Delete / Cancel / Save on a single row even on phones —
-         tighter button padding + smaller font lets all three fit. */
+      /* Single-row, uniform-shape action buttons on mobile. All three
+         (Delete / Cancel / Save) become equal-width pills with the
+         same height — Delete uses a destructive outline tint, Cancel
+         the standard ghost, Save the primary fill, but the silhouette
+         matches across all three so the row reads as a balanced set. */
       .actions {
         flex-wrap: nowrap;
         gap: 8px;
       }
-      .actions .delete-btn {
-        padding: 9px 12px;
-        font-size: 13px;
+      .actions .spacer {
+        display: none;
       }
+      .actions .delete-btn,
       .actions glass-button {
-        flex-shrink: 1;
+        flex: 1;
+        min-width: 0;
+        padding: 11px 14px;
+        font-size: 13.5px;
+        text-align: center;
+        white-space: nowrap;
+      }
+      .actions .delete-btn {
+        border-radius: var(--radius-pill);
       }
     }
     .seg {
@@ -923,131 +959,126 @@ export class TripForm extends LitElement {
             <button class="close" @click=${this._onCancel} aria-label="Close">×</button>
           </div>
 
-          <div class="row-2">
-            <div class="field">
-              <label>Title</label>
-              <input
-                type="text"
-                placeholder="e.g. Half-term in the Alps"
-                .value=${d.title}
-                @input=${(e) => this._set('title', e.target.value)}
-              />
-            </div>
-            <div class="field">
-              <label>Location</label>
-              <input
-                type="text"
-                placeholder="City, country"
-                .value=${d.location}
-                @input=${(e) => this._set('location', e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div class="field">
-            <label>Dates</label>
-            <date-range-picker
-              .start=${d.start}
-              .end=${d.end}
-              @range-change=${(e) => {
-                // Don't coerce end → start when the picker emits an
-                // empty end; that snaps both endpoints to the same
-                // day and breaks the hover-preview state (the picker
-                // hides hover-range when end is set). Leave end blank
-                // so the user can hover-then-click an end date; the
-                // save validation falls back to start === end via the
-                // _onSave handler.
-                this._draft = {
-                  ...this._draft,
-                  start: e.detail.start,
-                  end: e.detail.end ?? '',
-                };
-              }}
-            ></date-range-picker>
-          </div>
-
-          <div class=${this.formMode === 'activity' ? 'field' : 'row-2'}>
-            <div class="field" style=${this.formMode === 'activity' ? 'margin-bottom:0;' : ''}>
-              <label>Visibility</label>
-              <div class="seg">
-                ${['personal', 'family', 'extended'].map(
-                  (v) => html`
-                    <button
-                      class=${d.visibility === v ? 'active' : ''}
-                      @click=${() => this._set('visibility', v)}
-                    >
-                      ${v === 'personal' ? 'Just me' : v === 'family' ? 'Family' : 'Extended'}
-                    </button>
-                  `,
-                )}
+          <div class="form-grid">
+            <div class="form-col">
+              <div class="field">
+                <label>Title</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Half-term in the Alps"
+                  .value=${d.title}
+                  @input=${(e) => this._set('title', e.target.value)}
+                />
+              </div>
+              <div class="field">
+                <label>Dates</label>
+                <date-range-picker
+                  .start=${d.start}
+                  .end=${d.end}
+                  @range-change=${(e) => {
+                    // Don't coerce end → start when the picker emits
+                    // an empty end; that snaps both endpoints to the
+                    // same day and breaks the hover-preview state.
+                    this._draft = {
+                      ...this._draft,
+                      start: e.detail.start,
+                      end: e.detail.end ?? '',
+                    };
+                  }}
+                ></date-range-picker>
               </div>
             </div>
-            ${this.formMode !== 'activity'
-              ? html`
-                  <div class="field">
-                    <label>Lodging URL</label>
-                    <div style="display:flex;gap:8px;align-items:stretch;">
-                      <input
-                        type="url"
-                        placeholder="airbnb.com/… or booking.com/…"
-                        .value=${d.lodgingUrl}
-                        @input=${(e) => this._onLodgingChange(e.target.value)}
-                        style="flex:1;min-width:0;"
-                      />
-                      ${d.lodgingUrl
-                        ? html`<button
-                            type="button"
-                            class="preview-refresh-btn"
-                            ?disabled=${this._previewing}
-                            title="Re-fetch preview"
-                            @click=${() => this._runPreview(d.lodgingUrl)}
-                          >
-                            ↻
-                          </button>`
+            <div class="form-col">
+              <div class="field">
+                <label>Location</label>
+                <input
+                  type="text"
+                  placeholder="City, country"
+                  .value=${d.location}
+                  @input=${(e) => this._set('location', e.target.value)}
+                />
+              </div>
+              <div class="field">
+                <label>Visibility</label>
+                <div class="seg">
+                  ${['personal', 'family', 'extended'].map(
+                    (v) => html`
+                      <button
+                        class=${d.visibility === v ? 'active' : ''}
+                        @click=${() => this._set('visibility', v)}
+                      >
+                        ${v === 'personal' ? 'Just me' : v === 'family' ? 'Family' : 'Extended'}
+                      </button>
+                    `,
+                  )}
+                </div>
+              </div>
+              <div class="field">
+                <label>Who's going</label>
+                <div class="attendees">
+                  ${this.members.map(
+                    (m) => html`
+                      <div
+                        class="att-chip ${d.attendees.includes(m.uid) ? 'on' : ''}"
+                        @click=${() => this._toggleAttendee(m.uid)}
+                      >
+                        <member-chip
+                          .name=${m.displayName}
+                          .photo=${m.photoURL ?? ''}
+                          .hue=${m.hue}
+                          size="22"
+                        ></member-chip>
+                        ${m.displayName}
+                      </div>
+                    `,
+                  )}
+                </div>
+              </div>
+              ${this.formMode !== 'activity'
+                ? html`
+                    <div class="field">
+                      <label>Lodging URL</label>
+                      <div style="display:flex;gap:8px;align-items:stretch;">
+                        <input
+                          type="url"
+                          placeholder="airbnb.com/… or booking.com/…"
+                          .value=${d.lodgingUrl}
+                          @input=${(e) => this._onLodgingChange(e.target.value)}
+                          style="flex:1;min-width:0;"
+                        />
+                        ${d.lodgingUrl
+                          ? html`<button
+                              type="button"
+                              class="preview-refresh-btn"
+                              ?disabled=${this._previewing}
+                              title="Re-fetch preview"
+                              @click=${() => this._runPreview(d.lodgingUrl)}
+                            >
+                              ↻
+                            </button>`
+                          : ''}
+                      </div>
+                      ${this._previewing
+                        ? html`<div class="preview-loading">
+                            <div class="spinner"></div>
+                            Fetching preview…
+                          </div>`
+                        : ''}
+                      ${this._previewError
+                        ? html`<div class="preview-error">${this._previewError}</div>`
+                        : ''}
+                      ${!this._previewing && d.coverImage
+                        ? html`<div class="preview">
+                            <div class="thumb" style="background-image:url(${d.coverImage});"></div>
+                            <div class="meta">
+                              <div class="meta-title">${d.lodgingTitle || d.lodgingUrl}</div>
+                              <div class="meta-host">${d.lodgingHost || ''}</div>
+                            </div>
+                          </div>`
                         : ''}
                     </div>
-                    ${this._previewing
-                      ? html`<div class="preview-loading">
-                          <div class="spinner"></div>
-                          Fetching preview…
-                        </div>`
-                      : ''}
-                    ${this._previewError
-                      ? html`<div class="preview-error">${this._previewError}</div>`
-                      : ''}
-                    ${!this._previewing && d.coverImage
-                      ? html`<div class="preview">
-                          <div class="thumb" style="background-image:url(${d.coverImage});"></div>
-                          <div class="meta">
-                            <div class="meta-title">${d.lodgingTitle || d.lodgingUrl}</div>
-                            <div class="meta-host">${d.lodgingHost || ''}</div>
-                          </div>
-                        </div>`
-                      : ''}
-                  </div>
-                `
-              : ''}
-          </div>
-
-          <div class="field">
-            <label>Who's going</label>
-            <div class="attendees">
-              ${this.members.map(
-                (m) => html`
-                  <div
-                    class="att-chip ${d.attendees.includes(m.uid) ? 'on' : ''}"
-                    @click=${() => this._toggleAttendee(m.uid)}
-                  >
-                    <member-chip
-                      .name=${m.displayName}
-                      .photo=${m.photoURL ?? ''}
-                      .hue=${m.hue}
-                      size="22"
-                    ></member-chip>
-                    ${m.displayName}
-                  </div>
-                `,
-              )}
+                  `
+                : ''}
             </div>
           </div>
 

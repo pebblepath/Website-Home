@@ -410,10 +410,9 @@ export class HomeScreen extends LitElement {
     }
     .hello .family-name {
       color: var(--text-tertiary);
-      font-size: 13px;
+      font-size: 14px;
       margin-top: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: -0.005em;
       cursor: pointer;
       padding: 2px 4px;
       margin-left: -4px;
@@ -426,10 +425,9 @@ export class HomeScreen extends LitElement {
     }
     .hello .family-name-input {
       color: var(--text-primary);
-      font-size: 13px;
+      font-size: 14px;
       margin-top: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: -0.005em;
       font-family: var(--font-body);
       font-weight: 500;
       background: rgba(255, 248, 235, 0.08);
@@ -944,10 +942,9 @@ export class HomeScreen extends LitElement {
     .stone-label {
       font-family: var(--font-display);
       font-weight: 600;
-      font-size: 10.5px;
+      font-size: 12px;
       color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
+      letter-spacing: -0.005em;
       white-space: nowrap;
     }
     /* Empty stones: hollow dashed ellipse — invites a click without
