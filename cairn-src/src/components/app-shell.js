@@ -4,6 +4,7 @@ import { dataStore, resolvePhoto } from '../services/data.js';
 import './sign-in-screen.js';
 import './home-screen.js';
 import './join-family-screen.js';
+import './onboarding-wizard.js';
 
 const PENDING_JOIN_KEY = 'cairn:pendingJoinCode';
 
@@ -18,6 +19,7 @@ export class AppShell extends LitElement {
     children: { state: true },
     trips: { state: true },
     events: { state: true },
+    userDocResolved: { state: true },
   };
 
   constructor() {
@@ -55,7 +57,11 @@ export class AppShell extends LitElement {
       this.children = dataStore.state.children;
       this.trips = dataStore.state.trips;
       this.events = dataStore.state.events;
+      // Promote the userDocResolved flag to a tracked property so render
+      // re-runs the moment we know whether the user has a family.
+      this.userDocResolved = dataStore.userDocResolved;
     };
+    this.userDocResolved = false;
   }
 
   _clearJoinState() {
@@ -81,8 +87,19 @@ export class AppShell extends LitElement {
     this._unsubAuth = onAuth((u) => {
       this.authUser = u;
       this.loading = false;
-      if (u) dataStore.start(u.uid);
-      else dataStore.stop();
+      if (u) {
+        // Pick up any join-code the user stashed pre-auth on the
+        // sign-in screen ("I have a family code" input) — same
+        // localStorage key as the URL ?join= flow.
+        try {
+          const pending = localStorage.getItem(PENDING_JOIN_KEY);
+          if (pending && !this.joinCode) this.joinCode = pending;
+        } catch { /* private mode */ }
+        dataStore.start(u.uid);
+      } else {
+        dataStore.stop();
+        this.userDocResolved = false;
+      }
     });
   }
 
@@ -108,6 +125,21 @@ export class AppShell extends LitElement {
     };
   }
 
+  /**
+   * True when the signed-in user has neither a PebblePath family
+   * (`familyId`) nor a Cairn family (`cairnFamilyId`). We wait for the
+   * user-doc snapshot to fire at least once before deciding — otherwise
+   * we'd flash the onboarding wizard during the initial async load.
+   */
+  _needsOnboarding() {
+    if (!this.authUser) return false;
+    if (this.joinCode) return false;          // dedicated join flow takes over
+    if (!this.userDocResolved) return false;  // still loading the user doc
+    const fid =
+      this.pebbleUser?.familyId ?? this.pebbleUser?.cairnFamilyId ?? null;
+    return !fid;
+  }
+
   render() {
     if (this.loading) return html``;
     if (this.preview) return html`<home-screen preview></home-screen>`;
@@ -125,6 +157,22 @@ export class AppShell extends LitElement {
           @joined=${() => this._clearJoinState()}
           @cancel=${() => this._clearJoinState()}
         ></join-family-screen>
+      `;
+    }
+    if (this._needsOnboarding()) {
+      return html`
+        <onboarding-wizard
+          .user=${this.authUser}
+          @join-code=${(e) => {
+            // User pasted a code in the wizard — feed it into the
+            // existing join-family-screen flow (writes to
+            // /families/{id}.cairnMemberIds via dataStore.joinFamilyAsCairn).
+            this.joinCode = e.detail.code;
+            try {
+              localStorage.setItem(PENDING_JOIN_KEY, e.detail.code);
+            } catch { /* private mode */ }
+          }}
+        ></onboarding-wizard>
       `;
     }
     return html`

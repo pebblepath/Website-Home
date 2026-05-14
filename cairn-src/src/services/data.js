@@ -38,6 +38,10 @@ class FamilyDataStore extends EventTarget {
     this._unsubTrips = null;
     this._unsubEvents = null;
     this._currentFamilyId = null;
+    // True after the user-doc snapshot has fired at least once (whether
+    // the doc exists or not). Lets app-shell distinguish "still loading
+    // the user record" from "user has no family yet, show onboarding".
+    this.userDocResolved = false;
   }
 
   get familyId() {
@@ -51,6 +55,7 @@ class FamilyDataStore extends EventTarget {
     this._uid = uid;
 
     this._unsubUser = onSnapshot(doc(db, 'users', uid), (snap) => {
+      this.userDocResolved = true;
       this.state.user = snap.exists() ? { id: snap.id, ...snap.data() } : null;
       // PebblePath users have `familyId`. Cairn-only users (extended family
       // who joined via invite) have `cairnFamilyId` instead — keeps the two
@@ -422,6 +427,81 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
+   * Cairn-only family creation — used by the onboarding wizard when a
+   * brand-new signed-in user picks "Start a new family" without an
+   * invite code. Writes a family doc tagged `createdInApp: 'cairn'`
+   * with the viewer in `cairnMemberIds` (NOT `memberIds`, since PP's
+   * /children/ + /milestones/ flows shouldn't activate for a Cairn-only
+   * household). Generates the invite code so the user can immediately
+   * invite extended family.
+   *
+   * Also writes the matching `/users/{uid}` doc with `cairnFamilyId`
+   * (creating it if it doesn't exist) so the dataStore's user listener
+   * picks up the new family and starts subscribing.
+   */
+  async createCairnOnlyFamily(familyName) {
+    if (!db) throw new Error('Firebase not configured.');
+    const authUser = auth?.currentUser;
+    const uid = authUser?.uid;
+    if (!uid) throw new Error('Not signed in.');
+    const name = (familyName ?? '').trim();
+    if (!name) throw new Error('Family name is required.');
+
+    const now = new Date();
+    const code = newCairnInviteCode();
+    const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    const profile = {
+      displayName: authUser.displayName ?? '',
+      profilePhotoURL: authUser.photoURL ?? null,
+      role: 'admin',
+      joinedAt: now,
+      updatedAt: now,
+    };
+
+    const familyDoc = {
+      name,
+      createdBy: uid,
+      createdInApp: 'cairn',
+      // No PebblePath memberIds — this is a Cairn-only household.
+      // memberIds is intentionally an empty array so PP-side queries
+      // (children, milestones) treat this family as "no PP members
+      // yet" rather than throwing on the missing field.
+      memberIds: [],
+      cairnMemberIds: [uid],
+      cairnMaxMembers: 20,
+      cairnInviteCode: code,
+      cairnInviteCodeExpiresAt: expiresAt,
+      memberProfiles: { [uid]: profile },
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    };
+
+    const ref = await addDoc(collection(db, 'families'), familyDoc);
+
+    // Upsert user doc so the listener picks up cairnFamilyId.
+    await setDoc(
+      doc(db, 'users', uid),
+      {
+        email: authUser.email ?? '',
+        displayName: authUser.displayName ?? '',
+        profilePhotoURL: authUser.photoURL ?? null,
+        cairnFamilyId: ref.id,
+        role: 'admin',
+        notificationPreferences: {
+          milestoneReminders: false,
+          tipNotifications: false,
+          schoolDeadlines: false,
+        },
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true },
+    );
+
+    return ref.id;
+  }
+
+  /**
    * Phase 3A: generate or regenerate the Cairn invite code. Caller must be
    * a PP member (rules enforce). 30-day expiry — extended-family invites
    * move on human time, not the 7-day co-parent timeline.
@@ -452,6 +532,7 @@ class FamilyDataStore extends EventTarget {
         null;
     this._uid = null;
     this._currentFamilyId = null;
+    this.userDocResolved = false;
     this.state = { user: null, family: null, children: [], trips: [], events: [] };
   }
 

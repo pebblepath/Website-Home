@@ -7,6 +7,8 @@ export class SignInScreen extends LitElement {
     error: { state: true },
     busy: { state: true },
     joinCode: { type: String },
+    _codeInputOpen: { state: true },
+    _code: { state: true },
   };
 
   constructor() {
@@ -14,6 +16,10 @@ export class SignInScreen extends LitElement {
     this.error = '';
     this.busy = false;
     this.joinCode = '';
+    // If we already arrived with a code (URL or stashed), keep the
+    // input collapsed — the invite banner above the form covers it.
+    this._codeInputOpen = false;
+    this._code = '';
   }
 
   static styles = css`
@@ -179,6 +185,70 @@ export class SignInScreen extends LitElement {
       flex-shrink: 0;
     }
 
+    /* "I have a family code" affordance — sits just below the Google
+       button as a quiet link, expands into an inline code input when
+       tapped. Mirrors the iOS onboarding wizard's "Join an existing
+       family" path so an invited grandparent who only has the code
+       (no link) still has a clear way in. */
+    .have-code {
+      display: flex;
+      justify-content: center;
+      margin-top: 14px;
+    }
+    .have-code button {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font: inherit;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 4px 6px;
+      letter-spacing: -0.005em;
+    }
+    .have-code button:hover {
+      color: var(--text-primary);
+    }
+    .code-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      animation: codeReveal 220ms ease;
+    }
+    @keyframes codeReveal {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .code-input {
+      flex: 1;
+      min-width: 0;
+      background: rgba(255, 248, 235, 0.08);
+      border: 1px solid rgba(255, 248, 235, 0.22);
+      border-radius: var(--radius-input);
+      padding: 11px 14px;
+      color: var(--text-primary);
+      font-family: 'SF Mono', ui-monospace, monospace;
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      outline: none;
+      transition: border-color 200ms ease, background 200ms ease;
+    }
+    .code-input::placeholder {
+      color: rgba(255, 248, 235, 0.32);
+      letter-spacing: 0.06em;
+    }
+    .code-input:focus {
+      border-color: var(--teal-pebble);
+      background: rgba(255, 248, 235, 0.12);
+    }
+    .code-hint {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      text-align: center;
+    }
+
     .config-hint {
       margin-top: 18px;
       padding: 12px 14px;
@@ -236,6 +306,18 @@ export class SignInScreen extends LitElement {
 
   async _handleSignIn() {
     if (this.busy) return;
+    // If the user typed a family code, stash it so app-shell re-reads
+    // it on the post-auth render and routes through the join-family
+    // flow. Same localStorage key the URL-based ?join= handler uses.
+    const code = (this._code ?? '').trim().toUpperCase();
+    if (this._codeInputOpen && code) {
+      const normalized = code.startsWith('CAIRN-') ? code : `CAIRN-${code.replace(/^CAIRN-?/i, '')}`;
+      try {
+        localStorage.setItem('cairn:pendingJoinCode', normalized);
+      } catch {
+        /* private mode — code lost; app-shell will fall back to wizard */
+      }
+    }
     this.busy = true;
     this.error = '';
     try {
@@ -244,6 +326,16 @@ export class SignInScreen extends LitElement {
       this.error = e?.message ?? 'Sign-in failed.';
     } finally {
       this.busy = false;
+    }
+  }
+
+  _toggleCode() {
+    this._codeInputOpen = !this._codeInputOpen;
+    if (this._codeInputOpen) {
+      // Auto-focus the input on reveal so the user can paste straight away.
+      requestAnimationFrame(() => {
+        this.renderRoot.querySelector('.code-input')?.focus();
+      });
     }
   }
 
@@ -313,9 +405,47 @@ export class SignInScreen extends LitElement {
               @click=${this._handleSignIn}
             >
               ${this._renderGoogleIcon()}
-              ${this.busy ? 'Signing in…' : 'Continue with Google'}
+              ${this.busy
+                ? 'Signing in…'
+                : this._codeInputOpen && this._code.trim()
+                ? 'Continue with Google & join'
+                : 'Continue with Google'}
             </button>
           </div>
+          ${!this.joinCode
+            ? html`<div class="have-code">
+                <button type="button" @click=${this._toggleCode}>
+                  ${this._codeInputOpen ? '× Cancel code' : 'I have a family code'}
+                </button>
+              </div>`
+            : ''}
+          ${this._codeInputOpen
+            ? html`
+                <div class="code-row">
+                  <input
+                    class="code-input"
+                    type="text"
+                    placeholder="CAIRN-XXXX"
+                    .value=${this._code}
+                    @input=${(e) => (this._code = e.target.value)}
+                    @keydown=${(e) => {
+                      if (e.key === 'Enter' && this._code.trim()) {
+                        e.preventDefault();
+                        this._handleSignIn();
+                      }
+                    }}
+                    autocapitalize="characters"
+                    autocomplete="off"
+                    spellcheck="false"
+                    maxlength="14"
+                  />
+                </div>
+                <div class="code-hint">
+                  Paste the code from your family invite, then continue with
+                  Google. We'll add you to the family right after sign-in.
+                </div>
+              `
+            : ''}
           ${!isConfigured
             ? html`<div class="config-hint">
                 Sign-in is awaiting your Firebase config — copy
