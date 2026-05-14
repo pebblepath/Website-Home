@@ -159,16 +159,24 @@ export class DateRangePicker extends LitElement {
     :host {
       display: block;
     }
+    /* Compact variant — date picker takes ~half the space it used to.
+       Headed by a slim summary chip, narrower grid cells, smaller
+       day buttons. Keeps the same UX (click-start, hover-preview,
+       click-end), just at a more proportionate footprint for the
+       form sheet. */
+    :host {
+      max-width: 360px;
+    }
     .summary {
       font-family: var(--font-body);
-      font-size: 15px;
+      font-size: 13.5px;
       font-weight: 500;
       color: var(--text-primary);
-      padding: 11px 14px;
+      padding: 8px 12px;
       background: rgba(255, 248, 235, 0.06);
       border: 1px solid rgba(255, 248, 235, 0.16);
       border-radius: var(--radius-input);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .head {
       display: flex;
@@ -180,18 +188,18 @@ export class DateRangePicker extends LitElement {
     .month-label {
       font-family: var(--font-display);
       font-weight: 600;
-      font-size: 14px;
+      font-size: 12.5px;
       letter-spacing: -0.005em;
     }
     .nav {
-      width: 30px;
-      height: 30px;
+      width: 24px;
+      height: 24px;
       border-radius: 999px;
       background: rgba(255, 248, 235, 0.06);
       border: 1px solid rgba(255, 248, 235, 0.14);
       color: var(--text-secondary);
       cursor: pointer;
-      font-size: 14px;
+      font-size: 12px;
       font-family: var(--font-body);
       padding: 0;
     }
@@ -206,17 +214,17 @@ export class DateRangePicker extends LitElement {
       margin-bottom: 4px;
     }
     .dow {
-      font-size: 10.5px;
+      font-size: 9.5px;
       color: var(--text-tertiary);
       text-transform: uppercase;
       letter-spacing: 0.06em;
       text-align: center;
-      padding: 6px 0;
+      padding: 4px 0;
     }
     .grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 2px;
+      gap: 1px;
     }
     .empty {
       aspect-ratio: 1 / 1;
@@ -225,10 +233,10 @@ export class DateRangePicker extends LitElement {
       aspect-ratio: 1 / 1;
       background: transparent;
       border: none;
-      border-radius: 6px;
+      border-radius: 4px;
       color: var(--text-primary);
       font: inherit;
-      font-size: 13px;
+      font-size: 11.5px;
       cursor: pointer;
       transition: background 140ms ease, color 140ms ease;
       padding: 0;

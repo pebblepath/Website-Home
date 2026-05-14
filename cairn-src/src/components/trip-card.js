@@ -313,7 +313,7 @@ export class TripCard extends LitElement {
     const sm = s.toLocaleString('en-GB', { month: 'short' });
     const em = e.toLocaleString('en-GB', { month: 'short' });
     if (sm === em && s.getFullYear() === e.getFullYear()) {
-      return `${s.getDate()}–${e.getDate()} ${sm}`;
+      return `${s.getDate()} – ${e.getDate()} ${sm}`;
     }
     return `${s.getDate()} ${sm} – ${e.getDate()} ${em}`;
   }
@@ -364,7 +364,6 @@ export class TripCard extends LitElement {
         }}
       >
         <div class="${coverClass}" style=${cover}>
-          <div class="visibility">${t.visibility ?? 'family'}</div>
           <div class="dates">${this._fmtDates(t.start, t.end)}</div>
         </div>
         <div class="body">

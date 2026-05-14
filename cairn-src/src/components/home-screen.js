@@ -686,6 +686,8 @@ export class HomeScreen extends LitElement {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      /* Day number flush top-left, preview label pinned bottom-left
+         via margin-top:auto. */
       justify-content: flex-start;
       padding: 4px 5px 5px;
       font-size: 12px;
@@ -711,6 +713,7 @@ export class HomeScreen extends LitElement {
       opacity: 0.95;
       text-align: left;
       word-break: break-word;
+      margin-top: auto;
     }
     @media (max-width: 480px) {
       .cal-cell .cal-cell-label {

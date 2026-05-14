@@ -41,6 +41,7 @@ export class TripForm extends LitElement {
     _showReturn: { state: true },
     _showOutboundDetails: { state: true },
     _showReturnDetails: { state: true },
+    _showFlight: { state: true },
     /** Per-leg lookup state: 'idle' | 'loading' | 'ok' | 'error' */
     _outboundLookupState: { state: true },
     _outboundLookupMessage: { state: true },
@@ -67,6 +68,7 @@ export class TripForm extends LitElement {
     this._showReturn = false;
     this._showOutboundDetails = false;
     this._showReturnDetails = false;
+    this._showFlight = false;
     this._outboundLookupState = 'idle';
     this._outboundLookupMessage = '';
     this._returnLookupState = 'idle';
@@ -172,6 +174,18 @@ export class TripForm extends LitElement {
         this._showReturnDetails = Boolean(
           this._draft.returnFlightDepartAirport ||
             this._draft.returnFlightArriveAirport,
+        );
+        // Reveal the whole flight section by default when an existing
+        // trip already carries flight data; otherwise keep it tucked
+        // away behind the "Will you be flying?" toggle so the form
+        // doesn't feel cluttered for activities without flights.
+        this._showFlight = Boolean(
+          this._draft.flightNumber ||
+            this._draft.flightAirline ||
+            this._draft.flightDepartTime ||
+            this._draft.flightDepartAirport ||
+            this._draft.flightArriveAirport ||
+            this._showReturn,
         );
       }
       this._error = '';
@@ -430,8 +444,18 @@ export class TripForm extends LitElement {
       h2 {
         font-size: 21px;
       }
+      /* Keep Delete / Cancel / Save on a single row even on phones —
+         tighter button padding + smaller font lets all three fit. */
       .actions {
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
+        gap: 8px;
+      }
+      .actions .delete-btn {
+        padding: 9px 12px;
+        font-size: 13px;
+      }
+      .actions glass-button {
+        flex-shrink: 1;
       }
     }
     .seg {
@@ -597,22 +621,48 @@ export class TripForm extends LitElement {
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Simplified flight section — one leg shown per row by default,
-       optional airport codes hidden behind a "Show details" disclosure
-       so most users only fill in a flight number + departure time. */
+    /* Flight section is collapsible behind a "Will you be flying?"
+       toggle — most activities don't involve a flight so the section
+       stays hidden until the user opts in. No fieldset border;
+       contained by the form's natural rhythm. */
     .flight-section {
-      border: 1px solid rgba(255, 248, 235, 0.12);
-      border-radius: var(--radius-tile);
-      padding: 14px 16px 12px;
+      border: none;
+      padding: 0;
       margin: 6px 0 14px;
     }
     .flight-section legend {
-      font-size: 11.5px;
+      display: none;
+    }
+    .flight-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 12px 0;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font: inherit;
+    }
+    .flight-toggle .ft-label {
+      font-size: 13px;
       font-weight: 600;
       color: var(--text-secondary);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 0 6px;
+      letter-spacing: 0.02em;
+    }
+    .flight-toggle .ft-caret {
+      color: var(--text-tertiary);
+      font-size: 14px;
+      transition: transform 200ms ease;
+    }
+    .flight-toggle[aria-expanded="true"] .ft-caret {
+      transform: rotate(180deg);
+    }
+    .flight-toggle:hover .ft-label {
+      color: var(--text-primary);
+    }
+    .flight-body {
+      padding-top: 4px;
     }
     .flight-leg {
       padding-bottom: 10px;
@@ -1024,40 +1074,29 @@ export class TripForm extends LitElement {
               `
             : ''}
 
-          <div class="field">
-            <label>Also visible to <span style="text-transform:none;font-weight:400;color:var(--text-tertiary);letter-spacing:0.01em;">(without going)</span></label>
-            <div class="attendees">
-              ${this.members
-                .filter((m) => !d.attendees.includes(m.uid))
-                .map(
-                  (m) => html`
-                    <div
-                      class="att-chip ${(d.viewers ?? []).includes(m.uid) ? 'on' : ''}"
-                      @click=${() => this._toggleViewer(m.uid)}
-                    >
-                      <member-chip
-                        .name=${m.displayName}
-                        .photo=${m.photoURL ?? ''}
-                        .hue=${m.hue}
-                        size="22"
-                      ></member-chip>
-                      ${m.displayName}
-                    </div>
-                  `,
-                )}
-              ${this.members.filter((m) => !d.attendees.includes(m.uid)).length === 0
-                ? html`<span style="color:var(--text-tertiary);font-size:13px;">
-                    Everyone is going — no extra viewers needed.
-                  </span>`
-                : ''}
-            </div>
-          </div>
+          <!-- "Also visible to" picker removed — the Visibility toggle
+               above (Just me / Family / Extended) already controls the
+               read audience. The viewers array is preserved on the trip
+               doc for old data round-tripping, but we don't surface it
+               in the iOS-parity form anymore. -->
+
 
           ${this.formMode === 'activity'
             ? ''
             : html`
           <fieldset class="flight-section">
             <legend>Flight (optional)</legend>
+            <button
+              type="button"
+              class="flight-toggle"
+              aria-expanded=${this._showFlight ? 'true' : 'false'}
+              @click=${() => (this._showFlight = !this._showFlight)}
+            >
+              <span class="ft-label">Will you be flying?</span>
+              <span class="ft-caret" aria-hidden="true">⌄</span>
+            </button>
+            ${this._showFlight
+              ? html`<div class="flight-body">
 
             <div class="flight-leg">
               <div class="leg-head">
@@ -1213,6 +1252,8 @@ export class TripForm extends LitElement {
                     + Add return flight
                   </button>
                 `}
+              </div>`
+              : ''}
           </fieldset>
           `}
 

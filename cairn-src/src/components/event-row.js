@@ -97,6 +97,14 @@ export class EventRow extends LitElement {
     .faces member-chip:first-child {
       margin-left: 0;
     }
+    @media (max-width: 768px) {
+      /* Mobile: hide the person avatars beside the event title — the
+         title alone is enough on a narrow row, and the chips can
+         crowd the type/date area. */
+      .faces {
+        display: none;
+      }
+    }
     .meta {
       font-size: 12.5px;
       color: var(--text-secondary);
