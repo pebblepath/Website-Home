@@ -1,4 +1,4 @@
-var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,configurable:!0,writable:!0,value:t}):d[e]=t;var m=(d,e,t)=>Qe(d,typeof e!="symbol"?e+"":e,t);import{i as z,a as C,b as o}from"./lit-2GpawzfI.js";import{f as et,h as tt,j as it,G as Ae,s as Oe,k as rt,l as A,m as L,n as T,o as at,q,t as R,v as se,w as oe,x as Pe,y as je,z as Le,A as Be}from"./firebase-core-DVt9Aunh.js";import{g as st,h as Q}from"./firebase-functions-CfBtnn7v.js";import{g as ot,r as Ge,u as Ye,a as Ue}from"./firebase-storage-C5Nl_r0j.js";(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const r of document.querySelectorAll('link[rel="modulepreload"]'))i(r);new MutationObserver(r=>{for(const a of r)if(a.type==="childList")for(const n of a.addedNodes)n.tagName==="LINK"&&n.rel==="modulepreload"&&i(n)}).observe(document,{childList:!0,subtree:!0});function t(r){const a={};return r.integrity&&(a.integrity=r.integrity),r.referrerPolicy&&(a.referrerPolicy=r.referrerPolicy),r.crossOrigin==="use-credentials"?a.credentials="include":r.crossOrigin==="anonymous"?a.credentials="omit":a.credentials="same-origin",a}function i(r){if(r.ep)return;r.ep=!0;const a=t(r);fetch(r.href,a)}})();class ne extends z{constructor(){super(),this.variant="default",this.lifted=!1,this.padding="md"}render(){const e=["panel",this.variant==="strong"?"strong":"",this.lifted?"lifted":"",`pad-${this.padding}`].filter(Boolean).join(" ");return o`
+var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,configurable:!0,writable:!0,value:t}):d[e]=t;var m=(d,e,t)=>Qe(d,typeof e!="symbol"?e+"":e,t);import{i as z,a as C,b as o}from"./lit-2GpawzfI.js";import{f as et,h as tt,j as it,G as Ae,s as Oe,k as rt,l as A,m as L,n as T,o as at,q as W,t as R,v as se,w as oe,x as Pe,y as je,z as Le,A as Be}from"./firebase-core-DVt9Aunh.js";import{g as st,h as Q}from"./firebase-functions-CfBtnn7v.js";import{g as ot,r as Ge,u as Ye,a as Ue}from"./firebase-storage-C5Nl_r0j.js";(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const r of document.querySelectorAll('link[rel="modulepreload"]'))i(r);new MutationObserver(r=>{for(const a of r)if(a.type==="childList")for(const n of a.addedNodes)n.tagName==="LINK"&&n.rel==="modulepreload"&&i(n)}).observe(document,{childList:!0,subtree:!0});function t(r){const a={};return r.integrity&&(a.integrity=r.integrity),r.referrerPolicy&&(a.referrerPolicy=r.referrerPolicy),r.crossOrigin==="use-credentials"?a.credentials="include":r.crossOrigin==="anonymous"?a.credentials="omit":a.credentials="same-origin",a}function i(r){if(r.ep)return;r.ep=!0;const a=t(r);fetch(r.href,a)}})();class ne extends z{constructor(){super(),this.variant="default",this.lifted=!1,this.padding="md"}render(){const e=["panel",this.variant==="strong"?"strong":"",this.lifted?"lifted":"",`pad-${this.padding}`].filter(Boolean).join(" ");return o`
       <div class=${e}>
         <div class="content"><slot></slot></div>
       </div>
@@ -189,7 +189,7 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
       display: block;
       filter: drop-shadow(0 6px 18px rgba(20, 12, 6, 0.45));
     }
-  `);customElements.define("cairn-mark",de);const nt="modulepreload",lt=function(d){return"/cairn/"+d},Te={},Re=function(e,t,i){let r=Promise.resolve();if(t&&t.length>0){let n=function(p){return Promise.all(p.map(c=>Promise.resolve(c).then(h=>({status:"fulfilled",value:h}),h=>({status:"rejected",reason:h}))))};document.getElementsByTagName("link");const s=document.querySelector("meta[property=csp-nonce]"),l=(s==null?void 0:s.nonce)||(s==null?void 0:s.getAttribute("nonce"));r=n(t.map(p=>{if(p=lt(p),p in Te)return;Te[p]=!0;const c=p.endsWith(".css"),h=c?'[rel="stylesheet"]':"";if(document.querySelector(`link[href="${p}"]${h}`))return;const g=document.createElement("link");if(g.rel=c?"stylesheet":nt,c||(g.as="script"),g.crossOrigin="",g.href=p,l&&g.setAttribute("nonce",l),document.head.appendChild(g),c)return new Promise((v,y)=>{g.addEventListener("load",v),g.addEventListener("error",()=>y(new Error(`Unable to preload CSS for ${p}`)))})}))}function a(n){const s=new Event("vite:preloadError",{cancelable:!0});if(s.payload=n,window.dispatchEvent(s),!s.defaultPrevented)throw n}return r.then(n=>{for(const s of n||[])s.status==="rejected"&&a(s.reason);return e().catch(a)})},pe={apiKey:"AIzaSyA6NKZNLVBeeLrXcLJSXus5M832AxpI2wk",authDomain:"pebblepath-992b6.firebaseapp.com",projectId:"pebblepath-992b6",storageBucket:"pebblepath-992b6.firebasestorage.app",messagingSenderId:"497141667291",appId:"1:497141667291:web:ee84c186db54389d10c3fe"},B=!!(pe.apiKey&&pe.projectId),J=B?et(pe):null,$=B?tt(J):null,w=B?it(J):null,H=B?st(J,"us-central1"):null,ce=B?ot(J):null,he=B?new Ae:null;he&&he.setCustomParameters({prompt:"select_account"});const te=B?new Ae:null;te&&te.addScope("https://www.googleapis.com/auth/calendar.readonly");let ee=null,ue=0;async function He(){if(!$||!te)throw new Error("Firebase not configured.");if(ee&&Date.now()<ue-6e4)return ee;const d=await Oe($,te),e=Ae.credentialFromResult(d),t=e==null?void 0:e.accessToken;if(!t)throw new Error("Couldn't get a Calendar access token — try again.");return ee=t,ue=Date.now()+3600*1e3,t}function dt(){ee=null,ue=0}function qe(){if(!$)throw new Error("Firebase not configured — fill in .env first.");return Oe($,he)}function We(){return $?rt($):Promise.resolve()}function Je(d){return $?at($,d):(d(null),()=>{})}const pt=Object.freeze(Object.defineProperty({__proto__:null,addDoc:se,app:J,auth:$,clearCalendarToken:dt,collection:R,connectGoogleCalendar:He,db:w,deleteDoc:oe,doc:A,firebaseApp:J,functions:H,getDocs:Le,getDownloadURL:Ue,httpsCallable:Q,isConfigured:B,onAuth:Je,onSnapshot:q,query:Pe,serverTimestamp:T,setDoc:Be,signIn:qe,signOutUser:We,storage:ce,storageRef:Ge,updateDoc:L,uploadBytes:Ye,where:je},Symbol.toStringTag,{value:"Module"}));class ct extends EventTarget{constructor(){super(),this.state={user:null,family:null,children:[],trips:[],events:[]},this._uid=null,this._unsubUser=null,this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this._currentFamilyId=null}get familyId(){return this._currentFamilyId}start(e){!w||!e||this._uid!==e&&(this.stop(),this._uid=e,this._unsubUser=q(A(w,"users",e),t=>{var r,a,n,s,l,p;this.state.user=t.exists()?{id:t.id,...t.data()}:null;const i=((r=this.state.user)==null?void 0:r.familyId)??((a=this.state.user)==null?void 0:a.cairnFamilyId)??null;i!==this._currentFamilyId&&(this._currentFamilyId=i,(n=this._unsubFamily)==null||n.call(this),(s=this._unsubChildren)==null||s.call(this),(l=this._unsubTrips)==null||l.call(this),(p=this._unsubEvents)==null||p.call(this),this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this.state.family=null,this.state.children=[],this.state.trips=[],this.state.events=[],i&&this._subscribeFamily(i)),this._emit()}))}_subscribeFamily(e){this._unsubFamily=q(A(w,"families",e),t=>{this.state.family=t.exists()?{id:t.id,...t.data()}:null,this._emit()}),this._unsubChildren=q(R(w,"families",e,"children"),t=>{this.state.children=t.docs.map(i=>{var a,n;const r=i.data();return{id:i.id,...r,dateOfBirth:((n=(a=r.dateOfBirth)==null?void 0:a.toDate)==null?void 0:n.call(a))??(r.dateOfBirth?new Date(r.dateOfBirth):null)}}),this._emit()}),this._unsubTrips=q(R(w,"families",e,"trips"),t=>{this.state.trips=t.docs.map(i=>{var a,n,s,l;const r=i.data();return{id:i.id,...r,start:r.start??"",end:r.end??"",createdAt:((n=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:n.call(a))??null,updatedAt:((l=(s=r.updatedAt)==null?void 0:s.toDate)==null?void 0:l.call(s))??null}}).sort((i,r)=>String(i.start).localeCompare(String(r.start))),this._emit()},t=>{console.warn("[Cairn] trips subscription error:",t.code,t.message)}),this._unsubEvents=q(R(w,"families",e,"familyEvents"),t=>{this.state.events=t.docs.map(i=>{var a,n,s,l;const r=i.data();return{id:i.id,...r,date:r.date??"",createdAt:((n=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:n.call(a))??null,updatedAt:((l=(s=r.updatedAt)==null?void 0:s.toDate)==null?void 0:l.call(s))??null}}),this._emit()},t=>{console.warn("[Cairn] familyEvents subscription error:",t.code,t.message)})}async saveTrip(e){var p;if(!w||!this._currentFamilyId)throw new Error("No family yet.");const t=(p=$==null?void 0:$.currentUser)==null?void 0:p.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...n}=e,s={...n,updatedAt:T()};return i?(await L(A(w,"families",this._currentFamilyId,"trips",i),s),i):(s.createdBy=t,s.createdAt=T(),(await se(R(w,"families",this._currentFamilyId,"trips"),s)).id)}async deleteTrip(e){if(!w||!this._currentFamilyId)throw new Error("No family yet.");await oe(A(w,"families",this._currentFamilyId,"trips",e))}async saveEvent(e){var p;if(!w||!this._currentFamilyId)throw new Error("No family yet.");const t=(p=$==null?void 0:$.currentUser)==null?void 0:p.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...n}=e,s={...n,updatedAt:T()};return i?(await L(A(w,"families",this._currentFamilyId,"familyEvents",i),s),i):(s.createdBy=t,s.createdAt=T(),(await se(R(w,"families",this._currentFamilyId,"familyEvents"),s)).id)}async deleteEvent(e){if(!w||!this._currentFamilyId)throw new Error("No family yet.");await oe(A(w,"families",this._currentFamilyId,"familyEvents",e))}async previewUrl(e){if(!e||typeof e!="string"||!/^https?:\/\//i.test(e.trim()))return null;if(!H)throw new Error("Firebase functions not configured.");return(await Q(H,"previewUrl")({url:e.trim()})).data}async lookupFlight(e,t){if(!e||typeof e!="string")return null;if(!H)throw new Error("Firebase functions not configured.");return(await Q(H,"lookupFlight")({flightNumber:e.trim(),date:typeof t=="string"?t.trim():""})).data}async askPebble(e,t=[]){if(!H)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family yet.");return(await Q(H,"askPebbleAboutActivities")({question:e,familyId:this._currentFamilyId,history:t})).data}async updateChildBirthday(e,t){if(!w||!this._currentFamilyId)throw new Error("No family yet.");await L(A(w,"families",this._currentFamilyId,"children",e),{dateOfBirth:t,updatedAt:T()})}async findFamilyByCairnCode(e){if(!w)throw new Error("Firebase not configured.");const t=Pe(R(w,"families"),je("cairnInviteCode","==",e)),i=await Le(t);if(i.empty)return null;const r=i.docs[0];return{id:r.id,...r.data()}}async joinFamilyAsCairn(e){var c,h,g;if(!w)throw new Error("Firebase not configured.");const t=(c=$==null?void 0:$.currentUser)==null?void 0:c.uid;if(!t)throw new Error("Not signed in.");const i=await this.findFamilyByCairnCode(e);if(!i){const v=new Error("Invite code not found.");throw v.code="not-found",v}const r=((g=(h=i.cairnInviteCodeExpiresAt)==null?void 0:h.toDate)==null?void 0:g.call(h))??(i.cairnInviteCodeExpiresAt?new Date(i.cairnInviteCodeExpiresAt):null);if(!r||r<new Date){const v=new Error("This invite code has expired.");throw v.code="expired",v}const a=i.cairnMemberIds??[];if(a.includes(t)||(i.memberIds??[]).includes(t)){const v=new Error("You're already in this family on Cairn.");throw v.code="already-member",v}const n=i.cairnMaxMembers??20;if(a.length>=n){const v=new Error("This family's Cairn ring is full.");throw v.code="full",v}const s=$.currentUser,l=new Date,p={displayName:s.displayName??"",profilePhotoURL:s.photoURL??null,role:"member",joinedAt:l,updatedAt:l};return await L(A(w,"families",i.id),{cairnMemberIds:[...a,t],[`memberProfiles.${t}`]:p,updatedAt:T()}),await Be(A(w,"users",t),{email:s.email??"",displayName:s.displayName??"",profilePhotoURL:s.photoURL??null,cairnFamilyId:i.id,role:"member",notificationPreferences:{milestoneReminders:!0,tipNotifications:!0,schoolDeadlines:!0},createdAt:T(),updatedAt:T()},{merge:!0}),i.id}async saveSubGroup({id:e,name:t,memberIds:i}){if(!w||!this._currentFamilyId)throw new Error("No family yet.");const r=e??`g_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,6)}`;return await L(A(w,"families",this._currentFamilyId),{[`subGroups.${r}`]:{name:t.trim(),memberIds:Array.isArray(i)?[...i]:[],updatedAt:T()},updatedAt:T()}),r}async deleteSubGroup(e){if(!w||!this._currentFamilyId)throw new Error("No family yet.");const{deleteField:t}=await Re(async()=>{const{deleteField:i}=await import("./firebase-core-DVt9Aunh.js").then(r=>r.B);return{deleteField:i}},[]);await L(A(w,"families",this._currentFamilyId),{[`subGroups.${e}`]:t(),updatedAt:T()})}async setCairnMemberSubGroup(e,t){var a;if(!w||!this._currentFamilyId)throw new Error("No family yet.");if(!e)throw new Error("uid is required.");const i=((a=this.state.family)==null?void 0:a.subGroups)??{},r={};for(const[n,s]of Object.entries(i)){const l=Array.isArray(s.memberIds)?s.memberIds:[];n===t?l.includes(e)||(r[`subGroups.${n}.memberIds`]=[...l,e]):l.includes(e)&&(r[`subGroups.${n}.memberIds`]=l.filter(p=>p!==e))}Object.keys(r).length!==0&&(r.updatedAt=T(),await L(A(w,"families",this._currentFamilyId),r))}async regenerateCairnInviteCode(){if(!w||!this._currentFamilyId)throw new Error("No family yet.");const e=ht(),t=new Date(Date.now()+720*60*60*1e3);return await L(A(w,"families",this._currentFamilyId),{cairnInviteCode:e,cairnInviteCodeExpiresAt:t,updatedAt:T()}),{code:e,expiresAt:t}}stop(){var e,t,i,r,a;(e=this._unsubUser)==null||e.call(this),(t=this._unsubFamily)==null||t.call(this),(i=this._unsubChildren)==null||i.call(this),(r=this._unsubTrips)==null||r.call(this),(a=this._unsubEvents)==null||a.call(this),this._unsubUser=this._unsubFamily=this._unsubChildren=this._unsubTrips=this._unsubEvents=null,this._uid=null,this._currentFamilyId=null,this.state={user:null,family:null,children:[],trips:[],events:[]}}_emit(){this.dispatchEvent(new Event("change"))}}const k=new ct;function Ke(d,e){const t=e==null?void 0:e.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:d!=null&&d.photoURL?d.photoURL:null}function ht(){const d="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let e="CAIRN-";for(let t=0;t<4;t++)e+=d[Math.floor(Math.random()*d.length)];return e}function ut(d,e,t,i,r){const a=[];a.push({uid:d,displayName:(e==null?void 0:e.displayName)??(t==null?void 0:t.displayName)??"You",photoURL:Ke(e,t),role:"self",circles:["immediate"],hue:198});const n=(i==null?void 0:i.memberProfiles)??{};for(const[l,p]of Object.entries(n)){if(l===d)continue;const c=p.profilePhotoURL;a.push({uid:l,displayName:p.displayName??"Co-parent",photoURL:typeof c=="string"&&/^https?:\/\//i.test(c)?c:null,role:"co-parent",circles:["immediate"],hue:8})}let s=142;for(const l of r??[]){const p=l.profilePhotoURL;a.push({uid:`child:${l.id}`,displayName:l.name,photoURL:typeof p=="string"&&/^https?:\/\//i.test(p)?p:null,role:"child",circles:["immediate"],hue:s,dateOfBirth:l.dateOfBirth}),s=(s+58)%360}return a}function gt(d){const e=[];for(const t of d??[]){if(!t.dateOfBirth)continue;const i=t.dateOfBirth,r=i.getUTCFullYear(),a=String(i.getUTCMonth()+1).padStart(2,"0"),n=String(i.getUTCDate()).padStart(2,"0");e.push({id:`bday:${t.id}`,type:"birthday",date:`${r}-${a}-${n}`,personIds:[`child:${t.id}`],title:`${t.name}'s birthday`,_childId:t.id,_childName:t.name,recurring:!0})}return e}function bt(d,e=new Date){if(!(d!=null&&d.date))return{date:null,yearsElapsed:0};const t=D(d.date);if(!t||Number.isNaN(t.getTime()))return{date:null,yearsElapsed:0};if(!d.recurring)return{date:t,yearsElapsed:0};const i=new Date(e.getFullYear(),t.getMonth(),t.getDate()),r=i<new Date(e.getFullYear(),e.getMonth(),e.getDate())?new Date(e.getFullYear()+1,t.getMonth(),t.getDate()):i,a=r.getFullYear()-t.getFullYear();return{date:r,yearsElapsed:a}}const Ie=["linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)","linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)","linear-gradient(135deg, #3d9b8f 0%, #1f5c54 100%)","linear-gradient(135deg, #d4a843 0%, #c67b5c 55%, #c98a8a 100%)","linear-gradient(135deg, #8b7bb5 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #6b9ac4 0%, #3d9b8f 100%)"];function D(d){if(!d)return null;if(d instanceof Date)return d;const e=String(d).match(/^(\d{4})-(\d{2})-(\d{2})/);return e?new Date(Number(e[1]),Number(e[2])-1,Number(e[3])):new Date(d)}function mt(d){if(!d)return null;const e=d.getFullYear(),t=String(d.getMonth()+1).padStart(2,"0"),i=String(d.getDate()).padStart(2,"0");return`${e}-${t}-${i}`}async function ft(d,e=90,t=100){const i=new Date,r=new Date(i.getTime()+e*24*60*60*1e3),a=new URL("https://www.googleapis.com/calendar/v3/calendars/primary/events");a.searchParams.set("timeMin",i.toISOString()),a.searchParams.set("timeMax",r.toISOString()),a.searchParams.set("maxResults",String(t)),a.searchParams.set("singleEvents","true"),a.searchParams.set("orderBy","startTime");const n=await fetch(a.toString(),{headers:{Authorization:`Bearer ${d}`}});if(!n.ok){const l=await n.text();throw new Error(`Google Calendar: ${n.status} ${l.slice(0,160)}`)}return((await n.json()).items??[]).filter(l=>{var p,c;return l.status!=="cancelled"&&(((p=l.start)==null?void 0:p.date)||((c=l.start)==null?void 0:c.dateTime))})}function vt(d,e){var r,a,n,s,l,p,c,h;const t=((r=d.start)==null?void 0:r.date)??((n=(a=d.start)==null?void 0:a.dateTime)==null?void 0:n.slice(0,10))??"";let i=((s=d.end)==null?void 0:s.date)??((p=(l=d.end)==null?void 0:l.dateTime)==null?void 0:p.slice(0,10))??t;if((c=d.start)!=null&&c.date&&((h=d.end)!=null&&h.date)){const g=new Date(i);g.setDate(g.getDate()-1),i=g.toISOString().slice(0,10)}return{title:d.summary||"(untitled)",location:d.location??"",start:t,end:i,attendees:e?[e]:[],viewers:[],visibility:"family",notes:(d.description??"").slice(0,1e3),gcalEventId:d.id,gcalEventLink:d.htmlLink??null}}function xt(d){if(d!=null&&d.coverGradient)return d.coverGradient;const e=((d==null?void 0:d.title)??(d==null?void 0:d.id)??"")+((d==null?void 0:d.location)??"");let t=0;for(let i=0;i<e.length;i++)t=t*31+e.charCodeAt(i)>>>0;return Ie[t%Ie.length]}class ge extends z{constructor(){super(),this.year=new Date().getFullYear(),this.tripDays=new Map,this.trips=[],this.events=[],this.today=new Date,this._activeDay=null}_isLeap(e){return e%4===0&&e%100!==0||e%400===0}_daysInMonth(e,t){return[31,this._isLeap(e)?29:28,31,30,31,30,31,31,30,31,30,31][t]}_labelsForMonth(e){var a;const t=this.year,i=new Map,r=(n,s)=>{const l=i.get(n);i.set(n,l?`${l} · ${s}`:s)};for(const n of this.trips??[]){if(!n.start||!n.end)continue;const s=D(n.start),l=D(n.end);if(!s||!l||s.getFullYear()>t||l.getFullYear()<t)continue;const p=new Date(t,e,1),c=new Date(t,e+1,0);if(l<p||s>c)continue;const h=s.getMonth()===e&&s.getFullYear()===t?s.getDate():1,g=l.getMonth()===e&&l.getFullYear()===t?l.getDate():c.getDate(),v=(a=n.location)!=null&&a.trim()?`${n.title} (${n.location.trim()})`:n.title;for(let y=h;y<=g;y++)r(y,v)}for(const n of this.events??[]){const s=D(n.date);s&&s.getFullYear()===t&&s.getMonth()===e&&r(s.getDate(),n.title??"Event")}return i}_renderMonth(e){var p,c;const t=this.year,r=(new Date(t,e,1).getDay()+6)%7,a=this._daysInMonth(t,e),n=this._labelsForMonth(e),s=[];for(let h=0;h<r;h++)s.push(o`<div class="cell empty"></div>`);const l=this.today;for(let h=1;h<=a;h++){const g=`${String(e+1).padStart(2,"0")}-${String(h).padStart(2,"0")}`,v=this.tripDays.get(g)??0,y=l.getFullYear()===t&&l.getMonth()===e&&l.getDate()===h,u=n.get(h),b=(this.events??[]).some(N=>{const S=D(N.date);return S&&S.getFullYear()===t&&S.getMonth()===e&&S.getDate()===h}),_=((p=this._activeDay)==null?void 0:p.month)===e&&((c=this._activeDay)==null?void 0:c.day)===h,F=["cell",y?"today":"",v>0?"trip":"",v>.6?"dense":"",b?"event":"",u?"labelled":"",_?"active":""].filter(Boolean).join(" ");s.push(o`<div
+  `);customElements.define("cairn-mark",de);const nt="modulepreload",lt=function(d){return"/cairn/"+d},Te={},Re=function(e,t,i){let r=Promise.resolve();if(t&&t.length>0){let n=function(p){return Promise.all(p.map(c=>Promise.resolve(c).then(h=>({status:"fulfilled",value:h}),h=>({status:"rejected",reason:h}))))};document.getElementsByTagName("link");const s=document.querySelector("meta[property=csp-nonce]"),l=(s==null?void 0:s.nonce)||(s==null?void 0:s.getAttribute("nonce"));r=n(t.map(p=>{if(p=lt(p),p in Te)return;Te[p]=!0;const c=p.endsWith(".css"),h=c?'[rel="stylesheet"]':"";if(document.querySelector(`link[href="${p}"]${h}`))return;const g=document.createElement("link");if(g.rel=c?"stylesheet":nt,c||(g.as="script"),g.crossOrigin="",g.href=p,l&&g.setAttribute("nonce",l),document.head.appendChild(g),c)return new Promise((v,y)=>{g.addEventListener("load",v),g.addEventListener("error",()=>y(new Error(`Unable to preload CSS for ${p}`)))})}))}function a(n){const s=new Event("vite:preloadError",{cancelable:!0});if(s.payload=n,window.dispatchEvent(s),!s.defaultPrevented)throw n}return r.then(n=>{for(const s of n||[])s.status==="rejected"&&a(s.reason);return e().catch(a)})},pe={apiKey:"AIzaSyA6NKZNLVBeeLrXcLJSXus5M832AxpI2wk",authDomain:"pebblepath-992b6.firebaseapp.com",projectId:"pebblepath-992b6",storageBucket:"pebblepath-992b6.firebasestorage.app",messagingSenderId:"497141667291",appId:"1:497141667291:web:ee84c186db54389d10c3fe"},B=!!(pe.apiKey&&pe.projectId),J=B?et(pe):null,$=B?tt(J):null,w=B?it(J):null,H=B?st(J,"us-central1"):null,ce=B?ot(J):null,he=B?new Ae:null;he&&he.setCustomParameters({prompt:"select_account"});const te=B?new Ae:null;te&&te.addScope("https://www.googleapis.com/auth/calendar.readonly");let ee=null,ue=0;async function He(){if(!$||!te)throw new Error("Firebase not configured.");if(ee&&Date.now()<ue-6e4)return ee;const d=await Oe($,te),e=Ae.credentialFromResult(d),t=e==null?void 0:e.accessToken;if(!t)throw new Error("Couldn't get a Calendar access token — try again.");return ee=t,ue=Date.now()+3600*1e3,t}function dt(){ee=null,ue=0}function We(){if(!$)throw new Error("Firebase not configured — fill in .env first.");return Oe($,he)}function qe(){return $?rt($):Promise.resolve()}function Je(d){return $?at($,d):(d(null),()=>{})}const pt=Object.freeze(Object.defineProperty({__proto__:null,addDoc:se,app:J,auth:$,clearCalendarToken:dt,collection:R,connectGoogleCalendar:He,db:w,deleteDoc:oe,doc:A,firebaseApp:J,functions:H,getDocs:Le,getDownloadURL:Ue,httpsCallable:Q,isConfigured:B,onAuth:Je,onSnapshot:W,query:Pe,serverTimestamp:T,setDoc:Be,signIn:We,signOutUser:qe,storage:ce,storageRef:Ge,updateDoc:L,uploadBytes:Ye,where:je},Symbol.toStringTag,{value:"Module"}));class ct extends EventTarget{constructor(){super(),this.state={user:null,family:null,children:[],trips:[],events:[]},this._uid=null,this._unsubUser=null,this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this._currentFamilyId=null}get familyId(){return this._currentFamilyId}start(e){!w||!e||this._uid!==e&&(this.stop(),this._uid=e,this._unsubUser=W(A(w,"users",e),t=>{var r,a,n,s,l,p;this.state.user=t.exists()?{id:t.id,...t.data()}:null;const i=((r=this.state.user)==null?void 0:r.familyId)??((a=this.state.user)==null?void 0:a.cairnFamilyId)??null;i!==this._currentFamilyId&&(this._currentFamilyId=i,(n=this._unsubFamily)==null||n.call(this),(s=this._unsubChildren)==null||s.call(this),(l=this._unsubTrips)==null||l.call(this),(p=this._unsubEvents)==null||p.call(this),this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this.state.family=null,this.state.children=[],this.state.trips=[],this.state.events=[],i&&this._subscribeFamily(i)),this._emit()}))}_subscribeFamily(e){this._unsubFamily=W(A(w,"families",e),t=>{this.state.family=t.exists()?{id:t.id,...t.data()}:null,this._emit()}),this._unsubChildren=W(R(w,"families",e,"children"),t=>{this.state.children=t.docs.map(i=>{var a,n;const r=i.data();return{id:i.id,...r,dateOfBirth:((n=(a=r.dateOfBirth)==null?void 0:a.toDate)==null?void 0:n.call(a))??(r.dateOfBirth?new Date(r.dateOfBirth):null)}}),this._emit()}),this._unsubTrips=W(R(w,"families",e,"trips"),t=>{this.state.trips=t.docs.map(i=>{var a,n,s,l;const r=i.data();return{id:i.id,...r,start:r.start??"",end:r.end??"",createdAt:((n=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:n.call(a))??null,updatedAt:((l=(s=r.updatedAt)==null?void 0:s.toDate)==null?void 0:l.call(s))??null}}).sort((i,r)=>String(i.start).localeCompare(String(r.start))),this._emit()},t=>{console.warn("[Cairn] trips subscription error:",t.code,t.message)}),this._unsubEvents=W(R(w,"families",e,"familyEvents"),t=>{this.state.events=t.docs.map(i=>{var a,n,s,l;const r=i.data();return{id:i.id,...r,date:r.date??"",createdAt:((n=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:n.call(a))??null,updatedAt:((l=(s=r.updatedAt)==null?void 0:s.toDate)==null?void 0:l.call(s))??null}}),this._emit()},t=>{console.warn("[Cairn] familyEvents subscription error:",t.code,t.message)})}async saveTrip(e){var p;if(!w||!this._currentFamilyId)throw new Error("No family yet.");const t=(p=$==null?void 0:$.currentUser)==null?void 0:p.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...n}=e,s={...n,updatedAt:T()};return i?(await L(A(w,"families",this._currentFamilyId,"trips",i),s),i):(s.createdBy=t,s.createdAt=T(),(await se(R(w,"families",this._currentFamilyId,"trips"),s)).id)}async deleteTrip(e){if(!w||!this._currentFamilyId)throw new Error("No family yet.");await oe(A(w,"families",this._currentFamilyId,"trips",e))}async saveEvent(e){var p;if(!w||!this._currentFamilyId)throw new Error("No family yet.");const t=(p=$==null?void 0:$.currentUser)==null?void 0:p.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...n}=e,s={...n,updatedAt:T()};return i?(await L(A(w,"families",this._currentFamilyId,"familyEvents",i),s),i):(s.createdBy=t,s.createdAt=T(),(await se(R(w,"families",this._currentFamilyId,"familyEvents"),s)).id)}async deleteEvent(e){if(!w||!this._currentFamilyId)throw new Error("No family yet.");await oe(A(w,"families",this._currentFamilyId,"familyEvents",e))}async previewUrl(e){if(!e||typeof e!="string"||!/^https?:\/\//i.test(e.trim()))return null;if(!H)throw new Error("Firebase functions not configured.");return(await Q(H,"previewUrl")({url:e.trim()})).data}async lookupFlight(e,t){if(!e||typeof e!="string")return null;if(!H)throw new Error("Firebase functions not configured.");return(await Q(H,"lookupFlight")({flightNumber:e.trim(),date:typeof t=="string"?t.trim():""})).data}async askPebble(e,t=[]){if(!H)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family yet.");return(await Q(H,"askPebbleAboutActivities")({question:e,familyId:this._currentFamilyId,history:t})).data}async updateChildBirthday(e,t){if(!w||!this._currentFamilyId)throw new Error("No family yet.");await L(A(w,"families",this._currentFamilyId,"children",e),{dateOfBirth:t,updatedAt:T()})}async findFamilyByCairnCode(e){if(!w)throw new Error("Firebase not configured.");const t=Pe(R(w,"families"),je("cairnInviteCode","==",e)),i=await Le(t);if(i.empty)return null;const r=i.docs[0];return{id:r.id,...r.data()}}async joinFamilyAsCairn(e){var c,h,g;if(!w)throw new Error("Firebase not configured.");const t=(c=$==null?void 0:$.currentUser)==null?void 0:c.uid;if(!t)throw new Error("Not signed in.");const i=await this.findFamilyByCairnCode(e);if(!i){const v=new Error("Invite code not found.");throw v.code="not-found",v}const r=((g=(h=i.cairnInviteCodeExpiresAt)==null?void 0:h.toDate)==null?void 0:g.call(h))??(i.cairnInviteCodeExpiresAt?new Date(i.cairnInviteCodeExpiresAt):null);if(!r||r<new Date){const v=new Error("This invite code has expired.");throw v.code="expired",v}const a=i.cairnMemberIds??[];if(a.includes(t)||(i.memberIds??[]).includes(t)){const v=new Error("You're already in this family on Cairn.");throw v.code="already-member",v}const n=i.cairnMaxMembers??20;if(a.length>=n){const v=new Error("This family's Cairn ring is full.");throw v.code="full",v}const s=$.currentUser,l=new Date,p={displayName:s.displayName??"",profilePhotoURL:s.photoURL??null,role:"member",joinedAt:l,updatedAt:l};return await L(A(w,"families",i.id),{cairnMemberIds:[...a,t],[`memberProfiles.${t}`]:p,updatedAt:T()}),await Be(A(w,"users",t),{email:s.email??"",displayName:s.displayName??"",profilePhotoURL:s.photoURL??null,cairnFamilyId:i.id,role:"member",notificationPreferences:{milestoneReminders:!0,tipNotifications:!0,schoolDeadlines:!0},createdAt:T(),updatedAt:T()},{merge:!0}),i.id}async saveSubGroup({id:e,name:t,memberIds:i}){if(!w||!this._currentFamilyId)throw new Error("No family yet.");const r=e??`g_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,6)}`;return await L(A(w,"families",this._currentFamilyId),{[`subGroups.${r}`]:{name:t.trim(),memberIds:Array.isArray(i)?[...i]:[],updatedAt:T()},updatedAt:T()}),r}async deleteSubGroup(e){if(!w||!this._currentFamilyId)throw new Error("No family yet.");const{deleteField:t}=await Re(async()=>{const{deleteField:i}=await import("./firebase-core-DVt9Aunh.js").then(r=>r.B);return{deleteField:i}},[]);await L(A(w,"families",this._currentFamilyId),{[`subGroups.${e}`]:t(),updatedAt:T()})}async setCairnMemberSubGroup(e,t){var a;if(!w||!this._currentFamilyId)throw new Error("No family yet.");if(!e)throw new Error("uid is required.");const i=((a=this.state.family)==null?void 0:a.subGroups)??{},r={};for(const[n,s]of Object.entries(i)){const l=Array.isArray(s.memberIds)?s.memberIds:[];n===t?l.includes(e)||(r[`subGroups.${n}.memberIds`]=[...l,e]):l.includes(e)&&(r[`subGroups.${n}.memberIds`]=l.filter(p=>p!==e))}Object.keys(r).length!==0&&(r.updatedAt=T(),await L(A(w,"families",this._currentFamilyId),r))}async regenerateCairnInviteCode(){if(!w||!this._currentFamilyId)throw new Error("No family yet.");const e=ht(),t=new Date(Date.now()+720*60*60*1e3);return await L(A(w,"families",this._currentFamilyId),{cairnInviteCode:e,cairnInviteCodeExpiresAt:t,updatedAt:T()}),{code:e,expiresAt:t}}stop(){var e,t,i,r,a;(e=this._unsubUser)==null||e.call(this),(t=this._unsubFamily)==null||t.call(this),(i=this._unsubChildren)==null||i.call(this),(r=this._unsubTrips)==null||r.call(this),(a=this._unsubEvents)==null||a.call(this),this._unsubUser=this._unsubFamily=this._unsubChildren=this._unsubTrips=this._unsubEvents=null,this._uid=null,this._currentFamilyId=null,this.state={user:null,family:null,children:[],trips:[],events:[]}}_emit(){this.dispatchEvent(new Event("change"))}}const k=new ct;function Ke(d,e){const t=e==null?void 0:e.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:d!=null&&d.photoURL?d.photoURL:null}function ht(){const d="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let e="CAIRN-";for(let t=0;t<4;t++)e+=d[Math.floor(Math.random()*d.length)];return e}function ut(d,e,t,i,r){const a=[];a.push({uid:d,displayName:(e==null?void 0:e.displayName)??(t==null?void 0:t.displayName)??"You",photoURL:Ke(e,t),role:"self",circles:["immediate"],hue:198});const n=(i==null?void 0:i.memberProfiles)??{};for(const[l,p]of Object.entries(n)){if(l===d)continue;const c=p.profilePhotoURL;a.push({uid:l,displayName:p.displayName??"Co-parent",photoURL:typeof c=="string"&&/^https?:\/\//i.test(c)?c:null,role:"co-parent",circles:["immediate"],hue:8})}let s=142;for(const l of r??[]){const p=l.profilePhotoURL;a.push({uid:`child:${l.id}`,displayName:l.name,photoURL:typeof p=="string"&&/^https?:\/\//i.test(p)?p:null,role:"child",circles:["immediate"],hue:s,dateOfBirth:l.dateOfBirth}),s=(s+58)%360}return a}function gt(d){const e=[];for(const t of d??[]){if(!t.dateOfBirth)continue;const i=t.dateOfBirth,r=i.getUTCFullYear(),a=String(i.getUTCMonth()+1).padStart(2,"0"),n=String(i.getUTCDate()).padStart(2,"0");e.push({id:`bday:${t.id}`,type:"birthday",date:`${r}-${a}-${n}`,personIds:[`child:${t.id}`],title:`${t.name}'s birthday`,_childId:t.id,_childName:t.name,recurring:!0})}return e}function bt(d,e=new Date){if(!(d!=null&&d.date))return{date:null,yearsElapsed:0};const t=D(d.date);if(!t||Number.isNaN(t.getTime()))return{date:null,yearsElapsed:0};if(!d.recurring)return{date:t,yearsElapsed:0};const i=new Date(e.getFullYear(),t.getMonth(),t.getDate()),r=i<new Date(e.getFullYear(),e.getMonth(),e.getDate())?new Date(e.getFullYear()+1,t.getMonth(),t.getDate()):i,a=r.getFullYear()-t.getFullYear();return{date:r,yearsElapsed:a}}const Ie=["linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)","linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)","linear-gradient(135deg, #3d9b8f 0%, #1f5c54 100%)","linear-gradient(135deg, #d4a843 0%, #c67b5c 55%, #c98a8a 100%)","linear-gradient(135deg, #8b7bb5 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #6b9ac4 0%, #3d9b8f 100%)"];function D(d){if(!d)return null;if(d instanceof Date)return d;const e=String(d).match(/^(\d{4})-(\d{2})-(\d{2})/);return e?new Date(Number(e[1]),Number(e[2])-1,Number(e[3])):new Date(d)}function mt(d){if(!d)return null;const e=d.getFullYear(),t=String(d.getMonth()+1).padStart(2,"0"),i=String(d.getDate()).padStart(2,"0");return`${e}-${t}-${i}`}async function ft(d,e=90,t=100){const i=new Date,r=new Date(i.getTime()+e*24*60*60*1e3),a=new URL("https://www.googleapis.com/calendar/v3/calendars/primary/events");a.searchParams.set("timeMin",i.toISOString()),a.searchParams.set("timeMax",r.toISOString()),a.searchParams.set("maxResults",String(t)),a.searchParams.set("singleEvents","true"),a.searchParams.set("orderBy","startTime");const n=await fetch(a.toString(),{headers:{Authorization:`Bearer ${d}`}});if(!n.ok){const l=await n.text();throw new Error(`Google Calendar: ${n.status} ${l.slice(0,160)}`)}return((await n.json()).items??[]).filter(l=>{var p,c;return l.status!=="cancelled"&&(((p=l.start)==null?void 0:p.date)||((c=l.start)==null?void 0:c.dateTime))})}function vt(d,e){var r,a,n,s,l,p,c,h;const t=((r=d.start)==null?void 0:r.date)??((n=(a=d.start)==null?void 0:a.dateTime)==null?void 0:n.slice(0,10))??"";let i=((s=d.end)==null?void 0:s.date)??((p=(l=d.end)==null?void 0:l.dateTime)==null?void 0:p.slice(0,10))??t;if((c=d.start)!=null&&c.date&&((h=d.end)!=null&&h.date)){const g=new Date(i);g.setDate(g.getDate()-1),i=g.toISOString().slice(0,10)}return{title:d.summary||"(untitled)",location:d.location??"",start:t,end:i,attendees:e?[e]:[],viewers:[],visibility:"family",notes:(d.description??"").slice(0,1e3),gcalEventId:d.id,gcalEventLink:d.htmlLink??null}}function xt(d){if(d!=null&&d.coverGradient)return d.coverGradient;const e=((d==null?void 0:d.title)??(d==null?void 0:d.id)??"")+((d==null?void 0:d.location)??"");let t=0;for(let i=0;i<e.length;i++)t=t*31+e.charCodeAt(i)>>>0;return Ie[t%Ie.length]}class ge extends z{constructor(){super(),this.year=new Date().getFullYear(),this.tripDays=new Map,this.trips=[],this.events=[],this.today=new Date,this._activeDay=null}_isLeap(e){return e%4===0&&e%100!==0||e%400===0}_daysInMonth(e,t){return[31,this._isLeap(e)?29:28,31,30,31,30,31,31,30,31,30,31][t]}_labelsForMonth(e){var a;const t=this.year,i=new Map,r=(n,s)=>{const l=i.get(n);i.set(n,l?`${l} · ${s}`:s)};for(const n of this.trips??[]){if(!n.start||!n.end)continue;const s=D(n.start),l=D(n.end);if(!s||!l||s.getFullYear()>t||l.getFullYear()<t)continue;const p=new Date(t,e,1),c=new Date(t,e+1,0);if(l<p||s>c)continue;const h=s.getMonth()===e&&s.getFullYear()===t?s.getDate():1,g=l.getMonth()===e&&l.getFullYear()===t?l.getDate():c.getDate(),v=(a=n.location)!=null&&a.trim()?`${n.title} (${n.location.trim()})`:n.title;for(let y=h;y<=g;y++)r(y,v)}for(const n of this.events??[]){const s=D(n.date);s&&s.getFullYear()===t&&s.getMonth()===e&&r(s.getDate(),n.title??"Event")}return i}_renderMonth(e){var p,c;const t=this.year,r=(new Date(t,e,1).getDay()+6)%7,a=this._daysInMonth(t,e),n=this._labelsForMonth(e),s=[];for(let h=0;h<r;h++)s.push(o`<div class="cell empty"></div>`);const l=this.today;for(let h=1;h<=a;h++){const g=`${String(e+1).padStart(2,"0")}-${String(h).padStart(2,"0")}`,v=this.tripDays.get(g)??0,y=l.getFullYear()===t&&l.getMonth()===e&&l.getDate()===h,u=n.get(h),b=(this.events??[]).some(N=>{const S=D(N.date);return S&&S.getFullYear()===t&&S.getMonth()===e&&S.getDate()===h}),_=((p=this._activeDay)==null?void 0:p.month)===e&&((c=this._activeDay)==null?void 0:c.day)===h,F=["cell",y?"today":"",v>0?"trip":"",v>.6?"dense":"",b?"event":"",u?"labelled":"",_?"active":""].filter(Boolean).join(" ");s.push(o`<div
         class=${F}
         title=${u?`${h} ${this._monthName(e)} — ${u}`:""}
         @click=${N=>u&&this._onDayTap(N,e,h,u)}
@@ -606,104 +606,103 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
             <button class="close" @click=${this._onCancel} aria-label="Close">×</button>
           </div>
 
-          <div class="row-2">
-            <div class="field">
-              <label>Title</label>
-              <input
-                type="text"
-                placeholder="e.g. Half-term in the Alps"
-                .value=${e.title}
-                @input=${i=>this._set("title",i.target.value)}
-              />
-            </div>
-            <div class="field">
-              <label>Location</label>
-              <input
-                type="text"
-                placeholder="City, country"
-                .value=${e.location}
-                @input=${i=>this._set("location",i.target.value)}
-              />
-            </div>
-          </div>
-
-          <div class="field">
-            <label>Dates</label>
-            <date-range-picker
-              .start=${e.start}
-              .end=${e.end}
-              @range-change=${i=>{this._draft={...this._draft,start:i.detail.start,end:i.detail.end??""}}}
-            ></date-range-picker>
-          </div>
-
-          <div class=${this.formMode==="activity"?"field":"row-2"}>
-            <div class="field" style=${this.formMode==="activity"?"margin-bottom:0;":""}>
-              <label>Visibility</label>
-              <div class="seg">
-                ${["personal","family","extended"].map(i=>o`
-                    <button
-                      class=${e.visibility===i?"active":""}
-                      @click=${()=>this._set("visibility",i)}
-                    >
-                      ${i==="personal"?"Just me":i==="family"?"Family":"Extended"}
-                    </button>
-                  `)}
+          <div class="form-grid">
+            <div class="form-col">
+              <div class="field">
+                <label>Title</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Half-term in the Alps"
+                  .value=${e.title}
+                  @input=${i=>this._set("title",i.target.value)}
+                />
+              </div>
+              <div class="field">
+                <label>Dates</label>
+                <date-range-picker
+                  .start=${e.start}
+                  .end=${e.end}
+                  @range-change=${i=>{this._draft={...this._draft,start:i.detail.start,end:i.detail.end??""}}}
+                ></date-range-picker>
               </div>
             </div>
-            ${this.formMode!=="activity"?o`
-                  <div class="field">
-                    <label>Lodging URL</label>
-                    <div style="display:flex;gap:8px;align-items:stretch;">
-                      <input
-                        type="url"
-                        placeholder="airbnb.com/… or booking.com/…"
-                        .value=${e.lodgingUrl}
-                        @input=${i=>this._onLodgingChange(i.target.value)}
-                        style="flex:1;min-width:0;"
-                      />
-                      ${e.lodgingUrl?o`<button
-                            type="button"
-                            class="preview-refresh-btn"
-                            ?disabled=${this._previewing}
-                            title="Re-fetch preview"
-                            @click=${()=>this._runPreview(e.lodgingUrl)}
-                          >
-                            ↻
-                          </button>`:""}
+            <div class="form-col">
+              <div class="field">
+                <label>Location</label>
+                <input
+                  type="text"
+                  placeholder="City, country"
+                  .value=${e.location}
+                  @input=${i=>this._set("location",i.target.value)}
+                />
+              </div>
+              <div class="field">
+                <label>Visibility</label>
+                <div class="seg">
+                  ${["personal","family","extended"].map(i=>o`
+                      <button
+                        class=${e.visibility===i?"active":""}
+                        @click=${()=>this._set("visibility",i)}
+                      >
+                        ${i==="personal"?"Just me":i==="family"?"Family":"Extended"}
+                      </button>
+                    `)}
+                </div>
+              </div>
+              <div class="field">
+                <label>Who's going</label>
+                <div class="attendees">
+                  ${this.members.map(i=>o`
+                      <div
+                        class="att-chip ${e.attendees.includes(i.uid)?"on":""}"
+                        @click=${()=>this._toggleAttendee(i.uid)}
+                      >
+                        <member-chip
+                          .name=${i.displayName}
+                          .photo=${i.photoURL??""}
+                          .hue=${i.hue}
+                          size="22"
+                        ></member-chip>
+                        ${i.displayName}
+                      </div>
+                    `)}
+                </div>
+              </div>
+              ${this.formMode!=="activity"?o`
+                    <div class="field">
+                      <label>Lodging URL</label>
+                      <div style="display:flex;gap:8px;align-items:stretch;">
+                        <input
+                          type="url"
+                          placeholder="airbnb.com/… or booking.com/…"
+                          .value=${e.lodgingUrl}
+                          @input=${i=>this._onLodgingChange(i.target.value)}
+                          style="flex:1;min-width:0;"
+                        />
+                        ${e.lodgingUrl?o`<button
+                              type="button"
+                              class="preview-refresh-btn"
+                              ?disabled=${this._previewing}
+                              title="Re-fetch preview"
+                              @click=${()=>this._runPreview(e.lodgingUrl)}
+                            >
+                              ↻
+                            </button>`:""}
+                      </div>
+                      ${this._previewing?o`<div class="preview-loading">
+                            <div class="spinner"></div>
+                            Fetching preview…
+                          </div>`:""}
+                      ${this._previewError?o`<div class="preview-error">${this._previewError}</div>`:""}
+                      ${!this._previewing&&e.coverImage?o`<div class="preview">
+                            <div class="thumb" style="background-image:url(${e.coverImage});"></div>
+                            <div class="meta">
+                              <div class="meta-title">${e.lodgingTitle||e.lodgingUrl}</div>
+                              <div class="meta-host">${e.lodgingHost||""}</div>
+                            </div>
+                          </div>`:""}
                     </div>
-                    ${this._previewing?o`<div class="preview-loading">
-                          <div class="spinner"></div>
-                          Fetching preview…
-                        </div>`:""}
-                    ${this._previewError?o`<div class="preview-error">${this._previewError}</div>`:""}
-                    ${!this._previewing&&e.coverImage?o`<div class="preview">
-                          <div class="thumb" style="background-image:url(${e.coverImage});"></div>
-                          <div class="meta">
-                            <div class="meta-title">${e.lodgingTitle||e.lodgingUrl}</div>
-                            <div class="meta-host">${e.lodgingHost||""}</div>
-                          </div>
-                        </div>`:""}
-                  </div>
-                `:""}
-          </div>
-
-          <div class="field">
-            <label>Who's going</label>
-            <div class="attendees">
-              ${this.members.map(i=>o`
-                  <div
-                    class="att-chip ${e.attendees.includes(i.uid)?"on":""}"
-                    @click=${()=>this._toggleAttendee(i.uid)}
-                  >
-                    <member-chip
-                      .name=${i.displayName}
-                      .photo=${i.photoURL??""}
-                      .hue=${i.hue}
-                      size="22"
-                    ></member-chip>
-                    ${i.displayName}
-                  </div>
-                `)}
+                  `:""}
             </div>
           </div>
 
@@ -976,11 +975,10 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
     }
     label {
       display: block;
-      font-size: 11.5px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--text-secondary);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      letter-spacing: -0.005em;
       margin-bottom: 6px;
     }
     input[type='text'],
@@ -1029,9 +1027,35 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
       grid-template-columns: 1fr 1fr;
       gap: 20px;
     }
+    /* Top-of-form grid: Title + Dates on the left, Location + Visibility
+       + Who's going + Lodging URL on the right. Keeps the date-picker
+       size in proportion with the title field above, and tucks all the
+       smaller inputs into the right column so the form reads as two
+       balanced stacks. Falls back to a single column on phones. */
+    .form-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 20px 24px;
+      margin-bottom: 4px;
+    }
+    .form-col {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .form-col .field {
+      margin-bottom: 14px;
+    }
+    .form-col .field:last-child {
+      margin-bottom: 0;
+    }
     @media (max-width: 560px) {
       .row-2,
       .row-dates {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .form-grid {
         grid-template-columns: 1fr;
         gap: 0;
       }
@@ -1043,18 +1067,29 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
       h2 {
         font-size: 21px;
       }
-      /* Keep Delete / Cancel / Save on a single row even on phones —
-         tighter button padding + smaller font lets all three fit. */
+      /* Single-row, uniform-shape action buttons on mobile. All three
+         (Delete / Cancel / Save) become equal-width pills with the
+         same height — Delete uses a destructive outline tint, Cancel
+         the standard ghost, Save the primary fill, but the silhouette
+         matches across all three so the row reads as a balanced set. */
       .actions {
         flex-wrap: nowrap;
         gap: 8px;
       }
-      .actions .delete-btn {
-        padding: 9px 12px;
-        font-size: 13px;
+      .actions .spacer {
+        display: none;
       }
+      .actions .delete-btn,
       .actions glass-button {
-        flex-shrink: 1;
+        flex: 1;
+        min-width: 0;
+        padding: 11px 14px;
+        font-size: 13.5px;
+        text-align: center;
+        white-space: nowrap;
+      }
+      .actions .delete-btn {
+        border-radius: var(--radius-pill);
       }
     }
     .seg {
@@ -1554,11 +1589,10 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
     .field { margin-bottom: 14px; min-width: 0; }
     label {
       display: block;
-      font-size: 11.5px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--text-secondary);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      letter-spacing: -0.005em;
       margin-bottom: 6px;
     }
     input[type='text'],
@@ -1949,11 +1983,10 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
     }
     h3 {
       font-family: var(--font-display);
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-secondary);
+      letter-spacing: -0.005em;
+      color: var(--text-primary);
       margin: 22px 0 12px;
     }
     h3:first-of-type {
@@ -1979,10 +2012,9 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
       color: var(--text-primary);
     }
     .member-row .role {
-      font-size: 11.5px;
+      font-size: 12.5px;
       color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: -0.005em;
       margin-top: 2px;
     }
     .empty {
@@ -2732,7 +2764,7 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
       display: flex;
       gap: 10px;
     }
-  `);customElements.define("import-calendar-modal",_e);class ke extends z{constructor(){super(),this.open=!1,this.user=null,this.pebbleUser=null,this._name="",this._savingName=!1,this._uploadingPhoto=!1}willUpdate(e){var t;e.has("open")&&this.open&&(this._name=((t=this.user)==null?void 0:t.displayName)??"")}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _saveName(){var t,i;const e=this._name.trim();if(!(!e||e===(((t=this.user)==null?void 0:t.displayName)??""))&&!(!((i=$==null?void 0:$.currentUser)!=null&&i.uid)||!w)){this._savingName=!0;try{await L(A(w,"users",$.currentUser.uid),{displayName:e,updatedAt:T()}),x("Display name updated.")}catch(r){console.error(r),x(`Couldn't save: ${r.code??r.message}`,{duration:5e3})}finally{this._savingName=!1}}}async _signOut(){confirm("Sign out of Cairn?")&&(this.dispatchEvent(new Event("cancel")),await We())}_triggerPhotoPicker(){var e;(e=this.renderRoot.querySelector("#photo-file"))==null||e.click()}async _onPhotoChosen(e){var a,n;const t=(a=e.target.files)==null?void 0:a[0];if(e.target.value="",!t)return;if(!t.type.startsWith("image/")){x("Pick an image file (JPG, PNG, etc.).");return}if(t.size>5*1024*1024){x("Photo is too big — keep it under 5 MB.");return}const i=(n=$==null?void 0:$.currentUser)==null?void 0:n.uid,r=k.familyId;if(!i||!r||!ce){x("Can't upload yet — you need to be in a family first.");return}this._uploadingPhoto=!0;try{const s=Ge(ce,`families/${r}/avatars/users/${i}`);await Ye(s,t,{contentType:t.type});const l=await Ue(s);await L(A(w,"users",i),{profilePhotoURL:l,updatedAt:T()}),x("Photo updated.")}catch(s){console.error("Photo upload failed",s),x(`Upload failed: ${s.code??s.message}`,{duration:5e3})}finally{this._uploadingPhoto=!1}}render(){if(!this.open)return o``;const e=this.user,t=this._name.trim()&&this._name.trim()!==((e==null?void 0:e.displayName)??"");return o`
+  `);customElements.define("import-calendar-modal",_e);class ke extends z{constructor(){super(),this.open=!1,this.user=null,this.pebbleUser=null,this._name="",this._savingName=!1,this._uploadingPhoto=!1}willUpdate(e){var t;e.has("open")&&this.open&&(this._name=((t=this.user)==null?void 0:t.displayName)??"")}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _saveName(){var t,i;const e=this._name.trim();if(!(!e||e===(((t=this.user)==null?void 0:t.displayName)??""))&&!(!((i=$==null?void 0:$.currentUser)!=null&&i.uid)||!w)){this._savingName=!0;try{await L(A(w,"users",$.currentUser.uid),{displayName:e,updatedAt:T()}),x("Display name updated.")}catch(r){console.error(r),x(`Couldn't save: ${r.code??r.message}`,{duration:5e3})}finally{this._savingName=!1}}}async _signOut(){confirm("Sign out of Cairn?")&&(this.dispatchEvent(new Event("cancel")),await qe())}_triggerPhotoPicker(){var e;(e=this.renderRoot.querySelector("#photo-file"))==null||e.click()}async _onPhotoChosen(e){var a,n;const t=(a=e.target.files)==null?void 0:a[0];if(e.target.value="",!t)return;if(!t.type.startsWith("image/")){x("Pick an image file (JPG, PNG, etc.).");return}if(t.size>5*1024*1024){x("Photo is too big — keep it under 5 MB.");return}const i=(n=$==null?void 0:$.currentUser)==null?void 0:n.uid,r=k.familyId;if(!i||!r||!ce){x("Can't upload yet — you need to be in a family first.");return}this._uploadingPhoto=!0;try{const s=Ge(ce,`families/${r}/avatars/users/${i}`);await Ye(s,t,{contentType:t.type});const l=await Ue(s);await L(A(w,"users",i),{profilePhotoURL:l,updatedAt:T()}),x("Photo updated.")}catch(s){console.error("Photo upload failed",s),x(`Upload failed: ${s.code??s.message}`,{duration:5e3})}finally{this._uploadingPhoto=!1}}render(){if(!this.open)return o``;const e=this.user,t=this._name.trim()&&this._name.trim()!==((e==null?void 0:e.displayName)??"");return o`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -2870,11 +2902,10 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
     }
     label {
       display: block;
-      font-size: 11.5px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--text-secondary);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      letter-spacing: -0.005em;
       margin-bottom: 6px;
     }
     input[type='text'] {
@@ -2941,21 +2972,17 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
       background: rgba(201, 138, 138, 0.1);
       border-color: rgba(201, 138, 138, 0.5);
     }
-  `);customElements.define("profile-sheet",ke);const X=class X extends z{constructor(){super(),this.open=!1}static get OPTIONS(){return[{type:"activity",tone:"sage",icon:o`<svg viewBox="0 0 22 22" fill="currentColor" aria-hidden="true">
-          <path d="M19.5 2.5c-.3-.3-.7-.4-1.1-.4-2.7.1-7.5.8-10.9 4.2C4.3 9.5 3.7 13.3 4.2 16c-1 1.5-1.6 3-1.9 4.2-.1.4.1.8.5.9.4.1.8-.1.9-.5.2-.9.7-2 1.5-3.1.7.3 1.6.5 2.5.5 2 0 4.5-.7 6.9-3.1 3.4-3.4 4.1-8.2 4.2-10.9 0-.4-.1-.8-.4-1.1zm-5.4 9.8c-1.7 1.7-3.5 2.4-5 2.6 1.8-2.6 4.1-4.9 6.9-6.8.4-.2.5-.7.3-1.1-.2-.4-.7-.5-1.1-.3-2.5 1.7-4.7 3.7-6.4 6 .1-1.6.8-3.5 2.5-5.2 2.6-2.6 6.4-3.4 9-3.7-.3 2.6-1.1 6.4-3.7 9z" />
-        </svg>`,label:"Group activity",desc:"Weekend plans, outings, day trips — no lodging or flights needed."},{type:"trip",tone:"tide",icon:o`<svg viewBox="0 0 22 22" fill="currentColor" aria-hidden="true">
-          <path d="M20.4 1.2c-.2-.2-.6-.3-.9-.2L1.7 7.5c-.4.1-.6.5-.6.9 0 .4.3.7.7.8l6.4 1.7 1.6 6.4c.1.4.4.7.8.7.4 0 .7-.2.9-.6L21.1 2.6c.2-.4.1-.8-.2-1.1L20.4 1.2zM8.4 9.4L4.4 8.3l13.4-4.8L8.4 9.4zm1.6 1.2l9.7-9.7-4.8 13.4L11.5 12 9.7 10.6h.3z" />
-        </svg>`,label:"Family trip",desc:"Multi-day travel with lodging, flight info, attendees."},{type:"event",tone:"amber",icon:o`<svg viewBox="0 0 22 22" fill="currentColor" aria-hidden="true">
-          <!-- Bow loops -->
-          <path d="M9.5 6.5C8 6.6 6 6.1 6 4.6c0-1 .9-1.6 1.9-1.6 1.6 0 3 1.7 3.4 3.5h-1.8zM12.5 6.5c1.5.1 3.5-.4 3.5-1.9 0-1-.9-1.6-1.9-1.6-1.6 0-3 1.7-3.4 3.5h1.8z"/>
-          <!-- Top of box (slimmer) -->
-          <rect x="3" y="7" width="16" height="3.2" rx="1.2"/>
+  `);customElements.define("profile-sheet",ke);const X=class X extends z{constructor(){super(),this.open=!1}static get OPTIONS(){return[{type:"activity",tone:"sage",icon:o`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.9 3.5c-.1-.4-.4-.7-.8-.7-3.2-.1-9 .4-13 4.4-3.3 3.3-3.9 7.7-3.4 10.7-.8 1.3-1.4 2.7-1.7 3.8-.1.4.1.8.5.9.4.1.8-.1.9-.5.3-1 .7-2.1 1.4-3.2.5.2 1.3.3 2.2.3 2.3 0 5.1-.8 7.5-3.2 4-4 4.5-9.8 4.4-13zm-6.2 11.7c-1.9 1.9-4 2.6-5.6 2.7 2-2.9 4.5-5.4 7.5-7.4.4-.2.5-.7.3-1-.2-.4-.7-.5-1-.3-2.8 1.9-5.3 4.1-7.3 6.7.1-1.8.9-4 2.9-6 3-3 7.9-3.7 10.7-3.9-.2 2.8-.8 7.7-3.5 10.2z"/>
+        </svg>`,label:"Group activity",desc:"Weekend plans, outings, day trips — no lodging or flights needed."},{type:"trip",tone:"tide",icon:o`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M21.7 2.4a.9.9 0 0 0-1-.2L2.6 8.6a.85.85 0 0 0-.6.83c0 .42.3.78.7.86l6.65 1.5 1.5 6.65c.08.4.43.7.84.7.4 0 .77-.24.94-.6L21.9 3.4a.9.9 0 0 0-.2-1zM9.65 11.0L5 9.85 17.4 5.4 9.65 11.0zm1.5 1.55L17.4 6.3 13.0 18.7l-1.85-6.15z"/>
+        </svg>`,label:"Family trip",desc:"Multi-day travel with lodging, flight info, attendees."},{type:"event",tone:"amber",icon:o`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <!-- Bow loops on top -->
+          <path d="M10.7 7.3c-.2-1-.9-2.4-2-3.1-.7-.5-1.4-.7-2.1-.6-.9.2-1.5.9-1.6 1.8-.1.7.1 1.4.6 1.9.6.6 1.5.9 2.6.9.7 0 1.5-.1 2.2-.3l.7-.2-.4-.4zM18.7 5.4c-.1-.9-.7-1.6-1.6-1.8-.7-.1-1.4.1-2.1.6-1.1.7-1.8 2.1-2 3.1l-.4.4.7.2c.7.2 1.5.3 2.2.3 1.1 0 2-.3 2.6-.9.5-.5.7-1.2.6-1.9z"/>
+          <!-- Box lid (slimmer, full width) -->
+          <path d="M21 8H3a1 1 0 0 0-1 1v2.5a1 1 0 0 0 1 1h7.5V8h3v4.5H21a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1z"/>
           <!-- Box body -->
-          <rect x="3.8" y="10.2" width="14.4" height="9.6" rx="1.4"/>
-          <!-- Vertical ribbon — cuts box in two -->
-          <rect x="9.75" y="7" width="2.5" height="12.8" fill="#000" fill-opacity="0.18"/>
-          <!-- Horizontal ribbon across top quarter of box body -->
-          <rect x="3.8" y="11.6" width="14.4" height="1.2" fill="#000" fill-opacity="0.18"/>
+          <path d="M4 14v6.5A1.5 1.5 0 0 0 5.5 22h5V14H4zM13.5 22h5a1.5 1.5 0 0 0 1.5-1.5V14h-6.5v8z"/>
         </svg>`,label:"Birthday or anniversary",desc:"Recurring celebration on a specific date."},{type:"import",tone:"tide",mobileOnly:!0,icon:o`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <rect x="3" y="5" width="18" height="16" rx="2" />
           <path d="M3 9h18M8 3v4M16 3v4" />
@@ -3770,7 +3797,7 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
       background: rgba(255, 248, 235, 0.08);
       border-radius: 6px;
     }
-  `);customElements.define("join-family-screen",ze);class Ce extends z{constructor(){super(),this.error="",this.busy=!1,this.joinCode=""}async _handleSignIn(){if(!this.busy){this.busy=!0,this.error="";try{await qe()}catch(e){this.error=(e==null?void 0:e.message)??"Sign-in failed."}finally{this.busy=!1}}}_renderGoogleIcon(){return o`
+  `);customElements.define("join-family-screen",ze);class Ce extends z{constructor(){super(),this.error="",this.busy=!1,this.joinCode=""}async _handleSignIn(){if(!this.busy){this.busy=!0,this.error="";try{await We()}catch(e){this.error=(e==null?void 0:e.message)??"Sign-in failed."}finally{this.busy=!1}}}_renderGoogleIcon(){return o`
       <svg viewBox="0 0 48 48" aria-hidden="true">
         <path
           fill="#EA4335"
@@ -4051,9 +4078,9 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
       letter-spacing: 0.04em;
       text-transform: uppercase;
     }
-  `);customElements.define("sign-in-screen",Ce);const W=class W extends z{constructor(){super(),this.value="family"}_select(e){e!==this.value&&(this.value=e,this.dispatchEvent(new CustomEvent("circle-change",{detail:{value:e},bubbles:!0,composed:!0})))}render(){return o`
+  `);customElements.define("sign-in-screen",Ce);const q=class q extends z{constructor(){super(),this.value="family"}_select(e){e!==this.value&&(this.value=e,this.dispatchEvent(new CustomEvent("circle-change",{detail:{value:e},bubbles:!0,composed:!0})))}render(){return o`
       <div class="track" role="tablist" aria-label="Circle">
-        ${W.OPTIONS.map(e=>o`
+        ${q.OPTIONS.map(e=>o`
             <button
               role="tab"
               aria-selected=${this.value===e.value}
@@ -4064,7 +4091,7 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
             </button>
           `)}
       </div>
-    `}};m(W,"properties",{value:{type:String,reflect:!0}}),m(W,"OPTIONS",[{value:"personal",label:"Just me"},{value:"family",label:"Family"},{value:"extended",label:"Extended"}]),m(W,"styles",C`
+    `}};m(q,"properties",{value:{type:String,reflect:!0}}),m(q,"OPTIONS",[{value:"personal",label:"Just me"},{value:"family",label:"Family"},{value:"extended",label:"Extended"}]),m(q,"styles",C`
     * {
       box-sizing: border-box;
     }
@@ -4113,7 +4140,7 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
         inset 0 1px 0 rgba(255, 255, 255, 0.5);
       font-weight: 600;
     }
-  `);let Fe=W;customElements.define("circle-switcher",Fe);class Se extends z{constructor(){super(),this.event=null,this.members=[]}_icon(e){return e==="birthday"?o`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  `);let Fe=q;customElements.define("circle-switcher",Fe);class Se extends z{constructor(){super(),this.event=null,this.members=[]}_icon(e){return e==="birthday"?o`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M5 14h14v6H5z" />
         <path d="M5 14c0-2 1.5-3 3-3h8c1.5 0 3 1 3 3" />
         <path d="M12 11V7" />
@@ -4952,10 +4979,9 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
     }
     .hello .family-name {
       color: var(--text-tertiary);
-      font-size: 13px;
+      font-size: 14px;
       margin-top: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: -0.005em;
       cursor: pointer;
       padding: 2px 4px;
       margin-left: -4px;
@@ -4968,10 +4994,9 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
     }
     .hello .family-name-input {
       color: var(--text-primary);
-      font-size: 13px;
+      font-size: 14px;
       margin-top: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: -0.005em;
       font-family: var(--font-body);
       font-weight: 500;
       background: rgba(255, 248, 235, 0.08);
@@ -5486,10 +5511,9 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
     .stone-label {
       font-family: var(--font-display);
       font-weight: 600;
-      font-size: 10.5px;
+      font-size: 12px;
       color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
+      letter-spacing: -0.005em;
       white-space: nowrap;
     }
     /* Empty stones: hollow dashed ellipse — invites a click without
@@ -5632,4 +5656,4 @@ var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,config
           .joinCode=${this.joinCode??""}
         ></sign-in-screen>
       `}}m(Xe,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0}});customElements.define("cairn-app",Xe);
-//# sourceMappingURL=index-C33d2f1L.js.map
+//# sourceMappingURL=index-BGrtVYq9.js.map
