@@ -63,16 +63,59 @@ export class TripForm extends LitElement {
       if (this.open) {
         this._draft = this._draftFromTrip(this.trip);
         // If we're opening an existing trip that has a lodging URL but
-        // no cover image, auto-refetch the preview. Catches trips that
-        // were created before the previewUrl Cloud Function was
-        // deployed — opening the form now will populate the cover
-        // image without the user re-typing the URL.
-        if (this._draft.lodgingUrl && !this._draft.coverImage) {
-          // Defer one frame so the form renders before the network call.
-          requestAnimationFrame(() => this._runPreview(this._draft.lodgingUrl));
+        // no cover image, auto-refetch + auto-save. Catches trips
+        // created before the previewUrl Cloud Function was deployed.
+        if (this._draft.id && this._draft.lodgingUrl && !this._draft.coverImage) {
+          requestAnimationFrame(() => this._autoRefreshPreview());
         }
       }
       this._error = '';
+    }
+  }
+
+  /**
+   * Existing-trip backfill: fetches the og:image and silently writes
+   * coverImage/lodgingHost/lodgingTitle to the trip doc, so the dashboard
+   * card updates without the user pressing Save. Different from
+   * `_runPreview` which only updates the in-memory draft (used during
+   * the user typing a new URL — they'll Save manually after editing
+   * other fields).
+   */
+  async _autoRefreshPreview() {
+    const url = this._draft.lodgingUrl;
+    const tripId = this._draft.id;
+    if (!url || !tripId || this._previewing) return;
+    this._previewing = true;
+    this._previewError = '';
+    try {
+      const result = await dataStore.previewUrl(url);
+      if (!result?.image) {
+        // Function ran but the URL didn't yield an og:image.
+        this._previewError = 'No preview image found for this URL.';
+        return;
+      }
+      const patch = {
+        coverImage: result.image,
+        lodgingHost: result.siteName ?? result.host ?? this._draft.lodgingHost ?? '',
+        lodgingTitle: result.title ?? this._draft.lodgingTitle ?? '',
+      };
+      this._draft = { ...this._draft, ...patch };
+      this._lastPreviewedUrl = url;
+      // Silent partial-update — trip-card on the dashboard re-renders
+      // via the live Firestore listener as soon as this lands.
+      try {
+        await dataStore.saveTrip({ id: tripId, ...patch });
+      } catch (saveErr) {
+        console.warn('Auto-save cover failed:', saveErr);
+      }
+    } catch (e) {
+      console.warn('Auto preview failed:', e);
+      this._previewError =
+        e?.code === 'functions/unauthenticated'
+          ? 'Preview needs you to be signed in.'
+          : 'Preview unavailable — try the Refresh button.';
+    } finally {
+      this._previewing = false;
     }
   }
 
@@ -395,6 +438,26 @@ export class TripForm extends LitElement {
       color: var(--text-tertiary);
       margin-top: 2px;
     }
+    .preview-refresh-btn {
+      flex-shrink: 0;
+      width: 44px;
+      background: rgba(255, 248, 235, 0.06);
+      border: 1px solid rgba(255, 248, 235, 0.16);
+      border-radius: var(--radius-input);
+      color: var(--text-secondary);
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 180ms ease, color 180ms ease, transform 220ms ease;
+    }
+    .preview-refresh-btn:hover:not(:disabled) {
+      background: rgba(255, 248, 235, 0.12);
+      color: var(--text-primary);
+    }
+    .preview-refresh-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      animation: spin 1s linear infinite;
+    }
     .preview-loading,
     .preview-error {
       font-size: 12px;
@@ -609,12 +672,26 @@ export class TripForm extends LitElement {
               ? html`
                   <div class="field">
                     <label>Lodging URL</label>
-                    <input
-                      type="url"
-                      placeholder="airbnb.com/… or booking.com/…"
-                      .value=${d.lodgingUrl}
-                      @input=${(e) => this._onLodgingChange(e.target.value)}
-                    />
+                    <div style="display:flex;gap:8px;align-items:stretch;">
+                      <input
+                        type="url"
+                        placeholder="airbnb.com/… or booking.com/…"
+                        .value=${d.lodgingUrl}
+                        @input=${(e) => this._onLodgingChange(e.target.value)}
+                        style="flex:1;min-width:0;"
+                      />
+                      ${d.lodgingUrl
+                        ? html`<button
+                            type="button"
+                            class="preview-refresh-btn"
+                            ?disabled=${this._previewing}
+                            title="Re-fetch preview"
+                            @click=${() => this._runPreview(d.lodgingUrl)}
+                          >
+                            ↻
+                          </button>`
+                        : ''}
+                    </div>
                     ${this._previewing
                       ? html`<div class="preview-loading">
                           <div class="spinner"></div>
