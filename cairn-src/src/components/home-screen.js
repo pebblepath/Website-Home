@@ -80,7 +80,15 @@ export class HomeScreen extends LitElement {
     this.trips = [];
     this.events = [];
     this.preview = false;
-    this.circle = 'family';
+    // 2026-05-14: the circle toggle was removed from the topbar (Pebble
+    // search bar took its centre-column slot). Default to 'extended' so
+    // the dashboard shows everything the viewer has access to; per-user
+    // visibility filtering still lives on the trip doc (visibility +
+    // viewers + targetSubGroups) and is enforced by the rules + the
+    // _userCanSeeTrip resolver below. The switcher component is kept in
+    // the codebase for a future re-introduction (likely as a filter
+    // chip row above All Trips or inside the profile sheet).
+    this.circle = 'extended';
     this._formOpen = false;
     this._formTrip = null;
     this._formBusy = false;
@@ -149,9 +157,9 @@ export class HomeScreen extends LitElement {
     .topbar .brand {
       justify-self: start;
     }
-    .topbar circle-switcher {
-      justify-self: center;
-    }
+    /* circle-switcher was removed from the topbar 2026-05-14 — left
+       a no-op selector here so older selectors that targeted it
+       degrade gracefully if anyone re-introduces it. */
     .topbar .who {
       justify-self: end;
     }
