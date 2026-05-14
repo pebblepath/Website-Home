@@ -1,8 +1,8 @@
-var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,configurable:!0,writable:!0,value:t}):o[e]=t;var u=(o,e,t)=>Qe(o,typeof e!="symbol"?e+"":e,t);import{i as k,a as $,b as n}from"./lit-2GpawzfI.js";import{f as et,h as tt,j as it,G as De,s as Ne,k as rt,l as z,m as T,n as C,o as at,q as U,t as B,v as Z,w as Q,x as Me,y as je,z as Oe,A as Pe}from"./firebase-core-DVt9Aunh.js";import{g as st,h as ee}from"./firebase-functions-CfBtnn7v.js";import{g as nt,r as Be,u as Ge,a as Ye}from"./firebase-storage-C5Nl_r0j.js";(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const r of document.querySelectorAll('link[rel="modulepreload"]'))i(r);new MutationObserver(r=>{for(const a of r)if(a.type==="childList")for(const l of a.addedNodes)l.tagName==="LINK"&&l.rel==="modulepreload"&&i(l)}).observe(document,{childList:!0,subtree:!0});function t(r){const a={};return r.integrity&&(a.integrity=r.integrity),r.referrerPolicy&&(a.referrerPolicy=r.referrerPolicy),r.crossOrigin==="use-credentials"?a.credentials="include":r.crossOrigin==="anonymous"?a.credentials="omit":a.credentials="same-origin",a}function i(r){if(r.ep)return;r.ep=!0;const a=t(r);fetch(r.href,a)}})();class te extends k{constructor(){super(),this.variant="default",this.lifted=!1,this.padding="md"}render(){const e=["panel",this.variant==="strong"?"strong":"",this.lifted?"lifted":"",`pad-${this.padding}`].filter(Boolean).join(" ");return n`
+var Ze=Object.defineProperty;var Qe=(d,e,t)=>e in d?Ze(d,e,{enumerable:!0,configurable:!0,writable:!0,value:t}):d[e]=t;var u=(d,e,t)=>Qe(d,typeof e!="symbol"?e+"":e,t);import{i as $,a as D,b as s}from"./lit-2GpawzfI.js";import{f as et,h as tt,j as it,G as Se,s as Ne,k as rt,l as E,m as M,n as S,o as at,q as R,t as U,v as re,w as ae,x as Me,y as je,z as Oe,A as Pe}from"./firebase-core-DVt9Aunh.js";import{g as st,h as Q}from"./firebase-functions-CfBtnn7v.js";import{g as nt,r as Le,u as Be,a as Ge}from"./firebase-storage-C5Nl_r0j.js";(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const r of document.querySelectorAll('link[rel="modulepreload"]'))i(r);new MutationObserver(r=>{for(const a of r)if(a.type==="childList")for(const l of a.addedNodes)l.tagName==="LINK"&&l.rel==="modulepreload"&&i(l)}).observe(document,{childList:!0,subtree:!0});function t(r){const a={};return r.integrity&&(a.integrity=r.integrity),r.referrerPolicy&&(a.referrerPolicy=r.referrerPolicy),r.crossOrigin==="use-credentials"?a.credentials="include":r.crossOrigin==="anonymous"?a.credentials="omit":a.credentials="same-origin",a}function i(r){if(r.ep)return;r.ep=!0;const a=t(r);fetch(r.href,a)}})();class se extends ${constructor(){super(),this.variant="default",this.lifted=!1,this.padding="md"}render(){const e=["panel",this.variant==="strong"?"strong":"",this.lifted?"lifted":"",`pad-${this.padding}`].filter(Boolean).join(" ");return s`
       <div class=${e}>
         <div class="content"><slot></slot></div>
       </div>
-    `}}u(te,"properties",{variant:{type:String},lifted:{type:Boolean},padding:{type:String}}),u(te,"styles",$`
+    `}}u(se,"properties",{variant:{type:String},lifted:{type:Boolean},padding:{type:String}}),u(se,"styles",D`
     :host {
       display: block;
     }
@@ -58,11 +58,11 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       position: relative;
       z-index: 1;
     }
-  `);customElements.define("glass-panel",te);class ie extends k{constructor(){super(),this.variant="primary",this.size="md",this.full=!1,this.disabled=!1}render(){const e=[this.variant,`size-${this.size}`,this.full?"full":""].filter(Boolean).join(" ");return n`
+  `);customElements.define("glass-panel",se);class ne extends ${constructor(){super(),this.variant="primary",this.size="md",this.full=!1,this.disabled=!1}render(){const e=[this.variant,`size-${this.size}`,this.full?"full":""].filter(Boolean).join(" ");return s`
       <button class=${e} ?disabled=${this.disabled}>
         <slot></slot>
       </button>
-    `}}u(ie,"properties",{variant:{type:String},size:{type:String},full:{type:Boolean},disabled:{type:Boolean,reflect:!0}}),u(ie,"styles",$`
+    `}}u(ne,"properties",{variant:{type:String},size:{type:String},full:{type:Boolean},disabled:{type:Boolean,reflect:!0}}),u(ne,"styles",D`
     * {
       box-sizing: border-box;
     }
@@ -132,7 +132,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       background: var(--glass-fill-strong);
       border-color: var(--glass-border-strong);
     }
-  `);customElements.define("glass-button",ie);class re extends k{constructor(){super(),this.size=44}render(){const e=this.size;return n`
+  `);customElements.define("glass-button",ne);class oe extends ${constructor(){super(),this.size=44}render(){const e=this.size;return s`
       <svg
         viewBox="0 0 64 64"
         width=${e}
@@ -180,7 +180,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
         <ellipse cx="33" cy="16" rx="6" ry="3.2" fill="url(#cm-stone-clay)" />
         <ellipse cx="33" cy="15.2" rx="5" ry="1.1" fill="url(#cm-highlight)" opacity="0.65" />
       </svg>
-    `}}u(re,"properties",{size:{type:Number}}),u(re,"styles",$`
+    `}}u(oe,"properties",{size:{type:Number}}),u(oe,"styles",D`
     :host {
       display: inline-block;
       line-height: 0;
@@ -189,9 +189,9 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       display: block;
       filter: drop-shadow(0 6px 18px rgba(20, 12, 6, 0.45));
     }
-  `);customElements.define("cairn-mark",re);const ot="modulepreload",lt=function(o){return"/cairn/"+o},Fe={},Ue=function(e,t,i){let r=Promise.resolve();if(t&&t.length>0){let l=function(p){return Promise.all(p.map(c=>Promise.resolve(c).then(h=>({status:"fulfilled",value:h}),h=>({status:"rejected",reason:h}))))};document.getElementsByTagName("link");const s=document.querySelector("meta[property=csp-nonce]"),d=(s==null?void 0:s.nonce)||(s==null?void 0:s.getAttribute("nonce"));r=l(t.map(p=>{if(p=lt(p),p in Fe)return;Fe[p]=!0;const c=p.endsWith(".css"),h=c?'[rel="stylesheet"]':"";if(document.querySelector(`link[href="${p}"]${h}`))return;const f=document.createElement("link");if(f.rel=c?"stylesheet":ot,c||(f.as="script"),f.crossOrigin="",f.href=p,d&&f.setAttribute("nonce",d),document.head.appendChild(f),c)return new Promise((v,b)=>{f.addEventListener("load",v),f.addEventListener("error",()=>b(new Error(`Unable to preload CSS for ${p}`)))})}))}function a(l){const s=new Event("vite:preloadError",{cancelable:!0});if(s.payload=l,window.dispatchEvent(s),!s.defaultPrevented)throw l}return r.then(l=>{for(const s of l||[])s.status==="rejected"&&a(s.reason);return e().catch(a)})},ae={apiKey:"AIzaSyA6NKZNLVBeeLrXcLJSXus5M832AxpI2wk",authDomain:"pebblepath-992b6.firebaseapp.com",projectId:"pebblepath-992b6",storageBucket:"pebblepath-992b6.firebasestorage.app",messagingSenderId:"497141667291",appId:"1:497141667291:web:ee84c186db54389d10c3fe"},I=!!(ae.apiKey&&ae.projectId),R=I?et(ae):null,y=I?tt(R):null,x=I?it(R):null,H=I?st(R,"us-central1"):null,se=I?nt(R):null,ne=I?new De:null;ne&&ne.setCustomParameters({prompt:"select_account"});const X=I?new De:null;X&&X.addScope("https://www.googleapis.com/auth/calendar.readonly");let V=null,oe=0;async function Le(){if(!y||!X)throw new Error("Firebase not configured.");if(V&&Date.now()<oe-6e4)return V;const o=await Ne(y,X),e=De.credentialFromResult(o),t=e==null?void 0:e.accessToken;if(!t)throw new Error("Couldn't get a Calendar access token — try again.");return V=t,oe=Date.now()+3600*1e3,t}function dt(){V=null,oe=0}function Re(){if(!y)throw new Error("Firebase not configured — fill in .env first.");return Ne(y,ne)}function He(){return y?rt(y):Promise.resolve()}function Je(o){return y?at(y,o):(o(null),()=>{})}const pt=Object.freeze(Object.defineProperty({__proto__:null,addDoc:Z,app:R,auth:y,clearCalendarToken:dt,collection:B,connectGoogleCalendar:Le,db:x,deleteDoc:Q,doc:z,firebaseApp:R,functions:H,getDocs:Oe,getDownloadURL:Ye,httpsCallable:ee,isConfigured:I,onAuth:Je,onSnapshot:U,query:Me,serverTimestamp:C,setDoc:Pe,signIn:Re,signOutUser:He,storage:se,storageRef:Be,updateDoc:T,uploadBytes:Ge,where:je},Symbol.toStringTag,{value:"Module"}));class ct extends EventTarget{constructor(){super(),this.state={user:null,family:null,children:[],trips:[],events:[]},this._uid=null,this._unsubUser=null,this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this._currentFamilyId=null}get familyId(){return this._currentFamilyId}start(e){!x||!e||this._uid!==e&&(this.stop(),this._uid=e,this._unsubUser=U(z(x,"users",e),t=>{var r,a,l,s,d,p;this.state.user=t.exists()?{id:t.id,...t.data()}:null;const i=((r=this.state.user)==null?void 0:r.familyId)??((a=this.state.user)==null?void 0:a.cairnFamilyId)??null;i!==this._currentFamilyId&&(this._currentFamilyId=i,(l=this._unsubFamily)==null||l.call(this),(s=this._unsubChildren)==null||s.call(this),(d=this._unsubTrips)==null||d.call(this),(p=this._unsubEvents)==null||p.call(this),this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this.state.family=null,this.state.children=[],this.state.trips=[],this.state.events=[],i&&this._subscribeFamily(i)),this._emit()}))}_subscribeFamily(e){this._unsubFamily=U(z(x,"families",e),t=>{this.state.family=t.exists()?{id:t.id,...t.data()}:null,this._emit()}),this._unsubChildren=U(B(x,"families",e,"children"),t=>{this.state.children=t.docs.map(i=>{var a,l;const r=i.data();return{id:i.id,...r,dateOfBirth:((l=(a=r.dateOfBirth)==null?void 0:a.toDate)==null?void 0:l.call(a))??(r.dateOfBirth?new Date(r.dateOfBirth):null)}}),this._emit()}),this._unsubTrips=U(B(x,"families",e,"trips"),t=>{this.state.trips=t.docs.map(i=>{var a,l,s,d;const r=i.data();return{id:i.id,...r,start:r.start??"",end:r.end??"",createdAt:((l=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:l.call(a))??null,updatedAt:((d=(s=r.updatedAt)==null?void 0:s.toDate)==null?void 0:d.call(s))??null}}).sort((i,r)=>String(i.start).localeCompare(String(r.start))),this._emit()},t=>{console.warn("[Cairn] trips subscription error:",t.code,t.message)}),this._unsubEvents=U(B(x,"families",e,"familyEvents"),t=>{this.state.events=t.docs.map(i=>{var a,l,s,d;const r=i.data();return{id:i.id,...r,date:r.date??"",createdAt:((l=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:l.call(a))??null,updatedAt:((d=(s=r.updatedAt)==null?void 0:s.toDate)==null?void 0:d.call(s))??null}}),this._emit()},t=>{console.warn("[Cairn] familyEvents subscription error:",t.code,t.message)})}async saveTrip(e){var p;if(!x||!this._currentFamilyId)throw new Error("No family yet.");const t=(p=y==null?void 0:y.currentUser)==null?void 0:p.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...l}=e,s={...l,updatedAt:C()};return i?(await T(z(x,"families",this._currentFamilyId,"trips",i),s),i):(s.createdBy=t,s.createdAt=C(),(await Z(B(x,"families",this._currentFamilyId,"trips"),s)).id)}async deleteTrip(e){if(!x||!this._currentFamilyId)throw new Error("No family yet.");await Q(z(x,"families",this._currentFamilyId,"trips",e))}async saveEvent(e){var p;if(!x||!this._currentFamilyId)throw new Error("No family yet.");const t=(p=y==null?void 0:y.currentUser)==null?void 0:p.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...l}=e,s={...l,updatedAt:C()};return i?(await T(z(x,"families",this._currentFamilyId,"familyEvents",i),s),i):(s.createdBy=t,s.createdAt=C(),(await Z(B(x,"families",this._currentFamilyId,"familyEvents"),s)).id)}async deleteEvent(e){if(!x||!this._currentFamilyId)throw new Error("No family yet.");await Q(z(x,"families",this._currentFamilyId,"familyEvents",e))}async previewUrl(e){if(!e||typeof e!="string"||!/^https?:\/\//i.test(e.trim()))return null;if(!H)throw new Error("Firebase functions not configured.");return(await ee(H,"previewUrl")({url:e.trim()})).data}async askPebble(e,t=[]){if(!H)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family yet.");return(await ee(H,"askPebbleAboutActivities")({question:e,familyId:this._currentFamilyId,history:t})).data}async updateChildBirthday(e,t){if(!x||!this._currentFamilyId)throw new Error("No family yet.");await T(z(x,"families",this._currentFamilyId,"children",e),{dateOfBirth:t,updatedAt:C()})}async findFamilyByCairnCode(e){if(!x)throw new Error("Firebase not configured.");const t=Me(B(x,"families"),je("cairnInviteCode","==",e)),i=await Oe(t);if(i.empty)return null;const r=i.docs[0];return{id:r.id,...r.data()}}async joinFamilyAsCairn(e){var c,h,f;if(!x)throw new Error("Firebase not configured.");const t=(c=y==null?void 0:y.currentUser)==null?void 0:c.uid;if(!t)throw new Error("Not signed in.");const i=await this.findFamilyByCairnCode(e);if(!i){const v=new Error("Invite code not found.");throw v.code="not-found",v}const r=((f=(h=i.cairnInviteCodeExpiresAt)==null?void 0:h.toDate)==null?void 0:f.call(h))??(i.cairnInviteCodeExpiresAt?new Date(i.cairnInviteCodeExpiresAt):null);if(!r||r<new Date){const v=new Error("This invite code has expired.");throw v.code="expired",v}const a=i.cairnMemberIds??[];if(a.includes(t)||(i.memberIds??[]).includes(t)){const v=new Error("You're already in this family on Cairn.");throw v.code="already-member",v}const l=i.cairnMaxMembers??20;if(a.length>=l){const v=new Error("This family's Cairn ring is full.");throw v.code="full",v}const s=y.currentUser,d=new Date,p={displayName:s.displayName??"",profilePhotoURL:s.photoURL??null,role:"member",joinedAt:d,updatedAt:d};return await T(z(x,"families",i.id),{cairnMemberIds:[...a,t],[`memberProfiles.${t}`]:p,updatedAt:C()}),await Pe(z(x,"users",t),{email:s.email??"",displayName:s.displayName??"",profilePhotoURL:s.photoURL??null,cairnFamilyId:i.id,role:"member",notificationPreferences:{milestoneReminders:!0,tipNotifications:!0,schoolDeadlines:!0},createdAt:C(),updatedAt:C()},{merge:!0}),i.id}async saveSubGroup({id:e,name:t,memberIds:i}){if(!x||!this._currentFamilyId)throw new Error("No family yet.");const r=e??`g_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,6)}`;return await T(z(x,"families",this._currentFamilyId),{[`subGroups.${r}`]:{name:t.trim(),memberIds:Array.isArray(i)?[...i]:[],updatedAt:C()},updatedAt:C()}),r}async deleteSubGroup(e){if(!x||!this._currentFamilyId)throw new Error("No family yet.");const{deleteField:t}=await Ue(async()=>{const{deleteField:i}=await import("./firebase-core-DVt9Aunh.js").then(r=>r.B);return{deleteField:i}},[]);await T(z(x,"families",this._currentFamilyId),{[`subGroups.${e}`]:t(),updatedAt:C()})}async regenerateCairnInviteCode(){if(!x||!this._currentFamilyId)throw new Error("No family yet.");const e=ht(),t=new Date(Date.now()+720*60*60*1e3);return await T(z(x,"families",this._currentFamilyId),{cairnInviteCode:e,cairnInviteCodeExpiresAt:t,updatedAt:C()}),{code:e,expiresAt:t}}stop(){var e,t,i,r,a;(e=this._unsubUser)==null||e.call(this),(t=this._unsubFamily)==null||t.call(this),(i=this._unsubChildren)==null||i.call(this),(r=this._unsubTrips)==null||r.call(this),(a=this._unsubEvents)==null||a.call(this),this._unsubUser=this._unsubFamily=this._unsubChildren=this._unsubTrips=this._unsubEvents=null,this._uid=null,this._currentFamilyId=null,this.state={user:null,family:null,children:[],trips:[],events:[]}}_emit(){this.dispatchEvent(new Event("change"))}}const w=new ct;function qe(o,e){const t=e==null?void 0:e.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:o!=null&&o.photoURL?o.photoURL:null}function ht(){const o="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let e="CAIRN-";for(let t=0;t<4;t++)e+=o[Math.floor(Math.random()*o.length)];return e}function ut(o,e,t,i,r){const a=[];a.push({uid:o,displayName:(e==null?void 0:e.displayName)??(t==null?void 0:t.displayName)??"You",photoURL:qe(e,t),role:"self",circles:["immediate"],hue:198});const l=(i==null?void 0:i.memberProfiles)??{};for(const[d,p]of Object.entries(l)){if(d===o)continue;const c=p.profilePhotoURL;a.push({uid:d,displayName:p.displayName??"Co-parent",photoURL:typeof c=="string"&&/^https?:\/\//i.test(c)?c:null,role:"co-parent",circles:["immediate"],hue:8})}let s=142;for(const d of r??[]){const p=d.profilePhotoURL;a.push({uid:`child:${d.id}`,displayName:d.name,photoURL:typeof p=="string"&&/^https?:\/\//i.test(p)?p:null,role:"child",circles:["immediate"],hue:s,dateOfBirth:d.dateOfBirth}),s=(s+58)%360}return a}function gt(o){const e=[];for(const t of o??[]){if(!t.dateOfBirth)continue;const i=t.dateOfBirth,r=i.getUTCFullYear(),a=String(i.getUTCMonth()+1).padStart(2,"0"),l=String(i.getUTCDate()).padStart(2,"0");e.push({id:`bday:${t.id}`,type:"birthday",date:`${r}-${a}-${l}`,personIds:[`child:${t.id}`],title:`${t.name}'s birthday`,_childId:t.id,_childName:t.name,recurring:!0})}return e}function mt(o,e=new Date){if(!(o!=null&&o.date))return{date:null,yearsElapsed:0};const t=_(o.date);if(!t||Number.isNaN(t.getTime()))return{date:null,yearsElapsed:0};if(!o.recurring)return{date:t,yearsElapsed:0};const i=new Date(e.getFullYear(),t.getMonth(),t.getDate()),r=i<new Date(e.getFullYear(),e.getMonth(),e.getDate())?new Date(e.getFullYear()+1,t.getMonth(),t.getDate()):i,a=r.getFullYear()-t.getFullYear();return{date:r,yearsElapsed:a}}const Ae=["linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)","linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)","linear-gradient(135deg, #3d9b8f 0%, #1f5c54 100%)","linear-gradient(135deg, #d4a843 0%, #c67b5c 55%, #c98a8a 100%)","linear-gradient(135deg, #8b7bb5 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #6b9ac4 0%, #3d9b8f 100%)"];function _(o){if(!o)return null;if(o instanceof Date)return o;const e=String(o).match(/^(\d{4})-(\d{2})-(\d{2})/);return e?new Date(Number(e[1]),Number(e[2])-1,Number(e[3])):new Date(o)}function bt(o){if(!o)return null;const e=o.getFullYear(),t=String(o.getMonth()+1).padStart(2,"0"),i=String(o.getDate()).padStart(2,"0");return`${e}-${t}-${i}`}async function ft(o,e=90,t=100){const i=new Date,r=new Date(i.getTime()+e*24*60*60*1e3),a=new URL("https://www.googleapis.com/calendar/v3/calendars/primary/events");a.searchParams.set("timeMin",i.toISOString()),a.searchParams.set("timeMax",r.toISOString()),a.searchParams.set("maxResults",String(t)),a.searchParams.set("singleEvents","true"),a.searchParams.set("orderBy","startTime");const l=await fetch(a.toString(),{headers:{Authorization:`Bearer ${o}`}});if(!l.ok){const d=await l.text();throw new Error(`Google Calendar: ${l.status} ${d.slice(0,160)}`)}return((await l.json()).items??[]).filter(d=>{var p,c;return d.status!=="cancelled"&&(((p=d.start)==null?void 0:p.date)||((c=d.start)==null?void 0:c.dateTime))})}function xt(o,e){var r,a,l,s,d,p,c,h;const t=((r=o.start)==null?void 0:r.date)??((l=(a=o.start)==null?void 0:a.dateTime)==null?void 0:l.slice(0,10))??"";let i=((s=o.end)==null?void 0:s.date)??((p=(d=o.end)==null?void 0:d.dateTime)==null?void 0:p.slice(0,10))??t;if((c=o.start)!=null&&c.date&&((h=o.end)!=null&&h.date)){const f=new Date(i);f.setDate(f.getDate()-1),i=f.toISOString().slice(0,10)}return{title:o.summary||"(untitled)",location:o.location??"",start:t,end:i,attendees:e?[e]:[],viewers:[],visibility:"family",notes:(o.description??"").slice(0,1e3),gcalEventId:o.id,gcalEventLink:o.htmlLink??null}}function vt(o){if(o!=null&&o.coverGradient)return o.coverGradient;const e=((o==null?void 0:o.title)??(o==null?void 0:o.id)??"")+((o==null?void 0:o.location)??"");let t=0;for(let i=0;i<e.length;i++)t=t*31+e.charCodeAt(i)>>>0;return Ae[t%Ae.length]}class le extends k{constructor(){super(),this.year=new Date().getFullYear(),this.tripDays=new Map,this.events=[],this.today=new Date}_isLeap(e){return e%4===0&&e%100!==0||e%400===0}_daysInMonth(e,t){return[31,this._isLeap(e)?29:28,31,30,31,30,31,31,30,31,30,31][t]}_renderMonth(e){const t=this.year,r=(new Date(t,e,1).getDay()+6)%7,a=this._daysInMonth(t,e),l=new Set(this.events.filter(p=>{const c=_(p.date);return c&&c.getFullYear()===t&&c.getMonth()===e}).map(p=>_(p.date).getDate())),s=[];for(let p=0;p<r;p++)s.push(n`<div class="cell empty"></div>`);const d=this.today;for(let p=1;p<=a;p++){const c=`${String(e+1).padStart(2,"0")}-${String(p).padStart(2,"0")}`,h=this.tripDays.get(c)??0,f=d.getFullYear()===t&&d.getMonth()===e&&d.getDate()===p,v=l.has(p),b=["cell",f?"today":"",h>0?"trip":"",h>.6?"dense":"",v?"event":""].filter(Boolean).join(" ");s.push(n`<div class=${b}></div>`)}return s}_onSelect(e){this.dispatchEvent(new CustomEvent("month-select",{detail:{month:e,year:this.year},bubbles:!0,composed:!0}))}render(){const e=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],t=this.today.getMonth(),i=this.today.getFullYear()===this.year;return n`
+  `);customElements.define("cairn-mark",oe);const ot="modulepreload",lt=function(d){return"/cairn/"+d},Fe={},Ue=function(e,t,i){let r=Promise.resolve();if(t&&t.length>0){let l=function(p){return Promise.all(p.map(c=>Promise.resolve(c).then(h=>({status:"fulfilled",value:h}),h=>({status:"rejected",reason:h}))))};document.getElementsByTagName("link");const n=document.querySelector("meta[property=csp-nonce]"),o=(n==null?void 0:n.nonce)||(n==null?void 0:n.getAttribute("nonce"));r=l(t.map(p=>{if(p=lt(p),p in Fe)return;Fe[p]=!0;const c=p.endsWith(".css"),h=c?'[rel="stylesheet"]':"";if(document.querySelector(`link[href="${p}"]${h}`))return;const v=document.createElement("link");if(v.rel=c?"stylesheet":ot,c||(v.as="script"),v.crossOrigin="",v.href=p,o&&v.setAttribute("nonce",o),document.head.appendChild(v),c)return new Promise((x,g)=>{v.addEventListener("load",x),v.addEventListener("error",()=>g(new Error(`Unable to preload CSS for ${p}`)))})}))}function a(l){const n=new Event("vite:preloadError",{cancelable:!0});if(n.payload=l,window.dispatchEvent(n),!n.defaultPrevented)throw l}return r.then(l=>{for(const n of l||[])n.status==="rejected"&&a(n.reason);return e().catch(a)})},le={apiKey:"AIzaSyA6NKZNLVBeeLrXcLJSXus5M832AxpI2wk",authDomain:"pebblepath-992b6.firebaseapp.com",projectId:"pebblepath-992b6",storageBucket:"pebblepath-992b6.firebasestorage.app",messagingSenderId:"497141667291",appId:"1:497141667291:web:ee84c186db54389d10c3fe"},j=!!(le.apiKey&&le.projectId),J=j?et(le):null,_=j?tt(J):null,y=j?it(J):null,Y=j?st(J,"us-central1"):null,de=j?nt(J):null,pe=j?new Se:null;pe&&pe.setCustomParameters({prompt:"select_account"});const te=j?new Se:null;te&&te.addScope("https://www.googleapis.com/auth/calendar.readonly");let ee=null,ce=0;async function Ye(){if(!_||!te)throw new Error("Firebase not configured.");if(ee&&Date.now()<ce-6e4)return ee;const d=await Ne(_,te),e=Se.credentialFromResult(d),t=e==null?void 0:e.accessToken;if(!t)throw new Error("Couldn't get a Calendar access token — try again.");return ee=t,ce=Date.now()+3600*1e3,t}function dt(){ee=null,ce=0}function Re(){if(!_)throw new Error("Firebase not configured — fill in .env first.");return Ne(_,pe)}function He(){return _?rt(_):Promise.resolve()}function Je(d){return _?at(_,d):(d(null),()=>{})}const pt=Object.freeze(Object.defineProperty({__proto__:null,addDoc:re,app:J,auth:_,clearCalendarToken:dt,collection:U,connectGoogleCalendar:Ye,db:y,deleteDoc:ae,doc:E,firebaseApp:J,functions:Y,getDocs:Oe,getDownloadURL:Ge,httpsCallable:Q,isConfigured:j,onAuth:Je,onSnapshot:R,query:Me,serverTimestamp:S,setDoc:Pe,signIn:Re,signOutUser:He,storage:de,storageRef:Le,updateDoc:M,uploadBytes:Be,where:je},Symbol.toStringTag,{value:"Module"}));class ct extends EventTarget{constructor(){super(),this.state={user:null,family:null,children:[],trips:[],events:[]},this._uid=null,this._unsubUser=null,this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this._currentFamilyId=null}get familyId(){return this._currentFamilyId}start(e){!y||!e||this._uid!==e&&(this.stop(),this._uid=e,this._unsubUser=R(E(y,"users",e),t=>{var r,a,l,n,o,p;this.state.user=t.exists()?{id:t.id,...t.data()}:null;const i=((r=this.state.user)==null?void 0:r.familyId)??((a=this.state.user)==null?void 0:a.cairnFamilyId)??null;i!==this._currentFamilyId&&(this._currentFamilyId=i,(l=this._unsubFamily)==null||l.call(this),(n=this._unsubChildren)==null||n.call(this),(o=this._unsubTrips)==null||o.call(this),(p=this._unsubEvents)==null||p.call(this),this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this.state.family=null,this.state.children=[],this.state.trips=[],this.state.events=[],i&&this._subscribeFamily(i)),this._emit()}))}_subscribeFamily(e){this._unsubFamily=R(E(y,"families",e),t=>{this.state.family=t.exists()?{id:t.id,...t.data()}:null,this._emit()}),this._unsubChildren=R(U(y,"families",e,"children"),t=>{this.state.children=t.docs.map(i=>{var a,l;const r=i.data();return{id:i.id,...r,dateOfBirth:((l=(a=r.dateOfBirth)==null?void 0:a.toDate)==null?void 0:l.call(a))??(r.dateOfBirth?new Date(r.dateOfBirth):null)}}),this._emit()}),this._unsubTrips=R(U(y,"families",e,"trips"),t=>{this.state.trips=t.docs.map(i=>{var a,l,n,o;const r=i.data();return{id:i.id,...r,start:r.start??"",end:r.end??"",createdAt:((l=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:l.call(a))??null,updatedAt:((o=(n=r.updatedAt)==null?void 0:n.toDate)==null?void 0:o.call(n))??null}}).sort((i,r)=>String(i.start).localeCompare(String(r.start))),this._emit()},t=>{console.warn("[Cairn] trips subscription error:",t.code,t.message)}),this._unsubEvents=R(U(y,"families",e,"familyEvents"),t=>{this.state.events=t.docs.map(i=>{var a,l,n,o;const r=i.data();return{id:i.id,...r,date:r.date??"",createdAt:((l=(a=r.createdAt)==null?void 0:a.toDate)==null?void 0:l.call(a))??null,updatedAt:((o=(n=r.updatedAt)==null?void 0:n.toDate)==null?void 0:o.call(n))??null}}),this._emit()},t=>{console.warn("[Cairn] familyEvents subscription error:",t.code,t.message)})}async saveTrip(e){var p;if(!y||!this._currentFamilyId)throw new Error("No family yet.");const t=(p=_==null?void 0:_.currentUser)==null?void 0:p.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...l}=e,n={...l,updatedAt:S()};return i?(await M(E(y,"families",this._currentFamilyId,"trips",i),n),i):(n.createdBy=t,n.createdAt=S(),(await re(U(y,"families",this._currentFamilyId,"trips"),n)).id)}async deleteTrip(e){if(!y||!this._currentFamilyId)throw new Error("No family yet.");await ae(E(y,"families",this._currentFamilyId,"trips",e))}async saveEvent(e){var p;if(!y||!this._currentFamilyId)throw new Error("No family yet.");const t=(p=_==null?void 0:_.currentUser)==null?void 0:p.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...l}=e,n={...l,updatedAt:S()};return i?(await M(E(y,"families",this._currentFamilyId,"familyEvents",i),n),i):(n.createdBy=t,n.createdAt=S(),(await re(U(y,"families",this._currentFamilyId,"familyEvents"),n)).id)}async deleteEvent(e){if(!y||!this._currentFamilyId)throw new Error("No family yet.");await ae(E(y,"families",this._currentFamilyId,"familyEvents",e))}async previewUrl(e){if(!e||typeof e!="string"||!/^https?:\/\//i.test(e.trim()))return null;if(!Y)throw new Error("Firebase functions not configured.");return(await Q(Y,"previewUrl")({url:e.trim()})).data}async lookupFlight(e,t){if(!e||typeof e!="string")return null;if(!Y)throw new Error("Firebase functions not configured.");return(await Q(Y,"lookupFlight")({flightNumber:e.trim(),date:typeof t=="string"?t.trim():""})).data}async askPebble(e,t=[]){if(!Y)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family yet.");return(await Q(Y,"askPebbleAboutActivities")({question:e,familyId:this._currentFamilyId,history:t})).data}async updateChildBirthday(e,t){if(!y||!this._currentFamilyId)throw new Error("No family yet.");await M(E(y,"families",this._currentFamilyId,"children",e),{dateOfBirth:t,updatedAt:S()})}async findFamilyByCairnCode(e){if(!y)throw new Error("Firebase not configured.");const t=Me(U(y,"families"),je("cairnInviteCode","==",e)),i=await Oe(t);if(i.empty)return null;const r=i.docs[0];return{id:r.id,...r.data()}}async joinFamilyAsCairn(e){var c,h,v;if(!y)throw new Error("Firebase not configured.");const t=(c=_==null?void 0:_.currentUser)==null?void 0:c.uid;if(!t)throw new Error("Not signed in.");const i=await this.findFamilyByCairnCode(e);if(!i){const x=new Error("Invite code not found.");throw x.code="not-found",x}const r=((v=(h=i.cairnInviteCodeExpiresAt)==null?void 0:h.toDate)==null?void 0:v.call(h))??(i.cairnInviteCodeExpiresAt?new Date(i.cairnInviteCodeExpiresAt):null);if(!r||r<new Date){const x=new Error("This invite code has expired.");throw x.code="expired",x}const a=i.cairnMemberIds??[];if(a.includes(t)||(i.memberIds??[]).includes(t)){const x=new Error("You're already in this family on Cairn.");throw x.code="already-member",x}const l=i.cairnMaxMembers??20;if(a.length>=l){const x=new Error("This family's Cairn ring is full.");throw x.code="full",x}const n=_.currentUser,o=new Date,p={displayName:n.displayName??"",profilePhotoURL:n.photoURL??null,role:"member",joinedAt:o,updatedAt:o};return await M(E(y,"families",i.id),{cairnMemberIds:[...a,t],[`memberProfiles.${t}`]:p,updatedAt:S()}),await Pe(E(y,"users",t),{email:n.email??"",displayName:n.displayName??"",profilePhotoURL:n.photoURL??null,cairnFamilyId:i.id,role:"member",notificationPreferences:{milestoneReminders:!0,tipNotifications:!0,schoolDeadlines:!0},createdAt:S(),updatedAt:S()},{merge:!0}),i.id}async saveSubGroup({id:e,name:t,memberIds:i}){if(!y||!this._currentFamilyId)throw new Error("No family yet.");const r=e??`g_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,6)}`;return await M(E(y,"families",this._currentFamilyId),{[`subGroups.${r}`]:{name:t.trim(),memberIds:Array.isArray(i)?[...i]:[],updatedAt:S()},updatedAt:S()}),r}async deleteSubGroup(e){if(!y||!this._currentFamilyId)throw new Error("No family yet.");const{deleteField:t}=await Ue(async()=>{const{deleteField:i}=await import("./firebase-core-DVt9Aunh.js").then(r=>r.B);return{deleteField:i}},[]);await M(E(y,"families",this._currentFamilyId),{[`subGroups.${e}`]:t(),updatedAt:S()})}async regenerateCairnInviteCode(){if(!y||!this._currentFamilyId)throw new Error("No family yet.");const e=ht(),t=new Date(Date.now()+720*60*60*1e3);return await M(E(y,"families",this._currentFamilyId),{cairnInviteCode:e,cairnInviteCodeExpiresAt:t,updatedAt:S()}),{code:e,expiresAt:t}}stop(){var e,t,i,r,a;(e=this._unsubUser)==null||e.call(this),(t=this._unsubFamily)==null||t.call(this),(i=this._unsubChildren)==null||i.call(this),(r=this._unsubTrips)==null||r.call(this),(a=this._unsubEvents)==null||a.call(this),this._unsubUser=this._unsubFamily=this._unsubChildren=this._unsubTrips=this._unsubEvents=null,this._uid=null,this._currentFamilyId=null,this.state={user:null,family:null,children:[],trips:[],events:[]}}_emit(){this.dispatchEvent(new Event("change"))}}const w=new ct;function Ke(d,e){const t=e==null?void 0:e.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:d!=null&&d.photoURL?d.photoURL:null}function ht(){const d="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let e="CAIRN-";for(let t=0;t<4;t++)e+=d[Math.floor(Math.random()*d.length)];return e}function ut(d,e,t,i,r){const a=[];a.push({uid:d,displayName:(e==null?void 0:e.displayName)??(t==null?void 0:t.displayName)??"You",photoURL:Ke(e,t),role:"self",circles:["immediate"],hue:198});const l=(i==null?void 0:i.memberProfiles)??{};for(const[o,p]of Object.entries(l)){if(o===d)continue;const c=p.profilePhotoURL;a.push({uid:o,displayName:p.displayName??"Co-parent",photoURL:typeof c=="string"&&/^https?:\/\//i.test(c)?c:null,role:"co-parent",circles:["immediate"],hue:8})}let n=142;for(const o of r??[]){const p=o.profilePhotoURL;a.push({uid:`child:${o.id}`,displayName:o.name,photoURL:typeof p=="string"&&/^https?:\/\//i.test(p)?p:null,role:"child",circles:["immediate"],hue:n,dateOfBirth:o.dateOfBirth}),n=(n+58)%360}return a}function gt(d){const e=[];for(const t of d??[]){if(!t.dateOfBirth)continue;const i=t.dateOfBirth,r=i.getUTCFullYear(),a=String(i.getUTCMonth()+1).padStart(2,"0"),l=String(i.getUTCDate()).padStart(2,"0");e.push({id:`bday:${t.id}`,type:"birthday",date:`${r}-${a}-${l}`,personIds:[`child:${t.id}`],title:`${t.name}'s birthday`,_childId:t.id,_childName:t.name,recurring:!0})}return e}function mt(d,e=new Date){if(!(d!=null&&d.date))return{date:null,yearsElapsed:0};const t=k(d.date);if(!t||Number.isNaN(t.getTime()))return{date:null,yearsElapsed:0};if(!d.recurring)return{date:t,yearsElapsed:0};const i=new Date(e.getFullYear(),t.getMonth(),t.getDate()),r=i<new Date(e.getFullYear(),e.getMonth(),e.getDate())?new Date(e.getFullYear()+1,t.getMonth(),t.getDate()):i,a=r.getFullYear()-t.getFullYear();return{date:r,yearsElapsed:a}}const Ae=["linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)","linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)","linear-gradient(135deg, #3d9b8f 0%, #1f5c54 100%)","linear-gradient(135deg, #d4a843 0%, #c67b5c 55%, #c98a8a 100%)","linear-gradient(135deg, #8b7bb5 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #6b9ac4 0%, #3d9b8f 100%)"];function k(d){if(!d)return null;if(d instanceof Date)return d;const e=String(d).match(/^(\d{4})-(\d{2})-(\d{2})/);return e?new Date(Number(e[1]),Number(e[2])-1,Number(e[3])):new Date(d)}function bt(d){if(!d)return null;const e=d.getFullYear(),t=String(d.getMonth()+1).padStart(2,"0"),i=String(d.getDate()).padStart(2,"0");return`${e}-${t}-${i}`}async function ft(d,e=90,t=100){const i=new Date,r=new Date(i.getTime()+e*24*60*60*1e3),a=new URL("https://www.googleapis.com/calendar/v3/calendars/primary/events");a.searchParams.set("timeMin",i.toISOString()),a.searchParams.set("timeMax",r.toISOString()),a.searchParams.set("maxResults",String(t)),a.searchParams.set("singleEvents","true"),a.searchParams.set("orderBy","startTime");const l=await fetch(a.toString(),{headers:{Authorization:`Bearer ${d}`}});if(!l.ok){const o=await l.text();throw new Error(`Google Calendar: ${l.status} ${o.slice(0,160)}`)}return((await l.json()).items??[]).filter(o=>{var p,c;return o.status!=="cancelled"&&(((p=o.start)==null?void 0:p.date)||((c=o.start)==null?void 0:c.dateTime))})}function vt(d,e){var r,a,l,n,o,p,c,h;const t=((r=d.start)==null?void 0:r.date)??((l=(a=d.start)==null?void 0:a.dateTime)==null?void 0:l.slice(0,10))??"";let i=((n=d.end)==null?void 0:n.date)??((p=(o=d.end)==null?void 0:o.dateTime)==null?void 0:p.slice(0,10))??t;if((c=d.start)!=null&&c.date&&((h=d.end)!=null&&h.date)){const v=new Date(i);v.setDate(v.getDate()-1),i=v.toISOString().slice(0,10)}return{title:d.summary||"(untitled)",location:d.location??"",start:t,end:i,attendees:e?[e]:[],viewers:[],visibility:"family",notes:(d.description??"").slice(0,1e3),gcalEventId:d.id,gcalEventLink:d.htmlLink??null}}function xt(d){if(d!=null&&d.coverGradient)return d.coverGradient;const e=((d==null?void 0:d.title)??(d==null?void 0:d.id)??"")+((d==null?void 0:d.location)??"");let t=0;for(let i=0;i<e.length;i++)t=t*31+e.charCodeAt(i)>>>0;return Ae[t%Ae.length]}class he extends ${constructor(){super(),this.year=new Date().getFullYear(),this.tripDays=new Map,this.events=[],this.today=new Date}_isLeap(e){return e%4===0&&e%100!==0||e%400===0}_daysInMonth(e,t){return[31,this._isLeap(e)?29:28,31,30,31,30,31,31,30,31,30,31][t]}_renderMonth(e){const t=this.year,r=(new Date(t,e,1).getDay()+6)%7,a=this._daysInMonth(t,e),l=new Set(this.events.filter(p=>{const c=k(p.date);return c&&c.getFullYear()===t&&c.getMonth()===e}).map(p=>k(p.date).getDate())),n=[];for(let p=0;p<r;p++)n.push(s`<div class="cell empty"></div>`);const o=this.today;for(let p=1;p<=a;p++){const c=`${String(e+1).padStart(2,"0")}-${String(p).padStart(2,"0")}`,h=this.tripDays.get(c)??0,v=o.getFullYear()===t&&o.getMonth()===e&&o.getDate()===p,x=l.has(p),g=["cell",v?"today":"",h>0?"trip":"",h>.6?"dense":"",x?"event":""].filter(Boolean).join(" ");n.push(s`<div class=${g}></div>`)}return n}_onSelect(e){this.dispatchEvent(new CustomEvent("month-select",{detail:{month:e,year:this.year},bubbles:!0,composed:!0}))}render(){const e=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],t=this.today.getMonth(),i=this.today.getFullYear()===this.year;return s`
       <div class="grid">
-        ${e.map((r,a)=>n`
+        ${e.map((r,a)=>s`
             <div
               class="month ${i&&a===t?"current":""}"
               @click=${()=>this._onSelect(a)}
@@ -206,7 +206,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
         <span class="swatch"><i class="event"></i> Celebration</span>
         <span class="swatch"><i class="today"></i> Today</span>
       </div>
-    `}}u(le,"properties",{year:{type:Number},tripDays:{type:Object},events:{type:Array},today:{type:Object}}),u(le,"styles",$`
+    `}}u(he,"properties",{year:{type:Number},tripDays:{type:Object},events:{type:Array},today:{type:Object}}),u(he,"styles",D`
     :host {
       display: block;
     }
@@ -275,7 +275,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       background: var(--today-bg);
       box-shadow:
         0 0 0 1px rgba(255, 255, 255, 0.4),
-        0 0 6px rgba(212, 168, 67, 0.6);
+        0 0 6px rgba(79, 194, 107, 0.7);
     }
     .cell.trip {
       background: var(--trip-day-bg);
@@ -333,12 +333,12 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
     .swatch i.today {
       background: var(--today-bg);
     }
-  `);customElements.define("yearly-view",le);class de extends k{constructor(){super(),this.name="",this.hue=200,this.photo="",this.size=36,this.showName=!1}_initials(){return this.name.split(/\s+/).map(e=>e[0]).filter(Boolean).slice(0,2).join("").toUpperCase()}render(){const e=`linear-gradient(135deg, hsl(${this.hue}, 55%, 62%) 0%, hsl(${(this.hue+40)%360}, 50%, 42%) 100%)`,t=`width:${this.size}px;height:${this.size}px;background:${e};font-size:${this.size*.38}px;`;return n`
+  `);customElements.define("yearly-view",he);class ue extends ${constructor(){super(),this.name="",this.hue=200,this.photo="",this.size=36,this.showName=!1}_initials(){return this.name.split(/\s+/).map(e=>e[0]).filter(Boolean).slice(0,2).join("").toUpperCase()}render(){const e=`linear-gradient(135deg, hsl(${this.hue}, 55%, 62%) 0%, hsl(${(this.hue+40)%360}, 50%, 42%) 100%)`,t=`width:${this.size}px;height:${this.size}px;background:${e};font-size:${this.size*.38}px;`;return s`
       <div class="avatar" style=${t} title=${this.name}>
-        ${this.photo?n`<img src=${this.photo} alt=${this.name} />`:n`<span>${this._initials()}</span>`}
+        ${this.photo?s`<img src=${this.photo} alt=${this.name} />`:s`<span>${this._initials()}</span>`}
       </div>
-      ${this.showName?n`<span class="name">${this.name}</span>`:""}
-    `}}u(de,"properties",{name:{type:String},hue:{type:Number},photo:{type:String},size:{type:Number},showName:{type:Boolean,attribute:"show-name"}}),u(de,"styles",$`
+      ${this.showName?s`<span class="name">${this.name}</span>`:""}
+    `}}u(ue,"properties",{name:{type:String},hue:{type:Number},photo:{type:String},size:{type:Number},showName:{type:Boolean,attribute:"show-name"}}),u(ue,"styles",D`
     :host {
       display: inline-flex;
       align-items: center;
@@ -370,16 +370,16 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       font-weight: 500;
       color: var(--text-secondary);
     }
-  `);customElements.define("member-chip",de);class pe extends k{constructor(){super(),this.start="",this.end="",this._displayMonth=null,this._hoverDate=null}willUpdate(e){if(e.has("start")||this._displayMonth===null){const t=this.start?_(this.start):new Date;this._displayMonth=new Date(t.getFullYear(),t.getMonth(),1)}}_isoFor(e,t,i){return`${e}-${String(t+1).padStart(2,"0")}-${String(i).padStart(2,"0")}`}_emit(e,t){this.start=e,this.end=t,this._hoverDate=null,this.dispatchEvent(new CustomEvent("range-change",{detail:{start:e,end:t},bubbles:!0,composed:!0}))}_onDayClick(e){if(!this.start||this.start&&this.end){this._emit(e,"");return}e<this.start?this._emit(e,this.start):this._emit(this.start,e)}_onDayHover(e){this.start&&!this.end&&(this._hoverDate=e)}_onLeave(){this._hoverDate=null}_shiftMonth(e){const t=this._displayMonth;this._displayMonth=new Date(t.getFullYear(),t.getMonth()+e,1)}_isToday(e,t,i){const r=new Date;return r.getFullYear()===e&&r.getMonth()===t&&r.getDate()===i}_inSelectedRange(e){return!this.start||!this.end?!1:e>this.start&&e<this.end}_inHoverRange(e){if(!this.start||this.end||!this._hoverDate)return!1;const t=this._hoverDate<this.start?this._hoverDate:this.start,i=this._hoverDate<this.start?this.start:this._hoverDate;return e>t&&e<i}_summary(){if(!this.start&&!this.end)return"Pick a start date";const e=t=>{const i=_(t);return i?i.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"}):""};return this.start&&!this.end?`From ${e(this.start)} — pick an end date`:this.start===this.end?e(this.start):`${e(this.start)} – ${e(this.end)}`}_renderGrid(){const e=this._displayMonth.getFullYear(),t=this._displayMonth.getMonth(),r=(new Date(e,t,1).getDay()+6)%7,a=new Date(e,t+1,0).getDate(),l=[];for(let s=0;s<r;s++)l.push(n`<div class="empty"></div>`);for(let s=1;s<=a;s++){const d=this._isoFor(e,t,s),p=d===this.start,c=d===this.end&&d!==this.start,h=this._inSelectedRange(d),f=this._inHoverRange(d),v=this._isToday(e,t,s),b=["day",p?"start":"",c?"end":"",h?"in-range":"",f?"hover-range":"",v&&!p&&!c?"today":""].filter(Boolean).join(" ");l.push(n`
+  `);customElements.define("member-chip",ue);class ge extends ${constructor(){super(),this.start="",this.end="",this._displayMonth=null,this._hoverDate=null}willUpdate(e){if(e.has("start")||this._displayMonth===null){const t=this.start?k(this.start):new Date;this._displayMonth=new Date(t.getFullYear(),t.getMonth(),1)}}_isoFor(e,t,i){return`${e}-${String(t+1).padStart(2,"0")}-${String(i).padStart(2,"0")}`}_emit(e,t){this.start=e,this.end=t,this._hoverDate=null,this.dispatchEvent(new CustomEvent("range-change",{detail:{start:e,end:t},bubbles:!0,composed:!0}))}_onDayClick(e){if(!this.start||this.start&&this.end){this._emit(e,"");return}e<this.start?this._emit(e,this.start):this._emit(this.start,e)}_onDayHover(e){this.start&&!this.end&&(this._hoverDate=e)}_onLeave(){this._hoverDate=null}_shiftMonth(e){const t=this._displayMonth;this._displayMonth=new Date(t.getFullYear(),t.getMonth()+e,1)}_isToday(e,t,i){const r=new Date;return r.getFullYear()===e&&r.getMonth()===t&&r.getDate()===i}_inSelectedRange(e){return!this.start||!this.end?!1:e>this.start&&e<this.end}_inHoverRange(e){if(!this.start||this.end||!this._hoverDate)return!1;const t=this._hoverDate<this.start?this._hoverDate:this.start,i=this._hoverDate<this.start?this.start:this._hoverDate;return e>t&&e<i}_summary(){if(!this.start&&!this.end)return"Pick a start date";const e=t=>{const i=k(t);return i?i.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"}):""};return this.start&&!this.end?`From ${e(this.start)} — pick an end date`:this.start===this.end?e(this.start):`${e(this.start)} – ${e(this.end)}`}_renderGrid(){const e=this._displayMonth.getFullYear(),t=this._displayMonth.getMonth(),r=(new Date(e,t,1).getDay()+6)%7,a=new Date(e,t+1,0).getDate(),l=[];for(let n=0;n<r;n++)l.push(s`<div class="empty"></div>`);for(let n=1;n<=a;n++){const o=this._isoFor(e,t,n),p=o===this.start,c=o===this.end&&o!==this.start,h=this._inSelectedRange(o),v=this._inHoverRange(o),x=this._isToday(e,t,n),g=["day",p?"start":"",c?"end":"",h?"in-range":"",v?"hover-range":"",x&&!p&&!c?"today":""].filter(Boolean).join(" ");l.push(s`
         <button
           type="button"
-          class=${b}
-          @click=${()=>this._onDayClick(d)}
-          @mouseover=${()=>this._onDayHover(d)}
+          class=${g}
+          @click=${()=>this._onDayClick(o)}
+          @mouseover=${()=>this._onDayHover(o)}
         >
-          ${s}
+          ${n}
         </button>
-      `)}return l}render(){if(!this._displayMonth)return n``;const e=this._displayMonth.toLocaleString("en-GB",{month:"long",year:"numeric"});return n`
+      `)}return l}render(){if(!this._displayMonth)return s``;const e=this._displayMonth.toLocaleString("en-GB",{month:"long",year:"numeric"});return s`
       <div class="summary">${this._summary()}</div>
       <div class="head">
         <button class="nav" type="button" @click=${()=>this._shiftMonth(-1)} aria-label="Previous month">‹</button>
@@ -387,10 +387,10 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
         <button class="nav" type="button" @click=${()=>this._shiftMonth(1)} aria-label="Next month">›</button>
       </div>
       <div class="dow-row">
-        ${["Mo","Tu","We","Th","Fr","Sa","Su"].map(t=>n`<div class="dow">${t}</div>`)}
+        ${["Mo","Tu","We","Th","Fr","Sa","Su"].map(t=>s`<div class="dow">${t}</div>`)}
       </div>
       <div class="grid" @mouseleave=${this._onLeave}>${this._renderGrid()}</div>
-    `}}u(pe,"properties",{start:{type:String},end:{type:String},_displayMonth:{state:!0},_hoverDate:{state:!0}}),u(pe,"styles",$`
+    `}}u(ge,"properties",{start:{type:String},end:{type:String},_displayMonth:{state:!0},_hoverDate:{state:!0}}),u(ge,"styles",D`
     * { box-sizing: border-box; }
     :host {
       display: block;
@@ -505,7 +505,12 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
     }
-  `);customElements.define("date-range-picker",pe);class ce extends k{constructor(){super(),this.open=!1,this.trip=null,this.members=[],this.currentUid="",this.familyId="",this.busy=!1,this.formMode="trip",this.subGroups={},this._draft=this._blankDraft(),this._error="",this._previewing=!1,this._previewError="",this._previewDebounce=null,this._lastPreviewedUrl="",this._showReturn=!1,this._showOutboundDetails=!1,this._showReturnDetails=!1}willUpdate(e){(e.has("trip")||e.has("open"))&&(this.open&&(this._draft=this._draftFromTrip(this.trip),this._draft.id&&this._draft.lodgingUrl&&!this._draft.coverImage&&requestAnimationFrame(()=>this._autoRefreshPreview()),this._showReturn=!!(this._draft.returnFlightNumber||this._draft.returnFlightDepartTime||this._draft.returnFlightDepartAirport||this._draft.returnFlightArriveAirport),this._showOutboundDetails=!!(this._draft.flightDepartAirport||this._draft.flightArriveAirport),this._showReturnDetails=!!(this._draft.returnFlightDepartAirport||this._draft.returnFlightArriveAirport)),this._error="")}async _autoRefreshPreview(){const e=this._draft.lodgingUrl,t=this._draft.id;if(!(!e||!t||this._previewing)){this._previewing=!0,this._previewError="";try{const i=await w.previewUrl(e);if(!(i!=null&&i.image)){this._previewError="No preview image found for this URL.";return}const r={coverImage:i.image,lodgingHost:i.siteName??i.host??this._draft.lodgingHost??"",lodgingTitle:i.title??this._draft.lodgingTitle??""};this._draft={...this._draft,...r},this._lastPreviewedUrl=e;try{await w.saveTrip({id:t,...r})}catch(a){console.warn("Auto-save cover failed:",a)}}catch(i){console.warn("Auto preview failed:",i),this._previewError=(i==null?void 0:i.code)==="functions/unauthenticated"?"Preview needs you to be signed in.":"Preview unavailable — try the Refresh button."}finally{this._previewing=!1}}}_blankDraft(){const e=new Date().toISOString().slice(0,10);return{id:null,title:"",location:"",start:e,end:e,visibility:"family",attendees:this.currentUid?[this.currentUid]:[],viewers:[],targetSubGroups:[],lodgingUrl:"",lodgingHost:"",lodgingTitle:"",flightAirline:"",flightNumber:"",flightDepartAirport:"",flightDepartTime:"",flightArriveAirport:"",flightArriveTime:"",returnFlightAirline:"",returnFlightNumber:"",returnFlightDepartAirport:"",returnFlightDepartTime:"",returnFlightArriveAirport:"",returnFlightArriveTime:"",notes:""}}_draftFromTrip(e){return e?{id:e.id??null,title:e.title??"",location:e.location??"",start:e.start??new Date().toISOString().slice(0,10),end:e.end??e.start??new Date().toISOString().slice(0,10),visibility:e.visibility??"family",attendees:Array.isArray(e.attendees)?[...e.attendees]:[],viewers:Array.isArray(e.viewers)?[...e.viewers]:[],targetSubGroups:Array.isArray(e.targetSubGroups)?[...e.targetSubGroups]:[],lodgingUrl:e.lodgingUrl??"",lodgingHost:e.lodgingHost??"",lodgingTitle:e.lodgingTitle??"",flightAirline:e.flightAirline??"",flightNumber:e.flightNumber??"",flightDepartAirport:e.flightDepartAirport??"",flightDepartTime:e.flightDepartTime??"",flightArriveAirport:e.flightArriveAirport??"",flightArriveTime:e.flightArriveTime??"",returnFlightAirline:e.returnFlightAirline??"",returnFlightNumber:e.returnFlightNumber??"",returnFlightDepartAirport:e.returnFlightDepartAirport??"",returnFlightDepartTime:e.returnFlightDepartTime??"",returnFlightArriveAirport:e.returnFlightArriveAirport??"",returnFlightArriveTime:e.returnFlightArriveTime??"",coverImage:e.coverImage??"",notes:e.notes??""}:this._blankDraft()}_set(e,t){this._draft={...this._draft,[e]:t}}_onLodgingChange(e){this._set("lodgingUrl",e),this._previewError="",this._previewDebounce&&clearTimeout(this._previewDebounce);const t=e.trim();if(!t){this._set("coverImage",""),this._set("lodgingHost",""),this._set("lodgingTitle",""),this._lastPreviewedUrl="";return}/^https?:\/\//i.test(t)&&t!==this._lastPreviewedUrl&&(this._previewDebounce=setTimeout(()=>this._runPreview(t),700))}async _runPreview(e){this._previewing=!0,this._previewError="";try{const t=await w.previewUrl(e);if(!t)return;this._lastPreviewedUrl=e,this._draft={...this._draft,coverImage:t.image??this._draft.coverImage,lodgingHost:t.siteName??t.host??this._draft.lodgingHost,lodgingTitle:t.title??this._draft.lodgingTitle}}catch(t){console.warn("Preview failed:",t),(t==null?void 0:t.code)==="functions/unauthenticated"?this._previewError="Preview unavailable — sign in.":(t==null?void 0:t.code)==="functions/invalid-argument"?this._previewError="That URL doesn’t look right.":this._previewError="Preview unavailable — paste it again or skip."}finally{this._previewing=!1}}_toggleAttendee(e){const t=this._draft.attendees.includes(e),i=t?this._draft.attendees.filter(a=>a!==e):[...this._draft.attendees,e];let r=this._draft.viewers??[];t||(r=r.filter(a=>a!==e)),this._draft={...this._draft,attendees:i,viewers:r}}_toggleViewer(e){if(this._draft.attendees.includes(e))return;const i=(this._draft.viewers??[]).includes(e)?this._draft.viewers.filter(r=>r!==e):[...this._draft.viewers??[],e];this._set("viewers",i)}_toggleSubGroup(e){const i=(this._draft.targetSubGroups??[]).includes(e)?this._draft.targetSubGroups.filter(r=>r!==e):[...this._draft.targetSubGroups??[],e];this._set("targetSubGroups",i)}_onSave(){const e=this._draft;if(!e.title.trim()){this._error="Give the trip a title.";return}if(!e.start||!e.end){this._error="Set both start and end dates.";return}if(e.end<e.start){this._error="End date can’t be before start date.";return}if(!this.familyId){this._error="You need to be in a family first.";return}this._error="",this.dispatchEvent(new CustomEvent("save",{detail:{...e,title:e.title.trim(),location:e.location.trim()}}))}_onDelete(){this._draft.id&&confirm("Delete this trip? This can’t be undone.")&&this.dispatchEvent(new CustomEvent("remove",{detail:{id:this._draft.id}}))}_onCancel(){this.dispatchEvent(new Event("cancel"))}render(){if(!this.open)return n``;const e=this._draft,t=!!e.id;return n`
+  `);customElements.define("date-range-picker",ge);class me extends ${constructor(){super(),this.open=!1,this.trip=null,this.members=[],this.currentUid="",this.familyId="",this.busy=!1,this.formMode="trip",this.subGroups={},this._draft=this._blankDraft(),this._error="",this._previewing=!1,this._previewError="",this._previewDebounce=null,this._lastPreviewedUrl="",this._showReturn=!1,this._showOutboundDetails=!1,this._showReturnDetails=!1,this._outboundLookupState="idle",this._outboundLookupMessage="",this._returnLookupState="idle",this._returnLookupMessage="",this._lastLookedUpOutbound="",this._lastLookedUpReturn=""}async _runFlightLookup(e){var h,v,x,g;const t=e==="return",i=t?"returnFlightNumber":"flightNumber",r=(this._draft[i]??"").trim();if(!r)return;const a=r.toUpperCase().replace(/[^A-Z0-9]/g,"");if(!/^[A-Z]{2,3}\d{1,4}[A-Z]?$/.test(a)){this[t?"_returnLookupState":"_outboundLookupState"]="idle";return}const l=t?"_lastLookedUpReturn":"_lastLookedUpOutbound",n=t?this._draft.end:this._draft.start,o=`${a}|${n??""}`;if(this[l]===o)return;const p=t?"_returnLookupState":"_outboundLookupState",c=t?"_returnLookupMessage":"_outboundLookupMessage";this[p]="loading",this[c]="";try{const m=await w.lookupFlight(a,n);if(!m)return;this[l]=o;const z=t?"returnFlightAirline":"flightAirline",F=t?"returnFlightDepartAirport":"flightDepartAirport",N=t?"returnFlightArriveAirport":"flightArriveAirport",O=t?"returnFlightDepartTime":"flightDepartTime",K=t?"returnFlightArriveTime":"flightArriveTime",W=q=>q?String(q).slice(0,16):"",T={};if(!this._draft[z]&&m.airline&&(T[z]=m.airline),!this._draft[F]&&((h=m.depart)!=null&&h.iata)&&(T[F]=m.depart.iata),!this._draft[N]&&((v=m.arrive)!=null&&v.iata)&&(T[N]=m.arrive.iata),!this._draft[O]&&((x=m.depart)!=null&&x.scheduledTime)&&(T[O]=W(m.depart.scheduledTime)),!this._draft[K]&&((g=m.arrive)!=null&&g.scheduledTime)&&(T[K]=W(m.arrive.scheduledTime)),Object.keys(T).length===0){this[p]="idle";return}this._draft={...this._draft,...T},(T[F]||T[N])&&(t?this._showReturnDetails=!0:this._showOutboundDetails=!0),this[p]="ok",this[c]=`Filled from ${m.airline??"flight record"}.`}catch(m){console.warn("Flight lookup failed:",m),this[p]="error",(m==null?void 0:m.code)==="functions/failed-precondition"?this[c]="Auto-fill not configured — enter details manually.":(m==null?void 0:m.code)==="functions/not-found"?this[c]="Couldn't find that flight — enter details manually.":(m==null?void 0:m.code)==="functions/invalid-argument"?this[c]="That doesn't look like a flight number.":(m==null?void 0:m.code)==="functions/unauthenticated"?this[c]="Sign in to use flight lookup.":this[c]="Flight lookup unavailable — enter details manually."}}willUpdate(e){(e.has("trip")||e.has("open"))&&(this.open&&(this._draft=this._draftFromTrip(this.trip),this._draft.id&&this._draft.lodgingUrl&&!this._draft.coverImage&&requestAnimationFrame(()=>this._autoRefreshPreview()),this._showReturn=!!(this._draft.returnFlightNumber||this._draft.returnFlightDepartTime||this._draft.returnFlightDepartAirport||this._draft.returnFlightArriveAirport),this._showOutboundDetails=!!(this._draft.flightDepartAirport||this._draft.flightArriveAirport),this._showReturnDetails=!!(this._draft.returnFlightDepartAirport||this._draft.returnFlightArriveAirport)),this._error="")}async _autoRefreshPreview(){const e=this._draft.lodgingUrl,t=this._draft.id;if(!(!e||!t||this._previewing)){this._previewing=!0,this._previewError="";try{const i=await w.previewUrl(e);if(!(i!=null&&i.image)){this._previewError="No preview image found for this URL.";return}const r={coverImage:i.image,lodgingHost:i.siteName??i.host??this._draft.lodgingHost??"",lodgingTitle:i.title??this._draft.lodgingTitle??""};this._draft={...this._draft,...r},this._lastPreviewedUrl=e;try{await w.saveTrip({id:t,...r})}catch(a){console.warn("Auto-save cover failed:",a)}}catch(i){console.warn("Auto preview failed:",i),this._previewError=(i==null?void 0:i.code)==="functions/unauthenticated"?"Preview needs you to be signed in.":"Preview unavailable — try the Refresh button."}finally{this._previewing=!1}}}_blankDraft(){const e=new Date().toISOString().slice(0,10);return{id:null,title:"",location:"",start:e,end:e,visibility:"family",attendees:this.currentUid?[this.currentUid]:[],viewers:[],targetSubGroups:[],lodgingUrl:"",lodgingHost:"",lodgingTitle:"",flightAirline:"",flightNumber:"",flightDepartAirport:"",flightDepartTime:"",flightArriveAirport:"",flightArriveTime:"",returnFlightAirline:"",returnFlightNumber:"",returnFlightDepartAirport:"",returnFlightDepartTime:"",returnFlightArriveAirport:"",returnFlightArriveTime:"",notes:""}}_draftFromTrip(e){return e?{id:e.id??null,title:e.title??"",location:e.location??"",start:e.start??new Date().toISOString().slice(0,10),end:e.end??e.start??new Date().toISOString().slice(0,10),visibility:e.visibility??"family",attendees:Array.isArray(e.attendees)?[...e.attendees]:[],viewers:Array.isArray(e.viewers)?[...e.viewers]:[],targetSubGroups:Array.isArray(e.targetSubGroups)?[...e.targetSubGroups]:[],lodgingUrl:e.lodgingUrl??"",lodgingHost:e.lodgingHost??"",lodgingTitle:e.lodgingTitle??"",flightAirline:e.flightAirline??"",flightNumber:e.flightNumber??"",flightDepartAirport:e.flightDepartAirport??"",flightDepartTime:e.flightDepartTime??"",flightArriveAirport:e.flightArriveAirport??"",flightArriveTime:e.flightArriveTime??"",returnFlightAirline:e.returnFlightAirline??"",returnFlightNumber:e.returnFlightNumber??"",returnFlightDepartAirport:e.returnFlightDepartAirport??"",returnFlightDepartTime:e.returnFlightDepartTime??"",returnFlightArriveAirport:e.returnFlightArriveAirport??"",returnFlightArriveTime:e.returnFlightArriveTime??"",coverImage:e.coverImage??"",notes:e.notes??""}:this._blankDraft()}_set(e,t){this._draft={...this._draft,[e]:t}}_onLodgingChange(e){this._set("lodgingUrl",e),this._previewError="",this._previewDebounce&&clearTimeout(this._previewDebounce);const t=e.trim();if(!t){this._set("coverImage",""),this._set("lodgingHost",""),this._set("lodgingTitle",""),this._lastPreviewedUrl="";return}/^https?:\/\//i.test(t)&&t!==this._lastPreviewedUrl&&(this._previewDebounce=setTimeout(()=>this._runPreview(t),700))}async _runPreview(e){this._previewing=!0,this._previewError="";try{const t=await w.previewUrl(e);if(!t)return;this._lastPreviewedUrl=e,this._draft={...this._draft,coverImage:t.image??this._draft.coverImage,lodgingHost:t.siteName??t.host??this._draft.lodgingHost,lodgingTitle:t.title??this._draft.lodgingTitle}}catch(t){console.warn("Preview failed:",t),(t==null?void 0:t.code)==="functions/unauthenticated"?this._previewError="Preview unavailable — sign in.":(t==null?void 0:t.code)==="functions/invalid-argument"?this._previewError="That URL doesn’t look right.":this._previewError="Preview unavailable — paste it again or skip."}finally{this._previewing=!1}}_toggleAttendee(e){const t=this._draft.attendees.includes(e),i=t?this._draft.attendees.filter(a=>a!==e):[...this._draft.attendees,e];let r=this._draft.viewers??[];t||(r=r.filter(a=>a!==e)),this._draft={...this._draft,attendees:i,viewers:r}}_toggleViewer(e){if(this._draft.attendees.includes(e))return;const i=(this._draft.viewers??[]).includes(e)?this._draft.viewers.filter(r=>r!==e):[...this._draft.viewers??[],e];this._set("viewers",i)}_toggleSubGroup(e){const i=(this._draft.targetSubGroups??[]).includes(e)?this._draft.targetSubGroups.filter(r=>r!==e):[...this._draft.targetSubGroups??[],e];this._set("targetSubGroups",i)}_renderFlightLookupStatus(e){const t=e==="return",i=t?this._returnLookupState:this._outboundLookupState,r=t?this._returnLookupMessage:this._outboundLookupMessage;return i==="idle"?s`<div class="hint">
+        Tip: paste a flight number — we'll fetch airline + airports + times for you.
+      </div>`:i==="loading"?s`<div class="lookup-status">
+        <div class="spinner"></div>
+        Looking up flight…
+      </div>`:i==="ok"?s`<div class="lookup-status lookup-ok">✓ ${r}</div>`:s`<div class="lookup-status lookup-error">${r}</div>`}_onSave(){const e=this._draft;if(!e.title.trim()){this._error="Give the trip a title.";return}if(!e.start||!e.end){this._error="Set both start and end dates.";return}if(e.end<e.start){this._error="End date can’t be before start date.";return}if(!this.familyId){this._error="You need to be in a family first.";return}this._error="",this.dispatchEvent(new CustomEvent("save",{detail:{...e,title:e.title.trim(),location:e.location.trim()}}))}_onDelete(){this._draft.id&&confirm("Delete this trip? This can’t be undone.")&&this.dispatchEvent(new CustomEvent("remove",{detail:{id:this._draft.id}}))}_onCancel(){this.dispatchEvent(new Event("cancel"))}render(){if(!this.open)return s``;const e=this._draft,t=!!e.id;return s`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -548,7 +553,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
             <div class="field" style=${this.formMode==="activity"?"margin-bottom:0;":""}>
               <label>Visibility</label>
               <div class="seg">
-                ${["personal","family","extended"].map(i=>n`
+                ${["personal","family","extended"].map(i=>s`
                     <button
                       class=${e.visibility===i?"active":""}
                       @click=${()=>this._set("visibility",i)}
@@ -558,7 +563,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                   `)}
               </div>
             </div>
-            ${this.formMode!=="activity"?n`
+            ${this.formMode!=="activity"?s`
                   <div class="field">
                     <label>Lodging URL</label>
                     <div style="display:flex;gap:8px;align-items:stretch;">
@@ -569,7 +574,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                         @input=${i=>this._onLodgingChange(i.target.value)}
                         style="flex:1;min-width:0;"
                       />
-                      ${e.lodgingUrl?n`<button
+                      ${e.lodgingUrl?s`<button
                             type="button"
                             class="preview-refresh-btn"
                             ?disabled=${this._previewing}
@@ -579,12 +584,12 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                             ↻
                           </button>`:""}
                     </div>
-                    ${this._previewing?n`<div class="preview-loading">
+                    ${this._previewing?s`<div class="preview-loading">
                           <div class="spinner"></div>
                           Fetching preview…
                         </div>`:""}
-                    ${this._previewError?n`<div class="preview-error">${this._previewError}</div>`:""}
-                    ${!this._previewing&&e.coverImage?n`<div class="preview">
+                    ${this._previewError?s`<div class="preview-error">${this._previewError}</div>`:""}
+                    ${!this._previewing&&e.coverImage?s`<div class="preview">
                           <div class="thumb" style="background-image:url(${e.coverImage});"></div>
                           <div class="meta">
                             <div class="meta-title">${e.lodgingTitle||e.lodgingUrl}</div>
@@ -598,7 +603,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           <div class="field">
             <label>Who's going</label>
             <div class="attendees">
-              ${this.members.map(i=>n`
+              ${this.members.map(i=>s`
                   <div
                     class="att-chip ${e.attendees.includes(i.uid)?"on":""}"
                     @click=${()=>this._toggleAttendee(i.uid)}
@@ -615,11 +620,11 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
             </div>
           </div>
 
-          ${e.visibility==="extended"&&Object.keys(this.subGroups??{}).length>0?n`
+          ${e.visibility==="extended"&&Object.keys(this.subGroups??{}).length>0?s`
                 <div class="field">
                   <label>Limit to sub-groups <span style="text-transform:none;font-weight:400;color:var(--text-tertiary);letter-spacing:0.01em;">(optional — leave empty to show to all extended)</span></label>
                   <div class="attendees">
-                    ${Object.entries(this.subGroups).map(([i,r])=>n`
+                    ${Object.entries(this.subGroups).map(([i,r])=>s`
                         <div
                           class="att-chip ${(e.targetSubGroups??[]).includes(i)?"on":""}"
                           @click=${()=>this._toggleSubGroup(i)}
@@ -637,7 +642,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           <div class="field">
             <label>Also visible to <span style="text-transform:none;font-weight:400;color:var(--text-tertiary);letter-spacing:0.01em;">(without going)</span></label>
             <div class="attendees">
-              ${this.members.filter(i=>!e.attendees.includes(i.uid)).map(i=>n`
+              ${this.members.filter(i=>!e.attendees.includes(i.uid)).map(i=>s`
                     <div
                       class="att-chip ${(e.viewers??[]).includes(i.uid)?"on":""}"
                       @click=${()=>this._toggleViewer(i.uid)}
@@ -651,13 +656,13 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                       ${i.displayName}
                     </div>
                   `)}
-              ${this.members.filter(i=>!e.attendees.includes(i.uid)).length===0?n`<span style="color:var(--text-tertiary);font-size:13px;">
+              ${this.members.filter(i=>!e.attendees.includes(i.uid)).length===0?s`<span style="color:var(--text-tertiary);font-size:13px;">
                     Everyone is going — no extra viewers needed.
                   </span>`:""}
             </div>
           </div>
 
-          ${this.formMode==="activity"?"":n`
+          ${this.formMode==="activity"?"":s`
           <fieldset class="flight-section">
             <legend>Flight (optional)</legend>
 
@@ -680,6 +685,8 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                     placeholder="AF1234"
                     .value=${e.flightNumber}
                     @input=${i=>this._set("flightNumber",i.target.value)}
+                    @change=${()=>this._runFlightLookup("outbound")}
+                    @blur=${()=>this._runFlightLookup("outbound")}
                   />
                 </div>
                 <div class="field" style="margin-bottom:0;">
@@ -691,7 +698,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                   />
                 </div>
               </div>
-              ${this._showOutboundDetails?n`
+              ${this._showOutboundDetails?s`
                     <div class="row-airports">
                       <input
                         type="text"
@@ -710,12 +717,10 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                       />
                     </div>
                   `:""}
-              <div class="hint">
-                Tip: paste a flight number and we'll fetch the airline + times automatically in a later release.
-              </div>
+              ${this._renderFlightLookupStatus("outbound")}
             </div>
 
-            ${this._showReturn?n`
+            ${this._showReturn?s`
                   <div class="flight-leg">
                     <div class="leg-head">
                       <span class="leg-name">Return</span>
@@ -744,6 +749,8 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                           placeholder="AF1235"
                           .value=${e.returnFlightNumber}
                           @input=${i=>this._set("returnFlightNumber",i.target.value)}
+                          @change=${()=>this._runFlightLookup("return")}
+                          @blur=${()=>this._runFlightLookup("return")}
                         />
                       </div>
                       <div class="field" style="margin-bottom:0;">
@@ -755,7 +762,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                         />
                       </div>
                     </div>
-                    ${this._showReturnDetails?n`
+                    ${this._showReturnDetails?s`
                           <div class="row-airports">
                             <input
                               type="text"
@@ -774,8 +781,9 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                             />
                           </div>
                         `:""}
+                    ${this._renderFlightLookupStatus("return")}
                   </div>
-                `:n`
+                `:s`
                   <button
                     type="button"
                     class="return-toggle"
@@ -796,10 +804,10 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
             ></textarea>
           </div>
 
-          ${this._error?n`<div class="error">${this._error}</div>`:""}
+          ${this._error?s`<div class="error">${this._error}</div>`:""}
 
           <div class="actions">
-            ${t?n`<button class="delete-btn" @click=${this._onDelete} ?disabled=${this.busy}>
+            ${t?s`<button class="delete-btn" @click=${this._onDelete} ?disabled=${this.busy}>
                   Delete
                 </button>`:""}
             <div class="spacer"></div>
@@ -812,7 +820,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           </div>
         </glass-panel>
       </div>
-    `}}u(ce,"properties",{open:{type:Boolean,reflect:!0},trip:{type:Object},members:{type:Array},currentUid:{type:String},familyId:{type:String},busy:{type:Boolean},formMode:{type:String},subGroups:{type:Object},_draft:{state:!0},_error:{state:!0},_previewing:{state:!0},_previewError:{state:!0},_showReturn:{state:!0},_showOutboundDetails:{state:!0},_showReturnDetails:{state:!0}}),u(ce,"styles",$`
+    `}}u(me,"properties",{open:{type:Boolean,reflect:!0},trip:{type:Object},members:{type:Array},currentUid:{type:String},familyId:{type:String},busy:{type:Boolean},formMode:{type:String},subGroups:{type:Object},_draft:{state:!0},_error:{state:!0},_previewing:{state:!0},_previewError:{state:!0},_showReturn:{state:!0},_showOutboundDetails:{state:!0},_showReturnDetails:{state:!0},_outboundLookupState:{state:!0},_outboundLookupMessage:{state:!0},_returnLookupState:{state:!0},_returnLookupMessage:{state:!0}}),u(me,"styles",D`
     * {
       box-sizing: border-box;
     }
@@ -1225,7 +1233,17 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
     .return-remove:hover {
       text-decoration: underline;
     }
-  `);customElements.define("trip-form",ce);class he extends k{constructor(){super(),this.open=!1,this.event=null,this.members=[],this.familyId="",this.busy=!1,this._draft=this._blankDraft(),this._error=""}willUpdate(e){(e.has("event")||e.has("open"))&&(this.open&&(this._draft=this._draftFromEvent(this.event)),this._error="")}_blankDraft(){return{id:null,type:"birthday",title:"",date:new Date().toISOString().slice(0,10),personIds:[],recurring:!0,subtitle:"",notes:"",visibility:"family"}}_draftFromEvent(e){return e?{id:e.id??null,type:e.type??"birthday",title:e.title??"",date:e.date??new Date().toISOString().slice(0,10),personIds:Array.isArray(e.personIds)?[...e.personIds]:[],recurring:e.recurring??!0,subtitle:e.subtitle??"",notes:e.notes??"",visibility:e.visibility??"family"}:this._blankDraft()}_set(e,t){this._draft={...this._draft,[e]:t}}_toggleType(e){this._set("type",e)}_togglePerson(e){const t=this._draft.personIds.includes(e);this._set("personIds",t?this._draft.personIds.filter(i=>i!==e):[...this._draft.personIds,e])}_onSave(){const e=this._draft;if(!e.title.trim()){this._error="Give it a title.";return}if(!e.date){this._error="Pick a date.";return}if(!this.familyId){this._error="No family yet.";return}this._error="",this.dispatchEvent(new CustomEvent("save",{detail:{...e,title:e.title.trim(),subtitle:e.subtitle.trim(),notes:e.notes.trim()}}))}_onDelete(){this._draft.id&&confirm("Delete this event? This can't be undone.")&&this.dispatchEvent(new CustomEvent("remove",{detail:{id:this._draft.id}}))}_onCancel(){this.dispatchEvent(new Event("cancel"))}render(){if(!this.open)return n``;const e=this._draft,t=!!e.id;return n`
+    .lookup-status {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lookup-ok { color: var(--teal-pebble); }
+    .lookup-error { color: var(--rose-soft); }
+  `);customElements.define("trip-form",me);class be extends ${constructor(){super(),this.open=!1,this.event=null,this.members=[],this.familyId="",this.busy=!1,this._draft=this._blankDraft(),this._error=""}willUpdate(e){(e.has("event")||e.has("open"))&&(this.open&&(this._draft=this._draftFromEvent(this.event)),this._error="")}_blankDraft(){return{id:null,type:"birthday",title:"",date:new Date().toISOString().slice(0,10),personIds:[],recurring:!0,subtitle:"",notes:"",visibility:"family"}}_draftFromEvent(e){return e?{id:e.id??null,type:e.type??"birthday",title:e.title??"",date:e.date??new Date().toISOString().slice(0,10),personIds:Array.isArray(e.personIds)?[...e.personIds]:[],recurring:e.recurring??!0,subtitle:e.subtitle??"",notes:e.notes??"",visibility:e.visibility??"family"}:this._blankDraft()}_set(e,t){this._draft={...this._draft,[e]:t}}_toggleType(e){this._set("type",e)}_togglePerson(e){const t=this._draft.personIds.includes(e);this._set("personIds",t?this._draft.personIds.filter(i=>i!==e):[...this._draft.personIds,e])}_onSave(){const e=this._draft;if(!e.title.trim()){this._error="Give it a title.";return}if(!e.date){this._error="Pick a date.";return}if(!this.familyId){this._error="No family yet.";return}this._error="",this.dispatchEvent(new CustomEvent("save",{detail:{...e,title:e.title.trim(),subtitle:e.subtitle.trim(),notes:e.notes.trim()}}))}_onDelete(){this._draft.id&&confirm("Delete this event? This can't be undone.")&&this.dispatchEvent(new CustomEvent("remove",{detail:{id:this._draft.id}}))}_onCancel(){this.dispatchEvent(new Event("cancel"))}render(){if(!this.open)return s``;const e=this._draft,t=!!e.id;return s`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -1237,7 +1255,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           <div class="field">
             <label>Type</label>
             <div class="seg">
-              ${[{v:"birthday",label:"Birthday"},{v:"anniversary",label:"Anniversary"},{v:"custom",label:"Other"}].map(i=>n`
+              ${[{v:"birthday",label:"Birthday"},{v:"anniversary",label:"Anniversary"},{v:"custom",label:"Other"}].map(i=>s`
                   <button
                     class=${e.type===i.v?"active":""}
                     @click=${()=>this._toggleType(i.v)}
@@ -1283,11 +1301,11 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
             </div>
           </div>
 
-          ${this.members.length>0?n`
+          ${this.members.length>0?s`
                 <div class="field">
                   <label>Who is this about</label>
                   <div class="people">
-                    ${this.members.map(i=>n`
+                    ${this.members.map(i=>s`
                         <div
                           class="person-chip ${e.personIds.includes(i.uid)?"on":""}"
                           @click=${()=>this._togglePerson(i.uid)}
@@ -1309,7 +1327,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
             <div class="field">
               <label>Visibility</label>
               <div class="seg">
-                ${["personal","family","extended"].map(i=>n`
+                ${["personal","family","extended"].map(i=>s`
                     <button
                       class=${e.visibility===i?"active":""}
                       @click=${()=>this._set("visibility",i)}
@@ -1339,10 +1357,10 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
             ></textarea>
           </div>
 
-          ${this._error?n`<div class="error">${this._error}</div>`:""}
+          ${this._error?s`<div class="error">${this._error}</div>`:""}
 
           <div class="actions">
-            ${t?n`<button class="delete-btn" @click=${this._onDelete} ?disabled=${this.busy}>
+            ${t?s`<button class="delete-btn" @click=${this._onDelete} ?disabled=${this.busy}>
                   Delete
                 </button>`:""}
             <div class="spacer"></div>
@@ -1355,7 +1373,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           </div>
         </glass-panel>
       </div>
-    `}_monthDay(e){if(!e)return"";const t=new Date(e);return Number.isNaN(t.getTime())?"":t.toLocaleString("en-GB",{day:"numeric",month:"long"})}}u(he,"properties",{open:{type:Boolean,reflect:!0},event:{type:Object},members:{type:Array},familyId:{type:String},busy:{type:Boolean},_draft:{state:!0},_error:{state:!0}}),u(he,"styles",$`
+    `}_monthDay(e){if(!e)return"";const t=new Date(e);return Number.isNaN(t.getTime())?"":t.toLocaleString("en-GB",{day:"numeric",month:"long"})}}u(be,"properties",{open:{type:Boolean,reflect:!0},event:{type:Object},members:{type:Array},familyId:{type:String},busy:{type:Boolean},_draft:{state:!0},_error:{state:!0}}),u(be,"styles",D`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -1586,7 +1604,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       margin-top: 6px;
       line-height: 1.4;
     }
-  `);customElements.define("event-form",he);let P=null,Te=null;function yt(){return P||(P=document.createElement("div"),P.id="cairn-toast-host",Object.assign(P.style,{position:"fixed",bottom:"24px",left:"50%",transform:"translateX(-50%)",zIndex:9999,pointerEvents:"none"}),document.body.appendChild(P),P)}function m(o,{duration:e=2800}={}){const t=yt();clearTimeout(Te),t.innerHTML="";const i=document.createElement("div");i.textContent=o,Object.assign(i.style,{padding:"12px 18px",background:"rgba(20, 12, 6, 0.78)",backdropFilter:"blur(24px) saturate(180%)",webkitBackdropFilter:"blur(24px) saturate(180%)",border:"1px solid rgba(255, 248, 235, 0.22)",borderRadius:"999px",color:"rgba(255, 248, 235, 0.96)",fontFamily:"'Inter', system-ui, sans-serif",fontSize:"13.5px",fontWeight:"500",letterSpacing:"0.005em",boxShadow:"0 12px 32px rgba(20, 12, 6, 0.45)",pointerEvents:"auto",transform:"translateY(8px)",opacity:"0",transition:"opacity 200ms ease, transform 240ms ease"}),t.appendChild(i),requestAnimationFrame(()=>{i.style.opacity="1",i.style.transform="translateY(0)"}),Te=setTimeout(()=>{i.style.opacity="0",i.style.transform="translateY(8px)",setTimeout(()=>i.remove(),260)},e)}class ue extends k{constructor(){super(),this.open=!1,this.family=null,this.immediate=[],this.extended=[],this._busy=!1,this._newGroupName="",this._editingGroupId=null}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _createSubGroup(){const e=this._newGroupName.trim();if(!(!e||this._busy)){this._busy=!0;try{const t=await w.saveSubGroup({name:e,memberIds:[]});this._newGroupName="",this._editingGroupId=t,m(`Sub-group "${e}" created.`)}catch(t){m(`Couldn't create: ${t.code??t.message}`,{duration:5e3})}finally{this._busy=!1}}}async _toggleSubGroupMember(e,t){var l,s;const i=(s=(l=this.family)==null?void 0:l.subGroups)==null?void 0:s[e];if(!i)return;const r=i.memberIds??[],a=r.includes(t)?r.filter(d=>d!==t):[...r,t];try{await w.saveSubGroup({id:e,name:i.name,memberIds:a})}catch(d){m(`Couldn't update: ${d.code??d.message}`,{duration:5e3})}}async _deleteSubGroup(e,t){if(confirm(`Delete the "${t}" sub-group?`))try{await w.deleteSubGroup(e),this._editingGroupId===e&&(this._editingGroupId=null),m("Sub-group deleted.")}catch(i){m(`Couldn't delete: ${i.code??i.message}`,{duration:5e3})}}async _regenerate(){if(!this._busy){this._busy=!0;try{await w.regenerateCairnInviteCode(),m("New invite code generated.")}catch(e){console.error(e),m(`Couldn't generate code: ${e.code??e.message}`,{duration:5e3})}finally{this._busy=!1}}}_inviteLink(e){return`${window.location.origin}/cairn/?join=${e}`}async _copyLink(){var t;const e=(t=this.family)==null?void 0:t.cairnInviteCode;if(e)try{await navigator.clipboard.writeText(this._inviteLink(e)),m("Invite link copied to clipboard.")}catch{m("Could not copy — try long-press the link instead.")}}async _share(){var i,r;const e=(i=this.family)==null?void 0:i.cairnInviteCode;if(!e)return;const t=this._inviteLink(e);if(navigator.share)try{await navigator.share({title:"Join my family on Cairn",text:`Join ${((r=this.family)==null?void 0:r.name)??"our family"} on Cairn — our shared family calendar.`,url:t})}catch{}else this._copyLink()}_expiryText(e){if(!e)return"";const t=e.toDate?e.toDate():new Date(e),r=Math.max(0,Math.round((t-new Date)/(1440*60*1e3)));return r===0?"Expires today":r===1?"Expires tomorrow":`Expires in ${r} days`}render(){var r,a,l,s;if(!this.open)return n``;const e=(r=this.family)==null?void 0:r.cairnInviteCode,t=(a=this.family)==null?void 0:a.cairnInviteCodeExpiresAt,i=t&&(t.toDate?t.toDate():new Date(t))<new Date;return n`
+  `);customElements.define("event-form",be);let G=null,Te=null;function yt(){return G||(G=document.createElement("div"),G.id="cairn-toast-host",Object.assign(G.style,{position:"fixed",bottom:"24px",left:"50%",transform:"translateX(-50%)",zIndex:9999,pointerEvents:"none"}),document.body.appendChild(G),G)}function f(d,{duration:e=2800}={}){const t=yt();clearTimeout(Te),t.innerHTML="";const i=document.createElement("div");i.textContent=d,Object.assign(i.style,{padding:"12px 18px",background:"rgba(20, 12, 6, 0.78)",backdropFilter:"blur(24px) saturate(180%)",webkitBackdropFilter:"blur(24px) saturate(180%)",border:"1px solid rgba(255, 248, 235, 0.22)",borderRadius:"999px",color:"rgba(255, 248, 235, 0.96)",fontFamily:"'Inter', system-ui, sans-serif",fontSize:"13.5px",fontWeight:"500",letterSpacing:"0.005em",boxShadow:"0 12px 32px rgba(20, 12, 6, 0.45)",pointerEvents:"auto",transform:"translateY(8px)",opacity:"0",transition:"opacity 200ms ease, transform 240ms ease"}),t.appendChild(i),requestAnimationFrame(()=>{i.style.opacity="1",i.style.transform="translateY(0)"}),Te=setTimeout(()=>{i.style.opacity="0",i.style.transform="translateY(8px)",setTimeout(()=>i.remove(),260)},e)}class fe extends ${constructor(){super(),this.open=!1,this.family=null,this.immediate=[],this.extended=[],this._busy=!1,this._newGroupName="",this._editingGroupId=null}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _createSubGroup(){const e=this._newGroupName.trim();if(!(!e||this._busy)){this._busy=!0;try{const t=await w.saveSubGroup({name:e,memberIds:[]});this._newGroupName="",this._editingGroupId=t,f(`Sub-group "${e}" created.`)}catch(t){f(`Couldn't create: ${t.code??t.message}`,{duration:5e3})}finally{this._busy=!1}}}async _toggleSubGroupMember(e,t){var l,n;const i=(n=(l=this.family)==null?void 0:l.subGroups)==null?void 0:n[e];if(!i)return;const r=i.memberIds??[],a=r.includes(t)?r.filter(o=>o!==t):[...r,t];try{await w.saveSubGroup({id:e,name:i.name,memberIds:a})}catch(o){f(`Couldn't update: ${o.code??o.message}`,{duration:5e3})}}async _deleteSubGroup(e,t){if(confirm(`Delete the "${t}" sub-group?`))try{await w.deleteSubGroup(e),this._editingGroupId===e&&(this._editingGroupId=null),f("Sub-group deleted.")}catch(i){f(`Couldn't delete: ${i.code??i.message}`,{duration:5e3})}}async _regenerate(){if(!this._busy){this._busy=!0;try{await w.regenerateCairnInviteCode(),f("New invite code generated.")}catch(e){console.error(e),f(`Couldn't generate code: ${e.code??e.message}`,{duration:5e3})}finally{this._busy=!1}}}_inviteLink(e){return`${window.location.origin}/cairn/?join=${e}`}async _copyLink(){var t;const e=(t=this.family)==null?void 0:t.cairnInviteCode;if(e)try{await navigator.clipboard.writeText(this._inviteLink(e)),f("Invite link copied to clipboard.")}catch{f("Could not copy — try long-press the link instead.")}}async _share(){var i,r;const e=(i=this.family)==null?void 0:i.cairnInviteCode;if(!e)return;const t=this._inviteLink(e);if(navigator.share)try{await navigator.share({title:"Join my family on Cairn",text:`Join ${((r=this.family)==null?void 0:r.name)??"our family"} on Cairn — our shared family calendar.`,url:t})}catch{}else this._copyLink()}_expiryText(e){if(!e)return"";const t=e.toDate?e.toDate():new Date(e),r=Math.max(0,Math.round((t-new Date)/(1440*60*1e3)));return r===0?"Expires today":r===1?"Expires tomorrow":`Expires in ${r} days`}render(){var r,a,l,n;if(!this.open)return s``;const e=(r=this.family)==null?void 0:r.cairnInviteCode,t=(a=this.family)==null?void 0:a.cairnInviteCodeExpiresAt,i=t&&(t.toDate?t.toDate():new Date(t))<new Date;return s`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -1596,45 +1614,45 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           </div>
 
           <h3>Immediate family · ${this.immediate.length}</h3>
-          ${this.immediate.length===0?n`<div class="empty">No one in immediate yet.</div>`:this.immediate.map(d=>n`
+          ${this.immediate.length===0?s`<div class="empty">No one in immediate yet.</div>`:this.immediate.map(o=>s`
                   <div class="member-row">
                     <member-chip
-                      .name=${d.displayName}
-                      .photo=${d.photoURL??""}
-                      .hue=${d.hue}
+                      .name=${o.displayName}
+                      .photo=${o.photoURL??""}
+                      .hue=${o.hue}
                       size="36"
                     ></member-chip>
                     <div class="body">
-                      <div class="name">${d.displayName}</div>
+                      <div class="name">${o.displayName}</div>
                       <div class="role">
-                        ${d.role==="self"?"You":d.role==="co-parent"?"Co-parent (PebblePath)":d.role==="child"?"Child":"Family"}
+                        ${o.role==="self"?"You":o.role==="co-parent"?"Co-parent (PebblePath)":o.role==="child"?"Child":"Family"}
                       </div>
                     </div>
                   </div>
                 `)}
 
           <h3>Extended family · ${this.extended.length}</h3>
-          ${this.extended.length===0?n`<div class="empty">
+          ${this.extended.length===0?s`<div class="empty">
                 Anyone you invite via Cairn (grandparents, aunts, uncles, etc.) will appear here.
                 They can see trips and celebrations but not PebblePath child data.
-              </div>`:this.extended.map(d=>n`
+              </div>`:this.extended.map(o=>s`
                   <div class="member-row">
                     <member-chip
-                      .name=${d.displayName}
-                      .photo=${d.photoURL??""}
-                      .hue=${d.hue}
+                      .name=${o.displayName}
+                      .photo=${o.photoURL??""}
+                      .hue=${o.hue}
                       size="36"
                     ></member-chip>
                     <div class="body">
-                      <div class="name">${d.displayName}</div>
+                      <div class="name">${o.displayName}</div>
                       <div class="role">Cairn — extended</div>
                     </div>
                   </div>
                 `)}
 
-          ${this.extended.length>0||Object.keys(((l=this.family)==null?void 0:l.subGroups)??{}).length>0?n`
+          ${this.extended.length>0||Object.keys(((l=this.family)==null?void 0:l.subGroups)??{}).length>0?s`
                 <h3>Sub-groups</h3>
-                ${Object.entries(((s=this.family)==null?void 0:s.subGroups)??{}).map(([d,p])=>n`
+                ${Object.entries(((n=this.family)==null?void 0:n.subGroups)??{}).map(([o,p])=>s`
                     <div class="subgroup">
                       <div class="subgroup-head">
                         <div>
@@ -1644,26 +1662,26 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                         <div class="subgroup-actions">
                           <button
                             class="icon-btn"
-                            title=${this._editingGroupId===d?"Done":"Edit members"}
-                            @click=${()=>this._editingGroupId=this._editingGroupId===d?null:d}
+                            title=${this._editingGroupId===o?"Done":"Edit members"}
+                            @click=${()=>this._editingGroupId=this._editingGroupId===o?null:o}
                           >
-                            ${this._editingGroupId===d?"✓":"✎"}
+                            ${this._editingGroupId===o?"✓":"✎"}
                           </button>
                           <button
                             class="icon-btn danger"
                             title="Delete"
-                            @click=${()=>this._deleteSubGroup(d,p.name)}
+                            @click=${()=>this._deleteSubGroup(o,p.name)}
                           >
                             ×
                           </button>
                         </div>
                       </div>
-                      ${this._editingGroupId===d?n`
+                      ${this._editingGroupId===o?s`
                             <div style="margin-top:4px;">
-                              ${this.extended.map(c=>n`
+                              ${this.extended.map(c=>s`
                                   <span
                                     class="chip-toggle ${(p.memberIds??[]).includes(c.uid)?"on":""}"
-                                    @click=${()=>this._toggleSubGroupMember(d,c.uid)}
+                                    @click=${()=>this._toggleSubGroupMember(o,c.uid)}
                                   >
                                     <member-chip
                                       .name=${c.displayName}
@@ -1674,12 +1692,12 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                                     ${c.displayName}
                                   </span>
                                 `)}
-                              ${this.extended.length===0?n`<span style="color:var(--text-tertiary);font-size:13px;">
+                              ${this.extended.length===0?s`<span style="color:var(--text-tertiary);font-size:13px;">
                                     Invite extended family first, then group them here.
                                   </span>`:""}
                             </div>
-                          `:(p.memberIds??[]).length>0?n`<div style="margin-top:4px;">
-                            ${(p.memberIds??[]).map(c=>{const h=this.extended.find(f=>f.uid===c);return h?n`<span class="chip-toggle on" style="cursor:default;">
+                          `:(p.memberIds??[]).length>0?s`<div style="margin-top:4px;">
+                            ${(p.memberIds??[]).map(c=>{const h=this.extended.find(v=>v.uid===c);return h?s`<span class="chip-toggle on" style="cursor:default;">
                                 <member-chip
                                   .name=${h.displayName}
                                   .photo=${h.photoURL??""}
@@ -1688,7 +1706,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                                 ></member-chip>
                                 ${h.displayName}
                               </span>`:""})}
-                          </div>`:n`<div style="color:var(--text-tertiary);font-size:12.5px;margin-top:4px;">
+                          </div>`:s`<div style="color:var(--text-tertiary);font-size:12.5px;margin-top:4px;">
                             No members yet — tap ✎ to add.
                           </div>`}
                     </div>
@@ -1699,8 +1717,8 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                     type="text"
                     placeholder="New sub-group (e.g. Grandparents, In-laws)"
                     .value=${this._newGroupName}
-                    @input=${d=>this._newGroupName=d.target.value}
-                    @keydown=${d=>{d.key==="Enter"&&this._createSubGroup()}}
+                    @input=${o=>this._newGroupName=o.target.value}
+                    @keydown=${o=>{o.key==="Enter"&&this._createSubGroup()}}
                   />
                   <glass-button
                     variant="primary"
@@ -1713,7 +1731,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
               `:""}
 
           <h3>Cairn invite code</h3>
-          ${e&&!i?n`
+          ${e&&!i?s`
                 <div class="invite-box">
                   <div class="invite-code">${e}</div>
                   <div class="invite-meta">${this._expiryText(t)} · share this code with extended family</div>
@@ -1729,7 +1747,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                     </glass-button>
                   </div>
                 </div>
-              `:n`
+              `:s`
                 <div class="invite-empty">
                   ${i?"Your invite code has expired. Generate a new one to invite extended family.":"No invite code yet. Generate one to share Cairn with extended family."}
                   <br />
@@ -1744,7 +1762,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           </div>
         </glass-panel>
       </div>
-    `}}u(ue,"properties",{open:{type:Boolean,reflect:!0},family:{type:Object},immediate:{type:Array},extended:{type:Array},_busy:{state:!0},_newGroupName:{state:!0},_editingGroupId:{state:!0}}),u(ue,"styles",$`
+    `}}u(fe,"properties",{open:{type:Boolean,reflect:!0},family:{type:Object},immediate:{type:Array},extended:{type:Array},_busy:{state:!0},_newGroupName:{state:!0},_editingGroupId:{state:!0}}),u(fe,"styles",D`
     * {
       box-sizing: border-box;
     }
@@ -1990,40 +2008,40 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       gap: 8px;
       margin-top: 10px;
     }
-  `);customElements.define("manage-members-modal",ue);function wt(o,e){const t=[];if(t.push(o.title||"Cairn activity"),o.location&&t.push(o.location),o.start&&o.end){const r=_(o.start),a=_(o.end),l=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),s=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});t.push(o.start===o.end?s:`${l} – ${s}`)}if((o.lodgingHost||o.lodgingTitle)&&t.push(`Lodging: ${[o.lodgingHost,o.lodgingTitle].filter(Boolean).join(" — ")}`),o.flightNumber||o.flightAirline||o.flightDepartAirport){const r=[],a=[o.flightAirline,o.flightNumber].filter(Boolean).join(" ");if(a&&r.push(a),o.flightDepartAirport&&o.flightArriveAirport&&r.push(`${o.flightDepartAirport.toUpperCase()} → ${o.flightArriveAirport.toUpperCase()}`),o.flightDepartTime){const l=new Date(o.flightDepartTime);Number.isNaN(l.getTime())||r.push(`Depart: ${l.toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}`)}r.length&&t.push(`Flight: ${r.join(" · ")}`)}const i=(o.attendees??[]).map(r=>{var a;return(a=e.get(r))==null?void 0:a.displayName}).filter(Boolean);return i.length&&t.push(`With: ${i.join(", ")}`),o.notes&&t.push("",o.notes),t.push("","Shared from Cairn · pebblepath.ai/cairn"),t.join(`
-`)}class ge extends k{constructor(){super(),this.trip=null,this.members=[]}_fmtDates(e,t){const i=_(e),r=_(t);if(!i||!r)return"";const a=i.toLocaleString("en-GB",{month:"short"}),l=r.toLocaleString("en-GB",{month:"short"});return a===l&&i.getFullYear()===r.getFullYear()?`${i.getDate()}–${r.getDate()} ${a}`:`${i.getDate()} ${a} – ${r.getDate()} ${l}`}async _onShare(e,t,i){i.stopPropagation();const r=wt(e,t);if(navigator.share)try{await navigator.share({title:`Cairn — ${e.title??"activity"}`,text:r})}catch{}else try{await navigator.clipboard.writeText(r),m("Itinerary copied to clipboard.")}catch{m("Could not copy — try again from a browser tab.")}}render(){const e=this.trip;if(!e)return n``;const t=e.coverImage?`background-image: url(${e.coverImage});`:`background: ${vt(e)};`,i=new Map(this.members.map(s=>[s.uid,s])),r=(e.attendees??[]).map(s=>i.get(s)).filter(Boolean),a=r.slice(0,4),l=Math.max(0,r.length-a.length);return n`
+  `);customElements.define("manage-members-modal",fe);function wt(d,e){const t=[];if(t.push(d.title||"Cairn activity"),d.location&&t.push(d.location),d.start&&d.end){const r=k(d.start),a=k(d.end),l=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),n=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});t.push(d.start===d.end?n:`${l} – ${n}`)}if((d.lodgingHost||d.lodgingTitle)&&t.push(`Lodging: ${[d.lodgingHost,d.lodgingTitle].filter(Boolean).join(" — ")}`),d.flightNumber||d.flightAirline||d.flightDepartAirport){const r=[],a=[d.flightAirline,d.flightNumber].filter(Boolean).join(" ");if(a&&r.push(a),d.flightDepartAirport&&d.flightArriveAirport&&r.push(`${d.flightDepartAirport.toUpperCase()} → ${d.flightArriveAirport.toUpperCase()}`),d.flightDepartTime){const l=new Date(d.flightDepartTime);Number.isNaN(l.getTime())||r.push(`Depart: ${l.toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}`)}r.length&&t.push(`Flight: ${r.join(" · ")}`)}const i=(d.attendees??[]).map(r=>{var a;return(a=e.get(r))==null?void 0:a.displayName}).filter(Boolean);return i.length&&t.push(`With: ${i.join(", ")}`),d.notes&&t.push("",d.notes),t.push("","Shared from Cairn · pebblepath.ai/cairn"),t.join(`
+`)}class ve extends ${constructor(){super(),this.trip=null,this.members=[]}_fmtDates(e,t){const i=k(e),r=k(t);if(!i||!r)return"";const a=i.toLocaleString("en-GB",{month:"short"}),l=r.toLocaleString("en-GB",{month:"short"});return a===l&&i.getFullYear()===r.getFullYear()?`${i.getDate()}–${r.getDate()} ${a}`:`${i.getDate()} ${a} – ${r.getDate()} ${l}`}async _onShare(e,t,i){i.stopPropagation();const r=wt(e,t);if(navigator.share)try{await navigator.share({title:`Cairn — ${e.title??"activity"}`,text:r})}catch{}else try{await navigator.clipboard.writeText(r),f("Itinerary copied to clipboard.")}catch{f("Could not copy — try again from a browser tab.")}}render(){const e=this.trip;if(!e)return s``;const t=e.coverImage?`background-image: url(${e.coverImage});`:`background: ${xt(e)};`,i=e.coverImage?"cover has-image":"cover",r=new Map(this.members.map(o=>[o.uid,o])),a=(e.attendees??[]).map(o=>r.get(o)).filter(Boolean),l=a.slice(0,4),n=Math.max(0,a.length-l.length);return s`
       <article
         tabindex="0"
         aria-label=${e.title}
         @click=${()=>this.dispatchEvent(new CustomEvent("edit-trip",{detail:e,bubbles:!0,composed:!0}))}
-        @keydown=${s=>{(s.key==="Enter"||s.key===" ")&&(s.preventDefault(),this.dispatchEvent(new CustomEvent("edit-trip",{detail:e,bubbles:!0,composed:!0})))}}
+        @keydown=${o=>{(o.key==="Enter"||o.key===" ")&&(o.preventDefault(),this.dispatchEvent(new CustomEvent("edit-trip",{detail:e,bubbles:!0,composed:!0})))}}
       >
-        <div class="cover" style=${t}>
+        <div class="${i}" style=${t}>
           <div class="visibility">${e.visibility??"family"}</div>
           <div class="dates">${this._fmtDates(e.start,e.end)}</div>
         </div>
         <div class="body">
           <h3>${e.title}</h3>
           <div class="location">${e.location||"—"}</div>
-          ${e.lodgingUrl||e.lodgingHost?n`<div class="lodging">
-                ${e.lodgingHost?n`<span class="pill">${e.lodgingHost}</span>`:""}
+          ${e.lodgingUrl||e.lodgingHost?s`<div class="lodging">
+                ${e.lodgingHost?s`<span class="pill">${e.lodgingHost}</span>`:""}
                 <span class="lodging-text">${e.lodgingTitle||e.lodgingUrl||""}</span>
               </div>`:""}
-          ${e.flightNumber||e.flightDepartAirport?n`<div class="flight-info">
+          ${e.flightNumber||e.flightDepartAirport?s`<div class="flight-info">
                 <span class="plane">✈</span>
                 <span>${[e.flightAirline,e.flightNumber].filter(Boolean).join(" ")}</span>
-                ${e.flightDepartAirport&&e.flightArriveAirport?n`<span class="route">${e.flightDepartAirport.toUpperCase()} → ${e.flightArriveAirport.toUpperCase()}</span>`:""}
+                ${e.flightDepartAirport&&e.flightArriveAirport?s`<span class="route">${e.flightDepartAirport.toUpperCase()} → ${e.flightArriveAirport.toUpperCase()}</span>`:""}
               </div>`:""}
           <div class="footer">
             <div class="attendees">
-              ${a.map(s=>n`<member-chip name=${s.displayName} .hue=${s.hue} size="28"></member-chip>`)}
-              ${l>0?n`<span class="more">+${l}</span>`:""}
+              ${l.map(o=>s`<member-chip name=${o.displayName} .hue=${o.hue} size="28"></member-chip>`)}
+              ${n>0?s`<span class="more">+${n}</span>`:""}
             </div>
             <button
               class="share-btn"
               title="Share itinerary"
               aria-label="Share itinerary"
-              @click=${s=>this._onShare(e,i,s)}
+              @click=${o=>this._onShare(e,r,o)}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
@@ -2034,7 +2052,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           </div>
         </div>
       </article>
-    `}}u(ge,"properties",{trip:{type:Object},members:{type:Array}}),u(ge,"styles",$`
+    `}}u(ve,"properties",{trip:{type:Object},members:{type:Array}}),u(ve,"styles",D`
     :host {
       display: block;
     }
@@ -2061,11 +2079,30 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       background-size: cover;
       background-position: center;
     }
+    /* When a real lodging photo is attached, give the cover more
+       vertical real estate + a stronger bottom vignette so the
+       overlay chips stay legible against any image. */
+    .cover.has-image {
+      aspect-ratio: 3 / 2;
+    }
     .cover::after {
       content: '';
       position: absolute;
       inset: 0;
       background: linear-gradient(180deg, rgba(0, 0, 0, 0) 50%, rgba(20, 12, 6, 0.55) 100%);
+    }
+    .cover.has-image::after {
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.15) 0%,
+        rgba(0, 0, 0, 0) 40%,
+        rgba(20, 12, 6, 0.72) 100%
+      );
+    }
+    article:hover .cover.has-image {
+      /* Subtle zoom on hover gives the photo a polaroid-like presence */
+      background-size: 105%;
+      transition: background-size 360ms ease;
     }
     .visibility {
       position: absolute;
@@ -2202,7 +2239,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       width: 15px;
       height: 15px;
     }
-  `);customElements.define("trip-card",ge);class me extends k{constructor(){super(),this.open=!1,this.trips=[],this.members=[]}_onCancel(){this.dispatchEvent(new Event("cancel"))}_groupByYear(e){const t=[...e].sort((a,l)=>String(a.start).localeCompare(String(l.start))),i=new Date;i.setHours(0,0,0,0);const r=new Map;for(const a of t){if(!a.start)continue;const l=_(a.start),s=_(a.end);if(!l)continue;const d=l.getFullYear();r.has(d)||r.set(d,[]);const p=s?s<i:!1;r.get(d).push({trip:a,isPast:p})}return r}render(){var r;if(!this.open)return n``;const e=this._groupByYear(this.trips??[]),t=((r=this.trips)==null?void 0:r.length)??0,i=new Date().getFullYear();return n`
+  `);customElements.define("trip-card",ve);class xe extends ${constructor(){super(),this.open=!1,this.trips=[],this.members=[]}_onCancel(){this.dispatchEvent(new Event("cancel"))}_groupByYear(e){const t=[...e].sort((a,l)=>String(a.start).localeCompare(String(l.start))),i=new Date;i.setHours(0,0,0,0);const r=new Map;for(const a of t){if(!a.start)continue;const l=k(a.start),n=k(a.end);if(!l)continue;const o=l.getFullYear();r.has(o)||r.set(o,[]);const p=n?n<i:!1;r.get(o).push({trip:a,isPast:p})}return r}render(){var r;if(!this.open)return s``;const e=this._groupByYear(this.trips??[]),t=((r=this.trips)==null?void 0:r.length)??0,i=new Date().getFullYear();return s`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -2210,24 +2247,24 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
             <h2>All trips<span class="count">${t} ${t===1?"trip":"trips"}</span></h2>
             <button class="close" @click=${this._onCancel} aria-label="Close">×</button>
           </div>
-          ${t===0?n`<div class="empty">
+          ${t===0?s`<div class="empty">
                 No trips for this circle yet.<br />
                 Close this and tap <strong>+ New trip</strong> to add one.
-              </div>`:Array.from(e.entries()).map(([a,l])=>n`
+              </div>`:Array.from(e.entries()).map(([a,l])=>s`
                   <div class="year ${a===i?"current":""}">
                     ${a}
                   </div>
                   <div class="grid">
-                    ${l.map(({trip:s,isPast:d})=>n`
-                        <div class=${d?"past":""}>
-                          <trip-card .trip=${s} .members=${this.members}></trip-card>
+                    ${l.map(({trip:n,isPast:o})=>s`
+                        <div class=${o?"past":""}>
+                          <trip-card .trip=${n} .members=${this.members}></trip-card>
                         </div>
                       `)}
                   </div>
                 `)}
         </glass-panel>
       </div>
-    `}}u(me,"properties",{open:{type:Boolean,reflect:!0},trips:{type:Array},members:{type:Array}}),u(me,"styles",$`
+    `}}u(xe,"properties",{open:{type:Boolean,reflect:!0},trips:{type:Array},members:{type:Array}}),u(xe,"styles",D`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -2339,7 +2376,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       padding: 38px 12px;
       line-height: 1.55;
     }
-  `);customElements.define("all-trips-modal",me);class be extends k{constructor(){super(),this.open=!1,this._events=[],this._selected=new Set,this._loading=!1,this._error="",this._importing=!1}willUpdate(e){e.has("open")&&this.open&&this._events.length===0&&!this._loading&&this._load()}async _load(){var e,t,i,r,a,l;this._loading=!0,this._error="";try{const s=await Le(),d=await ft(s,90),p=new Set((w.state.trips??[]).filter(h=>h.gcalEventId).map(h=>h.gcalEventId));this._events=d.map(h=>({...h,_alreadyImported:p.has(h.id)}));const c=new Set;for(const h of this._events){if(h._alreadyImported)continue;const f=((e=h.start)==null?void 0:e.date)??((i=(t=h.start)==null?void 0:t.dateTime)==null?void 0:i.slice(0,10)),v=((r=h.end)==null?void 0:r.date)??((l=(a=h.end)==null?void 0:a.dateTime)==null?void 0:l.slice(0,10));f&&v&&v!==f&&c.add(h.id)}this._selected=c}catch(s){console.error(s),this._error=(s==null?void 0:s.message)??"Could not load calendar events."}finally{this._loading=!1}}_toggle(e){const t=new Set(this._selected);t.has(e)?t.delete(e):t.add(e),this._selected=t}_toggleAll(){const e=this._events.filter(t=>!t._alreadyImported);this._selected.size===e.length?this._selected=new Set:this._selected=new Set(e.map(t=>t.id))}async _import(){var a;if(this._importing||this._selected.size===0)return;this._importing=!0;const e=(a=y==null?void 0:y.currentUser)==null?void 0:a.uid,t=this._events.filter(l=>this._selected.has(l.id));let i=0,r=0;for(const l of t){const s=xt(l,e);try{await w.saveTrip(s),i++}catch(d){console.error("Import failed for event",l.id,d),r++}}this._importing=!1,r===0?m(`Imported ${i} ${i===1?"activity":"activities"}.`):m(`Imported ${i}, ${r} failed.`,{duration:5e3}),this._events=[],this._selected=new Set,this.dispatchEvent(new Event("cancel"))}_onCancel(){this.dispatchEvent(new Event("cancel"))}_fmtRange(e){var c,h,f,v,b,E,S,N;const t=((c=e.start)==null?void 0:c.date)??((f=(h=e.start)==null?void 0:h.dateTime)==null?void 0:f.slice(0,10)),i=((v=e.end)==null?void 0:v.date)??((E=(b=e.end)==null?void 0:b.dateTime)==null?void 0:E.slice(0,10));if(!t)return"";const r=new Date(t);if(!i||i===t)return r.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});let a=new Date(i);(S=e.start)!=null&&S.date&&((N=e.end)!=null&&N.date)&&a.setDate(a.getDate()-1);const l=r.getMonth()===a.getMonth()&&r.getFullYear()===a.getFullYear(),s=r.getFullYear()===a.getFullYear();if(l)return`${r.getDate()}–${a.getDate()} ${r.toLocaleString("en-GB",{month:"short",year:"numeric"})}`;const d=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),p=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});return s?`${d} – ${p}`:`${r.toLocaleDateString()} – ${a.toLocaleDateString()}`}render(){if(!this.open)return n``;const e=this._events.filter(i=>!i._alreadyImported),t=e.length>0&&this._selected.size===e.length;return n`
+  `);customElements.define("all-trips-modal",xe);class ye extends ${constructor(){super(),this.open=!1,this._events=[],this._selected=new Set,this._loading=!1,this._error="",this._importing=!1}willUpdate(e){e.has("open")&&this.open&&this._events.length===0&&!this._loading&&this._load()}async _load(){var e,t,i,r,a,l;this._loading=!0,this._error="";try{const n=await Ye(),o=await ft(n,90),p=new Set((w.state.trips??[]).filter(h=>h.gcalEventId).map(h=>h.gcalEventId));this._events=o.map(h=>({...h,_alreadyImported:p.has(h.id)}));const c=new Set;for(const h of this._events){if(h._alreadyImported)continue;const v=((e=h.start)==null?void 0:e.date)??((i=(t=h.start)==null?void 0:t.dateTime)==null?void 0:i.slice(0,10)),x=((r=h.end)==null?void 0:r.date)??((l=(a=h.end)==null?void 0:a.dateTime)==null?void 0:l.slice(0,10));v&&x&&x!==v&&c.add(h.id)}this._selected=c}catch(n){console.error(n),this._error=(n==null?void 0:n.message)??"Could not load calendar events."}finally{this._loading=!1}}_toggle(e){const t=new Set(this._selected);t.has(e)?t.delete(e):t.add(e),this._selected=t}_toggleAll(){const e=this._events.filter(t=>!t._alreadyImported);this._selected.size===e.length?this._selected=new Set:this._selected=new Set(e.map(t=>t.id))}async _import(){var a;if(this._importing||this._selected.size===0)return;this._importing=!0;const e=(a=_==null?void 0:_.currentUser)==null?void 0:a.uid,t=this._events.filter(l=>this._selected.has(l.id));let i=0,r=0;for(const l of t){const n=vt(l,e);try{await w.saveTrip(n),i++}catch(o){console.error("Import failed for event",l.id,o),r++}}this._importing=!1,r===0?f(`Imported ${i} ${i===1?"activity":"activities"}.`):f(`Imported ${i}, ${r} failed.`,{duration:5e3}),this._events=[],this._selected=new Set,this.dispatchEvent(new Event("cancel"))}_onCancel(){this.dispatchEvent(new Event("cancel"))}_fmtRange(e){var c,h,v,x,g,m,z,F;const t=((c=e.start)==null?void 0:c.date)??((v=(h=e.start)==null?void 0:h.dateTime)==null?void 0:v.slice(0,10)),i=((x=e.end)==null?void 0:x.date)??((m=(g=e.end)==null?void 0:g.dateTime)==null?void 0:m.slice(0,10));if(!t)return"";const r=new Date(t);if(!i||i===t)return r.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});let a=new Date(i);(z=e.start)!=null&&z.date&&((F=e.end)!=null&&F.date)&&a.setDate(a.getDate()-1);const l=r.getMonth()===a.getMonth()&&r.getFullYear()===a.getFullYear(),n=r.getFullYear()===a.getFullYear();if(l)return`${r.getDate()}–${a.getDate()} ${r.toLocaleString("en-GB",{month:"short",year:"numeric"})}`;const o=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),p=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});return n?`${o} – ${p}`:`${r.toLocaleDateString()} – ${a.toLocaleDateString()}`}render(){if(!this.open)return s``;const e=this._events.filter(i=>!i._alreadyImported),t=e.length>0&&this._selected.size===e.length;return s`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -2352,9 +2389,9 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
             Tick the events you want as Cairn activities — the rest stay where they are.
           </p>
 
-          ${this._loading?n`<div class="loading">Loading your calendar…</div>`:this._error?n`<div class="error">${this._error}</div>`:this._events.length===0?n`<div class="empty">No events found in the next 90 days.</div>`:n`
+          ${this._loading?s`<div class="loading">Loading your calendar…</div>`:this._error?s`<div class="error">${this._error}</div>`:this._events.length===0?s`<div class="empty">No events found in the next 90 days.</div>`:s`
                 <div class="list">
-                  ${this._events.map(i=>n`
+                  ${this._events.map(i=>s`
                       <div
                         class="row ${i._alreadyImported?"disabled":this._selected.has(i.id)?"on":""}"
                         @click=${()=>!i._alreadyImported&&this._toggle(i.id)}
@@ -2364,10 +2401,10 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                           <div class="title">${i.summary||"(untitled)"}</div>
                           <div class="meta">
                             <span>${this._fmtRange(i)}</span>
-                            ${i.location?n`<span>· ${i.location}</span>`:""}
+                            ${i.location?s`<span>· ${i.location}</span>`:""}
                           </div>
                         </div>
-                        ${i._alreadyImported?n`<span class="badge">In Cairn</span>`:""}
+                        ${i._alreadyImported?s`<span class="badge">In Cairn</span>`:""}
                       </div>
                     `)}
                 </div>
@@ -2391,7 +2428,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
               `}
         </glass-panel>
       </div>
-    `}}u(be,"properties",{open:{type:Boolean,reflect:!0},_events:{state:!0},_selected:{state:!0},_loading:{state:!0},_error:{state:!0},_importing:{state:!0}}),u(be,"styles",$`
+    `}}u(ye,"properties",{open:{type:Boolean,reflect:!0},_events:{state:!0},_selected:{state:!0},_loading:{state:!0},_error:{state:!0},_importing:{state:!0}}),u(ye,"styles",D`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -2571,7 +2608,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       display: flex;
       gap: 10px;
     }
-  `);customElements.define("import-calendar-modal",be);class fe extends k{constructor(){super(),this.open=!1,this.user=null,this.pebbleUser=null,this._name="",this._savingName=!1,this._uploadingPhoto=!1}willUpdate(e){var t;e.has("open")&&this.open&&(this._name=((t=this.user)==null?void 0:t.displayName)??"")}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _saveName(){var t,i;const e=this._name.trim();if(!(!e||e===(((t=this.user)==null?void 0:t.displayName)??""))&&!(!((i=y==null?void 0:y.currentUser)!=null&&i.uid)||!x)){this._savingName=!0;try{await T(z(x,"users",y.currentUser.uid),{displayName:e,updatedAt:C()}),m("Display name updated.")}catch(r){console.error(r),m(`Couldn't save: ${r.code??r.message}`,{duration:5e3})}finally{this._savingName=!1}}}async _signOut(){confirm("Sign out of Cairn?")&&(this.dispatchEvent(new Event("cancel")),await He())}_triggerPhotoPicker(){var e;(e=this.renderRoot.querySelector("#photo-file"))==null||e.click()}async _onPhotoChosen(e){var a,l;const t=(a=e.target.files)==null?void 0:a[0];if(e.target.value="",!t)return;if(!t.type.startsWith("image/")){m("Pick an image file (JPG, PNG, etc.).");return}if(t.size>5*1024*1024){m("Photo is too big — keep it under 5 MB.");return}const i=(l=y==null?void 0:y.currentUser)==null?void 0:l.uid,r=w.familyId;if(!i||!r||!se){m("Can't upload yet — you need to be in a family first.");return}this._uploadingPhoto=!0;try{const s=Be(se,`families/${r}/avatars/users/${i}`);await Ge(s,t,{contentType:t.type});const d=await Ye(s);await T(z(x,"users",i),{profilePhotoURL:d,updatedAt:C()}),m("Photo updated.")}catch(s){console.error("Photo upload failed",s),m(`Upload failed: ${s.code??s.message}`,{duration:5e3})}finally{this._uploadingPhoto=!1}}render(){if(!this.open)return n``;const e=this.user,t=this._name.trim()&&this._name.trim()!==((e==null?void 0:e.displayName)??"");return n`
+  `);customElements.define("import-calendar-modal",ye);class we extends ${constructor(){super(),this.open=!1,this.user=null,this.pebbleUser=null,this._name="",this._savingName=!1,this._uploadingPhoto=!1}willUpdate(e){var t;e.has("open")&&this.open&&(this._name=((t=this.user)==null?void 0:t.displayName)??"")}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _saveName(){var t,i;const e=this._name.trim();if(!(!e||e===(((t=this.user)==null?void 0:t.displayName)??""))&&!(!((i=_==null?void 0:_.currentUser)!=null&&i.uid)||!y)){this._savingName=!0;try{await M(E(y,"users",_.currentUser.uid),{displayName:e,updatedAt:S()}),f("Display name updated.")}catch(r){console.error(r),f(`Couldn't save: ${r.code??r.message}`,{duration:5e3})}finally{this._savingName=!1}}}async _signOut(){confirm("Sign out of Cairn?")&&(this.dispatchEvent(new Event("cancel")),await He())}_triggerPhotoPicker(){var e;(e=this.renderRoot.querySelector("#photo-file"))==null||e.click()}async _onPhotoChosen(e){var a,l;const t=(a=e.target.files)==null?void 0:a[0];if(e.target.value="",!t)return;if(!t.type.startsWith("image/")){f("Pick an image file (JPG, PNG, etc.).");return}if(t.size>5*1024*1024){f("Photo is too big — keep it under 5 MB.");return}const i=(l=_==null?void 0:_.currentUser)==null?void 0:l.uid,r=w.familyId;if(!i||!r||!de){f("Can't upload yet — you need to be in a family first.");return}this._uploadingPhoto=!0;try{const n=Le(de,`families/${r}/avatars/users/${i}`);await Be(n,t,{contentType:t.type});const o=await Ge(n);await M(E(y,"users",i),{profilePhotoURL:o,updatedAt:S()}),f("Photo updated.")}catch(n){console.error("Photo upload failed",n),f(`Upload failed: ${n.code??n.message}`,{duration:5e3})}finally{this._uploadingPhoto=!1}}render(){if(!this.open)return s``;const e=this.user,t=this._name.trim()&&this._name.trim()!==((e==null?void 0:e.displayName)??"");return s`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -2610,7 +2647,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
               .value=${this._name}
               @input=${i=>this._name=i.target.value}
             />
-            ${t?n`<button
+            ${t?s`<button
                   class="save-btn"
                   ?disabled=${this._savingName}
                   @click=${this._saveName}
@@ -2629,7 +2666,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           </div>
         </glass-panel>
       </div>
-    `}}u(fe,"properties",{open:{type:Boolean,reflect:!0},user:{type:Object},pebbleUser:{type:Object},_name:{state:!0},_savingName:{state:!0},_uploadingPhoto:{state:!0}}),u(fe,"styles",$`
+    `}}u(we,"properties",{open:{type:Boolean,reflect:!0},user:{type:Object},pebbleUser:{type:Object},_name:{state:!0},_savingName:{state:!0},_uploadingPhoto:{state:!0}}),u(we,"styles",D`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -2780,17 +2817,17 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       background: rgba(201, 138, 138, 0.1);
       border-color: rgba(201, 138, 138, 0.5);
     }
-  `);customElements.define("profile-sheet",fe);const J=class J extends k{constructor(){super(),this.open=!1}static get OPTIONS(){return[{type:"activity",tone:"sage",icon:n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  `);customElements.define("profile-sheet",we);const V=class V extends ${constructor(){super(),this.open=!1}static get OPTIONS(){return[{type:"activity",tone:"sage",icon:s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4 20c0-7 5-12 12-12 0 7-5 12-12 12z" />
           <path d="M4 20l8-8" />
-        </svg>`,label:"Group activity",desc:"Weekend plans, outings, day trips — no lodging or flights needed."},{type:"trip",tone:"tide",icon:n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        </svg>`,label:"Group activity",desc:"Weekend plans, outings, day trips — no lodging or flights needed."},{type:"trip",tone:"tide",icon:s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M21 14l-9 6-3-3 3-3-8-2 2-2 9 1 4-4a2 2 0 1 1 3 3l-4 4z" />
-        </svg>`,label:"Family trip",desc:"Multi-day travel with lodging, flight info, attendees."},{type:"event",tone:"amber",icon:n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        </svg>`,label:"Family trip",desc:"Multi-day travel with lodging, flight info, attendees."},{type:"event",tone:"amber",icon:s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M5 14h14v6H5z" />
           <path d="M5 14c0-2 1.5-3 3-3h8c1.5 0 3 1 3 3" />
           <path d="M12 11V7" />
           <path d="M11 5.5c0-.8.5-1.5 1-2 .5.5 1 1.2 1 2 0 .6-.4 1-1 1s-1-.4-1-1z" fill="currentColor" stroke="none" />
-        </svg>`,label:"Birthday or anniversary",desc:"Recurring celebration on a specific date."}]}_pick(e){this.dispatchEvent(new CustomEvent("pick",{detail:{type:e}}))}_cancel(){this.dispatchEvent(new Event("cancel"))}render(){return this.open?n`
+        </svg>`,label:"Birthday or anniversary",desc:"Recurring celebration on a specific date."}]}_pick(e){this.dispatchEvent(new CustomEvent("pick",{detail:{type:e}}))}_cancel(){this.dispatchEvent(new Event("cancel"))}render(){return this.open?s`
       <div class="backdrop" @click=${this._cancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -2799,7 +2836,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
             <button class="close" @click=${this._cancel} aria-label="Close">×</button>
           </div>
           <div class="options">
-            ${J.OPTIONS.map(e=>n`
+            ${V.OPTIONS.map(e=>s`
                 <button class="option" @click=${()=>this._pick(e.type)}>
                   <span class="icon-cell ${e.tone}" aria-hidden="true">${e.icon}</span>
                   <span>
@@ -2811,7 +2848,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           </div>
         </glass-panel>
       </div>
-    `:n``}};u(J,"properties",{open:{type:Boolean,reflect:!0}}),u(J,"styles",$`
+    `:s``}};u(V,"properties",{open:{type:Boolean,reflect:!0}}),u(V,"styles",D`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -2927,12 +2964,12 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       line-height: 1.45;
       margin-top: 2px;
     }
-  `);let xe=J;customElements.define("activity-type-picker",xe);class ve extends k{constructor(){super(),this.open=!1,this.floating=!1,this.family=null,this.trips=[],this._messages=[],this._input="",this._loading=!1,this._error=""}willUpdate(e){var t;e.has("_messages")&&(this.floating=(((t=this._messages)==null?void 0:t.length)??0)>0)}_onCancel(){this.dispatchEvent(new Event("cancel"))}_suggestions(){const e=[],t=(this.trips??[]).filter(i=>i.start&&new Date(i.start)>=new Date).sort((i,r)=>String(i.start).localeCompare(String(r.start)))[0];return t&&(e.push(`What should we do in ${t.location||t.title}?`),e.push(`What should we pack for ${t.title}?`)),e.push("Plan a family activity for this weekend"),e.push("Gift ideas for an upcoming birthday"),e.slice(0,4)}async _send(e){const t=(e??this._input).trim();if(!(!t||this._loading)){this._error="",this._input="",this._messages=[...this._messages,{role:"user",content:t}],this._loading=!0,this.updateComplete.then(()=>this._scrollToBottom());try{const i=this._messages.slice(0,-1).map(a=>({role:a.role,content:a.content})),r=await w.askPebble(t,i);this._messages=[...this._messages,{role:"assistant",content:r.answer}]}catch(i){console.error(i),(i==null?void 0:i.code)==="functions/unauthenticated"?this._error="Pebble needs you to be signed in.":(i==null?void 0:i.code)==="functions/permission-denied"?this._error="You're not in this family yet.":(i==null?void 0:i.code)==="functions/not-found"||(i==null?void 0:i.code)==="functions/internal"?this._error="Pebble isn't available right now — the Cloud Function may not be deployed yet.":this._error=(i==null?void 0:i.message)??"Pebble could not answer right now."}finally{this._loading=!1,this.updateComplete.then(()=>this._scrollToBottom())}}}_scrollToBottom(){const e=this.renderRoot.querySelector(".thread");e&&(e.scrollTop=e.scrollHeight)}_renderPebbleIcon(){return n`
+  `);let _e=V;customElements.define("activity-type-picker",_e);class ke extends ${constructor(){super(),this.open=!1,this.floating=!1,this.family=null,this.trips=[],this._messages=[],this._input="",this._loading=!1,this._error="",this._followUps=[]}willUpdate(e){var t;e.has("_messages")&&(this.floating=(((t=this._messages)==null?void 0:t.length)??0)>0)}_onCancel(){this.dispatchEvent(new Event("cancel"))}_suggestions(){const e=[],t=(this.trips??[]).filter(i=>i.start&&new Date(i.start)>=new Date).sort((i,r)=>String(i.start).localeCompare(String(r.start)))[0];return t&&(e.push(`What should we do in ${t.location||t.title}?`),e.push(`What should we pack for ${t.title}?`)),e.push("Plan a family activity for this weekend"),e.push("Gift ideas for an upcoming birthday"),e.slice(0,4)}async _send(e){const t=(e??this._input).trim();if(!(!t||this._loading)){this._error="",this._input="",this._followUps=[],this._messages=[...this._messages,{role:"user",content:t}],this._loading=!0,this.updateComplete.then(()=>this._scrollToBottom());try{const i=this._messages.slice(0,-1).map(a=>({role:a.role,content:a.content})),r=await w.askPebble(t,i);this._messages=[...this._messages,{role:"assistant",content:r.answer}],this._followUps=Array.isArray(r.followUps)?r.followUps:[]}catch(i){console.error(i),(i==null?void 0:i.code)==="functions/unauthenticated"?this._error="Pebble needs you to be signed in.":(i==null?void 0:i.code)==="functions/permission-denied"?this._error="You're not in this family yet.":(i==null?void 0:i.code)==="functions/not-found"||(i==null?void 0:i.code)==="functions/internal"?this._error="Pebble isn't available right now — the Cloud Function may not be deployed yet.":this._error=(i==null?void 0:i.message)??"Pebble could not answer right now."}finally{this._loading=!1,this.updateComplete.then(()=>this._scrollToBottom())}}}_scrollToBottom(){const e=this.renderRoot.querySelector(".thread");e&&(e.scrollTop=e.scrollHeight)}_renderPebbleIcon(){return s`
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="9" />
         <circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" />
       </svg>
-    `}render(){if(!this.open)return n``;const e=this._suggestions();return n`
+    `}render(){if(!this.open)return s``;const e=this._suggestions();return s`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="panel" @keydown=${t=>{t.key==="Escape"&&this._onCancel()}}>
           <div class="header">
@@ -2945,7 +2982,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           </div>
 
           <div class="thread">
-            ${this._messages.length===0?n`
+            ${this._messages.length===0?s`
                   <div class="empty">
                     <div class="lede">Hi — what's on your mind?</div>
                     <div class="sub">
@@ -2954,20 +2991,28 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                       — anything family-shaped.
                     </div>
                     <div class="suggestions">
-                      ${e.map(t=>n`
+                      ${e.map(t=>s`
                           <button class="suggestion" @click=${()=>this._send(t)}>
                             ${t}
                           </button>
                         `)}
                     </div>
                   </div>
-                `:n`
-                  ${this._messages.map(t=>n`<div class="bubble ${t.role}">${t.content}</div>`)}
-                  ${this._loading?n`<div class="typing"><span></span><span></span><span></span></div>`:""}
+                `:s`
+                  ${this._messages.map(t=>s`<div class="bubble ${t.role}">${t.content}</div>`)}
+                  ${this._loading?s`<div class="typing"><span></span><span></span><span></span></div>`:this._followUps.length>0?s`
+                        <div class="follow-ups">
+                          ${this._followUps.map(t=>s`
+                              <button class="follow-up" @click=${()=>this._send(t)}>
+                                ${t}
+                              </button>
+                            `)}
+                        </div>
+                      `:""}
                 `}
           </div>
 
-          ${this._error?n`<div class="error">${this._error}</div>`:""}
+          ${this._error?s`<div class="error">${this._error}</div>`:""}
 
           <form
             class="composer"
@@ -2993,7 +3038,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
             </button>
           </form>
       </div>
-    `}}u(ve,"properties",{open:{type:Boolean,reflect:!0},floating:{type:Boolean,reflect:!0},family:{type:Object},trips:{type:Array},_messages:{state:!0},_input:{state:!0},_loading:{state:!0},_error:{state:!0}}),u(ve,"styles",$`
+    `}}u(ke,"properties",{open:{type:Boolean,reflect:!0},floating:{type:Boolean,reflect:!0},family:{type:Object},trips:{type:Array},_messages:{state:!0},_input:{state:!0},_loading:{state:!0},_error:{state:!0},_followUps:{state:!0}}),u(ke,"styles",D`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -3240,6 +3285,34 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       background: rgba(255, 248, 235, 0.08);
       border-color: rgba(255, 248, 235, 0.22);
     }
+    /* Quick-reply chips Pebble offers after each answer — sit just
+       below the last assistant bubble, flex-wrap, click to send. */
+    .follow-ups {
+      align-self: flex-start;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: -4px;
+      max-width: 100%;
+    }
+    .follow-up {
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(61, 155, 143, 0.14);
+      border: 1px solid rgba(61, 155, 143, 0.4);
+      color: var(--text-primary);
+      font: inherit;
+      font-size: 12.5px;
+      cursor: pointer;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+    .follow-up:hover {
+      background: rgba(61, 155, 143, 0.24);
+      transform: translateY(-1px);
+    }
+    .follow-up:active {
+      transform: translateY(0);
+    }
 
     .composer {
       display: flex;
@@ -3296,7 +3369,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       text-align: center;
       line-height: 1.5;
     }
-  `);customElements.define("pebble-chat",ve);class We extends k{render(){return n`
+  `);customElements.define("pebble-chat",ke);class We extends ${render(){return s`
       <img class="icon" src=${"/cairn/assets/pebblepath-icon.png"} alt="" aria-hidden="true" />
       <div class="wordmark">PebblePath</div>
       <div class="tagline">for every little milestone</div>
@@ -3308,7 +3381,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       >
         Get the app on iPhone <span class="arrow">→</span>
       </a>
-    `}}u(We,"styles",$`
+    `}}u(We,"styles",D`
     :host {
       display: block;
       margin-top: 24px;
@@ -3380,7 +3453,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
     .cta:hover .arrow {
       transform: translateX(3px);
     }
-  `);customElements.define("discover-pebblepath",We);class ye extends k{constructor(){super(),this.code="",this._family=null,this._loading=!0,this._joining=!1,this._error=""}willUpdate(e){e.has("code")&&this.code&&this._lookup()}async _lookup(){var e,t;this._loading=!0,this._error="";try{const i=await w.findFamilyByCairnCode(this.code);if(!i)this._error="Invite code not found. Check it was typed correctly.",this._family=null;else{const r=((t=(e=i.cairnInviteCodeExpiresAt)==null?void 0:e.toDate)==null?void 0:t.call(e))??(i.cairnInviteCodeExpiresAt?new Date(i.cairnInviteCodeExpiresAt):null);!r||r<new Date?(this._error="This invite code has expired. Ask the family for a fresh one.",this._family=null):this._family=i}}catch(i){console.error(i),this._error=(i==null?void 0:i.message)??"Couldn't look up the invite."}finally{this._loading=!1}}async _join(){var e;if(!this._joining){this._joining=!0,this._error="";try{const t=await w.joinFamilyAsCairn(this.code);m(`Welcome to ${((e=this._family)==null?void 0:e.name)??"the family"}.`),this.dispatchEvent(new CustomEvent("joined",{detail:{familyId:t}}))}catch(t){console.error(t),this._error=(t==null?void 0:t.message)??"Could not join."}finally{this._joining=!1}}}_cancel(){this.dispatchEvent(new Event("cancel"))}_inviterFromFamily(e){var r;if(!e)return null;const t=(r=e.memberProfiles)==null?void 0:r[e.createdBy];if(!t)return null;const i=t.profilePhotoURL;return{displayName:t.displayName??"A family member",photoURL:typeof i=="string"&&/^https?:\/\//i.test(i)?i:null}}render(){var r,a,l;const e=this._inviterFromFamily(this._family),t=(((r=this._family)==null?void 0:r.cairnMemberIds)??((a=this._family)==null?void 0:a.memberIds)??[]).length,i=(((l=this._family)==null?void 0:l.memberIds)??[]).length;return n`
+  `);customElements.define("discover-pebblepath",We);class $e extends ${constructor(){super(),this.code="",this._family=null,this._loading=!0,this._joining=!1,this._error=""}willUpdate(e){e.has("code")&&this.code&&this._lookup()}async _lookup(){var e,t;this._loading=!0,this._error="";try{const i=await w.findFamilyByCairnCode(this.code);if(!i)this._error="Invite code not found. Check it was typed correctly.",this._family=null;else{const r=((t=(e=i.cairnInviteCodeExpiresAt)==null?void 0:e.toDate)==null?void 0:t.call(e))??(i.cairnInviteCodeExpiresAt?new Date(i.cairnInviteCodeExpiresAt):null);!r||r<new Date?(this._error="This invite code has expired. Ask the family for a fresh one.",this._family=null):this._family=i}}catch(i){console.error(i),this._error=(i==null?void 0:i.message)??"Couldn't look up the invite."}finally{this._loading=!1}}async _join(){var e;if(!this._joining){this._joining=!0,this._error="";try{const t=await w.joinFamilyAsCairn(this.code);f(`Welcome to ${((e=this._family)==null?void 0:e.name)??"the family"}.`),this.dispatchEvent(new CustomEvent("joined",{detail:{familyId:t}}))}catch(t){console.error(t),this._error=(t==null?void 0:t.message)??"Could not join."}finally{this._joining=!1}}}_cancel(){this.dispatchEvent(new Event("cancel"))}_inviterFromFamily(e){var r;if(!e)return null;const t=(r=e.memberProfiles)==null?void 0:r[e.createdBy];if(!t)return null;const i=t.profilePhotoURL;return{displayName:t.displayName??"A family member",photoURL:typeof i=="string"&&/^https?:\/\//i.test(i)?i:null}}render(){var r,a,l;const e=this._inviterFromFamily(this._family),t=(((r=this._family)==null?void 0:r.cairnMemberIds)??((a=this._family)==null?void 0:a.memberIds)??[]).length,i=(((l=this._family)==null?void 0:l.memberIds)??[]).length;return s`
       <div class="wrap">
         <div class="mark">
           <img
@@ -3395,10 +3468,10 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           <div class="mark-name">Cairn</div>
         </div>
         <glass-panel padding="lg" variant="strong" lifted>
-          ${this._loading?n`<div class="loading">Looking up <code>${this.code}</code>…</div>`:this._family?n`
+          ${this._loading?s`<div class="loading">Looking up <code>${this.code}</code>…</div>`:this._family?s`
                 <h1>You're invited.</h1>
                 <div class="preview">
-                  ${e?n`
+                  ${e?s`
                         <member-chip
                           .name=${e.displayName}
                           .photo=${e.photoURL??""}
@@ -3433,8 +3506,8 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                     Not now
                   </glass-button>
                 </div>
-                ${this._error?n`<div class="error">${this._error}</div>`:""}
-              `:n`
+                ${this._error?s`<div class="error">${this._error}</div>`:""}
+              `:s`
                 <h1>Hmm.</h1>
                 <p style="text-align:center;color:var(--text-secondary);margin:0 0 22px;line-height:1.55;">
                   ${this._error||"This invite link doesn't look right."}
@@ -3447,7 +3520,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
               `}
         </glass-panel>
       </div>
-    `}}u(ye,"properties",{code:{type:String},_family:{state:!0},_loading:{state:!0},_joining:{state:!0},_error:{state:!0}}),u(ye,"styles",$`
+    `}}u($e,"properties",{code:{type:String},_family:{state:!0},_loading:{state:!0},_joining:{state:!0},_error:{state:!0}}),u($e,"styles",D`
     * { box-sizing: border-box; }
     :host {
       display: flex;
@@ -3555,7 +3628,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       background: rgba(255, 248, 235, 0.08);
       border-radius: 6px;
     }
-  `);customElements.define("join-family-screen",ye);class we extends k{constructor(){super(),this.error="",this.busy=!1,this.joinCode=""}async _handleSignIn(){if(!this.busy){this.busy=!0,this.error="";try{await Re()}catch(e){this.error=(e==null?void 0:e.message)??"Sign-in failed."}finally{this.busy=!1}}}_renderGoogleIcon(){return n`
+  `);customElements.define("join-family-screen",$e);class De extends ${constructor(){super(),this.error="",this.busy=!1,this.joinCode=""}async _handleSignIn(){if(!this.busy){this.busy=!0,this.error="";try{await Re()}catch(e){this.error=(e==null?void 0:e.message)??"Sign-in failed."}finally{this.busy=!1}}}_renderGoogleIcon(){return s`
       <svg viewBox="0 0 48 48" aria-hidden="true">
         <path
           fill="#EA4335"
@@ -3575,7 +3648,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
         />
         <path fill="none" d="M0 0h48v48H0z" />
       </svg>
-    `}render(){return n`
+    `}render(){return s`
       <div class="wrap">
         <div class="brand">
           <div class="mark-row">
@@ -3592,7 +3665,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           <div class="companion">PebblePath companion</div>
         </div>
         <glass-panel padding="lg" lifted variant="strong">
-          ${this.joinCode?n`<div class="invite-banner">
+          ${this.joinCode?s`<div class="invite-banner">
                 <strong>You've been invited to a family on Cairn.</strong><br />
                 Sign in to continue — we'll show you the family next.
                 <br /><code>${this.joinCode}</code>
@@ -3604,23 +3677,23 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           <div class="actions">
             <button
               class="google-btn"
-              ?disabled=${this.busy||!I}
+              ?disabled=${this.busy||!j}
               @click=${this._handleSignIn}
             >
               ${this._renderGoogleIcon()}
               ${this.busy?"Signing in…":"Continue with Google"}
             </button>
           </div>
-          ${I?"":n`<div class="config-hint">
+          ${j?"":s`<div class="config-hint">
                 Sign-in is awaiting your Firebase config — copy
                 <code>.env.example</code> to <code>.env</code> and fill in the web-app
                 values from PebblePath's Firebase Console.
               </div>`}
-          ${this.error?n`<div class="error">${this.error}</div>`:""}
+          ${this.error?s`<div class="error">${this.error}</div>`:""}
         </glass-panel>
         <div class="footnote">Beta Version</div>
       </div>
-    `}}u(we,"properties",{error:{state:!0},busy:{state:!0},joinCode:{type:String}}),u(we,"styles",$`
+    `}}u(De,"properties",{error:{state:!0},busy:{state:!0},joinCode:{type:String}}),u(De,"styles",D`
     * {
       box-sizing: border-box;
     }
@@ -3836,9 +3909,9 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       letter-spacing: 0.04em;
       text-transform: uppercase;
     }
-  `);customElements.define("sign-in-screen",we);const L=class L extends k{constructor(){super(),this.value="family"}_select(e){e!==this.value&&(this.value=e,this.dispatchEvent(new CustomEvent("circle-change",{detail:{value:e},bubbles:!0,composed:!0})))}render(){return n`
+  `);customElements.define("sign-in-screen",De);const H=class H extends ${constructor(){super(),this.value="family"}_select(e){e!==this.value&&(this.value=e,this.dispatchEvent(new CustomEvent("circle-change",{detail:{value:e},bubbles:!0,composed:!0})))}render(){return s`
       <div class="track" role="tablist" aria-label="Circle">
-        ${L.OPTIONS.map(e=>n`
+        ${H.OPTIONS.map(e=>s`
             <button
               role="tab"
               aria-selected=${this.value===e.value}
@@ -3849,7 +3922,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
             </button>
           `)}
       </div>
-    `}};u(L,"properties",{value:{type:String,reflect:!0}}),u(L,"OPTIONS",[{value:"personal",label:"Just me"},{value:"family",label:"Family"},{value:"extended",label:"Extended"}]),u(L,"styles",$`
+    `}};u(H,"properties",{value:{type:String,reflect:!0}}),u(H,"OPTIONS",[{value:"personal",label:"Just me"},{value:"family",label:"Family"},{value:"extended",label:"Extended"}]),u(H,"styles",D`
     * {
       box-sizing: border-box;
     }
@@ -3898,17 +3971,17 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
         inset 0 1px 0 rgba(255, 255, 255, 0.5);
       font-weight: 600;
     }
-  `);let _e=L;customElements.define("circle-switcher",_e);class ke extends k{constructor(){super(),this.event=null,this.members=[]}_icon(e){return e==="birthday"?n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  `);let ze=H;customElements.define("circle-switcher",ze);class Ce extends ${constructor(){super(),this.event=null,this.members=[]}_icon(e){return e==="birthday"?s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M5 14h14v6H5z" />
         <path d="M5 14c0-2 1.5-3 3-3h8c1.5 0 3 1 3 3" />
         <path d="M12 11V7" />
         <path d="M11 5.5c0-.8.5-1.5 1-2 .5.5 1 1.2 1 2 0 .6-.4 1-1 1s-1-.4-1-1z" fill="currentColor" stroke="none" />
-      </svg>`:e==="anniversary"?n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      </svg>`:e==="anniversary"?s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="9" cy="13" r="5" />
         <circle cx="15" cy="13" r="5" />
-      </svg>`:n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      </svg>`:s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" />
-    </svg>`}_fmtDate(e){const t=_(e)??new Date(e);return{day:t.getDate(),month:t.toLocaleString("en-GB",{month:"short"})}}render(){const e=this.event;if(!e)return n``;const t=this._fmtDate(e.date);return n`
+    </svg>`}_fmtDate(e){const t=k(e)??new Date(e);return{day:t.getDate(),month:t.toLocaleString("en-GB",{month:"short"})}}render(){const e=this.event;if(!e)return s``;const t=this._fmtDate(e.date);return s`
       <div
         class="row"
         @click=${()=>this.dispatchEvent(new CustomEvent("edit-event",{detail:e,bubbles:!0,composed:!0}))}
@@ -3916,14 +3989,14 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
         <div class="icon ${e.type}">${this._icon(e.type)}</div>
         <div class="body">
           <div class="title">${e.title}</div>
-          ${e.subtitle?n`<div class="meta">${e.subtitle}</div>`:""}
+          ${e.subtitle?s`<div class="meta">${e.subtitle}</div>`:""}
         </div>
         <div class="date">
           ${t.day}
           <small>${t.month}</small>
         </div>
       </div>
-    `}}u(ke,"properties",{event:{type:Object},members:{type:Array}}),u(ke,"styles",$`
+    `}}u(Ce,"properties",{event:{type:Object},members:{type:Array}}),u(Ce,"styles",D`
     :host {
       display: block;
     }
@@ -3995,16 +4068,16 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       text-transform: uppercase;
       letter-spacing: 0.06em;
     }
-  `);customElements.define("event-row",ke);const _t={uid:"preview-user",displayName:"Thomas Paris",email:"thomas@example.com",photoURL:null},Ie=[{uid:"thomas",displayName:"Thomas",circles:["immediate"],hue:198},{uid:"partner",displayName:"Élise",circles:["immediate"],hue:8},{uid:"kid1",displayName:"Oscar",circles:["immediate"],hue:142},{uid:"kid2",displayName:"Mila",circles:["immediate"],hue:44},{uid:"mum",displayName:"Mum",circles:["extended"],hue:320},{uid:"dad",displayName:"Dad",circles:["extended"],hue:28},{uid:"sister",displayName:"Camille",circles:["extended"],hue:280},{uid:"bro-in-law",displayName:"Sam",circles:["extended"],hue:175},{uid:"niece",displayName:"Léa",circles:["extended"],hue:100}],kt=[{id:"t1",title:"Côte d’Azur, summer",location:"Antibes, France",start:"2026-07-12",end:"2026-07-21",coverGradient:"linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)",lodgingHost:"Airbnb",lodgingTitle:"Villa near Cap d’Antibes",attendees:["thomas","partner","kid1","kid2","mum","dad"],notes:"Mum + Dad arrive day 2. Dinner reservations at La Guérite booked.",visibility:"extended"},{id:"t2",title:"Half-term in the Alps",location:"Chamonix, France",start:"2026-10-24",end:"2026-10-31",coverGradient:"linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)",lodgingHost:"Booking.com",lodgingTitle:"Chalet Les Drus",attendees:["thomas","partner","kid1","kid2"],notes:"Need ski school for the kids — book by September.",visibility:"immediate"},{id:"t3",title:"Camille’s 40th",location:"Lisbon, Portugal",start:"2026-09-05",end:"2026-09-08",coverGradient:"linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)",lodgingHost:"Airbnb",lodgingTitle:"Alfama rooftop apartment",attendees:["thomas","partner","sister","bro-in-law"],notes:"Surprise. Don’t mention to Camille.",visibility:"family"}],$t=[{id:"e1",type:"birthday",date:"2026-05-24",personIds:["mum"],title:"Mum’s birthday"},{id:"e2",type:"anniversary",date:"2026-05-28",personIds:["mum","dad"],title:"Mum & Dad’s anniversary",subtitle:"38 years"},{id:"e3",type:"birthday",date:"2026-06-11",personIds:["kid1"],title:"Oscar turns 7"},{id:"e4",type:"birthday",date:"2026-06-30",personIds:["niece"],title:"Léa’s birthday"}];class $e extends k{constructor(){super(),this.user=_t,this.pebbleUser=null,this.family=null,this.children=[],this.trips=[],this.events=[],this.preview=!1,this.circle="extended",this._formOpen=!1,this._formTrip=null,this._formBusy=!1,this._membersOpen=!1,this._eventFormOpen=!1,this._eventFormEvent=null,this._eventFormBusy=!1,this._allTripsOpen=!1,this._editingFamilyName=!1,this._importOpen=!1,this._profileOpen=!1,this._typePickerOpen=!1,this._formMode="trip",this._pebbleOpen=!1;const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1)}async _saveFamilyName(e){var a,l;const i=(e.target.value??"").trim(),r=((a=this.family)==null?void 0:a.name)??"";if(i&&i!==r&&((l=this.family)!=null&&l.id))try{const{db:s,doc:d,updateDoc:p,serverTimestamp:c}=await Ue(async()=>{const{db:h,doc:f,updateDoc:v,serverTimestamp:b}=await Promise.resolve().then(()=>pt);return{db:h,doc:f,updateDoc:v,serverTimestamp:b}},void 0);await p(d(s,"families",this.family.id),{name:i,updatedAt:c()}),m("Family name updated.")}catch(s){console.error("Update family name failed:",s),m(`Couldn't save: ${s.code??s.message}`,{duration:5e3})}this._editingFamilyName=!1}_liveImmediate(){var e;return this.preview||!((e=this.user)!=null&&e.uid)?Ie.filter(t=>t.circles.includes("immediate")):ut(this.user.uid,this.user,this.pebbleUser,this.family,this.children)}_liveExtended(){return this.preview?Ie.filter(e=>e.circles.includes("extended")):[]}_liveTrips(){return this.preview?kt:this.trips??[]}_liveEvents(){if(this.preview)return $t;const e=r=>{const{date:a,yearsElapsed:l}=mt(r);return{...r,date:a?bt(a):r.date,_yearsElapsed:l,_originalDate:r.date}},t=gt(this.children).map(e),i=(this.events??[]).map(e);return[...t,...i].sort((r,a)=>String(r.date).localeCompare(String(a.date)))}_filteredMembers(){const e=this._liveImmediate(),t=this._liveExtended();return this.circle==="personal"?e.filter(i=>{var r;return i.uid===((r=this.user)==null?void 0:r.uid)}):this.circle==="family"?e:[...e,...t]}_circleTrips(){var l;const e=this._liveTrips(),t=((l=this.user)==null?void 0:l.uid)??"thomas";let i;this.circle==="personal"?i=e.filter(s=>{var d;return(d=s.attendees)==null?void 0:d.includes(t)}):this.circle==="family"?i=e.filter(s=>s.visibility!=="extended"&&this._userCanSeeTrip(s)):i=e.filter(s=>this._userCanSeeTrip(s));const r=new Set,a=[];for(const s of i){const d=s.id??`${s.title}|${s.start}|${s.end}`;r.has(d)||(r.add(d),a.push(s))}return a}_filteredTrips(){const e=new Date;return e.setHours(0,0,0,0),this._circleTrips().filter(t=>t.end?_(t.end)>=e:!0)}_userCanSeeTrip(e){var i,r,a,l,s;const t=(i=this.user)==null?void 0:i.uid;if(!t)return!1;if((r=e.attendees)!=null&&r.includes(t)||(a=e.viewers)!=null&&a.includes(t)||e.visibility==="family")return!0;if(e.visibility==="extended"){if((((l=this.family)==null?void 0:l.memberIds)??[]).includes(t))return!0;const d=e.targetSubGroups??[];if(d.length===0)return!0;const p=Object.entries(((s=this.family)==null?void 0:s.subGroups)??{}).filter(([,c])=>(c.memberIds??[]).includes(t)).map(([c])=>c);return d.some(c=>p.includes(c))}return!1}_filteredEvents(){const e=new Set(this._filteredMembers().map(t=>t.uid));return this._liveEvents().filter(t=>t.personIds.some(i=>e.has(i)))}_smartCallout(){var s,d;const e=new Date,t=new Date(e.getFullYear(),e.getMonth(),e.getDate()),i=1440*60*1e3,r=p=>Math.round((p-t)/i);for(const p of this._circleTrips()){if(!p.start||!p.end)continue;const c=_(p.start),h=_(p.end);if(c.setHours(0,0,0,0),h.setHours(0,0,0,0),c<=t&&t<=h){const f=r(c)+1,v=r(h)-r(c)+1,b=((s=p.location)==null?void 0:s.trim())||p.title;return`Day ${f} of ${v} in ${b}.`}}let a=null,l=1/0;for(const p of this._circleTrips()){if(!p.start)continue;const c=_(p.start);if(!c)continue;const h=r(c);h>0&&h<l&&(a={kind:"trip",item:p},l=h)}for(const p of this._filteredEvents()){if(!p.date)continue;const c=_(p.date);if(!c)continue;const h=r(c);h>=0&&h<l&&(a={kind:"event",item:p},l=h)}if(!a)return null;if(a.kind==="trip"){const p=((d=a.item.location)==null?void 0:d.trim())||a.item.title;return l===1?`${p} starts tomorrow.`:l<=14?`${p} in ${l} days.`:l<=60?`Next trip: ${p} in ${l} days.`:null}return l===0?`${a.item.title} — today.`:l===1?`${a.item.title} — tomorrow.`:l<=7?`${a.item.title} in ${l} days.`:null}_tripDensityByDay(e){const t=new Map;for(const i of this._filteredTrips()){if(!i.start||!i.end)continue;const r=_(i.start),a=_(i.end);if(Number.isNaN(r.getTime())||Number.isNaN(a.getTime())||r.getFullYear()>e||a.getFullYear()<e)continue;const l=new Date(Math.max(r,new Date(e,0,1))),s=new Date(Math.min(a,new Date(e,11,31)));for(;l<=s;){const d=`${String(l.getMonth()+1).padStart(2,"0")}-${String(l.getDate()).padStart(2,"0")}`;t.set(d,Math.min(1,(t.get(d)??0)+.5)),l.setDate(l.getDate()+1)}}return t}_shiftMonth(e){const t=this._displayMonth;this._displayMonth=new Date(t.getFullYear(),t.getMonth()+e,1)}_jumpToMonth(e,t){this._displayMonth=new Date(e,t,1)}_resetToToday(){const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1)}_renderStone({label:e,members:t,pebbleClass:i,emptyLabel:r,onClick:a,maxChips:l=6}){if(!t||t.length===0)return n`
+  `);customElements.define("event-row",Ce);const _t={uid:"preview-user",displayName:"Thomas Paris",email:"thomas@example.com",photoURL:null},Ie=[{uid:"thomas",displayName:"Thomas",circles:["immediate"],hue:198},{uid:"partner",displayName:"Élise",circles:["immediate"],hue:8},{uid:"kid1",displayName:"Oscar",circles:["immediate"],hue:142},{uid:"kid2",displayName:"Mila",circles:["immediate"],hue:44},{uid:"mum",displayName:"Mum",circles:["extended"],hue:320},{uid:"dad",displayName:"Dad",circles:["extended"],hue:28},{uid:"sister",displayName:"Camille",circles:["extended"],hue:280},{uid:"bro-in-law",displayName:"Sam",circles:["extended"],hue:175},{uid:"niece",displayName:"Léa",circles:["extended"],hue:100}],kt=[{id:"t1",title:"Côte d’Azur, summer",location:"Antibes, France",start:"2026-07-12",end:"2026-07-21",coverGradient:"linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)",lodgingHost:"Airbnb",lodgingTitle:"Villa near Cap d’Antibes",attendees:["thomas","partner","kid1","kid2","mum","dad"],notes:"Mum + Dad arrive day 2. Dinner reservations at La Guérite booked.",visibility:"extended"},{id:"t2",title:"Half-term in the Alps",location:"Chamonix, France",start:"2026-10-24",end:"2026-10-31",coverGradient:"linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)",lodgingHost:"Booking.com",lodgingTitle:"Chalet Les Drus",attendees:["thomas","partner","kid1","kid2"],notes:"Need ski school for the kids — book by September.",visibility:"immediate"},{id:"t3",title:"Camille’s 40th",location:"Lisbon, Portugal",start:"2026-09-05",end:"2026-09-08",coverGradient:"linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)",lodgingHost:"Airbnb",lodgingTitle:"Alfama rooftop apartment",attendees:["thomas","partner","sister","bro-in-law"],notes:"Surprise. Don’t mention to Camille.",visibility:"family"}],$t=[{id:"e1",type:"birthday",date:"2026-05-24",personIds:["mum"],title:"Mum’s birthday"},{id:"e2",type:"anniversary",date:"2026-05-28",personIds:["mum","dad"],title:"Mum & Dad’s anniversary",subtitle:"38 years"},{id:"e3",type:"birthday",date:"2026-06-11",personIds:["kid1"],title:"Oscar turns 7"},{id:"e4",type:"birthday",date:"2026-06-30",personIds:["niece"],title:"Léa’s birthday"}];class Ee extends ${constructor(){super(),this.user=_t,this.pebbleUser=null,this.family=null,this.children=[],this.trips=[],this.events=[],this.preview=!1,this.circle="extended",this._formOpen=!1,this._formTrip=null,this._formBusy=!1,this._membersOpen=!1,this._eventFormOpen=!1,this._eventFormEvent=null,this._eventFormBusy=!1,this._allTripsOpen=!1,this._editingFamilyName=!1,this._importOpen=!1,this._profileOpen=!1,this._typePickerOpen=!1,this._formMode="trip",this._pebbleOpen=!1;const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1)}async _saveFamilyName(e){var a,l;const i=(e.target.value??"").trim(),r=((a=this.family)==null?void 0:a.name)??"";if(i&&i!==r&&((l=this.family)!=null&&l.id))try{const{db:n,doc:o,updateDoc:p,serverTimestamp:c}=await Ue(async()=>{const{db:h,doc:v,updateDoc:x,serverTimestamp:g}=await Promise.resolve().then(()=>pt);return{db:h,doc:v,updateDoc:x,serverTimestamp:g}},void 0);await p(o(n,"families",this.family.id),{name:i,updatedAt:c()}),f("Family name updated.")}catch(n){console.error("Update family name failed:",n),f(`Couldn't save: ${n.code??n.message}`,{duration:5e3})}this._editingFamilyName=!1}_liveImmediate(){var e;return this.preview||!((e=this.user)!=null&&e.uid)?Ie.filter(t=>t.circles.includes("immediate")):ut(this.user.uid,this.user,this.pebbleUser,this.family,this.children)}_liveExtended(){return this.preview?Ie.filter(e=>e.circles.includes("extended")):[]}_liveTrips(){return this.preview?kt:this.trips??[]}_liveEvents(){if(this.preview)return $t;const e=r=>{const{date:a,yearsElapsed:l}=mt(r);return{...r,date:a?bt(a):r.date,_yearsElapsed:l,_originalDate:r.date}},t=gt(this.children).map(e),i=(this.events??[]).map(e);return[...t,...i].sort((r,a)=>String(r.date).localeCompare(String(a.date)))}_filteredMembers(){const e=this._liveImmediate(),t=this._liveExtended();return this.circle==="personal"?e.filter(i=>{var r;return i.uid===((r=this.user)==null?void 0:r.uid)}):this.circle==="family"?e:[...e,...t]}_circleTrips(){var l;const e=this._liveTrips(),t=((l=this.user)==null?void 0:l.uid)??"thomas";let i;this.circle==="personal"?i=e.filter(n=>{var o;return(o=n.attendees)==null?void 0:o.includes(t)}):this.circle==="family"?i=e.filter(n=>n.visibility!=="extended"&&this._userCanSeeTrip(n)):i=e.filter(n=>this._userCanSeeTrip(n));const r=new Set,a=[];for(const n of i){const o=n.id??`${n.title}|${n.start}|${n.end}`;r.has(o)||(r.add(o),a.push(n))}return a}_filteredTrips(){const e=new Date;return e.setHours(0,0,0,0),this._circleTrips().filter(t=>t.end?k(t.end)>=e:!0)}_userCanSeeTrip(e){var i,r,a,l,n;const t=(i=this.user)==null?void 0:i.uid;if(!t)return!1;if((r=e.attendees)!=null&&r.includes(t)||(a=e.viewers)!=null&&a.includes(t)||e.visibility==="family")return!0;if(e.visibility==="extended"){if((((l=this.family)==null?void 0:l.memberIds)??[]).includes(t))return!0;const o=e.targetSubGroups??[];if(o.length===0)return!0;const p=Object.entries(((n=this.family)==null?void 0:n.subGroups)??{}).filter(([,c])=>(c.memberIds??[]).includes(t)).map(([c])=>c);return o.some(c=>p.includes(c))}return!1}_filteredEvents(){const e=new Set(this._filteredMembers().map(t=>t.uid));return this._liveEvents().filter(t=>t.personIds.some(i=>e.has(i)))}_smartCallout(){var n,o;const e=new Date,t=new Date(e.getFullYear(),e.getMonth(),e.getDate()),i=1440*60*1e3,r=p=>Math.round((p-t)/i);for(const p of this._circleTrips()){if(!p.start||!p.end)continue;const c=k(p.start),h=k(p.end);if(c.setHours(0,0,0,0),h.setHours(0,0,0,0),c<=t&&t<=h){const v=r(c)+1,x=r(h)-r(c)+1,g=((n=p.location)==null?void 0:n.trim())||p.title;return`Day ${v} of ${x} in ${g}.`}}let a=null,l=1/0;for(const p of this._circleTrips()){if(!p.start)continue;const c=k(p.start);if(!c)continue;const h=r(c);h>0&&h<l&&(a={kind:"trip",item:p},l=h)}for(const p of this._filteredEvents()){if(!p.date)continue;const c=k(p.date);if(!c)continue;const h=r(c);h>=0&&h<l&&(a={kind:"event",item:p},l=h)}if(!a)return null;if(a.kind==="trip"){const p=((o=a.item.location)==null?void 0:o.trim())||a.item.title;return l===1?`${p} starts tomorrow.`:l<=14?`${p} in ${l} days.`:l<=60?`Next trip: ${p} in ${l} days.`:null}return l===0?`${a.item.title} — today.`:l===1?`${a.item.title} — tomorrow.`:l<=7?`${a.item.title} in ${l} days.`:null}_tripDensityByDay(e){const t=new Map;for(const i of this._filteredTrips()){if(!i.start||!i.end)continue;const r=k(i.start),a=k(i.end);if(Number.isNaN(r.getTime())||Number.isNaN(a.getTime())||r.getFullYear()>e||a.getFullYear()<e)continue;const l=new Date(Math.max(r,new Date(e,0,1))),n=new Date(Math.min(a,new Date(e,11,31)));for(;l<=n;){const o=`${String(l.getMonth()+1).padStart(2,"0")}-${String(l.getDate()).padStart(2,"0")}`;t.set(o,Math.min(1,(t.get(o)??0)+.5)),l.setDate(l.getDate()+1)}}return t}_shiftMonth(e){const t=this._displayMonth;this._displayMonth=new Date(t.getFullYear(),t.getMonth()+e,1)}_jumpToMonth(e,t){this._displayMonth=new Date(e,t,1)}_resetToToday(){const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1)}_renderStone({label:e,members:t,pebbleClass:i,emptyLabel:r,onClick:a,maxChips:l=6}){if(!t||t.length===0)return s`
         <button class="stone" @click=${a} title=${r}>
           <span class="pebble ${i} pebble-empty">${r}</span>
           <span class="stone-label">${e}</span>
         </button>
-      `;const s=t.slice(0,l),d=t.length-s.length;return n`
+      `;const n=t.slice(0,l),o=t.length-n.length;return s`
       <button class="stone" @click=${a} title="${e} — manage members">
         <span class="pebble ${i}">
           <span class="stone-chips">
-            ${s.map(p=>n`
+            ${n.map(p=>s`
                 <member-chip
                   .name=${p.displayName}
                   .photo=${p.photoURL??""}
@@ -4012,16 +4085,16 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                   size="26"
                 ></member-chip>
               `)}
-            ${d>0?n`<span class="stone-more">+${d}</span>`:""}
+            ${o>0?s`<span class="stone-more">+${o}</span>`:""}
           </span>
         </span>
         <span class="stone-label">${e}</span>
       </button>
-    `}_renderMonthly(){const e=new Date,t=this._displayMonth??e,i=t.getFullYear(),r=t.getMonth(),l=(new Date(i,r,1).getDay()+6)%7,s=new Date(i,r+1,0).getDate(),d=this._filteredEvents().map(b=>_(b.date)).filter(Boolean).filter(b=>b.getFullYear()===i&&b.getMonth()===r).map(b=>b.getDate()),p=new Set;for(const b of this._filteredTrips()){if(!b.start||!b.end)continue;const E=_(b.start),S=_(b.end);if(Number.isNaN(E.getTime())||Number.isNaN(S.getTime())||E.getFullYear()>i||S.getFullYear()<i||E.getMonth()>r&&S.getMonth()>r||E.getMonth()<r&&S.getMonth()<r)continue;const N=E.getMonth()===r?E.getDate():1,G=S.getMonth()===r?S.getDate():s;for(let Y=N;Y<=G;Y++)p.add(Y)}const c=[];for(let b=0;b<l;b++)c.push(n`<div class="cal-cell empty"></div>`);const h=e.getFullYear()===i&&e.getMonth()===r;for(let b=1;b<=s;b++){const E=h&&b===e.getDate(),S=d.includes(b),N=p.has(b),G=["cal-cell",E?"today":"",S?"has-event":"",N?"has-trip":""].filter(Boolean).join(" ");c.push(n`<div class=${G}>${b}</div>`)}const f=new Date(i,r,1).toLocaleString("en-GB",{month:"long",year:"numeric"});return n`
+    `}_renderMonthly(){const e=new Date,t=this._displayMonth??e,i=t.getFullYear(),r=t.getMonth(),l=(new Date(i,r,1).getDay()+6)%7,n=new Date(i,r+1,0).getDate(),o=this._filteredEvents().map(g=>k(g.date)).filter(Boolean).filter(g=>g.getFullYear()===i&&g.getMonth()===r).map(g=>g.getDate()),p=new Set;for(const g of this._filteredTrips()){if(!g.start||!g.end)continue;const m=k(g.start),z=k(g.end);if(Number.isNaN(m.getTime())||Number.isNaN(z.getTime())||m.getFullYear()>i||z.getFullYear()<i||m.getMonth()>r&&z.getMonth()>r||m.getMonth()<r&&z.getMonth()<r)continue;const F=m.getMonth()===r?m.getDate():1,N=z.getMonth()===r?z.getDate():n;for(let O=F;O<=N;O++)p.add(O)}const c=[];for(let g=0;g<l;g++)c.push(s`<div class="cal-cell empty"></div>`);const h=e.getFullYear()===i&&e.getMonth()===r;for(let g=1;g<=n;g++){const m=h&&g===e.getDate(),z=o.includes(g),F=p.has(g),N=["cal-cell",m?"today":"",z?"has-event":"",F?"has-trip":""].filter(Boolean).join(" ");c.push(s`<div class=${N}>${g}</div>`)}const v=new Date(i,r,1).toLocaleString("en-GB",{month:"long",year:"numeric"});return s`
       <div class="cal-head">
-        <h3>${f}</h3>
+        <h3>${v}</h3>
         <div class="nav">
-          ${!h?n`<button
+          ${!h?s`<button
                 class="cal-nav-btn cal-today-btn"
                 @click=${()=>this._resetToToday()}
                 title="Jump to today"
@@ -4033,10 +4106,10 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
         </div>
       </div>
       <div class="cal-grid">
-        ${["Mo","Tu","We","Th","Fr","Sa","Su"].map(b=>n`<div class="cal-dow">${b}</div>`)}
+        ${["Mo","Tu","We","Th","Fr","Sa","Su"].map(g=>s`<div class="cal-dow">${g}</div>`)}
         ${c}
       </div>
-    `}_openCreate(){if(this.preview){m("Sign in to create real activities.");return}if(!w.familyId){m("You need a PebblePath family first.");return}this._typePickerOpen=!0}_onTypePicked(e){this._typePickerOpen=!1;const t=e.detail.type;if(t==="event"){this._eventFormEvent=null,this._eventFormOpen=!0;return}this._formMode=t,this._formTrip=null,this._formOpen=!0}_openEdit(e){if(this.preview){m("Sign in to edit real activities.");return}const t=e.lodgingUrl||e.lodgingHost||e.flightNumber||e.flightDepartAirport;this._formMode=t?"trip":"activity",this._formTrip=e,this._formOpen=!0}async _onSaveTrip(e){const t=e.detail;this._formBusy=!0;try{await w.saveTrip(t),this._formOpen=!1,this._formTrip=null,m(t.id?"Trip updated.":"Trip created.")}catch(i){console.error("Save trip failed:",i),m(`Couldn't save: ${i.code??i.message}`,{duration:5e3})}finally{this._formBusy=!1}}async _onDeleteTrip(e){this._formBusy=!0;try{await w.deleteTrip(e.detail.id),this._formOpen=!1,this._formTrip=null,m("Trip deleted.")}catch(t){console.error("Delete trip failed:",t),m(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._formBusy=!1}}_openCreateEvent(){if(this.preview){m("Sign in to add real events.");return}if(!w.familyId){m("You need a family first.");return}this._eventFormEvent=null,this._eventFormOpen=!0}_openEditEvent(e){if(this.preview){m("Sign in to edit real events.");return}if(e!=null&&e._childId){const t=prompt(`Edit ${e._childName}'s birthday (YYYY-MM-DD):`,e.date);if(!t)return;if(!/^\d{4}-\d{2}-\d{2}$/.test(t)){m("Use YYYY-MM-DD format.");return}w.updateChildBirthday(e._childId,new Date(t)).then(()=>m(`Updated ${e._childName}'s birthday.`)).catch(i=>{console.error("Update child birthday failed:",i),m(`Couldn't update: ${i.code??i.message}`,{duration:5e3})});return}this._eventFormEvent={...e,date:e._originalDate??e.date},this._eventFormOpen=!0}async _onSaveEvent(e){this._eventFormBusy=!0;try{await w.saveEvent(e.detail),this._eventFormOpen=!1,this._eventFormEvent=null,m(e.detail.id?"Event updated.":"Event added.")}catch(t){console.error("Save event failed:",t),m(`Couldn't save: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}async _onDeleteEvent(e){this._eventFormBusy=!0;try{await w.deleteEvent(e.detail.id),this._eventFormOpen=!1,this._eventFormEvent=null,m("Event deleted.")}catch(t){console.error("Delete event failed:",t),m(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}render(){var v,b,E,S,N,G,Y,ze,Ce,Ee,Se;const e=this._filteredTrips(),t=this._filteredEvents(),i=this._liveImmediate(),r=this._liveExtended(),a=i.concat(r),l=(((v=this.user)==null?void 0:v.displayName)??"there").split(" ")[0],s=new Date,d=new Date(s.getFullYear(),s.getMonth(),1),p=new Date(s.getFullYear(),s.getMonth()+1,0),c=t.filter(g=>{const D=_(g.date);return D&&D.getFullYear()===s.getFullYear()&&D.getMonth()===s.getMonth()}),f=this._circleTrips().filter(g=>{if(!g.start||!g.end)return!1;const D=_(g.start),M=_(g.end);return Number.isNaN(D.getTime())||Number.isNaN(M.getTime())?!1:D<=p&&M>=d}).length+c.length;return n`
+    `}_openCreate(){if(this.preview){f("Sign in to create real activities.");return}if(!w.familyId){f("You need a PebblePath family first.");return}this._typePickerOpen=!0}_onTypePicked(e){this._typePickerOpen=!1;const t=e.detail.type;if(t==="event"){this._eventFormEvent=null,this._eventFormOpen=!0;return}this._formMode=t,this._formTrip=null,this._formOpen=!0}_openEdit(e){if(this.preview){f("Sign in to edit real activities.");return}const t=e.lodgingUrl||e.lodgingHost||e.flightNumber||e.flightDepartAirport;this._formMode=t?"trip":"activity",this._formTrip=e,this._formOpen=!0}async _onSaveTrip(e){const t=e.detail;this._formBusy=!0;try{await w.saveTrip(t),this._formOpen=!1,this._formTrip=null,f(t.id?"Trip updated.":"Trip created.")}catch(i){console.error("Save trip failed:",i),f(`Couldn't save: ${i.code??i.message}`,{duration:5e3})}finally{this._formBusy=!1}}async _onDeleteTrip(e){this._formBusy=!0;try{await w.deleteTrip(e.detail.id),this._formOpen=!1,this._formTrip=null,f("Trip deleted.")}catch(t){console.error("Delete trip failed:",t),f(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._formBusy=!1}}_openCreateEvent(){if(this.preview){f("Sign in to add real events.");return}if(!w.familyId){f("You need a family first.");return}this._eventFormEvent=null,this._eventFormOpen=!0}_openEditEvent(e){if(this.preview){f("Sign in to edit real events.");return}if(e!=null&&e._childId){const t=prompt(`Edit ${e._childName}'s birthday (YYYY-MM-DD):`,e.date);if(!t)return;if(!/^\d{4}-\d{2}-\d{2}$/.test(t)){f("Use YYYY-MM-DD format.");return}w.updateChildBirthday(e._childId,new Date(t)).then(()=>f(`Updated ${e._childName}'s birthday.`)).catch(i=>{console.error("Update child birthday failed:",i),f(`Couldn't update: ${i.code??i.message}`,{duration:5e3})});return}this._eventFormEvent={...e,date:e._originalDate??e.date},this._eventFormOpen=!0}async _onSaveEvent(e){this._eventFormBusy=!0;try{await w.saveEvent(e.detail),this._eventFormOpen=!1,this._eventFormEvent=null,f(e.detail.id?"Event updated.":"Event added.")}catch(t){console.error("Save event failed:",t),f(`Couldn't save: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}async _onDeleteEvent(e){this._eventFormBusy=!0;try{await w.deleteEvent(e.detail.id),this._eventFormOpen=!1,this._eventFormEvent=null,f("Event deleted.")}catch(t){console.error("Delete event failed:",t),f(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}render(){var x,g,m,z,F,N,O,K,W,T,q;const e=this._filteredTrips(),t=this._filteredEvents(),i=this._liveImmediate(),r=this._liveExtended(),a=i.concat(r),l=(((x=this.user)==null?void 0:x.displayName)??"there").split(" ")[0],n=new Date,o=new Date(n.getFullYear(),n.getMonth(),1),p=new Date(n.getFullYear(),n.getMonth()+1,0),c=t.filter(b=>{const C=k(b.date);return C&&C.getFullYear()===n.getFullYear()&&C.getMonth()===n.getMonth()}),v=this._circleTrips().filter(b=>{if(!b.start||!b.end)return!1;const C=k(b.start),P=k(b.end);return Number.isNaN(C.getTime())||Number.isNaN(P.getTime())?!1:C<=p&&P>=o}).length+c.length;return s`
       <div class="topbar">
         <div class="brand">
           <img
@@ -4051,7 +4124,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
         </div>
         <div
           class="pebble-search"
-          @click=${g=>{var D;g.target.tagName!=="INPUT"&&((D=this.renderRoot.querySelector(".pebble-search-input"))==null||D.focus())}}
+          @click=${b=>{var C;b.target.tagName!=="INPUT"&&((C=this.renderRoot.querySelector(".pebble-search-input"))==null||C.focus())}}
         >
           <svg class="pebble-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="9" />
@@ -4061,8 +4134,8 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
             class="pebble-search-input"
             type="text"
             placeholder="Ask Pebble — weekend plans, trip ideas…"
-            @focus=${()=>{var g;this._pebbleOpen=!0,(g=this.renderRoot.querySelector(".pebble-search-input"))==null||g.blur()}}
-            @keydown=${g=>{g.key==="Enter"&&(g.preventDefault(),this._pebbleOpen=!0)}}
+            @focus=${()=>{var b;this._pebbleOpen=!0,(b=this.renderRoot.querySelector(".pebble-search-input"))==null||b.blur()}}
+            @keydown=${b=>{b.key==="Enter"&&(b.preventDefault(),this._pebbleOpen=!0)}}
             aria-label="Ask Pebble"
           />
           <span class="pebble-search-kbd">⏎</span>
@@ -4079,12 +4152,12 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           <button
             class="avatar-tap"
             @click=${()=>this._profileOpen=!0}
-            title="${((b=this.user)==null?void 0:b.displayName)??"Profile"} — open settings"
+            title="${((g=this.user)==null?void 0:g.displayName)??"Profile"} — open settings"
             aria-label="Open profile settings"
           >
             <member-chip
-              .name=${((E=this.user)==null?void 0:E.displayName)??"You"}
-              .photo=${((S=this.user)==null?void 0:S.photoURL)??""}
+              .name=${((m=this.user)==null?void 0:m.displayName)??"You"}
+              .photo=${((z=this.user)==null?void 0:z.photoURL)??""}
               .hue=${198}
               size="36"
             ></member-chip>
@@ -4092,7 +4165,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
         </div>
       </div>
 
-      ${this.preview?n`<div class="preview-banner">
+      ${this.preview?s`<div class="preview-banner">
             <strong>Preview mode</strong> — viewing the dashboard with placeholder
             data. <a href="?">Back to sign-in</a>.
           </div>`:""}
@@ -4101,18 +4174,18 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
         <div class="hello">
           <div>
             <h1>Hi ${l}.</h1>
-            ${(()=>{const g=this._smartCallout();return g?n`<div class="smart">${g}</div>`:""})()}
+            ${(()=>{const b=this._smartCallout();return b?s`<div class="smart">${b}</div>`:""})()}
             <div class="stat">
-              <span>${f}</span> ${f===1?"activity":"activities"} this month
+              <span>${v}</span> ${v===1?"activity":"activities"} this month
             </div>
-            ${this.family?this._editingFamilyName?n`<input
+            ${this.family?this._editingFamilyName?s`<input
                     class="family-name-input"
                     type="text"
                     .value=${this.family.name??""}
                     autofocus
                     @blur=${this._saveFamilyName}
-                    @keydown=${g=>{g.key==="Enter"&&g.target.blur(),g.key==="Escape"&&(g.target.value=this.family.name??"",this._editingFamilyName=!1)}}
-                  />`:n`<div
+                    @keydown=${b=>{b.key==="Enter"&&b.target.blur(),b.key==="Escape"&&(b.target.value=this.family.name??"",this._editingFamilyName=!1)}}
+                  />`:s`<div
                     class="family-name"
                     title="Click to rename"
                     @click=${()=>this._editingFamilyName=!0}
@@ -4129,12 +4202,12 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
               <button class="link" @click=${()=>this._importOpen=!0}>
                 Import from Calendar
               </button>
-              ${this._circleTrips().length>0?n`<button class="link" @click=${()=>this._allTripsOpen=!0}>
+              ${this._circleTrips().length>0?s`<button class="link" @click=${()=>this._allTripsOpen=!0}>
                     All trips →
                   </button>`:""}
             </div>
           </div>
-          ${e.length===0?n`
+          ${e.length===0?s`
                 <glass-panel padding="lg" variant="strong">
                   <div class="empty-hero">
                     <div class="empty-icon" aria-hidden="true">
@@ -4164,12 +4237,12 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                     </div>
                   </div>
                 </glass-panel>
-              `:n`
+              `:s`
                 <div class="trips-row">
-                  ${e.map(g=>n`<trip-card
-                      .trip=${g}
+                  ${e.map(b=>s`<trip-card
+                      .trip=${b}
                       .members=${a}
-                      @edit-trip=${D=>this._openEdit(D.detail)}
+                      @edit-trip=${C=>this._openEdit(C.detail)}
                     ></trip-card>`)}
                 </div>
               `}
@@ -4182,15 +4255,15 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
             </glass-panel>
             <glass-panel padding="md" variant="strong" stretch>
               <div class="cal-head">
-                <h3>${((N=this._displayMonth)==null?void 0:N.getFullYear())??s.getFullYear()}</h3>
+                <h3>${((F=this._displayMonth)==null?void 0:F.getFullYear())??n.getFullYear()}</h3>
                 <div style="font-size:12px;color:var(--text-tertiary);">Yearly</div>
               </div>
               <yearly-view
-                .year=${((G=this._displayMonth)==null?void 0:G.getFullYear())??s.getFullYear()}
-                .tripDays=${this._tripDensityByDay(((Y=this._displayMonth)==null?void 0:Y.getFullYear())??s.getFullYear())}
+                .year=${((N=this._displayMonth)==null?void 0:N.getFullYear())??n.getFullYear()}
+                .tripDays=${this._tripDensityByDay(((O=this._displayMonth)==null?void 0:O.getFullYear())??n.getFullYear())}
                 .events=${this._liveEvents()}
-                .today=${s}
-                @month-select=${g=>this._jumpToMonth(g.detail.year,g.detail.month)}
+                .today=${n}
+                @month-select=${b=>this._jumpToMonth(b.detail.year,b.detail.month)}
               ></yearly-view>
             </glass-panel>
           </div>
@@ -4201,32 +4274,32 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
             <h2>Celebrations</h2>
             <button class="link" @click=${()=>this._openCreateEvent()}>+ Add event</button>
           </div>
-          ${(()=>{const g=t.filter(F=>F.type==="birthday"),D=t.filter(F=>F.type==="anniversary"),M=t.filter(F=>F.type!=="birthday"&&F.type!=="anniversary"),q=(F,O,W)=>n`
+          ${(()=>{const b=t.filter(A=>A.type==="birthday"),C=t.filter(A=>A.type==="anniversary"),P=t.filter(A=>A.type!=="birthday"&&A.type!=="anniversary"),X=(A,B,Z)=>s`
               <glass-panel padding="md" variant="strong" class="cel-col">
                 <div class="cel-col-head">
-                  <span class="cel-col-title">${F}</span>
-                  <span class="cel-col-count">${O.length}</span>
+                  <span class="cel-col-title">${A}</span>
+                  <span class="cel-col-count">${B.length}</span>
                 </div>
-                ${O.length===0?n`<div class="cel-empty">${W}</div>`:O.map(j=>n`<event-row
-                        .event=${j}
+                ${B.length===0?s`<div class="cel-empty">${Z}</div>`:B.map(L=>s`<event-row
+                        .event=${L}
                         .members=${a}
-                        @edit-event=${A=>this._openEditEvent(A.detail)}
+                        @edit-event=${I=>this._openEditEvent(I.detail)}
                       ></event-row>`)}
               </glass-panel>
-            `;return n`
+            `;return s`
               <div class="cel-row">
-                ${q("Birthdays",g,"No birthdays yet.")}
-                ${q("Anniversaries",D,"No anniversaries yet.")}
+                ${X("Birthdays",b,"No birthdays yet.")}
+                ${X("Anniversaries",C,"No anniversaries yet.")}
               </div>
-              ${M.length>0?n`<glass-panel padding="md" variant="strong" style="margin-top:18px;">
+              ${P.length>0?s`<glass-panel padding="md" variant="strong" style="margin-top:18px;">
                     <div class="cel-col-head">
                       <span class="cel-col-title">Other</span>
-                      <span class="cel-col-count">${M.length}</span>
+                      <span class="cel-col-count">${P.length}</span>
                     </div>
-                    ${M.map(F=>n`<event-row
-                        .event=${F}
+                    ${P.map(A=>s`<event-row
+                        .event=${A}
                         .members=${a}
-                        @edit-event=${O=>this._openEditEvent(O.detail)}
+                        @edit-event=${B=>this._openEditEvent(B.detail)}
                       ></event-row>`)}
                   </glass-panel>`:""}
             `})()}
@@ -4240,7 +4313,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
             </button>
           </div>
           <glass-panel padding="md" variant="strong">
-            ${(()=>{var F,O,W;const g=i.find(j=>{var A;return j.uid===((A=this.user)==null?void 0:A.uid)}),D=i.filter(j=>{var A;return j.uid!==((A=this.user)==null?void 0:A.uid)}),M=Object.entries(((F=this.family)==null?void 0:F.subGroups)??{}),q=new Map(a.map(j=>[j.uid,j]));return n`
+            ${(()=>{var A,B,Z;const b=i.find(L=>{var I;return L.uid===((I=this.user)==null?void 0:I.uid)}),C=i.filter(L=>{var I;return L.uid!==((I=this.user)==null?void 0:I.uid)}),P=Object.entries(((A=this.family)==null?void 0:A.subGroups)??{}),X=new Map(a.map(L=>[L.uid,L]));return s`
                 <div class="cairn-stack">
                   <!-- Top: you (terracotta pebble) -->
                   <button
@@ -4251,9 +4324,9 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                     <span class="pebble pebble-self">
                       <span class="stone-chips">
                         <member-chip
-                          .name=${(g==null?void 0:g.displayName)??((O=this.user)==null?void 0:O.displayName)??"You"}
-                          .photo=${(g==null?void 0:g.photoURL)??((W=this.user)==null?void 0:W.photoURL)??""}
-                          .hue=${(g==null?void 0:g.hue)??198}
+                          .name=${(b==null?void 0:b.displayName)??((B=this.user)==null?void 0:B.displayName)??"You"}
+                          .photo=${(b==null?void 0:b.photoURL)??((Z=this.user)==null?void 0:Z.photoURL)??""}
+                          .hue=${(b==null?void 0:b.hue)??198}
                           size="28"
                         ></member-chip>
                       </span>
@@ -4262,27 +4335,52 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
                   </button>
 
                   <!-- Family (teal pebble) -->
-                  ${this._renderStone({label:"Family",members:D,pebbleClass:"pebble-family",emptyLabel:"+ Add co-parent or child",onClick:()=>this._membersOpen=!0})}
+                  ${this._renderStone({label:"Family",members:C,pebbleClass:"pebble-family",emptyLabel:"+ Add co-parent or child",onClick:()=>this._membersOpen=!0})}
 
                   <!-- Extended (deeper teal, larger) -->
                   ${this._renderStone({label:"Extended",members:r,pebbleClass:"pebble-extended",emptyLabel:"+ Invite extended family",onClick:()=>this._membersOpen=!0})}
 
                   <!-- Sub-group base row -->
-                  ${M.length>0?n`
+                  ${P.length>0?s`
                         <div class="subgroup-row">
-                          ${M.map(([j,A])=>{const Xe=(A.memberIds??[]).map(Ke=>q.get(Ke)).filter(Boolean);return this._renderStone({label:A.name??"Group",members:Xe,pebbleClass:"pebble-subgroup",emptyLabel:`${A.name??"Group"} (empty)`,onClick:()=>this._membersOpen=!0,maxChips:4})})}
+                          ${P.map(([L,I])=>{const Ve=(I.memberIds??[]).map(Xe=>X.get(Xe)).filter(Boolean);return this._renderStone({label:I.name??"Group",members:Ve,pebbleClass:"pebble-subgroup",emptyLabel:`${I.name??"Group"} (empty)`,onClick:()=>this._membersOpen=!0,maxChips:4})})}
                         </div>
                       `:""}
                 </div>
-                <div class="cairn-meta">
-                  <button @click=${()=>this._membersOpen=!0}>
-                    + Invite
-                  </button>
-                  <span style="color:var(--text-tertiary);">·</span>
-                  <button @click=${()=>this._membersOpen=!0}>
-                    + Sub-group
-                  </button>
-                </div>
+                ${C.length===0&&r.length===0?s`
+                      <div class="cairn-hint">
+                        <span class="cairn-hint-icon" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <ellipse cx="12" cy="6.5" rx="3.5" ry="1.5" />
+                            <ellipse cx="12" cy="12" rx="6" ry="2.4" />
+                            <ellipse cx="12" cy="18" rx="8" ry="3" />
+                          </svg>
+                        </span>
+                        <div class="cairn-hint-body">
+                          <div class="cairn-hint-title">Start stacking your cairn</div>
+                          <div class="cairn-hint-sub">
+                            Invite a partner, child or grandparent — every stone
+                            adds shared trips, celebrations, and circles.
+                          </div>
+                        </div>
+                        <button
+                          class="cairn-hint-cta"
+                          @click=${()=>this._membersOpen=!0}
+                        >
+                          Invite
+                        </button>
+                      </div>
+                    `:s`
+                      <div class="cairn-meta">
+                        <button @click=${()=>this._membersOpen=!0}>
+                          + Invite
+                        </button>
+                        <span style="color:var(--text-tertiary);">·</span>
+                        <button @click=${()=>this._membersOpen=!0}>
+                          + Sub-group
+                        </button>
+                      </div>
+                    `}
               `})()}
           </glass-panel>
         </section>
@@ -4294,11 +4392,11 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
         ?open=${this._formOpen}
         .trip=${this._formTrip}
         .members=${i}
-        .currentUid=${((ze=this.user)==null?void 0:ze.uid)??""}
-        .familyId=${((Ce=this.family)==null?void 0:Ce.id)??""}
+        .currentUid=${((K=this.user)==null?void 0:K.uid)??""}
+        .familyId=${((W=this.family)==null?void 0:W.id)??""}
         .busy=${this._formBusy}
         .formMode=${this._formMode}
-        .subGroups=${((Ee=this.family)==null?void 0:Ee.subGroups)??{}}
+        .subGroups=${((T=this.family)==null?void 0:T.subGroups)??{}}
         @save=${this._onSaveTrip}
         @remove=${this._onDeleteTrip}
         @cancel=${()=>{this._formOpen=!1,this._formTrip=null}}
@@ -4322,7 +4420,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
         ?open=${this._eventFormOpen}
         .event=${this._eventFormEvent}
         .members=${a}
-        .familyId=${((Se=this.family)==null?void 0:Se.id)??""}
+        .familyId=${((q=this.family)==null?void 0:q.id)??""}
         .busy=${this._eventFormBusy}
         @save=${this._onSaveEvent}
         @remove=${this._onDeleteEvent}
@@ -4333,7 +4431,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
         ?open=${this._allTripsOpen}
         .trips=${this._circleTrips()}
         .members=${a}
-        @edit-trip=${g=>{this._allTripsOpen=!1,this._openEdit(g.detail)}}
+        @edit-trip=${b=>{this._allTripsOpen=!1,this._openEdit(b.detail)}}
         @cancel=${()=>this._allTripsOpen=!1}
       ></all-trips-modal>
 
@@ -4355,7 +4453,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
         .trips=${this._circleTrips()}
         @cancel=${()=>this._pebbleOpen=!1}
       ></pebble-chat>
-    `}}u($e,"properties",{user:{type:Object},pebbleUser:{type:Object},family:{type:Object},children:{type:Array},trips:{type:Array},events:{type:Array},preview:{type:Boolean},circle:{state:!0},_formOpen:{state:!0},_formTrip:{state:!0},_formBusy:{state:!0},_membersOpen:{state:!0},_eventFormOpen:{state:!0},_eventFormEvent:{state:!0},_eventFormBusy:{state:!0},_displayMonth:{state:!0},_allTripsOpen:{state:!0},_editingFamilyName:{state:!0},_importOpen:{state:!0},_profileOpen:{state:!0},_typePickerOpen:{state:!0},_formMode:{state:!0},_pebbleOpen:{state:!0}}),u($e,"styles",$`
+    `}}u(Ee,"properties",{user:{type:Object},pebbleUser:{type:Object},family:{type:Object},children:{type:Array},trips:{type:Array},events:{type:Array},preview:{type:Boolean},circle:{state:!0},_formOpen:{state:!0},_formTrip:{state:!0},_formBusy:{state:!0},_membersOpen:{state:!0},_eventFormOpen:{state:!0},_eventFormEvent:{state:!0},_eventFormBusy:{state:!0},_displayMonth:{state:!0},_allTripsOpen:{state:!0},_editingFamilyName:{state:!0},_importOpen:{state:!0},_profileOpen:{state:!0},_typePickerOpen:{state:!0},_formMode:{state:!0},_pebbleOpen:{state:!0}}),u(Ee,"styles",D`
     :host {
       display: block;
       min-height: 100vh;
@@ -5007,35 +5105,44 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       transform: translateY(-2px);
       filter: brightness(1.04);
     }
+    /* Sizes follow the icon's progression — flatter + wider as the
+       stack descends, like real river stones balanced on each other. */
     .pebble-self {
       width: 120px;
-      height: 50px;
+      height: 44px;
       background:
         radial-gradient(
           ellipse 80% 60% at 50% 30%,
-          #c87a5e 0%,
-          #a05d3e 55%,
-          #6b3a25 100%
+          #d4866a 0%,
+          #a85f3e 55%,
+          #5e3220 100%
         );
     }
     .pebble-family {
-      width: 240px;
-      height: 78px;
-    }
-    .pebble-extended {
-      width: 320px;
-      height: 92px;
+      width: 260px;
+      height: 66px;
       background:
         radial-gradient(
           ellipse 80% 60% at 50% 30%,
-          #45a397 0%,
+          #52baad 0%,
+          #3d9b8f 55%,
+          #1f5c54 100%
+        );
+    }
+    .pebble-extended {
+      width: 340px;
+      height: 80px;
+      background:
+        radial-gradient(
+          ellipse 80% 60% at 50% 30%,
+          #46a89c 0%,
           #348177 55%,
           #194c45 100%
         );
     }
     .pebble-subgroup {
-      width: 140px;
-      height: 54px;
+      width: 150px;
+      height: 50px;
     }
     /* Sub-group palette rotation — alternate terracotta + teal so the
        base row reads as varied pebbles, not one repeated colour. */
@@ -5118,10 +5225,10 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       max-width: 100%;
     }
     @media (max-width: 560px) {
-      .pebble-self { width: 100px; height: 44px; }
-      .pebble-family { width: 200px; height: 66px; }
-      .pebble-extended { width: 240px; height: 76px; }
-      .pebble-subgroup { width: 120px; height: 48px; }
+      .pebble-self { width: 100px; height: 38px; }
+      .pebble-family { width: 220px; height: 58px; }
+      .pebble-extended { width: 270px; height: 68px; }
+      .pebble-subgroup { width: 130px; height: 46px; }
       .subgroup-row { gap: 12px; }
     }
     .cairn-meta {
@@ -5144,13 +5251,77 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
     .cairn-meta button:hover {
       color: var(--text-primary);
     }
-  `);customElements.define("home-screen",$e);const K="cairn:pendingJoinCode";class Ve extends k{constructor(){super(),this.authUser=null,this.loading=!0;const e=new URLSearchParams(window.location.search);this.preview=e.has("preview");const t=e.get("join");if(t)try{localStorage.setItem(K,t)}catch{}let i=null;try{i=localStorage.getItem(K)}catch{}this.joinCode=t??i??null,this.pebbleUser=null,this.family=null,this.children=[],this.trips=[],this.events=[],this._unsubAuth=null,this._onDataChange=()=>{this.pebbleUser=w.state.user,this.family=w.state.family,this.children=w.state.children,this.trips=w.state.trips,this.events=w.state.events}}_clearJoinState(){this.joinCode=null;try{localStorage.removeItem(K)}catch{}const e=new URL(window.location.href);e.searchParams.delete("join"),window.history.replaceState({},"",e.toString())}connectedCallback(){if(super.connectedCallback(),this.preview){this.loading=!1;return}w.addEventListener("change",this._onDataChange),this._unsubAuth=Je(e=>{this.authUser=e,this.loading=!1,e?w.start(e.uid):w.stop()})}disconnectedCallback(){var e;super.disconnectedCallback(),(e=this._unsubAuth)==null||e.call(this),w.removeEventListener("change",this._onDataChange)}_composeViewer(){var t,i;const e=this.authUser;return{uid:e.uid,displayName:e.displayName??((t=this.pebbleUser)==null?void 0:t.displayName)??"You",email:e.email??((i=this.pebbleUser)==null?void 0:i.email)??"",photoURL:qe(e,this.pebbleUser)}}render(){return this.loading?n``:this.preview?n`<home-screen preview></home-screen>`:this.authUser?this.joinCode?n`
+
+    /* Onboarding hint shown when the cairn is mostly empty (just self).
+       Sits above the meta with a soft glow + gentle suggestion. */
+    .cairn-hint {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: var(--radius-tile);
+      background: linear-gradient(
+        135deg,
+        rgba(61, 155, 143, 0.16) 0%,
+        rgba(212, 168, 67, 0.12) 100%
+      );
+      border: 1px solid rgba(255, 248, 235, 0.14);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .cairn-hint-icon {
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      background: var(--gradient-sage);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+    .cairn-hint-icon svg { width: 18px; height: 18px; }
+    .cairn-hint-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .cairn-hint-title {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 13.5px;
+      letter-spacing: -0.005em;
+    }
+    .cairn-hint-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+      line-height: 1.5;
+    }
+    .cairn-hint-cta {
+      flex-shrink: 0;
+      background: var(--gradient-cta);
+      color: #fff;
+      border: 1px solid rgba(255, 248, 235, 0.22);
+      border-radius: var(--radius-pill);
+      padding: 7px 14px;
+      font: inherit;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow:
+        0 3px 10px rgba(139, 90, 62, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    }
+    .cairn-hint-cta:hover {
+      background: var(--gradient-cta-hover);
+    }
+  `);customElements.define("home-screen",Ee);const ie="cairn:pendingJoinCode";class qe extends ${constructor(){super(),this.authUser=null,this.loading=!0;const e=new URLSearchParams(window.location.search);this.preview=e.has("preview");const t=e.get("join");if(t)try{localStorage.setItem(ie,t)}catch{}let i=null;try{i=localStorage.getItem(ie)}catch{}this.joinCode=t??i??null,this.pebbleUser=null,this.family=null,this.children=[],this.trips=[],this.events=[],this._unsubAuth=null,this._onDataChange=()=>{this.pebbleUser=w.state.user,this.family=w.state.family,this.children=w.state.children,this.trips=w.state.trips,this.events=w.state.events}}_clearJoinState(){this.joinCode=null;try{localStorage.removeItem(ie)}catch{}const e=new URL(window.location.href);e.searchParams.delete("join"),window.history.replaceState({},"",e.toString())}connectedCallback(){if(super.connectedCallback(),this.preview){this.loading=!1;return}w.addEventListener("change",this._onDataChange),this._unsubAuth=Je(e=>{this.authUser=e,this.loading=!1,e?w.start(e.uid):w.stop()})}disconnectedCallback(){var e;super.disconnectedCallback(),(e=this._unsubAuth)==null||e.call(this),w.removeEventListener("change",this._onDataChange)}_composeViewer(){var t,i;const e=this.authUser;return{uid:e.uid,displayName:e.displayName??((t=this.pebbleUser)==null?void 0:t.displayName)??"You",email:e.email??((i=this.pebbleUser)==null?void 0:i.email)??"",photoURL:Ke(e,this.pebbleUser)}}render(){return this.loading?s``:this.preview?s`<home-screen preview></home-screen>`:this.authUser?this.joinCode?s`
         <join-family-screen
           .code=${this.joinCode}
           @joined=${()=>this._clearJoinState()}
           @cancel=${()=>this._clearJoinState()}
         ></join-family-screen>
-      `:n`
+      `:s`
       <home-screen
         .user=${this._composeViewer()}
         .pebbleUser=${this.pebbleUser}
@@ -5159,9 +5330,9 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
         .trips=${this.trips}
         .events=${this.events}
       ></home-screen>
-    `:n`
+    `:s`
         <sign-in-screen
           .joinCode=${this.joinCode??""}
         ></sign-in-screen>
-      `}}u(Ve,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0}});customElements.define("cairn-app",Ve);
-//# sourceMappingURL=index-EkpXVOna.js.map
+      `}}u(qe,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0}});customElements.define("cairn-app",qe);
+//# sourceMappingURL=index-Q7nv9SzH.js.map
