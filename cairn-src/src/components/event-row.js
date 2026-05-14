@@ -52,14 +52,13 @@ export class EventRow extends LitElement {
       height: 20px;
       display: block;
     }
-    .icon.birthday {
-      background: var(--gradient-amber);
-    }
-    .icon.anniversary {
-      background: var(--gradient-rose);
-    }
+    /* All celebration icons share the warmsun→rose gradient so they
+       match the colour Celebrations carry on the calendar (yearly +
+       monthly view paint those days with the same gradient). */
+    .icon.birthday,
+    .icon.anniversary,
     .icon.custom {
-      background: var(--gradient-sage);
+      background: var(--gradient-celebration);
     }
     .body {
       flex: 1;

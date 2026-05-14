@@ -276,14 +276,22 @@ export class HomeScreen extends LitElement {
       transform: translateY(1px) scale(0.98);
     }
     @media (max-width: 768px) {
-      /* Mobile keeps the single-row desktop layout. Just hide the
-         wordmark text (icon carries identity) and tighten padding +
-         activity button so all 3 grid cells fit on a phone. */
+      /* Pixel-matched with pebblepath.ai's mobile nav: padding 0 20px,
+         height 60px, same teal wash gradient that fades to transparent.
+         Logo lives at the same x/y as on the website so the two surfaces
+         feel like one product when switching between them. */
       .topbar {
-        padding: 10px 16px;
+        padding: 0 20px;
         height: 60px;
         column-gap: 8px;
         grid-template-columns: auto 1fr auto;
+        background: linear-gradient(
+          180deg,
+          rgba(31, 92, 84, 0.96) 0%,
+          rgba(31, 92, 84, 0.78) 100%
+        );
+        backdrop-filter: blur(18px) saturate(160%);
+        -webkit-backdrop-filter: blur(18px) saturate(160%);
       }
       .topbar .brand-name {
         display: none;
@@ -693,14 +701,19 @@ export class HomeScreen extends LitElement {
     }
     .cal-cell .cal-cell-label {
       font-size: 10px;
-      line-height: 1.1;
+      line-height: 1.15;
       font-weight: 500;
       max-width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
       padding: 0 2px 1px;
-      opacity: 0.92;
+      opacity: 0.95;
+      text-align: center;
+      word-break: break-word;
     }
     @media (max-width: 480px) {
       .cal-cell .cal-cell-label {
@@ -1450,7 +1463,9 @@ export class HomeScreen extends LitElement {
       const isToday = isCurrentMonth && d === today.getDate();
       const hasEvent = events.includes(d);
       const hasTrip = tripDays.has(d);
-      const label = dayLabels.get(d);
+      // Today gets its own preview label like trips/events do, so the
+      // cell carries text (not just colour) consistently.
+      const label = isToday ? (dayLabels.get(d) ?? 'Today') : dayLabels.get(d);
       const cls = [
         'cal-cell',
         isToday ? 'today' : '',

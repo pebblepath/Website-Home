@@ -25,15 +25,13 @@ export class ActivityTypePicker extends LitElement {
   // and we don't need a build-time JS evaluation gotcha for static.
   static get OPTIONS() {
     return [
+      // Filled, single-color glyphs that mirror the iOS picker's SF
+      // Symbol `*.fill` variants (leaf.fill / paperplane.fill / gift.fill).
       {
         type: 'activity',
         tone: 'sage',
-        // Hiker glyph — captures "weekend outing" better than a leaf.
-        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="13" cy="4.5" r="1.5" fill="currentColor" stroke="none" />
-          <path d="M9 21l3-7 4 2 3-6" />
-          <path d="M6 12l3-1 3 3" />
-          <path d="M12 14l-2 3" />
+        icon: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M20.5 3.5c0 0-7 0-11.5 4.5C5 11.5 4 16 4 20l1.5 0c0-2.6 0.6-5.9 3.6-8.9 1.5-1.5 3.2-2.4 4.8-3 -1.5 1-3 2.4-4.4 4-1.6 1.9-2.5 4.3-2.5 6.4 4 0 8.5-1 12-4.5C23.5 9.5 20.5 3.5 20.5 3.5z" />
         </svg>`,
         label: 'Group activity',
         desc: 'Weekend plans, outings, day trips — no lodging or flights needed.',
@@ -41,11 +39,8 @@ export class ActivityTypePicker extends LitElement {
       {
         type: 'trip',
         tone: 'tide',
-        // Clean paperplane — silhouette + crease line, matches the iOS
-        // paperplane.fill SF Symbol.
-        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M21 3L3 11l7 2 2 7 9-17z" />
-          <path d="M10 13l5-5" />
+        icon: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M21.5 3.2c0.2-0.2 0.3-0.6 0.1-0.9-0.2-0.3-0.5-0.4-0.9-0.3L2.4 8c-0.4 0.1-0.6 0.5-0.6 0.9 0 0.4 0.3 0.7 0.7 0.8l7 1.8 8-6.7-6.4 7.6 1.8 7c0.1 0.4 0.4 0.6 0.8 0.7 0.4 0 0.7-0.2 0.9-0.6L21.5 3.2z" />
         </svg>`,
         label: 'Family trip',
         desc: 'Multi-day travel with lodging, flight info, attendees.',
@@ -53,13 +48,8 @@ export class ActivityTypePicker extends LitElement {
       {
         type: 'event',
         tone: 'amber',
-        // Gift box — present with ribbon. Matches iOS gift.fill.
-        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="3" y="9" width="18" height="12" rx="1.5" />
-          <path d="M3 13h18" />
-          <path d="M12 9v12" />
-          <path d="M8 9c-1.5 0-2.5-1-2.5-2.5S6.5 4 8 4c2 0 4 5 4 5" />
-          <path d="M16 9c1.5 0 2.5-1 2.5-2.5S17.5 4 16 4c-2 0-4 5-4 5" />
+        icon: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M11 21H5.5C4.7 21 4 20.3 4 19.5V13h7v8zm0-9.5H3.5c-0.8 0-1.5-0.7-1.5-1.5v-1c0-0.8 0.7-1.5 1.5-1.5H11v4zm2 9.5h5.5c0.8 0 1.5-0.7 1.5-1.5V13h-7v8zm0-9.5h7.5c0.8 0 1.5-0.7 1.5-1.5v-1c0-0.8-0.7-1.5-1.5-1.5H13v4zM8 8h3V5.5C11 4.1 9.9 3 8.5 3S6 4.1 6 5.5 7 8 8 8zm5 0h3c1 0 2-1.4 2-2.5S17 3 15.5 3 13 4.1 13 5.5V8z" />
         </svg>`,
         label: 'Birthday or anniversary',
         desc: 'Recurring celebration on a specific date.',
