@@ -589,6 +589,19 @@ export function parseLocalDate(input) {
 }
 
 /**
+ * Format a Date as `YYYY-MM-DD` using LOCAL components. `toISOString().slice(0,10)`
+ * converts to UTC first, which shifts the day for any user west of UTC —
+ * causes recurring events to show on the wrong day in the yearly view.
+ */
+export function formatLocalDate(date) {
+  if (!date) return null;
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+/**
  * Tier 2: fetch the user's upcoming Google Calendar events. Accepts a
  * raw OAuth access token (from connectGoogleCalendar in firebase.js).
  */

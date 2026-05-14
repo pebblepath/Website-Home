@@ -51,14 +51,14 @@ export class YearlyView extends LitElement {
     .month {
       padding: 8px 6px 6px;
       border-radius: 10px;
-      background: rgba(255, 248, 235, 0.04);
-      border: 1px solid rgba(255, 248, 235, 0.08);
+      background: rgba(255, 248, 235, 0.06);
+      border: 1px solid rgba(255, 248, 235, 0.14);
       transition: background 200ms ease, border-color 200ms ease;
       cursor: pointer;
     }
     .month:hover {
-      background: rgba(255, 248, 235, 0.07);
-      border-color: rgba(255, 248, 235, 0.14);
+      background: rgba(255, 248, 235, 0.1);
+      border-color: rgba(255, 248, 235, 0.22);
     }
     .month.current {
       background: rgba(61, 155, 143, 0.1);
@@ -84,19 +84,24 @@ export class YearlyView extends LitElement {
     }
     .cell {
       aspect-ratio: 1 / 1;
-      border-radius: 2px;
-      background: rgba(255, 248, 235, 0.04);
+      border-radius: 3px;
+      background: rgba(255, 248, 235, 0.09);
+      box-shadow: inset 0 0 0 1px rgba(255, 248, 235, 0.07);
       position: relative;
     }
     .cell.empty {
       background: transparent;
+      box-shadow: none;
     }
     .cell.today {
       background: var(--today-bg);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.4),
+        0 0 6px rgba(212, 168, 67, 0.6);
     }
     .cell.trip {
       background: var(--trip-day-bg);
-      border-radius: 2px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
     }
     .cell.trip.dense {
       background: var(--trip-day-bg-strong);
@@ -104,18 +109,21 @@ export class YearlyView extends LitElement {
     .cell.event::after {
       content: '';
       position: absolute;
-      bottom: 1px;
+      bottom: 1.5px;
       left: 50%;
       transform: translateX(-50%);
-      width: 3px;
-      height: 3px;
+      width: 5px;
+      height: 5px;
       border-radius: 999px;
-      background: var(--amber-glow);
-      box-shadow: 0 0 4px rgba(212, 168, 67, 0.8);
+      background: var(--gradient-celebration);
+      box-shadow:
+        0 0 6px rgba(242, 154, 77, 0.85),
+        0 0 0 1px rgba(255, 240, 215, 0.6);
     }
     .cell.event.trip::after {
-      background: #fff;
-      box-shadow: 0 0 4px rgba(255, 255, 255, 0.7);
+      /* Trip + celebration day — white core so it pops on the tide blue. */
+      background: radial-gradient(circle at 35% 35%, #fff 0%, #ffd066 80%);
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.85);
     }
     .legend {
       display: flex;
@@ -143,8 +151,9 @@ export class YearlyView extends LitElement {
       border-radius: 2px;
     }
     .swatch i.event {
-      background: var(--amber-glow);
+      background: var(--gradient-celebration);
       border-radius: 999px;
+      box-shadow: 0 0 4px rgba(242, 154, 77, 0.7);
     }
     .swatch i.today {
       background: var(--today-bg);

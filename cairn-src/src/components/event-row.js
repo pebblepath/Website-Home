@@ -43,9 +43,14 @@ export class EventRow extends LitElement {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
       flex-shrink: 0;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      color: #fff;
+    }
+    .icon svg {
+      width: 20px;
+      height: 20px;
+      display: block;
     }
     .icon.birthday {
       background: var(--gradient-amber);
@@ -90,9 +95,26 @@ export class EventRow extends LitElement {
   `;
 
   _icon(type) {
-    if (type === 'birthday') return '\u{1F382}';
-    if (type === 'anniversary') return '\u{1F495}';
-    return '✨';
+    // Stroke-based icons matching Cairn/PebblePath line style. Cake
+    // for birthdays (candle + frosting); two interlocked rings for
+    // anniversaries; sparkle for everything else.
+    if (type === 'birthday') {
+      return html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 14h14v6H5z" />
+        <path d="M5 14c0-2 1.5-3 3-3h8c1.5 0 3 1 3 3" />
+        <path d="M12 11V7" />
+        <path d="M11 5.5c0-.8.5-1.5 1-2 .5.5 1 1.2 1 2 0 .6-.4 1-1 1s-1-.4-1-1z" fill="currentColor" stroke="none" />
+      </svg>`;
+    }
+    if (type === 'anniversary') {
+      return html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="9" cy="13" r="5" />
+        <circle cx="15" cy="13" r="5" />
+      </svg>`;
+    }
+    return html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" />
+    </svg>`;
   }
 
   _fmtDate(date) {

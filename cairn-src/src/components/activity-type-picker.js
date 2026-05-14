@@ -20,26 +20,44 @@ export class ActivityTypePicker extends LitElement {
     this.open = false;
   }
 
-  static OPTIONS = [
-    {
-      type: 'activity',
-      icon: '🌿',
-      label: 'Group activity',
-      desc: 'Weekend plans, outings, day trips — no lodging or flights needed.',
-    },
-    {
-      type: 'trip',
-      icon: '✈️',
-      label: 'Family trip',
-      desc: 'Multi-day travel with lodging, flight info, attendees.',
-    },
-    {
-      type: 'event',
-      icon: '🎂',
-      label: 'Birthday or anniversary',
-      desc: 'Recurring celebration on a specific date.',
-    },
-  ];
+  // Inline SVGs matching the Cairn line-icon style (stroke-based, 2px).
+  // Defined as a getter so html`` is evaluated lazily at render time
+  // and we don't need a build-time JS evaluation gotcha for static.
+  static get OPTIONS() {
+    return [
+      {
+        type: 'activity',
+        tone: 'sage',
+        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 20c0-7 5-12 12-12 0 7-5 12-12 12z" />
+          <path d="M4 20l8-8" />
+        </svg>`,
+        label: 'Group activity',
+        desc: 'Weekend plans, outings, day trips — no lodging or flights needed.',
+      },
+      {
+        type: 'trip',
+        tone: 'tide',
+        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 14l-9 6-3-3 3-3-8-2 2-2 9 1 4-4a2 2 0 1 1 3 3l-4 4z" />
+        </svg>`,
+        label: 'Family trip',
+        desc: 'Multi-day travel with lodging, flight info, attendees.',
+      },
+      {
+        type: 'event',
+        tone: 'amber',
+        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 14h14v6H5z" />
+          <path d="M5 14c0-2 1.5-3 3-3h8c1.5 0 3 1 3 3" />
+          <path d="M12 11V7" />
+          <path d="M11 5.5c0-.8.5-1.5 1-2 .5.5 1 1.2 1 2 0 .6-.4 1-1 1s-1-.4-1-1z" fill="currentColor" stroke="none" />
+        </svg>`,
+        label: 'Birthday or anniversary',
+        desc: 'Recurring celebration on a specific date.',
+      },
+    ];
+  }
 
   _pick(type) {
     this.dispatchEvent(new CustomEvent('pick', { detail: { type } }));
@@ -140,9 +158,18 @@ export class ActivityTypePicker extends LitElement {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
       flex-shrink: 0;
+      color: #fff;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
     }
+    .icon-cell svg {
+      width: 22px;
+      height: 22px;
+      display: block;
+    }
+    .icon-cell.sage { background: var(--gradient-sage); }
+    .icon-cell.tide { background: var(--gradient-tide); }
+    .icon-cell.amber { background: var(--gradient-amber); }
     .label {
       font-family: var(--font-display);
       font-weight: 600;
@@ -172,7 +199,7 @@ export class ActivityTypePicker extends LitElement {
             ${ActivityTypePicker.OPTIONS.map(
               (o) => html`
                 <button class="option" @click=${() => this._pick(o.type)}>
-                  <span class="icon-cell" aria-hidden="true">${o.icon}</span>
+                  <span class="icon-cell ${o.tone}" aria-hidden="true">${o.icon}</span>
                   <span>
                     <div class="label">${o.label}</div>
                     <div class="desc">${o.desc}</div>

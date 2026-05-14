@@ -155,8 +155,9 @@ export class TripCard extends LitElement {
       color: var(--text-tertiary);
       margin-bottom: 14px;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 6px;
+      min-width: 0;
     }
     .lodging .pill {
       padding: 2px 8px;
@@ -165,6 +166,18 @@ export class TripCard extends LitElement {
       border: 1px solid rgba(255, 248, 235, 0.14);
       font-weight: 500;
       color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+    .lodging .lodging-text {
+      flex: 1;
+      min-width: 0;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.35;
     }
     .flight-info {
       font-size: 12px;
@@ -293,7 +306,7 @@ export class TripCard extends LitElement {
           ${t.lodgingUrl || t.lodgingHost
             ? html`<div class="lodging">
                 ${t.lodgingHost ? html`<span class="pill">${t.lodgingHost}</span>` : ''}
-                <span>${t.lodgingTitle || t.lodgingUrl || ''}</span>
+                <span class="lodging-text">${t.lodgingTitle || t.lodgingUrl || ''}</span>
               </div>`
             : ''}
           ${t.flightNumber || t.flightDepartAirport

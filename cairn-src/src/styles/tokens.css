@@ -27,6 +27,7 @@
   );
   --gradient-warmsun: linear-gradient(135deg, #d4a843 0%, #c67b5c 55%, #c98a8a 100%);
   --gradient-tide: linear-gradient(135deg, #6bb4e8 0%, #4a90e2 55%, #3d9b8f 100%);
+  --gradient-celebration: linear-gradient(135deg, #ffd066 0%, #f29a4d 50%, #d96a8b 100%);
   --gradient-sage: linear-gradient(135deg, #3d9b8f 0%, #1f5c54 100%);
   --gradient-amber: linear-gradient(135deg, #d4a843 0%, #c67b5c 100%);
   --gradient-rose: linear-gradient(135deg, #c98a8a 0%, #8b7bb5 100%);

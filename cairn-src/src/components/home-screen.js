@@ -29,6 +29,7 @@ import {
   deriveBirthdayEvents,
   resolveEventOccurrence,
   parseLocalDate,
+  formatLocalDate,
 } from '../services/data.js';
 import { signOutUser } from '../services/firebase.js';
 import { toast } from '../services/toast.js';
@@ -750,9 +751,8 @@ export class HomeScreen extends LitElement {
           #1f5c54 100%
         );
       box-shadow:
-        0 14px 24px -8px rgba(0, 0, 0, 0.55),
-        0 2px 4px rgba(0, 0, 0, 0.3),
-        inset 0 -10px 18px rgba(0, 0, 0, 0.32),
+        0 6px 14px -6px rgba(0, 0, 0, 0.38),
+        inset 0 -8px 14px rgba(0, 0, 0, 0.24),
         inset 0 6px 14px rgba(255, 255, 255, 0.06);
       transition: transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
         filter 240ms ease;
@@ -775,19 +775,8 @@ export class HomeScreen extends LitElement {
       filter: blur(2px);
       pointer-events: none;
     }
-    /* Small bright catchlight dot, upper-left. */
-    .pebble::after {
-      content: '';
-      position: absolute;
-      top: 18%;
-      left: 24%;
-      width: 8%;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.92);
-      box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
-      pointer-events: none;
-    }
+    /* Catchlight dot deferred — the elongated upper smear is enough
+       texture without it. Reintroduce later if needed. */
     .stone:hover .pebble {
       transform: translateY(-2px);
       filter: brightness(1.04);
@@ -957,18 +946,21 @@ export class HomeScreen extends LitElement {
   _liveEvents() {
     if (this.preview) return mockEvents;
     // Auto-derived children birthdays + manual familyEvents from Firestore.
-    // For recurring events, resolve to the next upcoming occurrence so
-    // the list sorts naturally by what's-coming-up.
-    const autoEvents = deriveBirthdayEvents(this.children);
-    const manualEvents = (this.events ?? []).map((e) => {
+    // Birthdays are inherently recurring — resolve them to this/next-year's
+    // occurrence so they show on the yearly calendar in the right column,
+    // not stuck on the birth year. formatLocalDate keeps the YYYY-MM-DD
+    // in local time (toISOString shifts by a day west of UTC).
+    const resolve = (e) => {
       const { date, yearsElapsed } = resolveEventOccurrence(e);
       return {
         ...e,
-        date: date ? date.toISOString().slice(0, 10) : e.date,
+        date: date ? formatLocalDate(date) : e.date,
         _yearsElapsed: yearsElapsed,
         _originalDate: e.date,
       };
-    });
+    };
+    const autoEvents = deriveBirthdayEvents(this.children).map(resolve);
+    const manualEvents = (this.events ?? []).map(resolve);
     return [...autoEvents, ...manualEvents].sort((a, b) =>
       String(a.date).localeCompare(String(b.date)),
     );
@@ -1761,7 +1753,7 @@ export class HomeScreen extends LitElement {
                     label: 'Extended',
                     members: extended,
                     pebbleClass: 'pebble-extended',
-                    emptyLabel: '+ Invite the grandparents',
+                    emptyLabel: '+ Invite extended family',
                     onClick: () => (this._membersOpen = true),
                   })}
 
