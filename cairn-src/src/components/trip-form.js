@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import './glass-panel.js';
 import './glass-button.js';
 import './member-chip.js';
+import './date-range-picker.js';
 import { dataStore } from '../services/data.js';
 
 /**
@@ -31,6 +32,8 @@ export class TripForm extends LitElement {
     busy: { type: Boolean },
     /** 'trip' (full form, default) or 'activity' (hide lodging + flight). */
     formMode: { type: String },
+    /** family.subGroups map for the "visible to which sub-groups" picker. */
+    subGroups: { type: Object },
     _draft: { state: true },
     _error: { state: true },
     _previewing: { state: true },
@@ -46,6 +49,7 @@ export class TripForm extends LitElement {
     this.familyId = '';
     this.busy = false;
     this.formMode = 'trip';
+    this.subGroups = {};
     this._draft = this._blankDraft();
     this._error = '';
     this._previewing = false;
@@ -72,6 +76,7 @@ export class TripForm extends LitElement {
       visibility: 'family',
       attendees: this.currentUid ? [this.currentUid] : [],
       viewers: [],
+      targetSubGroups: [],
       lodgingUrl: '',
       lodgingHost: '',
       lodgingTitle: '',
@@ -96,6 +101,9 @@ export class TripForm extends LitElement {
       visibility: trip.visibility ?? 'family',
       attendees: Array.isArray(trip.attendees) ? [...trip.attendees] : [],
       viewers: Array.isArray(trip.viewers) ? [...trip.viewers] : [],
+      targetSubGroups: Array.isArray(trip.targetSubGroups)
+        ? [...trip.targetSubGroups]
+        : [],
       lodgingUrl: trip.lodgingUrl ?? '',
       lodgingHost: trip.lodgingHost ?? '',
       lodgingTitle: trip.lodgingTitle ?? '',
@@ -456,7 +464,27 @@ export class TripForm extends LitElement {
     const attendees = has
       ? this._draft.attendees.filter((id) => id !== uid)
       : [...this._draft.attendees, uid];
-    this._set('attendees', attendees);
+    // Remove from viewers if newly attending (redundant once you're going).
+    let viewers = this._draft.viewers ?? [];
+    if (!has) viewers = viewers.filter((id) => id !== uid);
+    this._draft = { ...this._draft, attendees, viewers };
+  }
+
+  _toggleViewer(uid) {
+    if (this._draft.attendees.includes(uid)) return;
+    const has = (this._draft.viewers ?? []).includes(uid);
+    const viewers = has
+      ? this._draft.viewers.filter((id) => id !== uid)
+      : [...(this._draft.viewers ?? []), uid];
+    this._set('viewers', viewers);
+  }
+
+  _toggleSubGroup(groupId) {
+    const has = (this._draft.targetSubGroups ?? []).includes(groupId);
+    const next = has
+      ? this._draft.targetSubGroups.filter((id) => id !== groupId)
+      : [...(this._draft.targetSubGroups ?? []), groupId];
+    this._set('targetSubGroups', next);
   }
 
   _onSave() {
@@ -535,23 +563,19 @@ export class TripForm extends LitElement {
             </div>
           </div>
 
-          <div class="row-dates">
-            <div class="field">
-              <label>Start</label>
-              <input
-                type="date"
-                .value=${d.start}
-                @input=${(e) => this._set('start', e.target.value)}
-              />
-            </div>
-            <div class="field">
-              <label>End</label>
-              <input
-                type="date"
-                .value=${d.end}
-                @input=${(e) => this._set('end', e.target.value)}
-              />
-            </div>
+          <div class="field">
+            <label>Dates</label>
+            <date-range-picker
+              .start=${d.start}
+              .end=${d.end}
+              @range-change=${(e) => {
+                this._draft = {
+                  ...this._draft,
+                  start: e.detail.start,
+                  end: e.detail.end || e.detail.start,
+                };
+              }}
+            ></date-range-picker>
           </div>
 
           <div class=${this.formMode === 'activity' ? 'field' : 'row-2'}>
@@ -624,6 +648,29 @@ export class TripForm extends LitElement {
               )}
             </div>
           </div>
+
+          ${d.visibility === 'extended' && Object.keys(this.subGroups ?? {}).length > 0
+            ? html`
+                <div class="field">
+                  <label>Limit to sub-groups <span style="text-transform:none;font-weight:400;color:var(--text-tertiary);letter-spacing:0.01em;">(optional — leave empty to show to all extended)</span></label>
+                  <div class="attendees">
+                    ${Object.entries(this.subGroups).map(
+                      ([gid, group]) => html`
+                        <div
+                          class="att-chip ${(d.targetSubGroups ?? []).includes(gid) ? 'on' : ''}"
+                          @click=${() => this._toggleSubGroup(gid)}
+                        >
+                          ${group.name}
+                          <span style="color:var(--text-tertiary);font-size:11px;margin-left:4px;">
+                            ${(group.memberIds ?? []).length}
+                          </span>
+                        </div>
+                      `,
+                    )}
+                  </div>
+                </div>
+              `
+            : ''}
 
           <div class="field">
             <label>Also visible to <span style="text-transform:none;font-weight:400;color:var(--text-tertiary);letter-spacing:0.01em;">(without going)</span></label>

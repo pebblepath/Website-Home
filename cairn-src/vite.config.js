@@ -18,8 +18,13 @@ export default defineConfig(({ command }) => ({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          // Sub-split Firebase by package so storage + functions load
+          // lazily (only the trip form's preview path and profile-sheet
+          // photo upload need them — most page-loads skip both chunks).
+          if (id.match(/[\\/](?:@firebase|firebase)[\\/]storage/)) return 'firebase-storage';
+          if (id.match(/[\\/](?:@firebase|firebase)[\\/]functions/)) return 'firebase-functions';
           if (id.includes('node_modules/@firebase') || id.includes('node_modules/firebase')) {
-            return 'firebase';
+            return 'firebase-core';
           }
           if (id.includes('node_modules/lit') || id.includes('node_modules/@lit')) {
             return 'lit';

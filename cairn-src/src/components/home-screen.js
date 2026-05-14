@@ -764,13 +764,27 @@ export class HomeScreen extends LitElement {
   }
 
   /** Trip visibility resolver — true if the viewer should see it given
-   *  the trip's visibility ring, attendees, and explicit viewers list. */
+   *  the trip's visibility ring, attendees, explicit viewers, and any
+   *  sub-group targeting (Phase 5+). PP family members see everything;
+   *  Cairn-only extended joiners only see trips that target an empty
+   *  set OR a sub-group they're in. */
   _userCanSeeTrip(trip) {
     const uid = this.user?.uid;
     if (!uid) return false;
     if (trip.attendees?.includes(uid)) return true;
     if (trip.viewers?.includes(uid)) return true;
-    if (trip.visibility === 'family' || trip.visibility === 'extended') return true;
+    if (trip.visibility === 'family') return true;
+    if (trip.visibility === 'extended') {
+      // PP family members (in memberIds) see all extended trips.
+      if ((this.family?.memberIds ?? []).includes(uid)) return true;
+      // Cairn-only members: must be in a targeted sub-group (or no target).
+      const targets = trip.targetSubGroups ?? [];
+      if (targets.length === 0) return true;
+      const myGroups = Object.entries(this.family?.subGroups ?? {})
+        .filter(([, g]) => (g.memberIds ?? []).includes(uid))
+        .map(([id]) => id);
+      return targets.some((t) => myGroups.includes(t));
+    }
     return false;
   }
 
@@ -1445,6 +1459,7 @@ export class HomeScreen extends LitElement {
         .familyId=${this.family?.id ?? ''}
         .busy=${this._formBusy}
         .formMode=${this._formMode}
+        .subGroups=${this.family?.subGroups ?? {}}
         @save=${this._onSaveTrip}
         @remove=${this._onDeleteTrip}
         @cancel=${() => {
