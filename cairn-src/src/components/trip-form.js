@@ -38,6 +38,9 @@ export class TripForm extends LitElement {
     _error: { state: true },
     _previewing: { state: true },
     _previewError: { state: true },
+    _showReturn: { state: true },
+    _showOutboundDetails: { state: true },
+    _showReturnDetails: { state: true },
   };
 
   constructor() {
@@ -56,6 +59,9 @@ export class TripForm extends LitElement {
     this._previewError = '';
     this._previewDebounce = null;
     this._lastPreviewedUrl = '';
+    this._showReturn = false;
+    this._showOutboundDetails = false;
+    this._showReturnDetails = false;
   }
 
   willUpdate(changed) {
@@ -68,6 +74,21 @@ export class TripForm extends LitElement {
         if (this._draft.id && this._draft.lodgingUrl && !this._draft.coverImage) {
           requestAnimationFrame(() => this._autoRefreshPreview());
         }
+        // Show return flight section by default if the trip already has
+        // any return-flight data. Same for the airport disclosures.
+        this._showReturn = Boolean(
+          this._draft.returnFlightNumber ||
+            this._draft.returnFlightDepartTime ||
+            this._draft.returnFlightDepartAirport ||
+            this._draft.returnFlightArriveAirport,
+        );
+        this._showOutboundDetails = Boolean(
+          this._draft.flightDepartAirport || this._draft.flightArriveAirport,
+        );
+        this._showReturnDetails = Boolean(
+          this._draft.returnFlightDepartAirport ||
+            this._draft.returnFlightArriveAirport,
+        );
       }
       this._error = '';
     }
@@ -140,6 +161,12 @@ export class TripForm extends LitElement {
       flightDepartTime: '',
       flightArriveAirport: '',
       flightArriveTime: '',
+      returnFlightAirline: '',
+      returnFlightNumber: '',
+      returnFlightDepartAirport: '',
+      returnFlightDepartTime: '',
+      returnFlightArriveAirport: '',
+      returnFlightArriveTime: '',
       notes: '',
     };
   }
@@ -167,6 +194,12 @@ export class TripForm extends LitElement {
       flightDepartTime: trip.flightDepartTime ?? '',
       flightArriveAirport: trip.flightArriveAirport ?? '',
       flightArriveTime: trip.flightArriveTime ?? '',
+      returnFlightAirline: trip.returnFlightAirline ?? '',
+      returnFlightNumber: trip.returnFlightNumber ?? '',
+      returnFlightDepartAirport: trip.returnFlightDepartAirport ?? '',
+      returnFlightDepartTime: trip.returnFlightDepartTime ?? '',
+      returnFlightArriveAirport: trip.returnFlightArriveAirport ?? '',
+      returnFlightArriveTime: trip.returnFlightArriveTime ?? '',
       coverImage: trip.coverImage ?? '',
       notes: trip.notes ?? '',
     };
@@ -479,6 +512,112 @@ export class TripForm extends LitElement {
       animation: spin 700ms linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Simplified flight section — one leg shown per row by default,
+       optional airport codes hidden behind a "Show details" disclosure
+       so most users only fill in a flight number + departure time. */
+    .flight-section {
+      border: 1px solid rgba(255, 248, 235, 0.12);
+      border-radius: var(--radius-tile);
+      padding: 14px 16px 12px;
+      margin: 6px 0 14px;
+    }
+    .flight-section legend {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0 6px;
+    }
+    .flight-leg {
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      border-bottom: 1px dashed rgba(255, 248, 235, 0.1);
+    }
+    .flight-leg:last-of-type {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .leg-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .leg-name {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .leg-disclosure {
+      background: transparent;
+      border: none;
+      color: var(--text-tertiary);
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 2px 4px;
+    }
+    .leg-disclosure:hover {
+      color: var(--text-secondary);
+    }
+    .row-flight {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 14px;
+    }
+    @media (max-width: 560px) {
+      .row-flight {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+    }
+    .row-airports {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .row-airports .arrow {
+      color: var(--text-tertiary);
+      font-size: 18px;
+      text-align: center;
+    }
+    .return-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      background: transparent;
+      border: 1px dashed rgba(255, 248, 235, 0.22);
+      color: var(--text-secondary);
+      border-radius: var(--radius-pill);
+      padding: 6px 12px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: border-color 180ms ease, color 180ms ease;
+    }
+    .return-toggle:hover {
+      border-color: rgba(255, 248, 235, 0.4);
+      color: var(--text-primary);
+    }
+    .return-remove {
+      background: transparent;
+      border: none;
+      color: var(--rose-soft);
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 0;
+    }
+    .return-remove:hover {
+      text-decoration: underline;
+    }
   `;
 
   _set(field, value) {
@@ -794,71 +933,158 @@ export class TripForm extends LitElement {
             : html`
           <fieldset class="flight-section">
             <legend>Flight (optional)</legend>
-            <div class="row-2">
-              <div class="field" style="margin-bottom:0;">
-                <label>Airline</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Air France"
-                  .value=${d.flightAirline}
-                  @input=${(e) => this._set('flightAirline', e.target.value)}
-                />
+
+            <div class="flight-leg">
+              <div class="leg-head">
+                <span class="leg-name">Outbound</span>
+                <button
+                  type="button"
+                  class="leg-disclosure"
+                  @click=${() => (this._showOutboundDetails = !this._showOutboundDetails)}
+                >
+                  ${this._showOutboundDetails ? '− Hide airports' : '+ Airports'}
+                </button>
               </div>
-              <div class="field" style="margin-bottom:0;">
-                <label>Flight number</label>
-                <input
-                  type="text"
-                  placeholder="AF1234"
-                  .value=${d.flightNumber}
-                  @input=${(e) => this._set('flightNumber', e.target.value)}
-                />
+              <div class="row-flight">
+                <div class="field" style="margin-bottom:0;">
+                  <label>Flight #</label>
+                  <input
+                    type="text"
+                    placeholder="AF1234"
+                    .value=${d.flightNumber}
+                    @input=${(e) => this._set('flightNumber', e.target.value)}
+                  />
+                </div>
+                <div class="field" style="margin-bottom:0;">
+                  <label>Departure</label>
+                  <input
+                    type="datetime-local"
+                    .value=${d.flightDepartTime}
+                    @input=${(e) => this._set('flightDepartTime', e.target.value)}
+                  />
+                </div>
+              </div>
+              ${this._showOutboundDetails
+                ? html`
+                    <div class="row-airports">
+                      <input
+                        type="text"
+                        placeholder="From (CDG)"
+                        maxlength="4"
+                        .value=${d.flightDepartAirport}
+                        @input=${(e) => this._set('flightDepartAirport', e.target.value)}
+                      />
+                      <span class="arrow">→</span>
+                      <input
+                        type="text"
+                        placeholder="To (NCE)"
+                        maxlength="4"
+                        .value=${d.flightArriveAirport}
+                        @input=${(e) => this._set('flightArriveAirport', e.target.value)}
+                      />
+                    </div>
+                  `
+                : ''}
+              <div class="hint">
+                Tip: paste a flight number and we'll fetch the airline + times automatically in a later release.
               </div>
             </div>
 
-            <div class="leg-label">Departure</div>
-            <div class="row-3">
-              <div class="field" style="margin-bottom:0;">
-                <input
-                  type="text"
-                  placeholder="CDG"
-                  maxlength="4"
-                  .value=${d.flightDepartAirport}
-                  @input=${(e) => this._set('flightDepartAirport', e.target.value)}
-                />
-              </div>
-              <div class="field" style="margin-bottom:0;display:flex;align-items:center;justify-content:center;color:var(--text-tertiary);font-size:18px;">→</div>
-              <div class="field" style="margin-bottom:0;">
-                <input
-                  type="datetime-local"
-                  .value=${d.flightDepartTime}
-                  @input=${(e) => this._set('flightDepartTime', e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div class="leg-label">Arrival</div>
-            <div class="row-3">
-              <div class="field" style="margin-bottom:0;">
-                <input
-                  type="text"
-                  placeholder="NCE"
-                  maxlength="4"
-                  .value=${d.flightArriveAirport}
-                  @input=${(e) => this._set('flightArriveAirport', e.target.value)}
-                />
-              </div>
-              <div class="field" style="margin-bottom:0;display:flex;align-items:center;justify-content:center;color:var(--text-tertiary);font-size:18px;">→</div>
-              <div class="field" style="margin-bottom:0;">
-                <input
-                  type="datetime-local"
-                  .value=${d.flightArriveTime}
-                  @input=${(e) => this._set('flightArriveTime', e.target.value)}
-                />
-              </div>
-            </div>
-            <div class="hint">
-              Auto-fill from confirmation email arrives in a later phase. Manual entry for now.
-            </div>
+            ${this._showReturn
+              ? html`
+                  <div class="flight-leg">
+                    <div class="leg-head">
+                      <span class="leg-name">Return</span>
+                      <div style="display:flex;gap:10px;align-items:baseline;">
+                        <button
+                          type="button"
+                          class="leg-disclosure"
+                          @click=${() =>
+                            (this._showReturnDetails = !this._showReturnDetails)}
+                        >
+                          ${this._showReturnDetails ? '− Hide airports' : '+ Airports'}
+                        </button>
+                        <button
+                          type="button"
+                          class="return-remove"
+                          @click=${() => {
+                            this._showReturn = false;
+                            this._draft = {
+                              ...this._draft,
+                              returnFlightAirline: '',
+                              returnFlightNumber: '',
+                              returnFlightDepartAirport: '',
+                              returnFlightDepartTime: '',
+                              returnFlightArriveAirport: '',
+                              returnFlightArriveTime: '',
+                            };
+                          }}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row-flight">
+                      <div class="field" style="margin-bottom:0;">
+                        <label>Flight #</label>
+                        <input
+                          type="text"
+                          placeholder="AF1235"
+                          .value=${d.returnFlightNumber}
+                          @input=${(e) =>
+                            this._set('returnFlightNumber', e.target.value)}
+                        />
+                      </div>
+                      <div class="field" style="margin-bottom:0;">
+                        <label>Departure</label>
+                        <input
+                          type="datetime-local"
+                          .value=${d.returnFlightDepartTime}
+                          @input=${(e) =>
+                            this._set('returnFlightDepartTime', e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    ${this._showReturnDetails
+                      ? html`
+                          <div class="row-airports">
+                            <input
+                              type="text"
+                              placeholder="From (NCE)"
+                              maxlength="4"
+                              .value=${d.returnFlightDepartAirport}
+                              @input=${(e) =>
+                                this._set(
+                                  'returnFlightDepartAirport',
+                                  e.target.value,
+                                )}
+                            />
+                            <span class="arrow">→</span>
+                            <input
+                              type="text"
+                              placeholder="To (CDG)"
+                              maxlength="4"
+                              .value=${d.returnFlightArriveAirport}
+                              @input=${(e) =>
+                                this._set(
+                                  'returnFlightArriveAirport',
+                                  e.target.value,
+                                )}
+                            />
+                          </div>
+                        `
+                      : ''}
+                  </div>
+                `
+              : html`
+                  <button
+                    type="button"
+                    class="return-toggle"
+                    @click=${() => (this._showReturn = true)}
+                  >
+                    + Add return flight
+                  </button>
+                `}
           </fieldset>
           `}
 

@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { parseLocalDate } from '../services/data.js';
 
 /**
  * Compact 12-month grid for the current year. Each day cell is colored
@@ -166,10 +167,10 @@ export class YearlyView extends LitElement {
     const eventDates = new Set(
       this.events
         .filter((e) => {
-          const d = new Date(e.date);
-          return d.getFullYear() === y && d.getMonth() === m;
+          const d = parseLocalDate(e.date);
+          return d && d.getFullYear() === y && d.getMonth() === m;
         })
-        .map((e) => new Date(e.date).getDate()),
+        .map((e) => parseLocalDate(e.date).getDate()),
     );
     const cells = [];
     for (let i = 0; i < offset; i++) cells.push(html`<div class="cell empty"></div>`);

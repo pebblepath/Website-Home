@@ -172,7 +172,7 @@ export class HomeScreen extends LitElement {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      width: 320px;
+      width: clamp(360px, 42vw, 560px);
       max-width: 100%;
       padding: 7px 14px 7px 12px;
       border-radius: var(--radius-pill);
@@ -687,17 +687,20 @@ export class HomeScreen extends LitElement {
       color: var(--text-primary);
     }
     .cal-cell.has-trip {
-      background: rgba(74, 144, 226, 0.34);
-      border-color: rgba(74, 144, 226, 0.6);
-      color: var(--text-primary);
+      background: var(--trip-day-bg);
+      border-color: rgba(74, 144, 226, 0.75);
+      color: var(--trip-day-fg);
+      font-weight: 600;
     }
     .cal-cell.has-trip.has-event {
       background: linear-gradient(
         135deg,
-        rgba(74, 144, 226, 0.32) 0%,
-        rgba(212, 168, 67, 0.28) 100%
+        #6bb4e8 0%,
+        #4a90e2 45%,
+        #d4a843 100%
       );
-      border-color: rgba(212, 168, 67, 0.5);
+      border-color: rgba(212, 168, 67, 0.65);
+      color: var(--charcoal);
     }
 
     .circle-block {
@@ -826,15 +829,32 @@ export class HomeScreen extends LitElement {
     return [...immediate, ...extended];
   }
 
-  /** All trips for the current circle (past + future). */
+  /** All trips for the current circle (past + future). Applies the
+   *  per-user visibility resolver so a viewer never sees trips they
+   *  weren't included in, then dedupes by trip id as a safety net
+   *  against legacy duplicates lingering in Firestore. */
   _circleTrips() {
     const trips = this._liveTrips();
     const uid = this.user?.uid ?? 'thomas';
+    let scoped;
     if (this.circle === 'personal') {
-      return trips.filter((t) => t.attendees?.includes(uid));
+      scoped = trips.filter((t) => t.attendees?.includes(uid));
+    } else if (this.circle === 'family') {
+      scoped = trips.filter(
+        (t) => t.visibility !== 'extended' && this._userCanSeeTrip(t),
+      );
+    } else {
+      scoped = trips.filter((t) => this._userCanSeeTrip(t));
     }
-    if (this.circle === 'family') return trips.filter((t) => t.visibility !== 'extended');
-    return trips;
+    const seen = new Set();
+    const out = [];
+    for (const t of scoped) {
+      const key = t.id ?? `${t.title}|${t.start}|${t.end}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(t);
+    }
+    return out;
   }
 
   /** Upcoming + ongoing trips only — for the "Coming up" feed. */

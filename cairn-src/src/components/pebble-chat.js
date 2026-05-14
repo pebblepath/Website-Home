@@ -12,6 +12,10 @@ import { dataStore } from '../services/data.js';
 export class PebbleChat extends LitElement {
   static properties = {
     open: { type: Boolean, reflect: true },
+    /** Reflected so CSS can pick up :host([floating]) — set true once
+     *  the conversation has any messages, so the panel docks to the
+     *  bottom-right while leaving the dashboard interactive. */
+    floating: { type: Boolean, reflect: true },
     family: { type: Object },
     trips: { type: Array },
     _messages: { state: true },
@@ -23,12 +27,19 @@ export class PebbleChat extends LitElement {
   constructor() {
     super();
     this.open = false;
+    this.floating = false;
     this.family = null;
     this.trips = [];
     this._messages = [];
     this._input = '';
     this._loading = false;
     this._error = '';
+  }
+
+  willUpdate(changed) {
+    if (changed.has('_messages')) {
+      this.floating = (this._messages?.length ?? 0) > 0;
+    }
   }
 
   _onCancel() {
@@ -110,7 +121,9 @@ export class PebbleChat extends LitElement {
       display: block;
     }
     /* Backdrop is subtle — dashboard stays legible behind the dropdown.
-       Catches outside-clicks to dismiss. */
+       Catches outside-clicks to dismiss. Hidden once the chat is in
+       floating-chatbot mode so the user can still scroll/click the
+       dashboard while a conversation is in progress. */
     .backdrop {
       position: fixed;
       inset: 0;
@@ -118,17 +131,20 @@ export class PebbleChat extends LitElement {
       pointer-events: auto;
       animation: fadeIn 200ms ease;
     }
+    :host([floating]) .backdrop {
+      display: none;
+    }
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    /* Dropdown panel: anchored just below the topbar Pebble search bar.
-       Centred horizontally on desktop, near-edge on mobile. Internal
-       flex so the conversation thread can scroll while header + composer
-       stay pinned. */
+    /* Dropdown panel (default): anchored just below the topbar Pebble
+       search bar. Centred horizontally on desktop, near-edge on mobile.
+       Internal flex so the conversation thread can scroll while header
+       + composer stay pinned. */
     .panel {
       position: fixed;
-      top: 76px; /* below 68px topbar + 8px gap */
+      top: 76px;
       left: 50%;
       transform: translateX(-50%);
       width: min(580px, calc(100vw - 32px));
@@ -146,9 +162,28 @@ export class PebbleChat extends LitElement {
       padding: 18px 20px 18px;
       overflow: hidden;
     }
+    /* Floating-chatbot mode kicks in once a conversation has started:
+       dock bottom-right, narrower + slightly shorter, animate up from
+       below. The dashboard stays fully interactive behind it. */
+    :host([floating]) .panel {
+      top: auto;
+      left: auto;
+      right: 24px;
+      bottom: 24px;
+      transform: none;
+      width: 380px;
+      height: min(540px, calc(100vh - 120px));
+      max-height: calc(100vh - 120px);
+      animation: floatIn 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      padding: 14px 16px;
+    }
     @keyframes dropIn {
       from { transform: translateX(-50%) translateY(-12px); opacity: 0; }
       to   { transform: translateX(-50%) translateY(0); opacity: 1; }
+    }
+    @keyframes floatIn {
+      from { transform: translateY(14px); opacity: 0; }
+      to   { transform: translateY(0); opacity: 1; }
     }
     @media (max-width: 768px) {
       .panel {
@@ -158,6 +193,14 @@ export class PebbleChat extends LitElement {
         width: auto;
         max-height: calc(100vh - 96px);
         transform: none;
+      }
+      :host([floating]) .panel {
+        top: auto;
+        bottom: 16px;
+        left: 16px;
+        right: 16px;
+        width: auto;
+        height: min(540px, calc(100vh - 96px));
       }
       @keyframes dropIn {
         from { transform: translateY(-12px); opacity: 0; }

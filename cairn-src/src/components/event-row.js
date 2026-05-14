@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import './member-chip.js';
+import { parseLocalDate } from '../services/data.js';
 
 /**
  * One row in the upcoming celebrations list.
@@ -95,7 +96,11 @@ export class EventRow extends LitElement {
   }
 
   _fmtDate(date) {
-    const d = new Date(date);
+    // parseLocalDate keeps YYYY-MM-DD as a local calendar day so the
+    // displayed day matches what the user picked in the editor —
+    // otherwise `new Date('YYYY-10-11')` is UTC-midnight and prints
+    // as Oct 10 in any timezone west of UTC.
+    const d = parseLocalDate(date) ?? new Date(date);
     return {
       day: d.getDate(),
       month: d.toLocaleString('en-GB', { month: 'short' }),
