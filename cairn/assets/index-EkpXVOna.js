@@ -284,24 +284,22 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
     .cell.trip.dense {
       background: var(--trip-day-bg-strong);
     }
-    .cell.event::after {
-      content: '';
-      position: absolute;
-      bottom: 1.5px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 5px;
-      height: 5px;
-      border-radius: 999px;
+    /* Celebration day — solid colored cell, treated the same way as
+       trip and today instead of a tiny dot. */
+    .cell.event {
       background: var(--gradient-celebration);
-      box-shadow:
-        0 0 6px rgba(242, 154, 77, 0.85),
-        0 0 0 1px rgba(255, 240, 215, 0.6);
+      box-shadow: inset 0 0 0 1px rgba(255, 240, 215, 0.35);
     }
-    .cell.event.trip::after {
-      /* Trip + celebration day — white core so it pops on the tide blue. */
-      background: radial-gradient(circle at 35% 35%, #fff 0%, #ffd066 80%);
-      box-shadow: 0 0 6px rgba(255, 255, 255, 0.85);
+    /* Trip + celebration day — split diagonally so both signals read. */
+    .cell.event.trip {
+      background:
+        linear-gradient(135deg,
+          #6bb4e8 0%,
+          #4a90e2 45%,
+          #f29a4d 55%,
+          #ffd066 100%
+        );
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
     }
     .legend {
       display: flex;
@@ -330,8 +328,7 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
     }
     .swatch i.event {
       background: var(--gradient-celebration);
-      border-radius: 999px;
-      box-shadow: 0 0 4px rgba(242, 154, 77, 0.7);
+      border-radius: 2px;
     }
     .swatch i.today {
       background: var(--today-bg);
@@ -4911,9 +4908,10 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
       border-color: rgba(255, 248, 235, 0.5);
     }
     .cal-cell.has-event {
-      background: rgba(212, 168, 67, 0.18);
-      border-color: rgba(212, 168, 67, 0.4);
-      color: var(--text-primary);
+      background: var(--gradient-celebration);
+      border-color: rgba(255, 240, 215, 0.55);
+      color: var(--charcoal);
+      font-weight: 600;
     }
     .cal-cell.has-trip {
       background: var(--trip-day-bg);
@@ -5166,4 +5164,4 @@ var Ze=Object.defineProperty;var Qe=(o,e,t)=>e in o?Ze(o,e,{enumerable:!0,config
           .joinCode=${this.joinCode??""}
         ></sign-in-screen>
       `}}u(Ve,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0}});customElements.define("cairn-app",Ve);
-//# sourceMappingURL=index-DHqkHCRg.js.map
+//# sourceMappingURL=index-EkpXVOna.js.map
