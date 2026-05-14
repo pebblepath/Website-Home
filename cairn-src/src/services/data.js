@@ -217,6 +217,24 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
+   * Pebble inside Cairn (Tier 3). Calls the askPebbleAboutActivities
+   * Cloud Function — same Firebase project secret as PP's Pebble,
+   * different scope (family activities / trip planning, not child
+   * milestones). Returns { answer, followUps? } or throws on failure.
+   */
+  async askPebble(question, history = []) {
+    if (!functions) throw new Error('Firebase functions not configured.');
+    if (!this._currentFamilyId) throw new Error('No family yet.');
+    const fn = httpsCallable(functions, 'askPebbleAboutActivities');
+    const result = await fn({
+      question,
+      familyId: this._currentFamilyId,
+      history,
+    });
+    return result.data;
+  }
+
+  /**
    * Phase 3B: edit a child's birthday from Cairn (since PP TestFlight
    * doesn't yet have child-edit settings). Only PP family members can
    * write per the existing `/children/` rules.

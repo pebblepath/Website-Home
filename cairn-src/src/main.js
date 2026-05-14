@@ -10,6 +10,7 @@ import './components/import-calendar-modal.js';
 import './components/profile-sheet.js';
 import './components/activity-type-picker.js';
 import './components/date-range-picker.js';
+import './components/pebble-chat.js';
 import './components/discover-pebblepath.js';
 import './components/join-family-screen.js';
 import './components/sign-in-screen.js';

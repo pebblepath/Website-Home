@@ -13,6 +13,7 @@ import './manage-members-modal.js';
 import './all-trips-modal.js';
 import './import-calendar-modal.js';
 import './profile-sheet.js';
+import './pebble-chat.js';
 import './activity-type-picker.js';
 import './discover-pebblepath.js';
 import {
@@ -67,6 +68,7 @@ export class HomeScreen extends LitElement {
     _profileOpen: { state: true },
     _typePickerOpen: { state: true },
     _formMode: { state: true },
+    _pebbleOpen: { state: true },
   };
 
   constructor() {
@@ -92,6 +94,7 @@ export class HomeScreen extends LitElement {
     this._profileOpen = false;
     this._typePickerOpen = false;
     this._formMode = 'trip';
+    this._pebbleOpen = false;
     // Calendar nav state — initialized to "today" at first paint, then
     // user-controlled via prev/next or yearly month-tap.
     const t = new Date();
@@ -147,6 +150,42 @@ export class HomeScreen extends LitElement {
     .topbar .who {
       justify-self: end;
     }
+    .pebble-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px 7px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(61, 155, 143, 0.18);
+      color: var(--text-primary);
+      border: 1px solid rgba(61, 155, 143, 0.42);
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: -0.005em;
+      transition: background 200ms ease, transform 160ms ease;
+    }
+    .pebble-pill:hover {
+      background: rgba(61, 155, 143, 0.3);
+    }
+    .pebble-pill:active {
+      transform: translateY(1px) scale(0.98);
+    }
+    .pebble-pill svg {
+      width: 14px;
+      height: 14px;
+      color: var(--teal-pebble);
+    }
+    @media (max-width: 768px) {
+      .pebble-pill-label {
+        display: none;
+      }
+      .pebble-pill {
+        padding: 7px 9px;
+      }
+    }
+
     .activity-btn {
       display: inline-flex;
       align-items: center;
@@ -1170,6 +1209,18 @@ export class HomeScreen extends LitElement {
         ></circle-switcher>
         <div class="who">
           <button
+            class="pebble-pill"
+            @click=${() => (this._pebbleOpen = true)}
+            title="Ask Pebble"
+            aria-label="Ask Pebble"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" />
+            </svg>
+            <span class="pebble-pill-label">Pebble</span>
+          </button>
+          <button
             class="activity-btn"
             @click=${() => this._openCreate()}
             title="New activity"
@@ -1518,6 +1569,13 @@ export class HomeScreen extends LitElement {
         .pebbleUser=${this.pebbleUser}
         @cancel=${() => (this._profileOpen = false)}
       ></profile-sheet>
+
+      <pebble-chat
+        ?open=${this._pebbleOpen}
+        .family=${this.family}
+        .trips=${this._circleTrips()}
+        @cancel=${() => (this._pebbleOpen = false)}
+      ></pebble-chat>
     `;
   }
 }
