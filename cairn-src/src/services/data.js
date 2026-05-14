@@ -396,6 +396,32 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
+   * Move a Cairn member into a sub-group (exclusive membership — drops them
+   * from any other sub-group at the same time). Pass `targetGroupId === null`
+   * to strip them from every sub-group (back to "general extended"). No-op
+   * when nothing would change.
+   */
+  async setCairnMemberSubGroup(uid, targetGroupId) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    if (!uid) throw new Error('uid is required.');
+    const subGroups = this.state.family?.subGroups ?? {};
+    const patch = {};
+    for (const [gid, g] of Object.entries(subGroups)) {
+      const memberIds = Array.isArray(g.memberIds) ? g.memberIds : [];
+      if (gid === targetGroupId) {
+        if (!memberIds.includes(uid)) {
+          patch[`subGroups.${gid}.memberIds`] = [...memberIds, uid];
+        }
+      } else if (memberIds.includes(uid)) {
+        patch[`subGroups.${gid}.memberIds`] = memberIds.filter((id) => id !== uid);
+      }
+    }
+    if (Object.keys(patch).length === 0) return;
+    patch.updatedAt = serverTimestamp();
+    await updateDoc(doc(db, 'families', this._currentFamilyId), patch);
+  }
+
+  /**
    * Phase 3A: generate or regenerate the Cairn invite code. Caller must be
    * a PP member (rules enforce). 30-day expiry — extended-family invites
    * move on human time, not the 7-day co-parent timeline.

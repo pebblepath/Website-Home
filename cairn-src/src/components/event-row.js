@@ -65,11 +65,36 @@ export class EventRow extends LitElement {
       flex: 1;
       min-width: 0;
     }
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
     .title {
       font-family: var(--font-display);
       font-weight: 600;
       font-size: 15px;
       letter-spacing: -0.01em;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .faces {
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .faces member-chip {
+      box-shadow:
+        0 0 0 1.5px rgba(255, 248, 235, 0.95),
+        0 1px 3px rgba(0, 0, 0, 0.25);
+      border-radius: 999px;
+      margin-left: -7px;
+    }
+    .faces member-chip:first-child {
+      margin-left: 0;
     }
     .meta {
       font-size: 12.5px;
@@ -133,6 +158,13 @@ export class EventRow extends LitElement {
     const e = this.event;
     if (!e) return html``;
     const dt = this._fmtDate(e.date);
+    // Resolve personIds → member objects so we can show real avatars
+    // beside the title (cake icon stays as type signifier). For a
+    // birthday this is one face; for an anniversary, two overlapping.
+    const memberMap = new Map((this.members ?? []).map((m) => [m.uid, m]));
+    const people = (e.personIds ?? [])
+      .map((id) => memberMap.get(id))
+      .filter(Boolean);
     return html`
       <div
         class="row"
@@ -143,7 +175,23 @@ export class EventRow extends LitElement {
       >
         <div class="icon ${e.type}">${this._icon(e.type)}</div>
         <div class="body">
-          <div class="title">${e.title}</div>
+          <div class="title-row">
+            <div class="title">${e.title}</div>
+            ${people.length > 0
+              ? html`<span class="faces">
+                  ${people.slice(0, 3).map(
+                    (m) => html`
+                      <member-chip
+                        .name=${m.displayName}
+                        .photo=${m.photoURL ?? ''}
+                        .hue=${m.hue}
+                        size="22"
+                      ></member-chip>
+                    `,
+                  )}
+                </span>`
+              : ''}
+          </div>
           ${e.subtitle ? html`<div class="meta">${e.subtitle}</div>` : ''}
         </div>
         <div class="date">

@@ -3,29 +3,41 @@ import { parseLocalDate } from '../services/data.js';
 
 /**
  * Compact 12-month grid for the current year. Each day cell is colored
- * by what's on it: sage tint for trip density, amber dot for celebrations,
- * highlight for today.
+ * by what's on it: trip-day gradient for trips, celebration gradient
+ * for birthdays/anniversaries, today indicator on today's cell.
  *
  * Properties:
  *   year     — number (defaults to current)
  *   tripDays — Map<string, number> keyed "MM-DD" → density (0-1)
- *   events   — Array of { date: "YYYY-MM-DD" }
+ *   trips    — Array of { title, start: "YYYY-MM-DD", end, location? }
+ *   events   — Array of { date: "YYYY-MM-DD", title }
  *   today    — Date (defaults to new Date())
+ *
+ * Behaviour:
+ *   - Hovering a day cell with content shows a native tooltip with the
+ *     trip/event names (so the at-a-glance signal isn't just colour).
+ *   - Tapping a coloured day flips the floating caption below the
+ *     grid to that day's items — accessible on mobile where there's
+ *     no hover.
  */
 export class YearlyView extends LitElement {
   static properties = {
     year: { type: Number },
     tripDays: { type: Object },
+    trips: { type: Array },
     events: { type: Array },
     today: { type: Object },
+    _activeDay: { state: true },
   };
 
   constructor() {
     super();
     this.year = new Date().getFullYear();
     this.tripDays = new Map();
+    this.trips = [];
     this.events = [];
     this.today = new Date();
+    this._activeDay = null; // { month, day, label }
   }
 
   static styles = css`
@@ -88,6 +100,24 @@ export class YearlyView extends LitElement {
       background: rgba(255, 248, 235, 0.09);
       box-shadow: inset 0 0 0 1px rgba(255, 248, 235, 0.07);
       position: relative;
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+    .cell.labelled {
+      cursor: pointer;
+    }
+    .cell.labelled:hover {
+      transform: scale(1.18);
+      z-index: 1;
+      box-shadow:
+        0 0 0 1.5px rgba(255, 255, 255, 0.55),
+        0 2px 6px rgba(0, 0, 0, 0.35);
+    }
+    .cell.active {
+      transform: scale(1.18);
+      z-index: 1;
+      box-shadow:
+        0 0 0 1.5px rgba(255, 255, 255, 0.7),
+        0 2px 8px rgba(0, 0, 0, 0.4);
     }
     .cell.empty {
       background: transparent;
@@ -152,6 +182,50 @@ export class YearlyView extends LitElement {
       background: var(--gradient-celebration);
       border-radius: 2px;
     }
+
+    /* Caption strip — appears under the year grid when the user taps a
+       coloured day. Stays put until they tap somewhere else or the
+       same cell again (toggle). */
+    .day-caption {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: linear-gradient(
+        135deg,
+        rgba(74, 144, 226, 0.16) 0%,
+        rgba(212, 168, 67, 0.16) 100%
+      );
+      border: 1px solid rgba(255, 248, 235, 0.16);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12.5px;
+      color: var(--text-primary);
+    }
+    .day-caption .day-pill {
+      flex-shrink: 0;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .day-caption .day-text {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .day-caption .day-close {
+      background: transparent;
+      border: none;
+      color: var(--text-tertiary);
+      font: inherit;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+    .day-caption .day-close:hover { color: var(--text-primary); }
     .swatch i.today {
       background: var(--today-bg);
     }
@@ -165,19 +239,48 @@ export class YearlyView extends LitElement {
     return [31, this._isLeap(y) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m];
   }
 
+  /**
+   * Build per-day labels for a month from the trips + events lists.
+   * Each key is the day-of-month (number); the value is a string with
+   * trip titles and event titles for that day, " · " separated.
+   */
+  _labelsForMonth(m) {
+    const y = this.year;
+    const labels = new Map();
+    const push = (day, label) => {
+      const cur = labels.get(day);
+      labels.set(day, cur ? `${cur} · ${label}` : label);
+    };
+    for (const t of this.trips ?? []) {
+      if (!t.start || !t.end) continue;
+      const s = parseLocalDate(t.start);
+      const e = parseLocalDate(t.end);
+      if (!s || !e) continue;
+      if (s.getFullYear() > y || e.getFullYear() < y) continue;
+      const monthStart = new Date(y, m, 1);
+      const monthEnd = new Date(y, m + 1, 0);
+      if (e < monthStart || s > monthEnd) continue;
+      const fromDay = s.getMonth() === m && s.getFullYear() === y ? s.getDate() : 1;
+      const toDay = e.getMonth() === m && e.getFullYear() === y ? e.getDate() : monthEnd.getDate();
+      const title = t.location?.trim() ? `${t.title} (${t.location.trim()})` : t.title;
+      for (let d = fromDay; d <= toDay; d++) push(d, title);
+    }
+    for (const ev of this.events ?? []) {
+      const d = parseLocalDate(ev.date);
+      if (!d) continue;
+      if (d.getFullYear() === y && d.getMonth() === m) {
+        push(d.getDate(), ev.title ?? 'Event');
+      }
+    }
+    return labels;
+  }
+
   _renderMonth(m) {
     const y = this.year;
     const firstDow = new Date(y, m, 1).getDay();
     const offset = (firstDow + 6) % 7;
     const days = this._daysInMonth(y, m);
-    const eventDates = new Set(
-      this.events
-        .filter((e) => {
-          const d = parseLocalDate(e.date);
-          return d && d.getFullYear() === y && d.getMonth() === m;
-        })
-        .map((e) => parseLocalDate(e.date).getDate()),
-    );
+    const labels = this._labelsForMonth(m);
     const cells = [];
     for (let i = 0; i < offset; i++) cells.push(html`<div class="cell empty"></div>`);
     const today = this.today;
@@ -186,19 +289,50 @@ export class YearlyView extends LitElement {
       const density = this.tripDays.get(key) ?? 0;
       const isToday =
         today.getFullYear() === y && today.getMonth() === m && today.getDate() === d;
-      const hasEvent = eventDates.has(d);
+      const label = labels.get(d);
+      const hasEvent = (this.events ?? []).some((e) => {
+        const dd = parseLocalDate(e.date);
+        return dd && dd.getFullYear() === y && dd.getMonth() === m && dd.getDate() === d;
+      });
+      const isActive =
+        this._activeDay?.month === m && this._activeDay?.day === d;
       const cls = [
         'cell',
         isToday ? 'today' : '',
         density > 0 ? 'trip' : '',
         density > 0.6 ? 'dense' : '',
         hasEvent ? 'event' : '',
+        label ? 'labelled' : '',
+        isActive ? 'active' : '',
       ]
         .filter(Boolean)
         .join(' ');
-      cells.push(html`<div class=${cls}></div>`);
+      cells.push(html`<div
+        class=${cls}
+        title=${label ? `${d} ${this._monthName(m)} — ${label}` : ''}
+        @click=${(ev) => label && this._onDayTap(ev, m, d, label)}
+      ></div>`);
     }
     return cells;
+  }
+
+  _onDayTap(ev, month, day, label) {
+    // Day taps are caught here BEFORE the month-cell click bubbles, so
+    // we stop propagation: tapping a labelled day pops the caption
+    // instead of jumping the monthly view away.
+    ev.stopPropagation();
+    if (
+      this._activeDay?.month === month &&
+      this._activeDay?.day === day
+    ) {
+      this._activeDay = null;
+      return;
+    }
+    this._activeDay = { month, day, label };
+  }
+
+  _monthName(m) {
+    return new Date(this.year, m, 1).toLocaleString('en-GB', { month: 'short' });
   }
 
   _onSelect(m) {
@@ -234,6 +368,24 @@ export class YearlyView extends LitElement {
         <span class="swatch"><i class="event"></i> Celebration</span>
         <span class="swatch"><i class="today"></i> Today</span>
       </div>
+      ${this._activeDay
+        ? html`
+            <div class="day-caption">
+              <span class="day-pill">
+                ${this._activeDay.day} ${this._monthName(this._activeDay.month)}
+              </span>
+              <span class="day-text">${this._activeDay.label}</span>
+              <button
+                class="day-close"
+                aria-label="Dismiss"
+                @click=${(e) => {
+                  e.stopPropagation();
+                  this._activeDay = null;
+                }}
+              >×</button>
+            </div>
+          `
+        : ''}
     `;
   }
 }

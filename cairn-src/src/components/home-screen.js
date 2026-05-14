@@ -70,6 +70,11 @@ export class HomeScreen extends LitElement {
     _typePickerOpen: { state: true },
     _formMode: { state: true },
     _pebbleOpen: { state: true },
+    /** Currently-hovered drop target during a member drag — gives the
+     *  receiving stone a highlighted ring so it's obvious where the
+     *  drop will land. Holds the targetGroupId ('extended' or a sub-
+     *  group id), or null when nothing is being dragged over. */
+    _dragOverTarget: { state: true },
   };
 
   constructor() {
@@ -104,6 +109,7 @@ export class HomeScreen extends LitElement {
     this._typePickerOpen = false;
     this._formMode = 'trip';
     this._pebbleOpen = false;
+    this._dragOverTarget = null;
     // Calendar nav state — initialized to "today" at first paint, then
     // user-controlled via prev/next or yearly month-tap.
     const t = new Date();
@@ -782,6 +788,20 @@ export class HomeScreen extends LitElement {
       transform: translateY(-2px);
       filter: brightness(1.04);
     }
+    /* Drop hover: bright ring + lift so the receiving stone reads as
+       the active target during a drag. */
+    .pebble-drop {
+      outline: 2px dashed rgba(255, 255, 255, 0.7);
+      outline-offset: 4px;
+      transform: translateY(-3px) scale(1.02);
+      filter: brightness(1.08);
+    }
+    .stone-chips member-chip.is-draggable {
+      cursor: grab;
+    }
+    .stone-chips member-chip.is-draggable:active {
+      cursor: grabbing;
+    }
     /* Sizes follow the icon's progression — flatter + wider as the
        stack descends, like real river stones balanced on each other. */
     .pebble-self {
@@ -839,11 +859,13 @@ export class HomeScreen extends LitElement {
       z-index: 1;
     }
     .stone-chips member-chip {
+      /* Slim 1px ring instead of the thick cream halo — matches how
+         avatars are shown elsewhere (attendees row on trip cards). */
       box-shadow:
-        0 0 0 2px rgba(245, 232, 210, 0.95),
-        0 2px 4px rgba(0, 0, 0, 0.35);
+        0 0 0 1px rgba(255, 248, 235, 0.5),
+        0 1px 3px rgba(0, 0, 0, 0.28);
       border-radius: 999px;
-      margin-left: -8px;
+      margin-left: -6px;
       transition: transform 180ms ease;
     }
     .stone-chips member-chip:first-child {
@@ -861,7 +883,7 @@ export class HomeScreen extends LitElement {
       background: rgba(0, 0, 0, 0.28);
       border-radius: 999px;
       font-variant-numeric: tabular-nums;
-      box-shadow: 0 0 0 2px rgba(245, 232, 210, 0.85);
+      box-shadow: 0 0 0 1px rgba(255, 248, 235, 0.5);
     }
     .stone-label {
       font-family: var(--font-display);
@@ -1220,17 +1242,101 @@ export class HomeScreen extends LitElement {
     this._displayMonth = new Date(t.getFullYear(), t.getMonth(), 1);
   }
 
+  _pebblePlaceholder() {
+    // Mobile (≤768px): bare "Ask Pebble" — the chip is narrow and the
+    // longer copy gets ellipsed unhelpfully. Desktop gets the inviting
+    // long-form prompt.
+    if (typeof window !== 'undefined' && window.matchMedia?.('(max-width: 768px)').matches) {
+      return 'Ask Pebble';
+    }
+    return 'Ask Pebble — weekend plans, trip ideas…';
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    // Re-render placeholder when crossing the mobile breakpoint so the
+    // copy stays right for the current viewport on rotation/resize.
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      this._mq = window.matchMedia('(max-width: 768px)');
+      this._mqHandler = () => this.requestUpdate();
+      this._mq.addEventListener?.('change', this._mqHandler);
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._mq?.removeEventListener?.('change', this._mqHandler);
+  }
+
   /**
    * Render a single cairn stone with overlapping member chips. Empty
    * lists render as a dashed "invite" stone instead — the action lives
    * on the stone itself so the user clicks the visual rather than
    * hunting for a separate "+ Invite" button.
    */
-  _renderStone({ label, members, pebbleClass, emptyLabel, onClick, maxChips = 6 }) {
+  /**
+   * Render a cairn stone.
+   *
+   * Drop-target opt-in: pass `dropTargetId` ('extended' or a sub-group
+   * id) and the stone wires up dragover/drop so Cairn-only members can
+   * be moved between rings by drag.
+   *
+   * Chip draggability: each chip is draggable when `draggable(member)`
+   * returns true (typically: Cairn-only members, not self, not PP-only).
+   * dragstart writes `text/cairn-uid` to dataTransfer; that's what the
+   * drop handler reads back.
+   */
+  _renderStone({
+    label,
+    members,
+    pebbleClass,
+    emptyLabel,
+    onClick,
+    maxChips = 6,
+    dropTargetId = null,
+    draggable = () => false,
+  }) {
+    const dropProps = dropTargetId
+      ? {
+          'dragover': (e) => {
+            if (e.dataTransfer.types?.includes('text/cairn-uid')) {
+              e.preventDefault();
+              this._dragOverTarget = dropTargetId;
+            }
+          },
+          'dragleave': () => {
+            if (this._dragOverTarget === dropTargetId) this._dragOverTarget = null;
+          },
+          'drop': async (e) => {
+            e.preventDefault();
+            this._dragOverTarget = null;
+            const uid = e.dataTransfer.getData('text/cairn-uid');
+            if (!uid) return;
+            const target = dropTargetId === 'extended' ? null : dropTargetId;
+            try {
+              await dataStore.setCairnMemberSubGroup(uid, target);
+              toast(target ? `Moved to ${label}.` : 'Moved to extended.');
+            } catch (err) {
+              console.error('Move failed:', err);
+              toast(`Couldn't move: ${err.code ?? err.message}`, { duration: 4000 });
+            }
+          },
+        }
+      : {};
+    const isDropOver = dropTargetId && this._dragOverTarget === dropTargetId;
+    const pebbleClassFull = `pebble ${pebbleClass}${isDropOver ? ' pebble-drop' : ''}`;
+
     if (!members || members.length === 0) {
       return html`
-        <button class="stone" @click=${onClick} title=${emptyLabel}>
-          <span class="pebble ${pebbleClass} pebble-empty">${emptyLabel}</span>
+        <button
+          class="stone"
+          @click=${onClick}
+          title=${emptyLabel}
+          @dragover=${dropProps.dragover}
+          @dragleave=${dropProps.dragleave}
+          @drop=${dropProps.drop}
+        >
+          <span class="${pebbleClassFull} pebble-empty">${emptyLabel}</span>
           <span class="stone-label">${label}</span>
         </button>
       `;
@@ -1238,19 +1344,38 @@ export class HomeScreen extends LitElement {
     const shown = members.slice(0, maxChips);
     const extra = members.length - shown.length;
     return html`
-      <button class="stone" @click=${onClick} title="${label} — manage members">
-        <span class="pebble ${pebbleClass}">
+      <button
+        class="stone"
+        @click=${onClick}
+        title="${label} — manage members"
+        @dragover=${dropProps.dragover}
+        @dragleave=${dropProps.dragleave}
+        @drop=${dropProps.drop}
+      >
+        <span class="${pebbleClassFull}">
           <span class="stone-chips">
-            ${shown.map(
-              (m) => html`
+            ${shown.map((m) => {
+              const isDraggable = draggable(m);
+              return html`
                 <member-chip
+                  draggable=${isDraggable ? 'true' : 'false'}
+                  class=${isDraggable ? 'is-draggable' : ''}
+                  @dragstart=${(e) => {
+                    if (!isDraggable) {
+                      e.preventDefault();
+                      return;
+                    }
+                    e.stopPropagation();
+                    e.dataTransfer.setData('text/cairn-uid', m.uid);
+                    e.dataTransfer.effectAllowed = 'move';
+                  }}
                   .name=${m.displayName}
                   .photo=${m.photoURL ?? ''}
                   .hue=${m.hue}
                   size="26"
                 ></member-chip>
-              `,
-            )}
+              `;
+            })}
             ${extra > 0 ? html`<span class="stone-more">+${extra}</span>` : ''}
           </span>
         </span>
@@ -1545,7 +1670,7 @@ export class HomeScreen extends LitElement {
           <input
             class="pebble-search-input"
             type="text"
-            placeholder="Ask Pebble — weekend plans, trip ideas…"
+            .placeholder=${this._pebblePlaceholder()}
             @focus=${() => {
               // Open chat sheet on focus (sheet has its own composer);
               // blur the inline input so the modal's textarea can take
@@ -1707,6 +1832,7 @@ export class HomeScreen extends LitElement {
                 .tripDays=${this._tripDensityByDay(
                   this._displayMonth?.getFullYear() ?? today.getFullYear(),
                 )}
+                .trips=${this._circleTrips()}
                 .events=${this._liveEvents()}
                 .today=${today}
                 @month-select=${(e) => this._jumpToMonth(e.detail.year, e.detail.month)}
@@ -1775,7 +1901,7 @@ export class HomeScreen extends LitElement {
 
         <section>
           <div class="section-head">
-            <h2>Your cairn</h2>
+            <h2>Your Cairn</h2>
             <button class="link" @click=${() => (this._membersOpen = true)}>
               Manage members
             </button>
@@ -1813,7 +1939,9 @@ export class HomeScreen extends LitElement {
                     <span class="stone-label">You</span>
                   </button>
 
-                  <!-- Family (teal pebble) -->
+                  <!-- Family (teal pebble) — read-only for drag-and-drop:
+                       its members are PP co-parents/children, not the Cairn
+                       ring, so they can't be moved into sub-groups. -->
                   ${this._renderStone({
                     label: 'Family',
                     members: familyMembers,
@@ -1822,16 +1950,21 @@ export class HomeScreen extends LitElement {
                     onClick: () => (this._membersOpen = true),
                   })}
 
-                  <!-- Extended (deeper teal, larger) -->
+                  <!-- Extended (deeper teal, larger) — drop here to strip
+                       a Cairn member from every sub-group. -->
                   ${this._renderStone({
                     label: 'Extended',
                     members: extended,
                     pebbleClass: 'pebble-extended',
                     emptyLabel: '+ Invite extended family',
                     onClick: () => (this._membersOpen = true),
+                    dropTargetId: 'extended',
+                    draggable: (m) => m.role === 'extended',
                   })}
 
-                  <!-- Sub-group base row -->
+                  <!-- Sub-group base row — each stone is a drop target for
+                       its group; chips inside are draggable so they can be
+                       moved into another sub-group or back to extended. -->
                   ${subGroupEntries.length > 0
                     ? html`
                         <div class="subgroup-row">
@@ -1846,6 +1979,8 @@ export class HomeScreen extends LitElement {
                               emptyLabel: `${g.name ?? 'Group'} (empty)`,
                               onClick: () => (this._membersOpen = true),
                               maxChips: 4,
+                              dropTargetId: gid,
+                              draggable: (m) => m.role === 'extended',
                             });
                           })}
                         </div>
