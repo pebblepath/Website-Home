@@ -211,38 +211,41 @@ export class HomeScreen extends LitElement {
       outline: none;
     }
     .pebble-search-input::placeholder {
-      color: var(--text-tertiary);
+      /* Quieter than var(--text-tertiary) — the bar already reads as
+         a Pebble entry-point from its location + sparkle icon, so the
+         placeholder shouldn't compete visually. */
+      color: rgba(255, 248, 235, 0.32);
       font-style: italic;
     }
-    .pebble-search-kbd {
-      font-family: 'SF Mono', ui-monospace, monospace;
-      font-size: 11px;
-      color: var(--text-tertiary);
-      padding: 2px 6px;
-      border-radius: 4px;
-      background: rgba(255, 248, 235, 0.06);
-      border: 1px solid rgba(255, 248, 235, 0.12);
-      flex-shrink: 0;
+    /* Mobile-only Pebble button — shown next to "+ Activity" instead of
+       a centred search bar on narrow viewports. */
+    .pebble-mobile-btn {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background: rgba(255, 248, 235, 0.08);
+      border: 1px solid var(--glass-border);
+      color: var(--teal-pebble);
+      cursor: pointer;
+      padding: 0;
     }
+    .pebble-mobile-btn:hover {
+      background: rgba(61, 155, 143, 0.16);
+      border-color: rgba(61, 155, 143, 0.45);
+    }
+    .pebble-mobile-btn svg { width: 16px; height: 16px; }
     @media (max-width: 768px) {
+      /* Replace the central search bar with a small button next to
+         the "+ Activity" CTA — much less typing real-estate is needed
+         on a phone, and the button reads cleaner. */
       .pebble-search {
-        width: auto;
-        flex: 1;
-        /* Drop the icon + kbd hint so the placeholder can sit dead-centre
-           — short "Ask Pebble" copy looks off-balance hugging the left
-           edge with a leading icon. */
-        padding: 7px 14px;
-      }
-      .pebble-search-icon,
-      .pebble-search-kbd {
         display: none;
       }
-      .pebble-search-input {
-        text-align: center;
-      }
-      .pebble-search-input::placeholder {
-        font-size: 13px;
-        text-align: center;
+      .pebble-mobile-btn {
+        display: inline-flex;
       }
     }
 
@@ -675,11 +678,34 @@ export class HomeScreen extends LitElement {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding: 6px 4px;
+      justify-content: space-between;
+      padding: 4px 4px 5px;
       font-size: 12px;
       color: var(--text-secondary);
-      gap: 3px;
+      gap: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cal-cell .cal-cell-day {
+      align-self: flex-start;
+      font-weight: 600;
+      padding-left: 2px;
+    }
+    .cal-cell .cal-cell-label {
+      font-size: 10px;
+      line-height: 1.1;
+      font-weight: 500;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding: 0 2px 1px;
+      opacity: 0.92;
+    }
+    @media (max-width: 480px) {
+      .cal-cell .cal-cell-label {
+        display: none;
+      }
     }
     @media (max-width: 480px) {
       .cal-grid {
@@ -1259,31 +1285,6 @@ export class HomeScreen extends LitElement {
     this._displayMonth = new Date(t.getFullYear(), t.getMonth(), 1);
   }
 
-  _pebblePlaceholder() {
-    // Mobile (≤768px): bare "Ask Pebble" — the chip is narrow and the
-    // longer copy gets ellipsed unhelpfully. Desktop gets the inviting
-    // long-form prompt.
-    if (typeof window !== 'undefined' && window.matchMedia?.('(max-width: 768px)').matches) {
-      return 'Ask Pebble';
-    }
-    return 'Ask Pebble — weekend plans, trip ideas…';
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    // Re-render placeholder when crossing the mobile breakpoint so the
-    // copy stays right for the current viewport on rotation/resize.
-    if (typeof window !== 'undefined' && window.matchMedia) {
-      this._mq = window.matchMedia('(max-width: 768px)');
-      this._mqHandler = () => this.requestUpdate();
-      this._mq.addEventListener?.('change', this._mqHandler);
-    }
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this._mq?.removeEventListener?.('change', this._mqHandler);
-  }
 
   /**
    * Render a single cairn stone with overlapping member chips. Empty
@@ -1409,11 +1410,22 @@ export class HomeScreen extends LitElement {
     const firstDay = new Date(year, month, 1).getDay();
     const offset = (firstDay + 6) % 7;
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const events = this._filteredEvents()
-      .map((e) => parseLocalDate(e.date))
-      .filter(Boolean)
-      .filter((d) => d.getFullYear() === year && d.getMonth() === month)
-      .map((d) => d.getDate());
+    // Per-day label map — Map<day, string>. Lets the cell render a short
+    // text caption (event title or trip title) underneath the day number
+    // so the colour isn't the only signal.
+    const dayLabels = new Map();
+    const pushLabel = (day, label) => {
+      if (!dayLabels.has(day)) dayLabels.set(day, label);
+    };
+    const events = [];
+    for (const ev of this._filteredEvents()) {
+      const d = parseLocalDate(ev.date);
+      if (!d) continue;
+      if (d.getFullYear() === year && d.getMonth() === month) {
+        events.push(d.getDate());
+        pushLabel(d.getDate(), ev.title ?? '');
+      }
+    }
     const tripDays = new Set();
     for (const t of this._filteredTrips()) {
       if (!t.start || !t.end) continue;
@@ -1425,7 +1437,10 @@ export class HomeScreen extends LitElement {
       if (s.getMonth() < month && e.getMonth() < month) continue;
       const start = s.getMonth() === month ? s.getDate() : 1;
       const end = e.getMonth() === month ? e.getDate() : daysInMonth;
-      for (let d = start; d <= end; d++) tripDays.add(d);
+      for (let d = start; d <= end; d++) {
+        tripDays.add(d);
+        pushLabel(d, t.title ?? '');
+      }
     }
     const cells = [];
     for (let i = 0; i < offset; i++) cells.push(html`<div class="cal-cell empty"></div>`);
@@ -1435,6 +1450,7 @@ export class HomeScreen extends LitElement {
       const isToday = isCurrentMonth && d === today.getDate();
       const hasEvent = events.includes(d);
       const hasTrip = tripDays.has(d);
+      const label = dayLabels.get(d);
       const cls = [
         'cal-cell',
         isToday ? 'today' : '',
@@ -1443,7 +1459,10 @@ export class HomeScreen extends LitElement {
       ]
         .filter(Boolean)
         .join(' ');
-      cells.push(html`<div class=${cls}>${d}</div>`);
+      cells.push(html`<div class=${cls} title=${label ? `${d} — ${label}` : ''}>
+        <span class="cal-cell-day">${d}</span>
+        ${label ? html`<span class="cal-cell-label">${label}</span>` : ''}
+      </div>`);
     }
     const monthName = new Date(year, month, 1).toLocaleString('en-GB', {
       month: 'long',
@@ -1691,7 +1710,7 @@ export class HomeScreen extends LitElement {
           <input
             class="pebble-search-input"
             type="text"
-            .placeholder=${this._pebblePlaceholder()}
+            placeholder="Ask Pebble — weekend plans, trip ideas…"
             @focus=${() => {
               // Open chat sheet on focus (sheet has its own composer);
               // blur the inline input so the modal's textarea can take
@@ -1707,9 +1726,19 @@ export class HomeScreen extends LitElement {
             }}
             aria-label="Ask Pebble"
           />
-          <span class="pebble-search-kbd">⏎</span>
         </div>
         <div class="who">
+          <button
+            class="pebble-mobile-btn"
+            @click=${() => (this._pebbleOpen = true)}
+            title="Ask Pebble"
+            aria-label="Ask Pebble"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" />
+            </svg>
+          </button>
           <button
             class="activity-btn"
             @click=${() => this._openCreate()}
@@ -1749,9 +1778,11 @@ export class HomeScreen extends LitElement {
               const callout = this._smartCallout();
               return callout ? html`<div class="smart">${callout}</div>` : '';
             })()}
-            <div class="stat">
-              <span>${activitiesThisMonth}</span> ${activitiesThisMonth === 1 ? 'activity' : 'activities'} this month
-            </div>
+            ${activitiesThisMonth > 0
+              ? html`<div class="stat">
+                  <span>${activitiesThisMonth}</span> ${activitiesThisMonth === 1 ? 'activity' : 'activities'} this month
+                </div>`
+              : ''}
             ${this.family
               ? this._editingFamilyName
                 ? html`<input
@@ -1871,13 +1902,23 @@ export class HomeScreen extends LitElement {
             <button class="link" @click=${() => this._openCreateEvent()}>+ Add event</button>
           </div>
           ${(() => {
-            const birthdays = filteredEvents.filter((e) => e.type === 'birthday');
-            const anniversaries = filteredEvents.filter(
-              (e) => e.type === 'anniversary',
-            );
-            const other = filteredEvents.filter(
-              (e) => e.type !== 'birthday' && e.type !== 'anniversary',
-            );
+            // Defensive sort: _liveEvents already sorts by date asc, but
+            // we re-sort each filtered slice here so any future code path
+            // that mutates the list (mock data, future filters, etc.)
+            // still lands in chronological order.
+            const byDate = (a, b) => String(a.date).localeCompare(String(b.date));
+            const birthdays = filteredEvents
+              .filter((e) => e.type === 'birthday')
+              .slice()
+              .sort(byDate);
+            const anniversaries = filteredEvents
+              .filter((e) => e.type === 'anniversary')
+              .slice()
+              .sort(byDate);
+            const other = filteredEvents
+              .filter((e) => e.type !== 'birthday' && e.type !== 'anniversary')
+              .slice()
+              .sort(byDate);
             const renderColumn = (heading, list, emptyCopy) => html`
               <glass-panel padding="sm" variant="strong" class="cel-col">
                 <div class="cel-col-head">

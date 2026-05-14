@@ -28,9 +28,12 @@ export class ActivityTypePicker extends LitElement {
       {
         type: 'activity',
         tone: 'sage',
+        // Hiker glyph — captures "weekend outing" better than a leaf.
         icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M4 20c0-7 5-12 12-12 0 7-5 12-12 12z" />
-          <path d="M4 20l8-8" />
+          <circle cx="13" cy="4.5" r="1.5" fill="currentColor" stroke="none" />
+          <path d="M9 21l3-7 4 2 3-6" />
+          <path d="M6 12l3-1 3 3" />
+          <path d="M12 14l-2 3" />
         </svg>`,
         label: 'Group activity',
         desc: 'Weekend plans, outings, day trips — no lodging or flights needed.',
@@ -38,8 +41,11 @@ export class ActivityTypePicker extends LitElement {
       {
         type: 'trip',
         tone: 'tide',
+        // Clean paperplane — silhouette + crease line, matches the iOS
+        // paperplane.fill SF Symbol.
         icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M21 14l-9 6-3-3 3-3-8-2 2-2 9 1 4-4a2 2 0 1 1 3 3l-4 4z" />
+          <path d="M21 3L3 11l7 2 2 7 9-17z" />
+          <path d="M10 13l5-5" />
         </svg>`,
         label: 'Family trip',
         desc: 'Multi-day travel with lodging, flight info, attendees.',
@@ -47,11 +53,13 @@ export class ActivityTypePicker extends LitElement {
       {
         type: 'event',
         tone: 'amber',
+        // Gift box — present with ribbon. Matches iOS gift.fill.
         icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M5 14h14v6H5z" />
-          <path d="M5 14c0-2 1.5-3 3-3h8c1.5 0 3 1 3 3" />
-          <path d="M12 11V7" />
-          <path d="M11 5.5c0-.8.5-1.5 1-2 .5.5 1 1.2 1 2 0 .6-.4 1-1 1s-1-.4-1-1z" fill="currentColor" stroke="none" />
+          <rect x="3" y="9" width="18" height="12" rx="1.5" />
+          <path d="M3 13h18" />
+          <path d="M12 9v12" />
+          <path d="M8 9c-1.5 0-2.5-1-2.5-2.5S6.5 4 8 4c2 0 4 5 4 5" />
+          <path d="M16 9c1.5 0 2.5-1 2.5-2.5S17.5 4 16 4c-2 0-4 5-4 5" />
         </svg>`,
         label: 'Birthday or anniversary',
         desc: 'Recurring celebration on a specific date.',

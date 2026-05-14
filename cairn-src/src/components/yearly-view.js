@@ -364,9 +364,9 @@ export class YearlyView extends LitElement {
         )}
       </div>
       <div class="legend">
-        <span class="swatch"><i class="trip"></i> Trip</span>
-        <span class="swatch"><i class="event"></i> Celebration</span>
         <span class="swatch"><i class="today"></i> Today</span>
+        <span class="swatch"><i class="trip"></i> Family Activities</span>
+        <span class="swatch"><i class="event"></i> Celebrations</span>
       </div>
       ${this._activeDay
         ? html`

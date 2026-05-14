@@ -68,6 +68,51 @@ export class TripCard extends LitElement {
     super();
     this.trip = null;
     this.members = [];
+    this._resizeObs = null;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    // Re-fit the title whenever the card's container width changes
+    // (e.g. resizing the window, layout reflow when other cards load).
+    if (typeof ResizeObserver !== 'undefined') {
+      this._resizeObs = new ResizeObserver(() => this._fitTitle());
+      // Defer attach to first updated() — element isn't in the DOM yet.
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._resizeObs?.disconnect();
+  }
+
+  updated() {
+    if (this._resizeObs && this.renderRoot) {
+      const root = this.renderRoot.querySelector('article');
+      if (root && !root._observed) {
+        this._resizeObs.observe(root);
+        root._observed = true;
+      }
+    }
+    this._fitTitle();
+  }
+
+  /**
+   * Shrink the title font-size until it fits on a single line. Floors at
+   * 13px so we never go absurdly small; if it still doesn't fit at the
+   * floor, CSS overflow:hidden lets the rest of the text just get cut.
+   */
+  _fitTitle() {
+    if (!this.renderRoot) return;
+    const h3 = this.renderRoot.querySelector('h3');
+    if (!h3) return;
+    h3.style.fontSize = '';
+    let size = 19;
+    h3.style.fontSize = `${size}px`;
+    while (h3.scrollWidth > h3.clientWidth + 1 && size > 13) {
+      size -= 0.5;
+      h3.style.fontSize = `${size}px`;
+    }
   }
 
   static styles = css`
@@ -163,6 +208,8 @@ export class TripCard extends LitElement {
       font-size: 19px;
       font-weight: 600;
       letter-spacing: -0.015em;
+      white-space: nowrap;
+      overflow: hidden;
     }
     .location {
       color: var(--text-secondary);

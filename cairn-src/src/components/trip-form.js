@@ -821,11 +821,14 @@ export class TripForm extends LitElement {
       this._error = 'Give the trip a title.';
       return;
     }
-    if (!d.start || !d.end) {
-      this._error = 'Set both start and end dates.';
+    if (!d.start) {
+      this._error = 'Pick a start date.';
       return;
     }
-    if (d.end < d.start) {
+    // Single-day activity: when the user picks a start but no end,
+    // treat both endpoints as the same day so the save can proceed.
+    const end = d.end || d.start;
+    if (end < d.start) {
       this._error = 'End date can’t be before start date.';
       return;
     }
@@ -836,7 +839,7 @@ export class TripForm extends LitElement {
     this._error = '';
     this.dispatchEvent(
       new CustomEvent('save', {
-        detail: { ...d, title: d.title.trim(), location: d.location.trim() },
+        detail: { ...d, end, title: d.title.trim(), location: d.location.trim() },
       }),
     );
   }
@@ -897,10 +900,17 @@ export class TripForm extends LitElement {
               .start=${d.start}
               .end=${d.end}
               @range-change=${(e) => {
+                // Don't coerce end → start when the picker emits an
+                // empty end; that snaps both endpoints to the same
+                // day and breaks the hover-preview state (the picker
+                // hides hover-range when end is set). Leave end blank
+                // so the user can hover-then-click an end date; the
+                // save validation falls back to start === end via the
+                // _onSave handler.
                 this._draft = {
                   ...this._draft,
                   start: e.detail.start,
-                  end: e.detail.end || e.detail.start,
+                  end: e.detail.end ?? '',
                 };
               }}
             ></date-range-picker>
