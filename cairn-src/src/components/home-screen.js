@@ -703,86 +703,146 @@ export class HomeScreen extends LitElement {
       color: var(--charcoal);
     }
 
-    /* ── Cairn stack: stones tapered from a single pebble at top down
-       to a wide base of sub-group stones, mirroring a real cairn. Each
-       stone is a flat lozenge (border-radius via x/y ratio) with a
-       warm-sand gradient + glass highlights, sitting on a soft cast
-       shadow so the stones feel stacked rather than floated. */
+    /* ── Cairn stack: flat polished pebbles in solid colors with
+       specular highlights, mirroring the app icon. Each stone is a
+       true ellipse (border-radius 50% on a wider-than-tall box),
+       solid-colored — terracotta on top, teal below — with a soft
+       elongated upper highlight + a small specular dot, and a
+       darker inner shadow on the bottom rim for 3D shading. */
     .cairn-stack {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      padding: 18px 6px 14px;
+      gap: 14px;
+      padding: 22px 6px 20px;
+      /* Faint ground-ring under the base, like the icon's drawn
+         arc. Drawn as a soft horizontal vignette. */
+      background:
+        radial-gradient(
+          ellipse 60% 14% at 50% calc(100% - 26px),
+          rgba(61, 155, 143, 0.16) 0%,
+          rgba(61, 155, 143, 0) 70%
+        );
     }
     .stone {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+    .pebble {
       position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      padding: 10px 18px;
-      cursor: pointer;
-      background: var(--gradient-stone);
-      border-radius: 999px / 60%;
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 50%;
+      /* Default pebble palette (teal); specific stones override. */
+      background:
+        radial-gradient(
+          ellipse 80% 60% at 50% 30%,
+          #4eb2a4 0%,
+          #3d9b8f 55%,
+          #1f5c54 100%
+        );
       box-shadow:
-        0 8px 16px rgba(0, 0, 0, 0.38),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4),
-        inset 0 -8px 18px rgba(0, 0, 0, 0.22);
-      transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 220ms ease;
+        0 14px 24px -8px rgba(0, 0, 0, 0.55),
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        inset 0 -10px 18px rgba(0, 0, 0, 0.32),
+        inset 0 6px 14px rgba(255, 255, 255, 0.06);
+      transition: transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1),
+        filter 240ms ease;
     }
-    .stone::after {
-      /* Subtle dust-grain so the stones don't read as glass */
+    /* Elongated specular: soft white smear across the upper face. */
+    .pebble::before {
       content: '';
       position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      background-image: radial-gradient(
-        rgba(255, 255, 255, 0.06) 1px,
-        transparent 1px
+      top: 16%;
+      left: 18%;
+      right: 18%;
+      height: 22%;
+      border-radius: 50%;
+      background: radial-gradient(
+        ellipse 100% 100% at 50% 50%,
+        rgba(255, 255, 255, 0.55) 0%,
+        rgba(255, 255, 255, 0.18) 55%,
+        rgba(255, 255, 255, 0) 100%
       );
-      background-size: 4px 4px;
-      mix-blend-mode: overlay;
+      filter: blur(2px);
       pointer-events: none;
     }
-    .stone:hover {
-      transform: translateY(-2px) rotate(var(--lean, 0deg));
-      box-shadow:
-        0 12px 22px rgba(0, 0, 0, 0.45),
-        inset 0 1px 0 rgba(255, 255, 255, 0.45),
-        inset 0 -8px 18px rgba(0, 0, 0, 0.22);
+    /* Small bright catchlight dot, upper-left. */
+    .pebble::after {
+      content: '';
+      position: absolute;
+      top: 18%;
+      left: 24%;
+      width: 8%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+      pointer-events: none;
     }
-    .stone-self {
-      transform: rotate(-1.5deg);
-      --lean: -1.5deg;
-      padding: 8px 16px;
+    .stone:hover .pebble {
+      transform: translateY(-2px);
+      filter: brightness(1.04);
     }
-    .stone-family {
-      transform: rotate(1deg);
-      --lean: 1deg;
-      min-width: 240px;
+    .pebble-self {
+      width: 120px;
+      height: 50px;
+      background:
+        radial-gradient(
+          ellipse 80% 60% at 50% 30%,
+          #c87a5e 0%,
+          #a05d3e 55%,
+          #6b3a25 100%
+        );
     }
-    .stone-extended {
-      transform: rotate(-1deg);
-      --lean: -1deg;
-      min-width: 320px;
+    .pebble-family {
+      width: 240px;
+      height: 78px;
     }
-    .stone-label {
-      font-family: var(--font-display);
-      font-weight: 600;
-      font-size: 11px;
-      color: rgba(34, 22, 14, 0.7);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      white-space: nowrap;
+    .pebble-extended {
+      width: 320px;
+      height: 92px;
+      background:
+        radial-gradient(
+          ellipse 80% 60% at 50% 30%,
+          #45a397 0%,
+          #348177 55%,
+          #194c45 100%
+        );
+    }
+    .pebble-subgroup {
+      width: 140px;
+      height: 54px;
+    }
+    /* Sub-group palette rotation — alternate terracotta + teal so the
+       base row reads as varied pebbles, not one repeated colour. */
+    .subgroup-row .stone:nth-child(odd) .pebble {
+      background:
+        radial-gradient(
+          ellipse 80% 60% at 50% 30%,
+          #c87a5e 0%,
+          #a05d3e 55%,
+          #6b3a25 100%
+        );
     }
     .stone-chips {
       display: inline-flex;
       align-items: center;
+      position: relative;
+      z-index: 1;
     }
     .stone-chips member-chip {
-      box-shadow: 0 0 0 2px rgba(232, 220, 200, 0.95);
+      box-shadow:
+        0 0 0 2px rgba(245, 232, 210, 0.95),
+        0 2px 4px rgba(0, 0, 0, 0.35);
       border-radius: 999px;
       margin-left: -8px;
       transition: transform 180ms ease;
@@ -794,68 +854,68 @@ export class HomeScreen extends LitElement {
       transform: translateY(-1px);
     }
     .stone-more {
-      font-size: 11.5px;
-      font-weight: 600;
-      color: rgba(34, 22, 14, 0.65);
-      margin-left: 4px;
+      margin-left: 6px;
+      padding: 2px 7px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.28);
+      border-radius: 999px;
       font-variant-numeric: tabular-nums;
+      box-shadow: 0 0 0 2px rgba(245, 232, 210, 0.85);
     }
-    /* Empty extended/subgroup stones: hollow + dashed so they invite
-       a click without looking finished. */
-    .stone-empty {
+    .stone-label {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 10.5px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      white-space: nowrap;
+    }
+    /* Empty stones: hollow dashed ellipse — invites a click without
+       breaking the pebble silhouette. */
+    .pebble-empty {
       background: transparent;
       border: 1.5px dashed rgba(255, 248, 235, 0.22);
       box-shadow: none;
       color: var(--text-tertiary);
-      font-size: 12.5px;
+      font-size: 12px;
       font-style: italic;
+      padding: 0 18px;
     }
-    .stone-empty:hover {
+    .pebble-empty::before,
+    .pebble-empty::after {
+      display: none;
+    }
+    .stone:hover .pebble-empty {
+      transform: none;
       border-color: rgba(255, 248, 235, 0.4);
       color: var(--text-secondary);
-      box-shadow: none;
-    }
-    .stone-empty::after {
-      display: none;
+      filter: none;
     }
     .subgroup-row {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 10px 14px;
+      gap: 16px 18px;
       margin-top: 4px;
       max-width: 100%;
     }
-    .stone-subgroup {
-      padding: 8px 14px;
-      min-width: 130px;
-    }
-    .stone-subgroup .stone-label {
-      font-size: 10.5px;
-    }
-    /* Mobile: stones get slimmer so they still fit the column */
     @media (max-width: 560px) {
-      .stone-family {
-        min-width: 200px;
-      }
-      .stone-extended {
-        min-width: 240px;
-      }
-      .subgroup-row {
-        gap: 8px;
-      }
-      .stone-subgroup {
-        min-width: 110px;
-        padding: 7px 12px;
-      }
+      .pebble-self { width: 100px; height: 44px; }
+      .pebble-family { width: 200px; height: 66px; }
+      .pebble-extended { width: 240px; height: 76px; }
+      .pebble-subgroup { width: 120px; height: 48px; }
+      .subgroup-row { gap: 12px; }
     }
     .cairn-meta {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 14px;
-      margin-top: 14px;
-      padding-top: 12px;
+      margin-top: 18px;
+      padding-top: 14px;
       border-top: 1px dashed rgba(255, 248, 235, 0.1);
     }
     .cairn-meta button {
@@ -1100,34 +1160,33 @@ export class HomeScreen extends LitElement {
    * on the stone itself so the user clicks the visual rather than
    * hunting for a separate "+ Invite" button.
    */
-  _renderStone({ label, members, klass, emptyLabel, onClick, maxChips = 6 }) {
+  _renderStone({ label, members, pebbleClass, emptyLabel, onClick, maxChips = 6 }) {
     if (!members || members.length === 0) {
       return html`
-        <button
-          class="stone ${klass} stone-empty"
-          @click=${onClick}
-          title=${emptyLabel}
-        >
-          <span>${emptyLabel}</span>
+        <button class="stone" @click=${onClick} title=${emptyLabel}>
+          <span class="pebble ${pebbleClass} pebble-empty">${emptyLabel}</span>
+          <span class="stone-label">${label}</span>
         </button>
       `;
     }
     const shown = members.slice(0, maxChips);
     const extra = members.length - shown.length;
     return html`
-      <button class="stone ${klass}" @click=${onClick} title="${label} — manage members">
-        <span class="stone-chips">
-          ${shown.map(
-            (m) => html`
-              <member-chip
-                .name=${m.displayName}
-                .photo=${m.photoURL ?? ''}
-                .hue=${m.hue}
-                size="26"
-              ></member-chip>
-            `,
-          )}
-          ${extra > 0 ? html`<span class="stone-more">+${extra}</span>` : ''}
+      <button class="stone" @click=${onClick} title="${label} — manage members">
+        <span class="pebble ${pebbleClass}">
+          <span class="stone-chips">
+            ${shown.map(
+              (m) => html`
+                <member-chip
+                  .name=${m.displayName}
+                  .photo=${m.photoURL ?? ''}
+                  .hue=${m.hue}
+                  size="26"
+                ></member-chip>
+              `,
+            )}
+            ${extra > 0 ? html`<span class="stone-more">+${extra}</span>` : ''}
+          </span>
         </span>
         <span class="stone-label">${label}</span>
       </button>
@@ -1669,42 +1728,44 @@ export class HomeScreen extends LitElement {
               );
               return html`
                 <div class="cairn-stack">
-                  <!-- Top: you -->
+                  <!-- Top: you (terracotta pebble) -->
                   <button
-                    class="stone stone-self"
+                    class="stone"
                     @click=${() => (this._profileOpen = true)}
                     title="Your profile"
                   >
-                    <span class="stone-chips">
-                      <member-chip
-                        .name=${me?.displayName ?? this.user?.displayName ?? 'You'}
-                        .photo=${me?.photoURL ?? this.user?.photoURL ?? ''}
-                        .hue=${me?.hue ?? 198}
-                        size="28"
-                      ></member-chip>
+                    <span class="pebble pebble-self">
+                      <span class="stone-chips">
+                        <member-chip
+                          .name=${me?.displayName ?? this.user?.displayName ?? 'You'}
+                          .photo=${me?.photoURL ?? this.user?.photoURL ?? ''}
+                          .hue=${me?.hue ?? 198}
+                          size="28"
+                        ></member-chip>
+                      </span>
                     </span>
                     <span class="stone-label">You</span>
                   </button>
 
-                  <!-- Family (immediate minus self) -->
+                  <!-- Family (teal pebble) -->
                   ${this._renderStone({
                     label: 'Family',
                     members: familyMembers,
-                    klass: 'stone-family',
+                    pebbleClass: 'pebble-family',
                     emptyLabel: '+ Add co-parent or child',
                     onClick: () => (this._membersOpen = true),
                   })}
 
-                  <!-- Extended -->
+                  <!-- Extended (deeper teal, larger) -->
                   ${this._renderStone({
                     label: 'Extended',
                     members: extended,
-                    klass: 'stone-extended',
+                    pebbleClass: 'pebble-extended',
                     emptyLabel: '+ Invite the grandparents',
                     onClick: () => (this._membersOpen = true),
                   })}
 
-                  <!-- Sub-group base row: one stone per named group -->
+                  <!-- Sub-group base row -->
                   ${subGroupEntries.length > 0
                     ? html`
                         <div class="subgroup-row">
@@ -1715,7 +1776,7 @@ export class HomeScreen extends LitElement {
                             return this._renderStone({
                               label: g.name ?? 'Group',
                               members: groupMembers,
-                              klass: 'stone-subgroup',
+                              pebbleClass: 'pebble-subgroup',
                               emptyLabel: `${g.name ?? 'Group'} (empty)`,
                               onClick: () => (this._membersOpen = true),
                               maxChips: 4,
