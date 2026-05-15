@@ -27,6 +27,10 @@ export class TripForm extends LitElement {
     open: { type: Boolean, reflect: true },
     trip: { type: Object },
     members: { type: Array },
+    /** Extended-family ring members (in-laws / grandparents) — Cairn
+     *  ring minus PP household. Tagging one as an attendee explicitly
+     *  elevates trip visibility to "extended" (reversible). */
+    extendedMembers: { type: Array },
     currentUid: { type: String },
     familyId: { type: String },
     busy: { type: Boolean },
@@ -34,6 +38,11 @@ export class TripForm extends LitElement {
     formMode: { type: String },
     /** family.subGroups map for the "visible to which sub-groups" picker. */
     subGroups: { type: Object },
+    /** True when WE auto-elevated visibility to "extended" because an
+     *  extended member was tagged — lets us revert to "family" if the
+     *  last extended attendee is removed, and surfaces the inline note.
+     *  Cleared the moment the user picks visibility manually. */
+    _visibilityAutoExtended: { state: true },
     _draft: { state: true },
     _error: { state: true },
     _previewing: { state: true },
@@ -54,6 +63,8 @@ export class TripForm extends LitElement {
     this.open = false;
     this.trip = null;
     this.members = [];
+    this.extendedMembers = [];
+    this._visibilityAutoExtended = false;
     this.currentUid = '';
     this.familyId = '';
     this.busy = false;
@@ -154,6 +165,12 @@ export class TripForm extends LitElement {
     if (changed.has('trip') || changed.has('open')) {
       if (this.open) {
         this._draft = this._draftFromTrip(this.trip);
+        // Fresh form session — clear the auto-elevate flag so the
+        // "set to Extended because…" note never carries over from a
+        // previously-edited trip. (An existing trip already saved as
+        // Extended just shows Extended selected, no note — correct:
+        // we didn't auto-elevate it this session.)
+        this._visibilityAutoExtended = false;
         // If we're opening an existing trip that has a lodging URL but
         // no cover image, auto-refetch + auto-save. Catches trips
         // created before the previewUrl Cloud Function was deployed.
@@ -538,6 +555,25 @@ export class TripForm extends LitElement {
       flex-wrap: wrap;
       gap: 8px;
     }
+    .att-group-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin: 12px 0 6px;
+    }
+    .vis-note {
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--text-secondary);
+      background: rgba(198, 123, 92, 0.10);
+      border: 1px solid rgba(198, 123, 92, 0.28);
+      border-radius: 10px;
+      padding: 8px 10px;
+    }
+    .vis-note strong { color: var(--text-primary); font-weight: 700; }
     .att-chip {
       display: inline-flex;
       align-items: center;
@@ -870,6 +906,18 @@ export class TripForm extends LitElement {
     }
   }
 
+  _isExtendedUid(uid) {
+    return (this.extendedMembers ?? []).some((m) => m.uid === uid);
+  }
+
+  /** Explicit visibility pick (segmented control). A manual choice
+   *  always wins — clear the auto-elevate flag so we never silently
+   *  revert a visibility the user deliberately set. */
+  _setVisibility(v) {
+    this._visibilityAutoExtended = false;
+    this._set('visibility', v);
+  }
+
   _toggleAttendee(uid) {
     const has = this._draft.attendees.includes(uid);
     const attendees = has
@@ -878,7 +926,26 @@ export class TripForm extends LitElement {
     // Remove from viewers if newly attending (redundant once you're going).
     let viewers = this._draft.viewers ?? [];
     if (!has) viewers = viewers.filter((id) => id !== uid);
-    this._draft = { ...this._draft, attendees, viewers };
+
+    let visibility = this._draft.visibility ?? 'family';
+    if (!has && this._isExtendedUid(uid) && visibility !== 'extended') {
+      // Tagging an in-law/grandparent → explicitly elevate so the trip
+      // is actually visible to them. Surfaced via the inline note +
+      // the Visibility control switching to Extended (not silent).
+      visibility = 'extended';
+      this._visibilityAutoExtended = true;
+    } else if (has && this._visibilityAutoExtended) {
+      // Removed an attendee — if no extended members remain tagged and
+      // WE were the ones who elevated, revert to "family". A manual
+      // visibility pick clears the flag so this never overrides intent.
+      const anyExtendedLeft = attendees.some((id) => this._isExtendedUid(id));
+      if (!anyExtendedLeft) {
+        visibility = 'family';
+        this._visibilityAutoExtended = false;
+      }
+    }
+
+    this._draft = { ...this._draft, attendees, viewers, visibility };
   }
 
   _toggleViewer(uid) {
@@ -1023,13 +1090,20 @@ export class TripForm extends LitElement {
                     (v) => html`
                       <button
                         class=${d.visibility === v ? 'active' : ''}
-                        @click=${() => this._set('visibility', v)}
+                        @click=${() => this._setVisibility(v)}
                       >
                         ${v === 'personal' ? 'Just me' : v === 'family' ? 'Family' : 'Extended'}
                       </button>
                     `,
                   )}
                 </div>
+                ${this._visibilityAutoExtended
+                  ? html`<div class="vis-note">
+                      Set to <strong>Extended</strong> because you tagged
+                      extended family — they'll see this trip. Remove them
+                      or pick a different visibility to change it.
+                    </div>`
+                  : ''}
               </div>
               <div class="field">
                 <label>Who's going</label>
@@ -1051,6 +1125,29 @@ export class TripForm extends LitElement {
                     `,
                   )}
                 </div>
+                ${(this.extendedMembers ?? []).length > 0
+                  ? html`
+                      <div class="att-group-label">Extended family</div>
+                      <div class="attendees">
+                        ${this.extendedMembers.map(
+                          (m) => html`
+                            <div
+                              class="att-chip ${d.attendees.includes(m.uid) ? 'on' : ''}"
+                              @click=${() => this._toggleAttendee(m.uid)}
+                            >
+                              <member-chip
+                                .name=${m.displayName}
+                                .photo=${m.photoURL ?? ''}
+                                .hue=${m.hue}
+                                size="22"
+                              ></member-chip>
+                              ${m.displayName}
+                            </div>
+                          `,
+                        )}
+                      </div>
+                    `
+                  : ''}
               </div>
               ${this.formMode !== 'activity'
                 ? html`

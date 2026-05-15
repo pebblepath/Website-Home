@@ -2151,6 +2151,7 @@ export class HomeScreen extends LitElement {
         ?open=${this._formOpen}
         .trip=${this._formTrip}
         .members=${immediate}
+        .extendedMembers=${this._liveExtended()}
         .currentUid=${this.user?.uid ?? ''}
         .familyId=${this.family?.id ?? ''}
         .busy=${this._formBusy}

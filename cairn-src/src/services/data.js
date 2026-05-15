@@ -187,6 +187,7 @@ class FamilyDataStore extends EventTarget {
             };
           })
           .sort((a, b) => String(a.start).localeCompare(String(b.start)));
+        this._backfillVisibleTo('trips', snap.docs);
         this._emit();
       },
       (err) => {
@@ -208,12 +209,41 @@ class FamilyDataStore extends EventTarget {
               updatedAt: data.updatedAt?.toDate?.() ?? null,
             };
           });
+        this._backfillVisibleTo('familyEvents', snap.docs);
         this._emit();
       },
       (err) => {
         console.warn('[Cairn] familyEvents subscription error:', err.code, err.message);
       },
     );
+  }
+
+  /**
+   * 2026-05-15 — lazy migration: stamp `visibleTo` onto trip /
+   * familyEvent docs that predate it, so stage-2 enforcement (tighter
+   * rule + `array-contains` query) can be switched on without legacy
+   * docs vanishing from the list. Fire-and-forget; idempotent (skips
+   * docs that already have the array); per-doc guard prevents write
+   * storms across rapid snapshots, with retry allowed on failure.
+   */
+  _backfillVisibleTo(collName, rawDocs) {
+    if (!db || !this._currentFamilyId) return;
+    const fam = this.state.family;
+    if (!fam) return; // need the member arrays to compute the audience
+    if (!this._vtBackfilled) this._vtBackfilled = new Set();
+    for (const d of rawDocs) {
+      const data = d.data();
+      if (Array.isArray(data.visibleTo)) continue;
+      const key = `${collName}/${d.id}`;
+      if (this._vtBackfilled.has(key)) continue;
+      this._vtBackfilled.add(key);
+      updateDoc(doc(db, 'families', this._currentFamilyId, collName, d.id), {
+        visibleTo: computeVisibleTo(data.visibility ?? 'family', fam, data.createdBy),
+      }).catch((e) => {
+        this._vtBackfilled.delete(key); // allow retry on the next snapshot
+        console.warn(`[Cairn] visibleTo backfill failed (${key}):`, e?.code, e?.message);
+      });
+    }
   }
 
   /**
@@ -229,6 +259,13 @@ class FamilyDataStore extends EventTarget {
       ...rest,
       updatedAt: serverTimestamp(),
     };
+    // Stage 1 (additive — no rule/query change yet): always carry an
+    // accurate read-audience so stage 2 can flip enforcement on safely.
+    payload.visibleTo = computeVisibleTo(
+      rest.visibility ?? 'family',
+      this.state.family,
+      rest.createdBy ?? uid, // existing creator on update; this user on create
+    );
     if (id) {
       await updateDoc(doc(db, 'families', this._currentFamilyId, 'trips', id), payload);
       return id;
@@ -254,6 +291,13 @@ class FamilyDataStore extends EventTarget {
     if (!uid) throw new Error('Not signed in.');
     const { id, createdAt, updatedAt, ...rest } = event;
     const payload = { ...rest, updatedAt: serverTimestamp() };
+    // Stage 1 (additive) — parity with saveTrip so stage-2 enforcement
+    // can cover /familyEvents too.
+    payload.visibleTo = computeVisibleTo(
+      rest.visibility ?? 'family',
+      this.state.family,
+      rest.createdBy ?? uid,
+    );
     if (id) {
       await updateDoc(doc(db, 'families', this._currentFamilyId, 'familyEvents', id), payload);
       return id;
@@ -670,6 +714,31 @@ export function deriveExtendedMembers(uid, family) {
     hue = (hue + 47) % 360;
   }
   return out;
+}
+
+/**
+ * 2026-05-15 — materialized read-audience for a trip / family-event,
+ * so visibility can be ENFORCED by Firestore rules (rules can't filter
+ * list queries, so the gating set must live on the doc — same pattern
+ * the codebase uses for per-user scoping).
+ *   - personal → just the owner
+ *   - family   → the PP household (memberIds) + owner
+ *   - extended → the whole Cairn ring (memberIds ∪ cairnMemberIds) + owner
+ * The owner is always included so a Cairn-only creator (empty memberIds)
+ * never loses sight of their own trip. Recompute on every save; a
+ * lazy backfill (see `_backfillVisibleTo`) populates legacy docs before
+ * the stage-2 rule/query switch so nothing vanishes mid-migration.
+ */
+export function computeVisibleTo(visibility, family, ownerUid) {
+  const memberIds = family?.memberIds ?? [];
+  const cairnIds = family?.cairnMemberIds ?? [];
+  const owner = ownerUid ? [ownerUid] : [];
+  if (visibility === 'personal') return [...new Set(owner)];
+  if (visibility === 'extended') {
+    return [...new Set([...memberIds, ...cairnIds, ...owner])];
+  }
+  // 'family' + any unknown/missing value → PP household only.
+  return [...new Set([...memberIds, ...owner])];
 }
 
 /** Cairn invite code generator. Format: CAIRN-XXXX (4 chars). */
