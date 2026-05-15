@@ -23,6 +23,8 @@ import './glass-button.js';
  *                 the parent (app-shell) wires this into the existing
  *                 join-family flow.
  */
+const PENDING_LOGIN_KEY = 'cairn:pendingLoginIntent';
+
 export class OnboardingWizard extends LitElement {
   static properties = {
     user: { type: Object },
@@ -31,6 +33,11 @@ export class OnboardingWizard extends LitElement {
     _familyName: { state: true },
     _busy: { state: true },
     _error: { state: true },
+    /** 'welcome' (default — brand-new user) or 'recovery' (signed-in
+     *  user came in via Login but has no family pointer). Affects only
+     *  the choose-step heading + lede so the message lands as
+     *  "we couldn't find your family" instead of "let's get you set up". */
+    _flavor: { state: true },
   };
 
   constructor() {
@@ -41,6 +48,16 @@ export class OnboardingWizard extends LitElement {
     this._familyName = '';
     this._busy = false;
     this._error = '';
+    this._flavor = 'welcome';
+    // Detect login-intent flag the register-screen stashed when the
+    // user clicked the Sign-in card. Consumed-and-cleared here so a
+    // page refresh doesn't keep us in recovery mode.
+    try {
+      if (localStorage.getItem(PENDING_LOGIN_KEY) === '1') {
+        this._flavor = 'recovery';
+        localStorage.removeItem(PENDING_LOGIN_KEY);
+      }
+    } catch { /* private mode */ }
   }
 
   willUpdate(changed) {
@@ -319,11 +336,18 @@ export class OnboardingWizard extends LitElement {
 
   _renderChoose() {
     const firstName = (this.user?.displayName ?? '').trim().split(/\s+/)[0] || 'there';
+    const isRecovery = this._flavor === 'recovery';
+    const heading = isRecovery
+      ? `Hi ${firstName} — we couldn't find a family on your account.`
+      : `Welcome, ${firstName}.`;
+    const lede = isRecovery
+      ? 'Join an existing family with your invite code, or start a new one.'
+      : "Let's get you all set up.";
     return html`
       <div class="wrap">
         <glass-panel padding="lg" variant="strong" lifted>
-          <h1>Welcome, ${firstName}.</h1>
-          <p class="lede">Let's get you all set up.</p>
+          <h1>${heading}</h1>
+          <p class="lede">${lede}</p>
           <div class="options">
             <button class="option" @click=${() => this._go('join')}>
               <span class="icon-cell tide">${this._iconJoin()}</span>

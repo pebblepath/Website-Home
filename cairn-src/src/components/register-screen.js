@@ -37,6 +37,7 @@ import './cairn-mark.js';
 
 const PENDING_CREATE_KEY = 'cairn:pendingCreateFamily';
 const PENDING_JOIN_KEY = 'cairn:pendingJoinCode';
+const PENDING_LOGIN_KEY = 'cairn:pendingLoginIntent';
 
 export class RegisterScreen extends LitElement {
   static properties = {
@@ -422,6 +423,18 @@ export class RegisterScreen extends LitElement {
     this.error = '';
     this._authMode = null;
     this._resetSent = false;
+    // Stash intent so app-shell can tailor the post-auth wizard heading
+    // if the user lands without a family pointer. Cleared by the wizard
+    // (or app-shell) once consumed. Only stash for the Login card —
+    // Create/Join already have their own stashes (PENDING_CREATE_KEY,
+    // PENDING_JOIN_KEY) that get consumed when the auth completes.
+    try {
+      if (step === 'login') {
+        localStorage.setItem(PENDING_LOGIN_KEY, '1');
+      } else {
+        localStorage.removeItem(PENDING_LOGIN_KEY);
+      }
+    } catch { /* private mode */ }
   }
 
   // ─── Auth handlers ────────────────────────────────────────────────
@@ -515,8 +528,8 @@ export class RegisterScreen extends LitElement {
         <button class="card" @click=${() => this._go('login')}>
           <span class="icon-cell tide" aria-hidden="true">${this._iconLogin()}</span>
           <span>
-            <div class="label">Login with PebblePath</div>
-            <div class="desc">I already have a PebblePath account.</div>
+            <div class="label">Sign in</div>
+            <div class="desc">For accounts already connected to a family.</div>
           </span>
         </button>
         <button class="card" @click=${() => this._go('create')}>

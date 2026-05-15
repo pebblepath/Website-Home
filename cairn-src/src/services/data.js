@@ -67,6 +67,17 @@ class FamilyDataStore extends EventTarget {
       // for their own household) fall through to the PP pointer.
       const fid =
         this.state.user?.cairnFamilyId ?? this.state.user?.familyId ?? null;
+      // Auto-heal: if the user doc carries NO family pointer but they
+      // are listed as a member on a family doc (PP or Cairn ring), back-
+      // fill the pointer so future sign-ins land them on the dashboard
+      // directly. Covers the "half-joined" state where joinFamilyAsCairn
+      // wrote to family.cairnMemberIds but the /users upsert silently
+      // failed, or the user doc was wiped and re-created without family
+      // metadata. Fire-and-forget — the listener will fire again with
+      // the populated pointer once the setDoc lands.
+      if (!fid && this.state.user) {
+        this._healFamilyPointer(uid);
+      }
       if (fid !== this._currentFamilyId) {
         this._currentFamilyId = fid;
         this._unsubFamily?.();
@@ -85,6 +96,58 @@ class FamilyDataStore extends EventTarget {
       }
       this._emit();
     });
+  }
+
+  /**
+   * Reconcile a signed-in user's family pointer when /users is missing
+   * `familyId` / `cairnFamilyId` but the user IS already a member of
+   * some family doc. Queries by `cairnMemberIds array-contains` first
+   * (the more common path on Cairn web), then falls back to PP
+   * `memberIds`. Writes the pointer back to /users so the next sign-in
+   * lands the user directly on the dashboard. Guarded against re-entry
+   * and silently no-ops on errors so a permission-denied or network
+   * blip never breaks the dashboard.
+   */
+  async _healFamilyPointer(uid) {
+    if (this._healing) return;
+    this._healing = true;
+    try {
+      const cairnQ = query(
+        collection(db, 'families'),
+        where('cairnMemberIds', 'array-contains', uid),
+      );
+      const cairnSnap = await getDocs(cairnQ);
+      if (!cairnSnap.empty) {
+        await setDoc(
+          doc(db, 'users', uid),
+          {
+            cairnFamilyId: cairnSnap.docs[0].id,
+            updatedAt: serverTimestamp(),
+          },
+          { merge: true },
+        );
+        return;
+      }
+      const ppQ = query(
+        collection(db, 'families'),
+        where('memberIds', 'array-contains', uid),
+      );
+      const ppSnap = await getDocs(ppQ);
+      if (!ppSnap.empty) {
+        await setDoc(
+          doc(db, 'users', uid),
+          {
+            familyId: ppSnap.docs[0].id,
+            updatedAt: serverTimestamp(),
+          },
+          { merge: true },
+        );
+      }
+    } catch (e) {
+      console.warn('[Cairn] auto-heal family pointer failed:', e?.code, e?.message);
+    } finally {
+      this._healing = false;
+    }
   }
 
   _subscribeFamily(familyId) {
