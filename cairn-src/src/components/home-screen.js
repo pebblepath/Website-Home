@@ -1161,36 +1161,10 @@ export class HomeScreen extends LitElement {
   _filteredTrips() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const filtered = this._circleTrips().filter((t) => {
+    return this._circleTrips().filter((t) => {
       if (!t.end) return true;
       return parseLocalDate(t.end) >= today;
     });
-    // Temporary diagnostic — surface trip-count + filter state on
-    // each render so we can pin down whether trips are missing from
-    // the listener, the visibility filter, or the date filter.
-    // Remove once the user confirms the feed is back.
-    if (typeof window !== 'undefined') {
-      window.__cairnDebug = {
-        uid: this.user?.uid,
-        familyId: this.family?.id,
-        memberIds: this.family?.memberIds,
-        cairnMemberIds: this.family?.cairnMemberIds,
-        rawTrips: (this.trips ?? []).length,
-        afterCircle: this._circleTrips().length,
-        afterDate: filtered.length,
-        sampleTrip: this.trips?.[0]
-          ? {
-              id: this.trips[0].id,
-              title: this.trips[0].title,
-              start: this.trips[0].start,
-              end: this.trips[0].end,
-              visibility: this.trips[0].visibility,
-              attendees: this.trips[0].attendees,
-            }
-          : null,
-      };
-    }
-    return filtered;
   }
 
   /** Trip visibility resolver — decides whether the viewer should see

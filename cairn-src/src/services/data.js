@@ -57,12 +57,16 @@ class FamilyDataStore extends EventTarget {
     this._unsubUser = onSnapshot(doc(db, 'users', uid), (snap) => {
       this.userDocResolved = true;
       this.state.user = snap.exists() ? { id: snap.id, ...snap.data() } : null;
-      // PebblePath users have `familyId`. Cairn-only users (extended family
-      // who joined via invite) have `cairnFamilyId` instead — keeps the two
-      // app's family-membership semantics cleanly separated so a Cairn-only
-      // user installing PP later doesn't trip PP's "you're a co-parent" UX.
+      // Cairn-specific family pointer wins: a user who has BOTH `familyId`
+      // (their own PebblePath household) AND `cairnFamilyId` (a relative's
+      // family they were invited to as extended Cairn-ring) wants to see
+      // the relative's family when they visit Cairn web. Without this
+      // priority, a PP parent who joins a parent-in-law's Cairn ring would
+      // silently keep loading their own family + see permission-denied on
+      // the joined family's trips. Users with only `familyId` (Cairn-only
+      // for their own household) fall through to the PP pointer.
       const fid =
-        this.state.user?.familyId ?? this.state.user?.cairnFamilyId ?? null;
+        this.state.user?.cairnFamilyId ?? this.state.user?.familyId ?? null;
       if (fid !== this._currentFamilyId) {
         this._currentFamilyId = fid;
         this._unsubFamily?.();
@@ -300,15 +304,7 @@ class FamilyDataStore extends EventTarget {
     const uid = auth?.currentUser?.uid;
     if (!uid) throw new Error('Not signed in.');
 
-    console.log('[Cairn join] starting', { code, uid });
     const family = await this.findFamilyByCairnCode(code);
-    console.log('[Cairn join] family lookup result', family ? {
-      id: family.id,
-      name: family.name,
-      memberIds: family.memberIds,
-      cairnMemberIds: family.cairnMemberIds,
-      cairnInviteCodeExpiresAt: family.cairnInviteCodeExpiresAt,
-    } : null);
     if (!family) {
       const err = new Error('Invite code not found.');
       err.code = 'not-found';
@@ -364,21 +360,11 @@ class FamilyDataStore extends EventTarget {
 
     // Atomic narrow update — matches isJoiningOwnUidAsCairn() exactly:
     // only cairnMemberIds, memberProfiles, updatedAt change.
-    console.log('[Cairn join] writing family update', {
-      familyId: family.id,
-      newCairnMemberIds: [...beforeCairn, uid],
+    await updateDoc(doc(db, 'families', family.id), {
+      cairnMemberIds: [...beforeCairn, uid],
+      [`memberProfiles.${uid}`]: profile,
+      updatedAt: serverTimestamp(),
     });
-    try {
-      await updateDoc(doc(db, 'families', family.id), {
-        cairnMemberIds: [...beforeCairn, uid],
-        [`memberProfiles.${uid}`]: profile,
-        updatedAt: serverTimestamp(),
-      });
-      console.log('[Cairn join] family update OK');
-    } catch (err) {
-      console.error('[Cairn join] family update FAILED', err.code, err.message);
-      throw err;
-    }
 
     // Upsert user doc with a PP-compatible shape so future PP iOS reads
     // decode cleanly. `cairnFamilyId` is what Cairn uses to subscribe.
