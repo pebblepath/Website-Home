@@ -300,7 +300,15 @@ class FamilyDataStore extends EventTarget {
     const uid = auth?.currentUser?.uid;
     if (!uid) throw new Error('Not signed in.');
 
+    console.log('[Cairn join] starting', { code, uid });
     const family = await this.findFamilyByCairnCode(code);
+    console.log('[Cairn join] family lookup result', family ? {
+      id: family.id,
+      name: family.name,
+      memberIds: family.memberIds,
+      cairnMemberIds: family.cairnMemberIds,
+      cairnInviteCodeExpiresAt: family.cairnInviteCodeExpiresAt,
+    } : null);
     if (!family) {
       const err = new Error('Invite code not found.');
       err.code = 'not-found';
@@ -356,11 +364,21 @@ class FamilyDataStore extends EventTarget {
 
     // Atomic narrow update — matches isJoiningOwnUidAsCairn() exactly:
     // only cairnMemberIds, memberProfiles, updatedAt change.
-    await updateDoc(doc(db, 'families', family.id), {
-      cairnMemberIds: [...beforeCairn, uid],
-      [`memberProfiles.${uid}`]: profile,
-      updatedAt: serverTimestamp(),
+    console.log('[Cairn join] writing family update', {
+      familyId: family.id,
+      newCairnMemberIds: [...beforeCairn, uid],
     });
+    try {
+      await updateDoc(doc(db, 'families', family.id), {
+        cairnMemberIds: [...beforeCairn, uid],
+        [`memberProfiles.${uid}`]: profile,
+        updatedAt: serverTimestamp(),
+      });
+      console.log('[Cairn join] family update OK');
+    } catch (err) {
+      console.error('[Cairn join] family update FAILED', err.code, err.message);
+      throw err;
+    }
 
     // Upsert user doc with a PP-compatible shape so future PP iOS reads
     // decode cleanly. `cairnFamilyId` is what Cairn uses to subscribe.
