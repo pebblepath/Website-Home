@@ -35,8 +35,8 @@ export class ActivityTypePicker extends LitElement {
         type: 'activity',
         tone: 'sage',
         icon: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <circle cx="12" cy="6.4" r="3"/>
-          <path d="M3 20.6c1.7-4.4 3.9-6.9 5.9-6.9 1.4 0 2.6 1 3.5 2.3 1-1.1 2-1.8 3.1-1.8 1.9 0 3.7 2.2 6.2 6.4.32.54-.06 1.2-.7 1.2H3.7c-.64 0-1.02-.66-.7-1.2z"/>
+          <path d="M15.8 7.4 21.8 19.5a1.1 1.1 0 0 1-.98 1.6H10.2z"/>
+          <path d="M9 4.6 16.5 19.5a1.1 1.1 0 0 1-.98 1.6H3.46a1.1 1.1 0 0 1-.98-1.6z"/>
         </svg>`,
         label: 'Group activity',
         desc: 'Weekend plans, outings, day trips — no lodging or flights needed.',
