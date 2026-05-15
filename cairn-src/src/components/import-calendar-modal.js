@@ -24,6 +24,13 @@ export class ImportCalendarModal extends LitElement {
     _loading: { state: true },
     _error: { state: true },
     _importing: { state: true },
+    /** Gate the Google OAuth popup behind an explicit "Connect" tap +
+     *  an expectations note. During the beta the unverified-app +
+     *  raw `…firebaseapp.com` Google screens are unavoidable (fixing
+     *  them = OAuth verification / custom auth domain, both deferred
+     *  pre-public-launch). Auto-firing the popup on open made testers
+     *  hit those screens with zero context; this primes them first. */
+    _started: { state: true },
   };
 
   constructor() {
@@ -34,12 +41,22 @@ export class ImportCalendarModal extends LitElement {
     this._loading = false;
     this._error = '';
     this._importing = false;
+    this._started = false;
   }
 
   willUpdate(changed) {
-    if (changed.has('open') && this.open && this._events.length === 0 && !this._loading) {
-      this._load();
+    // Reset to the intro step each time the modal (re)opens — do NOT
+    // auto-fire the Google popup; the user starts it from the intro.
+    if (changed.has('open') && this.open) {
+      this._started = false;
+      this._error = '';
     }
+  }
+
+  _start() {
+    if (this._loading) return;
+    this._started = true;
+    this._load();
   }
 
   async _load() {
@@ -325,6 +342,41 @@ export class ImportCalendarModal extends LitElement {
       display: flex;
       gap: 10px;
     }
+    .intro {
+      padding: 4px 2px 2px;
+    }
+    .intro-lede {
+      margin: 0 0 14px;
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .intro-lede strong { color: var(--text-primary); font-weight: 600; }
+    .note {
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 248, 235, 0.04);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: var(--text-secondary);
+      font-size: 12.5px;
+      line-height: 1.6;
+    }
+    .note strong { color: var(--text-primary); font-weight: 600; }
+    .note em { font-style: normal; color: var(--text-primary); }
+    .note code {
+      font-family: 'SF Mono', ui-monospace, monospace;
+      font-size: 11.5px;
+      background: rgba(255, 248, 235, 0.08);
+      padding: 1px 5px;
+      border-radius: 5px;
+      word-break: break-all;
+    }
+    .intro-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 18px;
+    }
   `;
 
   render() {
@@ -344,10 +396,47 @@ export class ImportCalendarModal extends LitElement {
             Tick the events you want as Cairn activities — the rest stay where they are.
           </p>
 
-          ${this._loading
+          ${!this._started
+            ? html`
+                <div class="intro">
+                  <p class="intro-lede">
+                    We'll pull the next <strong>90 days</strong> from your
+                    primary Google Calendar so you can pick which events
+                    become Cairn activities. Read-only — Cairn never edits
+                    your calendar.
+                  </p>
+                  <div class="note">
+                    <strong>During our beta:</strong> Google will show
+                    <code>pebblepath-992b6.firebaseapp.com</code> and may
+                    warn the app "isn't verified." That's expected — it's
+                    PebblePath. Pick your Google account, tap
+                    <em>Advanced → continue</em> if prompted, then grant
+                    calendar access.
+                  </div>
+                  <div class="intro-actions">
+                    <glass-button variant="ghost" @click=${this._onCancel}>
+                      Cancel
+                    </glass-button>
+                    <glass-button variant="primary" @click=${this._start}>
+                      Connect Google Calendar
+                    </glass-button>
+                  </div>
+                </div>
+              `
+            : this._loading
             ? html`<div class="loading">Loading your calendar…</div>`
             : this._error
-            ? html`<div class="error">${this._error}</div>`
+            ? html`
+                <div class="error">${this._error}</div>
+                <div class="intro-actions">
+                  <glass-button variant="ghost" @click=${this._onCancel}>
+                    Close
+                  </glass-button>
+                  <glass-button variant="primary" @click=${this._start}>
+                    Try again
+                  </glass-button>
+                </div>
+              `
             : this._events.length === 0
             ? html`<div class="empty">No events found in the next 90 days.</div>`
             : html`
