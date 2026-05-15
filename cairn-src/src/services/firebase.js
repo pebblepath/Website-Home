@@ -4,6 +4,7 @@ import {
   GoogleAuthProvider,
   OAuthProvider,
   signInWithPopup,
+  reauthenticateWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
@@ -77,13 +78,69 @@ if (calendarProvider) {
 let _calendarAccessToken = null;
 let _calendarTokenExpiresAt = 0;
 
-/** On-demand calendar scope grant + access-token return. */
+/**
+ * On-demand Google Calendar scope grant + access-token return.
+ *
+ * 2026-05-15 — ROOT-CAUSE FIX for "calendar import broken end-to-end".
+ * The previous implementation called `signInWithPopup(auth,
+ * calendarProvider)` — a full SIGN-IN — just to obtain the
+ * `calendar.readonly` scope. Cairn supports email/password, Apple AND
+ * Google sign-in, so for any user who didn't authenticate with the
+ * exact same Google account this either threw
+ * `auth/account-exists-with-different-credential` or silently switched
+ * `auth.currentUser` to a different uid mid-session (the data store
+ * then subscribed to the wrong user → permission-denied / wrong
+ * family). Net effect: broken for every non-Google user and a session-
+ * corruption hazard for Google users who picked a different account.
+ *
+ * Correct approach: `reauthenticateWithPopup` on the SAME current user
+ * (preserves the Firebase session, still returns a Google OAuth
+ * credential with the added scope). Firebase can only mint a Google
+ * access token for a user whose account is Google-linked, so non-Google
+ * users get a clear, honest failure instead of a corrupting one. (Full
+ * support for email/Apple users would require standalone Google
+ * Identity Services with a Cloud OAuth client ID — operational,
+ * tracked as a follow-up.)
+ */
 export async function connectGoogleCalendar() {
   if (!auth || !calendarProvider) throw new Error('Firebase not configured.');
   if (_calendarAccessToken && Date.now() < _calendarTokenExpiresAt - 60_000) {
     return _calendarAccessToken;
   }
-  const result = await signInWithPopup(auth, calendarProvider);
+  const user = auth.currentUser;
+  if (!user) throw new Error('Please sign in before importing your calendar.');
+
+  const isGoogleUser = (user.providerData ?? []).some(
+    (p) => p.providerId === 'google.com',
+  );
+  if (!isGoogleUser) {
+    const err = new Error(
+      "Calendar import needs a Google account. You're signed in another " +
+        "way, so Cairn can't read your Google Calendar here yet — add " +
+        'events manually for now.',
+    );
+    err.code = 'calendar/needs-google-account';
+    throw err;
+  }
+
+  let result;
+  try {
+    result = await reauthenticateWithPopup(user, calendarProvider);
+  } catch (e) {
+    if (e?.code === 'auth/user-mismatch') {
+      const err = new Error(
+        'Please choose the same Google account you use to sign in to Cairn.',
+      );
+      err.code = e.code;
+      throw err;
+    }
+    if (e?.code === 'auth/popup-closed-by-user' || e?.code === 'auth/cancelled-popup-request') {
+      const err = new Error('Calendar connection cancelled.');
+      err.code = e.code;
+      throw err;
+    }
+    throw e;
+  }
   const credential = GoogleAuthProvider.credentialFromResult(result);
   const token = credential?.accessToken;
   if (!token) throw new Error("Couldn't get a Calendar access token — try again.");

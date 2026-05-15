@@ -839,6 +839,22 @@ export async function fetchUpcomingCalendarEvents(accessToken, daysAhead = 90, m
   });
   if (!res.ok) {
     const txt = await res.text();
+    // 2026-05-15 — make the common operational failures self-diagnose
+    // instead of surfacing an opaque "Google Calendar: 403 {json}".
+    if (res.status === 401) {
+      throw new Error('Your Google session expired — connect your calendar again.');
+    }
+    if (
+      res.status === 403 &&
+      /accessNotConfigured|SERVICE_DISABLED|PERMISSION_DENIED|insufficient/i.test(txt)
+    ) {
+      throw new Error(
+        'Google Calendar access isn’t configured for this project yet. ' +
+          '(Admin: enable the Google Calendar API and add the ' +
+          'calendar.readonly scope to the OAuth consent screen in Google ' +
+          'Cloud Console.)',
+      );
+    }
     throw new Error(`Google Calendar: ${res.status} ${txt.slice(0, 160)}`);
   }
   const json = await res.json();
