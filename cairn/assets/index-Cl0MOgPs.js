@@ -2562,7 +2562,7 @@ var gt=Object.defineProperty;var mt=(d,e,t)=>e in d?gt(d,e,{enumerable:!0,config
       padding: 38px 12px;
       line-height: 1.55;
     }
-  `);customElements.define("all-trips-modal",Ee);class Fe extends D{constructor(){super(),this.open=!1,this._events=[],this._selected=new Set,this._loading=!1,this._error="",this._importing=!1}willUpdate(e){e.has("open")&&this.open&&this._events.length===0&&!this._loading&&this._load()}async _load(){var e,t,i,r,a,n;this._loading=!0,this._error="";try{const o=await at(),l=await Lt(o,90),c=new Set((k.state.trips??[]).filter(p=>p.gcalEventId).map(p=>p.gcalEventId));this._events=l.map(p=>({...p,_alreadyImported:c.has(p.id)}));const h=new Set;for(const p of this._events){if(p._alreadyImported)continue;const u=((e=p.start)==null?void 0:e.date)??((i=(t=p.start)==null?void 0:t.dateTime)==null?void 0:i.slice(0,10)),_=((r=p.end)==null?void 0:r.date)??((n=(a=p.end)==null?void 0:a.dateTime)==null?void 0:n.slice(0,10));u&&_&&_!==u&&h.add(p.id)}this._selected=h}catch(o){console.error(o),this._error=(o==null?void 0:o.message)??"Could not load calendar events."}finally{this._loading=!1}}_toggle(e){const t=new Set(this._selected);t.has(e)?t.delete(e):t.add(e),this._selected=t}_toggleAll(){const e=this._events.filter(t=>!t._alreadyImported);this._selected.size===e.length?this._selected=new Set:this._selected=new Set(e.map(t=>t.id))}async _import(){var a;if(this._importing||this._selected.size===0)return;this._importing=!0;const e=(a=w==null?void 0:w.currentUser)==null?void 0:a.uid,t=this._events.filter(n=>this._selected.has(n.id));let i=0,r=0;for(const n of t){const o=Gt(n,e);try{await k.saveTrip(o),i++}catch(l){console.error("Import failed for event",n.id,l),r++}}this._importing=!1,r===0?x(`Imported ${i} ${i===1?"activity":"activities"}.`):x(`Imported ${i}, ${r} failed.`,{duration:5e3}),this._events=[],this._selected=new Set,this.dispatchEvent(new Event("cancel"))}_onCancel(){this.dispatchEvent(new Event("cancel"))}_fmtRange(e){var h,p,u,_,f,g,m,$;const t=((h=e.start)==null?void 0:h.date)??((u=(p=e.start)==null?void 0:p.dateTime)==null?void 0:u.slice(0,10)),i=((_=e.end)==null?void 0:_.date)??((g=(f=e.end)==null?void 0:f.dateTime)==null?void 0:g.slice(0,10));if(!t)return"";const r=new Date(t);if(!i||i===t)return r.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});let a=new Date(i);(m=e.start)!=null&&m.date&&(($=e.end)!=null&&$.date)&&a.setDate(a.getDate()-1);const n=r.getMonth()===a.getMonth()&&r.getFullYear()===a.getFullYear(),o=r.getFullYear()===a.getFullYear();if(n)return`${r.getDate()}–${a.getDate()} ${r.toLocaleString("en-GB",{month:"short",year:"numeric"})}`;const l=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),c=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});return o?`${l} – ${c}`:`${r.toLocaleDateString()} – ${a.toLocaleDateString()}`}render(){if(!this.open)return s``;const e=this._events.filter(i=>!i._alreadyImported),t=e.length>0&&this._selected.size===e.length;return s`
+  `);customElements.define("all-trips-modal",Ee);class Fe extends D{constructor(){super(),this.open=!1,this._events=[],this._selected=new Set,this._loading=!1,this._error="",this._importing=!1,this._started=!1}willUpdate(e){e.has("open")&&this.open&&(this._started=!1,this._error="")}_start(){this._loading||(this._started=!0,this._load())}async _load(){var e,t,i,r,a,n;this._loading=!0,this._error="";try{const o=await at(),l=await Lt(o,90),c=new Set((k.state.trips??[]).filter(p=>p.gcalEventId).map(p=>p.gcalEventId));this._events=l.map(p=>({...p,_alreadyImported:c.has(p.id)}));const h=new Set;for(const p of this._events){if(p._alreadyImported)continue;const u=((e=p.start)==null?void 0:e.date)??((i=(t=p.start)==null?void 0:t.dateTime)==null?void 0:i.slice(0,10)),_=((r=p.end)==null?void 0:r.date)??((n=(a=p.end)==null?void 0:a.dateTime)==null?void 0:n.slice(0,10));u&&_&&_!==u&&h.add(p.id)}this._selected=h}catch(o){console.error(o),this._error=(o==null?void 0:o.message)??"Could not load calendar events."}finally{this._loading=!1}}_toggle(e){const t=new Set(this._selected);t.has(e)?t.delete(e):t.add(e),this._selected=t}_toggleAll(){const e=this._events.filter(t=>!t._alreadyImported);this._selected.size===e.length?this._selected=new Set:this._selected=new Set(e.map(t=>t.id))}async _import(){var a;if(this._importing||this._selected.size===0)return;this._importing=!0;const e=(a=w==null?void 0:w.currentUser)==null?void 0:a.uid,t=this._events.filter(n=>this._selected.has(n.id));let i=0,r=0;for(const n of t){const o=Gt(n,e);try{await k.saveTrip(o),i++}catch(l){console.error("Import failed for event",n.id,l),r++}}this._importing=!1,r===0?x(`Imported ${i} ${i===1?"activity":"activities"}.`):x(`Imported ${i}, ${r} failed.`,{duration:5e3}),this._events=[],this._selected=new Set,this.dispatchEvent(new Event("cancel"))}_onCancel(){this.dispatchEvent(new Event("cancel"))}_fmtRange(e){var h,p,u,_,f,g,m,$;const t=((h=e.start)==null?void 0:h.date)??((u=(p=e.start)==null?void 0:p.dateTime)==null?void 0:u.slice(0,10)),i=((_=e.end)==null?void 0:_.date)??((g=(f=e.end)==null?void 0:f.dateTime)==null?void 0:g.slice(0,10));if(!t)return"";const r=new Date(t);if(!i||i===t)return r.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});let a=new Date(i);(m=e.start)!=null&&m.date&&(($=e.end)!=null&&$.date)&&a.setDate(a.getDate()-1);const n=r.getMonth()===a.getMonth()&&r.getFullYear()===a.getFullYear(),o=r.getFullYear()===a.getFullYear();if(n)return`${r.getDate()}–${a.getDate()} ${r.toLocaleString("en-GB",{month:"short",year:"numeric"})}`;const l=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),c=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});return o?`${l} – ${c}`:`${r.toLocaleDateString()} – ${a.toLocaleDateString()}`}render(){if(!this.open)return s``;const e=this._events.filter(i=>!i._alreadyImported),t=e.length>0&&this._selected.size===e.length;return s`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -2575,7 +2575,17 @@ var gt=Object.defineProperty;var mt=(d,e,t)=>e in d?gt(d,e,{enumerable:!0,config
             Tick the events you want as Cairn activities — the rest stay where they are.
           </p>
 
-          ${this._loading?s`<div class="loading">Loading your calendar…</div>`:this._error?s`<div class="error">${this._error}</div>`:this._events.length===0?s`<div class="empty">No events found in the next 90 days.</div>`:s`
+          ${this._started?this._loading?s`<div class="loading">Loading your calendar…</div>`:this._error?s`
+                <div class="error">${this._error}</div>
+                <div class="intro-actions">
+                  <glass-button variant="ghost" @click=${this._onCancel}>
+                    Close
+                  </glass-button>
+                  <glass-button variant="primary" @click=${this._start}>
+                    Try again
+                  </glass-button>
+                </div>
+              `:this._events.length===0?s`<div class="empty">No events found in the next 90 days.</div>`:s`
                 <div class="list">
                   ${this._events.map(i=>s`
                       <div
@@ -2611,10 +2621,35 @@ var gt=Object.defineProperty;var mt=(d,e,t)=>e in d?gt(d,e,{enumerable:!0,config
                     </glass-button>
                   </div>
                 </div>
+              `:s`
+                <div class="intro">
+                  <p class="intro-lede">
+                    We'll pull the next <strong>90 days</strong> from your
+                    primary Google Calendar so you can pick which events
+                    become Cairn activities. Read-only — Cairn never edits
+                    your calendar.
+                  </p>
+                  <div class="note">
+                    <strong>During our beta:</strong> Google will show
+                    <code>pebblepath-992b6.firebaseapp.com</code> and may
+                    warn the app "isn't verified." That's expected — it's
+                    PebblePath. Pick your Google account, tap
+                    <em>Advanced → continue</em> if prompted, then grant
+                    calendar access.
+                  </div>
+                  <div class="intro-actions">
+                    <glass-button variant="ghost" @click=${this._onCancel}>
+                      Cancel
+                    </glass-button>
+                    <glass-button variant="primary" @click=${this._start}>
+                      Connect Google Calendar
+                    </glass-button>
+                  </div>
+                </div>
               `}
         </glass-panel>
       </div>
-    `}}b(Fe,"properties",{open:{type:Boolean,reflect:!0},_events:{state:!0},_selected:{state:!0},_loading:{state:!0},_error:{state:!0},_importing:{state:!0}}),b(Fe,"styles",S`
+    `}}b(Fe,"properties",{open:{type:Boolean,reflect:!0},_events:{state:!0},_selected:{state:!0},_loading:{state:!0},_error:{state:!0},_importing:{state:!0},_started:{state:!0}}),b(Fe,"styles",S`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -2793,6 +2828,41 @@ var gt=Object.defineProperty;var mt=(d,e,t)=>e in d?gt(d,e,{enumerable:!0,config
     .actions {
       display: flex;
       gap: 10px;
+    }
+    .intro {
+      padding: 4px 2px 2px;
+    }
+    .intro-lede {
+      margin: 0 0 14px;
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .intro-lede strong { color: var(--text-primary); font-weight: 600; }
+    .note {
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 248, 235, 0.04);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: var(--text-secondary);
+      font-size: 12.5px;
+      line-height: 1.6;
+    }
+    .note strong { color: var(--text-primary); font-weight: 600; }
+    .note em { font-style: normal; color: var(--text-primary); }
+    .note code {
+      font-family: 'SF Mono', ui-monospace, monospace;
+      font-size: 11.5px;
+      background: rgba(255, 248, 235, 0.08);
+      padding: 1px 5px;
+      border-radius: 5px;
+      word-break: break-all;
+    }
+    .intro-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 18px;
     }
   `);customElements.define("import-calendar-modal",Fe);class Ie extends D{constructor(){super(),this.open=!1,this.user=null,this.pebbleUser=null,this._name="",this._savingName=!1,this._uploadingPhoto=!1}willUpdate(e){var t;e.has("open")&&this.open&&(this._name=((t=this.user)==null?void 0:t.displayName)??"")}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _saveName(){var i,r;const e=this._name.trim();if(!e||e===(((i=this.user)==null?void 0:i.displayName)??""))return;const t=(r=w==null?void 0:w.currentUser)==null?void 0:r.uid;if(!(!t||!y)){this._savingName=!0;try{await M(A(y,"users",t),{displayName:e,updatedAt:z()});const a=k.familyId;if(a)try{await M(A(y,"families",a),{[`memberProfiles.${t}.displayName`]:e,[`memberProfiles.${t}.updatedAt`]:z(),updatedAt:z()})}catch(n){console.warn("memberProfiles fan-out failed:",n)}x("Display name updated.")}catch(a){console.error(a),x(`Couldn't save: ${a.code??a.message}`,{duration:5e3})}finally{this._savingName=!1}}}async _signOut(){confirm("Sign out of Cairn?")&&(this.dispatchEvent(new Event("cancel")),await lt())}_triggerPhotoPicker(){var e;(e=this.renderRoot.querySelector("#photo-file"))==null||e.click()}async _onPhotoChosen(e){var a,n;const t=(a=e.target.files)==null?void 0:a[0];if(e.target.value="",!t)return;if(!t.type.startsWith("image/")){x("Pick an image file (JPG, PNG, etc.).");return}if(t.size>5*1024*1024){x("Photo is too big — keep it under 5 MB.");return}const i=(n=w==null?void 0:w.currentUser)==null?void 0:n.uid,r=k.familyId;if(!i||!r||!xe){x("Can't upload yet — you need to be in a family first.");return}this._uploadingPhoto=!0;try{const o=et(xe,`families/${r}/avatars/users/${i}`);await tt(o,t,{contentType:t.type});const l=await it(o);await M(A(y,"users",i),{profilePhotoURL:l,updatedAt:z()});try{await M(A(y,"families",r),{[`memberProfiles.${i}.profilePhotoURL`]:l,[`memberProfiles.${i}.updatedAt`]:z(),updatedAt:z()})}catch(c){console.warn("memberProfiles photo fan-out failed:",c)}x("Photo updated.")}catch(o){console.error("Photo upload failed",o),x(`Upload failed: ${o.code??o.message}`,{duration:5e3})}finally{this._uploadingPhoto=!1}}render(){if(!this.open)return s``;const e=this.user,t=this._name.trim()&&this._name.trim()!==((e==null?void 0:e.displayName)??"");return s`
       <div class="backdrop" @click=${this._onCancel}></div>
@@ -6625,4 +6695,4 @@ var gt=Object.defineProperty;var mt=(d,e,t)=>e in d?gt(d,e,{enumerable:!0,config
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}b(ht,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},userDocResolved:{state:!0}});customElements.define("cairn-app",ht);
-//# sourceMappingURL=index-qd_OF3xG.js.map
+//# sourceMappingURL=index-Cl0MOgPs.js.map
