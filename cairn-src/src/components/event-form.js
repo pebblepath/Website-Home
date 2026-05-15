@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { parseLocalDate } from '../services/data.js';
 import './glass-panel.js';
 import './glass-button.js';
 import './member-chip.js';
@@ -523,8 +524,12 @@ export class EventForm extends LitElement {
 
   _monthDay(iso) {
     if (!iso) return '';
-    const d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return '';
+    // parseLocalDate keeps YYYY-MM-DD as a local calendar day.
+    // `new Date('2026-05-15')` is parsed as UTC midnight, which prints
+    // as 14 May in any timezone west of UTC — the off-by-one the user
+    // saw in the "Recurs every year" subtitle.
+    const d = parseLocalDate(iso);
+    if (!d || Number.isNaN(d.getTime())) return '';
     return d.toLocaleString('en-GB', { day: 'numeric', month: 'long' });
   }
 }

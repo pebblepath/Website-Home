@@ -88,7 +88,7 @@ export class DiscoverPebblePath extends LitElement {
     return html`
       <img class="icon" src=${iconUrl} alt="" aria-hidden="true" />
       <div class="wordmark">PebblePath</div>
-      <div class="tagline">for every little milestone</div>
+      <div class="tagline">your parenting companion</div>
       <a
         class="cta"
         href="https://apps.apple.com/app/pebblepath-ai/"
