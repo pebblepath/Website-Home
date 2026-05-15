@@ -240,7 +240,7 @@
   }
   .mobile-menu .mobile-menu-cta {
     display: inline-flex; align-items: center; gap: 8px;
-    background: white; color: var(--charcoal);
+    background: var(--terracotta, #c67b5c); color: white;
     margin-top: 18px;
     padding: 14px 32px;
     border-radius: 50px;
@@ -473,6 +473,27 @@
     box-shadow: 0 8px 24px rgba(198,123,92,0.50);
   }
   .hero-mobile-download svg { width: 18px; height: 18px; flex-shrink: 0; }
+  /* 2026-05-15 — Mobile-only Portal CTA paired with the terracotta
+     Download under the hero subhead. Ghost/translucent so Download
+     stays the primary action — same hierarchy as the nav cluster
+     (nav-cta terracotta + nav-login ghost). */
+  .hero-mobile-portal {
+    display: none;
+    align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.15); color: white;
+    padding: 14px 28px; border-radius: 50px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px; font-weight: 600;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.45);
+    backdrop-filter: blur(10px);
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  .hero-mobile-portal:hover {
+    transform: translateY(-2px);
+    background: rgba(255,255,255,0.25);
+    border-color: rgba(255,255,255,0.8);
+  }
   .btn-secondary {
     background: rgba(255,255,255,0.15); color: white;
     padding: 14px 32px; border-radius: 50px;
@@ -1985,6 +2006,7 @@
     .hero-buttons { flex-direction: column; align-items: center; gap: 10px; margin-top: 8px; }
     .hero-buttons .btn-secondary { width: 100%; max-width: 280px; text-align: center; padding: 12px 24px; font-size: 14px; }
     .hero-mobile-download { display: inline-flex; width: 100%; max-width: 280px; }
+    .hero-mobile-portal { display: inline-flex; width: 100%; max-width: 280px; }
     .scroll-cue { display: flex; }
 
     /* Center-align headers and subheaders */
@@ -2234,8 +2256,10 @@
   <a href="#showcase">The App</a>
   <a href="#intelligence">Insights</a>
   <a href="#founders">Founders</a>
-  <a href="/cairn/" class="mobile-menu-cta">
-    Family Portal
+  <!-- TODO: Once App Store ID is assigned, swap href to https://apps.apple.com/app/pebblepath-ai/id<XXXXXXXXX> -->
+  <a href="https://apps.apple.com/app/pebblepath-ai/" class="mobile-menu-cta" target="_blank" rel="noopener">
+    <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM248.6 84.7c33.5-39.8 30.4-76 29.4-89-29.6 1.7-63.8 20.1-83.3 42.7-21.5 24.2-34.1 54.1-31.4 87.6 32 2.5 61.1-13.9 85.3-41.3z"/></svg>
+    Download
   </a>
 </div>
 
@@ -2255,6 +2279,7 @@
           <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM248.6 84.7c33.5-39.8 30.4-76 29.4-89-29.6 1.7-63.8 20.1-83.3 42.7-21.5 24.2-34.1 54.1-31.4 87.6 32 2.5 61.1-13.9 85.3-41.3z"/></svg>
           Download
         </a>
+        <a href="/cairn/" class="hero-mobile-portal">Portal</a>
       </div>
     </div>
 
