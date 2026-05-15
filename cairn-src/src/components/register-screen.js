@@ -89,6 +89,12 @@ export class RegisterScreen extends LitElement {
       justify-content: center;
       min-height: 100vh;
       padding: 24px;
+      /* +50% backdrop blur for the pre-login box only. --glass-blur is
+         a CSS custom property so it cascades through the nested
+         glass-panel's shadow root; overriding it here scopes the
+         heavier frost to the register screen without touching the
+         dashboard's 24px default. */
+      --glass-blur: 36px;
     }
     .wrap {
       width: 100%;
@@ -538,7 +544,7 @@ export class RegisterScreen extends LitElement {
 
   _renderChoose() {
     return html`
-      <h1>Let's get you all set up.</h1>
+      <h1>Family Activity Portal</h1>
       <p class="lede">Visiting or Returning from PebblePath?</p>
       <div class="cards">
         <button class="card" @click=${() => this._go('login')}>

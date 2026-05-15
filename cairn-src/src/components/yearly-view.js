@@ -44,10 +44,20 @@ export class YearlyView extends LitElement {
     :host {
       display: block;
     }
+    /* Desktop: 6 columns × 2 rows so the year card's height matches
+       the monthly calendar beside it (was 4×3, which made it ~50%
+       taller than the monthly view). Narrower viewports fall back to
+       fewer columns. */
     .grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+    }
+    @media (max-width: 1024px) {
+      .grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
     }
     @media (max-width: 720px) {
       .grid {

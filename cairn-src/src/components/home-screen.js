@@ -871,7 +871,7 @@ export class HomeScreen extends LitElement {
         );
     }
     .pebble-family {
-      width: 260px;
+      width: 221px;
       height: 66px;
       background:
         radial-gradient(
@@ -895,16 +895,15 @@ export class HomeScreen extends LitElement {
     .pebble-subgroup {
       width: 150px;
       height: 50px;
-    }
-    /* Sub-group palette rotation — alternate terracotta + teal so the
-       base row reads as varied pebbles, not one repeated colour. */
-    .subgroup-row .stone:nth-child(odd) .pebble {
+      /* All sub-group pebbles share one green (matches the Family/
+         Extended teal family) — the terracotta/teal alternation read
+         as inconsistent, not intentional. */
       background:
         radial-gradient(
           ellipse 80% 60% at 50% 30%,
-          #c87a5e 0%,
-          #a05d3e 55%,
-          #6b3a25 100%
+          #46a89c 0%,
+          #348177 55%,
+          #194c45 100%
         );
     }
     .stone-chips {
