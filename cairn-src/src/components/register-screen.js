@@ -242,14 +242,15 @@ export class RegisterScreen extends LitElement {
     .back {
       background: transparent;
       border: none;
-      color: var(--text-secondary);
+      color: var(--teal-pebble);
       font: inherit;
       font-size: 13.5px;
+      font-weight: 600;
       cursor: pointer;
       padding: 4px 6px;
       align-self: flex-start;
     }
-    .back:hover { color: var(--text-primary); }
+    .back:hover { color: var(--teal-pebble); opacity: 0.75; }
 
     label {
       display: block;
@@ -748,7 +749,7 @@ export class RegisterScreen extends LitElement {
           />
         </div>
         ${this.error ? html`<div class="error">${this.error}</div>` : ''}
-        <p style="font-size:12.5px;color:var(--text-tertiary);margin:6px 0 0;">
+        <p style="font-size:12.5px;color:var(--teal-pebble);opacity:0.82;margin:6px 0 0;">
           Continue with a sign-in method — we'll create the family right
           after.
         </p>

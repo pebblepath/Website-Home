@@ -605,6 +605,31 @@ export class HomeScreen extends LitElement {
       transform: translateY(1px) scale(0.99);
     }
 
+    /* Celebrations (left) + Your Cairn (right) share the EXACT column
+       ratio of the calendars above (1fr 1.2fr, 18px gap, same 1024px
+       break) so the Celebrations card lines up flush with the monthly
+       calendar and Your Cairn lines up flush with the annual grid. */
+    .cel-cairn-row {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 18px;
+      align-items: start;
+    }
+    @media (max-width: 1024px) {
+      .cel-cairn-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .cel-cairn-col {
+      min-width: 0;
+    }
+    /* Stacked Birthdays / Anniversaries inside one card. */
+    .cel-stack-block + .cel-stack-block {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255, 248, 235, 0.08);
+    }
+
     .cal-row {
       display: grid;
       grid-template-columns: 1fr 1.2fr;
@@ -1935,80 +1960,78 @@ export class HomeScreen extends LitElement {
         </section>
 
         <section>
-          <div class="section-head">
-            <h2>Celebrations</h2>
-            <button class="link" @click=${() => this._openCreateEvent()}>+ Add event</button>
-          </div>
-          ${(() => {
-            // Defensive sort: _liveEvents already sorts by date asc, but
-            // we re-sort each filtered slice here so any future code path
-            // that mutates the list (mock data, future filters, etc.)
-            // still lands in chronological order.
-            const byDate = (a, b) => String(a.date).localeCompare(String(b.date));
-            const birthdays = filteredEvents
-              .filter((e) => e.type === 'birthday')
-              .slice()
-              .sort(byDate);
-            const anniversaries = filteredEvents
-              .filter((e) => e.type === 'anniversary')
-              .slice()
-              .sort(byDate);
-            const other = filteredEvents
-              .filter((e) => e.type !== 'birthday' && e.type !== 'anniversary')
-              .slice()
-              .sort(byDate);
-            const renderColumn = (heading, list, emptyCopy) => html`
-              <glass-panel padding="sm" variant="strong" class="cel-col">
-                <div class="cel-col-head">
-                  <span class="cel-col-title">${heading}</span>
-                </div>
-                ${list.length === 0
-                  ? html`<div class="cel-empty">${emptyCopy}</div>`
-                  : list.map(
-                      (e) => html`<event-row
-                        .event=${e}
-                        .members=${allMembers}
-                        @edit-event=${(ev) => this._openEditEvent(ev.detail)}
-                      ></event-row>`,
-                    )}
-              </glass-panel>
-            `;
-            return html`
-              <div class="cel-row">
-                ${renderColumn('Birthdays', birthdays, 'No birthdays yet.')}
-                ${renderColumn(
-                  'Anniversaries',
-                  anniversaries,
-                  'No anniversaries yet.',
-                )}
+          <div class="cel-cairn-row">
+            <!-- LEFT — Celebrations (combined Birthdays + Anniversaries
+                 stacked in one card; width matches the monthly
+                 calendar directly above it). -->
+            <div class="cel-cairn-col">
+              <div class="section-head">
+                <h2>Celebrations</h2>
+                <button class="link" @click=${() => this._openCreateEvent()}>+ Add event</button>
               </div>
-              ${other.length > 0
-                ? html`<glass-panel padding="md" variant="strong" style="margin-top:18px;">
+              ${(() => {
+                // Defensive sort: _liveEvents already sorts by date asc,
+                // but re-sort each slice so any future mutation still
+                // lands in chronological order.
+                const byDate = (a, b) =>
+                  String(a.date).localeCompare(String(b.date));
+                const birthdays = filteredEvents
+                  .filter((e) => e.type === 'birthday')
+                  .slice()
+                  .sort(byDate);
+                const anniversaries = filteredEvents
+                  .filter((e) => e.type === 'anniversary')
+                  .slice()
+                  .sort(byDate);
+                const other = filteredEvents
+                  .filter(
+                    (e) => e.type !== 'birthday' && e.type !== 'anniversary',
+                  )
+                  .slice()
+                  .sort(byDate);
+                const renderBlock = (heading, list, emptyCopy) => html`
+                  <div class="cel-stack-block">
                     <div class="cel-col-head">
-                      <span class="cel-col-title">Other</span>
+                      <span class="cel-col-title">${heading}</span>
                     </div>
-                    ${other.map(
-                      (e) => html`<event-row
-                        .event=${e}
-                        .members=${allMembers}
-                        @edit-event=${(ev) => this._openEditEvent(ev.detail)}
-                      ></event-row>`,
+                    ${list.length === 0
+                      ? html`<div class="cel-empty">${emptyCopy}</div>`
+                      : list.map(
+                          (e) => html`<event-row
+                            .event=${e}
+                            .members=${allMembers}
+                            @edit-event=${(ev) => this._openEditEvent(ev.detail)}
+                          ></event-row>`,
+                        )}
+                  </div>
+                `;
+                return html`
+                  <glass-panel padding="md" variant="strong">
+                    ${renderBlock('Birthdays', birthdays, 'No birthdays yet.')}
+                    ${renderBlock(
+                      'Anniversaries',
+                      anniversaries,
+                      'No anniversaries yet.',
                     )}
-                  </glass-panel>`
-                : ''}
-            `;
-          })()}
-        </section>
+                    ${other.length > 0
+                      ? renderBlock('Other', other, '')
+                      : ''}
+                  </glass-panel>
+                `;
+              })()}
+            </div>
 
-        <section>
-          <div class="section-head">
-            <h2>Your Cairn</h2>
-            <button class="link" @click=${() => (this._membersOpen = true)}>
-              Manage members
-            </button>
-          </div>
-          <glass-panel padding="md" variant="strong">
-            ${(() => {
+            <!-- RIGHT — Your Cairn (width matches the annual grid
+                 directly above it). -->
+            <div class="cel-cairn-col">
+              <div class="section-head">
+                <h2>Your Cairn</h2>
+                <button class="link" @click=${() => (this._membersOpen = true)}>
+                  Manage members
+                </button>
+              </div>
+              <glass-panel padding="md" variant="strong">
+                ${(() => {
               const me = immediate.find((m) => m.uid === this.user?.uid);
               // Viewer can be a PP household member (in memberIds) or
               // a Cairn-only joiner (cairnMemberIds only — extended
@@ -2147,7 +2170,9 @@ export class HomeScreen extends LitElement {
                     `}
               `;
             })()}
-          </glass-panel>
+              </glass-panel>
+            </div>
+          </div>
         </section>
 
         <discover-pebblepath></discover-pebblepath>
