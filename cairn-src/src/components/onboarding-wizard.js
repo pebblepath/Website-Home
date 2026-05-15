@@ -323,7 +323,7 @@ export class OnboardingWizard extends LitElement {
       <div class="wrap">
         <glass-panel padding="lg" variant="strong" lifted>
           <h1>Welcome, ${firstName}.</h1>
-          <p class="lede">How would you like to start with Cairn?</p>
+          <p class="lede">Let's get you all set up.</p>
           <div class="options">
             <button class="option" @click=${() => this._go('join')}>
               <span class="icon-cell tide">${this._iconJoin()}</span>
@@ -336,14 +336,14 @@ export class OnboardingWizard extends LitElement {
               <span class="icon-cell sage">${this._iconCreate()}</span>
               <span>
                 <div class="label">Start a new family</div>
-                <div class="desc">Create a Cairn family — invite the others after.</div>
+                <div class="desc">Create a family planner account.</div>
               </span>
             </button>
             <button class="option" @click=${() => this._go('download')}>
               <span class="icon-cell amber">${this._iconDownload()}</span>
               <span>
-                <div class="label">I use PebblePath on iPhone</div>
-                <div class="desc">Sign in to PebblePath first — Cairn will pick up your family automatically.</div>
+                <div class="label">I have the PebblePath app</div>
+                <div class="desc">Sign in on the app — your family will sync.</div>
               </span>
             </button>
           </div>
@@ -446,10 +446,10 @@ export class OnboardingWizard extends LitElement {
           <h1 style="margin-top:10px;">PebblePath on iPhone</h1>
           <div class="download-card">
             <p>
-              PebblePath is our iPhone app for tracking your kids'
-              milestones, daily wins, and Pebble's parenting advisor.
-              Sign up there first and your Cairn family will follow you
-              here automatically.
+              Sign in on the app — your family will sync to Cairn
+              automatically. PebblePath is our iPhone app for tracking
+              your kids' milestones, daily wins, and Pebble's
+              parenting advisor.
             </p>
             <a
               class="app-store-cta"

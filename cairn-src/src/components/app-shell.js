@@ -28,10 +28,24 @@ export class AppShell extends LitElement {
     this.loading = true;
     const params = new URLSearchParams(window.location.search);
     this.preview = params.has('preview');
+    // Dev path: `?reset=1` forces the onboarding wizard to render for
+    // the current signed-in user regardless of their existing family
+    // pointers. Also drops any stashed join code so a previous invite
+    // link doesn't snap them to the join screen. Read-only — no
+    // Firestore writes — so reloading without the flag returns the
+    // user to their normal state.
+    this._resetMode = params.has('reset');
+    if (this._resetMode) {
+      try {
+        localStorage.removeItem(PENDING_JOIN_KEY);
+      } catch {
+        /* private mode */
+      }
+    }
     // Pull join code from URL OR from a previous-session stash (set when
     // user clicked an invite link while signed out — we resume after auth).
     const urlJoin = params.get('join');
-    if (urlJoin) {
+    if (urlJoin && !this._resetMode) {
       try {
         localStorage.setItem(PENDING_JOIN_KEY, urlJoin);
       } catch {
@@ -39,12 +53,14 @@ export class AppShell extends LitElement {
       }
     }
     let pending = null;
-    try {
-      pending = localStorage.getItem(PENDING_JOIN_KEY);
-    } catch {
-      /* private mode */
+    if (!this._resetMode) {
+      try {
+        pending = localStorage.getItem(PENDING_JOIN_KEY);
+      } catch {
+        /* private mode */
+      }
     }
-    this.joinCode = urlJoin ?? pending ?? null;
+    this.joinCode = this._resetMode ? null : (urlJoin ?? pending ?? null);
     this.pebbleUser = null;
     this.family = null;
     this.children = [];
@@ -90,11 +106,15 @@ export class AppShell extends LitElement {
       if (u) {
         // Pick up any join-code the user stashed pre-auth on the
         // sign-in screen ("I have a family code" input) — same
-        // localStorage key as the URL ?join= flow.
-        try {
-          const pending = localStorage.getItem(PENDING_JOIN_KEY);
-          if (pending && !this.joinCode) this.joinCode = pending;
-        } catch { /* private mode */ }
+        // localStorage key as the URL ?join= flow. ?reset=1 skips
+        // this so the wizard can render without being short-circuited
+        // to join-family-screen.
+        if (!this._resetMode) {
+          try {
+            const pending = localStorage.getItem(PENDING_JOIN_KEY);
+            if (pending && !this.joinCode) this.joinCode = pending;
+          } catch { /* private mode */ }
+        }
         dataStore.start(u.uid);
       } else {
         dataStore.stop();
@@ -130,10 +150,18 @@ export class AppShell extends LitElement {
    * (`familyId`) nor a Cairn family (`cairnFamilyId`). We wait for the
    * user-doc snapshot to fire at least once before deciding — otherwise
    * we'd flash the onboarding wizard during the initial async load.
+   *
+   * Dev override: `?reset=1` on the URL forces the wizard to render
+   * for the current session regardless of the user's existing family
+   * pointers. Useful for QAing the wizard without wiping a real account
+   * doc. The flag doesn't mutate any Firestore state — it just changes
+   * what app-shell renders, and the user can sign out + return to the
+   * dashboard normally on their next visit.
    */
   _needsOnboarding() {
     if (!this.authUser) return false;
     if (this.joinCode) return false;          // dedicated join flow takes over
+    if (this._resetMode) return true;         // ?reset=1 — force wizard
     if (!this.userDocResolved) return false;  // still loading the user doc
     const fid =
       this.pebbleUser?.familyId ?? this.pebbleUser?.cairnFamilyId ?? null;
