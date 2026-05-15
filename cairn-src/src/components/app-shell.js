@@ -103,7 +103,7 @@ export class AppShell extends LitElement {
     // `/cairn/` while local dev serves at root — only JS can resolve
     // both via import.meta.env.BASE_URL.
     if (typeof document !== 'undefined') {
-      const url = `${import.meta.env.BASE_URL}assets/daybreak-wallpaper.png`;
+      const url = `${import.meta.env.BASE_URL}assets/pebblepath-daybreak-empty.png`;
       document.documentElement.style.setProperty(
         '--pre-login-bg',
         `url('${url}')`,
