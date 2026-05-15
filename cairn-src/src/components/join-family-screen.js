@@ -125,6 +125,8 @@ export class JoinFamilyScreen extends LitElement {
       letter-spacing: 0.04em;
       line-height: 1;
       transform: translateY(2px);
+      color: var(--teal-pebble);
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
     }
     h1 {
       font-family: var(--font-display);
@@ -133,10 +135,7 @@ export class JoinFamilyScreen extends LitElement {
       letter-spacing: -0.02em;
       margin: 0 0 14px;
       text-align: center;
-      background: linear-gradient(180deg, #fff 0%, rgba(255, 248, 235, 0.7) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      color: var(--teal-pebble);
     }
     .preview {
       display: flex;

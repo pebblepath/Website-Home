@@ -97,6 +97,18 @@ export class AppShell extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
+    // Inject the Daybreak wallpaper URL as a CSS custom property on the
+    // root so global pre-login background CSS in tokens.css can consume
+    // it. Can't hard-code the URL in CSS because prod's base path is
+    // `/cairn/` while local dev serves at root — only JS can resolve
+    // both via import.meta.env.BASE_URL.
+    if (typeof document !== 'undefined') {
+      const url = `${import.meta.env.BASE_URL}assets/daybreak-wallpaper.png`;
+      document.documentElement.style.setProperty(
+        '--pre-login-bg',
+        `url('${url}')`,
+      );
+    }
     if (this.preview) {
       this.loading = false;
       return;
@@ -197,6 +209,23 @@ export class AppShell extends LitElement {
     const fid =
       this.pebbleUser?.familyId ?? this.pebbleUser?.cairnFamilyId ?? null;
     return !fid;
+  }
+
+  /** Reflect the active route on the host so global CSS can swap the
+   *  page background (Daybreak wallpaper on pre-login, dusk gradient
+   *  on the dashboard). The wallpaper URL itself is set as a CSS custom
+   *  property up in the main connectedCallback. */
+  updated() {
+    this.setAttribute('data-route', this._currentRoute());
+  }
+
+  _currentRoute() {
+    if (this.loading) return 'loading';
+    if (this.preview) return 'home';
+    if (!this.authUser) return 'register';
+    if (this.joinCode) return 'join';
+    if (this._needsOnboarding()) return 'wizard';
+    return 'home';
   }
 
   render() {

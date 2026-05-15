@@ -91,10 +91,11 @@ export class OnboardingWizard extends LitElement {
       letter-spacing: -0.02em;
       margin: 0 0 6px;
       text-align: center;
-      color: var(--text-primary);
+      color: var(--teal-pebble);
     }
     .lede {
-      color: var(--text-secondary);
+      color: var(--teal-pebble);
+      opacity: 0.82;
       font-size: 14.5px;
       line-height: 1.5;
       margin: 0 0 22px;

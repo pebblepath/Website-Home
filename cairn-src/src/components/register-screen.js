@@ -128,8 +128,11 @@ export class RegisterScreen extends LitElement {
       font-size: 44px;
       letter-spacing: 0.04em;
       line-height: 1;
-      color: rgba(255, 248, 235, 0.92);
+      /* Brand teal — matches the iOS welcome screen's PebblePath
+         wordmark color so the two surfaces feel like one product. */
+      color: var(--teal-pebble);
       transform: translateY(4px);
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
     }
     .companion {
       font-family: var(--font-nunito);
@@ -137,7 +140,7 @@ export class RegisterScreen extends LitElement {
       font-size: 11.5px;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--text-tertiary);
+      color: var(--teal-pebble);
     }
     .companion::before,
     .companion::after {
@@ -145,9 +148,9 @@ export class RegisterScreen extends LitElement {
       display: inline-block;
       width: 18px;
       height: 1px;
-      background: var(--text-tertiary);
+      background: var(--teal-pebble);
       vertical-align: middle;
-      opacity: 0.6;
+      opacity: 0.55;
     }
     .companion::before { margin-right: 10px; }
     .companion::after { margin-left: 10px; }
@@ -159,10 +162,11 @@ export class RegisterScreen extends LitElement {
       font-size: 22px;
       letter-spacing: -0.02em;
       text-align: center;
-      color: var(--text-primary);
+      color: var(--teal-pebble);
     }
     .lede {
-      color: var(--text-secondary);
+      color: var(--teal-pebble);
+      opacity: 0.82;
       font-size: 14.5px;
       line-height: 1.5;
       margin: 0 0 18px;
@@ -378,10 +382,12 @@ export class RegisterScreen extends LitElement {
 
     .footnote {
       margin-top: 22px;
-      color: var(--text-tertiary);
+      color: var(--teal-pebble);
+      opacity: 0.72;
       font-size: 12px;
       text-align: center;
       letter-spacing: 0.04em;
+      font-weight: 500;
     }
   `;
 

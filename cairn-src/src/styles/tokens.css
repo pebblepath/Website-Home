@@ -110,6 +110,29 @@ body {
   background-attachment: fixed;
 }
 
+/* Pre-login routes (register / join / wizard) use the Daybreak Wallpaper
+   instead of the dusk gradient + warm mesh sheens. The image URL is
+   injected by app-shell as `--pre-login-bg` (it needs BASE_URL which
+   only JS can compute), so this rule just consumes whatever the host
+   sets. Default value is a soft sand fallback in case the JS write
+   hasn't run yet on first paint. */
+body:has(cairn-app[data-route='register']),
+body:has(cairn-app[data-route='join']),
+body:has(cairn-app[data-route='wizard']) {
+  background:
+    #f3e7d9
+    var(--pre-login-bg, none)
+    center / cover no-repeat fixed;
+}
+body:has(cairn-app[data-route='register'])::before,
+body:has(cairn-app[data-route='join'])::before,
+body:has(cairn-app[data-route='wizard'])::before,
+body:has(cairn-app[data-route='register'])::after,
+body:has(cairn-app[data-route='join'])::after,
+body:has(cairn-app[data-route='wizard'])::after {
+  display: none;
+}
+
 /* Warm mesh sheens — teal glow (PebblePath pebble), amber glow, terracotta glow */
 body::before {
   content: '';
