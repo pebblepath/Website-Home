@@ -218,11 +218,12 @@ export class RegisterScreen extends LitElement {
       font-weight: 600;
       font-size: 15px;
       letter-spacing: -0.005em;
-      color: var(--text-primary);
+      color: var(--teal-pebble);
     }
     .card .desc {
       font-size: 12.5px;
-      color: var(--text-secondary);
+      color: var(--teal-pebble);
+      opacity: 0.78;
       line-height: 1.45;
       margin-top: 2px;
     }
@@ -248,7 +249,7 @@ export class RegisterScreen extends LitElement {
       display: block;
       font-size: 13px;
       font-weight: 600;
-      color: var(--text-secondary);
+      color: var(--teal-pebble);
       letter-spacing: -0.005em;
       margin-bottom: 5px;
     }
@@ -258,11 +259,11 @@ export class RegisterScreen extends LitElement {
       width: 100%;
       min-height: 44px;
       box-sizing: border-box;
-      background: rgba(255, 248, 235, 0.08);
-      border: 1px solid rgba(255, 248, 235, 0.22);
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(61, 155, 143, 0.3);
       border-radius: var(--radius-input);
       padding: 10px 14px;
-      color: var(--text-primary);
+      color: var(--teal-pebble);
       font-family: var(--font-body);
       font-size: 16px;
       outline: none;
@@ -275,17 +276,18 @@ export class RegisterScreen extends LitElement {
     }
     input:focus {
       border-color: var(--teal-pebble);
-      background: rgba(255, 248, 235, 0.12);
+      background: rgba(255, 255, 255, 0.85);
     }
     input::placeholder {
-      color: rgba(255, 248, 235, 0.32);
+      color: rgba(61, 155, 143, 0.45);
     }
 
     .or {
       display: flex;
       align-items: center;
       gap: 10px;
-      color: var(--text-tertiary);
+      color: var(--teal-pebble);
+      opacity: 0.7;
       font-size: 11.5px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
@@ -296,7 +298,7 @@ export class RegisterScreen extends LitElement {
       content: '';
       flex: 1;
       height: 1px;
-      background: rgba(255, 248, 235, 0.12);
+      background: rgba(61, 155, 143, 0.25);
     }
 
     .providers {
@@ -313,23 +315,27 @@ export class RegisterScreen extends LitElement {
       min-height: 44px;
       padding: 0 14px;
       border-radius: var(--radius-pill);
-      border: 1px solid rgba(255, 248, 235, 0.22);
-      background: rgba(255, 248, 235, 0.06);
-      color: var(--text-primary);
+      /* Google brand style: white background, dark text, hairline
+         border. Matches the iOS Google sign-in button. */
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      background: #fff;
+      color: #3c4043;
       font: inherit;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 180ms ease, border-color 180ms ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
     }
     .provider-btn:hover:not(:disabled) {
-      background: rgba(255, 248, 235, 0.12);
-      border-color: rgba(255, 248, 235, 0.34);
+      background: #f8f8f8;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
     }
     .provider-btn.apple {
       background: #000;
       color: #fff;
       border-color: #000;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
     .provider-btn.apple:hover:not(:disabled) {
       background: #1a1a1a;
@@ -343,14 +349,16 @@ export class RegisterScreen extends LitElement {
       justify-content: space-between;
       gap: 10px;
       font-size: 13px;
-      color: var(--text-secondary);
+      color: var(--teal-pebble);
+      opacity: 0.82;
     }
     .toggle-row button {
       background: transparent;
       border: none;
-      color: var(--terracotta);
+      color: var(--terracotta-deep, #8b5a3e);
       cursor: pointer;
       font: inherit;
+      font-weight: 600;
       text-decoration: underline;
       text-underline-offset: 3px;
       padding: 0;
@@ -381,13 +389,15 @@ export class RegisterScreen extends LitElement {
     }
 
     .footnote {
+      /* Sits over the panel's drop shadow zone where the wallpaper
+         darkens — white reads cleanly here. */
       margin-top: 22px;
-      color: var(--teal-pebble);
-      opacity: 0.72;
+      color: rgba(255, 255, 255, 0.92);
       font-size: 12px;
       text-align: center;
       letter-spacing: 0.04em;
       font-weight: 500;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
     }
   `;
 
@@ -529,7 +539,7 @@ export class RegisterScreen extends LitElement {
   _renderChoose() {
     return html`
       <h1>Let's get you all set up.</h1>
-      <p class="lede">Pick what fits — you can change your mind on any of these later.</p>
+      <p class="lede">Visiting or Returning from PebblePath?</p>
       <div class="cards">
         <button class="card" @click=${() => this._go('login')}>
           <span class="icon-cell tide" aria-hidden="true">${this._iconLogin()}</span>
@@ -538,18 +548,18 @@ export class RegisterScreen extends LitElement {
             <div class="desc">For accounts already connected to a family.</div>
           </span>
         </button>
-        <button class="card" @click=${() => this._go('create')}>
-          <span class="icon-cell sage" aria-hidden="true">${this._iconCreate()}</span>
-          <span>
-            <div class="label">Create Cairn account</div>
-            <div class="desc">Start a new family planner on Cairn.</div>
-          </span>
-        </button>
         <button class="card" @click=${() => this._go('join')}>
           <span class="icon-cell amber" aria-hidden="true">${this._iconJoin()}</span>
           <span>
             <div class="label">Join an existing family</div>
             <div class="desc">Paste your CAIRN-XXXX invite code.</div>
+          </span>
+        </button>
+        <button class="card" @click=${() => this._go('create')}>
+          <span class="icon-cell sage" aria-hidden="true">${this._iconCreate()}</span>
+          <span>
+            <div class="label">Create my own account</div>
+            <div class="desc">Start a new family planner on Cairn.</div>
           </span>
         </button>
       </div>
