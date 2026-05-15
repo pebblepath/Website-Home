@@ -171,8 +171,16 @@ class FamilyDataStore extends EventTarget {
         this._emit();
       },
     );
+    // 2026-05-15 — visibility enforced server-side. Rules reject a
+    // list query that would return any doc the caller can't read, so
+    // we MUST filter to the caller's visibleTo (rules don't filter,
+    // they validate). All live docs were backfilled + verified before
+    // the rule shipped, so array-contains returns the full readable set.
     this._unsubTrips = onSnapshot(
-      collection(db, 'families', familyId, 'trips'),
+      query(
+        collection(db, 'families', familyId, 'trips'),
+        where('visibleTo', 'array-contains', this._uid),
+      ),
       (snap) => {
         this.state.trips = snap.docs
           .map((d) => {
@@ -196,7 +204,10 @@ class FamilyDataStore extends EventTarget {
       },
     );
     this._unsubEvents = onSnapshot(
-      collection(db, 'families', familyId, 'familyEvents'),
+      query(
+        collection(db, 'families', familyId, 'familyEvents'),
+        where('visibleTo', 'array-contains', this._uid),
+      ),
       (snap) => {
         this.state.events = snap.docs
           .map((d) => {
