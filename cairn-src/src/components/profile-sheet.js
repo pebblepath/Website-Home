@@ -62,13 +62,34 @@ export class ProfileSheet extends LitElement {
   async _saveName() {
     const name = this._name.trim();
     if (!name || name === (this.user?.displayName ?? '')) return;
-    if (!auth?.currentUser?.uid || !db) return;
+    const uid = auth?.currentUser?.uid;
+    if (!uid || !db) return;
     this._savingName = true;
     try {
-      await updateDoc(doc(db, 'users', auth.currentUser.uid), {
+      // Write the canonical user-doc value first (the source-of-truth
+      // for the signed-in user's own display name).
+      await updateDoc(doc(db, 'users', uid), {
         displayName: name,
         updatedAt: serverTimestamp(),
       });
+      // Then mirror it into family.memberProfiles[uid] so OTHER family
+      // members see the new name — they read profiles off the family
+      // doc, not directly off /users/{uid} (which Firestore rules don't
+      // allow cross-user). Without this fan-out, a name change is
+      // visible to the editor only.
+      const familyId = dataStore.familyId;
+      if (familyId) {
+        try {
+          await updateDoc(doc(db, 'families', familyId), {
+            [`memberProfiles.${uid}.displayName`]: name,
+            [`memberProfiles.${uid}.updatedAt`]: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          });
+        } catch (famErr) {
+          console.warn('memberProfiles fan-out failed:', famErr);
+          // Non-fatal — user-doc edit still landed.
+        }
+      }
       toast('Display name updated.');
     } catch (e) {
       console.error(e);
@@ -117,6 +138,18 @@ export class ProfileSheet extends LitElement {
         profilePhotoURL: url,
         updatedAt: serverTimestamp(),
       });
+      // Mirror into family.memberProfiles so co-parents / extended
+      // family see the new photo on their dashboard (they read
+      // profiles off the family doc, not /users/{uid}).
+      try {
+        await updateDoc(doc(db, 'families', familyId), {
+          [`memberProfiles.${uid}.profilePhotoURL`]: url,
+          [`memberProfiles.${uid}.updatedAt`]: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
+      } catch (famErr) {
+        console.warn('memberProfiles photo fan-out failed:', famErr);
+      }
       toast('Photo updated.');
     } catch (err) {
       console.error('Photo upload failed', err);

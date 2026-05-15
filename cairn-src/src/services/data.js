@@ -316,10 +316,26 @@ class FamilyDataStore extends EventTarget {
     }
 
     const beforeCairn = family.cairnMemberIds ?? [];
-    if (beforeCairn.includes(uid) || (family.memberIds ?? []).includes(uid)) {
-      const err = new Error('You\'re already in this family on Cairn.');
-      err.code = 'already-member';
-      throw err;
+    const memberIds = family.memberIds ?? [];
+    const authUser = auth.currentUser;
+
+    // Idempotent: already in cairnMemberIds (or memberIds for the PP
+    // path) means the join completed previously. Just ensure the
+    // user doc's cairnFamilyId points at this family so the dataStore
+    // listener resumes. No family-doc write needed.
+    if (beforeCairn.includes(uid) || memberIds.includes(uid)) {
+      await setDoc(
+        doc(db, 'users', uid),
+        {
+          email: authUser.email ?? '',
+          displayName: authUser.displayName ?? '',
+          profilePhotoURL: authUser.photoURL ?? null,
+          cairnFamilyId: family.id,
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true },
+      );
+      return family.id;
     }
 
     const cap = family.cairnMaxMembers ?? 20;
@@ -329,7 +345,6 @@ class FamilyDataStore extends EventTarget {
       throw err;
     }
 
-    const authUser = auth.currentUser;
     const now = new Date();
     const profile = {
       displayName: authUser.displayName ?? '',
