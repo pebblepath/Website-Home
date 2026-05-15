@@ -1,12 +1,14 @@
 import { LitElement, html } from 'lit';
 import { onAuth } from '../services/firebase.js';
 import { dataStore, resolvePhoto } from '../services/data.js';
-import './sign-in-screen.js';
+import './register-screen.js';
 import './home-screen.js';
 import './join-family-screen.js';
 import './onboarding-wizard.js';
+import { toast } from '../services/toast.js';
 
 const PENDING_JOIN_KEY = 'cairn:pendingJoinCode';
+const PENDING_CREATE_KEY = 'cairn:pendingCreateFamily';
 
 export class AppShell extends LitElement {
   static properties = {
@@ -105,10 +107,9 @@ export class AppShell extends LitElement {
       this.loading = false;
       if (u) {
         // Pick up any join-code the user stashed pre-auth on the
-        // sign-in screen ("I have a family code" input) — same
-        // localStorage key as the URL ?join= flow. ?reset=1 skips
-        // this so the wizard can render without being short-circuited
-        // to join-family-screen.
+        // register screen — same localStorage key as the URL ?join=
+        // flow. ?reset=1 skips this so the wizard can render without
+        // being short-circuited to join-family-screen.
         if (!this._resetMode) {
           try {
             const pending = localStorage.getItem(PENDING_JOIN_KEY);
@@ -116,11 +117,41 @@ export class AppShell extends LitElement {
           } catch { /* private mode */ }
         }
         dataStore.start(u.uid);
+        // If the user picked "Create Cairn account" on the register
+        // screen pre-auth, the family-name is sitting in localStorage.
+        // Fire-and-forget createCairnOnlyFamily after auth completes;
+        // data-store listener will pick up the new cairnFamilyId and
+        // route us into the dashboard.
+        this._consumePendingCreate();
       } else {
         dataStore.stop();
         this.userDocResolved = false;
       }
     });
+  }
+
+  /** Consume the register-screen "create family" intent if present. */
+  async _consumePendingCreate() {
+    let pending = null;
+    try {
+      pending = localStorage.getItem(PENDING_CREATE_KEY);
+    } catch { /* private mode */ }
+    if (!pending) return;
+    try {
+      localStorage.removeItem(PENDING_CREATE_KEY);
+    } catch {}
+    try {
+      await dataStore.createCairnOnlyFamily(pending);
+      toast(`Welcome to ${pending}.`);
+    } catch (e) {
+      console.error('Pending family create failed:', e);
+      toast(
+        e?.code === 'permission-denied'
+          ? "Couldn't create the family — Firestore rules may need a redeploy."
+          : `Couldn't create the family: ${e?.message ?? 'try again'}`,
+        { duration: 5000 },
+      );
+    }
   }
 
   disconnectedCallback() {
@@ -173,9 +204,9 @@ export class AppShell extends LitElement {
     if (this.preview) return html`<home-screen preview></home-screen>`;
     if (!this.authUser) {
       return html`
-        <sign-in-screen
+        <register-screen
           .joinCode=${this.joinCode ?? ''}
-        ></sign-in-screen>
+        ></register-screen>
       `;
     }
     if (this.joinCode) {

@@ -2,7 +2,12 @@ import { initializeApp } from 'firebase/app';
 import {
   getAuth,
   GoogleAuthProvider,
+  OAuthProvider,
   signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  updateProfile,
   signOut,
   onAuthStateChanged,
 } from 'firebase/auth';
@@ -95,6 +100,65 @@ export function clearCalendarToken() {
 export function signIn() {
   if (!auth) throw new Error('Firebase not configured — fill in .env first.');
   return signInWithPopup(auth, googleProvider);
+}
+
+/**
+ * Apple Sign-in. Uses the OAuthProvider for `apple.com` (Firebase Auth's
+ * native Apple integration). Requires the Apple provider to be enabled
+ * in Firebase Console → Authentication → Sign-in method. Same Firebase
+ * project as PebblePath iOS, so anyone with Apple-linked PP credentials
+ * lands on Cairn with their existing account.
+ */
+const appleProvider = isConfigured ? new OAuthProvider('apple.com') : null;
+if (appleProvider) {
+  appleProvider.addScope('email');
+  appleProvider.addScope('name');
+}
+
+export function signInWithApple() {
+  if (!auth || !appleProvider) {
+    throw new Error('Firebase not configured — fill in .env first.');
+  }
+  return signInWithPopup(auth, appleProvider);
+}
+
+/**
+ * Email + password sign-in. Firebase Auth's email/password provider is
+ * shared with PP iOS (same Firebase project), so a user who registered
+ * via the iOS app's manual email path can sign into Cairn web with
+ * the same credentials. No verification flow to manage on the web side.
+ */
+export function signInWithEmail(email, password) {
+  if (!auth) throw new Error('Firebase not configured.');
+  return signInWithEmailAndPassword(auth, email, password);
+}
+
+/**
+ * Email + password sign-up. Creates a fresh Firebase Auth user, then
+ * sets their displayName so the cairn-stack greeting + memberProfiles
+ * write have a name to use. Caller is responsible for routing to
+ * the create-family / join-family path afterwards.
+ */
+export async function signUpWithEmail(email, password, displayName) {
+  if (!auth) throw new Error('Firebase not configured.');
+  const cred = await createUserWithEmailAndPassword(auth, email, password);
+  if (displayName && displayName.trim()) {
+    try {
+      await updateProfile(cred.user, { displayName: displayName.trim() });
+    } catch {
+      /* non-fatal — name will be empty until they set it in profile sheet */
+    }
+  }
+  return cred;
+}
+
+/**
+ * Password-reset email — Firebase sends from the project's auth domain.
+ * Idempotent for non-existent emails (no information leak).
+ */
+export function sendPasswordReset(email) {
+  if (!auth) throw new Error('Firebase not configured.');
+  return sendPasswordResetEmail(auth, email);
 }
 
 export function signOutUser() {

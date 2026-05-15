@@ -14,5 +14,6 @@ import './components/pebble-chat.js';
 import './components/discover-pebblepath.js';
 import './components/join-family-screen.js';
 import './components/sign-in-screen.js';
+import './components/register-screen.js';
 import './components/home-screen.js';
 import './components/app-shell.js';
