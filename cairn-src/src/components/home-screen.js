@@ -968,7 +968,7 @@ export class HomeScreen extends LitElement {
       font-family: var(--font-display);
       font-weight: 600;
       font-size: 12px;
-      color: var(--text-tertiary);
+      color: var(--text-secondary);
       letter-spacing: -0.005em;
       white-space: nowrap;
     }
@@ -1008,27 +1008,6 @@ export class HomeScreen extends LitElement {
       .pebble-subgroup { width: 130px; height: 46px; }
       .subgroup-row { gap: 12px; }
     }
-    .cairn-meta {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      margin-top: 18px;
-      padding-top: 14px;
-      border-top: 1px dashed rgba(255, 248, 235, 0.1);
-    }
-    .cairn-meta button {
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      font: inherit;
-      font-size: 12.5px;
-      cursor: pointer;
-    }
-    .cairn-meta button:hover {
-      color: var(--text-primary);
-    }
-
     /* Onboarding hint shown when the cairn is mostly empty (just self).
        Sits above the meta with a soft glow + gentle suggestion. */
     .cairn-hint {
@@ -2157,17 +2136,7 @@ export class HomeScreen extends LitElement {
                         </button>
                       </div>
                     `
-                  : html`
-                      <div class="cairn-meta">
-                        <button @click=${() => (this._membersOpen = true)}>
-                          + Invite
-                        </button>
-                        <span style="color:var(--text-tertiary);">·</span>
-                        <button @click=${() => (this._membersOpen = true)}>
-                          + Sub-group
-                        </button>
-                      </div>
-                    `}
+                  : ''}
               `;
             })()}
               </glass-panel>
