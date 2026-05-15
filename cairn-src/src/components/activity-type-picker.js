@@ -25,14 +25,18 @@ export class ActivityTypePicker extends LitElement {
   // and we don't need a build-time JS evaluation gotcha for static.
   static get OPTIONS() {
     return [
-      // Traced to match the iOS picker's SF Symbol fills as seen in
-      // the user's screenshot (leaf.fill / paperplane.fill / gift.fill).
-      // viewBox 24×24, all paths fill currentColor.
+      // Custom Cairn icon set — original, cohesive glyphs (rounded
+      // filled silhouettes in the pebble aesthetic). The exact same
+      // SVG source files live in public/assets/icons/{activity,trip,
+      // event}.svg and are the parity source-of-truth: the iOS app
+      // imports those files into its asset catalog so both surfaces
+      // render byte-identical art. Do NOT hand-tweak one side only.
       {
         type: 'activity',
         tone: 'sage',
         icon: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M20.9 3.5c-.1-.4-.4-.7-.8-.7-3.2-.1-9 .4-13 4.4-3.3 3.3-3.9 7.7-3.4 10.7-.8 1.3-1.4 2.7-1.7 3.8-.1.4.1.8.5.9.4.1.8-.1.9-.5.3-1 .7-2.1 1.4-3.2.5.2 1.3.3 2.2.3 2.3 0 5.1-.8 7.5-3.2 4-4 4.5-9.8 4.4-13zm-6.2 11.7c-1.9 1.9-4 2.6-5.6 2.7 2-2.9 4.5-5.4 7.5-7.4.4-.2.5-.7.3-1-.2-.4-.7-.5-1-.3-2.8 1.9-5.3 4.1-7.3 6.7.1-1.8.9-4 2.9-6 3-3 7.9-3.7 10.7-3.9-.2 2.8-.8 7.7-3.5 10.2z"/>
+          <circle cx="12" cy="6.4" r="3"/>
+          <path d="M3 20.6c1.7-4.4 3.9-6.9 5.9-6.9 1.4 0 2.6 1 3.5 2.3 1-1.1 2-1.8 3.1-1.8 1.9 0 3.7 2.2 6.2 6.4.32.54-.06 1.2-.7 1.2H3.7c-.64 0-1.02-.66-.7-1.2z"/>
         </svg>`,
         label: 'Group activity',
         desc: 'Weekend plans, outings, day trips — no lodging or flights needed.',
@@ -41,7 +45,7 @@ export class ActivityTypePicker extends LitElement {
         type: 'trip',
         tone: 'tide',
         icon: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M21.7 2.4a.9.9 0 0 0-1-.2L2.6 8.6a.85.85 0 0 0-.6.83c0 .42.3.78.7.86l6.65 1.5 1.5 6.65c.08.4.43.7.84.7.4 0 .77-.24.94-.6L21.9 3.4a.9.9 0 0 0-.2-1zM9.65 11.0L5 9.85 17.4 5.4 9.65 11.0zm1.5 1.55L17.4 6.3 13.0 18.7l-1.85-6.15z"/>
+          <path d="M21.62 3.05a1 1 0 0 0-1.12-.18L3.7 10.3c-.86.38-.83 1.62.05 1.95l6.06 2.27 2.27 6.06c.33.88 1.57.9 1.95.05L21.8 4.17a1 1 0 0 0-.18-1.12zM10.5 12.7l6.4-5.7-4.9 6.6-.1.1z"/>
         </svg>`,
         label: 'Family trip',
         desc: 'Multi-day travel with lodging, flight info, attendees.',
@@ -50,12 +54,12 @@ export class ActivityTypePicker extends LitElement {
         type: 'event',
         tone: 'amber',
         icon: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <!-- Bow loops on top -->
-          <path d="M10.7 7.3c-.2-1-.9-2.4-2-3.1-.7-.5-1.4-.7-2.1-.6-.9.2-1.5.9-1.6 1.8-.1.7.1 1.4.6 1.9.6.6 1.5.9 2.6.9.7 0 1.5-.1 2.2-.3l.7-.2-.4-.4zM18.7 5.4c-.1-.9-.7-1.6-1.6-1.8-.7-.1-1.4.1-2.1.6-1.1.7-1.8 2.1-2 3.1l-.4.4.7.2c.7.2 1.5.3 2.2.3 1.1 0 2-.3 2.6-.9.5-.5.7-1.2.6-1.9z"/>
-          <!-- Box lid (slimmer, full width) -->
-          <path d="M21 8H3a1 1 0 0 0-1 1v2.5a1 1 0 0 0 1 1h7.5V8h3v4.5H21a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1z"/>
-          <!-- Box body -->
-          <path d="M4 14v6.5A1.5 1.5 0 0 0 5.5 22h5V14H4zM13.5 22h5a1.5 1.5 0 0 0 1.5-1.5V14h-6.5v8z"/>
+          <path d="M11.1 6.7C10.4 5 9.2 3.7 7.8 3.3c-1-.3-1.9.1-2.2.9-.4 1 .2 2.1 1 2.7 1 .75 2.5 1.05 4.5 1.05z"/>
+          <path d="M12.9 6.7c.7-1.7 1.9-3 3.3-3.4 1-.3 1.9.1 2.2.9.4 1-.2 2.1-1 2.7-1 .75-2.5 1.05-4.5 1.05z"/>
+          <rect x="3" y="8" width="8.1" height="3.5" rx="1"/>
+          <rect x="12.9" y="8" width="8.1" height="3.5" rx="1"/>
+          <rect x="4.1" y="11.7" width="7" height="9.1" rx="1.4"/>
+          <rect x="12.9" y="11.7" width="7" height="9.1" rx="1.4"/>
         </svg>`,
         label: 'Birthday or anniversary',
         desc: 'Recurring celebration on a specific date.',
