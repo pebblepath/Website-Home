@@ -3003,8 +3003,8 @@ var gt=Object.defineProperty;var mt=(d,e,t)=>e in d?gt(d,e,{enumerable:!0,config
       border-color: rgba(201, 138, 138, 0.5);
     }
   `);customElements.define("profile-sheet",Ie);const ie=class ie extends D{constructor(){super(),this.open=!1}static get OPTIONS(){return[{type:"activity",tone:"sage",icon:s`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <circle cx="12" cy="6.4" r="3"/>
-          <path d="M3 20.6c1.7-4.4 3.9-6.9 5.9-6.9 1.4 0 2.6 1 3.5 2.3 1-1.1 2-1.8 3.1-1.8 1.9 0 3.7 2.2 6.2 6.4.32.54-.06 1.2-.7 1.2H3.7c-.64 0-1.02-.66-.7-1.2z"/>
+          <path d="M15.8 7.4 21.8 19.5a1.1 1.1 0 0 1-.98 1.6H10.2z"/>
+          <path d="M9 4.6 16.5 19.5a1.1 1.1 0 0 1-.98 1.6H3.46a1.1 1.1 0 0 1-.98-1.6z"/>
         </svg>`,label:"Group activity",desc:"Weekend plans, outings, day trips — no lodging or flights needed."},{type:"trip",tone:"tide",icon:s`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M21.62 3.05a1 1 0 0 0-1.12-.18L3.7 10.3c-.86.38-.83 1.62.05 1.95l6.06 2.27 2.27 6.06c.33.88 1.57.9 1.95.05L21.8 4.17a1 1 0 0 0-.18-1.12zM10.5 12.7l6.4-5.7-4.9 6.6-.1.1z"/>
         </svg>`,label:"Family trip",desc:"Multi-day travel with lodging, flight info, attendees."},{type:"event",tone:"amber",icon:s`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -6625,4 +6625,4 @@ var gt=Object.defineProperty;var mt=(d,e,t)=>e in d?gt(d,e,{enumerable:!0,config
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}f(ht,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},userDocResolved:{state:!0}});customElements.define("cairn-app",ht);
-//# sourceMappingURL=index-DHwGM4PP.js.map
+//# sourceMappingURL=index-ttTcNONt.js.map
