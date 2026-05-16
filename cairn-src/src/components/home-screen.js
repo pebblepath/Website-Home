@@ -1950,52 +1950,27 @@ export class HomeScreen extends LitElement {
                 <button class="link" @click=${() => this._openCreateEvent()}>+ Add event</button>
               </div>
               ${(() => {
-                // Defensive sort: _liveEvents already sorts by date asc,
-                // but re-sort each slice so any future mutation still
-                // lands in chronological order.
-                const byDate = (a, b) =>
-                  String(a.date).localeCompare(String(b.date));
-                const birthdays = filteredEvents
-                  .filter((e) => e.type === 'birthday')
+                // 2026-05-16 — one chronological sequence, soonest →
+                // furthest (was grouped Birthdays/Anniversaries/Other,
+                // which broke the "in sequence" reading). `e.date` is
+                // the next-occurrence date (resolveEventOccurrence /
+                // deriveBirthdayEvents) as zero-padded YYYY-MM-DD, so a
+                // lexical asc compare IS chronological-by-soonest. Type
+                // is still conveyed per row by <event-row> itself.
+                const sorted = filteredEvents
                   .slice()
-                  .sort(byDate);
-                const anniversaries = filteredEvents
-                  .filter((e) => e.type === 'anniversary')
-                  .slice()
-                  .sort(byDate);
-                const other = filteredEvents
-                  .filter(
-                    (e) => e.type !== 'birthday' && e.type !== 'anniversary',
-                  )
-                  .slice()
-                  .sort(byDate);
-                const renderBlock = (heading, list, emptyCopy) => html`
-                  <div class="cel-stack-block">
-                    <div class="cel-col-head">
-                      <span class="cel-col-title">${heading}</span>
-                    </div>
-                    ${list.length === 0
-                      ? html`<div class="cel-empty">${emptyCopy}</div>`
-                      : list.map(
+                  .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+                return html`
+                  <glass-panel padding="md" variant="strong">
+                    ${sorted.length === 0
+                      ? html`<div class="cel-empty">No celebrations yet.</div>`
+                      : sorted.map(
                           (e) => html`<event-row
                             .event=${e}
                             .members=${allMembers}
                             @edit-event=${(ev) => this._openEditEvent(ev.detail)}
                           ></event-row>`,
                         )}
-                  </div>
-                `;
-                return html`
-                  <glass-panel padding="md" variant="strong">
-                    ${renderBlock('Birthdays', birthdays, 'No birthdays yet.')}
-                    ${renderBlock(
-                      'Anniversaries',
-                      anniversaries,
-                      'No anniversaries yet.',
-                    )}
-                    ${other.length > 0
-                      ? renderBlock('Other', other, '')
-                      : ''}
                   </glass-panel>
                 `;
               })()}

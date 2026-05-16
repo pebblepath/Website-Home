@@ -156,9 +156,14 @@ export class PebbleChat extends LitElement {
       max-height: min(640px, calc(100vh - 96px));
       display: flex;
       flex-direction: column;
-      background: rgba(34, 26, 32, 0.92);
-      backdrop-filter: blur(28px) saturate(180%);
-      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      /* 2026-05-16 — frosted glass, not a dark slab. Opacity dropped
+         0.92 → 0.5 + heavier blur so the dusk gradient reads through
+         as frosted glass. Kept a dark-ish tint (not white glass): the
+         app is dark-themed with light text, so a light panel would
+         kill contrast. Eyeball-tune the 0.5 / 34px if needed. */
+      background: rgba(40, 32, 42, 0.5);
+      backdrop-filter: blur(34px) saturate(180%);
+      -webkit-backdrop-filter: blur(34px) saturate(180%);
       border: 1px solid var(--glass-border-strong);
       border-radius: var(--radius-card);
       box-shadow: 0 24px 60px rgba(20, 12, 6, 0.55);
