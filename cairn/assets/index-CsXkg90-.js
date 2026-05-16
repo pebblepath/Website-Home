@@ -3778,7 +3778,7 @@ var mt=Object.defineProperty;var bt=(d,e,t)=>e in d?mt(d,e,{enumerable:!0,config
             height="44"
             style="border-radius:11px;display:block;box-shadow:0 4px 16px rgba(0,0,0,0.25);"
           />
-          <div class="mark-name">Cairn</div>
+          <div class="mark-name">Portal</div>
         </div>
         <glass-panel padding="lg" variant="strong" lifted>
           ${this._loading?s`<div class="loading">Looking up <code>${this.code}</code>…</div>`:this._family?s`
@@ -3972,7 +3972,7 @@ var mt=Object.defineProperty;var bt=(d,e,t)=>e in d?mt(d,e,{enumerable:!0,config
               width="56"
               height="56"
             />
-            <div class="mark-name">Cairn</div>
+            <div class="mark-name">Portal</div>
           </div>
           <div class="companion">PebblePath companion</div>
         </div>
@@ -4335,7 +4335,7 @@ var mt=Object.defineProperty;var bt=(d,e,t)=>e in d?mt(d,e,{enumerable:!0,config
               width="56"
               height="56"
             />
-            <div class="mark-name">Cairn</div>
+            <div class="mark-name">Portal</div>
           </div>
           <div class="companion">PebblePath companion</div>
         </div>
@@ -5119,7 +5119,8 @@ var mt=Object.defineProperty;var bt=(d,e,t)=>e in d?mt(d,e,{enumerable:!0,config
             width="38"
             height="38"
           />
-          <div class="brand-name">Cairn</div>
+          <!-- 2026-05-16 — wordmark text removed from the logged-in
+               topbar per Thomas; the stone icon stays as the brand mark. -->
         </div>
         <div
           class="pebble-search"
@@ -6739,4 +6740,4 @@ var mt=Object.defineProperty;var bt=(d,e,t)=>e in d?mt(d,e,{enumerable:!0,config
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}f(ut,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},userDocResolved:{state:!0}});customElements.define("cairn-app",ut);
-//# sourceMappingURL=index-N0nf5TnX.js.map
+//# sourceMappingURL=index-CsXkg90-.js.map
