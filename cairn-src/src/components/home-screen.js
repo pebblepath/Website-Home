@@ -55,6 +55,12 @@ export class HomeScreen extends LitElement {
     events: { type: Array },
     preview: { type: Boolean },
     circle: { state: true },
+    /** Active top-nav tab: 'today' | 'children' | 'activities' |
+     *  'pebble' | 'cairn'. Replaced the centre-column Pebble search
+     *  bar (now the Pebble tab). Purely in-component UI state — NOT a
+     *  URL param, so it never collides with app-shell's ?join / ?reset
+     *  / ?preview routing. */
+    _activeTab: { state: true },
     _formOpen: { state: true },
     _formTrip: { state: true },
     _formBusy: { state: true },
@@ -95,6 +101,11 @@ export class HomeScreen extends LitElement {
     // the codebase for a future re-introduction (likely as a filter
     // chip row above All Trips or inside the profile sheet).
     this.circle = 'extended';
+    // Today is the landing glance — greeting + a real-data preview of
+    // what's coming up. Activities holds the full trips/calendars/
+    // celebrations surface (the pre-tabs dashboard); My Cairn holds the
+    // ring stack; Children + Pebble are the app-companion surfaces.
+    this._activeTab = 'today';
     this._formOpen = false;
     this._formTrip = null;
     this._formBusy = false;
@@ -471,16 +482,32 @@ export class HomeScreen extends LitElement {
       font-weight: 600;
       letter-spacing: -0.01em;
     }
+    /* Harmonized section action — one pill grammar for "Import from
+       Calendar", "All trips", "+ Add event", "Manage members", etc.
+       (was bare text links of inconsistent weight). */
     .section-head .link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border);
       color: var(--text-secondary);
-      font-size: 13px;
+      font-size: 12.5px;
+      font-weight: 600;
       cursor: pointer;
-      background: transparent;
-      border: none;
       font-family: var(--font-body);
+      transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
     }
     .section-head .link:hover {
       color: var(--text-primary);
+      border-color: var(--glass-border-strong);
+      background: var(--glass-fill-strong);
+    }
+    .section-head .link svg {
+      width: 13px;
+      height: 13px;
     }
     @media (max-width: 768px) {
       .section-head .link.hide-mobile {
@@ -1070,6 +1097,93 @@ export class HomeScreen extends LitElement {
     }
     .cairn-hint-cta:hover {
       background: var(--gradient-cta-hover);
+    }
+
+    /* ── Top-nav tabs (centre column — replaced the Pebble search) ──
+       Lives inside .topbar's auto centre column so it stays visually
+       centred in the viewport via the same 1fr/auto/1fr grid the
+       search bar used. The Pebble entry-point moved to the Pebble
+       tab. */
+    .tabs {
+      display: inline-flex;
+      gap: 3px;
+      padding: 5px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 248, 235, 0.06);
+      border: 1px solid var(--glass-border);
+    }
+    .tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: -0.005em;
+      border-radius: var(--radius-pill);
+      white-space: nowrap;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .tab svg {
+      width: 16px;
+      height: 16px;
+    }
+    .tab:hover {
+      color: var(--text-primary);
+    }
+    .tab.active {
+      color: #fff;
+      background-image: var(--gradient-sage);
+      box-shadow:
+        0 4px 14px rgba(31, 92, 84, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    }
+    /* Below ~1000px the labels drop to icon-only so 5 tabs + brand +
+       Activity + avatar still fit the 68px bar. */
+    @media (max-width: 1000px) {
+      .tab span {
+        display: none;
+      }
+      .tab {
+        padding: 9px 12px;
+      }
+    }
+    /* On phones the centre column scrolls horizontally rather than
+       wrapping — the bar stays one row at the existing 60px height. */
+    @media (max-width: 768px) {
+      .topbar .tabs {
+        overflow-x: auto;
+        max-width: 100%;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .topbar .tabs::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    /* Per-tab privacy scope badge (Children/Pebble are parent-only —
+       surfaces the "without sharing everything" boundary visibly). */
+    .scope-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 12.5px;
+      font-weight: 600;
+      background: rgba(198, 123, 92, 0.16);
+      color: #e6c3ab;
+      border: 1px solid rgba(198, 123, 92, 0.4);
+    }
+    .scope-chip svg {
+      width: 13px;
+      height: 13px;
     }
   `;
 
@@ -1696,17 +1810,73 @@ export class HomeScreen extends LitElement {
     }
   }
 
-  render() {
-    const filteredTrips = this._filteredTrips();
-    const filteredEvents = this._filteredEvents();
-    const immediate = this._liveImmediate();
-    const extended = this._liveExtended();
-    const allMembers = immediate.concat(extended);
+  /** The 5-tab nav that replaced the centre-column Pebble search.
+   *  Pebble's tab icon reuses the EXACT live Pebble glyph; the four
+   *  other tabs are new surfaces so they take new icons. */
+  _renderTabBar() {
+    const tab = (id, label, icon) => html`
+      <button
+        class="tab ${this._activeTab === id ? 'active' : ''}"
+        role="tab"
+        aria-selected=${this._activeTab === id ? 'true' : 'false'}
+        @click=${() => (this._activeTab = id)}
+      >
+        ${icon}<span>${label}</span>
+      </button>
+    `;
+    return html`
+      <nav class="tabs" role="tablist" aria-label="Sections">
+        ${tab(
+          'today',
+          'Today',
+          html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9" /><path d="M5 10v10h14V10" /></svg>`,
+        )}
+        ${tab(
+          'children',
+          'Children',
+          html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M5 21c0-4 3-6 7-6s7 2 7 6" /></svg>`,
+        )}
+        ${tab(
+          'activities',
+          'Activities',
+          html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 9h18M8 2v4M16 2v4" /></svg>`,
+        )}
+        ${tab(
+          'pebble',
+          'Pebble',
+          html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" /></svg>`,
+        )}
+        ${tab(
+          'cairn',
+          'My Cairn',
+          html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6.5" rx="3.5" ry="1.5" /><ellipse cx="12" cy="12" rx="6" ry="2.4" /><ellipse cx="12" cy="18" rx="8" ry="3" /></svg>`,
+        )}
+      </nav>
+    `;
+  }
+
+  _renderActiveTab() {
+    switch (this._activeTab) {
+      case 'children':
+        return this._renderChildrenTab();
+      case 'activities':
+        return this._renderActivitiesTab();
+      case 'pebble':
+        return this._renderPebbleTab();
+      case 'cairn':
+        return this._renderCairnTab();
+      default:
+        return this._renderTodayTab();
+    }
+  }
+
+  /** Today's greeting — the only header carrying the editable
+   *  family-name affordance + smart callout (verbatim from the
+   *  pre-tabs dashboard, just scoped to this tab). */
+  _renderTodayHeader() {
     const firstName = (this.user?.displayName ?? 'there').split(' ')[0];
+    const filteredEvents = this._filteredEvents();
     const today = new Date();
-    // "Activities this month" = trips overlapping the current month +
-    // events landing in the current month. Trip-overlap counts the trip
-    // once even if it spans multiple months.
     const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
     const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
     const eventsThisMonth = filteredEvents.filter((e) => {
@@ -1721,99 +1891,7 @@ export class HomeScreen extends LitElement {
       return s <= monthEnd && e >= monthStart;
     });
     const activitiesThisMonth = tripsThisMonth.length + eventsThisMonth.length;
-
     return html`
-      <div class="topbar">
-        <div class="brand">
-          <img
-            class="brand-icon"
-            src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
-            srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
-            alt="Cairn"
-            width="38"
-            height="38"
-          />
-          <!-- 2026-05-16 — wordmark text removed from the logged-in
-               topbar per Thomas; the stone icon stays as the brand mark. -->
-        </div>
-        <div
-          class="pebble-search"
-          @click=${(e) => {
-            // Clicking the bar focuses the input. If the user types and
-            // hits Enter, hand the seed query to the chat modal.
-            if (e.target.tagName !== 'INPUT') {
-              this.renderRoot.querySelector('.pebble-search-input')?.focus();
-            }
-          }}
-        >
-          <svg class="pebble-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="9" />
-            <circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" />
-          </svg>
-          <input
-            class="pebble-search-input"
-            type="text"
-            placeholder="Ask Pebble — weekend plans, trip ideas…"
-            @focus=${() => {
-              // Open chat sheet on focus (sheet has its own composer);
-              // blur the inline input so the modal's textarea can take
-              // focus cleanly.
-              this._pebbleOpen = true;
-              this.renderRoot.querySelector('.pebble-search-input')?.blur();
-            }}
-            @keydown=${(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                this._pebbleOpen = true;
-              }
-            }}
-            aria-label="Ask Pebble"
-          />
-        </div>
-        <div class="who">
-          <button
-            class="pebble-mobile-btn"
-            @click=${() => (this._pebbleOpen = true)}
-            title="Ask Pebble"
-            aria-label="Ask Pebble"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" />
-              <circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" />
-            </svg>
-          </button>
-          <button
-            class="activity-btn"
-            @click=${() => this._openCreate()}
-            title="New activity"
-          >
-            <span aria-hidden="true">+</span>
-            <span class="activity-btn-label">Activity</span>
-          </button>
-          <button
-            class="avatar-tap"
-            @click=${() => (this._profileOpen = true)}
-            title="${this.user?.displayName ?? 'Profile'} — open settings"
-            aria-label="Open profile settings"
-          >
-            <member-chip
-              .name=${this.user?.displayName ?? 'You'}
-              .photo=${this.user?.photoURL ?? ''}
-              .hue=${198}
-              size="36"
-            ></member-chip>
-          </button>
-        </div>
-      </div>
-
-      ${this.preview
-        ? html`<div class="preview-banner">
-            <strong>Preview mode</strong> — viewing the dashboard with placeholder
-            data. <a href="?">Back to sign-in</a>.
-          </div>`
-        : ''}
-
-      <main>
         <div class="hello">
           <div>
             <h1>Hi ${firstName}.</h1>
@@ -1852,11 +1930,31 @@ export class HomeScreen extends LitElement {
               : ''}
           </div>
         </div>
+    `;
+  }
 
+  /** Plain header for the non-Today tabs — reuses .hello styling so
+   *  every tab shares one header grammar. */
+  _renderTabHeader(title, subtitle, rightSlot = '') {
+    return html`
+        <div class="hello">
+          <div>
+            <h1>${title}</h1>
+            ${subtitle ? html`<div class="family-name">${subtitle}</div>` : ''}
+          </div>
+          ${rightSlot}
+        </div>
+    `;
+  }
+
+  _renderComingUpSection() {
+    const filteredTrips = this._filteredTrips();
+    const allMembers = this._liveImmediate().concat(this._liveExtended());
+    return html`
         <section>
           <div class="section-head">
             <h2>Coming up</h2>
-            <div style="display:flex;gap:14px;align-items:baseline;">
+            <div style="display:flex;gap:10px;align-items:center;">
               <button
                 class="link hide-mobile"
                 @click=${() => (this._importOpen = true)}
@@ -1914,7 +2012,12 @@ export class HomeScreen extends LitElement {
                 </div>
               `}
         </section>
+    `;
+  }
 
+  _renderCalendarsSection() {
+    const today = new Date();
+    return html`
         <section>
           <div class="cal-row">
             <glass-panel padding="md" variant="strong" stretch>
@@ -1938,67 +2041,66 @@ export class HomeScreen extends LitElement {
             </glass-panel>
           </div>
         </section>
+    `;
+  }
 
+  _renderCelebrationsSection() {
+    const filteredEvents = this._filteredEvents();
+    const allMembers = this._liveImmediate().concat(this._liveExtended());
+    return html`
         <section>
-          <div class="cel-cairn-row">
-            <!-- LEFT — Celebrations (combined Birthdays + Anniversaries
-                 stacked in one card; width matches the monthly
-                 calendar directly above it). -->
-            <div class="cel-cairn-col">
-              <div class="section-head">
-                <h2>Celebrations</h2>
-                <button class="link" @click=${() => this._openCreateEvent()}>+ Add event</button>
-              </div>
-              ${(() => {
-                // 2026-05-16 — one chronological sequence, soonest →
-                // furthest (was grouped Birthdays/Anniversaries/Other,
-                // which broke the "in sequence" reading). `e.date` is
-                // the next-occurrence date (resolveEventOccurrence /
-                // deriveBirthdayEvents) as zero-padded YYYY-MM-DD, so a
-                // lexical asc compare IS chronological-by-soonest. Type
-                // is still conveyed per row by <event-row> itself.
-                const sorted = filteredEvents
-                  .slice()
-                  .sort((a, b) => String(a.date).localeCompare(String(b.date)));
-                return html`
-                  <glass-panel padding="md" variant="strong">
-                    ${sorted.length === 0
-                      ? html`<div class="cel-empty">No celebrations yet.</div>`
-                      : sorted.map(
-                          (e) => html`<event-row
-                            .event=${e}
-                            .members=${allMembers}
-                            @edit-event=${(ev) => this._openEditEvent(ev.detail)}
-                          ></event-row>`,
-                        )}
-                  </glass-panel>
-                `;
-              })()}
-            </div>
-
-            <!-- RIGHT — Your Cairn (width matches the annual grid
-                 directly above it). -->
-            <div class="cel-cairn-col">
-              <div class="section-head">
-                <h2>Your Cairn</h2>
-                <button class="link" @click=${() => (this._membersOpen = true)}>
-                  Manage members
-                </button>
-              </div>
+          <div class="section-head">
+            <h2>Celebrations</h2>
+            <button class="link" @click=${() => this._openCreateEvent()}>+ Add event</button>
+          </div>
+          ${(() => {
+            // 2026-05-16 — one chronological sequence, soonest →
+            // furthest. `e.date` is the next-occurrence date as
+            // zero-padded YYYY-MM-DD, so a lexical asc compare IS
+            // chronological-by-soonest. Type is conveyed per row by
+            // <event-row> itself.
+            const sorted = filteredEvents
+              .slice()
+              .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+            return html`
               <glass-panel padding="md" variant="strong">
-                ${(() => {
+                ${sorted.length === 0
+                  ? html`<div class="cel-empty">No celebrations yet.</div>`
+                  : sorted.map(
+                      (e) => html`<event-row
+                        .event=${e}
+                        .members=${allMembers}
+                        @edit-event=${(ev) => this._openEditEvent(ev.detail)}
+                      ></event-row>`,
+                    )}
+              </glass-panel>
+            `;
+          })()}
+        </section>
+    `;
+  }
+
+  _renderCairnSection() {
+    const immediate = this._liveImmediate();
+    const extended = this._liveExtended();
+    const allMembers = immediate.concat(extended);
+    return html`
+        <section>
+          <div class="section-head">
+            <h2>Your Cairn</h2>
+            <button class="link" @click=${() => (this._membersOpen = true)}>
+              Manage members
+            </button>
+          </div>
+          <glass-panel padding="md" variant="strong">
+            ${(() => {
               const me = immediate.find((m) => m.uid === this.user?.uid);
               // Viewer can be a PP household member (in memberIds) or
               // a Cairn-only joiner (cairnMemberIds only — extended
-              // family). The stack lays out differently:
-              //
-              //   PP viewer       → Self pebble at top, Family stone
-              //                     (co-parents + children), Extended
-              //                     stone (cairn-only joiners), sub-groups.
-              //   Extended viewer → No Self pebble. Family stone shows
-              //                     the PP household they joined; the
-              //                     viewer appears in the Extended stone
-              //                     alongside any other Cairn joiners.
+              // family). PP viewer → Self pebble + Family + Extended +
+              // sub-groups. Extended viewer → no Self pebble; Family
+              // shows the PP household they joined; viewer appears in
+              // Extended alongside other Cairn joiners.
               const memberIdsSet = new Set(this.family?.memberIds ?? []);
               const isPPViewer = memberIdsSet.has(this.user?.uid);
               const familyMembers = immediate.filter(
@@ -2039,9 +2141,8 @@ export class HomeScreen extends LitElement {
                       `
                     : ''}
 
-                  <!-- Family stone — for PP viewers this is co-parents +
-                       children; for extended-family viewers it shows the
-                       PP household they joined. -->
+                  <!-- Family stone — co-parents + children (PP viewer)
+                       or the PP household they joined (extended viewer). -->
                   ${this._renderStone({
                     label: 'Family',
                     members: familyMembers,
@@ -2050,8 +2151,7 @@ export class HomeScreen extends LitElement {
                     onClick: () => (this._membersOpen = true),
                   })}
 
-                  <!-- Extended (deeper teal, larger). For extended viewers
-                       this is where the viewer's own avatar appears. -->
+                  <!-- Extended (deeper teal, larger). -->
                   ${this._renderStone({
                     label: 'Extended',
                     members: extendedMembers,
@@ -2062,9 +2162,7 @@ export class HomeScreen extends LitElement {
                     draggable: (m) => m.role === 'extended',
                   })}
 
-                  <!-- Sub-group base row — each stone is a drop target for
-                       its group; chips inside are draggable so they can be
-                       moved into another sub-group or back to extended. -->
+                  <!-- Sub-group base row — each stone is a drop target. -->
                   ${subGroupEntries.length > 0
                     ? html`
                         <div class="subgroup-row">
@@ -2115,10 +2213,211 @@ export class HomeScreen extends LitElement {
                   : ''}
               `;
             })()}
-              </glass-panel>
+          </glass-panel>
+        </section>
+    `;
+  }
+
+  /** TODAY — the landing glance: greeting + real upcoming activities +
+   *  celebrations, plus a teaser into the (Phase B) Children surface. */
+  _renderTodayTab() {
+    return html`
+      ${this._renderTodayHeader()}
+      ${this._renderComingUpSection()}
+      ${this._renderCelebrationsSection()}
+      <section>
+        <glass-panel padding="lg" variant="strong">
+          <div class="empty-hero">
+            <div class="empty-icon" aria-hidden="true">
+              <svg viewBox="0 0 28 28" width="40" height="40">
+                <circle cx="14" cy="9" r="4.5" fill="none" stroke="#3d9b8f" stroke-width="1.6" />
+                <path d="M5 24c0-5 4-8 9-8s9 3 9 8" fill="none" stroke="#c67b5c" stroke-width="1.6" stroke-linecap="round" />
+              </svg>
+            </div>
+            <div class="empty-title">Your children's path is coming to the Portal</div>
+            <div class="empty-sub">
+              Milestones, growth insights and Pebble's daily note — track
+              development on the web, soon. It's live in the PebblePath app today.
+            </div>
+            <div class="empty-actions">
+              <button class="empty-cta primary" @click=${() => (this._activeTab = 'children')}>
+                Open the Children tab
+              </button>
             </div>
           </div>
-        </section>
+        </glass-panel>
+      </section>
+    `;
+  }
+
+  /** ACTIVITIES — the full pre-tabs dashboard surface (trips +
+   *  calendars + celebrations), unchanged data wiring. */
+  _renderActivitiesTab() {
+    return html`
+      ${this._renderTabHeader('Activities', this.family?.name ?? 'Your family')}
+      ${this._renderComingUpSection()}
+      ${this._renderCalendarsSection()}
+      ${this._renderCelebrationsSection()}
+    `;
+  }
+
+  /** MY CAIRN — the ring stack + manage members. */
+  _renderCairnTab() {
+    return html`
+      ${this._renderTabHeader(
+        'My Cairn',
+        "Who's in your circle, and what each ring can see",
+      )}
+      ${this._renderCairnSection()}
+    `;
+  }
+
+  /** CHILDREN — Phase B wires real Firestore child data here. Phase A
+   *  ships the parent-only framing + a clear placeholder (no fake
+   *  data). The privacy chip surfaces the "without sharing
+   *  everything" boundary. */
+  _renderChildrenTab() {
+    const scope = html`<span class="scope-chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round" /></svg>
+      Private to parents
+    </span>`;
+    return html`
+      ${this._renderTabHeader(
+        'Children',
+        'Milestones, growth insights & Pebble — from the app',
+        scope,
+      )}
+      <section>
+        <glass-panel padding="lg" variant="strong">
+          <div class="empty-hero">
+            <div class="empty-icon" aria-hidden="true">
+              <svg viewBox="0 0 28 28" width="44" height="44">
+                <circle cx="14" cy="9" r="5" fill="none" stroke="#3d9b8f" stroke-width="1.6" />
+                <path d="M4 25c0-5.5 4.5-9 10-9s10 3.5 10 9" fill="none" stroke="#c67b5c" stroke-width="1.6" stroke-linecap="round" />
+              </svg>
+            </div>
+            <div class="empty-title">Your children's developmental path, on the web</div>
+            <div class="empty-sub">
+              Soon you'll see each child's milestone progress, growth
+              insights, and Pebble's daily note here — the same data the
+              PebblePath app tracks. This view is private to parents and is
+              never shared with your extended Cairn.
+            </div>
+            <div class="empty-actions">
+              <button class="empty-cta ghost" @click=${() => (this._activeTab = 'activities')}>
+                Back to Activities
+              </button>
+            </div>
+          </div>
+        </glass-panel>
+      </section>
+    `;
+  }
+
+  /** PEBBLE — relocates the old topbar search entry-point to a proper
+   *  tab. The actual chat is the existing <pebble-chat> modal, opened
+   *  unchanged via _pebbleOpen (zero risk to the working chat). */
+  _renderPebbleTab() {
+    const next = (this._circleTrips() ?? [])
+      .filter((t) => t.start && parseLocalDate(t.start) >= new Date())
+      .sort((a, b) => String(a.start).localeCompare(String(b.start)))[0];
+    const scope = html`<span class="scope-chip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round" /></svg>
+      Private to your family
+    </span>`;
+    return html`
+      ${this._renderTabHeader(
+        'Pebble',
+        'Your family activity advisor — trips, weekends, gift ideas',
+        scope,
+      )}
+      <section>
+        <glass-panel padding="lg" variant="strong">
+          <div class="empty-hero">
+            <div class="empty-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="#3d9b8f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9" />
+                <circle cx="12" cy="12" r="4.5" fill="#3d9b8f" stroke="none" />
+              </svg>
+            </div>
+            <div class="empty-title">Ask Pebble</div>
+            <div class="empty-sub">
+              ${next
+                ? html`Pebble knows your upcoming trips and celebrations —
+                    including ${next.location || next.title}. Ask about
+                    activities, packing, restaurants or gift ideas.`
+                : html`Pebble knows your upcoming trips and family
+                    celebrations. Ask about activities, packing, restaurants
+                    or gift ideas — anything family-shaped.`}
+            </div>
+            <div class="empty-actions">
+              <button class="empty-cta primary" @click=${() => (this._pebbleOpen = true)}>
+                Start a conversation
+              </button>
+            </div>
+          </div>
+        </glass-panel>
+      </section>
+    `;
+  }
+
+  render() {
+    // Modals below still need the resolved member lists; the per-tab
+    // sections recompute their own (cheap derivations) so each helper
+    // stays self-contained.
+    const immediate = this._liveImmediate();
+    const extended = this._liveExtended();
+    const allMembers = immediate.concat(extended);
+
+    return html`
+      <div class="topbar">
+        <div class="brand">
+          <img
+            class="brand-icon"
+            src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
+            srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
+            alt="Cairn"
+            width="38"
+            height="38"
+          />
+          <!-- 2026-05-16 — wordmark text removed from the logged-in
+               topbar per Thomas; the stone icon stays as the brand mark. -->
+        </div>
+        ${this._renderTabBar()}
+        <div class="who">
+          <button
+            class="activity-btn"
+            @click=${() => this._openCreate()}
+            title="New activity"
+          >
+            <span aria-hidden="true">+</span>
+            <span class="activity-btn-label">Activity</span>
+          </button>
+          <button
+            class="avatar-tap"
+            @click=${() => (this._profileOpen = true)}
+            title="${this.user?.displayName ?? 'Profile'} — open settings"
+            aria-label="Open profile settings"
+          >
+            <member-chip
+              .name=${this.user?.displayName ?? 'You'}
+              .photo=${this.user?.photoURL ?? ''}
+              .hue=${198}
+              size="36"
+            ></member-chip>
+          </button>
+        </div>
+      </div>
+
+      ${this.preview
+        ? html`<div class="preview-banner">
+            <strong>Preview mode</strong> — viewing the dashboard with placeholder
+            data. <a href="?">Back to sign-in</a>.
+          </div>`
+        : ''}
+
+      <main>
+        ${this._renderActiveTab()}
 
         <discover-pebblepath></discover-pebblepath>
       </main>
