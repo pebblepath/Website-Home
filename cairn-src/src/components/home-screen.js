@@ -1733,7 +1733,8 @@ export class HomeScreen extends LitElement {
             width="38"
             height="38"
           />
-          <div class="brand-name">Cairn</div>
+          <!-- 2026-05-16 — wordmark text removed from the logged-in
+               topbar per Thomas; the stone icon stays as the brand mark. -->
         </div>
         <div
           class="pebble-search"

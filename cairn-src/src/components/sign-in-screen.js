@@ -380,7 +380,7 @@ export class SignInScreen extends LitElement {
               width="56"
               height="56"
             />
-            <div class="mark-name">Cairn</div>
+            <div class="mark-name">Portal</div>
           </div>
           <div class="companion">PebblePath companion</div>
         </div>
