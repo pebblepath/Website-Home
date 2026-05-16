@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+  <!-- Cairn icon set · Group activity — two-peak mountain.
+       Rhymes with the iOS Activities tab (mountain.2.fill); pointed
+       apexes + rounded base corners keep it in the set's filled
+       pebble style without reading as a person. Back peak drawn
+       first so the front peak overlaps it. -->
+  <path d="M15.8 7.4 21.8 19.5a1.1 1.1 0 0 1-.98 1.6H10.2z"/>
+  <path d="M9 4.6 16.5 19.5a1.1 1.1 0 0 1-.98 1.6H3.46a1.1 1.1 0 0 1-.98-1.6z"/>
+</svg>
