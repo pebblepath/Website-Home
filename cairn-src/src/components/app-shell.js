@@ -22,6 +22,14 @@ export class AppShell extends LitElement {
     trips: { state: true },
     events: { state: true },
     userDocResolved: { state: true },
+    ppFamily: { state: true },
+    ppIsMember: { state: true },
+    ppChildren: { state: true },
+    selectedChildId: { state: true },
+    childMilestones: { state: true },
+    childInsights: { state: true },
+    childDailyCard: { state: true },
+    childPebbleMessages: { state: true },
   };
 
   constructor() {
@@ -68,6 +76,14 @@ export class AppShell extends LitElement {
     this.children = [];
     this.trips = [];
     this.events = [];
+    this.ppFamily = null;
+    this.ppIsMember = false;
+    this.ppChildren = [];
+    this.selectedChildId = null;
+    this.childMilestones = [];
+    this.childInsights = [];
+    this.childDailyCard = null;
+    this.childPebbleMessages = [];
     this._unsubAuth = null;
     this._onDataChange = () => {
       this.pebbleUser = dataStore.state.user;
@@ -75,6 +91,14 @@ export class AppShell extends LitElement {
       this.children = dataStore.state.children;
       this.trips = dataStore.state.trips;
       this.events = dataStore.state.events;
+      this.ppFamily = dataStore.state.ppFamily;
+      this.ppIsMember = dataStore.state.ppIsMember;
+      this.ppChildren = dataStore.state.ppChildren;
+      this.selectedChildId = dataStore.state.selectedChildId;
+      this.childMilestones = dataStore.state.childMilestones;
+      this.childInsights = dataStore.state.childInsights;
+      this.childDailyCard = dataStore.state.childDailyCard;
+      this.childPebbleMessages = dataStore.state.childPebbleMessages;
       // Promote the userDocResolved flag to a tracked property so render
       // re-runs the moment we know whether the user has a family.
       this.userDocResolved = dataStore.userDocResolved;
@@ -271,6 +295,14 @@ export class AppShell extends LitElement {
         .children=${this.children}
         .trips=${this.trips}
         .events=${this.events}
+        .ppFamily=${this.ppFamily}
+        .ppIsMember=${this.ppIsMember}
+        .ppChildren=${this.ppChildren}
+        .selectedChildId=${this.selectedChildId}
+        .childMilestones=${this.childMilestones}
+        .childInsights=${this.childInsights}
+        .childDailyCard=${this.childDailyCard}
+        .childPebbleMessages=${this.childPebbleMessages}
       ></home-screen>
     `;
   }

@@ -30,7 +30,25 @@ import {
 class FamilyDataStore extends EventTarget {
   constructor() {
     super();
-    this.state = { user: null, family: null, children: [], trips: [], events: [] };
+    this.state = {
+      user: null,
+      family: null,
+      children: [],
+      trips: [],
+      events: [],
+      // ── PP-household child surface (Children / Today / Pebble) ──
+      // Deliberately separate from `family`/`children` above (the
+      // Cairn-resolved context). Children/Pebble must read the
+      // parent's OWN household — see _subscribePpFamily.
+      ppFamily: null,
+      ppIsMember: false,
+      ppChildren: [],
+      selectedChildId: null,
+      childMilestones: [],
+      childInsights: [],
+      childDailyCard: null,
+      childPebbleMessages: [],
+    };
     this._uid = null;
     this._unsubUser = null;
     this._unsubFamily = null;
@@ -38,6 +56,14 @@ class FamilyDataStore extends EventTarget {
     this._unsubTrips = null;
     this._unsubEvents = null;
     this._currentFamilyId = null;
+    this._ppFamilyId = null;
+    this._selectedChildId = null;
+    this._unsubPpFamily = null;
+    this._unsubPpChildren = null;
+    this._unsubChildMs = null;
+    this._unsubChildIns = null;
+    this._unsubChildDaily = null;
+    this._unsubChildPebble = null;
     // True after the user-doc snapshot has fired at least once (whether
     // the doc exists or not). Lets app-shell distinguish "still loading
     // the user record" from "user has no family yet, show onboarding".
@@ -93,6 +119,19 @@ class FamilyDataStore extends EventTarget {
         this.state.trips = [];
         this.state.events = [];
         if (fid) this._subscribeFamily(fid);
+      }
+      // PP-household resolver — the deliberate INVERSE of the Cairn
+      // resolver above. Children/Pebble surface the parent's OWN
+      // household (`user.familyId`, where the viewer is a memberIds
+      // parent), NOT the Cairn-resolved family (which may be a
+      // relative's ring the parent joined). They coincide in the
+      // common case; they diverge for a parent who also joined an
+      // in-law's ring — then the two contexts run side by side.
+      const ppFid = this.state.user?.familyId ?? null;
+      if (ppFid !== this._ppFamilyId) {
+        this._ppFamilyId = ppFid;
+        this._teardownPpFamily();
+        if (ppFid) this._subscribePpFamily(ppFid);
       }
       this._emit();
     });
@@ -227,6 +266,208 @@ class FamilyDataStore extends EventTarget {
         console.warn('[Cairn] familyEvents subscription error:', err.code, err.message);
       },
     );
+  }
+
+  /**
+   * Subscribe the PP household (user.familyId) for the Children /
+   * Today / Pebble surfaces. SEPARATE from _subscribeFamily — that
+   * one tracks the Cairn-resolved family (trips/events/rings); this
+   * one is strictly the parent's own child-data household.
+   *
+   * Member gate: `ppIsMember` = the viewer is in this family's
+   * `memberIds`. The Firestore rules already enforce parent-only
+   * access to milestones/insights/dailyCards/pebbleMessages
+   * server-side (a Cairn-only joiner gets PERMISSION_DENIED). The
+   * client gate just decides whether to render the surface vs. the
+   * parent-only empty state — it never relaxes a rule.
+   */
+  _subscribePpFamily(ppFid) {
+    this._unsubPpFamily = onSnapshot(
+      doc(db, 'families', ppFid),
+      (snap) => {
+        const fam = snap.exists() ? { id: snap.id, ...snap.data() } : null;
+        this.state.ppFamily = fam;
+        this.state.ppIsMember = Boolean(
+          fam && Array.isArray(fam.memberIds) && fam.memberIds.includes(this._uid),
+        );
+        this._emit();
+      },
+      (err) => {
+        console.warn('[Portal] ppFamily subscription error:', err.code, err.message);
+      },
+    );
+    this._unsubPpChildren = onSnapshot(
+      collection(db, 'families', ppFid, 'children'),
+      (snap) => {
+        const kids = snap.docs
+          .map((d) => {
+            const data = d.data();
+            return {
+              id: d.id,
+              ...data,
+              dateOfBirth:
+                data.dateOfBirth?.toDate?.() ??
+                (data.dateOfBirth ? new Date(data.dateOfBirth) : null),
+            };
+          })
+          .sort(
+            (a, b) =>
+              (a.createdAt?.toMillis?.() ?? 0) - (b.createdAt?.toMillis?.() ?? 0),
+          );
+        this.state.ppChildren = kids;
+        // Pick / keep the active child. Default to the first child;
+        // keep the current selection if it still exists.
+        const stillThere =
+          this._selectedChildId &&
+          kids.some((k) => k.id === this._selectedChildId);
+        const nextId = stillThere ? this._selectedChildId : kids[0]?.id ?? null;
+        if (nextId !== this._selectedChildId) {
+          this._subscribeChild(nextId);
+        } else if (!nextId) {
+          this._teardownChild();
+        }
+        this._emit();
+      },
+      (err) => {
+        console.warn('[Portal] ppChildren subscription error:', err.code, err.message);
+      },
+    );
+  }
+
+  /**
+   * Subscribe the selected child's milestone / insight / daily-card /
+   * Pebble-message subcollections. Collections are small per child so
+   * we read them unordered and sort client-side — zero composite-index
+   * surface, and no firebase.js export change.
+   *
+   * isPrivate filter (pebbleMessages): a co-parent's private message
+   * (`isPrivate === true && senderUid !== me`) is dropped here. This
+   * mirrors the iOS client filter — Firestore rules do NOT filter
+   * private messages, so skipping this leaks them to the other parent.
+   */
+  _subscribeChild(childId) {
+    this._teardownChild();
+    this._selectedChildId = childId;
+    this.state.selectedChildId = childId;
+    if (!childId || !this._ppFamilyId) {
+      this.state.childMilestones = [];
+      this.state.childInsights = [];
+      this.state.childDailyCard = null;
+      this.state.childPebbleMessages = [];
+      return;
+    }
+    const base = ['families', this._ppFamilyId, 'children', childId];
+    this._unsubChildMs = onSnapshot(
+      collection(db, ...base, 'milestones'),
+      (snap) => {
+        this.state.childMilestones = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .sort(
+            (a, b) =>
+              (a.ageRangeStartMonths ?? 0) - (b.ageRangeStartMonths ?? 0),
+          );
+        this._emit();
+      },
+      (err) => console.warn('[Portal] milestones error:', err.code, err.message),
+    );
+    this._unsubChildIns = onSnapshot(
+      collection(db, ...base, 'insights'),
+      (snap) => {
+        this.state.childInsights = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => (b.relevanceScore ?? 0) - (a.relevanceScore ?? 0));
+        this._emit();
+      },
+      (err) => console.warn('[Portal] insights error:', err.code, err.message),
+    );
+    this._unsubChildDaily = onSnapshot(
+      collection(db, ...base, 'dailyCards'),
+      (snap) => {
+        // Doc id is a YYYY-MM-DD string (device-local tz). Latest =
+        // lexicographically-max id (sorts chronologically). Avoids a
+        // tz-sensitive "today's key" computation in the browser.
+        const cards = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        cards.sort((a, b) => String(b.id).localeCompare(String(a.id)));
+        this.state.childDailyCard = cards[0] ?? null;
+        this._emit();
+      },
+      (err) => console.warn('[Portal] dailyCards error:', err.code, err.message),
+    );
+    this._unsubChildPebble = onSnapshot(
+      collection(db, ...base, 'pebbleMessages'),
+      (snap) => {
+        this.state.childPebbleMessages = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .filter(
+            (m) => !(m.isPrivate === true && m.senderUid !== this._uid),
+          )
+          .sort(
+            (a, b) =>
+              (a.timestamp?.toMillis?.() ?? 0) -
+              (b.timestamp?.toMillis?.() ?? 0),
+          );
+        this._emit();
+      },
+      (err) => console.warn('[Portal] pebbleMessages error:', err.code, err.message),
+    );
+  }
+
+  /** Switch the active child (multi-child families). */
+  selectChild(childId) {
+    if (!childId || childId === this._selectedChildId) return;
+    if (!this.state.ppChildren.some((k) => k.id === childId)) return;
+    this._subscribeChild(childId);
+    this._emit();
+  }
+
+  /**
+   * Child-development Pebble (Phase C). Calls the member-only
+   * `askPebbleAboutChild` Cloud Function (firebase/functions
+   * codebase — NOT the activities `askPebbleAboutActivities`, which
+   * admits the extended ring). The function re-enforces memberIds
+   * server-side; this is the convenience client path.
+   */
+  async askPebbleAboutChild(childId, question, history = []) {
+    if (!functions) throw new Error('Firebase functions not configured.');
+    if (!this._ppFamilyId) throw new Error('No PebblePath family.');
+    if (!childId) throw new Error('No child selected.');
+    const fn = httpsCallable(functions, 'askPebbleAboutChild');
+    const result = await fn({
+      familyId: this._ppFamilyId,
+      childId,
+      question,
+      history,
+    });
+    return result.data;
+  }
+
+  _teardownChild() {
+    this._unsubChildMs?.();
+    this._unsubChildIns?.();
+    this._unsubChildDaily?.();
+    this._unsubChildPebble?.();
+    this._unsubChildMs =
+      this._unsubChildIns =
+      this._unsubChildDaily =
+      this._unsubChildPebble =
+        null;
+  }
+
+  _teardownPpFamily() {
+    this._teardownChild();
+    this._unsubPpFamily?.();
+    this._unsubPpChildren?.();
+    this._unsubPpFamily = null;
+    this._unsubPpChildren = null;
+    this._selectedChildId = null;
+    this.state.ppFamily = null;
+    this.state.ppIsMember = false;
+    this.state.ppChildren = [];
+    this.state.selectedChildId = null;
+    this.state.childMilestones = [];
+    this.state.childInsights = [];
+    this.state.childDailyCard = null;
+    this.state.childPebbleMessages = [];
   }
 
   /**
@@ -667,10 +908,26 @@ class FamilyDataStore extends EventTarget {
       this._unsubTrips =
       this._unsubEvents =
         null;
+    this._teardownPpFamily();
     this._uid = null;
     this._currentFamilyId = null;
+    this._ppFamilyId = null;
     this.userDocResolved = false;
-    this.state = { user: null, family: null, children: [], trips: [], events: [] };
+    this.state = {
+      user: null,
+      family: null,
+      children: [],
+      trips: [],
+      events: [],
+      ppFamily: null,
+      ppIsMember: false,
+      ppChildren: [],
+      selectedChildId: null,
+      childMilestones: [],
+      childInsights: [],
+      childDailyCard: null,
+      childPebbleMessages: [],
+    };
   }
 
   _emit() {

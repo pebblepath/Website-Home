@@ -16,11 +16,19 @@ import './profile-sheet.js';
 import './pebble-chat.js';
 import './activity-type-picker.js';
 import './discover-pebblepath.js';
+import './child-overview.js';
+import './child-pebble.js';
 import {
   mockUser,
   mockMembers,
   mockTrips,
   mockEvents,
+  mockChild,
+  mockChildren,
+  mockMilestones,
+  mockInsights,
+  mockDailyCard,
+  mockChildPebbleMessages,
 } from '../data/mock.js';
 import {
   dataStore,
@@ -54,6 +62,16 @@ export class HomeScreen extends LitElement {
     trips: { type: Array },
     events: { type: Array },
     preview: { type: Boolean },
+    // ── PP-household child surface (Children / Today / Pebble) ──
+    ppFamily: { type: Object },
+    ppIsMember: { type: Boolean },
+    ppChildren: { type: Array },
+    selectedChildId: { type: String },
+    childMilestones: { type: Array },
+    childInsights: { type: Array },
+    childDailyCard: { type: Object },
+    childPebbleMessages: { type: Array },
+    _pebblePrefill: { state: true },
     circle: { state: true },
     /** Active top-nav tab: 'today' | 'children' | 'activities' |
      *  'pebble' | 'cairn'. Replaced the centre-column Pebble search
@@ -91,6 +109,15 @@ export class HomeScreen extends LitElement {
     this.children = [];
     this.trips = [];
     this.events = [];
+    this.ppFamily = null;
+    this.ppIsMember = false;
+    this.ppChildren = [];
+    this.selectedChildId = null;
+    this.childMilestones = [];
+    this.childInsights = [];
+    this.childDailyCard = null;
+    this.childPebbleMessages = [];
+    this._pebblePrefill = '';
     this.preview = false;
     // 2026-05-14: the circle toggle was removed from the topbar (Pebble
     // search bar took its centre-column slot). Default to 'extended' so
@@ -1185,6 +1212,53 @@ export class HomeScreen extends LitElement {
       width: 13px;
       height: 13px;
     }
+
+    /* Today tab — compact child snapshot. */
+    .today-child {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .today-child .tc-meta {
+      flex: 1;
+      min-width: 0;
+    }
+    .today-child .tc-name {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .today-child .tc-sub {
+      color: var(--text-secondary);
+      font-size: 13.5px;
+      margin-top: 3px;
+    }
+    .today-child .tc-pct {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .tc-daily {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 248, 235, 0.08);
+    }
+    .tc-daily-tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal-pebble);
+      margin-bottom: 5px;
+    }
+    .tc-daily-title {
+      font-family: var(--font-display);
+      font-size: 15.5px;
+      font-weight: 600;
+      letter-spacing: -0.005em;
+    }
   `;
 
   _liveImmediate() {
@@ -2218,35 +2292,144 @@ export class HomeScreen extends LitElement {
     `;
   }
 
+  /** Resolve the child surface for the current view — preview mock
+   *  vs. live PP-household data. `hasPP` gates the real child UI vs.
+   *  the parent-only empty state (Cairn-only viewers / no PP family).
+   *  This deliberately reads the PP-household child data threaded from
+   *  data.js (user.familyId), NOT the Cairn-resolved family. */
+  _childData() {
+    if (this.preview) {
+      return {
+        hasPP: true,
+        children: mockChildren,
+        child: mockChild,
+        milestones: mockMilestones,
+        insights: mockInsights,
+        dailyCard: mockDailyCard,
+        pebbleMessages: mockChildPebbleMessages,
+      };
+    }
+    const children = this.ppChildren ?? [];
+    const child =
+      children.find((c) => c.id === this.selectedChildId) ??
+      children[0] ??
+      null;
+    return {
+      hasPP: Boolean(this.ppIsMember && child),
+      children,
+      child,
+      milestones: this.childMilestones ?? [],
+      insights: this.childInsights ?? [],
+      dailyCard: this.childDailyCard ?? null,
+      pebbleMessages: this.childPebbleMessages ?? [],
+    };
+  }
+
+  _onSelectChild(e) {
+    if (this.preview) return;
+    dataStore.selectChild(e.detail);
+  }
+
+  _onAskPebble(e) {
+    this._pebblePrefill = e.detail ?? '';
+    this._activeTab = 'pebble';
+  }
+
+  _ageShort(dob) {
+    if (!dob || Number.isNaN(dob.getTime?.() ?? NaN)) return '';
+    const now = new Date();
+    let m =
+      (now.getFullYear() - dob.getFullYear()) * 12 +
+      (now.getMonth() - dob.getMonth());
+    if (now.getDate() < dob.getDate()) m -= 1;
+    m = Math.max(0, m);
+    const y = Math.floor(m / 12);
+    const mm = m % 12;
+    if (y === 0) return `${mm} mo`;
+    return `${y}y${mm ? ` ${mm}m` : ''}`;
+  }
+
   /** TODAY — the landing glance: greeting + real upcoming activities +
-   *  celebrations, plus a teaser into the (Phase B) Children surface. */
+   *  celebrations, plus a real child snapshot (parents) or a teaser. */
   _renderTodayTab() {
+    const cd = this._childData();
+    let childGlance;
+    if (cd.hasPP && cd.child) {
+      const ms = cd.milestones;
+      const achieved = ms.filter((x) => x.status === 'achieved').length;
+      const pct = ms.length ? Math.round((achieved / ms.length) * 100) : 0;
+      childGlance = html`
+        <section>
+          <div class="section-head">
+            <h2>${cd.child.name}</h2>
+            <button class="link" @click=${() => (this._activeTab = 'children')}>
+              Open ${cd.child.name}'s path →
+            </button>
+          </div>
+          <glass-panel padding="md" variant="strong">
+            <div class="today-child">
+              <div class="tc-meta">
+                <div class="tc-name">${cd.child.name}</div>
+                <div class="tc-sub">
+                  ${this._ageShort(cd.child.dateOfBirth)} ·
+                  ${achieved} of ${ms.length} milestones achieved
+                </div>
+              </div>
+              <div class="tc-pct">${pct}%</div>
+            </div>
+            ${cd.dailyCard
+              ? html`<div class="tc-daily">
+                  <div class="tc-daily-tag">Pebble's daily</div>
+                  <div class="tc-daily-title">${cd.dailyCard.title}</div>
+                  <button
+                    class="link"
+                    style="margin-top:10px;"
+                    @click=${() =>
+                      this._onAskPebble({
+                        detail:
+                          cd.dailyCard.topicForChat ||
+                          `Tell me more about: ${cd.dailyCard.title}`,
+                      })}
+                  >
+                    Ask Pebble about this →
+                  </button>
+                </div>`
+              : ''}
+          </glass-panel>
+        </section>
+      `;
+    } else {
+      childGlance = html`
+        <section>
+          <glass-panel padding="lg" variant="strong">
+            <div class="empty-hero">
+              <div class="empty-icon" aria-hidden="true">
+                <svg viewBox="0 0 28 28" width="40" height="40">
+                  <circle cx="14" cy="9" r="4.5" fill="none" stroke="#3d9b8f" stroke-width="1.6" />
+                  <path d="M5 24c0-5 4-8 9-8s9 3 9 8" fill="none" stroke="#c67b5c" stroke-width="1.6" stroke-linecap="round" />
+                </svg>
+              </div>
+              <div class="empty-title">Children's milestones live in the app</div>
+              <div class="empty-sub">
+                Milestones, growth insights and Pebble's daily note are
+                private to parents on a PebblePath household. They're
+                tracked in the PebblePath iOS app.
+              </div>
+              <div class="empty-actions">
+                <button class="empty-cta primary" @click=${() => (this._activeTab = 'children')}>
+                  Open the Children tab
+                </button>
+              </div>
+            </div>
+          </glass-panel>
+        </section>
+      `;
+    }
     return html`
       ${this._renderTodayHeader()}
       ${this._renderComingUpSection()}
       ${this._renderCelebrationsSection()}
-      <section>
-        <glass-panel padding="lg" variant="strong">
-          <div class="empty-hero">
-            <div class="empty-icon" aria-hidden="true">
-              <svg viewBox="0 0 28 28" width="40" height="40">
-                <circle cx="14" cy="9" r="4.5" fill="none" stroke="#3d9b8f" stroke-width="1.6" />
-                <path d="M5 24c0-5 4-8 9-8s9 3 9 8" fill="none" stroke="#c67b5c" stroke-width="1.6" stroke-linecap="round" />
-              </svg>
-            </div>
-            <div class="empty-title">Your children's path is coming to the Portal</div>
-            <div class="empty-sub">
-              Milestones, growth insights and Pebble's daily note — track
-              development on the web, soon. It's live in the PebblePath app today.
-            </div>
-            <div class="empty-actions">
-              <button class="empty-cta primary" @click=${() => (this._activeTab = 'children')}>
-                Open the Children tab
-              </button>
-            </div>
-          </div>
-        </glass-panel>
-      </section>
+      ${childGlance}
     `;
   }
 
@@ -2272,15 +2455,35 @@ export class HomeScreen extends LitElement {
     `;
   }
 
-  /** CHILDREN — Phase B wires real Firestore child data here. Phase A
-   *  ships the parent-only framing + a clear placeholder (no fake
-   *  data). The privacy chip surfaces the "without sharing
-   *  everything" boundary. */
+  /** CHILDREN — real PP-household child data (parents only). The
+   *  scope chip + the member gate surface the "without sharing
+   *  everything" boundary; non-members see the parent-only state. */
   _renderChildrenTab() {
+    const cd = this._childData();
     const scope = html`<span class="scope-chip">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round" /></svg>
       Private to parents
     </span>`;
+    if (cd.hasPP) {
+      return html`
+        ${this._renderTabHeader(
+          'Children',
+          'Milestones, growth insights & Pebble — from the app',
+          scope,
+        )}
+        <section>
+          <child-overview
+            .child=${cd.child}
+            .children=${cd.children}
+            .milestones=${cd.milestones}
+            .insights=${cd.insights}
+            .dailyCard=${cd.dailyCard}
+            @select-child=${this._onSelectChild}
+            @ask-pebble=${this._onAskPebble}
+          ></child-overview>
+        </section>
+      `;
+    }
     return html`
       ${this._renderTabHeader(
         'Children',
@@ -2296,12 +2499,13 @@ export class HomeScreen extends LitElement {
                 <path d="M4 25c0-5.5 4.5-9 10-9s10 3.5 10 9" fill="none" stroke="#c67b5c" stroke-width="1.6" stroke-linecap="round" />
               </svg>
             </div>
-            <div class="empty-title">Your children's developmental path, on the web</div>
+            <div class="empty-title">This area is private to parents</div>
             <div class="empty-sub">
-              Soon you'll see each child's milestone progress, growth
-              insights, and Pebble's daily note here — the same data the
-              PebblePath app tracks. This view is private to parents and is
-              never shared with your extended Cairn.
+              Children's milestones, growth insights and Pebble's daily
+              note are visible only to parents on a PebblePath household —
+              never to the extended Cairn. If you're a parent here and
+              don't see your child, make sure you're signed in with your
+              PebblePath account.
             </div>
             <div class="empty-actions">
               <button class="empty-cta ghost" @click=${() => (this._activeTab = 'activities')}>
@@ -2314,10 +2518,30 @@ export class HomeScreen extends LitElement {
     `;
   }
 
-  /** PEBBLE — relocates the old topbar search entry-point to a proper
-   *  tab. The actual chat is the existing <pebble-chat> modal, opened
-   *  unchanged via _pebbleOpen (zero risk to the working chat). */
+  /** PEBBLE — for parents with a child this is the child-development
+   *  advisor (member-only `askPebbleAboutChild` CF). For everyone else
+   *  (Cairn-only / no child) it falls back to the family-ACTIVITIES
+   *  advisor via the existing <pebble-chat> modal — unchanged. */
   _renderPebbleTab() {
+    const cd = this._childData();
+    if (cd.hasPP && cd.child) {
+      const scope = html`<span class="scope-chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round" /></svg>
+        Private to parents
+      </span>`;
+      return html`
+        ${this._renderTabHeader(
+          'Pebble',
+          `${cd.child.name}'s development advisor`,
+          scope,
+        )}
+        <child-pebble
+          .child=${cd.child}
+          .messages=${cd.pebbleMessages}
+          .prefill=${this._pebblePrefill}
+        ></child-pebble>
+      `;
+    }
     const next = (this._circleTrips() ?? [])
       .filter((t) => t.start && parseLocalDate(t.start) >= new Date())
       .sort((a, b) => String(a.start).localeCompare(String(b.start)))[0];
