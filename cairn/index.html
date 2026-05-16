@@ -2,61 +2,45 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#1f5c54" />
-    <meta name="color-scheme" content="dark light" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal — pebblepath.ai/portal</title>
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://pebblepath.ai/portal/" />
 
-    <title>Cairn — for every little adventure</title>
-    <meta
-      name="description"
-      content="Private portal for your trips, activities, birthdays and anniversaries — for your whole family."
-    />
-    <link rel="canonical" href="https://pebblepath.ai/cairn/" />
+    <!-- 2026-05-16 — /cairn/ was renamed to /portal/. This is a
+         permanent redirect stub kept ONLY so existing bookmarks, the
+         already-shipped iOS "Open Cairn" link, and previously-shared
+         ?join=/?code= invite links keep working. The Build-Cairn
+         Action no longer writes this directory (it builds /portal/),
+         so this file is stable. The old built assets that may still
+         sit alongside this file are orphaned + inert (this page
+         redirects before anything references them). -->
 
-    <!-- Favicons. PNG primary (matches the topbar icon) + SVG fallback. -->
-    <link rel="icon" type="image/png" sizes="256x256" href="assets/cairn-icon.png" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="apple-touch-icon" href="assets/cairn-icon-2x.png" />
-    <meta name="apple-mobile-web-app-title" content="Cairn" />
-
-    <!-- Open Graph (Facebook, LinkedIn, Slack, Discord, iMessage). -->
+    <!-- OG/Twitter point at /portal/ so any old /cairn/ link shared in
+         iMessage/Slack/etc. still unfurls to the right card. -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Cairn" />
-    <meta property="og:title" content="Cairn — for every little adventure" />
-    <meta
-      property="og:description"
-      content="Private portal for your trips, activities, birthdays and anniversaries — for your whole family."
-    />
-    <meta property="og:url" content="https://pebblepath.ai/cairn/" />
-    <meta property="og:image" content="https://pebblepath.ai/cairn/og-card.svg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Cairn — for every little adventure" />
-    <meta property="og:locale" content="en_GB" />
-
-    <!-- Twitter / X. -->
+    <meta property="og:site_name" content="Portal" />
+    <meta property="og:title" content="Portal — for every little adventure" />
+    <meta property="og:description" content="Private portal for your trips, activities, birthdays and anniversaries — for your whole family." />
+    <meta property="og:url" content="https://pebblepath.ai/portal/" />
+    <meta property="og:image" content="https://pebblepath.ai/portal/og-card.svg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Cairn — for every little adventure" />
-    <meta
-      name="twitter:description"
-      content="Private portal for your trips, activities, birthdays and anniversaries — for your whole family."
-    />
-    <meta name="twitter:image" content="https://pebblepath.ai/cairn/og-card.svg" />
+    <meta name="twitter:title" content="Portal — for every little adventure" />
+    <meta name="twitter:image" content="https://pebblepath.ai/portal/og-card.svg" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600;700&family=Nunito:wght@600;700&display=swap"
-      rel="stylesheet"
-    />
-    <script type="module" crossorigin src="/cairn/assets/index-CsXkg90-.js"></script>
-    <link rel="modulepreload" crossorigin href="/cairn/assets/lit-2GpawzfI.js">
-    <link rel="modulepreload" crossorigin href="/cairn/assets/firebase-core-WlNQdXp3.js">
-    <link rel="modulepreload" crossorigin href="/cairn/assets/firebase-functions-EPI35Sfs.js">
-    <link rel="modulepreload" crossorigin href="/cairn/assets/firebase-storage-BMyqKy67.js">
-    <link rel="stylesheet" crossorigin href="/cairn/assets/index-BxucKnmD.css">
+    <!-- noscript fallback (won't carry the query string — the JS path
+         below is the normal case and preserves ?join=/?code= + hash). -->
+    <meta http-equiv="refresh" content="0; url=/portal/" />
+    <script>
+      // Preserve invite params (?join= / ?code=) and any hash so old
+      // bookmarks + the shipped iOS link + shared invites resolve to
+      // the same place. replace() (not assign) so /cairn/ doesn't
+      // linger in history / break the back button.
+      location.replace('/portal/' + location.search + location.hash);
+    </script>
   </head>
   <body>
-    <cairn-app></cairn-app>
+    Portal has moved to
+    <a href="/portal/">pebblepath.ai/portal</a>. Redirecting…
   </body>
 </html>
