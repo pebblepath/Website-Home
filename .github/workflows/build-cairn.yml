@@ -45,20 +45,23 @@ jobs:
         working-directory: cairn-src
         run: npm run build
 
-      - name: Sync built bundle into /cairn
+      # 2026-05-16 — output renamed /cairn → /portal. The Action no
+      # longer touches the legacy /cairn dir; a committed
+      # query-preserving redirect lives there instead (Stage B).
+      - name: Sync built bundle into /portal
         run: |
-          rm -rf cairn
-          mkdir -p cairn
-          cp -R cairn-src/dist/. cairn/
+          rm -rf portal
+          mkdir -p portal
+          cp -R cairn-src/dist/. portal/
 
       - name: Commit + push if changed
         run: |
           git config user.name  "Cairn Build Bot"
           git config user.email "build@pebblepath.ai"
-          git add cairn
+          git add portal
 
           if git diff --cached --quiet; then
-            echo "Cairn output unchanged — nothing to commit."
+            echo "Portal output unchanged — nothing to commit."
             exit 0
           fi
 

@@ -1,10 +1,15 @@
 import { defineConfig } from 'vite';
 
-// Cairn deploys to pebblepath.ai/cairn — use absolute base so /assets/...
-// references in CSS (e.g. Ponari font) resolve to /cairn/assets/... in
-// production while still working at localhost:5273/ in dev.
+// Portal deploys to pebblepath.ai/portal — absolute base so /assets/...
+// references resolve to /portal/assets/... in production while still
+// working at localhost:5273/ in dev. Renamed from /cairn/ 2026-05-16;
+// a query-preserving redirect at /cairn/ keeps old bookmarks, the
+// already-shipped iOS "Open Cairn" link, and old ?join= invite links
+// working. NOTE: import.meta.env.BASE_URL becomes '/portal/' so
+// `manage-members-modal._inviteLink` auto-generates /portal/?join=…
+// links — no manual change needed there.
 export default defineConfig(({ command }) => ({
-  base: command === 'build' ? '/cairn/' : '/',
+  base: command === 'build' ? '/portal/' : '/',
   server: {
     port: 5273,
     open: true,

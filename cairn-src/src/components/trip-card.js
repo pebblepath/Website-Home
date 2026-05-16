@@ -47,7 +47,7 @@ function formatTripForShare(t, memberMap) {
     .filter(Boolean);
   if (attendees.length) lines.push(`With: ${attendees.join(', ')}`);
   if (t.notes) lines.push('', t.notes);
-  lines.push('', 'Shared from Cairn · pebblepath.ai/cairn');
+  lines.push('', 'Shared from Portal · pebblepath.ai/portal');
   return lines.join('\n');
 }
 
