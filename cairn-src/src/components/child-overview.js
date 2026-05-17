@@ -739,9 +739,7 @@ export class ChildOverview extends LitElement {
               class="tl-now"
               style="left:calc(var(--tl-pad, 118px) + (100% - var(--tl-pad, 118px)) * ${tl.nowFrac});"
             >
-              <span
-                >now · ${Math.floor(tl.ageM / 12)}y ${tl.ageM % 12}m</span
-              >
+              <span>Today</span>
             </div>
             ${tl.lanes.map(
               (ln) => html`<div class="tl-lane ${ln.cls}">

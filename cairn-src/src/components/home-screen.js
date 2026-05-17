@@ -3038,7 +3038,7 @@ export class HomeScreen extends LitElement {
     }
     return out
       .sort((a, b) => String(a.date).localeCompare(String(b.date)))
-      .slice(0, 3);
+      .slice(0, 5);
   }
 
   _fmtRangeShort(start, end) {
@@ -3064,7 +3064,7 @@ export class HomeScreen extends LitElement {
     const cd = this._childData();
     const scope = html`<div class="scope shared">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 2.5-5 6-5s6 2 6 5M15 17c2 0 5 1 5 3" stroke-linecap="round"/></svg>
-      The whole family
+      Your household
     </div>`;
     const coming = this._comingUp();
     const comingPanel = html`
