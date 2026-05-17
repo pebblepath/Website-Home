@@ -20,6 +20,49 @@ import {
   getDownloadURL,
 } from './firebase.js';
 
+// Free-text country (from iOS CLGeocoder / manual entry) → ISO-3166-1
+// alpha-2 for the Nager.Date holiday API. Covers the launch markets
+// + common aliases; unmapped countries simply skip the overlay
+// ("if available"). Keys are lower-cased + trimmed at lookup.
+const COUNTRY_ISO = {
+  'united states': 'US',
+  'united states of america': 'US',
+  usa: 'US',
+  us: 'US',
+  'united kingdom': 'GB',
+  uk: 'GB',
+  'great britain': 'GB',
+  england: 'GB',
+  scotland: 'GB',
+  wales: 'GB',
+  'northern ireland': 'GB',
+  canada: 'CA',
+  australia: 'AU',
+  ireland: 'IE',
+  france: 'FR',
+  germany: 'DE',
+  spain: 'ES',
+  italy: 'IT',
+  netherlands: 'NL',
+  'the netherlands': 'NL',
+  belgium: 'BE',
+  switzerland: 'CH',
+  austria: 'AT',
+  portugal: 'PT',
+  sweden: 'SE',
+  norway: 'NO',
+  denmark: 'DK',
+  finland: 'FI',
+  'new zealand': 'NZ',
+  mexico: 'MX',
+  brazil: 'BR',
+  'south africa': 'ZA',
+  india: 'IN',
+  japan: 'JP',
+  singapore: 'SG',
+  poland: 'PL',
+};
+
 /**
  * Pub-sub store for the signed-in user's PebblePath docs + Cairn trips.
  * Surface area:
@@ -40,6 +83,11 @@ class FamilyDataStore extends EventTarget {
       children: [],
       trips: [],
       events: [],
+      // Public-holiday overlay (Nager.Date, by family.homeLocation
+      // .country). NOT persisted — deterministic from country+year,
+      // so it's a read-only display layer, never written to the
+      // shared family doc. Event-shaped: {id,title,date,source}.
+      holidays: [],
       // ── PP-household child surface (Children / Today / Pebble) ──
       // Deliberately separate from `family`/`children` above (the
       // Cairn-resolved context). Children/Pebble must read the
@@ -68,6 +116,7 @@ class FamilyDataStore extends EventTarget {
     this._unsubTrips = null;
     this._unsubEvents = null;
     this._currentFamilyId = null;
+    this._holidayKey = null;
     this._ppFamilyId = null;
     this._selectedChildId = null;
     this._unsubPpFamily = null;
@@ -206,6 +255,88 @@ class FamilyDataStore extends EventTarget {
     }
   }
 
+  /**
+   * Public-holiday overlay (Ellie ③). Resolves the family's country
+   * from `family.homeLocation.country` (set by iOS), maps it to an
+   * ISO-3166-1 alpha-2 code, and pulls this + next year's public
+   * holidays from the free, no-key, CORS-enabled Nager.Date API.
+   * Results are an in-memory + localStorage-cached read-only overlay
+   * (event-shaped, source:'holiday') — deterministic data, never
+   * written to the shared family doc. Idempotent: keyed on
+   * iso+years so the frequent family-doc snapshots don't refetch.
+   * Silent on any failure (holidays just don't show — "if available").
+   */
+  async _loadHolidays() {
+    const raw = this.state.family?.homeLocation?.country;
+    const iso = COUNTRY_ISO[String(raw ?? '').trim().toLowerCase()] ?? null;
+    if (!iso) {
+      if (this.state.holidays.length) {
+        this.state.holidays = [];
+        this._holidayKey = null;
+        this._emit();
+      }
+      return;
+    }
+    const yr = new Date().getFullYear();
+    const years = [yr, yr + 1];
+    const key = `${iso}:${years.join(',')}`;
+    if (this._holidayKey === key) return; // already loaded for this country/years
+    this._holidayKey = key;
+    try {
+      const all = [];
+      for (const y of years) {
+        const ck = `pp_hol_${iso}_${y}`;
+        let list = null;
+        try {
+          const cached = JSON.parse(localStorage.getItem(ck) || 'null');
+          if (cached && Date.now() - cached.t < 30 * 24 * 3600 * 1000) {
+            list = cached.h;
+          }
+        } catch {
+          /* ignore cache parse errors */
+        }
+        if (!list) {
+          const res = await fetch(
+            `https://date.nager.at/api/v3/PublicHolidays/${y}/${iso}`,
+          );
+          if (!res.ok) continue;
+          const data = await res.json();
+          list = (Array.isArray(data) ? data : []).map((h) => ({
+            date: h.date,
+            name: h.name || h.localName || 'Holiday',
+          }));
+          try {
+            localStorage.setItem(ck, JSON.stringify({ t: Date.now(), h: list }));
+          } catch {
+            /* storage may be full / disabled — fine */
+          }
+        }
+        for (const h of list) {
+          all.push({
+            id: `hol-${iso}-${h.date}-${h.name}`,
+            title: h.name,
+            date: h.date,
+            source: 'holiday',
+          });
+        }
+      }
+      // Dedupe (a date can carry multiple holiday names; keep each
+      // distinct title once).
+      const seen = new Set();
+      this.state.holidays = all.filter((h) => {
+        const k = `${h.date}|${h.title}`;
+        if (seen.has(k)) return false;
+        seen.add(k);
+        return true;
+      });
+      this._emit();
+    } catch {
+      // Network/API failure → leave whatever we have; allow a later
+      // retry by clearing the key.
+      this._holidayKey = null;
+    }
+  }
+
   _subscribeFamily(familyId) {
     this._unsubFamily = onSnapshot(doc(db, 'families', familyId), (snap) => {
       this.state.family = snap.exists() ? { id: snap.id, ...snap.data() } : null;
@@ -215,6 +346,7 @@ class FamilyDataStore extends EventTarget {
       // live approval (childViewers change) activates access without
       // a reload. Pure fallback — members are untouched.
       this._reconcileChildViewer();
+      this._loadHolidays();
       this._emit();
     });
     // Batch F: the requester's own access-request doc (id = uid) on
@@ -1320,6 +1452,7 @@ class FamilyDataStore extends EventTarget {
     this._teardownPpFamily();
     this._uid = null;
     this._currentFamilyId = null;
+    this._holidayKey = null;
     this._ppFamilyId = null;
     this.userDocResolved = false;
     this.state = {
@@ -1328,6 +1461,7 @@ class FamilyDataStore extends EventTarget {
       children: [],
       trips: [],
       events: [],
+      holidays: [],
       ppFamily: null,
       ppIsMember: false,
       ppChildren: [],

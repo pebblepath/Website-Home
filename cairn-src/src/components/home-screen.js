@@ -63,6 +63,7 @@ export class HomeScreen extends LitElement {
     children: { type: Array },
     trips: { type: Array },
     events: { type: Array },
+    holidays: { type: Array },
     preview: { type: Boolean },
     // ── PP-household child surface (Children / Today / Pebble) ──
     ppFamily: { type: Object },
@@ -117,6 +118,7 @@ export class HomeScreen extends LitElement {
     this.children = [];
     this.trips = [];
     this.events = [];
+    this.holidays = [];
     this.ppFamily = null;
     this.ppIsMember = false;
     this.ppChildren = [];
@@ -863,6 +865,16 @@ export class HomeScreen extends LitElement {
       font-weight: 700;
       border-color: rgba(255, 248, 235, 0.5);
     }
+    /* Holiday days — teal, distinct from trip-blue + celebration-
+       amber (Ellie ③). Declared BEFORE has-event/has-trip so on a
+       day that's both, the user's own trip/celebration wins the
+       colour (this is just the public-holiday backdrop). */
+    .cal-cell.has-holiday {
+      background: var(--gradient-sage);
+      border-color: rgba(61, 155, 143, 0.6);
+      color: #fff;
+      font-weight: 600;
+    }
     .cal-cell.has-event {
       background: var(--gradient-celebration);
       border-color: rgba(255, 240, 215, 0.55);
@@ -1440,6 +1452,16 @@ export class HomeScreen extends LitElement {
     .gico.event {
       background: var(--gradient-celebration);
       color: #5a3a1a;
+    }
+    /* External/imported sources — deliberately distinct from the
+       trip (tide) + celebration (amber) palettes (Ellie ③). */
+    .gico.holiday {
+      background: var(--gradient-sage);
+      color: #fff;
+    }
+    .gico.school {
+      background: var(--gradient-cta);
+      color: #fff;
     }
     .ms-row {
       display: flex;
@@ -2207,6 +2229,17 @@ export class HomeScreen extends LitElement {
         pushLabel(d, t.title ?? '');
       }
     }
+    // Public-holiday overlay on the grid (Ellie ③) — distinct dot
+    // colour + the holiday name as the cell label.
+    const holidayDays = new Set();
+    for (const h of this.holidays ?? []) {
+      const d = parseLocalDate(h.date);
+      if (!d) continue;
+      if (d.getFullYear() === year && d.getMonth() === month) {
+        holidayDays.add(d.getDate());
+        pushLabel(d.getDate(), h.title ?? 'Holiday');
+      }
+    }
     const cells = [];
     for (let i = 0; i < offset; i++) cells.push(html`<div class="cal-cell empty"></div>`);
     const isCurrentMonth =
@@ -2215,6 +2248,7 @@ export class HomeScreen extends LitElement {
       const isToday = isCurrentMonth && d === today.getDate();
       const hasEvent = events.includes(d);
       const hasTrip = tripDays.has(d);
+      const hasHoliday = holidayDays.has(d);
       // Today gets its own preview label like trips/events do, so the
       // cell carries text (not just colour) consistently.
       const label = isToday ? (dayLabels.get(d) ?? 'Today') : dayLabels.get(d);
@@ -2223,6 +2257,7 @@ export class HomeScreen extends LitElement {
         isToday ? 'today' : '',
         hasEvent ? 'has-event' : '',
         hasTrip ? 'has-trip' : '',
+        hasHoliday ? 'has-holiday' : '',
       ]
         .filter(Boolean)
         .join(' ');
@@ -3033,10 +3068,26 @@ export class HomeScreen extends LitElement {
       const d = parseLocalDate(e.date);
       if (!d) continue;
       out.push({
-        kind: 'event',
+        // school-import events get the distinct "external" treatment
+        // (icon + colour), same family as holidays (Ellie ③).
+        kind: e.source === 'school-import' ? 'external' : 'event',
         title: e.title || 'Celebration',
         sub: '',
         date: e.date,
+        chip: d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
+      });
+    }
+    // Public-holiday overlay — upcoming only (a glance, not history).
+    const todayKey = new Date().toISOString().slice(0, 10);
+    for (const h of this.holidays ?? []) {
+      if (!h.date || h.date < todayKey) continue;
+      const d = parseLocalDate(h.date);
+      if (!d) continue;
+      out.push({
+        kind: 'holiday',
+        title: h.title || 'Public holiday',
+        sub: 'Public holiday',
+        date: h.date,
         chip: d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
       });
     }
@@ -3063,6 +3114,21 @@ export class HomeScreen extends LitElement {
   _eventGico() {
     return html`<span class="gico event"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.1 6.7C10.4 5 9.2 3.7 7.8 3.3c-1-.3-1.9.1-2.2.9-.4 1 .2 2.1 1 2.7 1 .75 2.5 1.05 4.5 1.05z"/><path d="M12.9 6.7c.7-1.7 1.9-3 3.3-3.4 1-.3 1.9.1 2.2.9.4 1-.2 2.1-1 2.7-1 .75-2.5 1.05-4.5 1.05z"/><rect x="3" y="8" width="8.1" height="3.5" rx="1"/><rect x="12.9" y="8" width="8.1" height="3.5" rx="1"/><rect x="4.1" y="11.7" width="7" height="9.1" rx="1.4"/><rect x="12.9" y="11.7" width="7" height="9.1" rx="1.4"/></svg></span>`;
   }
+  // External/imported sources (Ellie ③) — visually distinct from
+  // user-created trips/celebrations. Holiday = a sun/landmark glyph;
+  // school-import = a school building.
+  _holidayGico() {
+    return html`<span class="gico holiday"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span>`;
+  }
+  _schoolGico() {
+    return html`<span class="gico school"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-5 9 5-9 5-9-5z"/><path d="M7 12.5V17c0 1 2.5 2.5 5 2.5s5-1.5 5-2.5v-4.5M21 10v5"/></svg></span>`;
+  }
+  _gicoFor(c) {
+    if (c.kind === 'trip') return this._tripGico();
+    if (c.kind === 'holiday') return this._holidayGico();
+    if (c.kind === 'external') return this._schoolGico();
+    return this._eventGico();
+  }
 
   _renderTodayTab() {
     const cd = this._childData();
@@ -3079,7 +3145,7 @@ export class HomeScreen extends LitElement {
           ? html`<div class="ring-note" style="padding:8px 4px;">Nothing on the calendar yet — plan something from the Activities tab.</div>`
           : coming.map(
               (c) => html`<div class="ms-row">
-                ${c.kind === 'trip' ? this._tripGico() : this._eventGico()}
+                ${this._gicoFor(c)}
                 <div class="t">${c.title}${c.sub ? html`<small>${c.sub}</small>` : ''}</div>
                 <span class="ms-stat up">${c.chip}</span>
               </div>`,
