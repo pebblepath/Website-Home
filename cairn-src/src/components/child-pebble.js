@@ -140,20 +140,23 @@ export class ChildPebble extends LitElement {
   static styles = css`
     *, *::before, *::after { box-sizing: border-box; }
     :host { display: block; }
-    /* Portal v4 — Pebble is the whole tab: no card, no page header.
-       A full-height column edge-to-edge up to the nav bar; the
-       "Private to parents" pill is integrated into the top of the
-       chat surface. */
+    /* Portal v4 — Pebble is the whole tab: no card, no page header,
+       edge-to-edge up to the nav bar; the "Private to parents" pill
+       is integrated into the top of the chat surface.
+       Height is CAPPED at ~800px below the nav bar (not endless) —
+       the thread scrolls internally inside that box; the composer
+       stays pinned at the bottom. min() so short viewports shrink to
+       fit instead of pushing the page into its own scroll. */
     .chatpane {
       display: flex;
       flex-direction: column;
-      min-height: calc(100vh - 116px);
+      height: min(800px, calc(100vh - 84px));
       padding: 14px 24px 0;
     }
     @media (max-width: 720px) {
       .chatpane {
         padding: 10px 16px 0;
-        min-height: calc(100vh - 150px);
+        height: min(800px, calc(100vh - 150px));
       }
     }
     .toprow {
