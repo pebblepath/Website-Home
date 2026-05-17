@@ -28,25 +28,25 @@ const DOMAINS = [
     key: 'motor',
     label: 'Motor',
     color: '#6b9ac4',
-    svg: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="13.5" cy="4" r="2"/><path d="M12.6 7.3 8.8 9.9a1 1 0 0 0-.42.66l-.7 3.6a1 1 0 0 0 1.96.38l.5-2.6 1.5-.9-1 4-2.4 4.8a1 1 0 0 0 1.8.9l2.4-4.9.6-2 1.3 2.2.5 4.6a1 1 0 0 0 2-.2l-.5-5a1 1 0 0 0-.13-.42l-1.7-2.9.5-2.7 1.7 1.9a1 1 0 0 0 .76.34l2.3-.05a1 1 0 0 0 0-2l-1.86.04-2.7-3a1 1 0 0 0-.7-.33l-3.3-.06a1 1 0 0 0-.5.12z"/></svg>`,
+    svg: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="13.5" cy="5.5" r="2"/><path d="M9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5 0-.8.1L6 7.6V12h2V8.9l1.8-.7z"/></svg>`,
   },
   {
     key: 'language',
     label: 'Language',
     color: '#d4a843',
-    svg: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3.5h14A3.5 3.5 0 0 1 22.5 7v6A3.5 3.5 0 0 1 19 16.5h-7.6l-5 4.2A1 1 0 0 1 5 20V16.5A3.5 3.5 0 0 1 1.5 13V7A3.5 3.5 0 0 1 5 3.5z"/></svg>`,
+    svg: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>`,
   },
   {
     key: 'socialEmotional',
     label: 'Social-Emotional',
     color: '#c98a8a',
-    svg: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.4-4.6-9.7-9.2A5.4 5.4 0 0 1 12 6.1a5.4 5.4 0 0 1 9.7 5.7C19.4 16.4 12 21 12 21z"/></svg>`,
+    svg: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`,
   },
   {
     key: 'cognitive',
     label: 'Cognitive',
     color: '#8b7bb5',
-    svg: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 21v-3.2a3 3 0 0 0 2.3-2.9 4 4 0 0 0-.8-6.6A4.2 4.2 0 0 0 9 5.4 4 4 0 0 0 5 9.3a3.9 3.9 0 0 0 1.6 3.2 3 3 0 0 0 1.7 5.3V21"/><path d="M10.5 8.2a2.3 2.3 0 0 1 2.5 2.2v7"/></svg>`,
+    svg: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 4.2A2.7 2.7 0 0 0 6.4 5.9a2.6 2.6 0 0 0-2.5 2.6c0 .5.1.9.3 1.3A2.7 2.7 0 0 0 3 12.2a2.7 2.7 0 0 0 1.2 2.2 2.6 2.6 0 0 0-.2 1c0 1.5 1.2 2.7 2.7 2.7.2 0 .4 0 .6-.1A2.7 2.7 0 0 0 11 20V4.2zm2 0v15.8a2.7 2.7 0 0 0 3.7-1.9c.2 0 .4.1.6.1 1.5 0 2.7-1.2 2.7-2.7 0-.4-.1-.7-.2-1A2.7 2.7 0 0 0 21 12.2a2.7 2.7 0 0 0-1.2-2.4c.2-.4.3-.8.3-1.3a2.6 2.6 0 0 0-2.5-2.6A2.7 2.7 0 0 0 13 4.2z"/></svg>`,
   },
 ];
 
@@ -322,7 +322,7 @@ export class ChildOverview extends LitElement {
       gap: 12px;
     }
 
-    /* "The longer view" longitudinal timeline — concept-faithful. */
+    /* "Timeline" longitudinal view — concept-faithful. */
     .timeline {
       position: relative;
       padding: 8px 4px 4px;
@@ -550,7 +550,7 @@ export class ChildOverview extends LitElement {
     return Math.max(0, m);
   }
 
-  /** "The longer view" model — per-domain dots on a 0→axisMax age
+  /** "Timeline" model — per-domain dots on a 0→axisMax age
    *  axis. Solid dot = achieved milestone (by start age); one dashed
    *  "future" dot = the next not-yet-achieved one in that domain.
    *  Axis adapts to the child's age + the catalog so it stays
@@ -558,13 +558,21 @@ export class ChildOverview extends LitElement {
   _timelineModel() {
     const ms = this.milestones ?? [];
     const ageM = this._ageMonths(this.child?.dateOfBirth);
-    const maxEnd = ms.reduce(
-      (mx, m) => Math.max(mx, m.ageRangeEndMonths ?? 0),
+    // Axis = birth → 12 months PAST the latest *achieved* milestone
+    // (Portal v4). The old far adaptive ladder squashed every dot
+    // into a sliver, especially for young children; this keeps the
+    // span tight and readable. Floored so the "now" marker isn't
+    // pinned at the edge, and rounded up to a clean 6-step so the
+    // axis labels land on whole numbers.
+    const latestAchievedEnd = ms.reduce(
+      (mx, m) =>
+        m.status === 'achieved'
+          ? Math.max(mx, m.ageRangeEndMonths ?? m.ageRangeStartMonths ?? 0)
+          : mx,
       0,
     );
-    const ladder = [36, 48, 60, 72, 96, 120, 144, 168, 216, 264];
-    const need = Math.max(ageM + 4, maxEnd, 36);
-    const axisMax = ladder.find((v) => v >= need) ?? ladder[ladder.length - 1];
+    let axisMax = Math.max(latestAchievedEnd + 12, ageM + 6, 18);
+    axisMax = Math.ceil(axisMax / 6) * 6;
     const pos = (mm) =>
       Math.min(98, Math.max(2, ((mm ?? 0) / axisMax) * 100));
     const lanes = [
@@ -719,7 +727,7 @@ export class ChildOverview extends LitElement {
 
       <section>
         <div class="section-head">
-          <h2>The longer view</h2>
+          <h2>Timeline</h2>
           <p class="note">
             Every dot is a logged milestone · the longer you use
             PebblePath, the richer this gets
@@ -864,14 +872,6 @@ export class ChildOverview extends LitElement {
                     Generate summary
                   </button>
                 </div>
-              </div>
-              <div class="vis-note">
-                Visibility model — this whole tab reads from the app's
-                child data and is gated to
-                <b>parents (PP household members)</b>. Grandparents and
-                the wider Cairn ring never see milestone or health
-                content; they only see what's on the Activities &amp;
-                My Cairn tabs.
               </div>`}
       </section>
     `;
