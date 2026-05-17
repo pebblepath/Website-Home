@@ -1109,6 +1109,99 @@ class FamilyDataStore extends EventTarget {
     await deleteDoc(doc(db, 'families', this._currentFamilyId, 'familyEvents', eventId));
   }
 
+  // ── School-calendar import (Ellie ①) ──────────────────────────────
+  // 3 steps: upload the file → CF extracts candidate events → after
+  // the PARENT REVIEW screen, the confirmed subset is written. The CF
+  // never writes; only this confirmed-write does.
+
+  /** Upload the school calendar (PDF/image/.docx) to Storage. Path
+   *  has NO extension (contentType drives it, per the wildcard rule).
+   *  Returns the path + a coarse fileType the CF branches on. */
+  async uploadSchoolCalendar(file) {
+    if (!storage || !this._currentFamilyId) {
+      throw new Error('Storage unavailable.');
+    }
+    const ct = file.type || '';
+    const fileType = /pdf/.test(ct)
+      ? 'pdf'
+      : /^image\//.test(ct)
+        ? 'image'
+        : /word|officedocument|msword/.test(ct)
+          ? 'docx'
+          : 'pdf';
+    const path = `families/${this._currentFamilyId}/schoolCalendarUploads/${Date.now()}`;
+    await uploadBytes(storageRef(storage, path), file, {
+      contentType: ct || 'application/octet-stream',
+    });
+    return { storagePath: path, fileType };
+  }
+
+  /** Call the extractSchoolCalendar CF → candidate events for review.
+   *  Returns [] gracefully if the CF isn't deployed yet. */
+  async extractSchoolCalendarEvents(storagePath, fileType) {
+    if (!functions || !this._currentFamilyId) {
+      throw new Error('No family yet.');
+    }
+    const fn = httpsCallable(functions, 'extractSchoolCalendar');
+    const res = await fn({
+      familyId: this._currentFamilyId,
+      storagePath,
+      fileType,
+    });
+    const events = res?.data?.events;
+    return Array.isArray(events) ? events : [];
+  }
+
+  /** Write the parent-confirmed subset as familyEvents tagged
+   *  source:'school-import'. They're family-wide (personIds = the
+   *  whole ring) and ring-visible ('extended') so everyone sees
+   *  school closures/holidays. */
+  async importSchoolEvents(list) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    const uid = auth?.currentUser?.uid;
+    if (!uid) throw new Error('Not signed in.');
+    const fam = this.state.family ?? {};
+    const memberIds = Array.isArray(fam.memberIds) ? fam.memberIds : [];
+    const cairnIds = Array.isArray(fam.cairnMemberIds)
+      ? fam.cairnMemberIds
+      : [];
+    const personIds = [...new Set([...memberIds, ...cairnIds, uid])];
+    const visibleTo = computeVisibleTo('extended', fam, uid);
+    const col = collection(
+      db,
+      'families',
+      this._currentFamilyId,
+      'familyEvents',
+    );
+    const clean = (list ?? [])
+      .filter(
+        (e) =>
+          e &&
+          /^\d{4}-\d{2}-\d{2}$/.test(String(e.date ?? '')) &&
+          String(e.title ?? '').trim(),
+      )
+      .slice(0, 250);
+    let n = 0;
+    await Promise.all(
+      clean.map(async (e) => {
+        await addDoc(col, {
+          title: String(e.title).trim().slice(0, 120),
+          date: e.date,
+          type: e.type || 'other',
+          source: 'school-import',
+          personIds,
+          visibility: 'extended',
+          visibleTo,
+          createdBy: uid,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
+        n += 1;
+      }),
+    );
+    return n;
+  }
+
 
   /**
    * Phase 3C: server-side URL preview (OG image + title scrape). Calls the

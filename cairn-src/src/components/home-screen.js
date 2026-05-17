@@ -12,6 +12,7 @@ import './event-form.js';
 import './manage-members-modal.js';
 import './all-trips-modal.js';
 import './import-calendar-modal.js';
+import './school-import-modal.js';
 import './profile-sheet.js';
 import './pebble-chat.js';
 import './activity-type-picker.js';
@@ -99,6 +100,7 @@ export class HomeScreen extends LitElement {
     _allTripsOpen: { state: true },
     _editingFamilyName: { state: true },
     _importOpen: { state: true },
+    _schoolImportOpen: { state: true },
     _profileOpen: { state: true },
     _typePickerOpen: { state: true },
     _formMode: { state: true },
@@ -158,6 +160,7 @@ export class HomeScreen extends LitElement {
     this._allTripsOpen = false;
     this._editingFamilyName = false;
     this._importOpen = false;
+    this._schoolImportOpen = false;
     this._profileOpen = false;
     this._typePickerOpen = false;
     this._formMode = 'trip';
@@ -2661,6 +2664,12 @@ export class HomeScreen extends LitElement {
               >
                 Import from Calendar
               </button>
+              <button
+                class="link hide-mobile"
+                @click=${() => (this._schoolImportOpen = true)}
+              >
+                Import school calendar
+              </button>
               ${this._circleTrips().length > 4
                 ? html`<button class="link" @click=${() => (this._allTripsOpen = true)}>
                     All trips →
@@ -3803,6 +3812,12 @@ export class HomeScreen extends LitElement {
         ?open=${this._importOpen}
         @cancel=${() => (this._importOpen = false)}
       ></import-calendar-modal>
+
+      <school-import-modal
+        ?open=${this._schoolImportOpen}
+        @cancel=${() => (this._schoolImportOpen = false)}
+        @added=${() => (this._schoolImportOpen = false)}
+      ></school-import-modal>
 
       <profile-sheet
         ?open=${this._profileOpen}
