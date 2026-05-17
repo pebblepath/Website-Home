@@ -14,7 +14,9 @@ import './all-trips-modal.js';
 import './import-calendar-modal.js';
 import './school-import-modal.js';
 import './profile-sheet.js';
-import './pebble-chat.js';
+// `pebble-chat.js` (the family-ACTIVITIES advisor popup) is no longer
+// instantiated — the activities-Pebble fallback was removed
+// 2026-05-17 (Pebble is parents-only; non-parents get no Pebble).
 import './activity-type-picker.js';
 import './discover-pebblepath.js';
 import './child-overview.js';
@@ -105,7 +107,6 @@ export class HomeScreen extends LitElement {
     _profileOpen: { state: true },
     _typePickerOpen: { state: true },
     _formMode: { state: true },
-    _pebbleOpen: { state: true },
     _pebbleFabOpen: { state: true },
     _themeLight: { state: true },
     /** Currently-hovered drop target during a member drag — gives the
@@ -168,7 +169,6 @@ export class HomeScreen extends LitElement {
     this._profileOpen = false;
     this._typePickerOpen = false;
     this._formMode = 'trip';
-    this._pebbleOpen = false;
     this._pebbleFabOpen = false;
     this._themeLight =
       typeof document !== 'undefined' &&
@@ -603,13 +603,13 @@ export class HomeScreen extends LitElement {
          regardless of the host formatting context (max-width +
          margin:0 auto was computing to 0 here). Matches the concept's
          1280 max + 24px gutters. */
-      padding: 16px 24px 0;
+      padding: 30px 24px 0;
       width: min(1280px, 100%);
       margin-inline: auto;
     }
     @media (max-width: 768px) {
       main {
-        padding: 12px 16px calc(32px + env(safe-area-inset-bottom));
+        padding: 20px 16px calc(32px + env(safe-area-inset-bottom));
       }
     }
     /* Portal v4 — Pebble tab is full-bleed: drop the gutters + width
@@ -626,12 +626,12 @@ export class HomeScreen extends LitElement {
       align-items: flex-end;
       justify-content: space-between;
       gap: 20px;
-      margin-bottom: 18px;
+      margin-bottom: 32px;
       flex-wrap: wrap;
     }
     @media (max-width: 768px) {
       .hello {
-        margin-bottom: 14px;
+        margin-bottom: 22px;
       }
     }
     .hello h1 {
@@ -701,7 +701,7 @@ export class HomeScreen extends LitElement {
     }
 
     section {
-      margin-bottom: 22px;
+      margin-bottom: 32px;
     }
     .section-head {
       display: flex;
@@ -2699,7 +2699,23 @@ export class HomeScreen extends LitElement {
   /** The 5-tab nav that replaced the centre-column Pebble search.
    *  Pebble's tab icon reuses the EXACT live Pebble glyph; the four
    *  other tabs are new surfaces so they take new icons. */
+  /** Pebble is the child-development advisor — PARENTS ONLY (the
+   *  member-only `askPebbleAboutChild` CF rejects everyone else).
+   *  Accounts NOT granted full child access (Cairn-only ring members
+   *  AND read-only childViewers) get NO Pebble at all: the tab is
+   *  removed from the nav entirely (Thomas, 2026-05-17 — replaces the
+   *  old activities-advisor fallback). Preview keeps it (mock = parent).
+   */
+  get _pebbleAvailable() {
+    return this.preview || this.ppIsMember;
+  }
+
   _tabDefs() {
+    const pebbleTab = {
+      id: 'pebble',
+      label: 'Pebble',
+      icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" /></svg>`,
+    };
     return [
       {
         id: 'today',
@@ -2716,11 +2732,7 @@ export class HomeScreen extends LitElement {
         label: 'Activities',
         icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 9h18M8 2v4M16 2v4" /></svg>`,
       },
-      {
-        id: 'pebble',
-        label: 'Pebble',
-        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" /></svg>`,
-      },
+      ...(this._pebbleAvailable ? [pebbleTab] : []),
       {
         id: 'cairn',
         label: 'Settings',
@@ -3860,13 +3872,15 @@ export class HomeScreen extends LitElement {
     `;
   }
 
-  /** PEBBLE — for parents with a child this is the child-development
-   *  advisor (member-only `askPebbleAboutChild` CF). For everyone else
-   *  (Cairn-only / no child) it falls back to the family-ACTIVITIES
-   *  advisor via the existing <pebble-chat> modal — unchanged. */
+  /** PEBBLE — the child-development advisor, PARENTS ONLY (member-only
+   *  `askPebbleAboutChild` CF). Accounts without full child access
+   *  don't get the tab at all (`_pebbleAvailable` filters it from the
+   *  nav). This defensive branch only fires if such an account somehow
+   *  lands here (stale state / deep link) — no activities-advisor
+   *  fallback, no popup (removed 2026-05-17, Thomas's call). */
   _renderPebbleTab() {
     const cd = this._childData();
-    if (cd.hasPP && cd.child) {
+    if (this._pebbleAvailable && cd.child) {
       // Portal v4 — Pebble is the whole tab: no page header/subheader
       // and no card. <child-pebble> runs full-bleed (the "Private to
       // parents" pill is integrated into its own top strip). The
@@ -3883,19 +3897,8 @@ export class HomeScreen extends LitElement {
         ></child-pebble>
       `;
     }
-    const next = (this._circleTrips() ?? [])
-      .filter((t) => t.start && parseLocalDate(t.start) >= new Date())
-      .sort((a, b) => String(a.start).localeCompare(String(b.start)))[0];
-    const scope = html`<span class="scope-chip">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round" /></svg>
-      Private to your family
-    </span>`;
     return html`
-      ${this._renderTabHeader(
-        'Pebble',
-        'Your family activity advisor — trips, weekends, gift ideas',
-        scope,
-      )}
+      ${this._renderTabHeader('Pebble', 'Personalised guidance for parents')}
       <section>
         <glass-panel padding="lg" variant="strong">
           <div class="empty-hero">
@@ -3905,20 +3908,11 @@ export class HomeScreen extends LitElement {
                 <circle cx="12" cy="12" r="4.5" fill="#3d9b8f" stroke="none" />
               </svg>
             </div>
-            <div class="empty-title">Ask Pebble</div>
+            <div class="empty-title">Pebble is for parents</div>
             <div class="empty-sub">
-              ${next
-                ? html`Pebble knows your upcoming trips and celebrations —
-                    including ${next.location || next.title}. Ask about
-                    activities, packing, restaurants or gift ideas.`
-                : html`Pebble knows your upcoming trips and family
-                    celebrations. Ask about activities, packing, restaurants
-                    or gift ideas — anything family-shaped.`}
-            </div>
-            <div class="empty-actions">
-              <button class="empty-cta primary" @click=${() => (this._pebbleOpen = true)}>
-                Start a conversation
-              </button>
+              Pebble is the child-development advisor for parents on
+              this household. Ask a parent to add you to a child if you
+              need access.
             </div>
           </div>
         </glass-panel>
@@ -3927,13 +3921,14 @@ export class HomeScreen extends LitElement {
   }
 
   /** Floating liquid-glass Pebble — on every tab EXCEPT Pebble itself.
-   *  Reuses <child-pebble compact> for parents with a child; for
-   *  Cairn-only / no-child users it hands off to the existing
-   *  activities <pebble-chat> modal (mirrors _renderPebbleTab's own
-   *  branch — one Pebble, surfaced everywhere). */
+   *  PARENTS ONLY: reuses <child-pebble compact>. Accounts without
+   *  full child access get no floating Pebble at all (no activities
+   *  fallback — removed 2026-05-17). */
   _renderPebbleFab() {
     if (this._activeTab === 'pebble') return '';
+    if (!this._pebbleAvailable) return '';
     const cd = this._childData();
+    if (!cd.child) return '';
     const pico = html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none"/></svg>`;
     return html`
       <button
@@ -3961,30 +3956,15 @@ export class HomeScreen extends LitElement {
               </button>
             </div>
             <div class="pebble-fab-body">
-              ${cd.hasPP && cd.child
-                ? html`<child-pebble
-                    compact
-                    .child=${cd.child}
-                    .messages=${cd.pebbleMessages}
-                    .sessions=${cd.pebbleSessions}
-                    .prefill=${this._pebblePrefill}
-                    .memberProfiles=${this.family?.memberProfiles ?? {}}
-                    .myUid=${this.user?.uid ?? ''}
-                  ></child-pebble>`
-                : html`<div class="pebble-fab-empty">
-                    Pebble knows your upcoming trips and family
-                    celebrations. Ask about activities, packing,
-                    restaurants or gift ideas.
-                    <br />
-                    <button
-                      @click=${() => {
-                        this._pebbleFabOpen = false;
-                        this._pebbleOpen = true;
-                      }}
-                    >
-                      Start a conversation
-                    </button>
-                  </div>`}
+              <child-pebble
+                compact
+                .child=${cd.child}
+                .messages=${cd.pebbleMessages}
+                .sessions=${cd.pebbleSessions}
+                .prefill=${this._pebblePrefill}
+                .memberProfiles=${this.family?.memberProfiles ?? {}}
+                .myUid=${this.user?.uid ?? ''}
+              ></child-pebble>
             </div>
           </div>`
         : ''}
@@ -4136,13 +4116,6 @@ export class HomeScreen extends LitElement {
         .pebbleUser=${this.pebbleUser}
         @cancel=${() => (this._profileOpen = false)}
       ></profile-sheet>
-
-      <pebble-chat
-        ?open=${this._pebbleOpen}
-        .family=${this.family}
-        .trips=${this._circleTrips()}
-        @cancel=${() => (this._pebbleOpen = false)}
-      ></pebble-chat>
     `;
   }
 }
