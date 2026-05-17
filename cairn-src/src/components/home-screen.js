@@ -1277,6 +1277,419 @@ export class HomeScreen extends LitElement {
       font-weight: 600;
       letter-spacing: -0.005em;
     }
+
+    /* ── Concept-parity classes (Today + My Cairn rebuilds) ─────── */
+    .scope {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 12.5px;
+      font-weight: 600;
+      border: 1px solid var(--glass-border);
+    }
+    .scope svg {
+      width: 13px;
+      height: 13px;
+    }
+    .scope.private {
+      background: rgba(198, 123, 92, 0.16);
+      color: #e6c3ab;
+      border-color: rgba(198, 123, 92, 0.4);
+    }
+    .scope.shared {
+      background: rgba(61, 155, 143, 0.16);
+      color: #9fded2;
+      border-color: rgba(61, 155, 143, 0.4);
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 18px;
+      align-items: start;
+    }
+    @media (max-width: 1024px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+    .gico {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .gico svg {
+      width: 19px;
+      height: 19px;
+    }
+    .gico.trip {
+      background: var(--gradient-tide);
+      color: #0d2840;
+    }
+    .gico.event {
+      background: var(--gradient-celebration);
+      color: #5a3a1a;
+    }
+    .ms-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 13px 4px;
+      border-bottom: 1px solid rgba(255, 248, 235, 0.07);
+    }
+    .ms-row:last-child {
+      border-bottom: none;
+    }
+    .ms-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .ms-dot.motor {
+      background: #6b9ac4;
+    }
+    .ms-dot.language {
+      background: #d4a843;
+    }
+    .ms-dot.social {
+      background: #c98a8a;
+    }
+    .ms-dot.cognitive {
+      background: #8b7bb5;
+    }
+    .ms-row .t {
+      flex: 1;
+      font-size: 14.5px;
+      font-weight: 500;
+    }
+    .ms-row .t small {
+      display: block;
+      color: var(--text-tertiary);
+      font-size: 12px;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+    .ms-stat {
+      padding: 4px 11px;
+      border-radius: var(--radius-pill);
+      font-size: 11.5px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .ms-stat.done {
+      background: rgba(79, 194, 107, 0.18);
+      color: #a6e6b8;
+    }
+    .ms-stat.emerging {
+      background: rgba(212, 168, 67, 0.18);
+      color: #ecca7e;
+    }
+    .ms-stat.up {
+      background: rgba(255, 248, 235, 0.08);
+      color: var(--text-secondary);
+    }
+    .insight {
+      display: flex;
+      gap: 14px;
+      padding: 16px;
+      border-radius: var(--radius-tile);
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border);
+      margin-bottom: 12px;
+    }
+    .insight:last-child {
+      margin-bottom: 0;
+    }
+    .insight .strip {
+      width: 4px;
+      border-radius: 999px;
+      flex-shrink: 0;
+    }
+    .insight.strength .strip {
+      background: var(--teal-pebble);
+    }
+    .insight.watching .strip {
+      background: var(--amber-glow);
+    }
+    .insight.connection .strip {
+      background: var(--purple-muted);
+    }
+    .insight.nudge .strip {
+      background: var(--terracotta);
+    }
+    .insight .ikind {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+      color: var(--text-secondary);
+    }
+    .insight.strength .ikind {
+      color: #7fd3c6;
+    }
+    .insight.watching .ikind {
+      color: #ecca7e;
+    }
+    .insight.connection .ikind {
+      color: #b6a8d8;
+    }
+    .insight.nudge .ikind {
+      color: #e6b39a;
+    }
+    .insight h4 {
+      margin: 0 0 5px;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .insight p {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+    .daily {
+      border-radius: var(--radius-card);
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #3d9b8f 0%, #1f5c54 100%);
+      box-shadow: 0 12px 30px rgba(31, 92, 84, 0.4);
+    }
+    .daily::after {
+      content: '';
+      position: absolute;
+      right: -30px;
+      top: -30px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.14), transparent 70%);
+    }
+    .daily .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 10px;
+    }
+    .daily .tag svg {
+      width: 13px;
+      height: 13px;
+    }
+    .daily h3 {
+      margin: 0 0 8px;
+      font-family: var(--font-display);
+      font-size: 19px;
+      color: #fff;
+      letter-spacing: -0.01em;
+    }
+    .daily p {
+      margin: 0 0 16px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.88);
+      line-height: 1.6;
+    }
+    .daily .ask {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      color: #fff;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .daily .ask:hover {
+      background: rgba(255, 255, 255, 0.24);
+    }
+    .child-card {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+    .child-photo {
+      position: relative;
+      display: inline-flex;
+      border-radius: 999px;
+      padding: 3px;
+      background: var(--teal-pebble);
+    }
+    .child-meta {
+      min-width: 0;
+    }
+    .child-meta h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 26px;
+      letter-spacing: -0.02em;
+    }
+    .child-meta .sub {
+      color: var(--text-secondary);
+      font-size: 14px;
+      margin-top: 3px;
+    }
+    .child-meta .age-pill {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 4px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 12.5px;
+      font-weight: 600;
+      background: rgba(61, 155, 143, 0.18);
+      color: #9fded2;
+      border: 1px solid rgba(61, 155, 143, 0.35);
+    }
+    .child-progress {
+      margin-left: auto;
+      text-align: right;
+      min-width: 150px;
+    }
+    .child-progress .big {
+      font-family: var(--font-display);
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .child-progress .lbl {
+      color: var(--text-secondary);
+      font-size: 12.5px;
+      margin-top: 2px;
+    }
+    .cta-card {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .cta-card .ic {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--gradient-cta);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .cta-card .ic svg {
+      width: 22px;
+      height: 22px;
+    }
+    .cta-card .tx {
+      flex: 1;
+      min-width: 200px;
+    }
+    .cta-card .tx h4 {
+      margin: 0 0 4px;
+      font-family: var(--font-display);
+      font-size: 16px;
+    }
+    .cta-card .tx p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .btn-primary {
+      padding: 10px 18px;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      font-size: 13.5px;
+      background-image: var(--gradient-cta);
+      color: #fff;
+      border: 1px solid rgba(255, 248, 235, 0.22);
+      cursor: pointer;
+      box-shadow:
+        0 4px 14px rgba(139, 90, 62, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    }
+    .btn-primary:hover {
+      background-image: var(--gradient-cta-hover);
+    }
+    .set-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 15px 4px;
+      border-bottom: 1px solid rgba(255, 248, 235, 0.07);
+    }
+    .set-row:last-child {
+      border-bottom: none;
+    }
+    .set-row .si {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--glass-fill-strong);
+      border: 1px solid var(--glass-border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+    .set-row .si svg {
+      width: 16px;
+      height: 16px;
+    }
+    .set-row .sl {
+      flex: 1;
+      min-width: 0;
+    }
+    .set-row .sl b {
+      font-size: 14.5px;
+      font-weight: 600;
+      display: block;
+    }
+    .set-row .sl span {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+    }
+    .set-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 11px;
+      border-radius: var(--radius-pill);
+      font-size: 11.5px;
+      font-weight: 600;
+      background: rgba(255, 248, 235, 0.1);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+    }
+    .ring-note {
+      font-size: 12.5px;
+      color: var(--text-tertiary);
+      line-height: 1.5;
+      margin-top: 10px;
+      padding: 0 4px;
+    }
+    /* Compact header (Pebble tab) — pulls the chat box up so its top
+       sits right under the "Pebble" title instead of floating low. */
+    .hello.tight {
+      margin-bottom: 14px;
+      align-items: center;
+    }
+    .hello.tight h1 {
+      font-size: 26px;
+      line-height: 1.1;
+    }
   `;
 
   _liveImmediate() {
@@ -1778,12 +2191,11 @@ export class HomeScreen extends LitElement {
    *  The pencil icon on the card is the EDITOR (_openEdit); the card
    *  body opens the PLANNER. */
   _openPlanner(trip) {
-    if (this.preview) {
-      toast('Sign in to plan real activities.');
-      return;
-    }
     this._plannerTrip = trip;
     this._plannerOpen = true;
+    // The inline planner lives on the Activities tab — jump there so
+    // it un-collapses in view regardless of where the card was tapped.
+    this._activeTab = 'activities';
   }
 
   _openEdit(trip) {
@@ -1977,7 +2389,7 @@ export class HomeScreen extends LitElement {
   /** Today's greeting — the only header carrying the editable
    *  family-name affordance + smart callout (verbatim from the
    *  pre-tabs dashboard, just scoped to this tab). */
-  _renderTodayHeader() {
+  _renderTodayHeader(rightSlot = '') {
     const firstName = (this.user?.displayName ?? 'there').split(' ')[0];
     const filteredEvents = this._filteredEvents();
     const today = new Date();
@@ -2033,6 +2445,7 @@ export class HomeScreen extends LitElement {
                   </div>`
               : ''}
           </div>
+          ${rightSlot}
         </div>
     `;
   }
@@ -2185,18 +2598,11 @@ export class HomeScreen extends LitElement {
     `;
   }
 
-  _renderCairnSection() {
+  _renderCairnStackPanel() {
     const immediate = this._liveImmediate();
     const extended = this._liveExtended();
     const allMembers = immediate.concat(extended);
     return html`
-        <section>
-          <div class="section-head">
-            <h2>Your Cairn</h2>
-            <button class="link" @click=${() => (this._membersOpen = true)}>
-              Manage members
-            </button>
-          </div>
           <glass-panel padding="md" variant="strong">
             ${(() => {
               const me = immediate.find((m) => m.uid === this.user?.uid);
@@ -2319,7 +2725,6 @@ export class HomeScreen extends LitElement {
               `;
             })()}
           </glass-panel>
-        </section>
     `;
   }
 
@@ -2382,107 +2787,325 @@ export class HomeScreen extends LitElement {
 
   /** TODAY — the landing glance: greeting + real upcoming activities +
    *  celebrations, plus a real child snapshot (parents) or a teaser. */
+  _ageLong(dob) {
+    if (!dob || Number.isNaN(dob.getTime?.() ?? NaN)) return '';
+    const now = new Date();
+    let m =
+      (now.getFullYear() - dob.getFullYear()) * 12 +
+      (now.getMonth() - dob.getMonth());
+    if (now.getDate() < dob.getDate()) m -= 1;
+    m = Math.max(0, m);
+    const y = Math.floor(m / 12);
+    const mm = m % 12;
+    if (y === 0) return `${mm} month${mm === 1 ? '' : 's'}`;
+    const ms = mm ? `, ${mm} month${mm === 1 ? '' : 's'}` : '';
+    return `${y} year${y === 1 ? '' : 's'}${ms}`;
+  }
+
+  /** Combined upcoming activities (trips + celebrations) for Today's
+   *  "Coming up" glance — soonest first, max 3. */
+  _comingUp() {
+    const out = [];
+    for (const t of this._filteredTrips()) {
+      if (!t.start) continue;
+      out.push({
+        kind: 'trip',
+        title: t.title || 'Trip',
+        sub: t.location || t.lodgingHost || '',
+        date: t.start,
+        chip: this._fmtRangeShort(t.start, t.end),
+      });
+    }
+    for (const e of this._filteredEvents()) {
+      if (!e.date) continue;
+      const d = parseLocalDate(e.date);
+      if (!d) continue;
+      out.push({
+        kind: 'event',
+        title: e.title || 'Celebration',
+        sub: '',
+        date: e.date,
+        chip: d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
+      });
+    }
+    return out
+      .sort((a, b) => String(a.date).localeCompare(String(b.date)))
+      .slice(0, 3);
+  }
+
+  _fmtRangeShort(start, end) {
+    const s = parseLocalDate(start);
+    const e = parseLocalDate(end);
+    if (!s) return '';
+    const sm = s.toLocaleDateString('en-GB', { month: 'short' });
+    if (!e || (s.getDate() === e.getDate() && sm === e.toLocaleDateString('en-GB', { month: 'short' }))) {
+      return `${s.getDate()} ${sm}`;
+    }
+    const em = e.toLocaleDateString('en-GB', { month: 'short' });
+    return sm === em ? `${s.getDate()}–${e.getDate()} ${sm}` : `${s.getDate()} ${sm} – ${e.getDate()} ${em}`;
+  }
+
+  _tripGico() {
+    return html`<span class="gico trip"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.62 3.05a1 1 0 0 0-1.12-.18L3.7 10.3c-.86.38-.83 1.62.05 1.95l6.06 2.27 2.27 6.06c.33.88 1.57.9 1.95.05L21.8 4.17a1 1 0 0 0-.18-1.12zM10.5 12.7l6.4-5.7-4.9 6.6-.1.1z"/></svg></span>`;
+  }
+  _eventGico() {
+    return html`<span class="gico event"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.1 6.7C10.4 5 9.2 3.7 7.8 3.3c-1-.3-1.9.1-2.2.9-.4 1 .2 2.1 1 2.7 1 .75 2.5 1.05 4.5 1.05z"/><path d="M12.9 6.7c.7-1.7 1.9-3 3.3-3.4 1-.3 1.9.1 2.2.9.4 1-.2 2.1-1 2.7-1 .75-2.5 1.05-4.5 1.05z"/><rect x="3" y="8" width="8.1" height="3.5" rx="1"/><rect x="12.9" y="8" width="8.1" height="3.5" rx="1"/><rect x="4.1" y="11.7" width="7" height="9.1" rx="1.4"/><rect x="12.9" y="11.7" width="7" height="9.1" rx="1.4"/></svg></span>`;
+  }
+
   _renderTodayTab() {
     const cd = this._childData();
-    let childGlance;
-    if (cd.hasPP && cd.child) {
-      const ms = cd.milestones;
-      const achieved = ms.filter((x) => x.status === 'achieved').length;
-      const pct = ms.length ? Math.round((achieved / ms.length) * 100) : 0;
-      childGlance = html`
-        <section>
-          <div class="section-head">
-            <h2>${cd.child.name}</h2>
-            <button class="link" @click=${() => (this._activeTab = 'children')}>
-              Open ${cd.child.name}'s path →
-            </button>
-          </div>
-          <glass-panel padding="md" variant="strong">
-            <div class="today-child">
-              <div class="tc-meta">
-                <div class="tc-name">${cd.child.name}</div>
-                <div class="tc-sub">
-                  ${this._ageShort(cd.child.dateOfBirth)} ·
-                  ${achieved} of ${ms.length} milestones achieved
-                </div>
-              </div>
-              <div class="tc-pct">${pct}%</div>
-            </div>
-            ${cd.dailyCard
-              ? html`<div class="tc-daily">
-                  <div class="tc-daily-tag">Pebble's daily</div>
-                  <div class="tc-daily-title">${cd.dailyCard.title}</div>
-                  <button
-                    class="link"
-                    style="margin-top:10px;"
-                    @click=${() =>
-                      this._onAskPebble({
-                        detail:
-                          cd.dailyCard.topicForChat ||
-                          `Tell me more about: ${cd.dailyCard.title}`,
-                      })}
-                  >
-                    Ask Pebble about this →
-                  </button>
-                </div>`
-              : ''}
-          </glass-panel>
-        </section>
-      `;
-    } else {
-      childGlance = html`
-        <section>
-          <glass-panel padding="lg" variant="strong">
-            <div class="empty-hero">
-              <div class="empty-icon" aria-hidden="true">
-                <svg viewBox="0 0 28 28" width="40" height="40">
-                  <circle cx="14" cy="9" r="4.5" fill="none" stroke="#3d9b8f" stroke-width="1.6" />
-                  <path d="M5 24c0-5 4-8 9-8s9 3 9 8" fill="none" stroke="#c67b5c" stroke-width="1.6" stroke-linecap="round" />
-                </svg>
-              </div>
-              <div class="empty-title">Children's milestones live in the app</div>
-              <div class="empty-sub">
-                Milestones, growth insights and Pebble's daily note are
-                private to parents on a PebblePath household. They're
-                tracked in the PebblePath iOS app.
-              </div>
-              <div class="empty-actions">
-                <button class="empty-cta primary" @click=${() => (this._activeTab = 'children')}>
-                  Open the Children tab
-                </button>
-              </div>
-            </div>
-          </glass-panel>
-        </section>
+    const scope = html`<div class="scope shared">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 2.5-5 6-5s6 2 6 5M15 17c2 0 5 1 5 3" stroke-linecap="round"/></svg>
+      The whole family
+    </div>`;
+    const coming = this._comingUp();
+    const comingPanel = html`
+      <div class="glass strong"><div class="pad">
+        <div class="cal-head"><h3>Coming up</h3>
+          <button class="link" @click=${() => (this._activeTab = 'activities')}>All activities</button></div>
+        ${coming.length === 0
+          ? html`<div class="ring-note" style="padding:8px 4px;">Nothing on the calendar yet — plan something from the Activities tab.</div>`
+          : coming.map(
+              (c) => html`<div class="ms-row">
+                ${c.kind === 'trip' ? this._tripGico() : this._eventGico()}
+                <div class="t">${c.title}${c.sub ? html`<small>${c.sub}</small>` : ''}</div>
+                <span class="ms-stat up">${c.chip}</span>
+              </div>`,
+            )}
+      </div></div>`;
+
+    if (!cd.hasPP || !cd.child) {
+      // Cairn-only / no PP child — greeting + activities glance only.
+      return html`
+        ${this._renderTodayHeader(scope)}
+        <section>${comingPanel}</section>
+        ${this._renderCelebrationsSection()}
       `;
     }
+
+    const ms = cd.milestones;
+    const achieved = ms.filter((x) => x.status === 'achieved');
+    const pct = ms.length ? Math.round((achieved.length / ms.length) * 100) : 0;
+    const DOM = (c) =>
+      ({ selfCare: 'motor' }[c] || c) || 'motor';
+    const recently = achieved
+      .slice()
+      .sort((a, b) => (b.ageRangeStartMonths ?? 0) - (a.ageRangeStartMonths ?? 0))
+      .slice(0, 3);
+    const insight = (cd.insights || [])[0];
+    const dc = cd.dailyCard;
+
     return html`
-      ${this._renderTodayHeader()}
-      ${this._renderComingUpSection()}
-      ${this._renderCelebrationsSection()}
-      ${childGlance}
+      ${this._renderTodayHeader(scope)}
+
+      <section>
+        <div class="section-head">
+          <h2>${cd.child.name} today</h2>
+          <button class="link" @click=${() => (this._activeTab = 'children')}>
+            Open ${cd.child.name}'s path
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+        <div class="glass strong"><div class="pad">
+          <div class="child-card">
+            <span class="child-photo">
+              <member-chip
+                .name=${cd.child.name}
+                .photo=${cd.child.profilePhotoURL ?? ''}
+                .hue=${150}
+                size="84"
+              ></member-chip>
+            </span>
+            <div class="child-meta">
+              <h2>${cd.child.name}</h2>
+              <div class="sub">${this._ageLong(cd.child.dateOfBirth)}</div>
+              <span class="age-pill"
+                >${achieved.length} of ${ms.length} milestones on track</span
+              >
+            </div>
+            <div class="child-progress">
+              <div class="big">${pct}%</div>
+              <div class="lbl">of tracked milestones</div>
+            </div>
+          </div>
+        </div></div>
+      </section>
+
+      <section>
+        <div class="grid-2">
+          ${dc
+            ? html`<div class="daily">
+                <div class="tag">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/></svg>
+                  Pebble's daily
+                </div>
+                <h3>${dc.title}</h3>
+                <p>${dc.body}</p>
+                <button
+                  class="ask"
+                  @click=${() =>
+                    this._onAskPebble({
+                      detail:
+                        dc.topicForChat || `Tell me more about: ${dc.title}`,
+                    })}
+                >
+                  Ask Pebble about this →
+                </button>
+              </div>`
+            : html`<div class="daily">
+                <div class="tag">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/></svg>
+                  Pebble's daily
+                </div>
+                <h3>Pebble's note is on its way</h3>
+                <p>A fresh observation about ${cd.child.name} appears here each day once Pebble has enough to go on.</p>
+                <button class="ask" @click=${() => (this._activeTab = 'pebble')}>
+                  Ask Pebble anything →
+                </button>
+              </div>`}
+          ${comingPanel}
+        </div>
+      </section>
+
+      <section>
+        <div class="grid-2">
+          <div class="glass strong"><div class="pad">
+            <div class="cal-head"><h3>Recently achieved</h3>
+              <button class="link" @click=${() => (this._activeTab = 'children')}>See all</button></div>
+            ${recently.length === 0
+              ? html`<div class="ring-note" style="padding:8px 4px;">No milestones logged as achieved yet.</div>`
+              : recently.map(
+                  (m) => html`<div class="ms-row">
+                    <span class="ms-dot ${DOM(m.category)}"></span>
+                    <div class="t">${m.title}</div>
+                    <span class="ms-stat done">Achieved</span>
+                  </div>`,
+                )}
+          </div></div>
+          <div class="glass strong"><div class="pad">
+            <div class="cal-head"><h3>Growth insight</h3>
+              <button class="link" @click=${() => (this._activeTab = 'children')}>More insights</button></div>
+            ${insight
+              ? html`<div class="insight ${insight.type}" style="margin-bottom:0;">
+                  <div class="strip"></div>
+                  <div>
+                    <div class="ikind">${insight.type === 'nudge' ? 'Try this' : insight.type}</div>
+                    <h4>${insight.title}</h4>
+                    <p>${insight.body}</p>
+                  </div>
+                </div>`
+              : html`<div class="ring-note" style="padding:8px 4px;">Pebble surfaces patterns here as more of ${cd.child.name}'s milestones are logged.</div>`}
+          </div></div>
+        </div>
+      </section>
     `;
   }
 
   /** ACTIVITIES — the full pre-tabs dashboard surface (trips +
    *  calendars + celebrations), unchanged data wiring. */
   _renderActivitiesTab() {
+    const allMembers = this._liveImmediate().concat(this._liveExtended());
+    const scope = html`<div class="scope shared">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 2.5-5 6-5s6 2 6 5M15 17c2 0 5 1 5 3" stroke-linecap="round"/></svg>
+      Shared with your Cairn
+    </div>`;
     return html`
-      ${this._renderTabHeader('Activities', this.family?.name ?? 'Your family')}
+      ${this._renderTabHeader(
+        'Activities',
+        this.family?.name ?? 'Your family',
+        scope,
+      )}
       ${this._renderComingUpSection()}
+      <trip-planner
+        ?open=${this._plannerOpen}
+        .trip=${this._plannerTrip}
+        .members=${allMembers}
+        .currentUid=${this.user?.uid ?? ''}
+        @cancel=${() => {
+          this._plannerOpen = false;
+          this._plannerTrip = null;
+        }}
+      ></trip-planner>
       ${this._renderCalendarsSection()}
       ${this._renderCelebrationsSection()}
     `;
   }
 
-  /** MY CAIRN — the ring stack + manage members. */
+  /** MY CAIRN — rings + "what each ring sees" + settings (concept). */
   _renderCairnTab() {
+    const name = this.user?.displayName ?? 'You';
+    const email = this.user?.email ?? '';
+    const famName = this.family?.name ?? 'Your family';
     return html`
       ${this._renderTabHeader(
         'My Cairn',
         "Who's in your circle, and what each ring can see",
       )}
-      ${this._renderCairnSection()}
+
+      <section>
+        <div class="grid-2">
+          <div>
+            <div class="section-head">
+              <h2>Your Cairn</h2>
+              <button class="link" @click=${() => (this._membersOpen = true)}>
+                Manage members
+              </button>
+            </div>
+            ${this._renderCairnStackPanel()}
+          </div>
+          <div>
+            <div class="section-head"><h2>What each ring sees</h2></div>
+            <div class="glass strong"><div class="pad">
+              <div class="set-row">
+                <span class="si" style="color:#e6c3ab;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" stroke-linecap="round"/></svg>
+                </span>
+                <div class="sl"><b>You &amp; co-parents</b><span>Children · milestones · Pebble · activities · everything</span></div>
+                <span class="set-pill" style="color:#e6c3ab;border-color:rgba(198,123,92,.4);">Full access</span>
+              </div>
+              <div class="set-row">
+                <span class="si" style="color:#9fded2;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="7" rx="3" ry="1.4"/><ellipse cx="12" cy="12" rx="6" ry="2.4"/><ellipse cx="12" cy="17" rx="8" ry="3"/></svg>
+                </span>
+                <div class="sl"><b>Extended family</b><span>Activities, trips &amp; celebrations only — no child or health data</span></div>
+                <span class="set-pill" style="color:#9fded2;border-color:rgba(61,155,143,.4);">Activities only</span>
+              </div>
+              <div class="ring-note">This is the "one app for the whole family, without sharing everything" boundary — grandparents help plan trips and never see milestones.</div>
+            </div></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head"><h2>Settings</h2></div>
+        <div class="glass strong"><div class="pad">
+          <div class="set-row">
+            <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg></span>
+            <div class="sl"><b>${name}</b><span>${email || 'Account & profile'}</span></div>
+            <button class="link" @click=${() => (this._profileOpen = true)}>Edit</button>
+          </div>
+          <div class="set-row">
+            <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="3"/></svg></span>
+            <div class="sl"><b>${famName}</b><span>Family name &amp; invite codes</span></div>
+            <button class="link" @click=${() => (this._membersOpen = true)}>Manage</button>
+          </div>
+          <div class="set-row">
+            <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M10 21h4"/></svg></span>
+            <div class="sl"><b>Activity notifications</b><span>New trips, celebrations &amp; calendar changes</span></div>
+            <span class="toggle"></span>
+          </div>
+          <div class="set-row">
+            <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/></svg></span>
+            <div class="sl"><b>Pebble milestone alerts</b><span>When a child reaches a new milestone</span></div>
+            <span class="toggle"></span>
+          </div>
+          <div class="set-row">
+            <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.5 5 5.5.8-4 4 1 5.5L12 15l-5 2.3 1-5.5-4-4 5.5-.8z"/></svg></span>
+            <div class="sl"><b>PebblePath Premium</b><span>Unlimited Pebble · pediatrician PDFs · insights</span></div>
+            <span class="set-pill" style="color:#9fded2;border-color:rgba(61,155,143,.4);">Active</span>
+          </div>
+        </div></div>
+      </section>
     `;
   }
 
@@ -2561,11 +3184,13 @@ export class HomeScreen extends LitElement {
         Private to parents
       </span>`;
       return html`
-        ${this._renderTabHeader(
-          'Pebble',
-          `${cd.child.name}'s development advisor`,
-          scope,
-        )}
+        <div class="hello tight">
+          <div>
+            <h1>Pebble</h1>
+            <div class="family-name">${cd.child.name}'s development advisor</div>
+          </div>
+          ${scope}
+        </div>
         <child-pebble
           .child=${cd.child}
           .messages=${cd.pebbleMessages}
@@ -2737,17 +3362,6 @@ export class HomeScreen extends LitElement {
         }}
         @cancel=${() => (this._allTripsOpen = false)}
       ></all-trips-modal>
-
-      <trip-planner
-        ?open=${this._plannerOpen}
-        .trip=${this._plannerTrip}
-        .members=${allMembers}
-        .currentUid=${this.user?.uid ?? ''}
-        @cancel=${() => {
-          this._plannerOpen = false;
-          this._plannerTrip = null;
-        }}
-      ></trip-planner>
 
       <import-calendar-modal
         ?open=${this._importOpen}

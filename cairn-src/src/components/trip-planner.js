@@ -4,26 +4,26 @@ import { dataStore } from '../services/data.js';
 import { toast } from '../services/toast.js';
 
 /**
- * Collaborative trip day-planner (Portal). Opens from a trip card.
- * Anyone in the trip's audience can add items (visit / meal / travel /
- * note) on a per-day agenda; every item is tagged with who added it.
- * Live via dataStore.planItemsListener — co-planners see each other's
- * additions in real time, Google-Sheets style, laid out like a
- * Google-Calendar day. Read/write is enforced server-side by the
- * trip's visibleTo (firestore.rules canCoplanTrip).
+ * Collaborative trip day-planner — INLINE + collapsible (concept
+ * parity). Lives below the trips row on the Activities tab; a trip
+ * card opens it. Google-Calendar day grid + Google-Sheets attribution:
+ * anyone in the trip's audience adds items (visit/meal/travel/note),
+ * each tagged with who added it. Live via dataStore.planItemsListener;
+ * read/write enforced server-side by the trip's visibleTo.
  *
  * Props:
- *   open       — Boolean (reflected)
+ *   open       — Boolean (collapsed when false)
  *   trip       — { id, title, location, start, end }
- *   members    — [{ uid, displayName, photoURL, hue }] (author tags)
- *   currentUid — viewer uid (controls delete-own affordance)
+ *   members    — [{ uid, displayName, photoURL, hue }]
+ *   currentUid — viewer uid (delete-own affordance)
  */
 const TYPES = [
-  { key: 'visit', label: 'Visit', color: '#3d9b8f' },
-  { key: 'meal', label: 'Meal', color: '#d4a843' },
-  { key: 'travel', label: 'Travel', color: '#6b9ac4' },
-  { key: 'note', label: 'Note', color: '#c98a8a' },
+  { key: 'visit', label: 'Visit' },
+  { key: 'meal', label: 'Meal' },
+  { key: 'travel', label: 'Travel' },
+  { key: 'note', label: 'Note' },
 ];
+const ROWH = 56; // px per hour — matches concept .sched-row height
 
 function parseYMD(s) {
   const m = String(s ?? '').match(/^(\d{4})-(\d{2})-(\d{2})/);
@@ -35,6 +35,16 @@ function ymd(d) {
   const mo = String(d.getMonth() + 1).padStart(2, '0');
   const da = String(d.getDate()).padStart(2, '0');
   return `${y}-${mo}-${da}`;
+}
+function toHours(t) {
+  const m = String(t ?? '').match(/^(\d{1,2}):?(\d{2})?/);
+  if (!m) return null;
+  return Number(m[1]) + (m[2] ? Number(m[2]) / 60 : 0);
+}
+function fmtH(x) {
+  const hh = Math.floor(x);
+  const mm = Math.round((x - hh) * 60);
+  return `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
 }
 
 export class TripPlanner extends LitElement {
@@ -64,19 +74,18 @@ export class TripPlanner extends LitElement {
     this._type = 'visit';
     this._busy = false;
     this._unsub = null;
-    this._subscribedTripId = null;
+    this._subId = null;
   }
 
   willUpdate(changed) {
     if (changed.has('open') || changed.has('trip')) {
-      const tripId = this.trip?.id ?? null;
-      if (this.open && tripId) {
-        if (this._subscribedTripId !== tripId) {
+      const id = this.trip?.id ?? null;
+      if (this.open && id) {
+        if (this._subId !== id) {
           this._teardown();
-          this._subscribedTripId = tripId;
-          const days = this._days();
-          this._dayKey = days[0]?.key ?? '';
-          this._unsub = dataStore.planItemsListener(tripId, (items) => {
+          this._subId = id;
+          this._dayKey = this._days()[0]?.key ?? '';
+          this._unsub = dataStore.planItemsListener(id, (items) => {
             this._items = items;
           });
         }
@@ -90,39 +99,33 @@ export class TripPlanner extends LitElement {
     super.disconnectedCallback();
     this._teardown();
   }
-
   _teardown() {
     this._unsub?.();
     this._unsub = null;
-    this._subscribedTripId = null;
+    this._subId = null;
     this._items = [];
   }
-
-  _onCancel() {
+  _close() {
     this.dispatchEvent(new Event('cancel'));
   }
 
-  /** Day buckets across the trip range (inclusive, capped at 31). */
   _days() {
     const s = parseYMD(this.trip?.start);
     const e = parseYMD(this.trip?.end) ?? s;
-    if (!s) return [{ key: '', label: 'The trip' }];
+    if (!s) return [{ key: '', lbl: 'Day', d: 'The trip' }];
     const out = [];
     const cur = new Date(s);
-    let guard = 0;
-    while (cur <= e && guard < 31) {
+    let g = 0;
+    while (cur <= e && g < 31) {
       out.push({
         key: ymd(cur),
-        label: cur.toLocaleDateString('en-GB', {
-          weekday: 'short',
-          day: 'numeric',
-          month: 'short',
-        }),
+        lbl: cur.toLocaleDateString('en-GB', { weekday: 'short' }),
+        d: cur.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
       });
       cur.setDate(cur.getDate() + 1);
-      guard += 1;
+      g += 1;
     }
-    return out.length ? out : [{ key: '', label: 'The trip' }];
+    return out.length ? out : [{ key: '', lbl: 'Day', d: 'The trip' }];
   }
 
   _member(uid) {
@@ -153,226 +156,227 @@ export class TripPlanner extends LitElement {
       this._busy = false;
     }
   }
-
-  async _remove(item) {
+  async _remove(it) {
     try {
-      await dataStore.deletePlanItem(this.trip.id, item.id);
+      await dataStore.deletePlanItem(this.trip.id, it.id);
     } catch (err) {
-      console.error('deletePlanItem failed:', err);
       toast(`Couldn't remove: ${err?.code ?? err?.message}`, { duration: 4000 });
     }
   }
 
   static styles = css`
-    * { box-sizing: border-box; }
-    :host {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      display: none;
-    }
-    :host([open]) { display: block; }
-    .backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(20, 12, 6, 0.5);
-      animation: fade 200ms ease;
-    }
-    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-    .panel {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: min(720px, calc(100vw - 32px));
-      max-height: min(86vh, 820px);
-      display: flex;
-      flex-direction: column;
-      background: rgba(40, 32, 42, 0.55);
-      backdrop-filter: blur(34px) saturate(180%);
-      -webkit-backdrop-filter: blur(34px) saturate(180%);
-      border: 1px solid var(--glass-border-strong);
+    *, *::before, *::after { box-sizing: border-box; }
+    :host { display: block; }
+    :host(:not([open])) { display: none; }
+    section { margin-bottom: 30px; }
+    .glass {
+      position: relative;
       border-radius: var(--radius-card);
-      box-shadow: 0 24px 60px rgba(20, 12, 6, 0.55);
-      padding: 22px 22px 20px;
-      animation: pop 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      background: var(--glass-fill-strong);
+      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+      border: 1px solid var(--glass-border-strong);
+      box-shadow: var(--glass-shadow);
+      padding: 28px;
+      animation: drop 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
     }
-    @keyframes pop {
-      from { transform: translate(-50%, -48%) scale(0.98); opacity: 0; }
-      to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    @keyframes drop {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: none; }
     }
-    @media (max-width: 640px) {
-      .panel {
-        width: calc(100vw - 16px);
-        max-height: calc(100vh - 24px);
-        padding: 16px;
-      }
-    }
-    .head {
+    .pl-head {
       display: flex;
       align-items: flex-start;
-      gap: 14px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid rgba(255, 248, 235, 0.08);
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
     }
-    .head h3 {
+    .pl-head h3 {
       margin: 0;
       font-family: var(--font-display);
       font-size: 20px;
       letter-spacing: -0.015em;
     }
-    .head .sub {
+    .pl-sub {
       color: var(--text-secondary);
       font-size: 13px;
-      margin-top: 3px;
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
-    .head .body { flex: 1; min-width: 0; }
-    .close {
+    .who-adds { display: inline-flex; align-items: center; }
+    .who-adds member-chip { margin-right: -6px; }
+    .pl-close {
       background: var(--glass-fill);
       border: 1px solid var(--glass-border);
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
       color: var(--text-secondary);
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
       cursor: pointer;
-      font-size: 17px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
       flex-shrink: 0;
     }
-    .close:hover { color: var(--text-primary); }
-    .days {
+    .pl-close:hover {
+      color: var(--text-primary);
+      border-color: var(--glass-border-strong);
+    }
+    .day-rail {
       display: flex;
       gap: 8px;
       overflow-x: auto;
-      padding: 14px 0 12px;
+      padding-bottom: 4px;
+      margin-bottom: 16px;
       scrollbar-width: none;
     }
-    .days::-webkit-scrollbar { display: none; }
-    .day {
-      padding: 8px 14px;
+    .day-rail::-webkit-scrollbar { display: none; }
+    .day-pill {
+      padding: 9px 15px;
       border-radius: var(--radius-pill);
       background: var(--glass-fill);
       border: 1px solid var(--glass-border);
       color: var(--text-secondary);
-      font-family: var(--font-body);
-      font-weight: 600;
-      font-size: 12.5px;
-      white-space: nowrap;
       cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      font-weight: 600;
+      white-space: nowrap;
+      text-align: center;
+      line-height: 1.3;
     }
-    .day.on {
+    .day-pill small {
+      display: block;
+      font-weight: 500;
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+    .day-pill.on {
       background: rgba(61, 155, 143, 0.22);
       color: #fff;
       border-color: rgba(61, 155, 143, 0.45);
     }
-    .agenda {
-      flex: 1;
-      min-height: 160px;
-      overflow-y: auto;
-      margin: 4px -6px 0;
-      padding: 4px 6px 6px;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(255, 248, 235, 0.18) transparent;
+    .day-pill.on small { color: #bfe6df; }
+    .sched {
+      position: relative;
+      border-radius: var(--radius-tile);
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 248, 235, 0.03);
+      overflow: hidden;
     }
-    .agenda::-webkit-scrollbar { width: 6px; }
-    .agenda::-webkit-scrollbar-thumb {
-      background: rgba(255, 248, 235, 0.18);
-      border-radius: 999px;
+    .sched-row {
+      display: grid;
+      grid-template-columns: 62px 1fr;
+      height: ${ROWH}px;
+      border-bottom: 1px solid rgba(255, 248, 235, 0.06);
     }
-    .item {
+    .sched-row:last-child { border-bottom: none; }
+    .sched-row .hr {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      padding: 6px 10px 0;
+      border-right: 1px solid rgba(255, 248, 235, 0.06);
+      text-align: right;
+    }
+    .sched-track {
+      position: absolute;
+      left: 62px;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+    .evt {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      border-radius: 10px;
+      padding: 8px 12px;
+      overflow: hidden;
+      border-left: 4px solid;
       display: flex;
       align-items: flex-start;
-      gap: 12px;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255, 248, 235, 0.07);
+      gap: 10px;
+      box-shadow: 0 4px 14px rgba(20, 12, 6, 0.28);
+      backdrop-filter: blur(6px);
     }
-    .item:last-child { border-bottom: none; }
-    .item .when {
-      width: 52px;
-      flex-shrink: 0;
-      font-size: 12.5px;
-      font-weight: 700;
-      color: var(--text-secondary);
-      font-variant-numeric: tabular-nums;
-      padding-top: 1px;
-    }
-    .item .accent {
-      width: 4px;
-      align-self: stretch;
-      border-radius: 999px;
-      flex-shrink: 0;
-    }
-    .item .body { flex: 1; min-width: 0; }
-    .item .title {
-      font-size: 14.5px;
+    .evt .et { flex: 1; min-width: 0; }
+    .evt .et b {
+      font-size: 13px;
       font-weight: 600;
-      line-height: 1.35;
+      display: block;
+      color: #fff;
     }
-    .item .by {
-      display: inline-flex;
+    .evt .et span {
+      font-size: 11.5px;
+      color: rgba(255, 255, 255, 0.78);
+    }
+    .evt .by {
+      display: flex;
       align-items: center;
       gap: 6px;
-      margin-top: 5px;
-      font-size: 11.5px;
-      color: var(--text-tertiary);
+      flex-shrink: 0;
     }
-    .item .type-pill {
-      display: inline-block;
-      margin-left: 8px;
-      padding: 1px 8px;
-      border-radius: 999px;
+    .evt .by .nm {
       font-size: 10.5px;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-      border: 1px solid var(--glass-border);
+      color: rgba(255, 255, 255, 0.7);
     }
-    .item .del {
+    .evt .del {
       background: transparent;
       border: none;
-      color: var(--text-tertiary);
+      color: rgba(255, 255, 255, 0.6);
       cursor: pointer;
-      font-size: 15px;
+      font-size: 14px;
       padding: 0 2px;
       flex-shrink: 0;
     }
-    .item .del:hover { color: var(--rose-soft); }
-    .empty {
-      color: var(--text-secondary);
-      font-size: 13.5px;
-      line-height: 1.55;
-      padding: 22px 4px;
-      text-align: center;
-    }
-    .add {
+    .evt .del:hover { color: #fff; }
+    .evt.meal { background: rgba(212, 168, 67, 0.32); border-color: #d4a843; }
+    .evt.visit { background: rgba(61, 155, 143, 0.32); border-color: #3d9b8f; }
+    .evt.travel { background: rgba(107, 154, 196, 0.32); border-color: #6b9ac4; }
+    .evt.note { background: rgba(201, 138, 138, 0.3); border-color: #c98a8a; }
+    .sched-empty {
+      position: absolute;
+      inset: 0;
       display: flex;
-      gap: 8px;
       align-items: center;
-      margin-top: 14px;
-      padding: 10px;
+      justify-content: center;
+      color: var(--text-tertiary);
+      font-size: 13px;
+      text-align: center;
+      padding: 0 24px;
+    }
+    .add-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 16px;
+      padding: 12px 14px;
       border-radius: var(--radius-pill);
       background: var(--glass-fill);
       border: 1px dashed var(--glass-border);
       flex-wrap: wrap;
     }
-    .add input,
-    .add select {
+    .add-row input,
+    .add-row select {
       background: rgba(255, 248, 235, 0.06);
       border: 1px solid var(--glass-border);
       color: var(--text-primary);
       border-radius: var(--radius-pill);
-      padding: 9px 13px;
+      padding: 8px 13px;
       font-family: var(--font-body);
-      font-size: 13px;
+      font-size: 12.5px;
       outline: none;
     }
-    .add input:focus,
-    .add select:focus { border-color: var(--teal-pebble); }
-    .add .t { flex: 1; min-width: 150px; }
-    .add .tm { width: 78px; text-align: center; }
-    .add select { cursor: pointer; }
-    .add .go {
-      padding: 9px 16px;
+    .add-row input.t { flex: 1; min-width: 160px; }
+    .add-row input.tm { width: 78px; text-align: center; }
+    .add-row select { cursor: pointer; }
+    .add-row .add-btn {
+      padding: 8px 16px;
       border-radius: var(--radius-pill);
       border: none;
       cursor: pointer;
@@ -380,10 +384,10 @@ export class TripPlanner extends LitElement {
       color: #fff;
       font-family: var(--font-body);
       font-weight: 600;
-      font-size: 13px;
+      font-size: 12.5px;
     }
-    .add .go:disabled { opacity: 0.5; cursor: not-allowed; }
-    .hint {
+    .add-row .add-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .add-hint {
       font-size: 12px;
       color: var(--text-tertiary);
       margin-top: 10px;
@@ -395,130 +399,147 @@ export class TripPlanner extends LitElement {
     if (!this.open || !this.trip) return html``;
     const days = this._days();
     const dayKey = this._dayKey ?? days[0]?.key ?? '';
-    const dayItems = this._items.filter(
+    const dayItems = (this._items || []).filter(
       (i) => String(i.day ?? '') === String(dayKey),
     );
+    // Dynamic hour window: bound to the day's items, default 8–20.
+    let lo = 8;
+    let hi = 20;
+    for (const it of dayItems) {
+      const sh = toHours(it.time);
+      if (sh == null) continue;
+      const dur = Math.max(0.5, (Number(it.durationMins) || 60) / 60);
+      lo = Math.min(lo, Math.floor(sh));
+      hi = Math.max(hi, Math.ceil(sh + dur));
+    }
+    lo = Math.max(0, Math.min(lo, 8));
+    hi = Math.min(24, Math.max(hi, 20));
+    const rows = [];
+    for (let h = lo; h < hi; h++) {
+      rows.push(html`<div class="sched-row">
+        <div class="hr">${String(h).padStart(2, '0')}:00</div>
+        <div></div>
+      </div>`);
+    }
+    const blocks = dayItems
+      .map((it) => {
+        const sh = toHours(it.time);
+        if (sh == null) return null;
+        const dur = Math.max(0.5, (Number(it.durationMins) || 60) / 60);
+        const top = (sh - lo) * ROWH + 3;
+        const height = dur * ROWH - 8;
+        const p = this._member(it.addedBy);
+        const type = TYPES.some((t) => t.key === it.type) ? it.type : 'note';
+        return html`<div
+          class="evt ${type}"
+          style="top:${top}px;height:${Math.max(34, height)}px;"
+        >
+          <div class="et">
+            <b>${it.title}</b>
+            <span>${fmtH(sh)}${dur ? `–${fmtH(sh + dur)}` : ''}</span>
+          </div>
+          <div class="by">
+            <member-chip
+              .name=${p?.displayName ?? 'Family'}
+              .photo=${p?.photoURL ?? ''}
+              .hue=${p?.hue ?? 198}
+              size="20"
+            ></member-chip>
+            <span class="nm">${p?.displayName ?? 'Someone'}</span>
+          </div>
+          ${it.addedBy === this.currentUid
+            ? html`<button class="del" title="Remove" @click=${() => this._remove(it)}>×</button>`
+            : ''}
+        </div>`;
+      })
+      .filter(Boolean);
+
     return html`
-      <div class="backdrop" @click=${this._onCancel}></div>
-      <div
-        class="panel"
-        @keydown=${(e) => {
-          if (e.key === 'Escape') this._onCancel();
-        }}
-      >
-        <div class="head">
-          <div class="body">
-            <h3>${this.trip.title || 'Trip'}</h3>
-            <div class="sub">
-              Shared day plan${this.trip.location
-                ? ` · ${this.trip.location}`
-                : ''} — everyone on the trip can add
+      <section>
+        <div class="glass">
+          <div class="pl-head">
+            <div>
+              <h3>${this.trip.title || 'Trip'}</h3>
+              <div class="pl-sub">
+                Shared day plan${this.trip.location ? ` · ${this.trip.location}` : ''} — everyone on the trip can add
+                <span class="who-adds">
+                  ${(this.members ?? []).slice(0, 4).map(
+                    (m) => html`<member-chip
+                      .name=${m.displayName}
+                      .photo=${m.photoURL ?? ''}
+                      .hue=${m.hue ?? 198}
+                      size="22"
+                    ></member-chip>`,
+                  )}
+                </span>
+              </div>
+            </div>
+            <button class="pl-close" @click=${this._close} aria-label="Close planner">×</button>
+          </div>
+
+          <div class="day-rail">
+            ${days.map(
+              (d) => html`<button
+                class="day-pill ${d.key === dayKey ? 'on' : ''}"
+                @click=${() => (this._dayKey = d.key)}
+              >
+                ${d.lbl}<small>${d.d}</small>
+              </button>`,
+            )}
+          </div>
+
+          <div class="sched">
+            ${rows}
+            <div class="sched-track">
+              ${blocks.length
+                ? blocks
+                : html`<div class="sched-empty">
+                    Nothing planned for this day yet — add the first item below.
+                  </div>`}
             </div>
           </div>
-          <button class="close" @click=${this._onCancel} aria-label="Close">
-            ×
-          </button>
-        </div>
 
-        <div class="days">
-          ${days.map(
-            (d) => html`<button
-              class="day ${d.key === dayKey ? 'on' : ''}"
-              @click=${() => (this._dayKey = d.key)}
+          <form
+            class="add-row"
+            @submit=${(e) => {
+              e.preventDefault();
+              this._add();
+            }}
+          >
+            <input
+              class="tm"
+              type="text"
+              .value=${this._time}
+              aria-label="Time"
+              @input=${(e) => (this._time = e.target.value)}
+            />
+            <input
+              class="t"
+              type="text"
+              .value=${this._title}
+              placeholder="Add an item — lunch, a visit, a note…"
+              aria-label="Item"
+              @input=${(e) => (this._title = e.target.value)}
+            />
+            <select
+              aria-label="Type"
+              .value=${this._type}
+              @change=${(e) => (this._type = e.target.value)}
             >
-              ${d.label}
-            </button>`,
-          )}
+              ${TYPES.map(
+                (t) => html`<option value=${t.key}>${t.label}</option>`,
+              )}
+            </select>
+            <button class="add-btn" type="submit" ?disabled=${this._busy || !this._title.trim()}>
+              + Add to plan
+            </button>
+          </form>
+          <div class="add-hint">
+            Anyone on the trip can add to this plan — every item is tagged
+            with who added it (like a shared sheet, on a day grid).
+          </div>
         </div>
-
-        <div class="agenda">
-          ${dayItems.length === 0
-            ? html`<div class="empty">
-                Nothing planned for this day yet — add the first item
-                below. Anyone on the trip can contribute.
-              </div>`
-            : dayItems.map((i) => {
-                const ty =
-                  TYPES.find((t) => t.key === i.type) ?? TYPES[3];
-                const m = this._member(i.addedBy);
-                return html`<div class="item">
-                  <div class="when">${i.time || '—'}</div>
-                  <div
-                    class="accent"
-                    style="background:${ty.color}"
-                  ></div>
-                  <div class="body">
-                    <div class="title">
-                      ${i.title}<span class="type-pill">${ty.label}</span>
-                    </div>
-                    <div class="by">
-                      <member-chip
-                        .name=${m?.displayName ?? 'Family'}
-                        .photo=${m?.photoURL ?? ''}
-                        .hue=${m?.hue ?? 198}
-                        size="18"
-                      ></member-chip>
-                      ${m?.displayName ?? 'Someone'} added this
-                    </div>
-                  </div>
-                  ${i.addedBy === this.currentUid
-                    ? html`<button
-                        class="del"
-                        title="Remove"
-                        @click=${() => this._remove(i)}
-                      >
-                        ×
-                      </button>`
-                    : ''}
-                </div>`;
-              })}
-        </div>
-
-        <form
-          class="add"
-          @submit=${(e) => {
-            e.preventDefault();
-            this._add();
-          }}
-        >
-          <input
-            class="tm"
-            type="text"
-            .value=${this._time}
-            placeholder="12:00"
-            aria-label="Time"
-            @input=${(e) => (this._time = e.target.value)}
-          />
-          <input
-            class="t"
-            type="text"
-            .value=${this._title}
-            placeholder="Add lunch, a visit, a note…"
-            aria-label="Item"
-            @input=${(e) => (this._title = e.target.value)}
-          />
-          <select
-            aria-label="Type"
-            .value=${this._type}
-            @change=${(e) => (this._type = e.target.value)}
-          >
-            ${TYPES.map(
-              (t) => html`<option value=${t.key}>${t.label}</option>`,
-            )}
-          </select>
-          <button
-            type="submit"
-            class="go"
-            ?disabled=${this._busy || !this._title.trim()}
-          >
-            + Add
-          </button>
-        </form>
-        <div class="hint">
-          Every item is tagged with who added it — like a shared sheet,
-          on the trip's day view.
-        </div>
-      </div>
+      </section>
     `;
   }
 }
