@@ -6931,20 +6931,16 @@ var ut=Object.defineProperty;var mt=(c,e,t)=>e in c?ut(c,e,{enumerable:!0,config
             <div class="sl"><b>${i}</b><span>Family name &amp; invite codes</span></div>
             <button class="link" @click=${()=>this._membersOpen=!0}>Manage</button>
           </div>
-          <div class="set-row">
-            <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M10 21h4"/></svg></span>
-            <div class="sl"><b>Activity notifications</b><span>New trips, celebrations &amp; calendar changes</span></div>
-            <span class="toggle"></span>
-          </div>
-          <div class="set-row">
-            <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/></svg></span>
-            <div class="sl"><b>Pebble milestone alerts</b><span>When a child reaches a new milestone</span></div>
-            <span class="toggle"></span>
-          </div>
+          <!-- Portal v4 audit: the Activity-notifications + Pebble-
+               milestone-alerts toggles were removed — they were dead
+               decoration (no web notification backend; FCM push is
+               iOS-only). Premium is kept as an informational line
+               only: the web can't verify StoreKit subscription
+               state, so the misleading green "Active" badge was
+               dropped (manage the subscription in the iOS app). -->
           <div class="set-row">
             <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.5 5 5.5.8-4 4 1 5.5L12 15l-5 2.3 1-5.5-4-4 5.5-.8z"/></svg></span>
-            <div class="sl"><b>PebblePath Premium</b><span>Unlimited Pebble · pediatrician PDFs · insights</span></div>
-            <span class="set-pill" style="color:#9fded2;border-color:rgba(61,155,143,.4);">Active</span>
+            <div class="sl"><b>PebblePath Premium</b><span>Unlimited Pebble · pediatrician summaries · insights — managed in the app</span></div>
           </div>
         </glass-panel>
       </section>
@@ -9156,4 +9152,4 @@ var ut=Object.defineProperty;var mt=(c,e,t)=>e in c?ut(c,e,{enumerable:!0,config
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}x(gt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",gt);
-//# sourceMappingURL=index-doWGoWth.js.map
+//# sourceMappingURL=index-CrpZ_C7w.js.map
