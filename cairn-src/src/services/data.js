@@ -722,7 +722,7 @@ class FamilyDataStore extends EventTarget {
    * admits the extended ring). The function re-enforces memberIds
    * server-side; this is the convenience client path.
    */
-  async askPebbleAboutChild(childId, question, history = []) {
+  async askPebbleAboutChild(childId, question, history = [], isPrivate = false) {
     if (!functions) throw new Error('Firebase functions not configured.');
     if (!this._ppFamilyId) throw new Error('No PebblePath family.');
     if (!childId) throw new Error('No child selected.');
@@ -732,6 +732,7 @@ class FamilyDataStore extends EventTarget {
       childId,
       question,
       history,
+      isPrivate: isPrivate === true,
     });
     return result.data;
   }
@@ -1436,6 +1437,65 @@ class FamilyDataStore extends EventTarget {
     if (Object.keys(patch).length === 0) return;
     patch.updatedAt = serverTimestamp();
     await updateDoc(doc(db, 'families', this._currentFamilyId), patch);
+  }
+
+  /**
+   * Remove an extended-ring member from this Cairn family entirely.
+   * Strips them from `cairnMemberIds`, drops their denormalised
+   * `memberProfiles[uid]`, revokes any read-only child access
+   * (`childViewers`), tidies any pending `childAccessRequests/{uid}`,
+   * and pulls them from every sub-group — one atomic family-doc
+   * write (the sub-collection request doc is a separate delete).
+   *
+   * Scope guard: refuses to remove a PP member (anyone in
+   * `memberIds`). Removing a co-parent is an account-level action,
+   * not a "manage the ring" action — and the firestore.rules keep
+   * `createdBy` immutable regardless. Caller must be a PP member
+   * (the modal only surfaces the control to them); the member
+   * update branch in firestore.rules allows mutating cairnMemberIds
+   * + memberProfiles + childViewers + subGroups.
+   */
+  async removeCairnMember(uid) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    if (!uid) throw new Error('uid is required.');
+    const fam = this.state.family ?? {};
+    const memberIds = Array.isArray(fam.memberIds) ? fam.memberIds : [];
+    if (memberIds.includes(uid)) {
+      throw new Error('PP members can’t be removed from the ring here.');
+    }
+    const { deleteField } = await import('firebase/firestore');
+    const patch = { updatedAt: serverTimestamp() };
+
+    const cairnIds = Array.isArray(fam.cairnMemberIds) ? fam.cairnMemberIds : [];
+    if (cairnIds.includes(uid)) {
+      patch.cairnMemberIds = cairnIds.filter((id) => id !== uid);
+    }
+    if (fam.memberProfiles && fam.memberProfiles[uid]) {
+      patch[`memberProfiles.${uid}`] = deleteField();
+    }
+    const viewers = Array.isArray(fam.childViewers) ? fam.childViewers : [];
+    if (viewers.includes(uid)) {
+      patch.childViewers = viewers.filter((id) => id !== uid);
+    }
+    const subGroups = fam.subGroups ?? {};
+    for (const [gid, g] of Object.entries(subGroups)) {
+      const ids = Array.isArray(g.memberIds) ? g.memberIds : [];
+      if (ids.includes(uid)) {
+        patch[`subGroups.${gid}.memberIds`] = ids.filter((id) => id !== uid);
+      }
+    }
+
+    await updateDoc(doc(db, 'families', this._currentFamilyId), patch);
+
+    // Best-effort: clear any open child-access request from this
+    // person so re-inviting them later starts clean. Non-fatal.
+    try {
+      await deleteDoc(
+        doc(db, 'families', this._currentFamilyId, 'childAccessRequests', uid),
+      );
+    } catch {
+      /* no open request, or already gone — fine */
+    }
   }
 
   /**

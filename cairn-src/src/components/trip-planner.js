@@ -73,6 +73,8 @@ export class TripPlanner extends LitElement {
     _url: { state: true },
     _fileName: { state: true },
     _busy: { state: true },
+    _view: { state: true }, // 'day' | 'week' (Google-Calendar week grid)
+    _weekStart: { state: true }, // first day index when the trip > 7 days
   };
 
   constructor() {
@@ -91,8 +93,22 @@ export class TripPlanner extends LitElement {
     this._file = null; // pending File for attachment (not reactive)
     this._fileName = ''; // reactive label for the chosen file
     this._busy = false;
+    this._view = 'day';
+    this._weekStart = 0;
     this._unsub = null;
     this._subId = null;
+  }
+
+  // Days shown as columns in the week grid. Trips are usually short, so
+  // ≤ 7 days → show them all; longer trips page in 7-day windows.
+  _weekDays() {
+    const all = this._days();
+    if (all.length <= 7) return all;
+    const start = Math.min(
+      Math.max(0, this._weekStart),
+      Math.max(0, all.length - 7),
+    );
+    return all.slice(start, start + 7);
   }
 
   willUpdate(changed) {
@@ -311,6 +327,163 @@ export class TripPlanner extends LitElement {
       border-color: rgba(61, 155, 143, 0.45);
     }
     .day-pill.on small { color: #bfe6df; }
+
+    /* Day | Week segmented toggle + optional week pager. */
+    .pl-modebar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .view-toggle {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: var(--radius-pill);
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border);
+    }
+    .view-toggle button {
+      padding: 6px 16px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: transparent;
+      color: var(--text-tertiary);
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+    .view-toggle button.on {
+      background: rgba(61, 155, 143, 0.22);
+      color: #fff;
+      box-shadow: inset 0 0 0 1px rgba(61, 155, 143, 0.45);
+    }
+    .wk-pager {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+    .wk-pager button {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .wk-pager button:disabled { opacity: 0.4; cursor: default; }
+
+    /* Google-Calendar-style week grid: shared hour gutter + a column
+       per trip day, items absolutely positioned by time/duration. */
+    .wk {
+      border-radius: var(--radius-tile);
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 248, 235, 0.03);
+      overflow: hidden;
+    }
+    .wk-head {
+      display: grid;
+      grid-template-columns: 62px repeat(var(--cols, 1), 1fr);
+      border-bottom: 1px solid rgba(255, 248, 235, 0.08);
+    }
+    .wk-head .wk-hc {
+      padding: 8px 4px;
+      text-align: center;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      border-left: 1px solid rgba(255, 248, 235, 0.06);
+      cursor: pointer;
+      line-height: 1.3;
+    }
+    .wk-head .wk-hc:first-child { border-left: none; cursor: default; }
+    .wk-head .wk-hc small {
+      display: block;
+      font-weight: 500;
+      font-size: 10.5px;
+      color: var(--text-tertiary);
+    }
+    .wk-head .wk-hc.on {
+      background: rgba(61, 155, 143, 0.18);
+      color: #fff;
+    }
+    .wk-head .wk-hc.on small { color: #bfe6df; }
+    .wk-body {
+      position: relative;
+      display: grid;
+      grid-template-columns: 62px repeat(var(--cols, 1), 1fr);
+      max-height: 460px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+    .wk-gutter { position: relative; }
+    .wk-gutter .wk-hr {
+      height: ${ROWH}px;
+      font-size: 10.5px;
+      color: var(--text-tertiary);
+      text-align: right;
+      padding: 4px 8px 0;
+      border-bottom: 1px solid rgba(255, 248, 235, 0.05);
+      box-sizing: border-box;
+    }
+    .wk-col {
+      position: relative;
+      border-left: 1px solid rgba(255, 248, 235, 0.06);
+      background-image: repeating-linear-gradient(
+        rgba(255, 248, 235, 0.05) 0,
+        rgba(255, 248, 235, 0.05) 1px,
+        transparent 1px,
+        transparent ${ROWH}px
+      );
+    }
+    .wk-evt {
+      position: absolute;
+      left: 3px;
+      right: 3px;
+      border-radius: 7px;
+      padding: 4px 6px;
+      overflow: hidden;
+      border-left: 3px solid;
+      box-shadow: 0 3px 9px rgba(20, 12, 6, 0.26);
+      cursor: default;
+    }
+    .wk-evt b {
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      display: block;
+      line-height: 1.25;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .wk-evt span {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.78);
+    }
+    .wk-evt.meal { background: rgba(212, 168, 67, 0.34); border-color: #d4a843; }
+    .wk-evt.visit { background: rgba(61, 155, 143, 0.34); border-color: #3d9b8f; }
+    .wk-evt.travel { background: rgba(107, 154, 196, 0.34); border-color: #6b9ac4; }
+    .wk-evt.note { background: rgba(201, 138, 138, 0.32); border-color: #c98a8a; }
+    .wk-evt .wkdel {
+      position: absolute;
+      top: 1px;
+      right: 3px;
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      font-size: 12px;
+      line-height: 1;
+      padding: 0;
+    }
+    .wk-evt .wkdel:hover { color: #fff; }
     .sched {
       position: relative;
       border-radius: var(--radius-tile);
@@ -502,6 +675,99 @@ export class TripPlanner extends LitElement {
     }
   `;
 
+  // Google-Calendar-style week grid: a shared hour gutter + one column
+  // per trip day, each item absolutely positioned by its time +
+  // duration (same block math as the day view, denser). Tapping a
+  // day header drops into that day's day view.
+  _renderWeek() {
+    const cols = this._weekDays();
+    const n = cols.length || 1;
+    const colKeys = new Set(cols.map((c) => c.key));
+    const weekItems = (this._items || []).filter((i) =>
+      colKeys.has(String(i.day ?? '')),
+    );
+    let lo = 8;
+    let hi = 20;
+    for (const it of weekItems) {
+      const sh = toHours(it.time);
+      if (sh == null) continue;
+      const dur = Math.max(0.5, (Number(it.durationMins) || 60) / 60);
+      lo = Math.min(lo, Math.floor(sh));
+      hi = Math.max(hi, Math.ceil(sh + dur));
+    }
+    lo = Math.max(0, Math.min(lo, 8));
+    hi = Math.min(24, Math.max(hi, 20));
+    const hours = [];
+    for (let h = lo; h < hi; h++) {
+      hours.push(
+        html`<div class="wk-hr">${String(h).padStart(2, '0')}:00</div>`,
+      );
+    }
+    const colHeight = (hi - lo) * ROWH;
+    return html`
+      <div class="wk">
+        <div class="wk-head" style="--cols:${n};">
+          <div class="wk-hc"></div>
+          ${cols.map(
+            (c) => html`<div
+              class="wk-hc ${c.key === (this._dayKey ?? '') ? 'on' : ''}"
+              title="Open ${c.d} in day view"
+              @click=${() => {
+                this._dayKey = c.key;
+                this._view = 'day';
+              }}
+            >
+              ${c.lbl}<small>${c.d}</small>
+            </div>`,
+          )}
+        </div>
+        <div class="wk-body" style="--cols:${n};">
+          <div class="wk-gutter">${hours}</div>
+          ${cols.map((c) => {
+            const dayItems = weekItems.filter(
+              (i) => String(i.day ?? '') === String(c.key),
+            );
+            return html`<div
+              class="wk-col"
+              style="height:${colHeight}px;"
+            >
+              ${dayItems.map((it) => {
+                const sh = toHours(it.time);
+                if (sh == null) return '';
+                const dur = Math.max(
+                  0.5,
+                  (Number(it.durationMins) || 60) / 60,
+                );
+                const top = (sh - lo) * ROWH + 2;
+                const height = Math.max(26, dur * ROWH - 4);
+                const type = TYPES.some((t) => t.key === it.type)
+                  ? it.type
+                  : 'note';
+                return html`<div
+                  class="wk-evt ${type}"
+                  style="top:${top}px;height:${height}px;"
+                  title=${it.title}
+                >
+                  ${it.addedBy === this.currentUid
+                    ? html`<button
+                        class="wkdel"
+                        title="Remove"
+                        @click=${() => this._remove(it)}
+                      >
+                        ×
+                      </button>`
+                    : ''}
+                  <b>${it.title}</b>
+                  <span>${fmtH(sh)}</span>
+                </div>`;
+              })}
+            </div>`;
+          })}
+        </div>
+      </div>
+    `;
+  }
+
   render() {
     if (!this.open || !this.trip) return html``;
     const days = this._days();
@@ -608,27 +874,72 @@ export class TripPlanner extends LitElement {
             <button class="pl-close" @click=${this._close} aria-label="Close planner">×</button>
           </div>
 
-          <div class="day-rail">
-            ${days.map(
-              (d) => html`<button
-                class="day-pill ${d.key === dayKey ? 'on' : ''}"
-                @click=${() => (this._dayKey = d.key)}
+          <div class="pl-modebar">
+            <div class="view-toggle" role="group" aria-label="Planner view">
+              <button
+                class=${this._view === 'day' ? 'on' : ''}
+                @click=${() => (this._view = 'day')}
               >
-                ${d.lbl}<small>${d.d}</small>
-              </button>`,
-            )}
+                Day
+              </button>
+              <button
+                class=${this._view === 'week' ? 'on' : ''}
+                @click=${() => (this._view = 'week')}
+              >
+                Week
+              </button>
+            </div>
+            ${this._view === 'week' && days.length > 7
+              ? html`<div class="wk-pager">
+                  <button
+                    ?disabled=${this._weekStart <= 0}
+                    @click=${() =>
+                      (this._weekStart = Math.max(0, this._weekStart - 7))}
+                    aria-label="Previous week"
+                  >
+                    ‹
+                  </button>
+                  <span>Days ${this._weekStart + 1}–${Math.min(days.length, this._weekStart + 7)} of ${days.length}</span>
+                  <button
+                    ?disabled=${this._weekStart + 7 >= days.length}
+                    @click=${() =>
+                      (this._weekStart = Math.min(
+                        days.length - 7,
+                        this._weekStart + 7,
+                      ))}
+                    aria-label="Next week"
+                  >
+                    ›
+                  </button>
+                </div>`
+              : ''}
           </div>
 
-          <div class="sched">
-            ${rows}
-            <div class="sched-track">
-              ${blocks.length
-                ? blocks
-                : html`<div class="sched-empty">
-                    Nothing planned for this day yet — add the first item below.
-                  </div>`}
-            </div>
-          </div>
+          ${this._view === 'week'
+            ? this._renderWeek()
+            : html`
+                <div class="day-rail">
+                  ${days.map(
+                    (d) => html`<button
+                      class="day-pill ${d.key === dayKey ? 'on' : ''}"
+                      @click=${() => (this._dayKey = d.key)}
+                    >
+                      ${d.lbl}<small>${d.d}</small>
+                    </button>`,
+                  )}
+                </div>
+
+                <div class="sched">
+                  ${rows}
+                  <div class="sched-track">
+                    ${blocks.length
+                      ? blocks
+                      : html`<div class="sched-empty">
+                          Nothing planned for this day yet — add the first item below.
+                        </div>`}
+                  </div>
+                </div>
+              `}
 
           <form
             class="add-row"

@@ -105,6 +105,7 @@ export class HomeScreen extends LitElement {
     _typePickerOpen: { state: true },
     _formMode: { state: true },
     _pebbleOpen: { state: true },
+    _pebbleFabOpen: { state: true },
     /** Currently-hovered drop target during a member drag — gives the
      *  receiving stone a highlighted ring so it's obvious where the
      *  drop will land. Holds the targetGroupId ('extended' or a sub-
@@ -165,6 +166,7 @@ export class HomeScreen extends LitElement {
     this._typePickerOpen = false;
     this._formMode = 'trip';
     this._pebbleOpen = false;
+    this._pebbleFabOpen = false;
     this._dragOverTarget = null;
     // Calendar nav state — initialized to "today" at first paint, then
     // user-controlled via prev/next or yearly month-tap.
@@ -427,6 +429,153 @@ export class HomeScreen extends LitElement {
       color: inherit;
       text-decoration: underline;
       text-underline-offset: 3px;
+    }
+
+    /* ── Floating Pebble — liquid-glass launcher + docked panel.
+       Present on every tab EXCEPT Pebble (that tab IS Pebble). The
+       panel reuses <child-pebble compact> — one chat implementation,
+       two surfaces. ───────────────────────────────────────────── */
+    .pebble-fab {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 900;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 13px 18px 13px 15px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      color: #eafaf6;
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      /* Liquid glass: translucent teal over a heavy backdrop blur +
+         saturation, hairline light edge, soft lifted shadow. */
+      background: linear-gradient(
+        135deg,
+        rgba(61, 155, 143, 0.42),
+        rgba(45, 122, 112, 0.32)
+      );
+      backdrop-filter: blur(22px) saturate(180%);
+      -webkit-backdrop-filter: blur(22px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow:
+        0 10px 30px rgba(20, 60, 54, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+    .pebble-fab:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 16px 40px rgba(20, 60, 54, 0.48),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+    .pebble-fab svg { width: 20px; height: 20px; }
+    .pebble-fab .lbl {
+      /* Label hides on narrow screens — the orb alone is the affordance. */
+    }
+    .pebble-fab-panel {
+      position: fixed;
+      right: 24px;
+      bottom: 92px;
+      z-index: 901;
+      width: 400px;
+      max-width: calc(100vw - 32px);
+      height: 580px;
+      max-height: calc(100vh - 132px);
+      display: flex;
+      flex-direction: column;
+      border-radius: 22px;
+      overflow: hidden;
+      background: linear-gradient(
+        160deg,
+        rgba(34, 26, 19, 0.62),
+        rgba(28, 21, 15, 0.72)
+      );
+      backdrop-filter: blur(34px) saturate(170%);
+      -webkit-backdrop-filter: blur(34px) saturate(170%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+      animation: pebbleFabRise 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    @keyframes pebbleFabRise {
+      from { transform: translateY(16px) scale(0.98); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .pebble-fab-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      flex-shrink: 0;
+    }
+    .pebble-fab-head .ttl {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .pebble-fab-head .ttl svg { width: 18px; height: 18px; color: #7fd3c6; }
+    .pebble-fab-head .x {
+      background: transparent;
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 17px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .pebble-fab-head .x:hover {
+      color: var(--text-primary);
+      border-color: var(--glass-border-strong);
+    }
+    .pebble-fab-body { flex: 1; min-height: 0; overflow: hidden; }
+    .pebble-fab-empty {
+      padding: 26px 22px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+    .pebble-fab-empty button {
+      margin-top: 14px;
+      padding: 9px 18px;
+      border-radius: var(--radius-pill);
+      background: var(--gradient-sage);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+    }
+    @media (max-width: 720px) {
+      /* Sit above the fixed bottom nav bar. */
+      .pebble-fab { right: 16px; bottom: 84px; padding: 12px; }
+      .pebble-fab .lbl { display: none; }
+      .pebble-fab-panel {
+        right: 12px;
+        left: 12px;
+        bottom: 150px;
+        width: auto;
+        max-width: none;
+        height: auto;
+        max-height: calc(100vh - 210px);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pebble-fab-panel { animation: none; }
+      .pebble-fab:hover { transform: none; }
     }
 
     main {
@@ -1430,8 +1579,20 @@ export class HomeScreen extends LitElement {
     .today-top-left .daily {
       flex: 1;
     }
+    /* The Recently-achieved / Growth-insight row sits directly under
+       .today-top. Use the SAME column template so the Growth-insight
+       card is exactly as wide as the "Coming up" card above it and
+       the two right-hand cards align vertically (the shared .grid-2
+       is 1fr 1.2fr — slightly wider — so it gets its own override
+       here without disturbing My Cairn's grid-2). */
+    .today-insight-row {
+      grid-template-columns: 1fr 1.1fr;
+    }
     @media (max-width: 1024px) {
       .today-top {
+        grid-template-columns: 1fr;
+      }
+      .today-insight-row {
         grid-template-columns: 1fr;
       }
     }
@@ -2668,7 +2829,7 @@ export class HomeScreen extends LitElement {
                 class="link hide-mobile"
                 @click=${() => (this._schoolImportOpen = true)}
               >
-                Import school calendar
+                Import from PDF
               </button>
               ${this._circleTrips().length > 4
                 ? html`<button class="link" @click=${() => (this._allTripsOpen = true)}>
@@ -2745,6 +2906,7 @@ export class HomeScreen extends LitElement {
                 )}
                 .trips=${this._circleTrips()}
                 .events=${this._liveEvents()}
+                .holidays=${this.holidays ?? []}
                 .today=${today}
                 @month-select=${(e) => this._jumpToMonth(e.detail.year, e.detail.month)}
               ></yearly-view>
@@ -3256,7 +3418,7 @@ export class HomeScreen extends LitElement {
       </section>
 
       <section>
-        <div class="grid-2">
+        <div class="grid-2 today-insight-row">
           <glass-panel padding="md" variant="strong">
             <div class="cal-head"><h3>Recently achieved</h3>
               <button class="link" @click=${() => (this._activeTab = 'children')}>See all</button></div>
@@ -3683,6 +3845,70 @@ export class HomeScreen extends LitElement {
     `;
   }
 
+  /** Floating liquid-glass Pebble — on every tab EXCEPT Pebble itself.
+   *  Reuses <child-pebble compact> for parents with a child; for
+   *  Cairn-only / no-child users it hands off to the existing
+   *  activities <pebble-chat> modal (mirrors _renderPebbleTab's own
+   *  branch — one Pebble, surfaced everywhere). */
+  _renderPebbleFab() {
+    if (this._activeTab === 'pebble') return '';
+    const cd = this._childData();
+    const pico = html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none"/></svg>`;
+    return html`
+      <button
+        class="pebble-fab"
+        aria-label="Ask Pebble"
+        title="Ask Pebble"
+        @click=${() => (this._pebbleFabOpen = !this._pebbleFabOpen)}
+      >
+        ${pico}<span class="lbl">Ask Pebble</span>
+      </button>
+      ${this._pebbleFabOpen
+        ? html`<div
+            class="pebble-fab-panel"
+            role="dialog"
+            aria-label="Pebble"
+          >
+            <div class="pebble-fab-head">
+              <span class="ttl">${pico} Pebble</span>
+              <button
+                class="x"
+                aria-label="Close"
+                @click=${() => (this._pebbleFabOpen = false)}
+              >
+                ×
+              </button>
+            </div>
+            <div class="pebble-fab-body">
+              ${cd.hasPP && cd.child
+                ? html`<child-pebble
+                    compact
+                    .child=${cd.child}
+                    .messages=${cd.pebbleMessages}
+                    .prefill=${this._pebblePrefill}
+                    .memberProfiles=${this.family?.memberProfiles ?? {}}
+                    .myUid=${this.user?.uid ?? ''}
+                  ></child-pebble>`
+                : html`<div class="pebble-fab-empty">
+                    Pebble knows your upcoming trips and family
+                    celebrations. Ask about activities, packing,
+                    restaurants or gift ideas.
+                    <br />
+                    <button
+                      @click=${() => {
+                        this._pebbleFabOpen = false;
+                        this._pebbleOpen = true;
+                      }}
+                    >
+                      Start a conversation
+                    </button>
+                  </div>`}
+            </div>
+          </div>`
+        : ''}
+    `;
+  }
+
   render() {
     // Modals below still need the resolved member lists; the per-tab
     // sections recompute their own (cheap derivations) so each helper
@@ -3717,9 +3943,9 @@ export class HomeScreen extends LitElement {
           </button>
           <button
             class="avatar-tap"
-            @click=${() => (this._profileOpen = true)}
-            title="${this.user?.displayName ?? 'Profile'} — open settings"
-            aria-label="Open profile settings"
+            @click=${() => (this._activeTab = 'cairn')}
+            title="${this.user?.displayName ?? 'Profile'} — open My Cairn"
+            aria-label="Open My Cairn"
           >
             <member-chip
               .name=${this.user?.displayName ?? 'You'}
@@ -3746,6 +3972,8 @@ export class HomeScreen extends LitElement {
       </main>
 
       ${this._renderBottomNav()}
+
+      ${this._renderPebbleFab()}
 
       <trip-form
         ?open=${this._formOpen}
@@ -3776,6 +4004,7 @@ export class HomeScreen extends LitElement {
         .family=${this.family}
         .immediate=${immediate}
         .extended=${extended}
+        .canRemove=${this.ppIsMember}
         @cancel=${() => (this._membersOpen = false)}
       ></manage-members-modal>
 

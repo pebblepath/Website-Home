@@ -3,6 +3,46 @@ import './member-chip.js';
 import { gradientForTrip, parseLocalDate } from '../services/data.js';
 import { toast } from '../services/toast.js';
 
+// Known booking/lodging providers → clean display name. The scraped
+// `lodgingHost` (og:site_name) is unreliable — e.g. a saved Airbnb
+// wishlist URL returns "Flo's Favorites" (often HTML-entity-encoded
+// as "Flo&#039;s Favorites"). We derive the source from the URL's
+// domain instead and fall back to a plain "Other" for anything we
+// don't recognise, so the pill is always a clean, trustworthy label.
+const LODGING_PROVIDERS = [
+  [/(^|\.)airbnb\./, 'Airbnb'],
+  [/(^|\.)(vrbo|homeaway)\./, 'Vrbo'],
+  [/(^|\.)booking\./, 'Booking.com'],
+  [/(^|\.)expedia\./, 'Expedia'],
+  [/(^|\.)hipcamp\./, 'Hipcamp'],
+  [/(^|\.)tripadvisor\./, 'Tripadvisor'],
+  [/(^|\.)hotels\./, 'Hotels.com'],
+  [/(^|\.)(marriott|hilton|hyatt|ihg|accor|fourseasons)\./, 'Hotel'],
+  [/(^|\.)plumguide\./, 'Plum Guide'],
+];
+
+function lodgingSourceLabel(t) {
+  const raw = (t && t.lodgingUrl ? String(t.lodgingUrl) : '').trim();
+  if (raw) {
+    let host = '';
+    try {
+      host = new URL(raw.includes('://') ? raw : `https://${raw}`).hostname;
+    } catch {
+      host = '';
+    }
+    if (host) {
+      const h = host.toLowerCase();
+      for (const [re, name] of LODGING_PROVIDERS) {
+        if (re.test(h)) return name;
+      }
+    }
+    return 'Other';
+  }
+  // No URL but a lodging was noted — the scraped host is unreliable,
+  // so don't surface it; just say it came from somewhere else.
+  return t && t.lodgingHost ? 'Other' : '';
+}
+
 /**
  * Format a trip as plain text for sharing via Web Share / clipboard.
  */
@@ -17,8 +57,10 @@ function formatTripForShare(t, memberMap) {
     const em = e.toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
     lines.push(t.start === t.end ? em : `${sm} – ${em}`);
   }
-  if (t.lodgingHost || t.lodgingTitle) {
-    lines.push(`Lodging: ${[t.lodgingHost, t.lodgingTitle].filter(Boolean).join(' — ')}`);
+  if (t.lodgingUrl || t.lodgingHost || t.lodgingTitle) {
+    lines.push(
+      `Lodging: ${[lodgingSourceLabel(t), t.lodgingTitle].filter(Boolean).join(' — ')}`,
+    );
   }
   if (t.flightNumber || t.flightAirline || t.flightDepartAirport) {
     const parts = [];
@@ -376,10 +418,13 @@ export class TripCard extends LitElement {
           <h3>${t.title}</h3>
           <div class="location">${t.location || '—'}</div>
           ${t.lodgingUrl || t.lodgingHost
-            ? html`<div class="lodging">
-                ${t.lodgingHost ? html`<span class="pill">${t.lodgingHost}</span>` : ''}
-                <span class="lodging-text">${t.lodgingTitle || t.lodgingUrl || ''}</span>
-              </div>`
+            ? (() => {
+                const src = lodgingSourceLabel(t);
+                return html`<div class="lodging">
+                  ${src ? html`<span class="pill">${src}</span>` : ''}
+                  <span class="lodging-text">${t.lodgingTitle || t.lodgingUrl || ''}</span>
+                </div>`;
+              })()
             : ''}
           ${t.flightNumber || t.flightDepartAirport
             ? html`<div class="flight-info">

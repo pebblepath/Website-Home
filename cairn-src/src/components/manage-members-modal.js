@@ -24,9 +24,11 @@ export class ManageMembersModal extends LitElement {
     family: { type: Object },
     immediate: { type: Array },
     extended: { type: Array },
+    canRemove: { type: Boolean },
     _busy: { state: true },
     _newGroupName: { state: true },
     _editingGroupId: { state: true },
+    _removingUid: { state: true },
   };
 
   constructor() {
@@ -35,9 +37,11 @@ export class ManageMembersModal extends LitElement {
     this.family = null;
     this.immediate = [];
     this.extended = [];
+    this.canRemove = false;
     this._busy = false;
     this._newGroupName = '';
     this._editingGroupId = null;
+    this._removingUid = null;
   }
 
   static styles = css`
@@ -142,6 +146,27 @@ export class ManageMembersModal extends LitElement {
       color: var(--text-tertiary);
       letter-spacing: -0.005em;
       margin-top: 2px;
+    }
+    .member-row .remove-btn {
+      flex-shrink: 0;
+      background: transparent;
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      cursor: pointer;
+      transition: all 160ms ease;
+    }
+    .member-row .remove-btn:hover {
+      color: var(--rose-soft);
+      border-color: rgba(201, 138, 138, 0.5);
+      background: rgba(201, 138, 138, 0.08);
+    }
+    .member-row .remove-btn:disabled {
+      opacity: 0.5;
+      cursor: default;
     }
     .empty {
       color: var(--text-tertiary);
@@ -331,6 +356,29 @@ export class ManageMembersModal extends LitElement {
     }
   }
 
+  async _removeMember(m) {
+    if (this._removingUid) return;
+    const name = m.displayName || 'this person';
+    if (
+      !confirm(
+        `Remove ${name} from ${this.family?.name ?? 'your family'}?\n\n` +
+          `They'll lose access to shared trips, celebrations and any ` +
+          `read-only child access. You can re-invite them anytime with ` +
+          `the invite code.`,
+      )
+    )
+      return;
+    this._removingUid = m.uid;
+    try {
+      await dataStore.removeCairnMember(m.uid);
+      toast(`${name} removed.`);
+    } catch (e) {
+      toast(`Couldn't remove: ${e.code ?? e.message}`, { duration: 5000 });
+    } finally {
+      this._removingUid = null;
+    }
+  }
+
   async _regenerate() {
     if (this._busy) return;
     this._busy = true;
@@ -453,6 +501,15 @@ export class ManageMembersModal extends LitElement {
                       <div class="name">${m.displayName}</div>
                       <div class="role">Cairn — extended</div>
                     </div>
+                    ${this.canRemove
+                      ? html`<button
+                          class="remove-btn"
+                          ?disabled=${this._removingUid === m.uid}
+                          @click=${() => this._removeMember(m)}
+                        >
+                          ${this._removingUid === m.uid ? 'Removing…' : 'Remove'}
+                        </button>`
+                      : ''}
                   </div>
                 `,
               )}

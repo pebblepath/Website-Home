@@ -26,6 +26,7 @@ export class YearlyView extends LitElement {
     tripDays: { type: Object },
     trips: { type: Array },
     events: { type: Array },
+    holidays: { type: Array },
     today: { type: Object },
     _activeDay: { state: true },
   };
@@ -36,6 +37,7 @@ export class YearlyView extends LitElement {
     this.tripDays = new Map();
     this.trips = [];
     this.events = [];
+    this.holidays = [];
     this.today = new Date();
     this._activeDay = null; // { month, day, label }
   }
@@ -140,6 +142,14 @@ export class YearlyView extends LitElement {
          with the celebration + trip cells nearby. */
       box-shadow: none;
     }
+    /* Public-holiday day — teal, matching the monthly calendar's
+       .cal-cell.has-holiday. Declared BEFORE .cell.trip / .cell.event
+       so that on a day which is also a trip or celebration the user's
+       own content wins the colour; the holiday is just the backdrop. */
+    .cell.holiday {
+      background: var(--gradient-sage);
+      box-shadow: inset 0 0 0 1px rgba(61, 155, 143, 0.55);
+    }
     .cell.trip {
       background: var(--trip-day-bg);
       box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
@@ -191,6 +201,10 @@ export class YearlyView extends LitElement {
     }
     .swatch i.event {
       background: var(--gradient-celebration);
+      border-radius: 2px;
+    }
+    .swatch i.holiday {
+      background: var(--gradient-sage);
       border-radius: 2px;
     }
 
@@ -283,6 +297,13 @@ export class YearlyView extends LitElement {
         push(d.getDate(), ev.title ?? 'Event');
       }
     }
+    for (const h of this.holidays ?? []) {
+      const d = parseLocalDate(h.date);
+      if (!d) continue;
+      if (d.getFullYear() === y && d.getMonth() === m) {
+        push(d.getDate(), h.title ?? 'Public holiday');
+      }
+    }
     return labels;
   }
 
@@ -305,11 +326,16 @@ export class YearlyView extends LitElement {
         const dd = parseLocalDate(e.date);
         return dd && dd.getFullYear() === y && dd.getMonth() === m && dd.getDate() === d;
       });
+      const hasHoliday = (this.holidays ?? []).some((h) => {
+        const dd = parseLocalDate(h.date);
+        return dd && dd.getFullYear() === y && dd.getMonth() === m && dd.getDate() === d;
+      });
       const isActive =
         this._activeDay?.month === m && this._activeDay?.day === d;
       const cls = [
         'cell',
         isToday ? 'today' : '',
+        hasHoliday ? 'holiday' : '',
         density > 0 ? 'trip' : '',
         density > 0.6 ? 'dense' : '',
         hasEvent ? 'event' : '',
@@ -378,6 +404,7 @@ export class YearlyView extends LitElement {
         <span class="swatch"><i class="today"></i> Today</span>
         <span class="swatch"><i class="trip"></i> Family Activities</span>
         <span class="swatch"><i class="event"></i> Celebrations</span>
+        <span class="swatch"><i class="holiday"></i> Public holidays</span>
       </div>
       ${this._activeDay
         ? html`

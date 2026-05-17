@@ -31,6 +31,12 @@ export class ChildPebble extends LitElement {
     _error: { state: true },
     _seeded: { state: true },
     _listening: { state: true },
+    _isPrivate: { state: true },
+    _railOpen: { state: true },
+    // Embedded in the floating liquid-glass widget (non-Pebble tabs):
+    // no rail, fills its container instead of the viewport, tighter
+    // padding. Same component, same logic — just a denser skin.
+    compact: { type: Boolean },
   };
 
   constructor() {
@@ -45,6 +51,13 @@ export class ChildPebble extends LitElement {
     this._loading = false;
     this._error = '';
     this._seeded = false;
+    // Private/Family toggle (mirrors iOS Pebble Build 30). false =
+    // Family (co-parents see it); true = Private (only the asker).
+    // Per-session like iOS — resets when the child changes.
+    this._isPrivate = false;
+    // Mobile: the recent-questions rail is collapsed by default.
+    this._railOpen = false;
+    this.compact = false;
     // Voice-to-Pebble (Web Speech API — mirrors the iOS speak-to-ask).
     this._listening = false;
     this._recognition = null;
@@ -118,6 +131,7 @@ export class ChildPebble extends LitElement {
       this._seeded = false;
       this._session = [];
       this._error = '';
+      this._isPrivate = false; // per-session, like iOS
     }
     if (!this._seeded && Array.isArray(this.messages) && this.messages.length) {
       this._session = this.messages.map((m) => ({
@@ -153,6 +167,39 @@ export class ChildPebble extends LitElement {
     ];
   }
 
+  // "Recent" rail — the asked questions in this thread, newest first,
+  // each one a jump-link back to that exchange (the thread is one
+  // continuous conversation per child, mirroring the iOS app; this is
+  // a navigator over it, not a separate-conversations store).
+  _recentQuestions() {
+    const out = [];
+    this._session.forEach((m, idx) => {
+      if (m.role !== 'user') return;
+      const text = String(m.content ?? '').trim();
+      if (!text) return;
+      out.push({ idx, text, isPrivate: m.isPrivate === true });
+    });
+    return out.reverse();
+  }
+
+  _scrollToMsg(idx) {
+    this._railOpen = false;
+    this.updateComplete.then(() => {
+      const el = this.renderRoot.querySelector(`.thread [data-idx="${idx}"]`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+
+  _newQuestion() {
+    this._railOpen = false;
+    this._input = '';
+    this.updateComplete.then(() => {
+      const ta = this.renderRoot.querySelector('textarea');
+      ta?.focus();
+      this._scrollToBottom();
+    });
+  }
+
   async _send(text) {
     const question = (text ?? this._input).trim();
     if (!question || this._loading) return;
@@ -166,9 +213,15 @@ export class ChildPebble extends LitElement {
       role: m.role,
       content: m.content,
     }));
+    const priv = this._isPrivate === true;
     this._session = [
       ...this._session,
-      { role: 'user', content: question, senderUid: this.myUid },
+      {
+        role: 'user',
+        content: question,
+        senderUid: this.myUid,
+        isPrivate: priv,
+      },
     ];
     this._loading = true;
     try {
@@ -176,10 +229,16 @@ export class ChildPebble extends LitElement {
         this.child.id,
         question,
         history,
+        priv,
       );
       this._session = [
         ...this._session,
-        { role: 'assistant', content: result?.answer ?? '…' },
+        {
+          role: 'assistant',
+          content: result?.answer ?? '…',
+          isPrivate: priv,
+          senderUid: priv ? this.myUid : undefined,
+        },
       ];
     } catch (e) {
       console.error(e);
@@ -205,6 +264,163 @@ export class ChildPebble extends LitElement {
   static styles = css`
     *, *::before, *::after { box-sizing: border-box; }
     :host { display: block; }
+
+    /* Two-column shell: a "Recent" rail (desktop) beside the chat. */
+    .pebble-wrap {
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+    }
+    .rail {
+      flex: 0 0 232px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      height: min(800px, calc(100vh - 84px));
+      padding: 18px 14px 18px 24px;
+      border-right: 1px solid var(--glass-border);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 248, 235, 0.18) transparent;
+    }
+    .rail-head {
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      padding: 2px 8px 8px;
+    }
+    .rail-new {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 9px 12px;
+      margin-bottom: 8px;
+      border-radius: var(--radius-input);
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 13px;
+      cursor: pointer;
+      text-align: left;
+    }
+    .rail-new:hover {
+      color: var(--text-primary);
+      border-color: var(--glass-border-strong);
+    }
+    .rail-new svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .rail-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      width: 100%;
+      padding: 9px 11px;
+      border-radius: var(--radius-input);
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      line-height: 1.4;
+      cursor: pointer;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rail-item:hover {
+      background: var(--glass-fill);
+      color: var(--text-primary);
+      border-color: var(--glass-border);
+    }
+    .rail-item .lock { width: 11px; height: 11px; flex-shrink: 0; color: #e6c3ab; }
+    .rail-empty {
+      color: var(--text-tertiary);
+      font-size: 12.5px;
+      line-height: 1.5;
+      padding: 6px 8px;
+    }
+    /* Private/Family segmented toggle (iOS Build 30 parity). */
+    .privtoggle {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: var(--radius-pill);
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border);
+    }
+    .privtoggle button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 13px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: transparent;
+      color: var(--text-tertiary);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 160ms ease;
+    }
+    .privtoggle button svg { width: 13px; height: 13px; }
+    .privtoggle button.on.fam {
+      background: rgba(61, 155, 143, 0.2);
+      color: #9fded2;
+      box-shadow: inset 0 0 0 1px rgba(61, 155, 143, 0.4);
+    }
+    .privtoggle button.on.priv {
+      background: rgba(198, 123, 92, 0.2);
+      color: #e6c3ab;
+      box-shadow: inset 0 0 0 1px rgba(198, 123, 92, 0.45);
+    }
+    .rail-toggle {
+      display: none;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 13px;
+      border-radius: var(--radius-pill);
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .rail-toggle svg { width: 13px; height: 13px; }
+    @media (max-width: 900px) {
+      .rail {
+        position: absolute;
+        z-index: 5;
+        left: 0;
+        top: 0;
+        background: var(--surface-raised, rgba(20, 14, 9, 0.96));
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+        transform: translateX(-104%);
+        transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .rail.open { transform: translateX(0); }
+      .pebble-wrap { position: relative; }
+      .rail-toggle { display: inline-flex; }
+    }
+    /* Compact: embedded in the floating widget — no rail, fill the
+       widget box (its parent sizes it), tighter gutters. */
+    .pebble-wrap.compact { height: 100%; }
+    .pebble-wrap.compact .rail,
+    .pebble-wrap.compact .rail-toggle { display: none; }
+    .pebble-wrap.compact .chatpane {
+      height: 100%;
+      padding: 12px 16px 0;
+    }
+    .pebble-wrap.compact .toprow { margin-bottom: 8px; }
+    .pebble-wrap.compact .composer { margin-top: 12px; }
     /* Portal v4 — Pebble is the whole tab: no card, no page header,
        edge-to-edge up to the nav bar; the "Private to parents" pill
        is integrated into the top of the chat surface.
@@ -215,6 +431,8 @@ export class ChildPebble extends LitElement {
     .chatpane {
       display: flex;
       flex-direction: column;
+      flex: 1;
+      min-width: 0;
       height: min(800px, calc(100vh - 84px));
       padding: 14px 24px 0;
     }
@@ -540,13 +758,65 @@ export class ChildPebble extends LitElement {
   render() {
     const name = this.child?.name ?? 'your child';
     const hasThread = this._session.length > 0;
+    const recents = this._recentQuestions();
     return html`
+      <div class="pebble-wrap ${this.compact ? 'compact' : ''}">
+        <aside class="rail ${this._railOpen ? 'open' : ''}">
+          <div class="rail-head">Recent</div>
+          <button class="rail-new" @click=${() => this._newQuestion()}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            New question
+          </button>
+          ${recents.length === 0
+            ? html`<div class="rail-empty">
+                Your questions about ${name} show up here so you can jump
+                back to any answer.
+              </div>`
+            : recents.map(
+                (q) => html`<button
+                  class="rail-item"
+                  title=${q.text}
+                  @click=${() => this._scrollToMsg(q.idx)}
+                >
+                  ${q.isPrivate
+                    ? html`<svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round"/></svg>`
+                    : ''}
+                  ${q.text}
+                </button>`,
+              )}
+        </aside>
       <div class="chatpane">
         <div class="toprow">
-          <span class="privtag">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round"/></svg>
-            Private to parents
-          </span>
+          <button
+            class="rail-toggle"
+            @click=${() => (this._railOpen = !this._railOpen)}
+            aria-label="Recent questions"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+            Recent
+          </button>
+          <div
+            class="privtoggle"
+            role="group"
+            aria-label="Who can see this conversation"
+          >
+            <button
+              class="fam ${this._isPrivate ? '' : 'on'}"
+              @click=${() => (this._isPrivate = false)}
+              title="Both parents see this conversation"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-3-3.87M9 21v-2a4 4 0 0 1 3-3.87"/><circle cx="9" cy="7" r="3"/><circle cx="17" cy="8" r="2.4"/></svg>
+              Family
+            </button>
+            <button
+              class="priv ${this._isPrivate ? 'on' : ''}"
+              @click=${() => (this._isPrivate = true)}
+              title="Only you see this conversation"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round"/></svg>
+              Private
+            </button>
+          </div>
         </div>
         <div class="thread">
             ${!hasThread
@@ -566,16 +836,16 @@ export class ChildPebble extends LitElement {
                   </div>
                 </div>`
               : html`
-                  ${this._session.map((m) =>
+                  ${this._session.map((m, i) =>
                     m.role === 'assistant'
-                      ? html`<div class="msg pb">
+                      ? html`<div class="msg pb" data-idx="${i}">
                           <span class="pic">${this._pico()}</span>
                           <div class="col">
                             <!-- prettier-ignore -->
                             <div class="bubble">${this._fmt(m.content)}</div>
                           </div>
                         </div>`
-                      : html`<div class="msg you">
+                      : html`<div class="msg you" data-idx="${i}">
                           <span class="av">
                             <member-chip
                               .name=${this._senderName(m.senderUid)}
@@ -586,7 +856,9 @@ export class ChildPebble extends LitElement {
                           </span>
                           <div class="col">
                             <div class="said">
-                              ${this._senderName(m.senderUid)} asked
+                              ${this._senderName(m.senderUid)} asked${m.isPrivate
+                                ? ' · private'
+                                : ''}
                             </div>
                             <div class="bubble">${this._fmt(m.content)}</div>
                           </div>
@@ -654,6 +926,7 @@ export class ChildPebble extends LitElement {
               </svg>
             </button>
           </form>
+      </div>
       </div>
     `;
   }
