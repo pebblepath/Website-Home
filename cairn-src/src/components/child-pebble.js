@@ -30,6 +30,7 @@ export class ChildPebble extends LitElement {
     _loading: { state: true },
     _error: { state: true },
     _seeded: { state: true },
+    _listening: { state: true },
   };
 
   constructor() {
@@ -44,6 +45,70 @@ export class ChildPebble extends LitElement {
     this._loading = false;
     this._error = '';
     this._seeded = false;
+    // Voice-to-Pebble (Web Speech API — mirrors the iOS speak-to-ask).
+    this._listening = false;
+    this._recognition = null;
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    try {
+      this._recognition?.abort();
+    } catch {
+      /* recognition may already be stopped */
+    }
+    this._recognition = null;
+  }
+
+  // Feature-detect once; if the browser has no SpeechRecognition the
+  // mic button is simply not rendered (graceful fallback — typing
+  // still works everywhere).
+  get _voiceSupported() {
+    return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+  }
+
+  _toggleVoice() {
+    if (this._listening) {
+      try {
+        this._recognition?.stop();
+      } catch {
+        /* noop */
+      }
+      return;
+    }
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return;
+    const rec = new SR();
+    rec.lang = 'en-US';
+    rec.interimResults = true; // live-fill the box as they speak
+    rec.continuous = false; // single utterance, then auto-stop
+    rec.onresult = (e) => {
+      let text = '';
+      for (let i = 0; i < e.results.length; i += 1) {
+        text += e.results[i][0].transcript;
+      }
+      this._input = text;
+    };
+    rec.onerror = (e) => {
+      this._listening = false;
+      if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
+        this._error =
+          'Microphone access is blocked — allow it in your browser to ask by voice.';
+      }
+    };
+    rec.onend = () => {
+      this._listening = false;
+      this._recognition = null;
+    };
+    this._recognition = rec;
+    this._listening = true;
+    this._error = '';
+    try {
+      rec.start();
+    } catch {
+      this._listening = false;
+      this._recognition = null;
+    }
   }
 
   willUpdate(changed) {
@@ -376,6 +441,47 @@ export class ChildPebble extends LitElement {
     }
     .send:disabled { opacity: 0.5; cursor: not-allowed; }
     .send svg { width: 16px; height: 16px; }
+    /* Voice-to-Pebble mic — ghost circle when idle, teal + pulsing
+       while listening (mirrors the iOS speak-to-ask affordance). */
+    .mic {
+      flex-shrink: 0;
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      background: transparent;
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.18s ease, border-color 0.18s ease,
+        background 0.18s ease;
+    }
+    .mic:hover {
+      color: var(--text-primary);
+      border-color: var(--glass-border-strong);
+    }
+    .mic:disabled { opacity: 0.5; cursor: not-allowed; }
+    .mic svg { width: 17px; height: 17px; }
+    .mic.on {
+      color: #fff;
+      border-color: transparent;
+      background: var(--teal-pebble);
+      animation: micpulse 1.4s ease-in-out infinite;
+    }
+    @keyframes micpulse {
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(61, 155, 143, 0.5);
+      }
+      50% {
+        box-shadow: 0 0 0 6px rgba(61, 155, 143, 0);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .mic.on { animation: none; }
+    }
     .error {
       color: var(--rose-soft);
       font-size: 13px;
@@ -517,6 +623,25 @@ export class ChildPebble extends LitElement {
               }}
               ?disabled=${this._loading}
             ></textarea>
+            ${this._voiceSupported
+              ? html`<button
+                  type="button"
+                  class="mic ${this._listening ? 'on' : ''}"
+                  @click=${() => this._toggleVoice()}
+                  ?disabled=${this._loading}
+                  aria-label=${this._listening
+                    ? 'Stop listening'
+                    : 'Ask by voice'}
+                  title=${this._listening
+                    ? 'Listening… tap to stop'
+                    : 'Ask by voice'}
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="2" width="6" height="12" rx="3" />
+                    <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
+                  </svg>
+                </button>`
+              : ''}
             <button
               type="submit"
               class="send"
