@@ -6379,7 +6379,7 @@ var ct=Object.defineProperty;var pt=(c,e,t)=>e in c?ct(c,e,{enumerable:!0,config
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 2.5-5 6-5s6 2 6 5M15 17c2 0 5 1 5 3" stroke-linecap="round"/></svg>
       The whole family
     </div>`,i=this._comingUp(),r=s`
-      <div class="glass strong"><div class="pad">
+      <glass-panel padding="md" variant="strong">
         <div class="cal-head"><h3>Coming up</h3>
           <button class="link" @click=${()=>this._activeTab="activities"}>All activities</button></div>
         ${i.length===0?s`<div class="ring-note" style="padding:8px 4px;">Nothing on the calendar yet — plan something from the Activities tab.</div>`:i.map(h=>s`<div class="ms-row">
@@ -6387,7 +6387,7 @@ var ct=Object.defineProperty;var pt=(c,e,t)=>e in c?ct(c,e,{enumerable:!0,config
                 <div class="t">${h.title}${h.sub?s`<small>${h.sub}</small>`:""}</div>
                 <span class="ms-stat up">${h.chip}</span>
               </div>`)}
-      </div></div>`;if(!e.hasPP||!e.child)return s`
+      </glass-panel>`;if(!e.hasPP||!e.child)return s`
         ${this._renderTodayHeader(t)}
         <section>${r}</section>
         ${this._renderCelebrationsSection()}
@@ -6402,7 +6402,7 @@ var ct=Object.defineProperty;var pt=(c,e,t)=>e in c?ct(c,e,{enumerable:!0,config
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
         </div>
-        <div class="glass strong"><div class="pad">
+        <glass-panel padding="md" variant="strong">
           <div class="child-card">
             <span class="child-photo">
               <member-chip
@@ -6424,7 +6424,7 @@ var ct=Object.defineProperty;var pt=(c,e,t)=>e in c?ct(c,e,{enumerable:!0,config
               <div class="lbl">of tracked milestones</div>
             </div>
           </div>
-        </div></div>
+        </glass-panel>
       </section>
 
       <section>
@@ -6459,7 +6459,7 @@ var ct=Object.defineProperty;var pt=(c,e,t)=>e in c?ct(c,e,{enumerable:!0,config
 
       <section>
         <div class="grid-2">
-          <div class="glass strong"><div class="pad">
+          <glass-panel padding="md" variant="strong">
             <div class="cal-head"><h3>Recently achieved</h3>
               <button class="link" @click=${()=>this._activeTab="children"}>See all</button></div>
             ${d.length===0?s`<div class="ring-note" style="padding:8px 4px;">No milestones logged as achieved yet.</div>`:d.map(h=>s`<div class="ms-row">
@@ -6467,8 +6467,8 @@ var ct=Object.defineProperty;var pt=(c,e,t)=>e in c?ct(c,e,{enumerable:!0,config
                     <div class="t">${h.title}</div>
                     <span class="ms-stat done">Achieved</span>
                   </div>`)}
-          </div></div>
-          <div class="glass strong"><div class="pad">
+          </glass-panel>
+          <glass-panel padding="md" variant="strong">
             <div class="cal-head"><h3>Growth insight</h3>
               <button class="link" @click=${()=>this._activeTab="children"}>More insights</button></div>
             ${g?s`<div class="insight ${g.type}" style="margin-bottom:0;">
@@ -6479,7 +6479,7 @@ var ct=Object.defineProperty;var pt=(c,e,t)=>e in c?ct(c,e,{enumerable:!0,config
                     <p>${g.body}</p>
                   </div>
                 </div>`:s`<div class="ring-note" style="padding:8px 4px;">Pebble surfaces patterns here as more of ${e.child.name}'s milestones are logged.</div>`}
-          </div></div>
+          </glass-panel>
         </div>
       </section>
     `}_renderActivitiesTab(){var i,r;const e=this._liveImmediate().concat(this._liveExtended()),t=s`<div class="scope shared">
@@ -6513,7 +6513,7 @@ var ct=Object.defineProperty;var pt=(c,e,t)=>e in c?ct(c,e,{enumerable:!0,config
           </div>
           <div>
             <div class="section-head"><h2>What each ring sees</h2></div>
-            <div class="glass strong"><div class="pad">
+            <glass-panel padding="md" variant="strong">
               <div class="set-row">
                 <span class="si" style="color:#e6c3ab;">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" stroke-linecap="round"/></svg>
@@ -6529,14 +6529,14 @@ var ct=Object.defineProperty;var pt=(c,e,t)=>e in c?ct(c,e,{enumerable:!0,config
                 <span class="set-pill" style="color:#9fded2;border-color:rgba(61,155,143,.4);">Activities only</span>
               </div>
               <div class="ring-note">This is the "one app for the whole family, without sharing everything" boundary — grandparents help plan trips and never see milestones.</div>
-            </div></div>
+            </glass-panel>
           </div>
         </div>
       </section>
 
       <section>
         <div class="section-head"><h2>Settings</h2></div>
-        <div class="glass strong"><div class="pad">
+        <glass-panel padding="md" variant="strong">
           <div class="set-row">
             <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg></span>
             <div class="sl"><b>${e}</b><span>${t||"Account & profile"}</span></div>
@@ -6562,7 +6562,7 @@ var ct=Object.defineProperty;var pt=(c,e,t)=>e in c?ct(c,e,{enumerable:!0,config
             <div class="sl"><b>PebblePath Premium</b><span>Unlimited Pebble · pediatrician PDFs · insights</span></div>
             <span class="set-pill" style="color:#9fded2;border-color:rgba(61,155,143,.4);">Active</span>
           </div>
-        </div></div>
+        </glass-panel>
       </section>
     `}_renderChildrenTab(){const e=this._childData(),t=s`<span class="scope-chip">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round" /></svg>
@@ -8635,4 +8635,4 @@ var ct=Object.defineProperty;var pt=(c,e,t)=>e in c?ct(c,e,{enumerable:!0,config
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}v(dt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0}});customElements.define("cairn-app",dt);
-//# sourceMappingURL=index-CBJAmi0j.js.map
+//# sourceMappingURL=index-CR-oVUzG.js.map
