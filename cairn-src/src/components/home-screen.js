@@ -2863,7 +2863,7 @@ export class HomeScreen extends LitElement {
     </div>`;
     const coming = this._comingUp();
     const comingPanel = html`
-      <div class="glass strong"><div class="pad">
+      <glass-panel padding="md" variant="strong">
         <div class="cal-head"><h3>Coming up</h3>
           <button class="link" @click=${() => (this._activeTab = 'activities')}>All activities</button></div>
         ${coming.length === 0
@@ -2875,7 +2875,7 @@ export class HomeScreen extends LitElement {
                 <span class="ms-stat up">${c.chip}</span>
               </div>`,
             )}
-      </div></div>`;
+      </glass-panel>`;
 
     if (!cd.hasPP || !cd.child) {
       // Cairn-only / no PP child — greeting + activities glance only.
@@ -2909,7 +2909,7 @@ export class HomeScreen extends LitElement {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
         </div>
-        <div class="glass strong"><div class="pad">
+        <glass-panel padding="md" variant="strong">
           <div class="child-card">
             <span class="child-photo">
               <member-chip
@@ -2931,7 +2931,7 @@ export class HomeScreen extends LitElement {
               <div class="lbl">of tracked milestones</div>
             </div>
           </div>
-        </div></div>
+        </glass-panel>
       </section>
 
       <section>
@@ -2972,7 +2972,7 @@ export class HomeScreen extends LitElement {
 
       <section>
         <div class="grid-2">
-          <div class="glass strong"><div class="pad">
+          <glass-panel padding="md" variant="strong">
             <div class="cal-head"><h3>Recently achieved</h3>
               <button class="link" @click=${() => (this._activeTab = 'children')}>See all</button></div>
             ${recently.length === 0
@@ -2984,8 +2984,8 @@ export class HomeScreen extends LitElement {
                     <span class="ms-stat done">Achieved</span>
                   </div>`,
                 )}
-          </div></div>
-          <div class="glass strong"><div class="pad">
+          </glass-panel>
+          <glass-panel padding="md" variant="strong">
             <div class="cal-head"><h3>Growth insight</h3>
               <button class="link" @click=${() => (this._activeTab = 'children')}>More insights</button></div>
             ${insight
@@ -2998,7 +2998,7 @@ export class HomeScreen extends LitElement {
                   </div>
                 </div>`
               : html`<div class="ring-note" style="padding:8px 4px;">Pebble surfaces patterns here as more of ${cd.child.name}'s milestones are logged.</div>`}
-          </div></div>
+          </glass-panel>
         </div>
       </section>
     `;
@@ -3058,7 +3058,7 @@ export class HomeScreen extends LitElement {
           </div>
           <div>
             <div class="section-head"><h2>What each ring sees</h2></div>
-            <div class="glass strong"><div class="pad">
+            <glass-panel padding="md" variant="strong">
               <div class="set-row">
                 <span class="si" style="color:#e6c3ab;">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" stroke-linecap="round"/></svg>
@@ -3074,14 +3074,14 @@ export class HomeScreen extends LitElement {
                 <span class="set-pill" style="color:#9fded2;border-color:rgba(61,155,143,.4);">Activities only</span>
               </div>
               <div class="ring-note">This is the "one app for the whole family, without sharing everything" boundary — grandparents help plan trips and never see milestones.</div>
-            </div></div>
+            </glass-panel>
           </div>
         </div>
       </section>
 
       <section>
         <div class="section-head"><h2>Settings</h2></div>
-        <div class="glass strong"><div class="pad">
+        <glass-panel padding="md" variant="strong">
           <div class="set-row">
             <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg></span>
             <div class="sl"><b>${name}</b><span>${email || 'Account & profile'}</span></div>
@@ -3107,7 +3107,7 @@ export class HomeScreen extends LitElement {
             <div class="sl"><b>PebblePath Premium</b><span>Unlimited Pebble · pediatrician PDFs · insights</span></div>
             <span class="set-pill" style="color:#9fded2;border-color:rgba(61,155,143,.4);">Active</span>
           </div>
-        </div></div>
+        </glass-panel>
       </section>
     `;
   }
