@@ -2669,8 +2669,8 @@ export class HomeScreen extends LitElement {
       },
       {
         id: 'cairn',
-        label: 'My Cairn',
-        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6.5" rx="3.5" ry="1.5" /><ellipse cx="12" cy="12" rx="6" ry="2.4" /><ellipse cx="12" cy="18" rx="8" ry="3" /></svg>`,
+        label: 'Settings',
+        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>`,
       },
     ];
   }
@@ -3566,7 +3566,7 @@ export class HomeScreen extends LitElement {
     const famName = this.family?.name ?? 'Your family';
     return html`
       ${this._renderTabHeader(
-        'My Cairn',
+        'Settings',
         "Who's in your circle, and what each level can see",
       )}
 
@@ -3944,8 +3944,8 @@ export class HomeScreen extends LitElement {
           <button
             class="avatar-tap"
             @click=${() => (this._activeTab = 'cairn')}
-            title="${this.user?.displayName ?? 'Profile'} — open My Cairn"
-            aria-label="Open My Cairn"
+            title="${this.user?.displayName ?? 'Profile'} — open Settings"
+            aria-label="Open Settings"
           >
             <member-chip
               .name=${this.user?.displayName ?? 'You'}
