@@ -19,11 +19,34 @@ import './member-chip.js';
  *   select-child  detail: childId
  *   ask-pebble    detail: seed question string
  */
+// Icons mirror the iOS app's DomainTileView SF Symbols:
+// motor=figure.walk, language=bubble.left.fill, social=heart.fill,
+// cognitive=brain.head.profile.
 const DOMAINS = [
-  { key: 'motor', label: 'Motor', color: '#6b9ac4' },
-  { key: 'language', label: 'Language', color: '#d4a843' },
-  { key: 'socialEmotional', label: 'Social-Emotional', color: '#c98a8a' },
-  { key: 'cognitive', label: 'Cognitive', color: '#8b7bb5' },
+  {
+    key: 'motor',
+    label: 'Motor',
+    color: '#6b9ac4',
+    svg: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="13.5" cy="4" r="2"/><path d="M12.6 7.3 8.8 9.9a1 1 0 0 0-.42.66l-.7 3.6a1 1 0 0 0 1.96.38l.5-2.6 1.5-.9-1 4-2.4 4.8a1 1 0 0 0 1.8.9l2.4-4.9.6-2 1.3 2.2.5 4.6a1 1 0 0 0 2-.2l-.5-5a1 1 0 0 0-.13-.42l-1.7-2.9.5-2.7 1.7 1.9a1 1 0 0 0 .76.34l2.3-.05a1 1 0 0 0 0-2l-1.86.04-2.7-3a1 1 0 0 0-.7-.33l-3.3-.06a1 1 0 0 0-.5.12z"/></svg>`,
+  },
+  {
+    key: 'language',
+    label: 'Language',
+    color: '#d4a843',
+    svg: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 3.5h14A3.5 3.5 0 0 1 22.5 7v6A3.5 3.5 0 0 1 19 16.5h-7.6l-5 4.2A1 1 0 0 1 5 20V16.5A3.5 3.5 0 0 1 1.5 13V7A3.5 3.5 0 0 1 5 3.5z"/></svg>`,
+  },
+  {
+    key: 'socialEmotional',
+    label: 'Social-Emotional',
+    color: '#c98a8a',
+    svg: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.4-4.6-9.7-9.2A5.4 5.4 0 0 1 12 6.1a5.4 5.4 0 0 1 9.7 5.7C19.4 16.4 12 21 12 21z"/></svg>`,
+  },
+  {
+    key: 'cognitive',
+    label: 'Cognitive',
+    color: '#8b7bb5',
+    svg: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 21v-3.2a3 3 0 0 0 2.3-2.9 4 4 0 0 0-.8-6.6A4.2 4.2 0 0 0 9 5.4 4 4 0 0 0 5 9.3a3.9 3.9 0 0 0 1.6 3.2 3 3 0 0 0 1.7 5.3V21"/><path d="M10.5 8.2a2.3 2.3 0 0 1 2.5 2.2v7"/></svg>`,
+  },
 ];
 
 // Legacy 'selfCare' rows decode to motor (matches the iOS decoder
@@ -66,6 +89,7 @@ export class ChildOverview extends LitElement {
   }
 
   static styles = css`
+    *, *::before, *::after { box-sizing: border-box; }
     :host { display: block; }
     section { margin-bottom: 30px; }
     .section-head {
@@ -496,11 +520,7 @@ export class ChildOverview extends LitElement {
               class="dtile"
               style="--c:${d.color};--tint:${d.color}26;"
             >
-              <div class="dico">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 18l5-9 4 6 3-5 4 8" />
-                </svg>
-              </div>
+              <div class="dico">${d.svg}</div>
               <div class="dname">${d.label}</div>
               <div class="dcount">${s.achieved} of ${s.total} achieved</div>
               <div class="bar"><i style="width:${s.pct}%"></i></div>

@@ -14,6 +14,9 @@ import {
   auth,
   functions,
   httpsCallable,
+  storage,
+  storageRef,
+  getDownloadURL,
 } from './firebase.js';
 
 /**
@@ -315,6 +318,11 @@ class FamilyDataStore extends EventTarget {
               (a.createdAt?.toMillis?.() ?? 0) - (b.createdAt?.toMillis?.() ?? 0),
           );
         this.state.ppChildren = kids;
+        // iOS may store a local file:// profilePhotoURL (pre-Storage
+        // builds) which a browser can't load. Resolve the canonical
+        // Firebase Storage avatar (Build 14 path, no extension) so the
+        // real child photo shows on the web.
+        this._resolveChildPhotos(ppFid, kids);
         // Pick / keep the active child. Default to the first child;
         // keep the current selection if it still exists.
         const stillThere =
@@ -410,6 +418,41 @@ class FamilyDataStore extends EventTarget {
       },
       (err) => console.warn('[Portal] pebbleMessages error:', err.code, err.message),
     );
+  }
+
+  /**
+   * Resolve child avatars from Firebase Storage when the Child doc's
+   * profilePhotoURL isn't a usable https URL (iOS local file:// from
+   * pre-Build-14 installs). Path mirrors iOS StorageService:
+   * families/{fid}/avatars/children/{childId} (no extension). Patches
+   * state.ppChildren in place + re-emits. Idempotent per child.
+   */
+  _resolveChildPhotos(ppFid, kids) {
+    if (!storage) return;
+    if (!this._photoTried) this._photoTried = new Set();
+    for (const k of kids) {
+      const cur = k.profilePhotoURL;
+      if (typeof cur === 'string' && /^https?:\/\//i.test(cur)) continue;
+      const key = ppFid + '/' + k.id;
+      if (this._photoTried.has(key)) continue;
+      this._photoTried.add(key);
+      getDownloadURL(
+        storageRef(storage, 'families/' + ppFid + '/avatars/children/' + k.id),
+      )
+        .then((url) => {
+          const arr = this.state.ppChildren || [];
+          const idx = arr.findIndex((c) => c.id === k.id);
+          if (idx >= 0) {
+            arr[idx] = { ...arr[idx], profilePhotoURL: url };
+            this.state.ppChildren = [...arr];
+            this._emit();
+          }
+        })
+        .catch(() => {
+          // No Storage avatar for this child — keep the initials chip.
+          this._photoTried.delete(key);
+        });
+    }
   }
 
   /** Switch the active child (multi-child families). */

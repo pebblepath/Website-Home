@@ -128,9 +128,10 @@ export class ChildPebble extends LitElement {
   }
 
   static styles = css`
+    *, *::before, *::after { box-sizing: border-box; }
     :host { display: block; }
     .wrap {
-      max-width: 860px;
+      max-width: 880px;
       margin: 0 auto;
     }
     .panel {
@@ -141,7 +142,7 @@ export class ChildPebble extends LitElement {
       -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
       border: 1px solid var(--glass-border-strong);
       box-shadow: var(--glass-shadow);
-      padding: 24px;
+      padding: 28px;
     }
     .head {
       display: flex;
@@ -291,6 +292,10 @@ export class ChildPebble extends LitElement {
       max-height: 120px;
       line-height: 1.4;
       outline: none;
+    }
+    textarea::placeholder {
+      color: rgba(255, 248, 235, 0.92);
+      opacity: 1;
     }
     textarea:focus {
       border-color: var(--teal-pebble);

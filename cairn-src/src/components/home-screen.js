@@ -180,8 +180,17 @@ export class HomeScreen extends LitElement {
   }
 
   static styles = css`
+    /* The global tokens.css *{box-sizing} does NOT pierce this shadow
+       root — without this every concept-tuned padding renders against
+       content-box and the layout drifts from the concept. */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
     :host {
       display: block;
+      width: 100%;
       min-height: 100vh;
     }
     .topbar {
@@ -408,9 +417,13 @@ export class HomeScreen extends LitElement {
     }
 
     main {
-      padding: 32px 24px 48px;
-      max-width: 1280px;
-      margin: 0 auto;
+      /* Definite width + margin-inline:auto centres reliably
+         regardless of the host formatting context (max-width +
+         margin:0 auto was computing to 0 here). Matches the concept's
+         1280 max + 24px gutters. */
+      padding: 30px 24px 0;
+      width: min(1280px, 100%);
+      margin-inline: auto;
     }
     @media (max-width: 768px) {
       main {
