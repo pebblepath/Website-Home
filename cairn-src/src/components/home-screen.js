@@ -72,6 +72,10 @@ export class HomeScreen extends LitElement {
     childInsights: { type: Array },
     childDailyCard: { type: Object },
     childPebbleMessages: { type: Array },
+    // Batch F — read-only child-viewer tier + access requests.
+    ppIsChildViewer: { type: Boolean },
+    incomingChildRequests: { type: Array },
+    myChildAccessRequest: { type: Object },
     _pebblePrefill: { state: true },
     _plannerOpen: { state: true },
     _plannerTrip: { state: true },
@@ -120,6 +124,9 @@ export class HomeScreen extends LitElement {
     this.childInsights = [];
     this.childDailyCard = null;
     this.childPebbleMessages = [];
+    this.ppIsChildViewer = false;
+    this.incomingChildRequests = [];
+    this.myChildAccessRequest = null;
     this._pebblePrefill = '';
     this._plannerOpen = false;
     this._plannerTrip = null;
@@ -2832,6 +2839,7 @@ export class HomeScreen extends LitElement {
     if (this.preview) {
       return {
         hasPP: true,
+        readonly: false,
         children: mockChildren,
         child: mockChild,
         milestones: mockMilestones,
@@ -2845,8 +2853,13 @@ export class HomeScreen extends LitElement {
       children.find((c) => c.id === this.selectedChildId) ??
       children[0] ??
       null;
+    // Batch F: a parent-approved read-only child viewer also gets the
+    // Children surface — but in readonly mode (no Pebble/pediatrician/
+    // write). ppIsMember stays the full-rights gate.
+    const canSee = Boolean((this.ppIsMember || this.ppIsChildViewer) && child);
     return {
-      hasPP: Boolean(this.ppIsMember && child),
+      hasPP: canSee,
+      readonly: Boolean(this.ppIsChildViewer && !this.ppIsMember),
       children,
       child,
       milestones: this.childMilestones ?? [],
@@ -2864,6 +2877,64 @@ export class HomeScreen extends LitElement {
   _onAskPebble(e) {
     this._pebblePrefill = e.detail ?? '';
     this._activeTab = 'pebble';
+  }
+
+  // ── Batch F — child-view access request/approval handlers ──
+  async _requestChildAccess() {
+    if (this.preview) return;
+    try {
+      await dataStore.requestChildAccess();
+      toast("Request sent — a parent will be notified.");
+    } catch (err) {
+      toast(`Couldn't send request: ${err.code ?? err.message}`, {
+        duration: 5000,
+      });
+    }
+  }
+
+  async _withdrawChildAccess() {
+    if (this.preview) return;
+    try {
+      await dataStore.withdrawChildAccessRequest();
+      toast('Request withdrawn.');
+    } catch (err) {
+      toast(`Couldn't withdraw: ${err.code ?? err.message}`, {
+        duration: 4000,
+      });
+    }
+  }
+
+  async _approveChildAccess(uid) {
+    try {
+      await dataStore.approveChildAccess(uid);
+      toast('Access granted — read-only Children view.');
+    } catch (err) {
+      toast(`Couldn't approve: ${err.code ?? err.message}`, {
+        duration: 5000,
+      });
+    }
+  }
+
+  async _declineChildAccess(uid) {
+    try {
+      await dataStore.declineChildAccess(uid);
+      toast('Request declined.');
+    } catch (err) {
+      toast(`Couldn't decline: ${err.code ?? err.message}`, {
+        duration: 4000,
+      });
+    }
+  }
+
+  async _revokeChildViewer(uid) {
+    try {
+      await dataStore.revokeChildViewer(uid);
+      toast('Read-only access revoked.');
+    } catch (err) {
+      toast(`Couldn't revoke: ${err.code ?? err.message}`, {
+        duration: 4000,
+      });
+    }
   }
 
   _ageShort(dob) {
@@ -3126,6 +3197,86 @@ export class HomeScreen extends LitElement {
     `;
   }
 
+  /** Batch F — PP-member-only: approve/decline pending child-view
+   *  requests + revoke previously-granted read-only viewers. Renders
+   *  nothing unless the viewer is a member AND there's something to
+   *  show, so it never clutters an extended member's My Cairn. */
+  _renderChildAccessSection() {
+    if (this.preview || !this.ppIsMember) return '';
+    const reqs = this.incomingChildRequests ?? [];
+    const viewers = Array.isArray(this.ppFamily?.childViewers)
+      ? this.ppFamily.childViewers
+      : [];
+    if (reqs.length === 0 && viewers.length === 0) return '';
+    const profiles = this.ppFamily?.memberProfiles ?? {};
+    const nameFor = (uid, fallback) =>
+      profiles[uid]?.displayName ??
+      fallback ??
+      `${String(uid).charAt(0).toUpperCase()}${String(uid).slice(1)}`;
+    const personSvg = html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" stroke-linecap="round"/></svg>`;
+    return html`
+      <section>
+        <div class="section-head">
+          <h2>Child-view access</h2>
+          <span class="note" style="margin:0;"
+            >Read-only — milestones &amp; insights, never Pebble or
+            editing</span
+          >
+        </div>
+        <glass-panel padding="md" variant="strong">
+          ${reqs.length === 0
+            ? ''
+            : reqs.map(
+                (r) => html`<div class="set-row">
+                  <span class="si" style="color:#e6c3ab;">${personSvg}</span>
+                  <div class="sl">
+                    <b>${nameFor(r.uid ?? r.id, r.displayName)}</b>
+                    <span>Wants read-only access to the Children view</span>
+                  </div>
+                  <span style="display:inline-flex;gap:8px;">
+                    <button
+                      class="link"
+                      style="color:#9fded2;border-color:rgba(61,155,143,.4);"
+                      @click=${() => this._approveChildAccess(r.uid ?? r.id)}
+                    >
+                      Approve
+                    </button>
+                    <button
+                      class="link"
+                      @click=${() => this._declineChildAccess(r.uid ?? r.id)}
+                    >
+                      Decline
+                    </button>
+                  </span>
+                </div>`,
+              )}
+          ${viewers.map(
+            (uid) => html`<div class="set-row">
+              <span class="si" style="color:#9fded2;">${personSvg}</span>
+              <div class="sl">
+                <b>${nameFor(uid)}</b>
+                <span>Read-only Children access</span>
+              </div>
+              <button
+                class="link"
+                @click=${() => this._revokeChildViewer(uid)}
+              >
+                Revoke
+              </button>
+            </div>`,
+          )}
+          ${viewers.length === 0
+            ? ''
+            : html`<div class="ring-note">
+                Granted viewers see milestones &amp; growth insights
+                only — never Pebble, the pediatrician summary, or any
+                editing. Revoke any time.
+              </div>`}
+        </glass-panel>
+      </section>
+    `;
+  }
+
   /** MY CAIRN — rings + "what each ring sees" + settings (concept). */
   _renderCairnTab() {
     const name = this.user?.displayName ?? 'You';
@@ -3171,6 +3322,8 @@ export class HomeScreen extends LitElement {
         </div>
       </section>
 
+      ${this._renderChildAccessSection()}
+
       <section>
         <div class="section-head"><h2>Settings</h2></div>
         <glass-panel padding="md" variant="strong">
@@ -3204,6 +3357,95 @@ export class HomeScreen extends LitElement {
     `;
   }
 
+  /** Batch F — the Children gate for a non-member / non-viewer. An
+   *  extended-ring member can REQUEST read-only access here; a parent
+   *  approves it from My Cairn. A request never grants anything —
+   *  firestore.rules enforce that the grant (childViewers) is a
+   *  member-only write. UI state is driven by myChildAccessRequest. */
+  _renderChildGate() {
+    const req = this.myChildAccessRequest;
+    const kids = this.children ?? [];
+    const hasKids = kids.length > 0;
+    const who =
+      kids.length === 1 ? `${kids[0].name}'s` : "the children's";
+    const backBtn = html`<button
+      class="empty-cta ghost"
+      @click=${() => (this._activeTab = 'activities')}
+    >
+      Back to Activities
+    </button>`;
+
+    if (!hasKids) {
+      return html`
+        <div class="empty-title">This area is private to parents</div>
+        <div class="empty-sub">
+          Children's milestones, growth insights and Pebble are visible
+          only to parents on a PebblePath household — never to the
+          extended Cairn. If you're a parent here and don't see your
+          child, make sure you're signed in with your PebblePath
+          account.
+        </div>
+        <div class="empty-actions">${backBtn}</div>
+      `;
+    }
+
+    if (req?.status === 'pending') {
+      return html`
+        <div class="empty-title">Request sent</div>
+        <div class="empty-sub">
+          A parent on this family has been asked to share read-only
+          access to ${who} milestones &amp; growth insights with you.
+          You'll see it here as soon as they approve.
+        </div>
+        <div class="empty-actions">
+          <button
+            class="empty-cta ghost"
+            @click=${() => this._withdrawChildAccess()}
+          >
+            Withdraw request
+          </button>
+          ${backBtn}
+        </div>
+      `;
+    }
+
+    if (req?.status === 'approved') {
+      return html`
+        <div class="empty-title">Access approved</div>
+        <div class="empty-sub">
+          A parent shared read-only access with you — loading ${who}
+          view…
+        </div>
+        <div class="empty-actions">${backBtn}</div>
+      `;
+    }
+
+    // No request, or a previously declined one (re-request allowed).
+    return html`
+      <div class="empty-title">This area is private to parents</div>
+      <div class="empty-sub">
+        Children's milestones &amp; growth insights are shared only
+        with the parents by default. You can ask them to share a
+        <strong>read-only</strong> view with you — they'll approve or
+        decline, and you'll never get Pebble or editing access.
+        ${req?.status === 'declined'
+          ? html`<br /><span style="color:var(--text-tertiary);"
+              >A parent declined a previous request.</span
+            >`
+          : ''}
+      </div>
+      <div class="empty-actions">
+        <button
+          class="empty-cta primary"
+          @click=${() => this._requestChildAccess()}
+        >
+          Request read-only access
+        </button>
+        ${backBtn}
+      </div>
+    `;
+  }
+
   /** CHILDREN — real PP-household child data (parents only). The
    *  scope chip + the member gate surface the "without sharing
    *  everything" boundary; non-members see the parent-only state. */
@@ -3214,12 +3456,17 @@ export class HomeScreen extends LitElement {
       Private to parents
     </span>`;
     if (cd.hasPP) {
+      const subtitle = cd.readonly
+        ? 'Milestones & growth insights — read-only, shared by the parents'
+        : 'Milestones, growth insights & Pebble — from the app';
+      const viewerScope = cd.readonly
+        ? html`<span class="scope-chip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/></svg>
+            Shared with you · read-only
+          </span>`
+        : scope;
       return html`
-        ${this._renderTabHeader(
-          'Children',
-          'Milestones, growth insights & Pebble — from the app',
-          scope,
-        )}
+        ${this._renderTabHeader('Children', subtitle, viewerScope)}
         <section>
           <child-overview
             .child=${cd.child}
@@ -3227,6 +3474,7 @@ export class HomeScreen extends LitElement {
             .milestones=${cd.milestones}
             .insights=${cd.insights}
             .dailyCard=${cd.dailyCard}
+            ?readonly=${cd.readonly}
             @select-child=${this._onSelectChild}
             @ask-pebble=${this._onAskPebble}
           ></child-overview>
@@ -3248,19 +3496,7 @@ export class HomeScreen extends LitElement {
                 <path d="M4 25c0-5.5 4.5-9 10-9s10 3.5 10 9" fill="none" stroke="#c67b5c" stroke-width="1.6" stroke-linecap="round" />
               </svg>
             </div>
-            <div class="empty-title">This area is private to parents</div>
-            <div class="empty-sub">
-              Children's milestones, growth insights and Pebble's daily
-              note are visible only to parents on a PebblePath household —
-              never to the extended Cairn. If you're a parent here and
-              don't see your child, make sure you're signed in with your
-              PebblePath account.
-            </div>
-            <div class="empty-actions">
-              <button class="empty-cta ghost" @click=${() => (this._activeTab = 'activities')}>
-                Back to Activities
-              </button>
-            </div>
+            ${this._renderChildGate()}
           </div>
         </glass-panel>
       </section>

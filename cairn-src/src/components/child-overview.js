@@ -127,6 +127,12 @@ export class ChildOverview extends LitElement {
     milestones: { type: Array },
     insights: { type: Array },
     dailyCard: { type: Object },
+    // Batch F — true when shown to a read-only "child viewer"
+    // (parent-approved extended-ring member): hide the Pediatrician
+    // CTA (it dispatches a Pebble request — member-only) and reframe
+    // the visibility note. Milestones/timeline/insights are
+    // inherently read-only displays already.
+    readonly: { type: Boolean, reflect: true },
   };
 
   constructor() {
@@ -136,6 +142,7 @@ export class ChildOverview extends LitElement {
     this.milestones = [];
     this.insights = [];
     this.dailyCard = null;
+    this.readonly = false;
   }
 
   static styles = css`
@@ -980,41 +987,49 @@ export class ChildOverview extends LitElement {
       </section>
 
       <section>
-        <div class="panel">
-          <div class="cta-card">
-            <div class="cic">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v5h5"/><path d="M14 3H6v18h12V8z"/><path d="M9 13h6M9 17h6"/></svg>
-            </div>
-            <div class="ctx">
-              <h4>Pediatrician summary</h4>
-              <p>
-                A clinician-ready summary of ${child.name}'s milestone
-                history, written by Pebble. Bring it to your next
-                check-up.
-              </p>
-            </div>
-            <button
-              class="btn-primary"
-              @click=${() =>
-                this.dispatchEvent(
-                  new CustomEvent('ask-pebble', {
-                    detail: `Write a clinician-ready summary of ${child.name}'s developmental milestone history I can bring to our next pediatrician visit — strengths, anything to watch, and current progress by domain.`,
-                    bubbles: true,
-                    composed: true,
-                  }),
-                )}
-            >
-              Generate summary
-            </button>
-          </div>
-        </div>
-        <div class="vis-note">
-          Visibility model — this whole tab reads from the app's child
-          data and is gated to <b>parents (PP household members)</b>.
-          Grandparents and the wider Cairn ring never see milestone or
-          health content; they only see what's on the Activities &amp;
-          My Cairn tabs.
-        </div>
+        ${this.readonly
+          ? html`<div class="vis-note">
+              You're seeing ${child.name}'s milestones &amp; growth
+              insights <b>read-only</b>, shared by the parents. Pebble,
+              the pediatrician summary and any editing stay with the
+              parents — a parent can revoke this access any time.
+            </div>`
+          : html`<div class="panel">
+                <div class="cta-card">
+                  <div class="cic">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v5h5"/><path d="M14 3H6v18h12V8z"/><path d="M9 13h6M9 17h6"/></svg>
+                  </div>
+                  <div class="ctx">
+                    <h4>Pediatrician summary</h4>
+                    <p>
+                      A clinician-ready summary of ${child.name}'s
+                      milestone history, written by Pebble. Bring it to
+                      your next check-up.
+                    </p>
+                  </div>
+                  <button
+                    class="btn-primary"
+                    @click=${() =>
+                      this.dispatchEvent(
+                        new CustomEvent('ask-pebble', {
+                          detail: `Write a clinician-ready summary of ${child.name}'s developmental milestone history I can bring to our next pediatrician visit — strengths, anything to watch, and current progress by domain.`,
+                          bubbles: true,
+                          composed: true,
+                        }),
+                      )}
+                  >
+                    Generate summary
+                  </button>
+                </div>
+              </div>
+              <div class="vis-note">
+                Visibility model — this whole tab reads from the app's
+                child data and is gated to
+                <b>parents (PP household members)</b>. Grandparents and
+                the wider Cairn ring never see milestone or health
+                content; they only see what's on the Activities &amp;
+                My Cairn tabs.
+              </div>`}
       </section>
     `;
   }

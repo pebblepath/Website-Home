@@ -45,6 +45,14 @@ class FamilyDataStore extends EventTarget {
       // parent's OWN household — see _subscribePpFamily.
       ppFamily: null,
       ppIsMember: false,
+      // Batch F (Portal v3) — read-only "child viewer" tier. An
+      // extended-ring member a parent explicitly approved; sees the
+      // Children view read-only (no Pebble/pediatrician/write).
+      ppIsChildViewer: false,
+      // The requester's own access-request doc { status } | null.
+      myChildAccessRequest: null,
+      // PP members: pending requests awaiting approve/decline.
+      incomingChildRequests: [],
       ppChildren: [],
       selectedChildId: null,
       childMilestones: [],
@@ -67,6 +75,11 @@ class FamilyDataStore extends EventTarget {
     this._unsubChildIns = null;
     this._unsubChildDaily = null;
     this._unsubChildPebble = null;
+    // Batch F — read-only when the PP-household is resolved via the
+    // childViewer fallback (extended member, no own household).
+    this._ppReadOnly = false;
+    this._unsubIncomingReq = null;
+    this._unsubMyReq = null;
     // True after the user-doc snapshot has fired at least once (whether
     // the doc exists or not). Lets app-shell distinguish "still loading
     // the user record" from "user has no family yet, show onboarding".
@@ -195,8 +208,33 @@ class FamilyDataStore extends EventTarget {
   _subscribeFamily(familyId) {
     this._unsubFamily = onSnapshot(doc(db, 'families', familyId), (snap) => {
       this.state.family = snap.exists() ? { id: snap.id, ...snap.data() } : null;
+      // Batch F: a user with NO own PP household who a parent
+      // approved as a child viewer resolves the PP-household to THIS
+      // (Cairn-resolved) family, read-only. Reconciled here so a
+      // live approval (childViewers change) activates access without
+      // a reload. Pure fallback — members are untouched.
+      this._reconcileChildViewer();
       this._emit();
     });
+    // Batch F: the requester's own access-request doc (id = uid) on
+    // the Cairn-resolved family. Member or not, reading own doc is
+    // permitted by the rule; for members it just resolves to null.
+    this._unsubMyReq?.();
+    this._unsubMyReq = onSnapshot(
+      doc(db, 'families', familyId, 'childAccessRequests', this._uid),
+      (s) => {
+        this.state.myChildAccessRequest = s.exists()
+          ? { id: s.id, ...s.data() }
+          : null;
+        this._emit();
+      },
+      (err) =>
+        console.warn(
+          '[Portal] childAccessRequest (mine) error:',
+          err.code,
+          err.message,
+        ),
+    );
     this._unsubChildren = onSnapshot(
       collection(db, 'families', familyId, 'children'),
       (snap) => {
@@ -272,6 +310,38 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
+   * Batch F (Portal v3) — resolve the PP-household via the read-only
+   * "child viewer" FALLBACK. A user who IS a member of their own PP
+   * household always resolves via `user.familyId` (the deliberate
+   * inverse-resolver invariant — untouched). This only fires for a
+   * user with NO own household whom a parent explicitly approved
+   * into the Cairn-resolved family's `childViewers`: that family
+   * becomes their read-only Children context. Being a childViewer
+   * NEVER confers member powers — the firestore.rules enforce that;
+   * this client resolver only picks which surface to render.
+   */
+  _reconcileChildViewer() {
+    // Members resolve via their OWN household — never override.
+    if (this.state.user?.familyId) return;
+    const fam = this.state.family;
+    const uid = this._uid;
+    const isViewer = !!(
+      fam &&
+      Array.isArray(fam.childViewers) &&
+      fam.childViewers.includes(uid) &&
+      !(Array.isArray(fam.memberIds) && fam.memberIds.includes(uid))
+    );
+    const targetPp = isViewer ? fam.id : null;
+    if (targetPp !== this._ppFamilyId) {
+      this._ppFamilyId = targetPp;
+      this._ppReadOnly = Boolean(targetPp);
+      this._teardownPpFamily();
+      if (targetPp) this._subscribePpFamily(targetPp);
+      this._emit();
+    }
+  }
+
+  /**
    * Subscribe the PP household (user.familyId) for the Children /
    * Today / Pebble surfaces. SEPARATE from _subscribeFamily — that
    * one tracks the Cairn-resolved family (trips/events/rings); this
@@ -290,9 +360,22 @@ class FamilyDataStore extends EventTarget {
       (snap) => {
         const fam = snap.exists() ? { id: snap.id, ...snap.data() } : null;
         this.state.ppFamily = fam;
-        this.state.ppIsMember = Boolean(
+        const isMember = Boolean(
           fam && Array.isArray(fam.memberIds) && fam.memberIds.includes(this._uid),
         );
+        this.state.ppIsMember = isMember;
+        // Batch F: read-only child-viewer flag for the gate logic.
+        this.state.ppIsChildViewer = Boolean(
+          !isMember &&
+            fam &&
+            Array.isArray(fam.childViewers) &&
+            fam.childViewers.includes(this._uid),
+        );
+        // PP members see the pending access-request queue; a viewer
+        // is dropped from childViewers if a parent later revokes —
+        // reconcile so access deactivates live.
+        if (isMember) this._subscribeIncomingRequests(ppFid);
+        if (!this.state.user?.familyId) this._reconcileChildViewer();
         this._emit();
       },
       (err) => {
@@ -343,6 +426,35 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
+   * Batch F — PP members listen to the pending child-access request
+   * queue. Rule restricts this collection's read to members (+ each
+   * requester's own doc), so a non-member never reaches here.
+   */
+  _subscribeIncomingRequests(ppFid) {
+    this._unsubIncomingReq?.();
+    this._unsubIncomingReq = onSnapshot(
+      collection(db, 'families', ppFid, 'childAccessRequests'),
+      (snap) => {
+        this.state.incomingChildRequests = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .filter((r) => r.status === 'pending')
+          .sort(
+            (a, b) =>
+              (a.requestedAt?.toMillis?.() ?? 0) -
+              (b.requestedAt?.toMillis?.() ?? 0),
+          );
+        this._emit();
+      },
+      (err) =>
+        console.warn(
+          '[Portal] childAccessRequests error:',
+          err.code,
+          err.message,
+        ),
+    );
+  }
+
+  /**
    * Subscribe the selected child's milestone / insight / daily-card /
    * Pebble-message subcollections. Collections are small per child so
    * we read them unordered and sort client-side — zero composite-index
@@ -388,36 +500,43 @@ class FamilyDataStore extends EventTarget {
       },
       (err) => console.warn('[Portal] insights error:', err.code, err.message),
     );
-    this._unsubChildDaily = onSnapshot(
-      collection(db, ...base, 'dailyCards'),
-      (snap) => {
-        // Doc id is a YYYY-MM-DD string (device-local tz). Latest =
-        // lexicographically-max id (sorts chronologically). Avoids a
-        // tz-sensitive "today's key" computation in the browser.
-        const cards = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-        cards.sort((a, b) => String(b.id).localeCompare(String(a.id)));
-        this.state.childDailyCard = cards[0] ?? null;
-        this._emit();
-      },
-      (err) => console.warn('[Portal] dailyCards error:', err.code, err.message),
-    );
-    this._unsubChildPebble = onSnapshot(
-      collection(db, ...base, 'pebbleMessages'),
-      (snap) => {
-        this.state.childPebbleMessages = snap.docs
-          .map((d) => ({ id: d.id, ...d.data() }))
-          .filter(
-            (m) => !(m.isPrivate === true && m.senderUid !== this._uid),
-          )
-          .sort(
-            (a, b) =>
-              (a.timestamp?.toMillis?.() ?? 0) -
-              (b.timestamp?.toMillis?.() ?? 0),
-          );
-        this._emit();
-      },
-      (err) => console.warn('[Portal] pebbleMessages error:', err.code, err.message),
-    );
+    // Batch F: a read-only child viewer is rules-denied on dailyCards
+    // + pebbleMessages (member-only by design). Skip those listeners
+    // entirely — they're not surfaced for viewers (Batch C removed
+    // the daily card from Children; the Pebble tab is parent-only) —
+    // so we avoid pointless PERMISSION_DENIED churn.
+    if (!this._ppReadOnly) {
+      this._unsubChildDaily = onSnapshot(
+        collection(db, ...base, 'dailyCards'),
+        (snap) => {
+          // Doc id is a YYYY-MM-DD string (device-local tz). Latest =
+          // lexicographically-max id (sorts chronologically). Avoids a
+          // tz-sensitive "today's key" computation in the browser.
+          const cards = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+          cards.sort((a, b) => String(b.id).localeCompare(String(a.id)));
+          this.state.childDailyCard = cards[0] ?? null;
+          this._emit();
+        },
+        (err) => console.warn('[Portal] dailyCards error:', err.code, err.message),
+      );
+      this._unsubChildPebble = onSnapshot(
+        collection(db, ...base, 'pebbleMessages'),
+        (snap) => {
+          this.state.childPebbleMessages = snap.docs
+            .map((d) => ({ id: d.id, ...d.data() }))
+            .filter(
+              (m) => !(m.isPrivate === true && m.senderUid !== this._uid),
+            )
+            .sort(
+              (a, b) =>
+                (a.timestamp?.toMillis?.() ?? 0) -
+                (b.timestamp?.toMillis?.() ?? 0),
+            );
+          this._emit();
+        },
+        (err) => console.warn('[Portal] pebbleMessages error:', err.code, err.message),
+      );
+    }
   }
 
   /**
@@ -500,17 +619,138 @@ class FamilyDataStore extends EventTarget {
     this._teardownChild();
     this._unsubPpFamily?.();
     this._unsubPpChildren?.();
+    this._unsubIncomingReq?.();
     this._unsubPpFamily = null;
     this._unsubPpChildren = null;
+    this._unsubIncomingReq = null;
     this._selectedChildId = null;
     this.state.ppFamily = null;
     this.state.ppIsMember = false;
+    this.state.ppIsChildViewer = false;
+    this.state.incomingChildRequests = [];
     this.state.ppChildren = [];
     this.state.selectedChildId = null;
     this.state.childMilestones = [];
     this.state.childInsights = [];
     this.state.childDailyCard = null;
     this.state.childPebbleMessages = [];
+  }
+
+  // ───────────────────────────────────────────────────────────────
+  // Batch F (Portal v3) — child-view access requests.
+  //
+  // Security model (mirrors firestore.rules — the rules, not these
+  // methods, are the trust boundary):
+  //   • A request NEVER grants access. requestChildAccess only writes
+  //     a `pending` doc.
+  //   • Only a PP member can approve; approval adds the uid to the
+  //     family's `childViewers` (a read-only tier — milestones +
+  //     insights only, never memberIds / Pebble / write).
+  //   • The requester can neither self-approve (rule: status update
+  //     is member-only) nor self-add to childViewers (rule: the
+  //     Cairn-only update branch forbids touching childViewers).
+  // ───────────────────────────────────────────────────────────────
+
+  /** Requester (extended-ring member, no own PP household) asks the
+   *  parents for read-only Children access. Writes one pending doc
+   *  keyed on their uid on the Cairn-resolved core family. */
+  async requestChildAccess() {
+    const fid = this._currentFamilyId;
+    if (!fid) throw new Error('No family to request access from.');
+    await setDoc(
+      doc(db, 'families', fid, 'childAccessRequests', this._uid),
+      {
+        uid: this._uid,
+        displayName: this.state.user?.displayName ?? 'Family member',
+        requestedAt: serverTimestamp(),
+        status: 'pending',
+      },
+    );
+  }
+
+  /** Requester withdraws their own pending request. */
+  async withdrawChildAccessRequest() {
+    const fid = this._currentFamilyId;
+    if (!fid) return;
+    await deleteDoc(
+      doc(db, 'families', fid, 'childAccessRequests', this._uid),
+    );
+  }
+
+  /** PP member approves: add the uid to `childViewers` (full-array
+   *  write — no arrayUnion import needed; last-write-wins is fine at
+   *  this cadence) AND stamp the request approved. */
+  async approveChildAccess(reqUid) {
+    const fid = this._ppFamilyId;
+    if (!fid || !this.state.ppIsMember) {
+      throw new Error('Only a parent can approve access.');
+    }
+    const cur = Array.isArray(this.state.ppFamily?.childViewers)
+      ? this.state.ppFamily.childViewers
+      : [];
+    if (!cur.includes(reqUid)) {
+      await updateDoc(doc(db, 'families', fid), {
+        childViewers: [...cur, reqUid],
+        updatedAt: serverTimestamp(),
+      });
+    }
+    await updateDoc(
+      doc(db, 'families', fid, 'childAccessRequests', reqUid),
+      {
+        status: 'approved',
+        actionedBy: this._uid,
+        actionedAt: serverTimestamp(),
+      },
+    );
+  }
+
+  /** PP member declines: stamp the request only — no grant. */
+  async declineChildAccess(reqUid) {
+    const fid = this._ppFamilyId;
+    if (!fid || !this.state.ppIsMember) {
+      throw new Error('Only a parent can decline access.');
+    }
+    await updateDoc(
+      doc(db, 'families', fid, 'childAccessRequests', reqUid),
+      {
+        status: 'declined',
+        actionedBy: this._uid,
+        actionedAt: serverTimestamp(),
+      },
+    );
+  }
+
+  /** PP member revokes a previously-granted viewer: drop the uid
+   *  from `childViewers` (access deactivates live via the viewer's
+   *  _reconcileChildViewer) + best-effort flip their request doc so
+   *  it doesn't linger as approved. */
+  async revokeChildViewer(uid) {
+    const fid = this._ppFamilyId;
+    if (!fid || !this.state.ppIsMember) {
+      throw new Error('Only a parent can revoke access.');
+    }
+    const cur = Array.isArray(this.state.ppFamily?.childViewers)
+      ? this.state.ppFamily.childViewers
+      : [];
+    const next = cur.filter((x) => x !== uid);
+    if (next.length !== cur.length) {
+      await updateDoc(doc(db, 'families', fid), {
+        childViewers: next,
+        updatedAt: serverTimestamp(),
+      });
+    }
+    try {
+      await updateDoc(
+        doc(db, 'families', fid, 'childAccessRequests', uid),
+        {
+          status: 'declined',
+          actionedBy: this._uid,
+          actionedAt: serverTimestamp(),
+        },
+      );
+    } catch {
+      /* request doc may not exist — revocation already done */
+    }
   }
 
   /**

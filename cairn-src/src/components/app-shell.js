@@ -30,6 +30,9 @@ export class AppShell extends LitElement {
     childInsights: { state: true },
     childDailyCard: { state: true },
     childPebbleMessages: { state: true },
+    ppIsChildViewer: { state: true },
+    incomingChildRequests: { state: true },
+    myChildAccessRequest: { state: true },
   };
 
   constructor() {
@@ -84,6 +87,9 @@ export class AppShell extends LitElement {
     this.childInsights = [];
     this.childDailyCard = null;
     this.childPebbleMessages = [];
+    this.ppIsChildViewer = false;
+    this.incomingChildRequests = [];
+    this.myChildAccessRequest = null;
     this._unsubAuth = null;
     this._onDataChange = () => {
       this.pebbleUser = dataStore.state.user;
@@ -99,6 +105,9 @@ export class AppShell extends LitElement {
       this.childInsights = dataStore.state.childInsights;
       this.childDailyCard = dataStore.state.childDailyCard;
       this.childPebbleMessages = dataStore.state.childPebbleMessages;
+      this.ppIsChildViewer = dataStore.state.ppIsChildViewer;
+      this.incomingChildRequests = dataStore.state.incomingChildRequests;
+      this.myChildAccessRequest = dataStore.state.myChildAccessRequest;
       // Promote the userDocResolved flag to a tracked property so render
       // re-runs the moment we know whether the user has a family.
       this.userDocResolved = dataStore.userDocResolved;
@@ -303,6 +312,9 @@ export class AppShell extends LitElement {
         .childInsights=${this.childInsights}
         .childDailyCard=${this.childDailyCard}
         .childPebbleMessages=${this.childPebbleMessages}
+        .ppIsChildViewer=${this.ppIsChildViewer}
+        .incomingChildRequests=${this.incomingChildRequests}
+        .myChildAccessRequest=${this.myChildAccessRequest}
       ></home-screen>
     `;
   }
