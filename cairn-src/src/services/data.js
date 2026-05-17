@@ -16,6 +16,7 @@ import {
   httpsCallable,
   storage,
   storageRef,
+  uploadBytes,
   getDownloadURL,
 } from './firebase.js';
 
@@ -863,6 +864,7 @@ class FamilyDataStore extends EventTarget {
     if (!uid) throw new Error('Not signed in.');
     const title = String(item?.title ?? '').trim();
     if (!title) throw new Error('Add a title.');
+    const url = String(item?.url ?? '').trim();
     const ref = await addDoc(
       collection(
         db,
@@ -880,12 +882,49 @@ class FamilyDataStore extends EventTarget {
         durationMins: Number.isFinite(item?.durationMins)
           ? item.durationMins
           : 60,
+        ...(/^https?:\/\//i.test(url) ? { url } : {}),
         // Honest author tag — the rule enforces addedBy == caller.
         addedBy: uid,
         createdAt: serverTimestamp(),
       },
     );
     return ref.id;
+  }
+
+  /** Patch a plan item the caller authored (the rule restricts
+   *  update to addedBy == caller). Used to attach a file URL after
+   *  the item doc exists (need its id for the Storage path). */
+  async updatePlanItem(tripId, itemId, patch) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    await updateDoc(
+      doc(
+        db,
+        'families',
+        this._currentFamilyId,
+        'trips',
+        tripId,
+        'planItems',
+        itemId,
+      ),
+      patch,
+    );
+  }
+
+  /** Upload a per-item attachment (PDF / screenshot) to Storage and
+   *  return its download URL. Path has NO extension (Cloud Storage
+   *  rules can't combine a wildcard with a literal .ext); the
+   *  contentType metadata drives serving. Member-gated via
+   *  storage.rules `planAttachments` path. */
+  async uploadPlanAttachment(tripId, itemId, file) {
+    if (!storage || !this._currentFamilyId) {
+      throw new Error('Storage unavailable.');
+    }
+    const path = `families/${this._currentFamilyId}/planAttachments/${tripId}__${itemId}`;
+    const r = storageRef(storage, path);
+    await uploadBytes(r, file, {
+      contentType: file.type || 'application/octet-stream',
+    });
+    return getDownloadURL(r);
   }
 
   async deletePlanItem(tripId, itemId) {

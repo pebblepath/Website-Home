@@ -23,6 +23,17 @@ const TYPES = [
   { key: 'travel', label: 'Travel' },
   { key: 'note', label: 'Note' },
 ];
+
+// User-selectable item length (was hardcoded 1h). Minutes.
+const DURATIONS = [
+  { m: 30, label: '30 min' },
+  { m: 60, label: '1 h' },
+  { m: 90, label: '1½ h' },
+  { m: 120, label: '2 h' },
+  { m: 180, label: '3 h' },
+  { m: 240, label: '4 h' },
+  { m: 480, label: 'All day' },
+];
 const ROWH = 56; // px per hour — matches concept .sched-row height
 
 function parseYMD(s) {
@@ -58,6 +69,9 @@ export class TripPlanner extends LitElement {
     _title: { state: true },
     _time: { state: true },
     _type: { state: true },
+    _dur: { state: true },
+    _url: { state: true },
+    _fileName: { state: true },
     _busy: { state: true },
   };
 
@@ -72,6 +86,10 @@ export class TripPlanner extends LitElement {
     this._title = '';
     this._time = '12:00';
     this._type = 'visit';
+    this._dur = 60; // minutes; user-selectable (was hardcoded 1h)
+    this._url = '';
+    this._file = null; // pending File for attachment (not reactive)
+    this._fileName = ''; // reactive label for the chosen file
     this._busy = false;
     this._unsub = null;
     this._subId = null;
@@ -136,14 +154,45 @@ export class TripPlanner extends LitElement {
     const title = this._title.trim();
     if (!title || this._busy) return;
     this._busy = true;
+    const file = this._file;
     try {
-      await dataStore.addPlanItem(this.trip.id, {
+      const id = await dataStore.addPlanItem(this.trip.id, {
         title,
         type: this._type,
         day: this._dayKey ?? '',
         time: this._time || '',
+        durationMins: this._dur,
+        url: this._url.trim(),
       });
+      // Attachment is uploaded AFTER the item exists (its id is the
+      // Storage key). A failed upload doesn't lose the item — the
+      // user is told the file didn't attach and can retry.
+      if (file && id) {
+        try {
+          const attachmentURL = await dataStore.uploadPlanAttachment(
+            this.trip.id,
+            id,
+            file,
+          );
+          await dataStore.updatePlanItem(this.trip.id, id, {
+            attachmentURL,
+            attachmentName: file.name || 'attachment',
+          });
+        } catch (upErr) {
+          console.error('plan attachment upload failed:', upErr);
+          toast(
+            upErr?.code === 'storage/unauthorized'
+              ? 'Item added — but the attachment needs the Storage rule published.'
+              : "Item added — couldn't attach the file, try again.",
+            { duration: 5000 },
+          );
+        }
+      }
       this._title = '';
+      this._url = '';
+      this._file = null;
+      this._fileName = '';
+      this._dur = 60;
     } catch (err) {
       console.error('addPlanItem failed:', err);
       toast(
@@ -387,6 +436,55 @@ export class TripPlanner extends LitElement {
       font-size: 12.5px;
     }
     .add-row .add-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .add-row select.dur { width: auto; }
+    .add-row input.url { flex: 1; min-width: 150px; }
+    .add-row .attach {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      max-width: 170px;
+      padding: 8px 13px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 248, 235, 0.06);
+      border: 1px solid var(--glass-border);
+      color: var(--text-secondary);
+      font-size: 12.5px;
+      cursor: pointer;
+    }
+    .add-row .attach:hover {
+      color: var(--text-primary);
+      border-color: var(--glass-border-strong);
+    }
+    .add-row .attach svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .add-row .attach span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .add-row .attach input { display: none; }
+    /* Item link / attachment chips inside the schedule block. */
+    .evt .et .adorn {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .evt .et .adorn a {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      max-width: 100%;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-decoration: none;
+      overflow: hidden;
+    }
+    .evt .et .adorn a:hover { background: rgba(255, 255, 255, 0.28); }
+    .evt .et .adorn a svg { width: 11px; height: 11px; flex-shrink: 0; }
     .add-hint {
       font-size: 12px;
       color: var(--text-tertiary);
@@ -437,6 +535,30 @@ export class TripPlanner extends LitElement {
           <div class="et">
             <b>${it.title}</b>
             <span>${fmtH(sh)}${dur ? `–${fmtH(sh + dur)}` : ''}</span>
+            ${it.url || it.attachmentURL
+              ? html`<div class="adorn">
+                  ${it.url
+                    ? html`<a
+                        href=${it.url}
+                        target="_blank"
+                        rel="noopener"
+                        title=${it.url}
+                        @click=${(e) => e.stopPropagation()}
+                        ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.07-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Link</a
+                      >`
+                    : ''}
+                  ${it.attachmentURL
+                    ? html`<a
+                        href=${it.attachmentURL}
+                        target="_blank"
+                        rel="noopener"
+                        title=${it.attachmentName || 'Attachment'}
+                        @click=${(e) => e.stopPropagation()}
+                        ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05 12.7 19.8a5 5 0 0 1-7.07-7.07l8.49-8.49a3 3 0 0 1 4.24 4.24l-8.49 8.49a1 1 0 0 1-1.41-1.41l7.78-7.78"/></svg>${it.attachmentName || 'File'}</a
+                      >`
+                    : ''}
+                </div>`
+              : ''}
           </div>
           <div class="by">
             <member-chip
@@ -530,8 +652,43 @@ export class TripPlanner extends LitElement {
                 (t) => html`<option value=${t.key}>${t.label}</option>`,
               )}
             </select>
+            <select
+              class="dur"
+              aria-label="Duration"
+              @change=${(e) => (this._dur = Number(e.target.value))}
+            >
+              ${DURATIONS.map(
+                (d) => html`<option
+                  value=${String(d.m)}
+                  ?selected=${d.m === this._dur}
+                >
+                  ${d.label}
+                </option>`,
+              )}
+            </select>
+            <input
+              class="url"
+              type="url"
+              .value=${this._url}
+              placeholder="Link (optional) — e.g. booking URL"
+              aria-label="Link"
+              @input=${(e) => (this._url = e.target.value)}
+            />
+            <label class="attach" title="Attach a PDF or screenshot">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05 12.7 19.8a5 5 0 0 1-7.07-7.07l8.49-8.49a3 3 0 0 1 4.24 4.24l-8.49 8.49a1 1 0 0 1-1.41-1.41l7.78-7.78"/></svg>
+              <span>${this._fileName || 'Attach'}</span>
+              <input
+                type="file"
+                accept="application/pdf,image/*"
+                @change=${(e) => {
+                  const f = e.target.files?.[0] ?? null;
+                  this._file = f;
+                  this._fileName = f ? f.name : '';
+                }}
+              />
+            </label>
             <button class="add-btn" type="submit" ?disabled=${this._busy || !this._title.trim()}>
-              + Add to plan
+              ${this._busy ? 'Adding…' : '+ Add to plan'}
             </button>
           </form>
           <div class="add-hint">
