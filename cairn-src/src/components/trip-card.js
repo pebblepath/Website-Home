@@ -281,7 +281,12 @@ export class TripCard extends LitElement {
       gap: 8px;
       margin-top: 10px;
     }
-    .share-btn {
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .icon-btn {
       background: rgba(255, 248, 235, 0.06);
       border: 1px solid rgba(255, 248, 235, 0.14);
       color: var(--text-secondary);
@@ -293,14 +298,15 @@ export class TripCard extends LitElement {
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      padding: 0;
       transition: color 200ms ease, border-color 200ms ease, background 200ms ease;
     }
-    .share-btn:hover {
+    .icon-btn:hover {
       color: var(--text-primary);
       border-color: var(--glass-border-strong);
       background: rgba(255, 248, 235, 0.1);
     }
-    .share-btn svg {
+    .icon-btn svg {
       width: 15px;
       height: 15px;
     }
@@ -354,12 +360,12 @@ export class TripCard extends LitElement {
     return html`
       <article
         tabindex="0"
-        aria-label=${t.title}
-        @click=${() => this.dispatchEvent(new CustomEvent('edit-trip', { detail: t, bubbles: true, composed: true }))}
+        aria-label="${t.title} — open day plan"
+        @click=${() => this.dispatchEvent(new CustomEvent('open-planner', { detail: t, bubbles: true, composed: true }))}
         @keydown=${(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            this.dispatchEvent(new CustomEvent('edit-trip', { detail: t, bubbles: true, composed: true }));
+            this.dispatchEvent(new CustomEvent('open-planner', { detail: t, bubbles: true, composed: true }));
           }
         }}
       >
@@ -396,18 +402,40 @@ export class TripCard extends LitElement {
               )}
               ${overflow > 0 ? html`<span class="more">+${overflow}</span>` : ''}
             </div>
-            <button
-              class="share-btn"
-              title="Share itinerary"
-              aria-label="Share itinerary"
-              @click=${(e) => this._onShare(t, memberMap, e)}
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                <polyline points="16 6 12 2 8 6" />
-                <line x1="12" y1="2" x2="12" y2="15" />
-              </svg>
-            </button>
+            <div class="actions">
+              <button
+                class="icon-btn"
+                title="Edit trip"
+                aria-label="Edit trip details"
+                @click=${(e) => {
+                  e.stopPropagation(); // don't open the planner
+                  this.dispatchEvent(
+                    new CustomEvent('edit-trip', {
+                      detail: t,
+                      bubbles: true,
+                      composed: true,
+                    }),
+                  );
+                }}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20h9" />
+                  <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
+                </svg>
+              </button>
+              <button
+                class="icon-btn"
+                title="Share itinerary"
+                aria-label="Share itinerary"
+                @click=${(e) => this._onShare(t, memberMap, e)}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                  <polyline points="16 6 12 2 8 6" />
+                  <line x1="12" y1="2" x2="12" y2="15" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </article>

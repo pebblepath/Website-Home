@@ -534,6 +534,93 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
+   * Collaborative trip planner (Portal). planItems live under the
+   * Cairn-resolved family's trip (same context as the trips listener).
+   * Read/write is gated by the parent trip's `visibleTo` server-side
+   * (firestore.rules `canCoplanTrip`) — the trip's audience co-plans
+   * it; a "family" trip's plan is hidden from the extended ring.
+   * Component-managed listener (subscribe on open, unsub on close).
+   */
+  planItemsListener(tripId, onChange) {
+    if (!db || !this._currentFamilyId || !tripId) return () => {};
+    return onSnapshot(
+      collection(
+        db,
+        'families',
+        this._currentFamilyId,
+        'trips',
+        tripId,
+        'planItems',
+      ),
+      (snap) => {
+        const items = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => {
+            const dk = String(a.day ?? '').localeCompare(String(b.day ?? ''));
+            if (dk !== 0) return dk;
+            const tk = String(a.time ?? '').localeCompare(String(b.time ?? ''));
+            if (tk !== 0) return tk;
+            return (
+              (a.createdAt?.toMillis?.() ?? 0) -
+              (b.createdAt?.toMillis?.() ?? 0)
+            );
+          });
+        onChange(items);
+      },
+      (err) => {
+        console.warn('[Portal] planItems subscription error:', err.code, err.message);
+        onChange([]);
+      },
+    );
+  }
+
+  async addPlanItem(tripId, item) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    const uid = auth?.currentUser?.uid;
+    if (!uid) throw new Error('Not signed in.');
+    const title = String(item?.title ?? '').trim();
+    if (!title) throw new Error('Add a title.');
+    const ref = await addDoc(
+      collection(
+        db,
+        'families',
+        this._currentFamilyId,
+        'trips',
+        tripId,
+        'planItems',
+      ),
+      {
+        title,
+        type: item?.type ?? 'note',
+        day: item?.day ?? '',
+        time: item?.time ?? '',
+        durationMins: Number.isFinite(item?.durationMins)
+          ? item.durationMins
+          : 60,
+        // Honest author tag — the rule enforces addedBy == caller.
+        addedBy: uid,
+        createdAt: serverTimestamp(),
+      },
+    );
+    return ref.id;
+  }
+
+  async deletePlanItem(tripId, itemId) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    await deleteDoc(
+      doc(
+        db,
+        'families',
+        this._currentFamilyId,
+        'trips',
+        tripId,
+        'planItems',
+        itemId,
+      ),
+    );
+  }
+
+  /**
    * Phase 3B: create or update a family event (birthday, anniversary, or
    * custom). Same shape as saveTrip — pass an `id` to update, omit to create.
    */

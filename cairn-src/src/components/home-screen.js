@@ -18,6 +18,7 @@ import './activity-type-picker.js';
 import './discover-pebblepath.js';
 import './child-overview.js';
 import './child-pebble.js';
+import './trip-planner.js';
 import {
   mockUser,
   mockMembers,
@@ -72,6 +73,8 @@ export class HomeScreen extends LitElement {
     childDailyCard: { type: Object },
     childPebbleMessages: { type: Array },
     _pebblePrefill: { state: true },
+    _plannerOpen: { state: true },
+    _plannerTrip: { state: true },
     circle: { state: true },
     /** Active top-nav tab: 'today' | 'children' | 'activities' |
      *  'pebble' | 'cairn'. Replaced the centre-column Pebble search
@@ -118,6 +121,8 @@ export class HomeScreen extends LitElement {
     this.childDailyCard = null;
     this.childPebbleMessages = [];
     this._pebblePrefill = '';
+    this._plannerOpen = false;
+    this._plannerTrip = null;
     this.preview = false;
     // 2026-05-14: the circle toggle was removed from the topbar (Pebble
     // search bar took its centre-column slot). Default to 'extended' so
@@ -1756,6 +1761,18 @@ export class HomeScreen extends LitElement {
     this._formOpen = true;
   }
 
+  /** Open the collaborative day planner for a trip (card-body tap).
+   *  The pencil icon on the card is the EDITOR (_openEdit); the card
+   *  body opens the PLANNER. */
+  _openPlanner(trip) {
+    if (this.preview) {
+      toast('Sign in to plan real activities.');
+      return;
+    }
+    this._plannerTrip = trip;
+    this._plannerOpen = true;
+  }
+
   _openEdit(trip) {
     if (this.preview) {
       toast('Sign in to edit real activities.');
@@ -2080,6 +2097,7 @@ export class HomeScreen extends LitElement {
                     (t) => html`<trip-card
                       .trip=${t}
                       .members=${allMembers}
+                      @open-planner=${(e) => this._openPlanner(e.detail)}
                       @edit-trip=${(e) => this._openEdit(e.detail)}
                     ></trip-card>`,
                   )}
@@ -2696,12 +2714,27 @@ export class HomeScreen extends LitElement {
         ?open=${this._allTripsOpen}
         .trips=${this._circleTrips()}
         .members=${allMembers}
+        @open-planner=${(e) => {
+          this._allTripsOpen = false;
+          this._openPlanner(e.detail);
+        }}
         @edit-trip=${(e) => {
           this._allTripsOpen = false;
           this._openEdit(e.detail);
         }}
         @cancel=${() => (this._allTripsOpen = false)}
       ></all-trips-modal>
+
+      <trip-planner
+        ?open=${this._plannerOpen}
+        .trip=${this._plannerTrip}
+        .members=${allMembers}
+        .currentUid=${this.user?.uid ?? ''}
+        @cancel=${() => {
+          this._plannerOpen = false;
+          this._plannerTrip = null;
+        }}
+      ></trip-planner>
 
       <import-calendar-modal
         ?open=${this._importOpen}
