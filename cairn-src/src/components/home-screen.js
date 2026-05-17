@@ -527,10 +527,13 @@ export class HomeScreen extends LitElement {
       font-weight: 600;
       letter-spacing: -0.01em;
     }
-    /* Harmonized section action — one pill grammar for "Import from
-       Calendar", "All trips", "+ Add event", "Manage members", etc.
-       (was bare text links of inconsistent weight). */
-    .section-head .link {
+    /* ONE harmonized action pill — verbatim from the concept's global
+       .link (All activities / More insights / See all / Clear / Manage /
+       Edit / + Add event …). De-scoped from .section-head so EVERY .link
+       across all 5 tabs gets the pill, not just section headers (a
+       .section-head-scoped rule left cal-head / set-row links unstyled —
+       Portal-polish-v3 #4). */
+    .link {
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -545,17 +548,17 @@ export class HomeScreen extends LitElement {
       font-family: var(--font-body);
       transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
     }
-    .section-head .link:hover {
+    .link:hover {
       color: var(--text-primary);
       border-color: var(--glass-border-strong);
       background: var(--glass-fill-strong);
     }
-    .section-head .link svg {
+    .link svg {
       width: 13px;
       height: 13px;
     }
     @media (max-width: 768px) {
-      .section-head .link.hide-mobile {
+      .link.hide-mobile {
         display: none;
       }
     }
