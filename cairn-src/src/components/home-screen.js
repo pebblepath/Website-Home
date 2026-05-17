@@ -107,6 +107,7 @@ export class HomeScreen extends LitElement {
     _formMode: { state: true },
     _pebbleOpen: { state: true },
     _pebbleFabOpen: { state: true },
+    _themeLight: { state: true },
     /** Currently-hovered drop target during a member drag — gives the
      *  receiving stone a highlighted ring so it's obvious where the
      *  drop will land. Holds the targetGroupId ('extended' or a sub-
@@ -169,6 +170,9 @@ export class HomeScreen extends LitElement {
     this._formMode = 'trip';
     this._pebbleOpen = false;
     this._pebbleFabOpen = false;
+    this._themeLight =
+      typeof document !== 'undefined' &&
+      document.documentElement.classList.contains('theme-light');
     this._dragOverTarget = null;
     // Calendar nav state — initialized to "today" at first paint, then
     // user-controlled via prev/next or yearly month-tap.
@@ -225,7 +229,7 @@ export class HomeScreen extends LitElement {
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
       column-gap: 14px;
-      background: rgba(20, 12, 6, 0.42);
+      background: var(--chrome-bg);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
       border-bottom: 1px solid var(--glass-border);
@@ -252,7 +256,7 @@ export class HomeScreen extends LitElement {
       max-width: 100%;
       padding: 7px 14px 7px 12px;
       border-radius: var(--radius-pill);
-      background: rgba(255, 248, 235, 0.08);
+      background: var(--field-bg);
       border: 1px solid var(--glass-border);
       cursor: text;
       transition: background 200ms ease, border-color 200ms ease;
@@ -491,14 +495,10 @@ export class HomeScreen extends LitElement {
       flex-direction: column;
       border-radius: 22px;
       overflow: hidden;
-      background: linear-gradient(
-        160deg,
-        rgba(34, 26, 19, 0.62),
-        rgba(28, 21, 15, 0.72)
-      );
+      background: var(--panel-solid);
       backdrop-filter: blur(34px) saturate(170%);
       -webkit-backdrop-filter: blur(34px) saturate(170%);
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      border: 1px solid var(--glass-border-strong);
       box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
       animation: pebbleFabRise 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
     }
@@ -603,13 +603,13 @@ export class HomeScreen extends LitElement {
          regardless of the host formatting context (max-width +
          margin:0 auto was computing to 0 here). Matches the concept's
          1280 max + 24px gutters. */
-      padding: 30px 24px 0;
+      padding: 16px 24px 0;
       width: min(1280px, 100%);
       margin-inline: auto;
     }
     @media (max-width: 768px) {
       main {
-        padding: 20px 16px calc(32px + env(safe-area-inset-bottom));
+        padding: 12px 16px calc(32px + env(safe-area-inset-bottom));
       }
     }
     /* Portal v4 — Pebble tab is full-bleed: drop the gutters + width
@@ -626,12 +626,12 @@ export class HomeScreen extends LitElement {
       align-items: flex-end;
       justify-content: space-between;
       gap: 20px;
-      margin-bottom: 32px;
+      margin-bottom: 18px;
       flex-wrap: wrap;
     }
     @media (max-width: 768px) {
       .hello {
-        margin-bottom: 22px;
+        margin-bottom: 14px;
       }
     }
     .hello h1 {
@@ -640,7 +640,7 @@ export class HomeScreen extends LitElement {
       font-size: clamp(30px, 4vw, 44px);
       line-height: 1.05;
       letter-spacing: -0.025em;
-      background: linear-gradient(180deg, #fff 0%, rgba(255, 248, 235, 0.7) 100%);
+      background: var(--heading-fill);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -667,7 +667,7 @@ export class HomeScreen extends LitElement {
     }
     .hello .family-name:hover {
       color: var(--text-secondary);
-      background: rgba(255, 248, 235, 0.05);
+      background: var(--field-bg);
     }
     .hello .family-name-input {
       color: var(--text-primary);
@@ -676,8 +676,8 @@ export class HomeScreen extends LitElement {
       letter-spacing: -0.005em;
       font-family: var(--font-body);
       font-weight: 500;
-      background: rgba(255, 248, 235, 0.08);
-      border: 1px solid rgba(255, 248, 235, 0.25);
+      background: var(--field-bg);
+      border: 1px solid var(--glass-border-strong);
       border-radius: 4px;
       padding: 2px 6px;
       margin-left: -6px;
@@ -701,7 +701,7 @@ export class HomeScreen extends LitElement {
     }
 
     section {
-      margin-bottom: 32px;
+      margin-bottom: 22px;
     }
     .section-head {
       display: flex;
@@ -1454,7 +1454,7 @@ export class HomeScreen extends LitElement {
         bottom: 0;
         z-index: 40;
         padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
-        background: rgba(20, 12, 6, 0.62);
+        background: var(--chrome-bg);
         backdrop-filter: blur(28px) saturate(180%);
         -webkit-backdrop-filter: blur(28px) saturate(180%);
         border-top: 1px solid var(--glass-border);
@@ -1949,10 +1949,35 @@ export class HomeScreen extends LitElement {
       align-items: center;
       gap: 14px;
       padding: 15px 4px;
-      border-bottom: 1px solid rgba(255, 248, 235, 0.07);
+      border-bottom: 1px solid var(--hairline);
     }
     .set-row:last-child {
       border-bottom: none;
+    }
+    .theme-seg {
+      display: inline-flex;
+      flex-shrink: 0;
+      padding: 3px;
+      border-radius: var(--radius-pill);
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border);
+    }
+    .theme-seg button {
+      padding: 6px 15px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: transparent;
+      color: var(--text-tertiary);
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+    .theme-seg button.on {
+      background: rgba(61, 155, 143, 0.22);
+      color: var(--text-primary);
+      box-shadow: inset 0 0 0 1px rgba(61, 155, 143, 0.45);
     }
     .set-row .si {
       width: 36px;
@@ -3395,10 +3420,6 @@ export class HomeScreen extends LitElement {
                 <div class="child-meta">
                   <h2>${cd.child.name}</h2>
                   <div class="sub">${this._ageLong(cd.child.dateOfBirth)}</div>
-                  <span class="age-pill"
-                    >${achieved.length} of ${ms.length} milestones on
-                    track</span
-                  >
                 </div>
                 <div class="child-progress">
                   <div class="big">${pct}%</div>
@@ -3584,6 +3605,22 @@ export class HomeScreen extends LitElement {
     `;
   }
 
+  /** Light/dark theme toggle (lives in Settings, themes the whole
+   *  Portal). Flips the html.theme-light class — CSS custom
+   *  properties inherit through every component's shadow DOM — and
+   *  persists the choice + syncs the browser theme-color meta. */
+  _setTheme(light) {
+    this._themeLight = light;
+    try {
+      document.documentElement.classList.toggle('theme-light', light);
+      localStorage.setItem('portalTheme', light ? 'light' : 'dark');
+      const m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.setAttribute('content', light ? '#f2ede3' : '#1f5c54');
+    } catch (e) {
+      /* storage blocked — the in-memory toggle still themes the session */
+    }
+  }
+
   /** MY CAIRN — levels + "what each level sees" + settings. */
   _renderCairnTab() {
     const name = this.user?.displayName ?? 'You';
@@ -3642,6 +3679,24 @@ export class HomeScreen extends LitElement {
             <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="3"/></svg></span>
             <div class="sl"><b>${famName}</b><span>Family name &amp; invite codes</span></div>
             <button class="link" @click=${() => (this._membersOpen = true)}>Manage</button>
+          </div>
+          <div class="set-row">
+            <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/></svg></span>
+            <div class="sl"><b>Appearance</b><span>Light or dark theme — applies across the Portal.</span></div>
+            <div class="theme-seg" role="group" aria-label="Theme">
+              <button
+                class=${this._themeLight ? 'on' : ''}
+                @click=${() => this._setTheme(true)}
+              >
+                Light
+              </button>
+              <button
+                class=${this._themeLight ? '' : 'on'}
+                @click=${() => this._setTheme(false)}
+              >
+                Dark
+              </button>
+            </div>
           </div>
           <!-- Portal v4 audit: the Activity-notifications + Pebble-
                milestone-alerts toggles were removed — they were dead

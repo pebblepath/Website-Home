@@ -553,10 +553,10 @@ export class TripPlanner extends LitElement {
       font-size: 10px;
       color: rgba(255, 255, 255, 0.78);
     }
-    .wk-evt.meal { background: rgba(212, 168, 67, 0.34); border-color: #d4a843; }
-    .wk-evt.visit { background: rgba(61, 155, 143, 0.34); border-color: #3d9b8f; }
-    .wk-evt.travel { background: rgba(107, 154, 196, 0.34); border-color: #6b9ac4; }
-    .wk-evt.note { background: rgba(201, 138, 138, 0.32); border-color: #c98a8a; }
+    .wk-evt.meal { background: var(--evt-meal); border-color: #d4a843; }
+    .wk-evt.visit { background: var(--evt-visit); border-color: #3d9b8f; }
+    .wk-evt.travel { background: var(--evt-travel); border-color: #6b9ac4; }
+    .wk-evt.note { background: var(--evt-note); border-color: #c98a8a; }
     .wk-evt .wkdel {
       position: absolute;
       top: 1px;
@@ -643,10 +643,10 @@ export class TripPlanner extends LitElement {
       flex-shrink: 0;
     }
     .evt .del:hover { color: #fff; }
-    .evt.meal { background: rgba(212, 168, 67, 0.32); border-color: #d4a843; }
-    .evt.visit { background: rgba(61, 155, 143, 0.32); border-color: #3d9b8f; }
-    .evt.travel { background: rgba(107, 154, 196, 0.32); border-color: #6b9ac4; }
-    .evt.note { background: rgba(201, 138, 138, 0.3); border-color: #c98a8a; }
+    .evt.meal { background: var(--evt-meal); border-color: #d4a843; }
+    .evt.visit { background: var(--evt-visit); border-color: #3d9b8f; }
+    .evt.travel { background: var(--evt-travel); border-color: #6b9ac4; }
+    .evt.note { background: var(--evt-note); border-color: #c98a8a; }
     .sched-empty {
       position: absolute;
       inset: 0;
@@ -696,7 +696,7 @@ export class TripPlanner extends LitElement {
     }
     .add-row input,
     .add-row select {
-      background: rgba(255, 248, 235, 0.06);
+      background: var(--field-bg);
       border: 1px solid var(--glass-border);
       color: var(--text-primary);
       border-radius: var(--radius-pill);
@@ -738,7 +738,7 @@ export class TripPlanner extends LitElement {
       max-width: 170px;
       padding: 8px 13px;
       border-radius: var(--radius-pill);
-      background: rgba(255, 248, 235, 0.06);
+      background: var(--field-bg);
       border: 1px solid var(--glass-border);
       color: var(--text-secondary);
       font-size: 12.5px;

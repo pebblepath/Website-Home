@@ -569,7 +569,7 @@ export class ChildPebble extends LitElement {
     .privtoggle button svg { width: 13px; height: 13px; }
     .privtoggle button.on.fam {
       background: rgba(61, 155, 143, 0.2);
-      color: #9fded2;
+      color: var(--bubble-link-pb);
       box-shadow: inset 0 0 0 1px rgba(61, 155, 143, 0.4);
     }
     .privtoggle button.on.priv {
@@ -598,7 +598,7 @@ export class ChildPebble extends LitElement {
         z-index: 5;
         left: 0;
         top: 0;
-        background: var(--surface-raised, rgba(20, 14, 9, 0.96));
+        background: var(--panel-solid);
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
         box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
@@ -747,12 +747,12 @@ export class ChildPebble extends LitElement {
       color: var(--text-primary);
       border-bottom-left-radius: 6px;
     }
-    .msg.pb .bubble b { color: #9fded2; }
+    .msg.pb .bubble b { color: var(--bubble-link-pb); }
     /* Harmonised link colour — kill the browser blue. Light teal on
        the glass Pebble bubble; warm cream on the terracotta you
        bubble. Underlined for the affordance. */
     .msg.pb .bubble a {
-      color: #7fd3c6;
+      color: var(--bubble-link-pb);
       text-decoration: underline;
       text-underline-offset: 2px;
     }

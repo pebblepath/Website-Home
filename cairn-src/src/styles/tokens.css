@@ -78,6 +78,80 @@
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
   --font-pebble: 'Ponari', cursive; /* PebblePath wordmark */
   --font-nunito: 'Nunito', system-ui, sans-serif; /* PebblePath body */
+
+  /* ── Themeable semantic tokens (dark = default) ──────────────────
+     These exist so the few spots that historically hard-coded a
+     light-on-dark value can flip cleanly in the light theme. Custom
+     properties inherit through shadow DOM (unlike element selectors),
+     so overriding them on html.theme-light reaches every component. */
+  --heading-fill: linear-gradient(180deg, #fff 0%, rgba(255, 248, 235, 0.7) 100%);
+  --overlay-scrim: rgba(20, 12, 6, 0.55); /* modal backdrops */
+  --panel-solid: rgba(34, 26, 19, 0.72); /* opaque floating panels (Pebble FAB) */
+  --on-accent: #fff; /* text on saturated brand buttons — same both themes */
+  --hairline: rgba(255, 248, 235, 0.10);
+  --field-bg: rgba(255, 248, 235, 0.06);
+  --bubble-link-pb: #7fd3c6;
+  --chrome-bg: rgba(20, 12, 6, 0.42); /* sticky top/bottom nav bars */
+  /* Planner event-block tints — translucent over the planner surface;
+     opacities tuned so white block text reads on the dusk surface. */
+  --evt-meal: rgba(212, 168, 67, 0.32);
+  --evt-visit: rgba(61, 155, 143, 0.32);
+  --evt-travel: rgba(107, 154, 196, 0.32);
+  --evt-note: rgba(201, 138, 138, 0.3);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   LIGHT THEME — toggled from Settings (Tab 5), persisted in
+   localStorage('portalTheme'), applied as html.theme-light before
+   first paint (inline head script → no FOUC). Replaces the green
+   side of the dusk gradient with the website's warm sand (privacy
+   page palette: #FAF8F5 / #F2EDE3 / #E8DCC8) and keeps terracotta.
+   Text flips to charcoal; frosted glass flips to lifted-white so
+   cards still read on the sand background.
+   ───────────────────────────────────────────────────────────────── */
+html.theme-light {
+  /* Sand-to-terracotta — no green, terracotta retained at the warm end. */
+  --gradient-dusk: linear-gradient(
+    140deg,
+    #faf8f5 0%,
+    #f2ede3 24%,
+    #e8dcc8 52%,
+    #d8b694 76%,
+    #c67b5c 100%
+  );
+
+  /* Calendar "today" + trip accents need dark-readable fills on a
+     light bg — keep the bright gradients but darken their fg ink. */
+  --today-fg: #0d2a18;
+  --trip-day-fg: #0a2236;
+
+  /* Frosted glass → lifted warm-white cards on the sand bg. */
+  --glass-fill: rgba(255, 255, 255, 0.5);
+  --glass-fill-strong: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(44, 62, 64, 0.12);
+  --glass-border-strong: rgba(44, 62, 64, 0.22);
+  --glass-shadow: 0 8px 28px rgba(120, 90, 60, 0.16);
+  --glass-shadow-lifted: 0 22px 55px rgba(120, 90, 60, 0.22);
+
+  /* Charcoal-on-sand text (matches the website privacy page ink). */
+  --text-primary: rgba(44, 62, 64, 0.96);
+  --text-secondary: rgba(44, 62, 64, 0.64);
+  --text-tertiary: rgba(44, 62, 64, 0.44);
+
+  /* Semantic flips. */
+  --heading-fill: linear-gradient(180deg, #2c3e40 0%, rgba(44, 62, 64, 0.78) 100%);
+  --overlay-scrim: rgba(74, 58, 42, 0.4);
+  --panel-solid: rgba(255, 252, 247, 0.92);
+  --hairline: rgba(44, 62, 64, 0.1);
+  --field-bg: rgba(44, 62, 64, 0.05);
+  --bubble-link-pb: #1f7a6e;
+  --chrome-bg: rgba(255, 255, 255, 0.62);
+  /* Light theme: same hues, more saturated so the white block label
+     still reads against the pale planner surface. */
+  --evt-meal: rgba(196, 140, 40, 0.82);
+  --evt-visit: rgba(45, 122, 112, 0.82);
+  --evt-travel: rgba(74, 122, 168, 0.82);
+  --evt-note: rgba(180, 100, 100, 0.82);
 }
 
 /* PebblePath wordmark font, served from Cairn/public/assets/ */
@@ -177,6 +251,26 @@ body::after {
   body::before {
     animation: none;
   }
+}
+
+/* Light theme — the strong teal/amber/terracotta mesh would muddy a
+   sand background, so soften to a faint warm wash, and lighten the
+   dotted grain so it doesn't read as dirt on the pale bg. The body
+   background itself flips automatically (it consumes
+   var(--gradient-dusk), overridden on html.theme-light above). */
+html.theme-light body::before {
+  background:
+    radial-gradient(ellipse 60% 50% at 12% 20%, rgba(232, 220, 200, 0.55), transparent 62%),
+    radial-gradient(ellipse 50% 40% at 88% 26%, rgba(212, 168, 67, 0.12), transparent 60%),
+    radial-gradient(ellipse 70% 60% at 50% 96%, rgba(198, 123, 92, 0.18), transparent 66%);
+  filter: blur(40px);
+}
+html.theme-light body::after {
+  background-image: radial-gradient(
+    rgba(44, 62, 64, 0.045) 1px,
+    transparent 1px
+  );
+  opacity: 0.4;
 }
 
 cairn-app {

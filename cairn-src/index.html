@@ -55,6 +55,24 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/src/styles/tokens.css" />
+
+    <!-- Theme bootstrap — apply the saved light/dark choice to <html>
+         BEFORE first paint so there's no flash. Toggle lives in
+         Settings (Tab 5) and persists in localStorage('portalTheme').
+         Default = dark (the original look). -->
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem('portalTheme') === 'light') {
+            document.documentElement.classList.add('theme-light');
+            var m = document.querySelector('meta[name="theme-color"]');
+            if (m) m.setAttribute('content', '#f2ede3');
+          }
+        } catch (e) {
+          /* private mode / storage blocked — stay on default dark */
+        }
+      })();
+    </script>
   </head>
   <body>
     <cairn-app></cairn-app>
