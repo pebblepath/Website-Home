@@ -7793,7 +7793,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       `;const a=e.milestones,o=a.filter(h=>h.status==="achieved"),n=a.length?Math.round(o.length/a.length*100):0,l=h=>({selfCare:"motor"})[h]||h||"motor",d=o.slice().sort((h,b)=>(b.ageRangeStartMonths??0)-(h.ageRangeStartMonths??0)).slice(0,3),g=(e.insights||[])[0],c=e.dailyCard;return s`
       ${this._renderTodayHeader()}
 
-      <section>
+      <section class="today-lead">
         <div class="section-head scope-only">${t}</div>
         <div class="today-top">
           <div class="today-top-left">
@@ -8326,7 +8326,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
       column-gap: 14px;
-      background: var(--chrome-bg);
+      background: rgba(20, 12, 6, 0.42);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
       border-bottom: 1px solid var(--glass-border);
@@ -8819,6 +8819,19 @@ They'll lose access to shared trips, celebrations and any read-only child access
       justify-content: flex-end;
       min-height: 0;
       margin-bottom: 10px;
+    }
+    /* Tab 1 ONLY: pull the lead section (scope chip + Felix/Coming-up
+       cards) up toward the family name without moving the greeting
+       header itself — the shared .hello margin + main padding stay
+       at their original values, this just reclaims part of that gap
+       on Today. Other tabs unaffected. */
+    section.today-lead {
+      margin-top: -20px;
+    }
+    @media (max-width: 768px) {
+      section.today-lead {
+        margin-top: -12px;
+      }
     }
     .section-head h2 {
       margin: 0;
@@ -9477,7 +9490,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       padding: 9px 16px;
       border: none;
       background: transparent;
-      color: var(--text-secondary);
+      color: var(--chrome-fg);
       cursor: pointer;
       font-family: var(--font-body);
       font-weight: 600;
@@ -9492,7 +9505,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       height: 16px;
     }
     .tab:hover {
-      color: var(--text-primary);
+      color: var(--chrome-fg-strong);
     }
     .tab.active {
       color: #fff;
@@ -9551,7 +9564,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         bottom: 0;
         z-index: 40;
         padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
-        background: var(--chrome-bg);
+        background: rgba(20, 12, 6, 0.62);
         backdrop-filter: blur(28px) saturate(180%);
         -webkit-backdrop-filter: blur(28px) saturate(180%);
         border-top: 1px solid var(--glass-border);
@@ -9565,7 +9578,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         padding: 6px 2px;
         border: none;
         background: transparent;
-        color: var(--text-tertiary);
+        color: var(--chrome-fg);
         cursor: pointer;
         font-family: var(--font-body);
         font-weight: 600;
@@ -10488,4 +10501,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}w(bt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",bt);
-//# sourceMappingURL=index-DGBQUcP9.js.map
+//# sourceMappingURL=index-bPRL6Xxd.js.map
