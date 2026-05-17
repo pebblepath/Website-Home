@@ -70,6 +70,56 @@ function ageLabel(dob) {
   return `${y} year${y === 1 ? '' : 's'}${mm}`;
 }
 
+// 7 hand-drawn pebble silhouettes (a–g) ported verbatim from the
+// design-sandbox D-1 spec / the iOS PebbleShapes — used as the
+// Growth-insight watermark so the web matches the app exactly.
+const PEBBLES = [
+  { vb: '0 0 100 70', d: 'M 8 38 C 6 18, 26 6, 48 8 C 72 10, 94 18, 94 38 C 94 58, 72 66, 48 64 C 22 62, 10 58, 8 38 Z' },
+  { vb: '0 0 80 90', d: 'M 38 6 C 56 8, 70 24, 72 46 C 74 70, 58 84, 38 84 C 16 84, 6 66, 8 44 C 10 22, 22 4, 38 6 Z' },
+  { vb: '0 0 90 80', d: 'M 14 26 C 18 10, 38 4, 56 8 C 78 14, 86 32, 82 50 C 76 70, 54 78, 32 72 C 12 66, 10 42, 14 26 Z' },
+  { vb: '0 0 70 60', d: 'M 8 30 C 8 14, 22 6, 38 8 C 54 10, 64 22, 62 36 C 60 52, 44 56, 28 54 C 14 52, 8 44, 8 30 Z' },
+  { vb: '0 0 110 75', d: 'M 8 38 C 6 18, 30 8, 56 10 C 84 12, 104 22, 104 40 C 102 58, 80 68, 52 66 C 24 64, 10 56, 8 38 Z' },
+  { vb: '0 0 95 75', d: 'M 14 24 C 18 10, 40 6, 56 12 C 70 18, 80 18, 86 30 C 90 44, 80 56, 64 60 C 48 64, 28 60, 18 50 C 10 42, 10 32, 14 24 Z' },
+  { vb: '0 0 80 80', d: 'M 14 20 C 20 10, 36 6, 52 10 C 68 16, 76 30, 72 48 C 66 64, 50 72, 32 66 C 16 60, 8 44, 10 30 C 12 24, 12 22, 14 20 Z' },
+];
+
+// Stable shape pick (djb2, mirrors iOS PebbleShape.stable(for:)).
+function pebbleFor(seed) {
+  let h = 5381;
+  const s = String(seed ?? '');
+  for (let i = 0; i < s.length; i += 1) h = (h * 33) ^ s.charCodeAt(i);
+  return PEBBLES[Math.abs(h) % PEBBLES.length];
+}
+
+// Insight domain → colour family (matches the app's semantic mapping).
+const INSIGHT_FAM = {
+  motor: { cls: 'fam-motor', fill: '#6b9ac4', dom: 'Motor' },
+  language: { cls: 'fam-language', fill: '#d4a843', dom: 'Language' },
+  socialEmotional: { cls: 'fam-social', fill: '#c98a8a', dom: 'Social-Emotional' },
+  cognitive: { cls: 'fam-cognitive', fill: '#8b7bb5', dom: 'Cognitive' },
+  cross: { cls: 'fam-cross', fill: '#3d9b8f', dom: '' },
+};
+
+// Insight type → glyph + label (star/eye/link/bulb, app-faithful).
+const INSIGHT_ICON = {
+  strength: {
+    label: 'Strength',
+    svg: html`<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.94 5.96 6.58.96-4.76 4.64 1.12 6.55L12 17.6l-5.88 3.01 1.12-6.55-4.76-4.64 6.58-.96L12 2.5z"/></svg>`,
+  },
+  watching: {
+    label: 'Watching',
+    svg: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/></svg>`,
+  },
+  connection: {
+    label: 'Connection',
+    svg: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.07-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
+  },
+  nudge: {
+    label: 'Try this',
+    svg: html`<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg>`,
+  },
+};
+
 export class ChildOverview extends LitElement {
   static properties = {
     child: { type: Object },
@@ -301,50 +351,219 @@ export class ChildOverview extends LitElement {
       .two-col { grid-template-columns: 1fr; }
     }
 
-    /* insights */
+    /* Growth insights — the iOS app's InsightCardView /
+       design-sandbox D-1 treatment: a hand-drawn pebble watermark
+       behind the text + per-family colour harmony (bg tint +
+       icon-circle + accent label all from one family), replacing the
+       old flat 4px strip. REUSE of the app's design language, adapted
+       to the Portal's dark glass surface (not a light-card port —
+       that would clash with every other Portal card). */
     .insight {
-      display: flex;
-      gap: 14px;
-      padding: 16px;
+      position: relative;
       border-radius: var(--radius-tile);
-      background: var(--glass-fill);
       border: 1px solid var(--glass-border);
+      padding: 16px 18px;
+      overflow: hidden;
+      isolation: isolate;
       margin-bottom: 12px;
     }
     .insight:last-child { margin-bottom: 0; }
-    .insight .strip {
-      width: 4px;
-      border-radius: 999px;
+    .insight .wm {
+      position: absolute;
+      top: -28px;
+      left: -34px;
+      width: 150px;
+      height: 130px;
+      opacity: 0.18;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .insight .irow {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .insight .icirc {
       flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
     }
-    .insight.strength .strip { background: var(--teal-pebble); }
-    .insight.watching .strip { background: var(--amber-glow); }
-    .insight.connection .strip { background: var(--purple-muted); }
-    .insight.nudge .strip { background: var(--terracotta); }
-    .ikind {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
+    .insight .icirc svg { width: 14px; height: 14px; }
+    .insight .icontent { flex: 1; min-width: 0; }
+    .insight .cat {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 9.5px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      margin-bottom: 5px;
-      color: var(--text-secondary);
+      line-height: 1;
+      margin-bottom: 6px;
     }
-    .insight.strength .ikind { color: #7fd3c6; }
-    .insight.watching .ikind { color: #ecca7e; }
-    .insight.connection .ikind { color: #b6a8d8; }
-    .insight.nudge .ikind { color: #e6b39a; }
+    .insight .cat .sep,
+    .insight .cat .dom { color: var(--text-tertiary); }
     .insight h4 {
+      position: relative;
+      z-index: 1;
       margin: 0 0 5px;
       font-family: var(--font-display);
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.32;
+      letter-spacing: -0.005em;
     }
     .insight p {
+      position: relative;
+      z-index: 1;
       margin: 0;
       font-size: 13.5px;
       color: var(--text-secondary);
-      line-height: 1.55;
+      line-height: 1.52;
     }
+    /* per-family harmony — base colour drives the bg tint +
+       icon-circle fill; light accent drives the cat-label + glyph
+       (legible on the dusk surface). Mirrors the app's semantic
+       domain mapping (motor=blue, language=amber, social=rose,
+       cognitive=purple, cross=teal). */
+    .insight.fam-motor { background: linear-gradient(135deg, rgba(107,154,196,0.13), rgba(107,154,196,0.04)); }
+    .insight.fam-motor .icirc { background: rgba(107,154,196,0.22); color:#9fc4e8; }
+    .insight.fam-motor .cat .type { color:#9fc4e8; }
+    .insight.fam-language { background: linear-gradient(135deg, rgba(212,168,67,0.13), rgba(212,168,67,0.04)); }
+    .insight.fam-language .icirc { background: rgba(212,168,67,0.22); color:#ecca7e; }
+    .insight.fam-language .cat .type { color:#ecca7e; }
+    .insight.fam-social { background: linear-gradient(135deg, rgba(201,138,138,0.13), rgba(201,138,138,0.04)); }
+    .insight.fam-social .icirc { background: rgba(201,138,138,0.22); color:#e8b3b3; }
+    .insight.fam-social .cat .type { color:#e8b3b3; }
+    .insight.fam-cognitive { background: linear-gradient(135deg, rgba(139,123,181,0.13), rgba(139,123,181,0.04)); }
+    .insight.fam-cognitive .icirc { background: rgba(139,123,181,0.22); color:#c3b6e0; }
+    .insight.fam-cognitive .cat .type { color:#c3b6e0; }
+    .insight.fam-cross { background: linear-gradient(135deg, rgba(61,155,143,0.13), rgba(61,155,143,0.04)); }
+    .insight.fam-cross .icirc { background: rgba(61,155,143,0.22); color:#7fd3c6; }
+    .insight.fam-cross .cat .type { color:#7fd3c6; }
+
+    /* "The longer view" longitudinal timeline — concept-faithful. */
+    .timeline { position: relative; padding: 8px 4px 4px; }
+    .tl-lane { display: flex; align-items: center; gap: 14px; height: 46px; }
+    .tl-name {
+      width: 104px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .tl-track {
+      flex: 1;
+      position: relative;
+      height: 2px;
+      background: rgba(255, 248, 235, 0.12);
+      border-radius: 2px;
+    }
+    .tl-track i {
+      position: absolute;
+      top: 50%;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 0 3px rgba(20, 12, 6, 0.35);
+    }
+    .tl-lane.motor .tl-track i { background: #6b9ac4; }
+    .tl-lane.language .tl-track i { background: #d4a843; }
+    .tl-lane.social .tl-track i { background: #c98a8a; }
+    .tl-lane.cognitive .tl-track i { background: #8b7bb5; }
+    .tl-track i.future {
+      background: transparent !important;
+      border: 2px dashed rgba(255, 248, 235, 0.3);
+      box-shadow: none;
+    }
+    .tl-now {
+      position: absolute;
+      top: 0;
+      bottom: 24px;
+      width: 2px;
+      background: linear-gradient(180deg, #4fc26b, transparent);
+    }
+    .tl-now span {
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      font-weight: 700;
+      color: #7fdc97;
+      white-space: nowrap;
+    }
+    .tl-axis {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0 0 118px;
+      font-size: 11px;
+      color: var(--text-tertiary);
+    }
+
+    /* Pediatrician summary CTA — concept .cta-card. */
+    .cta-card {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .cta-card .cic {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background-image: var(--gradient-cta);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .cta-card .cic svg { width: 22px; height: 22px; }
+    .cta-card .ctx { flex: 1; min-width: 200px; }
+    .cta-card .ctx h4 {
+      margin: 0 0 4px;
+      font-family: var(--font-display);
+      font-size: 16px;
+    }
+    .cta-card .ctx p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .btn-primary {
+      padding: 10px 18px;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      font-size: 13.5px;
+      background-image: var(--gradient-cta);
+      color: #fff;
+      border: 1px solid rgba(255, 248, 235, 0.22);
+      cursor: pointer;
+      font-family: var(--font-body);
+      box-shadow: 0 4px 14px rgba(139, 90, 62, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    }
+    .btn-primary:hover { background-image: var(--gradient-cta-hover); }
+    .vis-note {
+      font-size: 12.5px;
+      color: var(--text-tertiary);
+      line-height: 1.5;
+      margin-top: 12px;
+      padding: 0 4px;
+    }
+    .vis-note b { color: var(--text-secondary); }
 
     /* Pebble's daily card */
     .daily {
@@ -427,6 +646,81 @@ export class ChildOverview extends LitElement {
     return html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none" /></svg>`;
   }
 
+  _ageMonths(dob) {
+    if (!dob || Number.isNaN(dob.getTime?.() ?? NaN)) return 0;
+    const now = new Date();
+    let m =
+      (now.getFullYear() - dob.getFullYear()) * 12 +
+      (now.getMonth() - dob.getMonth());
+    if (now.getDate() < dob.getDate()) m -= 1;
+    return Math.max(0, m);
+  }
+
+  /** "The longer view" model — per-domain dots on a 0→axisMax age
+   *  axis. Solid dot = achieved milestone (by start age); one dashed
+   *  "future" dot = the next not-yet-achieved one in that domain.
+   *  Axis adapts to the child's age + the catalog so it stays
+   *  meaningful past toddlerhood. */
+  _timelineModel() {
+    const ms = this.milestones ?? [];
+    const ageM = this._ageMonths(this.child?.dateOfBirth);
+    const maxEnd = ms.reduce(
+      (mx, m) => Math.max(mx, m.ageRangeEndMonths ?? 0),
+      0,
+    );
+    const ladder = [36, 48, 60, 72, 96, 120, 144, 168, 216, 264];
+    const need = Math.max(ageM + 4, maxEnd, 36);
+    const axisMax = ladder.find((v) => v >= need) ?? ladder[ladder.length - 1];
+    const pos = (mm) =>
+      Math.min(98, Math.max(2, ((mm ?? 0) / axisMax) * 100));
+    const lanes = [
+      { key: 'motor', cls: 'motor', name: 'Motor' },
+      { key: 'language', cls: 'language', name: 'Language' },
+      { key: 'socialEmotional', cls: 'social', name: 'Social-Emo.' },
+      { key: 'cognitive', cls: 'cognitive', name: 'Cognitive' },
+    ].map((ln) => {
+      const inDom = ms.filter((m) => normCat(m.category) === ln.key);
+      const done = inDom
+        .filter((m) => m.status === 'achieved')
+        .sort(
+          (a, b) =>
+            (a.ageRangeStartMonths ?? 0) - (b.ageRangeStartMonths ?? 0),
+        );
+      // Cap at 7 evenly-sampled so a 100+ catalog doesn't blur into a
+      // solid bar (concept shows a curated handful per lane).
+      let picks = done;
+      if (done.length > 7) {
+        picks = Array.from({ length: 7 }, (_, i) =>
+          done[Math.round((i * (done.length - 1)) / 6)],
+        );
+      }
+      const dots = picks.map((m) => ({
+        left: pos(m.ageRangeStartMonths),
+        future: false,
+      }));
+      const next = inDom
+        .filter((m) => m.status !== 'achieved')
+        .sort(
+          (a, b) =>
+            (a.ageRangeStartMonths ?? 0) - (b.ageRangeStartMonths ?? 0),
+        )[0];
+      if (next)
+        dots.push({ left: pos(next.ageRangeStartMonths), future: true });
+      return { ...ln, dots };
+    });
+    const fmt = (mm) => {
+      if (mm <= 0) return 'birth';
+      if (mm < 24) return `${mm} mo`;
+      if (mm % 12 === 0) return `${mm / 12} yr`;
+      return `${(mm / 12).toFixed(1).replace(/\.0$/, '')} yr`;
+    };
+    const axis = Array.from({ length: 7 }, (_, i) =>
+      fmt(Math.round((i * axisMax) / 6)),
+    );
+    const nowFrac = Math.min(1, Math.max(0, ageM / axisMax));
+    return { lanes, axis, ageM, nowFrac };
+  }
+
   render() {
     const child = this.child;
     if (!child) {
@@ -448,7 +742,7 @@ export class ChildOverview extends LitElement {
       .slice(0, 5);
     const theme = child.themeColorHex || 'var(--teal-pebble)';
     const insights = this.insights ?? [];
-    const daily = this.dailyCard;
+    const tl = this._timelineModel();
     const statusClass = (s) =>
       s === 'achieved' ? 'done' : s === 'emerging' ? 'emerging' : 'up';
     const statusLabel = (s) =>
@@ -530,6 +824,44 @@ export class ChildOverview extends LitElement {
       </section>
 
       <section>
+        <div class="section-head">
+          <h2>The longer view</h2>
+          <p class="note">
+            Every dot is a logged milestone · the longer you use
+            PebblePath, the richer this gets
+          </p>
+        </div>
+        <div class="panel">
+          <div class="timeline">
+            <div
+              class="tl-now"
+              style="left:calc(118px + (100% - 118px) * ${tl.nowFrac});"
+            >
+              <span
+                >now · ${Math.floor(tl.ageM / 12)}y ${tl.ageM % 12}m</span
+              >
+            </div>
+            ${tl.lanes.map(
+              (ln) => html`<div class="tl-lane ${ln.cls}">
+                <div class="tl-name">${ln.name}</div>
+                <div class="tl-track">
+                  ${ln.dots.map(
+                    (dt) => html`<i
+                      class=${dt.future ? 'future' : ''}
+                      style="left:${dt.left}%"
+                    ></i>`,
+                  )}
+                </div>
+              </div>`,
+            )}
+            <div class="tl-axis">
+              ${tl.axis.map((a) => html`<span>${a}</span>`)}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
         <div class="two-col">
           <div>
             <div class="section-head"><h2>Coming up</h2></div>
@@ -583,47 +915,82 @@ export class ChildOverview extends LitElement {
           </div>
 
           <div>
-            ${daily
-              ? html`<div class="daily" style="margin-bottom:18px;">
-                  <div class="tag">${this._pebbleIcon()} Pebble's daily</div>
-                  <h3>${daily.title}</h3>
-                  <p>${daily.body}</p>
-                  <button
-                    class="ask"
-                    @click=${() =>
-                      this.dispatchEvent(
-                        new CustomEvent('ask-pebble', {
-                          detail:
-                            daily.topicForChat ||
-                            `Tell me more about: ${daily.title}`,
-                          bubbles: true,
-                          composed: true,
-                        }),
-                      )}
-                  >
-                    Ask Pebble about this →
-                  </button>
-                </div>`
-              : ''}
             <div class="section-head"><h2>Growth insights</h2></div>
             ${insights.length === 0
               ? html`<div class="panel empty">
                   Pebble is still learning about ${child.name} — insights
                   appear as more milestones are logged in the app.
                 </div>`
-              : insights.map(
-                  (i) => html`<div class="insight ${i.type}">
-                    <div class="strip"></div>
-                    <div>
-                      <div class="ikind">
-                        ${i.type === 'nudge' ? 'Try this' : i.type}
+              : insights.map((i) => {
+                  const fam =
+                    INSIGHT_FAM[i.domain] ?? INSIGHT_FAM.cross;
+                  const ic =
+                    INSIGHT_ICON[i.type] ?? INSIGHT_ICON.nudge;
+                  const peb = pebbleFor(`${i.title}${i.type}`);
+                  return html`<div class="insight ${fam.cls}">
+                    <svg
+                      class="wm"
+                      viewBox=${peb.vb}
+                      preserveAspectRatio="xMidYMid meet"
+                      aria-hidden="true"
+                    >
+                      <path d=${peb.d} fill=${fam.fill} />
+                    </svg>
+                    <div class="irow">
+                      <div class="icirc">${ic.svg}</div>
+                      <div class="icontent">
+                        <div class="cat">
+                          <span class="type">${ic.label}</span>
+                          ${fam.dom
+                            ? html`<span class="sep">·</span
+                                ><span class="dom">${fam.dom}</span>`
+                            : ''}
+                        </div>
+                        <h4>${i.title}</h4>
+                        <p>${i.body}</p>
                       </div>
-                      <h4>${i.title}</h4>
-                      <p>${i.body}</p>
                     </div>
-                  </div>`,
-                )}
+                  </div>`;
+                })}
           </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="panel">
+          <div class="cta-card">
+            <div class="cic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v5h5"/><path d="M14 3H6v18h12V8z"/><path d="M9 13h6M9 17h6"/></svg>
+            </div>
+            <div class="ctx">
+              <h4>Pediatrician summary</h4>
+              <p>
+                A clinician-ready summary of ${child.name}'s milestone
+                history, written by Pebble. Bring it to your next
+                check-up.
+              </p>
+            </div>
+            <button
+              class="btn-primary"
+              @click=${() =>
+                this.dispatchEvent(
+                  new CustomEvent('ask-pebble', {
+                    detail: `Write a clinician-ready summary of ${child.name}'s developmental milestone history I can bring to our next pediatrician visit — strengths, anything to watch, and current progress by domain.`,
+                    bubbles: true,
+                    composed: true,
+                  }),
+                )}
+            >
+              Generate summary
+            </button>
+          </div>
+        </div>
+        <div class="vis-note">
+          Visibility model — this whole tab reads from the app's child
+          data and is gated to <b>parents (PP household members)</b>.
+          Grandparents and the wider Cairn ring never see milestone or
+          health content; they only see what's on the Activities &amp;
+          My Cairn tabs.
         </div>
       </section>
     `;
