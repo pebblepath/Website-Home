@@ -6838,6 +6838,15 @@ var mt=Object.defineProperty;var bt=(c,e,t)=>e in c?mt(c,e,{enumerable:!0,config
       font-size: 12.5px;
       outline: none;
     }
+    /* Readable placeholder — browsers dim the placeholder by their
+       own UA opacity on top of the colour, which left the title +
+       URL hints near-invisible on the dark glass. Pin to the page's
+       standard muted secondary text + opacity:1 so it matches the
+       other items. */
+    .add-row input::placeholder {
+      color: var(--text-secondary);
+      opacity: 1;
+    }
     .add-row input.t { flex: 1; min-width: 160px; }
     .add-row input.tm { width: 78px; text-align: center; }
     .add-row select { cursor: pointer; }
@@ -9665,4 +9674,4 @@ var mt=Object.defineProperty;var bt=(c,e,t)=>e in c?mt(c,e,{enumerable:!0,config
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}x(ut,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",ut);
-//# sourceMappingURL=index-CRKHpnNf.js.map
+//# sourceMappingURL=index-DVjHPpbb.js.map

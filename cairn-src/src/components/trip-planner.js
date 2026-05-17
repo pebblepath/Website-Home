@@ -421,6 +421,15 @@ export class TripPlanner extends LitElement {
       font-size: 12.5px;
       outline: none;
     }
+    /* Readable placeholder — browsers dim the placeholder by their
+       own UA opacity on top of the colour, which left the title +
+       URL hints near-invisible on the dark glass. Pin to the page's
+       standard muted secondary text + opacity:1 so it matches the
+       other items. */
+    .add-row input::placeholder {
+      color: var(--text-secondary);
+      opacity: 1;
+    }
     .add-row input.t { flex: 1; min-width: 160px; }
     .add-row input.tm { width: 78px; text-align: center; }
     .add-row select { cursor: pointer; }
