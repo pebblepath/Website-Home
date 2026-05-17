@@ -140,20 +140,40 @@ export class ChildPebble extends LitElement {
   static styles = css`
     *, *::before, *::after { box-sizing: border-box; }
     :host { display: block; }
-    .wrap {
-      max-width: 880px;
-      margin: 0 auto;
+    /* Portal v4 — Pebble is the whole tab: no card, no page header.
+       A full-height column edge-to-edge up to the nav bar; the
+       "Private to parents" pill is integrated into the top of the
+       chat surface. */
+    .chatpane {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 116px);
+      padding: 14px 24px 0;
     }
-    .panel {
-      position: relative;
-      border-radius: var(--radius-card);
-      background: var(--glass-fill-strong);
-      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-      border: 1px solid var(--glass-border-strong);
-      box-shadow: var(--glass-shadow);
-      padding: 28px;
+    @media (max-width: 720px) {
+      .chatpane {
+        padding: 10px 16px 0;
+        min-height: calc(100vh - 150px);
+      }
     }
+    .toprow {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+    }
+    .privtag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 13px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(198, 123, 92, 0.16);
+      color: #e6c3ab;
+      border: 1px solid rgba(198, 123, 92, 0.4);
+    }
+    .privtag svg { width: 13px; height: 13px; }
     /* Message rows with sender-attribution avatars (concept .msg).
        In-panel header removed — the page header already says
        "Pebble · {name}'s development advisor", so the chat box is
@@ -198,8 +218,8 @@ export class ChildPebble extends LitElement {
       display: flex;
       flex-direction: column;
       gap: 14px;
-      min-height: 44vh;
-      max-height: 56vh;
+      flex: 1;
+      min-height: 0;
       overflow-y: auto;
       padding: 4px 2px;
       scrollbar-width: thin;
@@ -231,6 +251,19 @@ export class ChildPebble extends LitElement {
       border-bottom-left-radius: 6px;
     }
     .msg.pb .bubble b { color: #9fded2; }
+    /* Harmonised link colour — kill the browser blue. Light teal on
+       the glass Pebble bubble; warm cream on the terracotta you
+       bubble. Underlined for the affordance. */
+    .msg.pb .bubble a {
+      color: #7fd3c6;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .msg.you .bubble a {
+      color: #ffe9da;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
     .typing {
       align-self: flex-start;
       padding: 13px 18px;
@@ -375,7 +408,13 @@ export class ChildPebble extends LitElement {
   // output can never inject markup. Newlines stay handled by the
   // bubble's white-space:pre-wrap (no <br>).
   _fmt(text) {
+    // Strip leading indentation per line + overall trim FIRST — the
+    // model occasionally prefixes a tab/spaces (rendered as an odd
+    // first-line indent under white-space:pre-wrap). Prose + bullet/
+    // numbered lines start flush, so this is safe.
     const esc = String(text ?? '')
+      .replace(/^[ \t\u00A0]+/gm, '')
+      .trim()
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
@@ -393,9 +432,14 @@ export class ChildPebble extends LitElement {
     const name = this.child?.name ?? 'your child';
     const hasThread = this._session.length > 0;
     return html`
-      <div class="wrap">
-        <div class="panel">
-          <div class="thread">
+      <div class="chatpane">
+        <div class="toprow">
+          <span class="privtag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round"/></svg>
+            Private to parents
+          </span>
+        </div>
+        <div class="thread">
             ${!hasThread
               ? html`<div class="empty">
                   <div class="lede">Hi — what's on your mind?</div>
@@ -418,9 +462,8 @@ export class ChildPebble extends LitElement {
                       ? html`<div class="msg pb">
                           <span class="pic">${this._pico()}</span>
                           <div class="col">
-                            <div class="bubble">
-                              ${this._fmt(m.content)}
-                            </div>
+                            <!-- prettier-ignore -->
+                            <div class="bubble">${this._fmt(m.content)}</div>
                           </div>
                         </div>`
                       : html`<div class="msg you">
@@ -483,7 +526,6 @@ export class ChildPebble extends LitElement {
               </svg>
             </button>
           </form>
-        </div>
       </div>
     `;
   }

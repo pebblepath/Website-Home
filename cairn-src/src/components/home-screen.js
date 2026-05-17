@@ -438,6 +438,14 @@ export class HomeScreen extends LitElement {
         padding: 20px 16px calc(32px + env(safe-area-inset-bottom));
       }
     }
+    /* Portal v4 — Pebble tab is full-bleed: drop the gutters + width
+       cap so the chat surface runs edge-to-edge and right up to the
+       nav bar. <child-pebble> supplies its own internal padding. */
+    main.pebble-full {
+      padding: 0;
+      width: 100%;
+      max-width: none;
+    }
 
     .hello {
       display: flex;
@@ -2290,6 +2298,17 @@ export class HomeScreen extends LitElement {
     // The inline planner lives on the Activities tab — jump there so
     // it un-collapses in view regardless of where the card was tapped.
     this._activeTab = 'activities';
+    // Portal v4 — gently scroll the now-open planner into view after
+    // the tab + planner have rendered (two RAFs lets the expand
+    // layout settle so the scroll lands accurately).
+    this.updateComplete.then(() => {
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          const pl = this.renderRoot?.querySelector('trip-planner');
+          pl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }),
+      );
+    });
   }
 
   _openEdit(trip) {
@@ -3532,18 +3551,12 @@ export class HomeScreen extends LitElement {
   _renderPebbleTab() {
     const cd = this._childData();
     if (cd.hasPP && cd.child) {
-      const scope = html`<span class="scope-chip">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round" /></svg>
-        Private to parents
-      </span>`;
+      // Portal v4 — Pebble is the whole tab: no page header/subheader
+      // and no card. <child-pebble> runs full-bleed (the "Private to
+      // parents" pill is integrated into its own top strip). The
+      // `pebble-full` class on <main> drops the gutters so the chat
+      // surface reaches the nav bar.
       return html`
-        <div class="hello tight">
-          <div>
-            <h1>Pebble</h1>
-            <div class="family-name">${cd.child.name}'s development advisor</div>
-          </div>
-          ${scope}
-        </div>
         <child-pebble
           .child=${cd.child}
           .messages=${cd.pebbleMessages}
@@ -3651,10 +3664,11 @@ export class HomeScreen extends LitElement {
           </div>`
         : ''}
 
-      <main>
+      <main class=${this._activeTab === 'pebble' ? 'pebble-full' : ''}>
         ${this._renderActiveTab()}
-
-        <discover-pebblepath></discover-pebblepath>
+        ${this._activeTab === 'pebble'
+          ? ''
+          : html`<discover-pebblepath></discover-pebblepath>`}
       </main>
 
       ${this._renderBottomNav()}
