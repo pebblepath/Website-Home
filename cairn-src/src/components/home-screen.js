@@ -2712,15 +2712,16 @@ export class HomeScreen extends LitElement {
   /** The 5-tab nav that replaced the centre-column Pebble search.
    *  Pebble's tab icon reuses the EXACT live Pebble glyph; the four
    *  other tabs are new surfaces so they take new icons. */
-  /** Pebble is the child-development advisor — PARENTS ONLY (the
-   *  member-only `askPebbleAboutChild` CF rejects everyone else).
-   *  Accounts NOT granted full child access (Cairn-only ring members
-   *  AND read-only childViewers) get NO Pebble at all: the tab is
-   *  removed from the nav entirely (Thomas, 2026-05-17 — replaces the
-   *  old activities-advisor fallback). Preview keeps it (mock = parent).
+  /** Pebble (child-development advisor) is for parents AND
+   *  parent-APPROVED childViewers (Thomas, 2026-05-17 — an approved
+   *  viewer gets read-only child data AND full Pebble, same as
+   *  parents; the `askPebbleAboutChild` CF + Firestore rules admit
+   *  childViewers). Cairn-only ring members with NO approval get NO
+   *  Pebble — the tab is removed from the nav entirely (replaces the
+   *  old activities-advisor fallback). Preview keeps it (mock=parent).
    */
   get _pebbleAvailable() {
-    return this.preview || this.ppIsMember;
+    return this.preview || this.ppIsMember || this.ppIsChildViewer;
   }
 
   _tabDefs() {

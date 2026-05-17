@@ -636,11 +636,12 @@ class FamilyDataStore extends EventTarget {
       },
       (err) => console.warn('[Portal] insights error:', err.code, err.message),
     );
-    // Batch F: a read-only child viewer is rules-denied on dailyCards
-    // + pebbleMessages (member-only by design). Skip those listeners
-    // entirely — they're not surfaced for viewers (Batch C removed
-    // the daily card from Children; the Pebble tab is parent-only) —
-    // so we avoid pointless PERMISSION_DENIED churn.
+    // dailyCards stays PARENTS-ONLY (the proactive "Pebble's daily"
+    // card on Today/Children). Rules gate it `isChildParent`; a
+    // read-only childViewer would just get PERMISSION_DENIED churn —
+    // skip. (If Thomas later wants approved viewers to see the daily
+    // card too, widen the dailyCards rule to `|| isChildViewer` AND
+    // drop this guard.)
     if (!this._ppReadOnly) {
       this._unsubChildDaily = onSnapshot(
         collection(db, ...base, 'dailyCards'),
@@ -655,52 +656,59 @@ class FamilyDataStore extends EventTarget {
         },
         (err) => console.warn('[Portal] dailyCards error:', err.code, err.message),
       );
-      this._unsubChildPebble = onSnapshot(
-        collection(db, ...base, 'pebbleMessages'),
-        (snap) => {
-          this.state.childPebbleMessages = snap.docs
-            .map((d) => ({ id: d.id, ...d.data() }))
-            .filter(
-              (m) => !(m.isPrivate === true && m.senderUid !== this._uid),
-            )
-            .sort(
-              (a, b) =>
-                (a.timestamp?.toMillis?.() ?? 0) -
-                (b.timestamp?.toMillis?.() ?? 0),
-            );
-          this._emit();
-        },
-        (err) => console.warn('[Portal] pebbleMessages error:', err.code, err.message),
-      );
-      // Pebble multi-session: each session is a doc; messages carry
-      // sessionId. Private sessions a co-parent didn't create are
-      // filtered out client-side (the message-level isPrivate filter
-      // above is the actual leak guard; this just hides the session
-      // chrome). Archived sessions stay out of the live list.
-      this._unsubChildSessions = onSnapshot(
-        collection(db, ...base, 'pebbleSessions'),
-        (snap) => {
-          this.state.childPebbleSessions = snap.docs
-            .map((d) => ({ id: d.id, ...d.data() }))
-            .filter((s) => s.archived !== true)
-            .filter(
-              (s) => !(s.isPrivate === true && s.createdBy !== this._uid),
-            )
-            .sort(
-              (a, b) =>
-                (b.lastMessageAt?.toMillis?.() ??
-                  b.createdAt?.toMillis?.() ??
-                  0) -
-                (a.lastMessageAt?.toMillis?.() ??
-                  a.createdAt?.toMillis?.() ??
-                  0),
-            );
-          this._emit();
-        },
-        (err) =>
-          console.warn('[Portal] pebbleSessions error:', err.code, err.message),
-      );
     }
+
+    // Pebble chat + sessions — parents AND parent-approved
+    // childViewers (Thomas, 2026-05-17: an approved viewer gets full
+    // Pebble, same as parents). Rules now admit `isChildViewer` on
+    // pebbleMessages READ + pebbleSessions READ/WRITE, so these
+    // listeners attach for read-only viewers too (NOT inside the
+    // `!_ppReadOnly` guard anymore).
+    this._unsubChildPebble = onSnapshot(
+      collection(db, ...base, 'pebbleMessages'),
+      (snap) => {
+        this.state.childPebbleMessages = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .filter(
+            (m) => !(m.isPrivate === true && m.senderUid !== this._uid),
+          )
+          .sort(
+            (a, b) =>
+              (a.timestamp?.toMillis?.() ?? 0) -
+              (b.timestamp?.toMillis?.() ?? 0),
+          );
+        this._emit();
+      },
+      (err) => console.warn('[Portal] pebbleMessages error:', err.code, err.message),
+    );
+    // Pebble multi-session: each session is a doc; messages carry
+    // sessionId. Private sessions a co-parent didn't create are
+    // filtered out client-side (the message-level isPrivate filter
+    // above is the actual leak guard; this just hides the session
+    // chrome). Archived sessions stay out of the live list.
+    this._unsubChildSessions = onSnapshot(
+      collection(db, ...base, 'pebbleSessions'),
+      (snap) => {
+        this.state.childPebbleSessions = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .filter((s) => s.archived !== true)
+          .filter(
+            (s) => !(s.isPrivate === true && s.createdBy !== this._uid),
+          )
+          .sort(
+            (a, b) =>
+              (b.lastMessageAt?.toMillis?.() ??
+                b.createdAt?.toMillis?.() ??
+                0) -
+              (a.lastMessageAt?.toMillis?.() ??
+                a.createdAt?.toMillis?.() ??
+                0),
+          );
+        this._emit();
+      },
+      (err) =>
+        console.warn('[Portal] pebbleSessions error:', err.code, err.message),
+    );
   }
 
   /**
