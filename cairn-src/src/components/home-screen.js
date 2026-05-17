@@ -535,6 +535,10 @@ export class HomeScreen extends LitElement {
       justify-content: space-between;
       margin-bottom: 14px;
       padding: 0 4px;
+      /* Consistent header height so a head WITH an action pill
+         (e.g. "Manage members") and a head WITHOUT one line up —
+         keeps side-by-side grid-2 cards top-aligned (My Cairn). */
+      min-height: 34px;
     }
     .section-head h2 {
       margin: 0;
@@ -3318,7 +3322,7 @@ export class HomeScreen extends LitElement {
     `;
   }
 
-  /** MY CAIRN — rings + "what each ring sees" + settings (concept). */
+  /** MY CAIRN — levels + "what each level sees" + settings. */
   _renderCairnTab() {
     const name = this.user?.displayName ?? 'You';
     const email = this.user?.email ?? '';
@@ -3326,7 +3330,7 @@ export class HomeScreen extends LitElement {
     return html`
       ${this._renderTabHeader(
         'My Cairn',
-        "Who's in your circle, and what each ring can see",
+        "Who's in your circle, and what each level can see",
       )}
 
       <section>
@@ -3341,7 +3345,7 @@ export class HomeScreen extends LitElement {
             ${this._renderCairnStackPanel()}
           </div>
           <div>
-            <div class="section-head"><h2>What each ring sees</h2></div>
+            <div class="section-head"><h2>What each level sees</h2></div>
             <glass-panel padding="md" variant="strong">
               <div class="set-row">
                 <span class="si" style="color:#e6c3ab;">
@@ -3357,7 +3361,6 @@ export class HomeScreen extends LitElement {
                 <div class="sl"><b>Extended family</b><span>Activities, trips &amp; celebrations only — no child or health data</span></div>
                 <span class="set-pill" style="color:#9fded2;border-color:rgba(61,155,143,.4);">Activities only</span>
               </div>
-              <div class="ring-note">This is the "one app for the whole family, without sharing everything" boundary — grandparents help plan trips and never see milestones.</div>
             </glass-panel>
           </div>
         </div>
