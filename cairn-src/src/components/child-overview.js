@@ -452,10 +452,18 @@ export class ChildOverview extends LitElement {
     .insight.fam-cross .cat .type { color:#7fd3c6; }
 
     /* "The longer view" longitudinal timeline — concept-faithful. */
-    .timeline { position: relative; padding: 8px 4px 4px; }
+    .timeline {
+      position: relative;
+      padding: 8px 4px 4px;
+      /* lane-label width + the 14px lane gap = the left pad the
+         "now" marker and axis align to. Made a custom property so
+         the ≤560px refinement can shrink it without desyncing. */
+      --tl-name-w: 104px;
+      --tl-pad: 118px;
+    }
     .tl-lane { display: flex; align-items: center; gap: 14px; height: 46px; }
     .tl-name {
-      width: 104px;
+      width: var(--tl-name-w, 104px);
       font-size: 12.5px;
       font-weight: 600;
       color: var(--text-secondary);
@@ -507,7 +515,7 @@ export class ChildOverview extends LitElement {
     .tl-axis {
       display: flex;
       justify-content: space-between;
-      margin: 8px 0 0 118px;
+      margin: 8px 0 0 var(--tl-pad, 118px);
       font-size: 11px;
       color: var(--text-tertiary);
     }
@@ -564,6 +572,21 @@ export class ChildOverview extends LitElement {
       padding: 0 4px;
     }
     .vis-note b { color: var(--text-secondary); }
+
+    /* Phone refinement — the timeline's fixed lane-label gutter is
+       too wide on narrow screens; shrink it (and the axis text) so
+       the track keeps usable width. The custom-prop pad keeps the
+       "now" marker + axis aligned automatically. */
+    @media (max-width: 560px) {
+      .timeline {
+        --tl-name-w: 58px;
+        --tl-pad: 72px;
+      }
+      .tl-name { font-size: 11px; }
+      .tl-axis { font-size: 10px; }
+      .child-card { gap: 16px; }
+      .progress { margin-left: 0; min-width: 0; text-align: left; }
+    }
 
     /* Pebble's daily card */
     .daily {
@@ -835,7 +858,7 @@ export class ChildOverview extends LitElement {
           <div class="timeline">
             <div
               class="tl-now"
-              style="left:calc(118px + (100% - 118px) * ${tl.nowFrac});"
+              style="left:calc(var(--tl-pad, 118px) + (100% - var(--tl-pad, 118px)) * ${tl.nowFrac});"
             >
               <span
                 >now · ${Math.floor(tl.ageM / 12)}y ${tl.ageM % 12}m</span

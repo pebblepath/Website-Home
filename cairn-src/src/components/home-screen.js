@@ -1215,6 +1215,67 @@ export class HomeScreen extends LitElement {
       }
     }
 
+    /* ── Mobile bottom tab bar (≤720px) — the PebblePath app's
+       mental model. Rendered as a SIBLING of .topbar so its
+       position:fixed resolves to the viewport; a .topbar ancestor's
+       backdrop-filter would otherwise trap it (the documented
+       containing-block trap). Replaces the old icon-only topbar
+       shrink with a proper bottom bar. */
+    .bottomnav {
+      display: none;
+    }
+    @media (max-width: 720px) {
+      .topbar {
+        grid-template-columns: 1fr auto;
+        padding: 0 16px;
+        height: 60px;
+      }
+      .topbar .tabs {
+        display: none;
+      }
+      .bottomnav {
+        display: flex;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 40;
+        padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+        background: rgba(20, 12, 6, 0.62);
+        backdrop-filter: blur(28px) saturate(180%);
+        -webkit-backdrop-filter: blur(28px) saturate(180%);
+        border-top: 1px solid var(--glass-border);
+      }
+      .bn-tab {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        padding: 6px 2px;
+        border: none;
+        background: transparent;
+        color: var(--text-tertiary);
+        cursor: pointer;
+        font-family: var(--font-body);
+        font-weight: 600;
+        font-size: 10px;
+        letter-spacing: -0.005em;
+        border-radius: 12px;
+        transition: color 0.18s ease;
+      }
+      .bn-tab svg {
+        width: 21px;
+        height: 21px;
+      }
+      .bn-tab.active {
+        color: var(--teal-pebble);
+      }
+      main {
+        padding: 18px 16px calc(82px + env(safe-area-inset-bottom));
+      }
+    }
+
     /* Per-tab privacy scope badge (Children/Pebble are parent-only —
        surfaces the "without sharing everything" boundary visibly). */
     .scope-chip {
@@ -2332,43 +2393,74 @@ export class HomeScreen extends LitElement {
   /** The 5-tab nav that replaced the centre-column Pebble search.
    *  Pebble's tab icon reuses the EXACT live Pebble glyph; the four
    *  other tabs are new surfaces so they take new icons. */
+  _tabDefs() {
+    return [
+      {
+        id: 'today',
+        label: 'Today',
+        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9" /><path d="M5 10v10h14V10" /></svg>`,
+      },
+      {
+        id: 'children',
+        label: 'Children',
+        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M5 21c0-4 3-6 7-6s7 2 7 6" /></svg>`,
+      },
+      {
+        id: 'activities',
+        label: 'Activities',
+        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 9h18M8 2v4M16 2v4" /></svg>`,
+      },
+      {
+        id: 'pebble',
+        label: 'Pebble',
+        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" /></svg>`,
+      },
+      {
+        id: 'cairn',
+        label: 'My Cairn',
+        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6.5" rx="3.5" ry="1.5" /><ellipse cx="12" cy="12" rx="6" ry="2.4" /><ellipse cx="12" cy="18" rx="8" ry="3" /></svg>`,
+      },
+    ];
+  }
+
+  /** Desktop/tablet: tabs centred in the 68px topbar. */
   _renderTabBar() {
-    const tab = (id, label, icon) => html`
-      <button
-        class="tab ${this._activeTab === id ? 'active' : ''}"
-        role="tab"
-        aria-selected=${this._activeTab === id ? 'true' : 'false'}
-        @click=${() => (this._activeTab = id)}
-      >
-        ${icon}<span>${label}</span>
-      </button>
-    `;
     return html`
       <nav class="tabs" role="tablist" aria-label="Sections">
-        ${tab(
-          'today',
-          'Today',
-          html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9" /><path d="M5 10v10h14V10" /></svg>`,
+        ${this._tabDefs().map(
+          (t) => html`<button
+            class="tab ${this._activeTab === t.id ? 'active' : ''}"
+            role="tab"
+            aria-selected=${this._activeTab === t.id ? 'true' : 'false'}
+            @click=${() => (this._activeTab = t.id)}
+          >
+            ${t.icon}<span>${t.label}</span>
+          </button>`,
         )}
-        ${tab(
-          'children',
-          'Children',
-          html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M5 21c0-4 3-6 7-6s7 2 7 6" /></svg>`,
-        )}
-        ${tab(
-          'activities',
-          'Activities',
-          html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 9h18M8 2v4M16 2v4" /></svg>`,
-        )}
-        ${tab(
-          'pebble',
-          'Pebble',
-          html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" /></svg>`,
-        )}
-        ${tab(
-          'cairn',
-          'My Cairn',
-          html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6.5" rx="3.5" ry="1.5" /><ellipse cx="12" cy="12" rx="6" ry="2.4" /><ellipse cx="12" cy="18" rx="8" ry="3" /></svg>`,
+      </nav>
+    `;
+  }
+
+  /** Phones (≤720px): a real iOS-style fixed bottom tab bar — the
+   *  same mental model as the PebblePath app. Rendered as a SIBLING
+   *  of .topbar / <main> (NOT a child of .topbar) so it escapes the
+   *  backdrop-filter containing-block trap and stays fixed to the
+   *  viewport. CSS shows it only ≤720px and hides the topbar tabs. */
+  _renderBottomNav() {
+    return html`
+      <nav class="bottomnav" role="tablist" aria-label="Sections">
+        ${this._tabDefs().map(
+          (t) => html`<button
+            class="bn-tab ${this._activeTab === t.id ? 'active' : ''}"
+            role="tab"
+            aria-selected=${this._activeTab === t.id ? 'true' : 'false'}
+            @click=${() => {
+              this._activeTab = t.id;
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          >
+            ${t.icon}<span>${t.label}</span>
+          </button>`,
         )}
       </nav>
     `;
@@ -3306,6 +3398,8 @@ export class HomeScreen extends LitElement {
 
         <discover-pebblepath></discover-pebblepath>
       </main>
+
+      ${this._renderBottomNav()}
 
       <trip-form
         ?open=${this._formOpen}
