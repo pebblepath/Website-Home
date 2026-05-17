@@ -75,6 +75,7 @@ export class HomeScreen extends LitElement {
     childInsights: { type: Array },
     childDailyCard: { type: Object },
     childPebbleMessages: { type: Array },
+    childPebbleSessions: { type: Array },
     // Batch F — read-only child-viewer tier + access requests.
     ppIsChildViewer: { type: Boolean },
     incomingChildRequests: { type: Array },
@@ -130,6 +131,7 @@ export class HomeScreen extends LitElement {
     this.childInsights = [];
     this.childDailyCard = null;
     this.childPebbleMessages = [];
+    this.childPebbleSessions = [];
     this.ppIsChildViewer = false;
     this.incomingChildRequests = [];
     this.myChildAccessRequest = null;
@@ -539,7 +541,23 @@ export class HomeScreen extends LitElement {
       color: var(--text-primary);
       border-color: var(--glass-border-strong);
     }
-    .pebble-fab-body { flex: 1; min-height: 0; overflow: hidden; }
+    /* Flex chain (NOT percentage heights) so the embedded
+       <child-pebble compact> fills the panel: its thread scrolls
+       internally + the composer stays pinned + visible. A
+       percentage-height chain breaks here because the custom-element
+       host has no definite height. */
+    .pebble-fab-body {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+    }
+    .pebble-fab-body > child-pebble {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
     .pebble-fab-empty {
       padding: 26px 22px;
       text-align: center;
@@ -569,7 +587,9 @@ export class HomeScreen extends LitElement {
         bottom: 150px;
         width: auto;
         max-width: none;
-        height: auto;
+        /* Definite height (not auto) so the inner flex chain can
+           size the chat + keep the composer on-screen. */
+        height: 62vh;
         max-height: calc(100vh - 210px);
       }
     }
@@ -693,6 +713,15 @@ export class HomeScreen extends LitElement {
          (e.g. "Manage members") and a head WITHOUT one line up —
          keeps side-by-side grid-2 cards top-aligned (My Cairn). */
       min-height: 34px;
+    }
+    /* Today: the "Felix today" h2 + "Open …'s path" pill were
+       removed; the scope ("Your household") chip moved down here
+       and sits where the pill was (right-aligned). Tighter margin
+       so the cards float up into the reclaimed space. */
+    .section-head.scope-only {
+      justify-content: flex-end;
+      min-height: 0;
+      margin-bottom: 10px;
     }
     .section-head h2 {
       margin: 0;
@@ -3098,6 +3127,7 @@ export class HomeScreen extends LitElement {
         insights: mockInsights,
         dailyCard: mockDailyCard,
         pebbleMessages: mockChildPebbleMessages,
+        pebbleSessions: [],
       };
     }
     const children = this.ppChildren ?? [];
@@ -3118,6 +3148,7 @@ export class HomeScreen extends LitElement {
       insights: this.childInsights ?? [],
       dailyCard: this.childDailyCard ?? null,
       pebbleMessages: this.childPebbleMessages ?? [],
+      pebbleSessions: this.childPebbleSessions ?? [],
     };
   }
 
@@ -3345,16 +3376,10 @@ export class HomeScreen extends LitElement {
     const dc = cd.dailyCard;
 
     return html`
-      ${this._renderTodayHeader(scope)}
+      ${this._renderTodayHeader()}
 
       <section>
-        <div class="section-head">
-          <h2>${cd.child.name} today</h2>
-          <button class="link" @click=${() => (this._activeTab = 'children')}>
-            Open ${cd.child.name}'s path
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </button>
-        </div>
+        <div class="section-head scope-only">${scope}</div>
         <div class="today-top">
           <div class="today-top-left">
             <glass-panel padding="md" variant="strong">
@@ -3595,7 +3620,7 @@ export class HomeScreen extends LitElement {
                 <span class="si" style="color:#9fded2;">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="7" rx="3" ry="1.4"/><ellipse cx="12" cy="12" rx="6" ry="2.4"/><ellipse cx="12" cy="17" rx="8" ry="3"/></svg>
                 </span>
-                <div class="sl"><b>Extended family</b><span>Activities, trips &amp; celebrations only — no child or health data</span></div>
+                <div class="sl"><b>Extended family</b><span>Activities and Pebble only — no child data, unless approved.</span></div>
                 <span class="set-pill" style="color:#9fded2;border-color:rgba(61,155,143,.4);">Activities only</span>
               </div>
             </glass-panel>
@@ -3627,7 +3652,7 @@ export class HomeScreen extends LitElement {
                dropped (manage the subscription in the iOS app). -->
           <div class="set-row">
             <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.5 5 5.5.8-4 4 1 5.5L12 15l-5 2.3 1-5.5-4-4 5.5-.8z"/></svg></span>
-            <div class="sl"><b>PebblePath Premium</b><span>Unlimited Pebble · pediatrician summaries · insights — managed in the app</span></div>
+            <div class="sl"><b>PebblePath Premium</b><span>Unlimited Pebble, summaries, and insights.</span></div>
           </div>
         </glass-panel>
       </section>
@@ -3796,6 +3821,7 @@ export class HomeScreen extends LitElement {
         <child-pebble
           .child=${cd.child}
           .messages=${cd.pebbleMessages}
+          .sessions=${cd.pebbleSessions}
           .prefill=${this._pebblePrefill}
           .memberProfiles=${this.family?.memberProfiles ?? {}}
           .myUid=${this.user?.uid ?? ''}
@@ -3885,6 +3911,7 @@ export class HomeScreen extends LitElement {
                     compact
                     .child=${cd.child}
                     .messages=${cd.pebbleMessages}
+                    .sessions=${cd.pebbleSessions}
                     .prefill=${this._pebblePrefill}
                     .memberProfiles=${this.family?.memberProfiles ?? {}}
                     .myUid=${this.user?.uid ?? ''}

@@ -22,6 +22,7 @@ export class ChildPebble extends LitElement {
   static properties = {
     child: { type: Object },
     messages: { type: Array },
+    sessions: { type: Array },
     prefill: { type: String },
     memberProfiles: { type: Object },
     myUid: { type: String },
@@ -29,7 +30,9 @@ export class ChildPebble extends LitElement {
     _input: { state: true },
     _loading: { state: true },
     _error: { state: true },
-    _seeded: { state: true },
+    _seededKey: { state: true },
+    _activeSessionId: { state: true },
+    _renamingId: { state: true },
     _listening: { state: true },
     _isPrivate: { state: true },
     _railOpen: { state: true },
@@ -43,6 +46,7 @@ export class ChildPebble extends LitElement {
     super();
     this.child = null;
     this.messages = [];
+    this.sessions = [];
     this.prefill = '';
     this.memberProfiles = {};
     this.myUid = '';
@@ -50,7 +54,11 @@ export class ChildPebble extends LitElement {
     this._input = '';
     this._loading = false;
     this._error = '';
-    this._seeded = false;
+    // Re-seed key = "childId|activeSessionId"; when it changes the
+    // thread re-derives from that session's persisted messages.
+    this._seededKey = '';
+    this._activeSessionId = null;
+    this._renamingId = null;
     // Private/Family toggle (mirrors iOS Pebble Build 30). false =
     // Family (co-parents see it); true = Private (only the asker).
     // Per-session like iOS — resets when the child changes.
@@ -125,24 +133,155 @@ export class ChildPebble extends LitElement {
   }
 
   willUpdate(changed) {
-    // Seed the live session from the persisted thread once it arrives
-    // (and re-seed if the active child changes).
     if (changed.has('child')) {
-      this._seeded = false;
       this._session = [];
       this._error = '';
-      this._isPrivate = false; // per-session, like iOS
+      this._activeSessionId = null;
+      this._seededKey = '';
     }
-    if (!this._seeded && Array.isArray(this.messages) && this.messages.length) {
-      this._session = this.messages.map((m) => ({
+    // Pick a default active session once data arrives: newest real
+    // session, else the legacy "Earlier chats" bucket if there are
+    // session-less messages, else none (empty → first send creates one).
+    if (
+      this._activeSessionId == null &&
+      (changed.has('sessions') ||
+        changed.has('messages') ||
+        changed.has('child'))
+    ) {
+      const list = this._sessionList();
+      if (list.length) this._activeSessionId = list[0].id;
+    }
+    // Re-derive the thread from the active session's persisted
+    // messages whenever the session or the message set changes.
+    const key = `${this.child?.id ?? ''}|${this._activeSessionId ?? ''}`;
+    if (
+      key !== this._seededKey &&
+      (changed.has('messages') ||
+        changed.has('sessions') ||
+        changed.has('child') ||
+        changed.has('_activeSessionId'))
+    ) {
+      this._session = this._messagesForActive().map((m) => ({
         role: m.role,
         content: m.content,
         senderUid: m.senderUid,
+        isPrivate: m.isPrivate === true,
       }));
-      this._seeded = true;
+      this._seededKey = key;
+      const s = this._activeSession();
+      this._isPrivate = s ? s.isPrivate === true : false;
     }
     if (changed.has('prefill') && this.prefill) {
       this._input = this.prefill;
+    }
+  }
+
+  // The full session list shown in the rail: real session docs +
+  // a synthetic, read-only "Earlier chats" bucket for any legacy /
+  // iOS messages that predate sessions (no sessionId).
+  _sessionList() {
+    const real = (this.sessions ?? []).map((s) => ({
+      id: s.id,
+      title: s.title || 'Untitled chat',
+      isPrivate: s.isPrivate === true,
+      _real: true,
+    }));
+    const hasLegacy = (this.messages ?? []).some((m) => !m.sessionId);
+    if (hasLegacy) {
+      real.push({
+        id: '__legacy',
+        title: 'Earlier chats',
+        isPrivate: false,
+        _real: false,
+      });
+    }
+    return real;
+  }
+
+  _activeSession() {
+    return (
+      this._sessionList().find((s) => s.id === this._activeSessionId) ?? null
+    );
+  }
+
+  _messagesForActive() {
+    const id = this._activeSessionId;
+    if (id == null) return [];
+    const all = this.messages ?? [];
+    if (id === '__legacy') return all.filter((m) => !m.sessionId);
+    return all.filter((m) => m.sessionId === id);
+  }
+
+  _selectSession(id) {
+    if (this._activeSessionId === id) {
+      this._railOpen = false;
+      return;
+    }
+    this._activeSessionId = id;
+    this._railOpen = false;
+    this._error = '';
+  }
+
+  async _newChat() {
+    this._railOpen = false;
+    this._error = '';
+    if (!this.child?.id) return;
+    try {
+      const id = await dataStore.createPebbleSession(this.child.id, {
+        title: 'New chat',
+        isPrivate: false,
+      });
+      this._activeSessionId = id;
+      this._session = [];
+      this._input = '';
+      this.updateComplete.then(() =>
+        this.renderRoot.querySelector('textarea')?.focus(),
+      );
+    } catch (e) {
+      this._error = e?.message ?? "Couldn't start a new chat.";
+    }
+  }
+
+  async _renameSession(s) {
+    if (!s?._real || !this.child?.id) return;
+    const next = window.prompt('Rename chat', s.title);
+    if (next == null) return;
+    const title = next.trim();
+    if (!title || title === s.title) return;
+    try {
+      await dataStore.renamePebbleSession(this.child.id, s.id, title);
+    } catch (e) {
+      this._error = e?.message ?? "Couldn't rename.";
+    }
+  }
+
+  async _archiveSession(s) {
+    if (!s?._real || !this.child?.id) return;
+    if (!window.confirm(`Archive "${s.title}"? It'll leave your chat list.`))
+      return;
+    try {
+      await dataStore.archivePebbleSession(this.child.id, s.id);
+      if (this._activeSessionId === s.id) {
+        this._activeSessionId = null; // willUpdate re-picks a default
+        this._seededKey = '';
+      }
+    } catch (e) {
+      this._error = e?.message ?? "Couldn't archive.";
+    }
+  }
+
+  async _togglePrivacy(makePrivate) {
+    const s = this._activeSession();
+    this._isPrivate = makePrivate; // optimistic
+    if (!s || !s._real || !this.child?.id) return; // legacy bucket = read-only
+    try {
+      await dataStore.setPebbleSessionPrivacy(
+        this.child.id,
+        s.id,
+        makePrivate,
+      );
+    } catch (e) {
+      this._error = e?.message ?? "Couldn't change privacy.";
     }
   }
 
@@ -214,6 +353,36 @@ export class ChildPebble extends LitElement {
       content: m.content,
     }));
     const priv = this._isPrivate === true;
+
+    // Ensure a real session to attach to. If the active "session" is
+    // the read-only legacy bucket or there's none yet, spin up a
+    // fresh one auto-titled from the question (ChatGPT-style; the
+    // user can rename it). Inherits the current privacy choice.
+    let sid = this._activeSessionId;
+    const active = this._activeSession();
+    if (!active || !active._real) {
+      try {
+        sid = await dataStore.createPebbleSession(this.child.id, {
+          title: question.slice(0, 48),
+          isPrivate: priv,
+        });
+        this._activeSessionId = sid;
+        this._seededKey = `${this.child.id}|${sid}`; // don't wipe optimistic
+        this._session = [];
+      } catch (e) {
+        this._error = e?.message ?? "Couldn't start a chat.";
+        return;
+      }
+    } else if (
+      active.title === 'New chat' &&
+      this._session.filter((m) => m.role === 'user').length === 0
+    ) {
+      // First question in an explicitly-created "New chat" → auto-name.
+      dataStore
+        .renamePebbleSession(this.child.id, sid, question.slice(0, 48))
+        .catch(() => {});
+    }
+
     this._session = [
       ...this._session,
       {
@@ -230,6 +399,7 @@ export class ChildPebble extends LitElement {
         question,
         history,
         priv,
+        sid,
       );
       this._session = [
         ...this._session,
@@ -328,16 +498,45 @@ export class ChildPebble extends LitElement {
       line-height: 1.4;
       cursor: pointer;
       text-align: left;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
     .rail-item:hover {
       background: var(--glass-fill);
       color: var(--text-primary);
       border-color: var(--glass-border);
     }
+    .rail-item.on {
+      background: rgba(61, 155, 143, 0.16);
+      color: var(--text-primary);
+      border-color: rgba(61, 155, 143, 0.4);
+    }
     .rail-item .lock { width: 11px; height: 11px; flex-shrink: 0; color: #e6c3ab; }
+    .rail-item .rail-title {
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rail-item .rail-acts {
+      display: none;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+    .rail-item:hover .rail-acts,
+    .rail-item.on .rail-acts { display: inline-flex; }
+    .rail-item .ra {
+      background: transparent;
+      border: none;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      padding: 2px;
+      display: inline-flex;
+      border-radius: 5px;
+    }
+    .rail-item .ra:hover { color: var(--text-primary); }
+    .rail-item .ra svg { width: 13px; height: 13px; }
+    .privtoggle.disabled { opacity: 0.45; }
+    .privtoggle button:disabled { cursor: default; }
     .rail-empty {
       color: var(--text-tertiary);
       font-size: 12.5px;
@@ -411,16 +610,28 @@ export class ChildPebble extends LitElement {
       .rail-toggle { display: inline-flex; }
     }
     /* Compact: embedded in the floating widget — no rail, fill the
-       widget box (its parent sizes it), tighter gutters. */
-    .pebble-wrap.compact { height: 100%; }
+       widget box via a FLEX chain (the host is set to display:flex
+       column by the parent; percentage heights don't work because
+       the custom-element host has no definite height). The thread
+       scrolls internally; the composer stays pinned + visible. */
+    .pebble-wrap.compact {
+      flex: 1;
+      min-height: 0;
+      height: auto;
+    }
     .pebble-wrap.compact .rail,
     .pebble-wrap.compact .rail-toggle { display: none; }
     .pebble-wrap.compact .chatpane {
-      height: 100%;
-      padding: 12px 16px 0;
+      flex: 1;
+      min-height: 0;
+      height: auto;
+      padding: 12px 16px 12px;
     }
     .pebble-wrap.compact .toprow { margin-bottom: 8px; }
-    .pebble-wrap.compact .composer { margin-top: 12px; }
+    .pebble-wrap.compact .composer {
+      margin-top: 12px;
+      margin-bottom: 4px;
+    }
     /* Portal v4 — Pebble is the whole tab: no card, no page header,
        edge-to-edge up to the nav bar; the "Private to parents" pill
        is integrated into the top of the chat surface.
@@ -758,31 +969,59 @@ export class ChildPebble extends LitElement {
   render() {
     const name = this.child?.name ?? 'your child';
     const hasThread = this._session.length > 0;
-    const recents = this._recentQuestions();
+    const sessions = this._sessionList();
+    const active = this._activeSession();
+    const canTogglePrivacy = !!(active && active._real);
     return html`
       <div class="pebble-wrap ${this.compact ? 'compact' : ''}">
         <aside class="rail ${this._railOpen ? 'open' : ''}">
-          <div class="rail-head">Recent</div>
-          <button class="rail-new" @click=${() => this._newQuestion()}>
+          <div class="rail-head">Chats</div>
+          <button class="rail-new" @click=${() => this._newChat()}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-            New question
+            New chat
           </button>
-          ${recents.length === 0
+          ${sessions.length === 0
             ? html`<div class="rail-empty">
-                Your questions about ${name} show up here so you can jump
-                back to any answer.
+                No chats yet — start one and ask Pebble anything about
+                ${name}.
               </div>`
-            : recents.map(
-                (q) => html`<button
-                  class="rail-item"
-                  title=${q.text}
-                  @click=${() => this._scrollToMsg(q.idx)}
+            : sessions.map(
+                (s) => html`<div
+                  class="rail-item ${s.id === this._activeSessionId
+                    ? 'on'
+                    : ''}"
+                  title=${s.title}
+                  @click=${() => this._selectSession(s.id)}
                 >
-                  ${q.isPrivate
+                  ${s.isPrivate
                     ? html`<svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round"/></svg>`
                     : ''}
-                  ${q.text}
-                </button>`,
+                  <span class="rail-title">${s.title}</span>
+                  ${s._real
+                    ? html`<span class="rail-acts">
+                        <button
+                          class="ra"
+                          title="Rename"
+                          @click=${(e) => {
+                            e.stopPropagation();
+                            this._renameSession(s);
+                          }}
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                        </button>
+                        <button
+                          class="ra"
+                          title="Archive"
+                          @click=${(e) => {
+                            e.stopPropagation();
+                            this._archiveSession(s);
+                          }}
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8M10 12h4"/></svg>
+                        </button>
+                      </span>`
+                    : ''}
+                </div>`,
               )}
         </aside>
       <div class="chatpane">
@@ -790,28 +1029,30 @@ export class ChildPebble extends LitElement {
           <button
             class="rail-toggle"
             @click=${() => (this._railOpen = !this._railOpen)}
-            aria-label="Recent questions"
+            aria-label="Chats"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
-            Recent
+            Chats
           </button>
           <div
-            class="privtoggle"
+            class="privtoggle ${canTogglePrivacy ? '' : 'disabled'}"
             role="group"
-            aria-label="Who can see this conversation"
+            aria-label="Who can see this chat"
           >
             <button
               class="fam ${this._isPrivate ? '' : 'on'}"
-              @click=${() => (this._isPrivate = false)}
-              title="Both parents see this conversation"
+              ?disabled=${!canTogglePrivacy}
+              @click=${() => this._togglePrivacy(false)}
+              title="Both parents see this chat"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-3-3.87M9 21v-2a4 4 0 0 1 3-3.87"/><circle cx="9" cy="7" r="3"/><circle cx="17" cy="8" r="2.4"/></svg>
               Family
             </button>
             <button
               class="priv ${this._isPrivate ? 'on' : ''}"
-              @click=${() => (this._isPrivate = true)}
-              title="Only you see this conversation"
+              ?disabled=${!canTogglePrivacy}
+              @click=${() => this._togglePrivacy(true)}
+              title="Only you see this chat"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round"/></svg>
               Private

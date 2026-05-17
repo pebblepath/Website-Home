@@ -31,6 +31,7 @@ export class AppShell extends LitElement {
     childInsights: { state: true },
     childDailyCard: { state: true },
     childPebbleMessages: { state: true },
+    childPebbleSessions: { state: true },
     ppIsChildViewer: { state: true },
     incomingChildRequests: { state: true },
     myChildAccessRequest: { state: true },
@@ -89,6 +90,7 @@ export class AppShell extends LitElement {
     this.childInsights = [];
     this.childDailyCard = null;
     this.childPebbleMessages = [];
+    this.childPebbleSessions = [];
     this.ppIsChildViewer = false;
     this.incomingChildRequests = [];
     this.myChildAccessRequest = null;
@@ -108,6 +110,7 @@ export class AppShell extends LitElement {
       this.childInsights = dataStore.state.childInsights;
       this.childDailyCard = dataStore.state.childDailyCard;
       this.childPebbleMessages = dataStore.state.childPebbleMessages;
+      this.childPebbleSessions = dataStore.state.childPebbleSessions;
       this.ppIsChildViewer = dataStore.state.ppIsChildViewer;
       this.incomingChildRequests = dataStore.state.incomingChildRequests;
       this.myChildAccessRequest = dataStore.state.myChildAccessRequest;
@@ -316,6 +319,7 @@ export class AppShell extends LitElement {
         .childInsights=${this.childInsights}
         .childDailyCard=${this.childDailyCard}
         .childPebbleMessages=${this.childPebbleMessages}
+        .childPebbleSessions=${this.childPebbleSessions}
         .ppIsChildViewer=${this.ppIsChildViewer}
         .incomingChildRequests=${this.incomingChildRequests}
         .myChildAccessRequest=${this.myChildAccessRequest}

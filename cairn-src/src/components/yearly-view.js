@@ -99,7 +99,9 @@ export class YearlyView extends LitElement {
       text-align: center;
     }
     .month.current .name {
-      color: var(--teal-pebble);
+      /* White, not teal — the dark-teal sat poorly against the
+         warm gradient backdrop and was hard to read. */
+      color: #fff;
     }
     .mini-grid {
       display: grid;

@@ -108,6 +108,7 @@ class FamilyDataStore extends EventTarget {
       childInsights: [],
       childDailyCard: null,
       childPebbleMessages: [],
+      childPebbleSessions: [],
     };
     this._uid = null;
     this._unsubUser = null;
@@ -125,6 +126,7 @@ class FamilyDataStore extends EventTarget {
     this._unsubChildIns = null;
     this._unsubChildDaily = null;
     this._unsubChildPebble = null;
+    this._unsubChildSessions = null;
     // Batch F — read-only when the PP-household is resolved via the
     // childViewer fallback (extended member, no own household).
     this._ppReadOnly = false;
@@ -607,6 +609,7 @@ class FamilyDataStore extends EventTarget {
       this.state.childInsights = [];
       this.state.childDailyCard = null;
       this.state.childPebbleMessages = [];
+      this.state.childPebbleSessions = [];
       return;
     }
     const base = ['families', this._ppFamilyId, 'children', childId];
@@ -669,6 +672,34 @@ class FamilyDataStore extends EventTarget {
         },
         (err) => console.warn('[Portal] pebbleMessages error:', err.code, err.message),
       );
+      // Pebble multi-session: each session is a doc; messages carry
+      // sessionId. Private sessions a co-parent didn't create are
+      // filtered out client-side (the message-level isPrivate filter
+      // above is the actual leak guard; this just hides the session
+      // chrome). Archived sessions stay out of the live list.
+      this._unsubChildSessions = onSnapshot(
+        collection(db, ...base, 'pebbleSessions'),
+        (snap) => {
+          this.state.childPebbleSessions = snap.docs
+            .map((d) => ({ id: d.id, ...d.data() }))
+            .filter((s) => s.archived !== true)
+            .filter(
+              (s) => !(s.isPrivate === true && s.createdBy !== this._uid),
+            )
+            .sort(
+              (a, b) =>
+                (b.lastMessageAt?.toMillis?.() ??
+                  b.createdAt?.toMillis?.() ??
+                  0) -
+                (a.lastMessageAt?.toMillis?.() ??
+                  a.createdAt?.toMillis?.() ??
+                  0),
+            );
+          this._emit();
+        },
+        (err) =>
+          console.warn('[Portal] pebbleSessions error:', err.code, err.message),
+      );
     }
   }
 
@@ -722,7 +753,13 @@ class FamilyDataStore extends EventTarget {
    * admits the extended ring). The function re-enforces memberIds
    * server-side; this is the convenience client path.
    */
-  async askPebbleAboutChild(childId, question, history = [], isPrivate = false) {
+  async askPebbleAboutChild(
+    childId,
+    question,
+    history = [],
+    isPrivate = false,
+    sessionId = '',
+  ) {
     if (!functions) throw new Error('Firebase functions not configured.');
     if (!this._ppFamilyId) throw new Error('No PebblePath family.');
     if (!childId) throw new Error('No child selected.');
@@ -733,8 +770,73 @@ class FamilyDataStore extends EventTarget {
       question,
       history,
       isPrivate: isPrivate === true,
+      sessionId: sessionId || '',
     });
     return result.data;
+  }
+
+  // ── Pebble multi-session (Portal v7) ─────────────────────────────
+  // Each chat is a `pebbleSessions/{id}` doc; messages carry
+  // `sessionId`. Privacy is per-SESSION (stored on the session doc;
+  // the CF copies it onto each message turn so the existing
+  // message-level isPrivate filter — the real leak guard — keeps a
+  // private session hidden from the co-parent on web AND iOS).
+  _childPebbleBase(childId) {
+    return ['families', this._ppFamilyId, 'children', childId, 'pebbleSessions'];
+  }
+
+  async createPebbleSession(childId, { title, isPrivate } = {}) {
+    if (!db || !this._ppFamilyId || !childId) {
+      throw new Error('No child selected.');
+    }
+    const ref = await addDoc(
+      collection(db, ...this._childPebbleBase(childId)),
+      {
+        title: (title || 'New chat').trim() || 'New chat',
+        isPrivate: isPrivate === true,
+        archived: false,
+        createdBy: this._uid ?? '',
+        createdAt: serverTimestamp(),
+        lastMessageAt: serverTimestamp(),
+      },
+    );
+    return ref.id;
+  }
+
+  async renamePebbleSession(childId, sessionId, title) {
+    if (!db || !this._ppFamilyId || !childId || !sessionId) return;
+    await updateDoc(
+      doc(db, ...this._childPebbleBase(childId), sessionId),
+      { title: (title || '').trim() || 'Untitled chat' },
+    );
+  }
+
+  async setPebbleSessionPrivacy(childId, sessionId, isPrivate) {
+    if (!db || !this._ppFamilyId || !childId || !sessionId) return;
+    await updateDoc(
+      doc(db, ...this._childPebbleBase(childId), sessionId),
+      { isPrivate: isPrivate === true },
+    );
+  }
+
+  async archivePebbleSession(childId, sessionId) {
+    if (!db || !this._ppFamilyId || !childId || !sessionId) return;
+    await updateDoc(
+      doc(db, ...this._childPebbleBase(childId), sessionId),
+      { archived: true },
+    );
+  }
+
+  async touchPebbleSession(childId, sessionId) {
+    if (!db || !this._ppFamilyId || !childId || !sessionId) return;
+    try {
+      await updateDoc(
+        doc(db, ...this._childPebbleBase(childId), sessionId),
+        { lastMessageAt: serverTimestamp() },
+      );
+    } catch {
+      /* non-fatal — ordering just won't bump */
+    }
   }
 
   _teardownChild() {
@@ -742,10 +844,12 @@ class FamilyDataStore extends EventTarget {
     this._unsubChildIns?.();
     this._unsubChildDaily?.();
     this._unsubChildPebble?.();
+    this._unsubChildSessions?.();
     this._unsubChildMs =
       this._unsubChildIns =
       this._unsubChildDaily =
       this._unsubChildPebble =
+      this._unsubChildSessions =
         null;
   }
 
@@ -768,6 +872,7 @@ class FamilyDataStore extends EventTarget {
     this.state.childInsights = [];
     this.state.childDailyCard = null;
     this.state.childPebbleMessages = [];
+    this.state.childPebbleSessions = [];
   }
 
   // ───────────────────────────────────────────────────────────────
@@ -1623,6 +1728,7 @@ class FamilyDataStore extends EventTarget {
       childInsights: [],
       childDailyCard: null,
       childPebbleMessages: [],
+      childPebbleSessions: [],
     };
   }
 

@@ -75,6 +75,7 @@ export class TripPlanner extends LitElement {
     _busy: { state: true },
     _view: { state: true }, // 'day' | 'week' (Google-Calendar week grid)
     _weekStart: { state: true }, // first day index when the trip > 7 days
+    _sel: { state: true }, // drag-to-create selection { dayKey, aMin, bMin }
   };
 
   constructor() {
@@ -95,6 +96,10 @@ export class TripPlanner extends LitElement {
     this._busy = false;
     this._view = 'day';
     this._weekStart = 0;
+    this._sel = null;
+    this._dragCtx = null; // { dayKey, lo, hi, el } captured at pointerdown
+    this._onGridMove = this._gridMove.bind(this);
+    this._onGridUp = this._gridUp.bind(this);
     this._unsub = null;
     this._subId = null;
   }
@@ -109,6 +114,83 @@ export class TripPlanner extends LitElement {
       Math.max(0, all.length - 7),
     );
     return all.slice(start, start + 7);
+  }
+
+  // ── Google-Calendar-style click-&-drag to pick a time slot ───────
+  // mousedown on empty grid → drag → release prefills the add-row's
+  // time + duration (and focuses the title) instead of creating an
+  // empty item. Works in both Day (.sched-track) and Week (.wk-col).
+  _minFromPointer(clientY, el, lo, hi) {
+    const r = el.getBoundingClientRect();
+    const y = Math.max(0, Math.min(clientY - r.top, r.height));
+    const raw = lo * 60 + (y / ROWH) * 60;
+    const snapped = Math.round(raw / 15) * 15;
+    return Math.max(lo * 60, Math.min(hi * 60, snapped));
+  }
+
+  _gridDown(e, dayKey, lo, hi) {
+    // Ignore drags that begin on an existing event/affordance.
+    if (e.button != null && e.button !== 0) return;
+    if (e.target.closest && e.target.closest('.evt, .wk-evt, button, a'))
+      return;
+    const el = e.currentTarget;
+    const aMin = this._minFromPointer(e.clientY, el, lo, hi);
+    this._dragCtx = { dayKey, lo, hi, el };
+    this._sel = { dayKey, aMin, bMin: aMin };
+    window.addEventListener('pointermove', this._onGridMove);
+    window.addEventListener('pointerup', this._onGridUp);
+    e.preventDefault();
+  }
+
+  _gridMove(e) {
+    if (!this._dragCtx || !this._sel) return;
+    const { el, lo, hi } = this._dragCtx;
+    this._sel = {
+      ...this._sel,
+      bMin: this._minFromPointer(e.clientY, el, lo, hi),
+    };
+  }
+
+  _gridUp() {
+    window.removeEventListener('pointermove', this._onGridMove);
+    window.removeEventListener('pointerup', this._onGridUp);
+    const sel = this._sel;
+    const ctx = this._dragCtx;
+    this._sel = null;
+    this._dragCtx = null;
+    if (!sel || !ctx) return;
+    let start = Math.min(sel.aMin, sel.bMin);
+    let end = Math.max(sel.aMin, sel.bMin);
+    // A plain click (no real drag) → keep the current duration choice.
+    let dur = end - start;
+    if (dur < 15) dur = this._dur && this._dur >= 15 ? this._dur : 60;
+    const hh = String(Math.floor(start / 60)).padStart(2, '0');
+    const mm = String(start % 60).padStart(2, '0');
+    this._dayKey = sel.dayKey;
+    this._time = `${hh}:${mm}`;
+    this._dur = dur;
+    this.updateComplete.then(() => {
+      const t = this.renderRoot.querySelector('.add-row input.t');
+      if (t) t.focus();
+    });
+  }
+
+  _selGhost(dayKey, lo) {
+    const s = this._sel;
+    if (!s || s.dayKey !== dayKey) return '';
+    const a = Math.min(s.aMin, s.bMin);
+    const b = Math.max(s.aMin, s.bMin);
+    const top = ((a - lo * 60) / 60) * ROWH;
+    const height = Math.max(3, ((b - a) / 60) * ROWH);
+    const lbl = `${String(Math.floor(a / 60)).padStart(2, '0')}:${String(
+      a % 60,
+    ).padStart(2, '0')}`;
+    return html`<div
+      class="sel-ghost"
+      style="top:${top}px;height:${height}px;"
+    >
+      <span>${lbl}</span>
+    </div>`;
   }
 
   willUpdate(changed) {
@@ -138,6 +220,10 @@ export class TripPlanner extends LitElement {
     this._unsub = null;
     this._subId = null;
     this._items = [];
+    window.removeEventListener('pointermove', this._onGridMove);
+    window.removeEventListener('pointerup', this._onGridUp);
+    this._sel = null;
+    this._dragCtx = null;
   }
   _close() {
     this.dispatchEvent(new Event('cancel'));
@@ -572,6 +658,31 @@ export class TripPlanner extends LitElement {
       text-align: center;
       padding: 0 24px;
     }
+    /* Empty grid is the drag surface; the cursor signals it. The
+       drag ghost previews the picked slot (Google-Calendar style). */
+    .sched-track,
+    .wk-col {
+      cursor: cell;
+    }
+    .sel-ghost {
+      position: absolute;
+      left: 4px;
+      right: 4px;
+      border-radius: 8px;
+      background: rgba(61, 155, 143, 0.32);
+      border: 1.5px solid rgba(61, 155, 143, 0.7);
+      pointer-events: none;
+      z-index: 4;
+      overflow: hidden;
+    }
+    .sel-ghost span {
+      position: absolute;
+      top: 3px;
+      left: 7px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #eafaf6;
+    }
     .add-row {
       display: flex;
       gap: 10px;
@@ -730,7 +841,9 @@ export class TripPlanner extends LitElement {
             return html`<div
               class="wk-col"
               style="height:${colHeight}px;"
+              @pointerdown=${(e) => this._gridDown(e, c.key, lo, hi)}
             >
+              ${this._selGhost(c.key, lo)}
               ${dayItems.map((it) => {
                 const sh = toHours(it.time);
                 if (sh == null) return '';
@@ -931,12 +1044,16 @@ export class TripPlanner extends LitElement {
 
                 <div class="sched">
                   ${rows}
-                  <div class="sched-track">
+                  <div
+                    class="sched-track"
+                    @pointerdown=${(e) => this._gridDown(e, dayKey, lo, hi)}
+                  >
                     ${blocks.length
                       ? blocks
                       : html`<div class="sched-empty">
-                          Nothing planned for this day yet — add the first item below.
+                          Drag to block out a time — or add an item below.
                         </div>`}
+                    ${this._selGhost(dayKey, lo)}
                   </div>
                 </div>
               `}
