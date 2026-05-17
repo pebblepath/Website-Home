@@ -229,7 +229,7 @@ export class HomeScreen extends LitElement {
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
       column-gap: 14px;
-      background: var(--chrome-bg);
+      background: rgba(20, 12, 6, 0.42);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
       border-bottom: 1px solid var(--glass-border);
@@ -722,6 +722,19 @@ export class HomeScreen extends LitElement {
       justify-content: flex-end;
       min-height: 0;
       margin-bottom: 10px;
+    }
+    /* Tab 1 ONLY: pull the lead section (scope chip + Felix/Coming-up
+       cards) up toward the family name without moving the greeting
+       header itself — the shared .hello margin + main padding stay
+       at their original values, this just reclaims part of that gap
+       on Today. Other tabs unaffected. */
+    section.today-lead {
+      margin-top: -20px;
+    }
+    @media (max-width: 768px) {
+      section.today-lead {
+        margin-top: -12px;
+      }
     }
     .section-head h2 {
       margin: 0;
@@ -1380,7 +1393,7 @@ export class HomeScreen extends LitElement {
       padding: 9px 16px;
       border: none;
       background: transparent;
-      color: var(--text-secondary);
+      color: var(--chrome-fg);
       cursor: pointer;
       font-family: var(--font-body);
       font-weight: 600;
@@ -1395,7 +1408,7 @@ export class HomeScreen extends LitElement {
       height: 16px;
     }
     .tab:hover {
-      color: var(--text-primary);
+      color: var(--chrome-fg-strong);
     }
     .tab.active {
       color: #fff;
@@ -1454,7 +1467,7 @@ export class HomeScreen extends LitElement {
         bottom: 0;
         z-index: 40;
         padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
-        background: var(--chrome-bg);
+        background: rgba(20, 12, 6, 0.62);
         backdrop-filter: blur(28px) saturate(180%);
         -webkit-backdrop-filter: blur(28px) saturate(180%);
         border-top: 1px solid var(--glass-border);
@@ -1468,7 +1481,7 @@ export class HomeScreen extends LitElement {
         padding: 6px 2px;
         border: none;
         background: transparent;
-        color: var(--text-tertiary);
+        color: var(--chrome-fg);
         cursor: pointer;
         font-family: var(--font-body);
         font-weight: 600;
@@ -3415,7 +3428,7 @@ export class HomeScreen extends LitElement {
     return html`
       ${this._renderTodayHeader()}
 
-      <section>
+      <section class="today-lead">
         <div class="section-head scope-only">${scope}</div>
         <div class="today-top">
           <div class="today-top-left">
