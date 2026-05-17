@@ -5787,17 +5787,21 @@ var ut=Object.defineProperty;var mt=(c,e,t)=>e in c?ut(c,e,{enumerable:!0,config
       line-height: 1.55;
       padding: 6px 0;
     }
-  `);customElements.define("child-overview",De);class Pe extends M{constructor(){super(),this.child=null,this.messages=[],this.prefill="",this.memberProfiles={},this.myUid="",this._session=[],this._input="",this._loading=!1,this._error="",this._seeded=!1}willUpdate(e){e.has("child")&&(this._seeded=!1,this._session=[],this._error=""),!this._seeded&&Array.isArray(this.messages)&&this.messages.length&&(this._session=this.messages.map(t=>({role:t.role,content:t.content,senderUid:t.senderUid})),this._seeded=!0),e.has("prefill")&&this.prefill&&(this._input=this.prefill)}updated(e){(e.has("messages")||e.has("_session")||e.has("_loading"))&&this.updateComplete.then(()=>this._scrollToBottom())}_scrollToBottom(){const e=this.renderRoot.querySelector(".thread");e&&(e.scrollTop=e.scrollHeight)}_suggestions(){var t;const e=((t=this.child)==null?void 0:t.name)??"your child";return[`What's coming up for ${e}?`,`Ideas for a rainy weekend with ${e}`,`Is ${e}'s speech on track?`,`How can I support ${e} this week?`]}async _send(e){var r;const t=(e??this._input).trim();if(!t||this._loading)return;if(!((r=this.child)!=null&&r.id)){this._error="No child selected.";return}this._error="",this._input="";const i=this._session.slice(-20).map(a=>({role:a.role,content:a.content}));this._session=[...this._session,{role:"user",content:t,senderUid:this.myUid}],this._loading=!0;try{const a=await w.askPebbleAboutChild(this.child.id,t,i);this._session=[...this._session,{role:"assistant",content:(a==null?void 0:a.answer)??"…"}]}catch(a){console.error(a),(a==null?void 0:a.code)==="functions/unauthenticated"?this._error="Pebble needs you to be signed in.":(a==null?void 0:a.code)==="functions/permission-denied"?this._error="Pebble's child advisor is for parents on this household.":(a==null?void 0:a.code)==="functions/not-found"||(a==null?void 0:a.code)==="functions/internal"?this._error="Pebble isn't available right now — try again in a moment.":this._error=(a==null?void 0:a.message)??"Pebble could not answer right now."}finally{this._loading=!1}}_pico(){return s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" /></svg>`}_senderName(e){var i;if(!e||e===this.myUid)return"You";const t=(i=this.memberProfiles)==null?void 0:i[e];return t!=null&&t.displayName?t.displayName:e.charAt(0).toUpperCase()+e.slice(1)}_senderPhoto(e){var i,r;const t=(r=(i=this.memberProfiles)==null?void 0:i[e])==null?void 0:r.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:""}_fmt(e){const i=String(e??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>").replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,!?]|$)/g,"$1<i>$2</i>").replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');return bt(i)}render(){var i;const e=((i=this.child)==null?void 0:i.name)??"your child",t=this._session.length>0;return s`
-      <div class="wrap">
-        <div class="panel">
-          <div class="thread">
+  `);customElements.define("child-overview",De);class Pe extends M{constructor(){super(),this.child=null,this.messages=[],this.prefill="",this.memberProfiles={},this.myUid="",this._session=[],this._input="",this._loading=!1,this._error="",this._seeded=!1}willUpdate(e){e.has("child")&&(this._seeded=!1,this._session=[],this._error=""),!this._seeded&&Array.isArray(this.messages)&&this.messages.length&&(this._session=this.messages.map(t=>({role:t.role,content:t.content,senderUid:t.senderUid})),this._seeded=!0),e.has("prefill")&&this.prefill&&(this._input=this.prefill)}updated(e){(e.has("messages")||e.has("_session")||e.has("_loading"))&&this.updateComplete.then(()=>this._scrollToBottom())}_scrollToBottom(){const e=this.renderRoot.querySelector(".thread");e&&(e.scrollTop=e.scrollHeight)}_suggestions(){var t;const e=((t=this.child)==null?void 0:t.name)??"your child";return[`What's coming up for ${e}?`,`Ideas for a rainy weekend with ${e}`,`Is ${e}'s speech on track?`,`How can I support ${e} this week?`]}async _send(e){var r;const t=(e??this._input).trim();if(!t||this._loading)return;if(!((r=this.child)!=null&&r.id)){this._error="No child selected.";return}this._error="",this._input="";const i=this._session.slice(-20).map(a=>({role:a.role,content:a.content}));this._session=[...this._session,{role:"user",content:t,senderUid:this.myUid}],this._loading=!0;try{const a=await w.askPebbleAboutChild(this.child.id,t,i);this._session=[...this._session,{role:"assistant",content:(a==null?void 0:a.answer)??"…"}]}catch(a){console.error(a),(a==null?void 0:a.code)==="functions/unauthenticated"?this._error="Pebble needs you to be signed in.":(a==null?void 0:a.code)==="functions/permission-denied"?this._error="Pebble's child advisor is for parents on this household.":(a==null?void 0:a.code)==="functions/not-found"||(a==null?void 0:a.code)==="functions/internal"?this._error="Pebble isn't available right now — try again in a moment.":this._error=(a==null?void 0:a.message)??"Pebble could not answer right now."}finally{this._loading=!1}}_pico(){return s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" /></svg>`}_senderName(e){var i;if(!e||e===this.myUid)return"You";const t=(i=this.memberProfiles)==null?void 0:i[e];return t!=null&&t.displayName?t.displayName:e.charAt(0).toUpperCase()+e.slice(1)}_senderPhoto(e){var i,r;const t=(r=(i=this.memberProfiles)==null?void 0:i[e])==null?void 0:r.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:""}_fmt(e){const i=String(e??"").replace(/^[ \t\u00A0]+/gm,"").trim().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>").replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,!?]|$)/g,"$1<i>$2</i>").replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');return bt(i)}render(){var i;const e=((i=this.child)==null?void 0:i.name)??"your child",t=this._session.length>0;return s`
+      <div class="chatpane">
+        <div class="toprow">
+          <span class="privtag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round"/></svg>
+            Private to parents
+          </span>
+        </div>
+        <div class="thread">
             ${t?s`
                   ${this._session.map(r=>r.role==="assistant"?s`<div class="msg pb">
                           <span class="pic">${this._pico()}</span>
                           <div class="col">
-                            <div class="bubble">
-                              ${this._fmt(r.content)}
-                            </div>
+                            <!-- prettier-ignore -->
+                            <div class="bubble">${this._fmt(r.content)}</div>
                           </div>
                         </div>`:s`<div class="msg you">
                           <span class="av">
@@ -5858,25 +5862,44 @@ var ut=Object.defineProperty;var mt=(c,e,t)=>e in c?ut(c,e,{enumerable:!0,config
               </svg>
             </button>
           </form>
-        </div>
       </div>
     `}}x(Pe,"properties",{child:{type:Object},messages:{type:Array},prefill:{type:String},memberProfiles:{type:Object},myUid:{type:String},_session:{state:!0},_input:{state:!0},_loading:{state:!0},_error:{state:!0},_seeded:{state:!0}}),x(Pe,"styles",A`
     *, *::before, *::after { box-sizing: border-box; }
     :host { display: block; }
-    .wrap {
-      max-width: 880px;
-      margin: 0 auto;
+    /* Portal v4 — Pebble is the whole tab: no card, no page header.
+       A full-height column edge-to-edge up to the nav bar; the
+       "Private to parents" pill is integrated into the top of the
+       chat surface. */
+    .chatpane {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 116px);
+      padding: 14px 24px 0;
     }
-    .panel {
-      position: relative;
-      border-radius: var(--radius-card);
-      background: var(--glass-fill-strong);
-      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
-      border: 1px solid var(--glass-border-strong);
-      box-shadow: var(--glass-shadow);
-      padding: 28px;
+    @media (max-width: 720px) {
+      .chatpane {
+        padding: 10px 16px 0;
+        min-height: calc(100vh - 150px);
+      }
     }
+    .toprow {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+    }
+    .privtag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 13px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(198, 123, 92, 0.16);
+      color: #e6c3ab;
+      border: 1px solid rgba(198, 123, 92, 0.4);
+    }
+    .privtag svg { width: 13px; height: 13px; }
     /* Message rows with sender-attribution avatars (concept .msg).
        In-panel header removed — the page header already says
        "Pebble · {name}'s development advisor", so the chat box is
@@ -5921,8 +5944,8 @@ var ut=Object.defineProperty;var mt=(c,e,t)=>e in c?ut(c,e,{enumerable:!0,config
       display: flex;
       flex-direction: column;
       gap: 14px;
-      min-height: 44vh;
-      max-height: 56vh;
+      flex: 1;
+      min-height: 0;
       overflow-y: auto;
       padding: 4px 2px;
       scrollbar-width: thin;
@@ -5954,6 +5977,19 @@ var ut=Object.defineProperty;var mt=(c,e,t)=>e in c?ut(c,e,{enumerable:!0,config
       border-bottom-left-radius: 6px;
     }
     .msg.pb .bubble b { color: #9fded2; }
+    /* Harmonised link colour — kill the browser blue. Light teal on
+       the glass Pebble bubble; warm cream on the terracotta you
+       bubble. Underlined for the affordance. */
+    .msg.pb .bubble a {
+      color: #7fd3c6;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .msg.you .bubble a {
+      color: #ffe9da;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
     .typing {
       align-self: flex-start;
       padding: 13px 18px;
@@ -6456,7 +6492,7 @@ var ut=Object.defineProperty;var mt=(c,e,t)=>e in c?ut(c,e,{enumerable:!0,config
         ${["Mo","Tu","We","Th","Fr","Sa","Su"].map(m=>s`<div class="cal-dow">${m}</div>`)}
         ${h}
       </div>
-    `}_openCreate(){if(this.preview){y("Sign in to create real activities.");return}if(!w.familyId){y("You need a PebblePath family first.");return}this._typePickerOpen=!0}_onTypePicked(e){this._typePickerOpen=!1;const t=e.detail.type;if(t==="event"){this._eventFormEvent=null,this._eventFormOpen=!0;return}if(t==="import"){this._importOpen=!0;return}this._formMode=t,this._formTrip=null,this._formOpen=!0}_openPlanner(e){this._plannerTrip=e,this._plannerOpen=!0,this._activeTab="activities"}_openEdit(e){if(this.preview){y("Sign in to edit real activities.");return}const t=e.lodgingUrl||e.lodgingHost||e.flightNumber||e.flightDepartAirport;this._formMode=t?"trip":"activity",this._formTrip=e,this._formOpen=!0}async _onSaveTrip(e){const t=e.detail;this._formBusy=!0;try{await w.saveTrip(t),this._formOpen=!1,this._formTrip=null,y(t.id?"Trip updated.":"Trip created.")}catch(i){console.error("Save trip failed:",i),y(`Couldn't save: ${i.code??i.message}`,{duration:5e3})}finally{this._formBusy=!1}}async _onDeleteTrip(e){this._formBusy=!0;try{await w.deleteTrip(e.detail.id),this._formOpen=!1,this._formTrip=null,y("Trip deleted.")}catch(t){console.error("Delete trip failed:",t),y(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._formBusy=!1}}_openCreateEvent(){if(this.preview){y("Sign in to add real events.");return}if(!w.familyId){y("You need a family first.");return}this._eventFormEvent=null,this._eventFormOpen=!0}_openEditEvent(e){if(this.preview){y("Sign in to edit real events.");return}if(e!=null&&e._childId){const t=prompt(`Edit ${e._childName}'s birthday (YYYY-MM-DD):`,e.date);if(!t)return;if(!/^\d{4}-\d{2}-\d{2}$/.test(t)){y("Use YYYY-MM-DD format.");return}w.updateChildBirthday(e._childId,new Date(t)).then(()=>y(`Updated ${e._childName}'s birthday.`)).catch(i=>{console.error("Update child birthday failed:",i),y(`Couldn't update: ${i.code??i.message}`,{duration:5e3})});return}this._eventFormEvent={...e,date:e._originalDate??e.date},this._eventFormOpen=!0}async _onSaveEvent(e){this._eventFormBusy=!0;try{await w.saveEvent(e.detail),this._eventFormOpen=!1,this._eventFormEvent=null,y(e.detail.id?"Event updated.":"Event added.")}catch(t){console.error("Save event failed:",t),y(`Couldn't save: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}async _onDeleteEvent(e){this._eventFormBusy=!0;try{await w.deleteEvent(e.detail.id),this._eventFormOpen=!1,this._eventFormEvent=null,y("Event deleted.")}catch(t){console.error("Delete event failed:",t),y(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}_tabDefs(){return[{id:"today",label:"Today",icon:s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9" /><path d="M5 10v10h14V10" /></svg>`},{id:"children",label:"Children",icon:s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M5 21c0-4 3-6 7-6s7 2 7 6" /></svg>`},{id:"activities",label:"Activities",icon:s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 9h18M8 2v4M16 2v4" /></svg>`},{id:"pebble",label:"Pebble",icon:s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" /></svg>`},{id:"cairn",label:"My Cairn",icon:s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6.5" rx="3.5" ry="1.5" /><ellipse cx="12" cy="12" rx="6" ry="2.4" /><ellipse cx="12" cy="18" rx="8" ry="3" /></svg>`}]}_renderTabBar(){return s`
+    `}_openCreate(){if(this.preview){y("Sign in to create real activities.");return}if(!w.familyId){y("You need a PebblePath family first.");return}this._typePickerOpen=!0}_onTypePicked(e){this._typePickerOpen=!1;const t=e.detail.type;if(t==="event"){this._eventFormEvent=null,this._eventFormOpen=!0;return}if(t==="import"){this._importOpen=!0;return}this._formMode=t,this._formTrip=null,this._formOpen=!0}_openPlanner(e){this._plannerTrip=e,this._plannerOpen=!0,this._activeTab="activities",this.updateComplete.then(()=>{requestAnimationFrame(()=>requestAnimationFrame(()=>{var i;const t=(i=this.renderRoot)==null?void 0:i.querySelector("trip-planner");t==null||t.scrollIntoView({behavior:"smooth",block:"start"})}))})}_openEdit(e){if(this.preview){y("Sign in to edit real activities.");return}const t=e.lodgingUrl||e.lodgingHost||e.flightNumber||e.flightDepartAirport;this._formMode=t?"trip":"activity",this._formTrip=e,this._formOpen=!0}async _onSaveTrip(e){const t=e.detail;this._formBusy=!0;try{await w.saveTrip(t),this._formOpen=!1,this._formTrip=null,y(t.id?"Trip updated.":"Trip created.")}catch(i){console.error("Save trip failed:",i),y(`Couldn't save: ${i.code??i.message}`,{duration:5e3})}finally{this._formBusy=!1}}async _onDeleteTrip(e){this._formBusy=!0;try{await w.deleteTrip(e.detail.id),this._formOpen=!1,this._formTrip=null,y("Trip deleted.")}catch(t){console.error("Delete trip failed:",t),y(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._formBusy=!1}}_openCreateEvent(){if(this.preview){y("Sign in to add real events.");return}if(!w.familyId){y("You need a family first.");return}this._eventFormEvent=null,this._eventFormOpen=!0}_openEditEvent(e){if(this.preview){y("Sign in to edit real events.");return}if(e!=null&&e._childId){const t=prompt(`Edit ${e._childName}'s birthday (YYYY-MM-DD):`,e.date);if(!t)return;if(!/^\d{4}-\d{2}-\d{2}$/.test(t)){y("Use YYYY-MM-DD format.");return}w.updateChildBirthday(e._childId,new Date(t)).then(()=>y(`Updated ${e._childName}'s birthday.`)).catch(i=>{console.error("Update child birthday failed:",i),y(`Couldn't update: ${i.code??i.message}`,{duration:5e3})});return}this._eventFormEvent={...e,date:e._originalDate??e.date},this._eventFormOpen=!0}async _onSaveEvent(e){this._eventFormBusy=!0;try{await w.saveEvent(e.detail),this._eventFormOpen=!1,this._eventFormEvent=null,y(e.detail.id?"Event updated.":"Event added.")}catch(t){console.error("Save event failed:",t),y(`Couldn't save: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}async _onDeleteEvent(e){this._eventFormBusy=!0;try{await w.deleteEvent(e.detail.id),this._eventFormOpen=!1,this._eventFormEvent=null,y("Event deleted.")}catch(t){console.error("Delete event failed:",t),y(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}_tabDefs(){return[{id:"today",label:"Today",icon:s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9" /><path d="M5 10v10h14V10" /></svg>`},{id:"children",label:"Children",icon:s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M5 21c0-4 3-6 7-6s7 2 7 6" /></svg>`},{id:"activities",label:"Activities",icon:s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 9h18M8 2v4M16 2v4" /></svg>`},{id:"pebble",label:"Pebble",icon:s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" /></svg>`},{id:"cairn",label:"My Cairn",icon:s`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6.5" rx="3.5" ry="1.5" /><ellipse cx="12" cy="12" rx="6" ry="2.4" /><ellipse cx="12" cy="18" rx="8" ry="3" /></svg>`}]}_renderTabBar(){return s`
       <nav class="tabs" role="tablist" aria-label="Sections">
         ${this._tabDefs().map(e=>s`<button
             class="tab ${this._activeTab===e.id?"active":""}"
@@ -7005,17 +7041,7 @@ var ut=Object.defineProperty;var mt=(c,e,t)=>e in c?ut(c,e,{enumerable:!0,config
           </div>
         </glass-panel>
       </section>
-    `}_renderPebbleTab(){var r,a;const e=this._childData();if(e.hasPP&&e.child){const o=s`<span class="scope-chip">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round" /></svg>
-        Private to parents
-      </span>`;return s`
-        <div class="hello tight">
-          <div>
-            <h1>Pebble</h1>
-            <div class="family-name">${e.child.name}'s development advisor</div>
-          </div>
-          ${o}
-        </div>
+    `}_renderPebbleTab(){var r,a;const e=this._childData();if(e.hasPP&&e.child)return s`
         <child-pebble
           .child=${e.child}
           .messages=${e.pebbleMessages}
@@ -7023,7 +7049,7 @@ var ut=Object.defineProperty;var mt=(c,e,t)=>e in c?ut(c,e,{enumerable:!0,config
           .memberProfiles=${((r=this.family)==null?void 0:r.memberProfiles)??{}}
           .myUid=${((a=this.user)==null?void 0:a.uid)??""}
         ></child-pebble>
-      `}const t=(this._circleTrips()??[]).filter(o=>o.start&&z(o.start)>=new Date).sort((o,n)=>String(o.start).localeCompare(String(n.start)))[0],i=s`<span class="scope-chip">
+      `;const t=(this._circleTrips()??[]).filter(o=>o.start&&z(o.start)>=new Date).sort((o,n)=>String(o.start).localeCompare(String(n.start)))[0],i=s`<span class="scope-chip">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round" /></svg>
       Private to your family
     </span>`;return s`
@@ -7098,10 +7124,9 @@ var ut=Object.defineProperty;var mt=(c,e,t)=>e in c?ut(c,e,{enumerable:!0,config
             data. <a href="?">Back to sign-in</a>.
           </div>`:""}
 
-      <main>
+      <main class=${this._activeTab==="pebble"?"pebble-full":""}>
         ${this._renderActiveTab()}
-
-        <discover-pebblepath></discover-pebblepath>
+        ${this._activeTab==="pebble"?"":s`<discover-pebblepath></discover-pebblepath>`}
       </main>
 
       ${this._renderBottomNav()}
@@ -7423,6 +7448,14 @@ var ut=Object.defineProperty;var mt=(c,e,t)=>e in c?ut(c,e,{enumerable:!0,config
       main {
         padding: 20px 16px calc(32px + env(safe-area-inset-bottom));
       }
+    }
+    /* Portal v4 — Pebble tab is full-bleed: drop the gutters + width
+       cap so the chat surface runs edge-to-edge and right up to the
+       nav bar. <child-pebble> supplies its own internal padding. */
+    main.pebble-full {
+      padding: 0;
+      width: 100%;
+      max-width: none;
     }
 
     .hello {
@@ -9123,4 +9156,4 @@ var ut=Object.defineProperty;var mt=(c,e,t)=>e in c?ut(c,e,{enumerable:!0,config
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}x(gt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",gt);
-//# sourceMappingURL=index-DbvmMuKO.js.map
+//# sourceMappingURL=index-doWGoWth.js.map
