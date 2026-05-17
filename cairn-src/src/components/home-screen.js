@@ -18,6 +18,7 @@ import './activity-type-picker.js';
 import './discover-pebblepath.js';
 import './child-overview.js';
 import './child-pebble.js';
+import './insight-card.js';
 import './trip-planner.js';
 import {
   mockUser,
@@ -1382,6 +1383,28 @@ export class HomeScreen extends LitElement {
     }
     @media (max-width: 1024px) {
       .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+    /* Today top row (Portal v4): left column stacks the half-width
+       child card + Pebble's-daily; "Coming up" sits right, stretched
+       to the full height of the left stack. */
+    .today-top {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .today-top-left {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .today-top-left .daily {
+      flex: 1;
+    }
+    @media (max-width: 1024px) {
+      .today-top {
         grid-template-columns: 1fr;
       }
     }
@@ -3026,7 +3049,7 @@ export class HomeScreen extends LitElement {
     </div>`;
     const coming = this._comingUp();
     const comingPanel = html`
-      <glass-panel padding="md" variant="strong">
+      <glass-panel padding="md" variant="strong" stretch>
         <div class="cal-head"><h3>Coming up</h3>
           <button class="link" @click=${() => (this._activeTab = 'activities')}>All activities</button></div>
         ${coming.length === 0
@@ -3072,63 +3095,64 @@ export class HomeScreen extends LitElement {
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </button>
         </div>
-        <glass-panel padding="md" variant="strong">
-          <div class="child-card">
-            <span class="child-photo">
-              <member-chip
-                .name=${cd.child.name}
-                .photo=${cd.child.profilePhotoURL ?? ''}
-                .hue=${150}
-                size="84"
-              ></member-chip>
-            </span>
-            <div class="child-meta">
-              <h2>${cd.child.name}</h2>
-              <div class="sub">${this._ageLong(cd.child.dateOfBirth)}</div>
-              <span class="age-pill"
-                >${achieved.length} of ${ms.length} milestones on track</span
-              >
-            </div>
-            <div class="child-progress">
-              <div class="big">${pct}%</div>
-              <div class="lbl">of tracked milestones</div>
-            </div>
+        <div class="today-top">
+          <div class="today-top-left">
+            <glass-panel padding="md" variant="strong">
+              <div class="child-card">
+                <span class="child-photo">
+                  <member-chip
+                    .name=${cd.child.name}
+                    .photo=${cd.child.profilePhotoURL ?? ''}
+                    .hue=${150}
+                    size="72"
+                  ></member-chip>
+                </span>
+                <div class="child-meta">
+                  <h2>${cd.child.name}</h2>
+                  <div class="sub">${this._ageLong(cd.child.dateOfBirth)}</div>
+                  <span class="age-pill"
+                    >${achieved.length} of ${ms.length} milestones on
+                    track</span
+                  >
+                </div>
+                <div class="child-progress">
+                  <div class="big">${pct}%</div>
+                  <div class="lbl">of tracked milestones</div>
+                </div>
+              </div>
+            </glass-panel>
+            ${dc
+              ? html`<div class="daily">
+                  <div class="tag">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/></svg>
+                    Pebble's daily
+                  </div>
+                  <h3>${dc.title}</h3>
+                  <p>${dc.body}</p>
+                  <button
+                    class="ask"
+                    @click=${() =>
+                      this._onAskPebble({
+                        detail:
+                          dc.topicForChat ||
+                          `Tell me more about: ${dc.title}`,
+                      })}
+                  >
+                    Ask Pebble about this →
+                  </button>
+                </div>`
+              : html`<div class="daily">
+                  <div class="tag">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/></svg>
+                    Pebble's daily
+                  </div>
+                  <h3>Pebble's note is on its way</h3>
+                  <p>A fresh observation about ${cd.child.name} appears here each day once Pebble has enough to go on.</p>
+                  <button class="ask" @click=${() => (this._activeTab = 'pebble')}>
+                    Ask Pebble anything →
+                  </button>
+                </div>`}
           </div>
-        </glass-panel>
-      </section>
-
-      <section>
-        <div class="grid-2">
-          ${dc
-            ? html`<div class="daily">
-                <div class="tag">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/></svg>
-                  Pebble's daily
-                </div>
-                <h3>${dc.title}</h3>
-                <p>${dc.body}</p>
-                <button
-                  class="ask"
-                  @click=${() =>
-                    this._onAskPebble({
-                      detail:
-                        dc.topicForChat || `Tell me more about: ${dc.title}`,
-                    })}
-                >
-                  Ask Pebble about this →
-                </button>
-              </div>`
-            : html`<div class="daily">
-                <div class="tag">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/></svg>
-                  Pebble's daily
-                </div>
-                <h3>Pebble's note is on its way</h3>
-                <p>A fresh observation about ${cd.child.name} appears here each day once Pebble has enough to go on.</p>
-                <button class="ask" @click=${() => (this._activeTab = 'pebble')}>
-                  Ask Pebble anything →
-                </button>
-              </div>`}
           ${comingPanel}
         </div>
       </section>
@@ -3152,14 +3176,12 @@ export class HomeScreen extends LitElement {
             <div class="cal-head"><h3>Growth insight</h3>
               <button class="link" @click=${() => (this._activeTab = 'children')}>More insights</button></div>
             ${insight
-              ? html`<div class="insight ${insight.type}" style="margin-bottom:0;">
-                  <div class="strip"></div>
-                  <div>
-                    <div class="ikind">${insight.type === 'nudge' ? 'Try this' : insight.type}</div>
-                    <h4>${insight.title}</h4>
-                    <p>${insight.body}</p>
-                  </div>
-                </div>`
+              ? html`<insight-card
+                  .type=${insight.type}
+                  .domain=${insight.domain}
+                  .title=${insight.title}
+                  .body=${insight.body}
+                ></insight-card>`
               : html`<div class="ring-note" style="padding:8px 4px;">Pebble surfaces patterns here as more of ${cd.child.name}'s milestones are logged.</div>`}
           </glass-panel>
         </div>
