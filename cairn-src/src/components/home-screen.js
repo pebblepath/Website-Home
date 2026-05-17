@@ -3198,6 +3198,8 @@ export class HomeScreen extends LitElement {
           .child=${cd.child}
           .messages=${cd.pebbleMessages}
           .prefill=${this._pebblePrefill}
+          .memberProfiles=${this.family?.memberProfiles ?? {}}
+          .myUid=${this.user?.uid ?? ''}
         ></child-pebble>
       `;
     }

@@ -1,5 +1,7 @@
 import { LitElement, html, css } from 'lit';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { dataStore } from '../services/data.js';
+import './member-chip.js';
 
 /**
  * Pebble — the child-development advisor, inline in the Pebble tab.
@@ -21,6 +23,8 @@ export class ChildPebble extends LitElement {
     child: { type: Object },
     messages: { type: Array },
     prefill: { type: String },
+    memberProfiles: { type: Object },
+    myUid: { type: String },
     _session: { state: true },
     _input: { state: true },
     _loading: { state: true },
@@ -33,6 +37,8 @@ export class ChildPebble extends LitElement {
     this.child = null;
     this.messages = [];
     this.prefill = '';
+    this.memberProfiles = {};
+    this.myUid = '';
     this._session = [];
     this._input = '';
     this._loading = false;
@@ -52,6 +58,7 @@ export class ChildPebble extends LitElement {
       this._session = this.messages.map((m) => ({
         role: m.role,
         content: m.content,
+        senderUid: m.senderUid,
       }));
       this._seeded = true;
     }
@@ -94,7 +101,10 @@ export class ChildPebble extends LitElement {
       role: m.role,
       content: m.content,
     }));
-    this._session = [...this._session, { role: 'user', content: question }];
+    this._session = [
+      ...this._session,
+      { role: 'user', content: question, senderUid: this.myUid },
+    ];
     this._loading = true;
     try {
       const result = await dataStore.askPebbleAboutChild(
@@ -144,37 +154,46 @@ export class ChildPebble extends LitElement {
       box-shadow: var(--glass-shadow);
       padding: 28px;
     }
-    .head {
+    /* Message rows with sender-attribution avatars (concept .msg).
+       In-panel header removed — the page header already says
+       "Pebble · {name}'s development advisor", so the chat box is
+       top-aligned with no redundant in-panel title. */
+    .msg {
       display: flex;
-      align-items: center;
-      gap: 14px;
-      padding-bottom: 18px;
-      margin-bottom: 18px;
-      border-bottom: 1px solid rgba(255, 248, 235, 0.08);
+      gap: 10px;
+      align-items: flex-end;
+      max-width: 80%;
     }
-    .pico {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
+    .msg.you {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+    .msg.pb { align-self: flex-start; }
+    .msg .av {
+      width: 30px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+    .msg .pic {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
       background: var(--gradient-sage);
       display: inline-flex;
       align-items: center;
       justify-content: center;
       color: #fff;
       flex-shrink: 0;
-      box-shadow: 0 4px 14px rgba(61, 155, 143, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
     }
-    .pico svg { width: 22px; height: 22px; }
-    .ht { flex: 1; min-width: 0; }
-    .ht b {
-      font-family: var(--font-display);
-      font-size: 18px;
-      display: block;
+    .msg .pic svg { width: 16px; height: 16px; }
+    .msg .col { min-width: 0; }
+    .said {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin: 0 4px 5px;
     }
-    .ht span {
-      font-size: 12.5px;
-      color: var(--text-secondary);
-    }
+    .msg.you .said { text-align: right; }
     .thread {
       display: flex;
       flex-direction: column;
@@ -192,27 +211,26 @@ export class ChildPebble extends LitElement {
       border-radius: 999px;
     }
     .bubble {
-      max-width: 80%;
       padding: 13px 16px;
       border-radius: 18px;
       font-size: 14px;
       line-height: 1.55;
       white-space: pre-wrap;
       word-wrap: break-word;
+      overflow-wrap: anywhere;
     }
-    .bubble.user {
-      align-self: flex-end;
+    .msg.you .bubble {
       background: linear-gradient(135deg, #c67b5c, #8b5a3e);
       color: #fff;
       border-bottom-right-radius: 6px;
     }
-    .bubble.assistant {
-      align-self: flex-start;
+    .msg.pb .bubble {
       background: var(--glass-fill-strong);
       border: 1px solid var(--glass-border);
       color: var(--text-primary);
       border-bottom-left-radius: 6px;
     }
+    .msg.pb .bubble b { color: #9fded2; }
     .typing {
       align-self: flex-start;
       padding: 13px 18px;
@@ -270,53 +288,58 @@ export class ChildPebble extends LitElement {
       color: var(--text-primary);
       border-color: var(--glass-border-strong);
     }
+    /* Composer — the concept's rounded pill: a transparent textarea
+       inside a glass-fill pill, vertically centred, with a 38px send
+       circle (fixes "input not rounded / wrong colour / not centred"). */
     .composer {
       display: flex;
-      gap: 10px;
-      align-items: flex-end;
-      margin-top: 16px;
-      padding-top: 14px;
-      border-top: 1px solid rgba(255, 248, 235, 0.08);
+      gap: 8px;
+      align-items: center;
+      margin-top: 18px;
+      padding: 7px 7px 7px 16px;
+      border-radius: var(--radius-pill);
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border);
+      transition: border-color 0.18s ease, background 0.18s ease;
+    }
+    .composer:focus-within {
+      border-color: rgba(61, 155, 143, 0.45);
+      background: rgba(61, 155, 143, 0.1);
     }
     textarea {
       flex: 1;
       resize: none;
-      background: rgba(255, 248, 235, 0.06);
-      border: 1px solid var(--glass-border);
-      border-radius: 14px;
-      padding: 11px 14px;
+      background: transparent;
+      border: none;
+      padding: 7px 0;
       color: var(--text-primary);
       font-family: var(--font-body);
-      font-size: 15px;
-      min-height: 44px;
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 24px;
       max-height: 120px;
-      line-height: 1.4;
       outline: none;
     }
     textarea::placeholder {
-      color: rgba(255, 248, 235, 0.92);
+      color: var(--text-tertiary);
       opacity: 1;
-    }
-    textarea:focus {
-      border-color: var(--teal-pebble);
-      background: rgba(255, 248, 235, 0.09);
     }
     .send {
       flex-shrink: 0;
-      width: 44px;
-      height: 44px;
+      width: 38px;
+      height: 38px;
       border-radius: 999px;
-      background: var(--gradient-sage);
+      background-image: var(--gradient-sage);
       color: #fff;
-      border: 1px solid rgba(255, 248, 235, 0.18);
+      border: none;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 14px rgba(61, 155, 143, 0.35);
+      box-shadow: 0 3px 10px rgba(61, 155, 143, 0.35);
     }
     .send:disabled { opacity: 0.5; cursor: not-allowed; }
-    .send svg { width: 18px; height: 18px; }
+    .send svg { width: 16px; height: 16px; }
     .error {
       color: var(--rose-soft);
       font-size: 13px;
@@ -330,20 +353,48 @@ export class ChildPebble extends LitElement {
     return html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" /></svg>`;
   }
 
+  // Sender attribution — co-parents on a shared family see who asked
+  // (mirrors the iOS app's senderUid attribution). Resolves via the
+  // family memberProfiles map; falls back to a title-cased uid so the
+  // preview mock ("thomas"/"partner") still reads sensibly.
+  _senderName(uid) {
+    if (!uid || uid === this.myUid) return 'You';
+    const p = this.memberProfiles?.[uid];
+    if (p?.displayName) return p.displayName;
+    return uid.charAt(0).toUpperCase() + uid.slice(1);
+  }
+
+  _senderPhoto(uid) {
+    const url = this.memberProfiles?.[uid]?.profilePhotoURL;
+    return typeof url === 'string' && /^https?:\/\//i.test(url) ? url : '';
+  }
+
+  // Safe inline markdown for the bubble (matches the iOS app + makes
+  // the ported `.bubble b` rule meaningful). HTML-escape FIRST, then
+  // re-introduce only **bold**, *italic* and http(s) links — so model
+  // output can never inject markup. Newlines stay handled by the
+  // bubble's white-space:pre-wrap (no <br>).
+  _fmt(text) {
+    const esc = String(text ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+    const md = esc
+      .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
+      .replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,!?]|$)/g, '$1<i>$2</i>')
+      .replace(
+        /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+        '<a href="$2" target="_blank" rel="noopener">$1</a>',
+      );
+    return unsafeHTML(md);
+  }
+
   render() {
     const name = this.child?.name ?? 'your child';
     const hasThread = this._session.length > 0;
     return html`
       <div class="wrap">
         <div class="panel">
-          <div class="head">
-            <span class="pico">${this._pico()}</span>
-            <div class="ht">
-              <b>Ask Pebble</b>
-              <span>Personalised to ${name} · private to parents</span>
-            </div>
-          </div>
-
           <div class="thread">
             ${!hasThread
               ? html`<div class="empty">
@@ -362,10 +413,32 @@ export class ChildPebble extends LitElement {
                   </div>
                 </div>`
               : html`
-                  ${this._session.map(
-                    (m) => html`<div class="bubble ${m.role}">
-                      ${m.content}
-                    </div>`,
+                  ${this._session.map((m) =>
+                    m.role === 'assistant'
+                      ? html`<div class="msg pb">
+                          <span class="pic">${this._pico()}</span>
+                          <div class="col">
+                            <div class="bubble">
+                              ${this._fmt(m.content)}
+                            </div>
+                          </div>
+                        </div>`
+                      : html`<div class="msg you">
+                          <span class="av">
+                            <member-chip
+                              .name=${this._senderName(m.senderUid)}
+                              .photo=${this._senderPhoto(m.senderUid)}
+                              .hue=${8}
+                              size="30"
+                            ></member-chip>
+                          </span>
+                          <div class="col">
+                            <div class="said">
+                              ${this._senderName(m.senderUid)} asked
+                            </div>
+                            <div class="bubble">${this._fmt(m.content)}</div>
+                          </div>
+                        </div>`,
                   )}
                   ${this._loading
                     ? html`<div class="typing">
