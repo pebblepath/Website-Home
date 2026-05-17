@@ -54,12 +54,30 @@
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600;700&family=Nunito:wght@600;700&display=swap"
       rel="stylesheet"
     />
-    <script type="module" crossorigin src="/portal/assets/index-bQDxds7L.js"></script>
+
+    <!-- Theme bootstrap — apply the saved light/dark choice to <html>
+         BEFORE first paint so there's no flash. Toggle lives in
+         Settings (Tab 5) and persists in localStorage('portalTheme').
+         Default = dark (the original look). -->
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem('portalTheme') === 'light') {
+            document.documentElement.classList.add('theme-light');
+            var m = document.querySelector('meta[name="theme-color"]');
+            if (m) m.setAttribute('content', '#f2ede3');
+          }
+        } catch (e) {
+          /* private mode / storage blocked — stay on default dark */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/portal/assets/index-DbEjwZ0c.js"></script>
     <link rel="modulepreload" crossorigin href="/portal/assets/lit-dM6tPkba.js">
     <link rel="modulepreload" crossorigin href="/portal/assets/firebase-core-WlNQdXp3.js">
     <link rel="modulepreload" crossorigin href="/portal/assets/firebase-functions-EPI35Sfs.js">
     <link rel="modulepreload" crossorigin href="/portal/assets/firebase-storage-BMyqKy67.js">
-    <link rel="stylesheet" crossorigin href="/portal/assets/index-CSaL2sm1.css">
+    <link rel="stylesheet" crossorigin href="/portal/assets/index-1ikuI9Nl.css">
   </head>
   <body>
     <cairn-app></cairn-app>
