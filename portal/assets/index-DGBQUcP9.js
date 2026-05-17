@@ -8700,13 +8700,13 @@ They'll lose access to shared trips, celebrations and any read-only child access
          regardless of the host formatting context (max-width +
          margin:0 auto was computing to 0 here). Matches the concept's
          1280 max + 24px gutters. */
-      padding: 16px 24px 0;
+      padding: 30px 24px 0;
       width: min(1280px, 100%);
       margin-inline: auto;
     }
     @media (max-width: 768px) {
       main {
-        padding: 12px 16px calc(32px + env(safe-area-inset-bottom));
+        padding: 20px 16px calc(32px + env(safe-area-inset-bottom));
       }
     }
     /* Portal v4 — Pebble tab is full-bleed: drop the gutters + width
@@ -8723,12 +8723,12 @@ They'll lose access to shared trips, celebrations and any read-only child access
       align-items: flex-end;
       justify-content: space-between;
       gap: 20px;
-      margin-bottom: 18px;
+      margin-bottom: 32px;
       flex-wrap: wrap;
     }
     @media (max-width: 768px) {
       .hello {
-        margin-bottom: 14px;
+        margin-bottom: 22px;
       }
     }
     .hello h1 {
@@ -8798,7 +8798,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
     }
 
     section {
-      margin-bottom: 22px;
+      margin-bottom: 32px;
     }
     .section-head {
       display: flex;
@@ -10488,4 +10488,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}w(bt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",bt);
-//# sourceMappingURL=index-G4BoClSa.js.map
+//# sourceMappingURL=index-DGBQUcP9.js.map
