@@ -3780,7 +3780,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(255, 248, 235, 0.18) 50%,
+        var(--glass-border-strong) 50%,
         transparent 100%
       );
     }
@@ -3797,10 +3797,12 @@ They'll lose access to shared trips, celebrations and any read-only child access
       font-family: var(--font-pebble);
       font-weight: 400;
       font-size: 30px;
-      color: rgba(255, 248, 235, 0.94);
+      /* Themeable: cream on the dark bg, charcoal on the light sand
+         (was hardcoded near-white → washed-out in light mode). */
+      color: var(--text-primary);
       letter-spacing: 0.04em;
       line-height: 1;
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
       margin-bottom: 6px;
     }
     .tagline {
@@ -5795,6 +5797,11 @@ They'll lose access to shared trips, celebrations and any read-only child access
       align-items: center;
       gap: 22px;
       flex-wrap: wrap;
+      /* Cap the content width: on the full-bleed Children panel the
+         %-block's margin-left:auto otherwise flings it ~1400px right,
+         leaving a vast empty centre. 820px keeps avatar · name · %
+         in the same balanced proportion the Today card has. */
+      max-width: 820px;
     }
     .ring {
       border-radius: 999px;
@@ -5927,7 +5934,11 @@ They'll lose access to shared trips, celebrations and any read-only child access
     }
     .ms-stat.done { background: rgba(79, 194, 107, 0.18); color: var(--ink-green); }
     .ms-stat.emerging { background: rgba(212, 168, 67, 0.18); color: var(--ink-amber); }
-    .ms-stat.up { background: rgba(255, 248, 235, 0.08); color: var(--text-secondary); }
+    .ms-stat.up {
+      background: var(--field-bg);
+      color: var(--text-secondary);
+      border: 1px solid var(--hairline);
+    }
 
     .two-col {
       display: grid;
@@ -7982,7 +7993,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       ${this._renderChildAccessSection()}
 
       <section>
-        <div class="section-head"><h2>Settings</h2></div>
+        <div class="section-head"><h2>Account</h2></div>
         <glass-panel padding="md" variant="strong">
           <div class="set-row">
             <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg></span>
@@ -8022,6 +8033,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <div class="set-row">
             <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.5 5 5.5.8-4 4 1 5.5L12 15l-5 2.3 1-5.5-4-4 5.5-.8z"/></svg></span>
             <div class="sl"><b>PebblePath Premium</b><span>Unlimited Pebble, summaries, and insights.</span></div>
+            <span class="set-meta">Managed in the app</span>
           </div>
         </glass-panel>
       </section>
@@ -9829,8 +9841,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
       color: var(--ink-amber);
     }
     .ms-stat.up {
-      background: rgba(255, 248, 235, 0.08);
+      background: var(--field-bg);
       color: var(--text-secondary);
+      border: 1px solid var(--hairline);
     }
     .insight {
       display: flex;
@@ -10124,6 +10137,17 @@ They'll lose access to shared trips, celebrations and any read-only child access
     .set-row .sl span {
       font-size: 12.5px;
       color: var(--text-secondary);
+    }
+    /* Right-side INFO label (e.g. Premium "Managed in the app").
+       Deliberately NOT a pill/button — every other set-row has an
+       actionable control on the right, so a bare row read as broken;
+       this muted, control-less text keeps the row grammar consistent
+       while clearly signalling "informational, not actionable". */
+    .set-row .set-meta {
+      flex-shrink: 0;
+      font-size: 12.5px;
+      color: var(--text-tertiary);
+      font-style: italic;
     }
     .set-pill {
       display: inline-flex;
@@ -10508,4 +10532,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}w(bt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",bt);
-//# sourceMappingURL=index-C_6xKrVU.js.map
+//# sourceMappingURL=index-WvafLR9S.js.map
