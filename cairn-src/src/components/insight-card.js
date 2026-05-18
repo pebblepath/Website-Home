@@ -153,19 +153,24 @@ export class InsightCard extends LitElement {
        light accent drives the cat-label + glyph (legible on dusk).
        Mirrors the app's domain mapping (motor=blue, language=amber,
        social=rose, cognitive=purple, cross=teal). */
-    .fam-motor { background: linear-gradient(135deg, rgba(107,154,196,0.13), rgba(107,154,196,0.04)); }
+    /* Hue tint layered OVER the themed glass fill — without the
+       --glass-fill base the faint tint sat straight on the page and
+       charcoal text read as muddy "dark-on-dark" in light mode. The
+       base makes it a proper light card in light / stays subtle in
+       dark (--glass-fill there is ~0.06, invisible under the tint). */
+    .fam-motor { background: linear-gradient(135deg, rgba(107,154,196,0.16), rgba(107,154,196,0.05)), var(--glass-fill); }
     .fam-motor .icirc { background: rgba(107,154,196,0.22); color: var(--ink-blue); }
     .fam-motor .cat .type { color: var(--ink-blue); }
-    .fam-language { background: linear-gradient(135deg, rgba(212,168,67,0.13), rgba(212,168,67,0.04)); }
+    .fam-language { background: linear-gradient(135deg, rgba(212,168,67,0.16), rgba(212,168,67,0.05)), var(--glass-fill); }
     .fam-language .icirc { background: rgba(212,168,67,0.22); color: var(--ink-amber); }
     .fam-language .cat .type { color: var(--ink-amber); }
-    .fam-social { background: linear-gradient(135deg, rgba(201,138,138,0.13), rgba(201,138,138,0.04)); }
+    .fam-social { background: linear-gradient(135deg, rgba(201,138,138,0.16), rgba(201,138,138,0.05)), var(--glass-fill); }
     .fam-social .icirc { background: rgba(201,138,138,0.22); color: var(--ink-rose); }
     .fam-social .cat .type { color: var(--ink-rose); }
-    .fam-cognitive { background: linear-gradient(135deg, rgba(139,123,181,0.13), rgba(139,123,181,0.04)); }
+    .fam-cognitive { background: linear-gradient(135deg, rgba(139,123,181,0.16), rgba(139,123,181,0.05)), var(--glass-fill); }
     .fam-cognitive .icirc { background: rgba(139,123,181,0.22); color: var(--ink-purple); }
     .fam-cognitive .cat .type { color: var(--ink-purple); }
-    .fam-cross { background: linear-gradient(135deg, rgba(61,155,143,0.13), rgba(61,155,143,0.04)); }
+    .fam-cross { background: linear-gradient(135deg, rgba(61,155,143,0.16), rgba(61,155,143,0.05)), var(--glass-fill); }
     .fam-cross .icirc { background: rgba(61,155,143,0.22); color: var(--ink-teal); }
     .fam-cross .cat .type { color: var(--ink-teal); }
   `;

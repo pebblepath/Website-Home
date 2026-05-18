@@ -340,8 +340,15 @@ export class TripPlanner extends LitElement {
       align-items: flex-start;
       justify-content: space-between;
       gap: 16px;
-      flex-wrap: wrap;
+      /* nowrap (was wrap): on mobile the wide title block pushed the
+         × close button onto its OWN row, left-aligned — bad UI. The
+         × must stay pinned top-right; the title block shrinks + wraps
+         instead. */
+      flex-wrap: nowrap;
       margin-bottom: 18px;
+    }
+    .pl-head > div:first-child {
+      min-width: 0;
     }
     .pl-head h3 {
       margin: 0;
@@ -364,8 +371,8 @@ export class TripPlanner extends LitElement {
       background: var(--glass-fill);
       border: 1px solid var(--glass-border);
       color: var(--text-secondary);
-      width: 34px;
-      height: 34px;
+      width: 40px;
+      height: 40px;
       border-radius: 999px;
       cursor: pointer;
       display: inline-flex;

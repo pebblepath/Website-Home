@@ -372,8 +372,18 @@ export class HomeScreen extends LitElement {
       .activity-btn-label {
         display: none;
       }
+      /* Label hidden on mobile → make it a CLEAN 40px circle with a
+         properly-sized "+" (was a cramped pill + tiny 13.5px glyph).
+         40px matches the planner close + is a comfortable touch
+         target; the FAB stays the larger primary floating action. */
       .activity-btn {
-        padding: 8px 12px;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        justify-content: center;
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1;
       }
     }
     .brand {
@@ -579,7 +589,18 @@ export class HomeScreen extends LitElement {
     }
     @media (max-width: 720px) {
       /* Sit above the fixed bottom nav bar. */
-      .pebble-fab { right: 16px; bottom: 84px; padding: 12px; }
+      /* Icon-only on mobile → an explicit, clean 52px circle (was
+         padding-derived ~44 which varied with the glyph). 52 keeps
+         it the clearly-primary floating action, distinct from the
+         40px header circular controls. */
+      .pebble-fab {
+        right: 16px;
+        bottom: 84px;
+        width: 52px;
+        height: 52px;
+        padding: 0;
+        justify-content: center;
+      }
       .pebble-fab .lbl { display: none; }
       .pebble-fab-panel {
         right: 12px;
@@ -653,6 +674,15 @@ export class HomeScreen extends LitElement {
     .hello .stat span {
       color: var(--text-primary);
       font-weight: 600;
+    }
+    /* Static page subtitle (non-Today tabs). Visually matches the
+       old subtitle but is NOT interactive — no cursor/hover — so it
+       never looks editable (only Today's .family-name is editable). */
+    .hello .page-sub {
+      color: var(--text-tertiary);
+      font-size: 14px;
+      margin-top: 6px;
+      letter-spacing: -0.005em;
     }
     .hello .family-name {
       color: var(--text-tertiary);
@@ -728,12 +758,17 @@ export class HomeScreen extends LitElement {
        header itself — the shared .hello margin + main padding stay
        at their original values, this just reclaims part of that gap
        on Today. Other tabs unaffected. */
+    /* Gentle pull so the cards sit close under the greeting. The
+       scope chip moved into the header rightSlot (unified with the
+       other tabs), so the old -20px (calibrated WITH a scope row
+       present) would now jam the cards into the family-name; -6 is
+       the right gap now. */
     section.today-lead {
-      margin-top: -20px;
+      margin-top: -6px;
     }
     @media (max-width: 768px) {
       section.today-lead {
-        margin-top: -12px;
+        margin-top: -4px;
       }
     }
     .section-head h2 {
@@ -1495,7 +1530,9 @@ export class HomeScreen extends LitElement {
         height: 21px;
       }
       .bn-tab.active {
-        color: var(--teal-pebble);
+        /* teal-pebble (#3d9b8f) was too dim on the dark-green bar;
+           a bright light-teal reads clearly as the active tab. */
+        color: #8fe0d2;
       }
       main {
         padding: 18px 16px calc(82px + env(safe-area-inset-bottom));
@@ -1891,10 +1928,13 @@ export class HomeScreen extends LitElement {
       color: var(--ink-teal);
       border: 1px solid rgba(61, 155, 143, 0.35);
     }
+    /* Identity · headline-stat as ONE left-aligned cluster with a
+       hairline divider (consistent with the Children card). */
     .child-progress {
-      margin-left: auto;
-      text-align: right;
-      min-width: 150px;
+      margin-left: 6px;
+      padding-left: 28px;
+      border-left: 1px solid var(--hairline);
+      text-align: left;
     }
     .child-progress .big {
       font-family: var(--font-display);
@@ -1906,6 +1946,16 @@ export class HomeScreen extends LitElement {
       color: var(--text-secondary);
       font-size: 12.5px;
       margin-top: 2px;
+    }
+    /* On phones the child-card flex-wraps so the stat stacks below
+       the identity — drop the left divider/indent (a vertical rule
+       on a wrapped, full-width block reads wrong). */
+    @media (max-width: 560px) {
+      .child-progress {
+        margin-left: 0;
+        padding-left: 0;
+        border-left: none;
+      }
     }
     .cta-card {
       display: flex;
@@ -2896,7 +2946,7 @@ export class HomeScreen extends LitElement {
         <div class="hello">
           <div>
             <h1>${title}</h1>
-            ${subtitle ? html`<div class="family-name">${subtitle}</div>` : ''}
+            ${subtitle ? html`<div class="page-sub">${subtitle}</div>` : ''}
           </div>
           ${rightSlot}
         </div>
@@ -3439,10 +3489,9 @@ export class HomeScreen extends LitElement {
     const dc = cd.dailyCard;
 
     return html`
-      ${this._renderTodayHeader()}
+      ${this._renderTodayHeader(scope)}
 
       <section class="today-lead">
-        <div class="section-head scope-only">${scope}</div>
         <div class="today-top">
           <div class="today-top-left">
             <glass-panel padding="md" variant="strong">

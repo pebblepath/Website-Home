@@ -169,11 +169,6 @@ export class ChildOverview extends LitElement {
       align-items: center;
       gap: 22px;
       flex-wrap: wrap;
-      /* Cap the content width: on the full-bleed Children panel the
-         %-block's margin-left:auto otherwise flings it ~1400px right,
-         leaving a vast empty centre. 820px keeps avatar · name · %
-         in the same balanced proportion the Today card has. */
-      max-width: 820px;
     }
     .ring {
       border-radius: 999px;
@@ -203,10 +198,15 @@ export class ChildOverview extends LitElement {
       color: var(--ink-teal);
       border: 1px solid rgba(61, 155, 143, 0.35);
     }
+    /* Identity · headline-stat as ONE left-aligned cluster with a
+       hairline divider — NOT margin-left:auto (which stranded the %
+       mid-panel on the full-bleed Children card). Reads as an
+       intentional hero band at any container width; matches Today. */
     .progress {
-      margin-left: auto;
-      text-align: right;
-      min-width: 150px;
+      margin-left: 6px;
+      padding-left: 28px;
+      border-left: 1px solid var(--hairline);
+      text-align: left;
     }
     .progress .big {
       font-family: var(--font-display);
@@ -464,8 +464,20 @@ export class ChildOverview extends LitElement {
       }
       .tl-name { font-size: 11px; }
       .tl-axis { font-size: 10px; }
-      .child-card { gap: 16px; }
-      .progress { margin-left: 0; min-width: 0; text-align: left; }
+      /* Compact the Children hero card on phones — it was too tall:
+         trim panel padding, smaller name, tighter pill, and drop the
+         left-divider on .progress (it's a stacked block here, not a
+         row, so a vertical rule reads wrong). */
+      .panel { padding: 16px; }
+      .child-card { gap: 14px; }
+      .meta h2 { font-size: 21px; }
+      .meta .agepill { margin-top: 7px; }
+      .progress {
+        margin-left: 0;
+        padding-left: 0;
+        border-left: none;
+        text-align: left;
+      }
     }
 
     /* Pebble's daily card */
@@ -694,7 +706,7 @@ export class ChildOverview extends LitElement {
                 .name=${child.name}
                 .photo=${child.profilePhotoURL ?? ''}
                 .hue=${150}
-                size="84"
+                size="72"
               ></member-chip>
             </span>
             <div class="meta">

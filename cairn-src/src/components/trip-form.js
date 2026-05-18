@@ -408,8 +408,11 @@ export class TripForm extends LitElement {
       min-width: 0;
       min-height: 44px;
       box-sizing: border-box;
-      background: rgba(255, 248, 235, 0.06);
-      border: 1px solid rgba(255, 248, 235, 0.16);
+      /* Themeable: the old light-on-dark rgba border/bg was invisible
+         on the light sand surface — fields had no visible outline.
+         --glass-border-strong reads clearly in BOTH themes. */
+      background: var(--field-bg);
+      border: 1px solid var(--glass-border-strong);
       border-radius: var(--radius-input);
       padding: 10px 14px;
       color: var(--text-primary);
@@ -426,7 +429,7 @@ export class TripForm extends LitElement {
     textarea:focus {
       outline: none;
       border-color: var(--terracotta);
-      background: rgba(255, 248, 235, 0.1);
+      background: var(--glass-fill-strong);
     }
     input::placeholder,
     textarea::placeholder {
@@ -528,8 +531,8 @@ export class TripForm extends LitElement {
       min-height: 44px;
       padding: 3px;
       gap: 2px;
-      background: rgba(255, 248, 235, 0.06);
-      border: 1px solid rgba(255, 248, 235, 0.16);
+      background: var(--field-bg);
+      border: 1px solid var(--glass-border-strong);
       border-radius: var(--radius-input);
     }
     .seg button {
@@ -579,8 +582,8 @@ export class TripForm extends LitElement {
       align-items: center;
       gap: 8px;
       padding: 5px 12px 5px 5px;
-      background: rgba(255, 248, 235, 0.05);
-      border: 1px solid rgba(255, 248, 235, 0.12);
+      background: var(--field-bg);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius-pill);
       cursor: pointer;
       font-size: 13px;
