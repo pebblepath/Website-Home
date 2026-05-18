@@ -1020,12 +1020,43 @@ class FamilyDataStore extends EventTarget {
       if (this._vtBackfilled.has(key)) continue;
       this._vtBackfilled.add(key);
       updateDoc(doc(db, 'families', this._currentFamilyId, collName, d.id), {
-        visibleTo: computeVisibleTo(data.visibility ?? 'family', fam, data.createdBy),
+        // Slice 3a: include tagged attendees (Participants) in the
+        // backfilled audience so a legacy doc never under-shares once
+        // enforcement is on. Connections deliberately NOT fanned out
+        // here — legacy docs predate them and their 'extended' already
+        // resolves to a safe superset; a per-doc async family fetch in
+        // a backfill loop would be needlessly heavy.
+        visibleTo: computeVisibleTo(
+          data.visibility ?? 'family', fam, data.createdBy,
+          Array.isArray(data.attendees) ? data.attendees : [],
+        ),
       }).catch((e) => {
         this._vtBackfilled.delete(key); // allow retry on the next snapshot
         console.warn(`[Cairn] visibleTo backfill failed (${key}):`, e?.code, e?.message);
       });
     }
+  }
+
+  /**
+   * Phase 2B Slice 3a (2026-05-18) — materialize a trip/event's
+   * `visibleTo` with the flat-family 3-stop semantics:
+   *   Just Me (personal)     → owner
+   *   Participants (family)  → household + owner + TAGGED attendees
+   *   Everyone (extended)    → + cairn ring + all CONNECTION members
+   * Tagged attendees always land in the audience (so "Participants"
+   * shows the trip to the people you tagged — Thomas's spec). The
+   * connected-family member fan-out is fetched ONLY for "Everyone"
+   * (the async resolve is skipped for personal/family — no cost on
+   * the common path). Shared by saveTrip + saveEvent so the two
+   * stay in parity.
+   */
+  async _visibleToFor(rest, family, ownerUid) {
+    const visibility = rest?.visibility ?? 'family';
+    const attendees = Array.isArray(rest?.attendees) ? rest.attendees : [];
+    const connMembers = visibility === 'extended'
+      ? await resolveConnectionMemberIds(family)
+      : [];
+    return computeVisibleTo(visibility, family, ownerUid, attendees, connMembers);
   }
 
   /**
@@ -1043,8 +1074,10 @@ class FamilyDataStore extends EventTarget {
     };
     // Stage 1 (additive — no rule/query change yet): always carry an
     // accurate read-audience so stage 2 can flip enforcement on safely.
-    payload.visibleTo = computeVisibleTo(
-      rest.visibility ?? 'family',
+    // Slice 3a: now includes tagged attendees (Participants) + resolved
+    // connection members (Everyone) per the flat-family 3-stop model.
+    payload.visibleTo = await this._visibleToFor(
+      rest,
       this.state.family,
       rest.createdBy ?? uid, // existing creator on update; this user on create
     );
@@ -1199,9 +1232,10 @@ class FamilyDataStore extends EventTarget {
     const { id, createdAt, updatedAt, ...rest } = event;
     const payload = { ...rest, updatedAt: serverTimestamp() };
     // Stage 1 (additive) — parity with saveTrip so stage-2 enforcement
-    // can cover /familyEvents too.
-    payload.visibleTo = computeVisibleTo(
-      rest.visibility ?? 'family',
+    // can cover /familyEvents too. Slice 3a: same 3-stop audience
+    // (attendees for Participants, connection members for Everyone).
+    payload.visibleTo = await this._visibleToFor(
+      rest,
       this.state.family,
       rest.createdBy ?? uid,
     );
@@ -1446,6 +1480,9 @@ class FamilyDataStore extends EventTarget {
         },
         { merge: true },
       );
+      // Slice 1b: backfill the mutual connection for an already-joined
+      // pair (self-healing on any re-entry; arrayUnion is idempotent).
+      await this._recordMutualConnection(family.id, uid);
       return family.id;
     }
 
@@ -1494,7 +1531,52 @@ class FamilyDataStore extends EventTarget {
       { merge: true },
     );
 
+    // Slice 1b: record the mutual family↔family connection.
+    await this._recordMutualConnection(family.id, uid);
+
     return family.id;
+  }
+
+  /**
+   * Flat-family model — Phase 2B Slice 1b (2026-05-18). Records the
+   * MUTUAL family↔family connection after a CAIRN-code redemption.
+   * Additive + best-effort: a failure here NEVER fails the join (the
+   * connection is recoverable on any later re-entry — `arrayUnion` is
+   * idempotent — and the join is the critical path).
+   *
+   * A connection grants ONLY activity co-visibility (Slice 2's
+   * `computeVisibleTo`) — NEVER `/children`. Both writes ride the
+   * EXISTING `/families` update branches: the HOST write is authorized
+   * by branch-2 (the redeemer is now in the host's `cairnMemberIds`,
+   * and we touch neither `memberIds` nor `childViewers`); the OWN-family
+   * write by branch-1/2 (the redeemer is a member of their own family).
+   * So the strict `isJoiningOwnUidAsCairn` join rule is UNTOUCHED — no
+   * firestore.rules change, no rule deploy for this slice.
+   *
+   * Familyless / Cairn-only redeemer (no own family doc yet) → skipped;
+   * deferred to 2C account/family unification (consistent with the
+   * "build on CAIRN now, unify in 2C" sequencing).
+   */
+  async _recordMutualConnection(hostFamilyId, uid) {
+    try {
+      const { getDoc, arrayUnion } = await import('firebase/firestore');
+      const meSnap = await getDoc(doc(db, 'users', uid));
+      const myFamilyId = meSnap.exists() ? meSnap.data()?.familyId : null;
+      // No own family yet (Cairn-only / familyless) → defer to 2C.
+      // Can't connect a family to itself.
+      if (!myFamilyId || myFamilyId === hostFamilyId) return;
+      await updateDoc(doc(db, 'families', hostFamilyId), {
+        connectedFamilyIds: arrayUnion(myFamilyId),
+        updatedAt: serverTimestamp(),
+      });
+      await updateDoc(doc(db, 'families', myFamilyId), {
+        connectedFamilyIds: arrayUnion(hostFamilyId),
+        updatedAt: serverTimestamp(),
+      });
+    } catch (e) {
+      // Best-effort: a failed connection record must not fail the join.
+      console.warn('[connect] mutual connection record skipped (non-fatal):', e);
+    }
   }
 
   /**
@@ -1653,6 +1735,12 @@ class FamilyDataStore extends EventTarget {
       // yet" rather than throwing on the missing field.
       memberIds: [],
       cairnMemberIds: [uid],
+      // Flat-family model Phase 2B (2026-05-18): families this family
+      // is connected to (mutual; activity co-visibility ONLY, never
+      // /children). Separate, narrower tier than cairnMemberIds.
+      // Populated by the mutual connect handshake (Slice 1b); read
+      // defensively as `?? []` everywhere.
+      connectedFamilyIds: [],
       cairnMaxMembers: 20,
       cairnInviteCode: code,
       cairnInviteCodeExpiresAt: expiresAt,
@@ -1795,28 +1883,119 @@ export function deriveExtendedMembers(uid, family) {
 }
 
 /**
+ * Phase 2B Slice 3b (2026-05-18) — the people behind a family's
+ * `connectedFamilyIds`, for the trip/activity attendee picker's
+ * "Connections" group. Same member-object shape as
+ * `deriveExtendedMembers` ({uid,displayName,photoURL,role,circles,hue}).
+ * Async — fetches each connected family doc + reads its
+ * `memberProfiles`/`memberIds`. Best-effort: an unreadable/missing
+ * connected family is skipped, never throws. De-duped by uid across
+ * families; the viewer is excluded (they're in the immediate group).
+ *
+ * (Lean parallel `resolveConnectionMemberIds` — Slice 2 — returns just
+ * the uids for the save-path `computeVisibleTo`; this returns the
+ * richer profiles the picker needs. Both are best-effort fetches; kept
+ * separate so the perf-sensitive save path stays uid-only.)
+ */
+export async function deriveConnectionMembers(uid, family) {
+  const ids = Array.isArray(family?.connectedFamilyIds) ? family.connectedFamilyIds : [];
+  if (ids.length === 0 || !db) return [];
+  const { getDoc } = await import('firebase/firestore');
+  const out = [];
+  const seen = new Set(uid ? [uid] : []);
+  let hue = 150;
+  for (const fid of ids) {
+    try {
+      const snap = await getDoc(doc(db, 'families', fid));
+      if (!snap.exists()) continue;
+      const fam = snap.data() ?? {};
+      const profiles = fam.memberProfiles ?? {};
+      const famName = fam.name ?? 'Connection';
+      for (const m of (fam.memberIds ?? [])) {
+        if (seen.has(m)) continue;
+        seen.add(m);
+        const url = profiles[m]?.profilePhotoURL;
+        out.push({
+          uid: m,
+          displayName: profiles[m]?.displayName ?? 'Connection',
+          photoURL: typeof url === 'string' && /^https?:\/\//i.test(url) ? url : null,
+          role: 'connection',
+          circles: ['connection'],
+          familyName: famName,
+          hue,
+        });
+        hue = (hue + 53) % 360;
+      }
+    } catch { /* skip unreadable connection — best-effort */ }
+  }
+  return out;
+}
+
+/**
  * 2026-05-15 — materialized read-audience for a trip / family-event,
  * so visibility can be ENFORCED by Firestore rules (rules can't filter
  * list queries, so the gating set must live on the doc — same pattern
  * the codebase uses for per-user scoping).
- *   - personal → just the owner
- *   - family   → the PP household (memberIds) + owner
- *   - extended → the whole Cairn ring (memberIds ∪ cairnMemberIds) + owner
- * The owner is always included so a Cairn-only creator (empty memberIds)
- * never loses sight of their own trip. Recompute on every save; a
- * lazy backfill (see `_backfillVisibleTo`) populates legacy docs before
- * the stage-2 rule/query switch so nothing vanishes mid-migration.
+ * Flat-family model — Phase 2B Slice 2 (2026-05-18). The stored
+ * `visibility` keys stay `personal|family|extended` (UI relabels them
+ * Just Me / Participants / Everyone in Slice 3 — no field migration).
+ * Audience per stop:
+ *   - personal  (Just Me)      → just the owner
+ *   - family    (Participants) → memberIds + owner + tagged attendees
+ *   - extended  (Everyone)     → memberIds + cairnMemberIds + owner
+ *                                + attendees + connection members
+ * `attendees` (the trip's tagged uids) and `connectionMemberIds` (the
+ * resolved member uids of `family.connectedFamilyIds`, via
+ * `resolveConnectionMemberIds`) are NEW optional params, default `[]`.
+ * With them omitted this is BYTE-IDENTICAL to the prior behaviour
+ * (existing call sites unchanged → Slice 2 is behaviour-neutral until
+ * Slice 3 starts passing them). `cairnMemberIds` is KEPT in `extended`
+ * for back-compat so existing ring-shared trips never vanish on
+ * re-save; connections are ADDED, not a replacement.
+ * The owner is always included so a Cairn-only creator (empty
+ * memberIds) never loses sight of their own trip. Recompute on every
+ * save; `_backfillVisibleTo` populates legacy docs.
+ *
+ * ⚠️ LOCKSTEP with iOS `AppState.tripVisibleTo` — change both together.
  */
-export function computeVisibleTo(visibility, family, ownerUid) {
+export function computeVisibleTo(visibility, family, ownerUid, attendees = [], connectionMemberIds = []) {
   const memberIds = family?.memberIds ?? [];
   const cairnIds = family?.cairnMemberIds ?? [];
   const owner = ownerUid ? [ownerUid] : [];
+  const tagged = Array.isArray(attendees) ? attendees : [];
+  const conns = Array.isArray(connectionMemberIds) ? connectionMemberIds : [];
   if (visibility === 'personal') return [...new Set(owner)];
   if (visibility === 'extended') {
-    return [...new Set([...memberIds, ...cairnIds, ...owner])];
+    return [...new Set([...memberIds, ...cairnIds, ...owner, ...tagged, ...conns])];
   }
-  // 'family' + any unknown/missing value → PP household only.
-  return [...new Set([...memberIds, ...owner])];
+  // 'family' + any unknown/missing value → household + tagged attendees.
+  return [...new Set([...memberIds, ...owner, ...tagged])];
+}
+
+/**
+ * Phase 2B Slice 2 — resolve the member uids behind a family's
+ * `connectedFamilyIds` (each connection is family↔family; we want the
+ * PEOPLE in those families so they can land in an "Everyone" trip's
+ * materialized `visibleTo`). Async (fetches each connected family doc);
+ * call it in the save path ONLY when visibility === 'extended' and feed
+ * the result into `computeVisibleTo`'s `connectionMemberIds`. A
+ * connection's members get activity co-visibility ONLY — NEVER
+ * `/children` (that gate stays `isCairnMember`, untouched). Best-effort:
+ * an unreadable/missing connected family is skipped, never throws.
+ */
+export async function resolveConnectionMemberIds(family) {
+  const ids = Array.isArray(family?.connectedFamilyIds) ? family.connectedFamilyIds : [];
+  if (ids.length === 0 || !db) return [];
+  const { getDoc } = await import('firebase/firestore');
+  const out = new Set();
+  for (const fid of ids) {
+    try {
+      const snap = await getDoc(doc(db, 'families', fid));
+      if (!snap.exists()) continue;
+      for (const uid of (snap.data()?.memberIds ?? [])) out.add(uid);
+    } catch { /* skip unreadable connection — best-effort */ }
+  }
+  return [...out];
 }
 
 /** Cairn invite code generator. Format: CAIRN-XXXX (4 chars). */

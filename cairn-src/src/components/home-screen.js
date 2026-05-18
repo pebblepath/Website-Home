@@ -39,6 +39,7 @@ import {
   dataStore,
   deriveImmediateMembers,
   deriveExtendedMembers,
+  deriveConnectionMembers,
   deriveBirthdayEvents,
   resolveEventOccurrence,
   parseLocalDate,
@@ -114,6 +115,12 @@ export class HomeScreen extends LitElement {
      *  drop will land. Holds the targetGroupId ('extended' or a sub-
      *  group id), or null when nothing is being dragged over. */
     _dragOverTarget: { state: true },
+    /** Flat-family Phase 2B Slice 3b-ii — people across the family's
+     *  `connectedFamilyIds` for the trip-form "Connections" picker
+     *  group. Connected families are NOT subscribed in state, so this
+     *  is an async one-shot fetch (`deriveConnectionMembers`) refreshed
+     *  from `updated()` when the family's connection set changes. */
+    _connectionMembers: { state: true },
   };
 
   constructor() {
@@ -125,6 +132,10 @@ export class HomeScreen extends LitElement {
     this.trips = [];
     this.events = [];
     this.holidays = [];
+    this._connectionMembers = [];
+    /** Non-reactive dedup key so `updated()` only re-fetches when the
+     *  family's id or connectedFamilyIds set actually changes. */
+    this._connKey = '';
     this.ppFamily = null;
     this.ppIsMember = false;
     this.ppChildren = [];
@@ -2167,6 +2178,47 @@ export class HomeScreen extends LitElement {
     return deriveExtendedMembers(this.user?.uid, this.family);
   }
 
+  /** Flat-family Phase 2B Slice 3b-ii — the "Connections" picker
+   *  group: people across the family's `connectedFamilyIds`. Async,
+   *  so it reads the cached `_connectionMembers` state (populated by
+   *  `_refreshConnectionMembers` from `updated()`); empty in preview. */
+  _liveConnections() {
+    if (this.preview) return [];
+    return this._connectionMembers ?? [];
+  }
+
+  async _refreshConnectionMembers() {
+    if (this.preview || !this.family) {
+      this._connectionMembers = [];
+      return;
+    }
+    try {
+      this._connectionMembers = await deriveConnectionMembers(
+        this.user?.uid,
+        this.family,
+      );
+    } catch {
+      this._connectionMembers = []; // best-effort — never block the UI
+    }
+  }
+
+  /** Lit lifecycle. Only re-fetch connection members when the family's
+   *  id or its `connectedFamilyIds` set actually changes (the dedup
+   *  key) — assigning `_connectionMembers` re-renders but doesn't
+   *  change `family`, so this can't loop. */
+  updated(changed) {
+    if (changed.has('family')) {
+      const ids = Array.isArray(this.family?.connectedFamilyIds)
+        ? this.family.connectedFamilyIds
+        : [];
+      const key = `${this.family?.id ?? ''}|${[...ids].sort().join(',')}`;
+      if (key !== this._connKey) {
+        this._connKey = key;
+        this._refreshConnectionMembers();
+      }
+    }
+  }
+
   _liveTrips() {
     if (this.preview) return mockTrips;
     return this.trips ?? [];
@@ -4152,6 +4204,7 @@ export class HomeScreen extends LitElement {
         .trip=${this._formTrip}
         .members=${immediate}
         .extendedMembers=${this._liveExtended()}
+        .connectionMembers=${this._liveConnections()}
         .currentUid=${this.user?.uid ?? ''}
         .familyId=${this.family?.id ?? ''}
         .busy=${this._formBusy}

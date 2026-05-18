@@ -28,9 +28,17 @@ export class TripForm extends LitElement {
     trip: { type: Object },
     members: { type: Array },
     /** Extended-family ring members (in-laws / grandparents) — Cairn
-     *  ring minus PP household. Tagging one as an attendee explicitly
-     *  elevates trip visibility to "extended" (reversible). */
+     *  ring minus PP household. (Phase 2B: tagging no longer
+     *  auto-elevates visibility — "Everyone" is an explicit pick;
+     *  tagging anyone just adds them as a participant.) */
     extendedMembers: { type: Array },
+    /** Flat-family Phase 2B — people across `connectedFamilyIds`
+     *  families (`deriveConnectionMembers`). Rendered as a
+     *  "Connections" group in the attendee picker. Tagging one adds
+     *  them as a participant (they see it via Participants/Everyone);
+     *  it does NOT force visibility. Empty until home-screen threads
+     *  the prop (3b-ii). */
+    connectionMembers: { type: Array },
     currentUid: { type: String },
     familyId: { type: String },
     busy: { type: Boolean },
@@ -64,6 +72,7 @@ export class TripForm extends LitElement {
     this.trip = null;
     this.members = [];
     this.extendedMembers = [];
+    this.connectionMembers = [];
     this._visibilityAutoExtended = false;
     this.currentUid = '';
     this.familyId = '';
@@ -930,25 +939,13 @@ export class TripForm extends LitElement {
     let viewers = this._draft.viewers ?? [];
     if (!has) viewers = viewers.filter((id) => id !== uid);
 
-    let visibility = this._draft.visibility ?? 'family';
-    if (!has && this._isExtendedUid(uid) && visibility !== 'extended') {
-      // Tagging an in-law/grandparent → explicitly elevate so the trip
-      // is actually visible to them. Surfaced via the inline note +
-      // the Visibility control switching to Extended (not silent).
-      visibility = 'extended';
-      this._visibilityAutoExtended = true;
-    } else if (has && this._visibilityAutoExtended) {
-      // Removed an attendee — if no extended members remain tagged and
-      // WE were the ones who elevated, revert to "family". A manual
-      // visibility pick clears the flag so this never overrides intent.
-      const anyExtendedLeft = attendees.some((id) => this._isExtendedUid(id));
-      if (!anyExtendedLeft) {
-        visibility = 'family';
-        this._visibilityAutoExtended = false;
-      }
-    }
-
-    this._draft = { ...this._draft, attendees, viewers, visibility };
+    // Phase 2B (2026-05-18): tagging NO LONGER auto-elevates visibility.
+    // A tagged participant is visible because `computeVisibleTo`
+    // includes attendees in Participants ("family") + Everyone
+    // ("extended"). "Everyone" stays a deliberate, separate pick — so
+    // inviting one in-law/connection no longer broadcasts to the whole
+    // ring. Visibility is purely the user's explicit choice.
+    this._draft = { ...this._draft, attendees, viewers };
   }
 
   _toggleViewer(uid) {
@@ -1095,18 +1092,13 @@ export class TripForm extends LitElement {
                         class=${d.visibility === v ? 'active' : ''}
                         @click=${() => this._setVisibility(v)}
                       >
-                        ${v === 'personal' ? 'Just me' : v === 'family' ? 'Family' : 'Extended'}
+                        ${v === 'personal' ? 'Just Me' : v === 'family' ? 'Participants' : 'Everyone'}
                       </button>
                     `,
                   )}
                 </div>
-                ${this._visibilityAutoExtended
-                  ? html`<div class="vis-note">
-                      Set to <strong>Extended</strong> because you tagged
-                      extended family — they'll see this trip. Remove them
-                      or pick a different visibility to change it.
-                    </div>`
-                  : ''}
+                <!-- Phase 2B: visibility auto-elevate removed; the
+                     vis-note no longer applies. -->
               </div>
               <div class="field">
                 <label>Who's going</label>
@@ -1137,6 +1129,30 @@ export class TripForm extends LitElement {
                             <div
                               class="att-chip ${d.attendees.includes(m.uid) ? 'on' : ''}"
                               @click=${() => this._toggleAttendee(m.uid)}
+                            >
+                              <member-chip
+                                .name=${m.displayName}
+                                .photo=${m.photoURL ?? ''}
+                                .hue=${m.hue}
+                                size="22"
+                              ></member-chip>
+                              ${m.displayName}
+                            </div>
+                          `,
+                        )}
+                      </div>
+                    `
+                  : ''}
+                ${(this.connectionMembers ?? []).length > 0
+                  ? html`
+                      <div class="att-group-label">Connections</div>
+                      <div class="attendees">
+                        ${this.connectionMembers.map(
+                          (m) => html`
+                            <div
+                              class="att-chip ${d.attendees.includes(m.uid) ? 'on' : ''}"
+                              @click=${() => this._toggleAttendee(m.uid)}
+                              title=${m.familyName ?? ''}
                             >
                               <member-chip
                                 .name=${m.displayName}
