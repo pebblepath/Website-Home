@@ -381,8 +381,8 @@ export class HomeScreen extends LitElement {
         height: 40px;
         padding: 0;
         justify-content: center;
-        font-size: 22px;
-        font-weight: 700;
+        font-size: 24px;
+        font-weight: 300;
         line-height: 1;
       }
     }
@@ -653,6 +653,19 @@ export class HomeScreen extends LitElement {
     @media (max-width: 768px) {
       .hello {
         margin-bottom: 22px;
+        /* Keep the scope/privacy pill on the SAME row as the
+           title/subheader, top-right (matches the Activities tab) —
+           was wrapping to its own left-aligned row on Today/Children
+           because the tall title block forced a flex wrap. */
+        flex-wrap: nowrap;
+        align-items: flex-start;
+      }
+      .hello > div:first-child {
+        min-width: 0;
+        flex: 1;
+      }
+      .hello > :not(div:first-child) {
+        flex-shrink: 0;
       }
     }
     .hello h1 {
@@ -1947,15 +1960,29 @@ export class HomeScreen extends LitElement {
       font-size: 12.5px;
       margin-top: 2px;
     }
-    /* On phones the child-card flex-wraps so the stat stacks below
-       the identity — drop the left divider/indent (a vertical rule
-       on a wrapped, full-width block reads wrong). */
+    /* Phones: keep the Today hero card a SINGLE simple row — avatar ·
+       name/age · % on one line (Thomas). Shrink the % to fit beside
+       the identity; drop the divider/indent. */
     @media (max-width: 560px) {
+      .child-card {
+        flex-wrap: nowrap;
+        align-items: center;
+      }
+      .child-meta {
+        flex: 1;
+        min-width: 0;
+      }
+      .child-meta h2 { font-size: 20px; }
+      .child-meta .sub { font-size: 13px; }
       .child-progress {
+        flex-shrink: 0;
         margin-left: 0;
         padding-left: 0;
         border-left: none;
+        text-align: right;
       }
+      .child-progress .big { font-size: 22px; }
+      .child-progress .lbl { font-size: 11px; }
     }
     .cta-card {
       display: flex;
@@ -2027,6 +2054,12 @@ export class HomeScreen extends LitElement {
       border: 1px solid var(--glass-border);
     }
     .theme-seg button {
+      /* min-height keeps it a comfortable tap target on mobile
+         (was ~27px — too small for touch). */
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       padding: 6px 15px;
       border-radius: var(--radius-pill);
       border: none;
@@ -3903,7 +3936,7 @@ export class HomeScreen extends LitElement {
     if (cd.hasPP) {
       const subtitle = cd.readonly
         ? 'Milestones & growth insights — read-only, shared by the parents'
-        : 'Milestones, growth insights & Pebble — from the app';
+        : 'Milestones and insights';
       const viewerScope = cd.readonly
         ? html`<span class="scope-chip">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/></svg>
@@ -3929,7 +3962,7 @@ export class HomeScreen extends LitElement {
     return html`
       ${this._renderTabHeader(
         'Children',
-        'Milestones, growth insights & Pebble — from the app',
+        'Milestones and insights',
         scope,
       )}
       <section>

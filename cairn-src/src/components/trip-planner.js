@@ -801,6 +801,41 @@ export class TripPlanner extends LitElement {
       margin-top: 10px;
       padding-left: 4px;
     }
+
+    /* ── Mobile ──────────────────────────────────────────────────
+       The planner had NO responsive rules — on phones the .add-row
+       flex-wrapped inside a 999px pill border, so the wrapped
+       multi-row controls ballooned into a giant dashed blob with
+       the title field clipped (the reported visual error). Make it
+       a clean full-width vertical stack inside a normal rounded
+       rectangle. */
+    @media (max-width: 720px) {
+      .add-row {
+        flex-direction: column;
+        align-items: stretch;
+        border-radius: var(--radius-tile);
+        padding: 14px;
+        gap: 10px;
+      }
+      .add-row input,
+      .add-row select,
+      .add-row .attach,
+      .add-row .add-btn,
+      .add-row input.t,
+      .add-row input.tm,
+      .add-row input.url,
+      .add-row select.dur {
+        width: 100%;
+        box-sizing: border-box;
+        flex: none;
+        min-width: 0;
+      }
+      .add-row input.tm { text-align: left; }
+      .add-row .attach {
+        justify-content: center;
+        max-width: none;
+      }
+    }
   `;
 
   // Google-Calendar-style week grid: a shared hour gutter + one column

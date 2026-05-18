@@ -464,20 +464,32 @@ export class ChildOverview extends LitElement {
       }
       .tl-name { font-size: 11px; }
       .tl-axis { font-size: 10px; }
-      /* Compact the Children hero card on phones — it was too tall:
-         trim panel padding, smaller name, tighter pill, and drop the
-         left-divider on .progress (it's a stacked block here, not a
-         row, so a vertical rule reads wrong). */
+      /* Phones: keep the hero card a SINGLE simple row — avatar ·
+         name/age · % all on one line (Thomas). Drop the redundant
+         "X of Y achieved" pill + the divider for simplicity, shrink
+         the % so it fits beside the identity, trim panel padding. */
       .panel { padding: 16px; }
-      .child-card { gap: 14px; }
-      .meta h2 { font-size: 21px; }
-      .meta .agepill { margin-top: 7px; }
+      .child-card {
+        gap: 14px;
+        flex-wrap: nowrap;
+        align-items: center;
+      }
+      .meta {
+        flex: 1;
+        min-width: 0;
+      }
+      .meta h2 { font-size: 20px; }
+      .meta .sub { font-size: 13px; }
+      .meta .agepill { display: none; }
       .progress {
+        flex-shrink: 0;
         margin-left: 0;
         padding-left: 0;
         border-left: none;
-        text-align: left;
+        text-align: right;
       }
+      .progress .big { font-size: 22px; }
+      .progress .lbl { font-size: 11px; }
     }
 
     /* Pebble's daily card */
