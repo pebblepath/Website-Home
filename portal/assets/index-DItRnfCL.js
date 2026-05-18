@@ -281,9 +281,11 @@ var mt=Object.defineProperty;var ft=(p,e,t)=>e in p?mt(p,e,{enumerable:!0,config
       text-align: center;
     }
     .month.current .name {
-      /* White, not teal — the dark-teal sat poorly against the
-         warm gradient backdrop and was hard to read. */
-      color: #fff;
+      /* Same colour as every other month (Thomas) — the current
+         month is already differentiated by its tinted tile + the
+         today marker; a different text colour read as inconsistent
+         (and white was wrong on the light theme). */
+      color: var(--text-secondary);
     }
     .mini-grid {
       display: grid;
@@ -2421,7 +2423,11 @@ They'll lose access to shared trips, celebrations and any read-only child access
       border: 1px solid rgba(255, 248, 235, 0.32);
       font-size: 12px;
       font-weight: 600;
-      color: var(--text-primary);
+      /* Always white — the badge sits on a photo thumbnail, so it
+         must not follow the theme (charcoal in light = unreadable
+         on the image). The frosted light pill + white text reads on
+         any cover. */
+      color: #fff;
       z-index: 2;
     }
     .body {
@@ -5583,28 +5589,29 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>`:""}
 
       <section>
-        <div class="panel">
-          <div class="child-card" style="--theme:${n};">
-            <span class="ring">
-              <member-chip
-                .name=${e.name}
-                .photo=${e.profilePhotoURL??""}
-                .hue=${150}
-                size="72"
-              ></member-chip>
-            </span>
-            <div class="meta">
-              <h2>${e.name}</h2>
-              <div class="sub">${Zt(e.dateOfBirth)}</div>
-              <span class="agepill"
-                >${i.length} of ${t.length} milestones
-                achieved</span
-              >
-            </div>
-            <div class="progress">
-              <div class="big">${r}%</div>
-              <div class="lbl">of tracked milestones</div>
-            </div>
+        <div
+          class="child-card"
+          style="--theme:${n};--wm:url('${"/portal/"}assets/playtime_watermark.jpg');"
+        >
+          <span class="ring">
+            <member-chip
+              .name=${e.name}
+              .photo=${e.profilePhotoURL??""}
+              .hue=${150}
+              size="72"
+            ></member-chip>
+          </span>
+          <div class="meta">
+            <h2>${e.name}</h2>
+            <div class="sub">${Zt(e.dateOfBirth)}</div>
+            <span class="agepill"
+              >${i.length} of ${t.length} milestones
+              achieved</span
+            >
+          </div>
+          <div class="progress">
+            <div class="big">${r}%</div>
+            <div class="lbl">of tracked milestones</div>
           </div>
         </div>
       </section>
@@ -5799,17 +5806,65 @@ They'll lose access to shared trips, celebrations and any read-only child access
       border-color: rgba(61, 155, 143, 0.45);
     }
 
-    /* child card */
+    /* Child hero card — mirrors the iOS app card: per-child theme
+       gradient, the playtime_watermark.jpg behind it, a left-side
+       theme colour-filter + soft blur for text legibility, white
+       text. (--theme + --wm are set inline per child.) */
     .child-card {
+      position: relative;
+      overflow: hidden;
       display: flex;
       align-items: center;
       gap: 22px;
       flex-wrap: wrap;
+      padding: 24px;
+      border-radius: var(--radius-card);
+      color: #fff;
+      background: linear-gradient(
+        135deg,
+        var(--theme, var(--teal-pebble)) 0%,
+        color-mix(in srgb, var(--theme, var(--teal-pebble)) 58%, #ffffff) 100%
+      );
+      box-shadow: 0 6px 22px rgba(20, 50, 46, 0.22);
+    }
+    .child-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--wm) center / cover no-repeat;
+      opacity: 0.15;
+      /* Blur the watermark itself (cheap filter, no backdrop
+         compositing) — same softened look as the iOS card's
+         backdrop-blur but without the heavy stacked-blur cost. */
+      filter: blur(2px);
+      transform: scale(1.06);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .child-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 62%;
+      background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--theme, var(--teal-pebble)) 88%, transparent) 0%,
+        color-mix(in srgb, var(--theme, var(--teal-pebble)) 55%, transparent) 50%,
+        transparent 100%
+      );
+      z-index: 0;
+      pointer-events: none;
+    }
+    .child-card > * {
+      position: relative;
+      z-index: 1;
     }
     .ring {
       border-radius: 999px;
-      padding: 4px;
-      background: var(--theme, var(--teal-pebble));
+      padding: 3px;
+      background: rgba(255, 255, 255, 0.85);
       display: inline-flex;
     }
     .meta h2 {
@@ -5817,9 +5872,10 @@ They'll lose access to shared trips, celebrations and any read-only child access
       font-family: var(--font-display);
       font-size: 26px;
       letter-spacing: -0.02em;
+      color: #fff;
     }
     .meta .sub {
-      color: var(--text-secondary);
+      color: rgba(255, 255, 255, 0.85);
       font-size: 14px;
       margin-top: 3px;
     }
@@ -5830,28 +5886,26 @@ They'll lose access to shared trips, celebrations and any read-only child access
       border-radius: var(--radius-pill);
       font-size: 12.5px;
       font-weight: 600;
-      background: rgba(61, 155, 143, 0.18);
-      color: var(--ink-teal);
-      border: 1px solid rgba(61, 155, 143, 0.35);
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.32);
     }
-    /* Identity · headline-stat as ONE left-aligned cluster with a
-       hairline divider — NOT margin-left:auto (which stranded the %
-       mid-panel on the full-bleed Children card). Reads as an
-       intentional hero band at any container width; matches Today. */
+    /* Identity · headline-stat as ONE left-aligned cluster, divider
+       in white-alpha (reads on the coloured card). */
     .progress {
       margin-left: 6px;
       padding-left: 28px;
-      border-left: 1px solid var(--hairline);
+      border-left: 1px solid rgba(255, 255, 255, 0.28);
       text-align: left;
     }
     .progress .big {
       font-family: var(--font-display);
       font-size: 30px;
       font-weight: 700;
-      color: var(--text-primary);
+      color: #fff;
     }
     .progress .lbl {
-      color: var(--text-secondary);
+      color: rgba(255, 255, 255, 0.85);
       font-size: 12.5px;
       margin-top: 2px;
     }
@@ -6109,6 +6163,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         gap: 14px;
         flex-wrap: nowrap;
         align-items: center;
+        padding: 16px;
       }
       .meta {
         flex: 1;
@@ -7145,7 +7200,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       padding: 9px 15px;
       border-radius: var(--radius-pill);
       background: var(--glass-fill);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--glass-border-strong);
       color: var(--text-secondary);
       cursor: pointer;
       font-family: var(--font-body);
@@ -7162,11 +7217,13 @@ They'll lose access to shared trips, celebrations and any read-only child access
       color: var(--text-tertiary);
     }
     .day-pill.on {
-      background: rgba(61, 155, 143, 0.22);
+      /* Solid teal (was a 0.22 tint) — white text washed out on it
+         in light mode; solid reads on both themes. */
+      background: var(--teal-pebble);
       color: #fff;
-      border-color: rgba(61, 155, 143, 0.45);
+      border-color: var(--teal-pebble);
     }
-    .day-pill.on small { color: #bfe6df; }
+    .day-pill.on small { color: rgba(255, 255, 255, 0.82); }
 
     /* Day | Week segmented toggle + optional week pager. */
     .pl-modebar {
@@ -7181,14 +7238,14 @@ They'll lose access to shared trips, celebrations and any read-only child access
       padding: 3px;
       border-radius: var(--radius-pill);
       background: var(--glass-fill);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--glass-border-strong);
     }
     .view-toggle button {
       padding: 6px 16px;
       border-radius: var(--radius-pill);
       border: none;
       background: transparent;
-      color: var(--text-tertiary);
+      color: var(--text-secondary);
       font-family: var(--font-body);
       font-size: 12.5px;
       font-weight: 600;
@@ -7196,9 +7253,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
       transition: all 150ms ease;
     }
     .view-toggle button.on {
-      background: rgba(61, 155, 143, 0.22);
+      background: var(--teal-pebble);
       color: #fff;
-      box-shadow: inset 0 0 0 1px rgba(61, 155, 143, 0.45);
+      box-shadow: inset 0 0 0 1px rgba(61, 155, 143, 0.55);
     }
     .wk-pager {
       display: inline-flex;
@@ -7250,7 +7307,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       color: var(--text-tertiary);
     }
     .wk-head .wk-hc.on {
-      background: rgba(61, 155, 143, 0.18);
+      background: var(--teal-pebble);
       color: #fff;
     }
     .wk-head .wk-hc.on small { color: #bfe6df; }
@@ -7266,7 +7323,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
     .wk-gutter .wk-hr {
       height: ${B}px;
       font-size: 10.5px;
-      color: var(--text-tertiary);
+      color: var(--text-secondary);
       text-align: right;
       padding: 4px 8px 0;
       border-bottom: 1px solid var(--gridline);
@@ -7350,7 +7407,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
     .sched-row:last-child { border-bottom: none; }
     .sched-row .hr {
       font-size: 11px;
-      color: var(--text-tertiary);
+      color: var(--text-secondary);
       padding: 6px 10px 0;
       border-right: 1px solid var(--gridline);
       text-align: right;
@@ -7461,7 +7518,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
     .add-row input,
     .add-row select {
       background: var(--field-bg);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--glass-border-strong);
       color: var(--text-primary);
       border-radius: var(--radius-pill);
       padding: 8px 13px;
@@ -10688,4 +10745,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}w(bt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",bt);
-//# sourceMappingURL=index-CweSZCuo.js.map
+//# sourceMappingURL=index-DItRnfCL.js.map
