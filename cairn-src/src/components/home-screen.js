@@ -1725,8 +1725,9 @@ export class HomeScreen extends LitElement {
       color: var(--ink-amber);
     }
     .ms-stat.up {
-      background: rgba(255, 248, 235, 0.08);
+      background: var(--field-bg);
       color: var(--text-secondary);
+      border: 1px solid var(--hairline);
     }
     .insight {
       display: flex;
@@ -2020,6 +2021,17 @@ export class HomeScreen extends LitElement {
     .set-row .sl span {
       font-size: 12.5px;
       color: var(--text-secondary);
+    }
+    /* Right-side INFO label (e.g. Premium "Managed in the app").
+       Deliberately NOT a pill/button — every other set-row has an
+       actionable control on the right, so a bare row read as broken;
+       this muted, control-less text keeps the row grammar consistent
+       while clearly signalling "informational, not actionable". */
+    .set-row .set-meta {
+      flex-shrink: 0;
+      font-size: 12.5px;
+      color: var(--text-tertiary);
+      font-style: italic;
     }
     .set-pill {
       display: inline-flex;
@@ -3694,7 +3706,7 @@ export class HomeScreen extends LitElement {
       ${this._renderChildAccessSection()}
 
       <section>
-        <div class="section-head"><h2>Settings</h2></div>
+        <div class="section-head"><h2>Account</h2></div>
         <glass-panel padding="md" variant="strong">
           <div class="set-row">
             <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg></span>
@@ -3734,6 +3746,7 @@ export class HomeScreen extends LitElement {
           <div class="set-row">
             <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.5 5 5.5.8-4 4 1 5.5L12 15l-5 2.3 1-5.5-4-4 5.5-.8z"/></svg></span>
             <div class="sl"><b>PebblePath Premium</b><span>Unlimited Pebble, summaries, and insights.</span></div>
+            <span class="set-meta">Managed in the app</span>
           </div>
         </glass-panel>
       </section>

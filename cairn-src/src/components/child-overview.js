@@ -169,6 +169,11 @@ export class ChildOverview extends LitElement {
       align-items: center;
       gap: 22px;
       flex-wrap: wrap;
+      /* Cap the content width: on the full-bleed Children panel the
+         %-block's margin-left:auto otherwise flings it ~1400px right,
+         leaving a vast empty centre. 820px keeps avatar · name · %
+         in the same balanced proportion the Today card has. */
+      max-width: 820px;
     }
     .ring {
       border-radius: 999px;
@@ -301,7 +306,11 @@ export class ChildOverview extends LitElement {
     }
     .ms-stat.done { background: rgba(79, 194, 107, 0.18); color: var(--ink-green); }
     .ms-stat.emerging { background: rgba(212, 168, 67, 0.18); color: var(--ink-amber); }
-    .ms-stat.up { background: rgba(255, 248, 235, 0.08); color: var(--text-secondary); }
+    .ms-stat.up {
+      background: var(--field-bg);
+      color: var(--text-secondary);
+      border: 1px solid var(--hairline);
+    }
 
     .two-col {
       display: grid;

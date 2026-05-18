@@ -25,7 +25,7 @@ export class DiscoverPebblePath extends LitElement {
       background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(255, 248, 235, 0.18) 50%,
+        var(--glass-border-strong) 50%,
         transparent 100%
       );
     }
@@ -42,10 +42,12 @@ export class DiscoverPebblePath extends LitElement {
       font-family: var(--font-pebble);
       font-weight: 400;
       font-size: 30px;
-      color: rgba(255, 248, 235, 0.94);
+      /* Themeable: cream on the dark bg, charcoal on the light sand
+         (was hardcoded near-white → washed-out in light mode). */
+      color: var(--text-primary);
       letter-spacing: 0.04em;
       line-height: 1;
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
       margin-bottom: 6px;
     }
     .tagline {
