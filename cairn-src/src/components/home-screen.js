@@ -229,7 +229,7 @@ export class HomeScreen extends LitElement {
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
       column-gap: 14px;
-      background: rgba(20, 12, 6, 0.42);
+      background: var(--chrome-bg);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
       border-bottom: 1px solid var(--glass-border);
@@ -524,7 +524,7 @@ export class HomeScreen extends LitElement {
       font-weight: 700;
       color: var(--text-primary);
     }
-    .pebble-fab-head .ttl svg { width: 18px; height: 18px; color: #7fd3c6; }
+    .pebble-fab-head .ttl svg { width: 18px; height: 18px; color: var(--ink-teal); }
     .pebble-fab-head .x {
       background: transparent;
       border: 1px solid var(--glass-border);
@@ -999,7 +999,7 @@ export class HomeScreen extends LitElement {
       aspect-ratio: 3 / 2;
       border-radius: 8px;
       background: rgba(255, 248, 235, 0.04);
-      border: 1px solid rgba(255, 248, 235, 0.06);
+      border: 1px solid var(--gridline);
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -1467,7 +1467,7 @@ export class HomeScreen extends LitElement {
         bottom: 0;
         z-index: 40;
         padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
-        background: rgba(20, 12, 6, 0.62);
+        background: var(--chrome-bg);
         backdrop-filter: blur(28px) saturate(180%);
         -webkit-backdrop-filter: blur(28px) saturate(180%);
         border-top: 1px solid var(--glass-border);
@@ -1513,7 +1513,7 @@ export class HomeScreen extends LitElement {
       font-size: 12.5px;
       font-weight: 600;
       background: rgba(198, 123, 92, 0.16);
-      color: #e6c3ab;
+      color: var(--ink-terracotta);
       border: 1px solid rgba(198, 123, 92, 0.4);
     }
     .scope-chip svg {
@@ -1585,12 +1585,12 @@ export class HomeScreen extends LitElement {
     }
     .scope.private {
       background: rgba(198, 123, 92, 0.16);
-      color: #e6c3ab;
+      color: var(--ink-terracotta);
       border-color: rgba(198, 123, 92, 0.4);
     }
     .scope.shared {
       background: rgba(61, 155, 143, 0.16);
-      color: #9fded2;
+      color: var(--ink-teal);
       border-color: rgba(61, 155, 143, 0.4);
     }
     .grid-2 {
@@ -1718,11 +1718,11 @@ export class HomeScreen extends LitElement {
     }
     .ms-stat.done {
       background: rgba(79, 194, 107, 0.18);
-      color: #a6e6b8;
+      color: var(--ink-green);
     }
     .ms-stat.emerging {
       background: rgba(212, 168, 67, 0.18);
-      color: #ecca7e;
+      color: var(--ink-amber);
     }
     .ms-stat.up {
       background: rgba(255, 248, 235, 0.08);
@@ -1766,16 +1766,16 @@ export class HomeScreen extends LitElement {
       color: var(--text-secondary);
     }
     .insight.strength .ikind {
-      color: #7fd3c6;
+      color: var(--ink-teal);
     }
     .insight.watching .ikind {
-      color: #ecca7e;
+      color: var(--ink-amber);
     }
     .insight.connection .ikind {
-      color: #b6a8d8;
+      color: var(--ink-purple);
     }
     .insight.nudge .ikind {
-      color: #e6b39a;
+      color: var(--ink-terracotta);
     }
     .insight h4 {
       margin: 0 0 5px;
@@ -1887,7 +1887,7 @@ export class HomeScreen extends LitElement {
       font-size: 12.5px;
       font-weight: 600;
       background: rgba(61, 155, 143, 0.18);
-      color: #9fded2;
+      color: var(--ink-teal);
       border: 1px solid rgba(61, 155, 143, 0.35);
     }
     .child-progress {
@@ -3582,7 +3582,7 @@ export class HomeScreen extends LitElement {
             ? ''
             : reqs.map(
                 (r) => html`<div class="set-row">
-                  <span class="si" style="color:#e6c3ab;">${personSvg}</span>
+                  <span class="si" style="color:var(--ink-terracotta);">${personSvg}</span>
                   <div class="sl">
                     <b>${nameFor(r.uid ?? r.id, r.displayName)}</b>
                     <span>Wants read-only access to the Children view</span>
@@ -3590,7 +3590,7 @@ export class HomeScreen extends LitElement {
                   <span style="display:inline-flex;gap:8px;">
                     <button
                       class="link"
-                      style="color:#9fded2;border-color:rgba(61,155,143,.4);"
+                      style="color:var(--ink-teal);border-color:rgba(61,155,143,.4);"
                       @click=${() => this._approveChildAccess(r.uid ?? r.id)}
                     >
                       Approve
@@ -3606,7 +3606,7 @@ export class HomeScreen extends LitElement {
               )}
           ${viewers.map(
             (uid) => html`<div class="set-row">
-              <span class="si" style="color:#9fded2;">${personSvg}</span>
+              <span class="si" style="color:var(--ink-teal);">${personSvg}</span>
               <div class="sl">
                 <b>${nameFor(uid)}</b>
                 <span>Read-only Children access</span>
@@ -3673,18 +3673,18 @@ export class HomeScreen extends LitElement {
             <div class="section-head"><h2>What each level sees</h2></div>
             <glass-panel padding="md" variant="strong">
               <div class="set-row">
-                <span class="si" style="color:#e6c3ab;">
+                <span class="si" style="color:var(--ink-terracotta);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" stroke-linecap="round"/></svg>
                 </span>
                 <div class="sl"><b>You &amp; co-parents</b><span>Children · milestones · Pebble · activities · everything</span></div>
-                <span class="set-pill" style="color:#e6c3ab;border-color:rgba(198,123,92,.4);">Full access</span>
+                <span class="set-pill" style="color:var(--ink-terracotta);border-color:rgba(198,123,92,.4);">Full access</span>
               </div>
               <div class="set-row">
-                <span class="si" style="color:#9fded2;">
+                <span class="si" style="color:var(--ink-teal);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="7" rx="3" ry="1.4"/><ellipse cx="12" cy="12" rx="6" ry="2.4"/><ellipse cx="12" cy="17" rx="8" ry="3"/></svg>
                 </span>
                 <div class="sl"><b>Extended family</b><span>Activities and Pebble only — no child data, unless approved.</span></div>
-                <span class="set-pill" style="color:#9fded2;border-color:rgba(61,155,143,.4);">Activities only</span>
+                <span class="set-pill" style="color:var(--ink-teal);border-color:rgba(61,155,143,.4);">Activities only</span>
               </div>
             </glass-panel>
           </div>

@@ -476,7 +476,7 @@ export class TripPlanner extends LitElement {
     .wk-head {
       display: grid;
       grid-template-columns: 62px repeat(var(--cols, 1), 1fr);
-      border-bottom: 1px solid rgba(255, 248, 235, 0.08);
+      border-bottom: 1px solid var(--gridline);
     }
     .wk-head .wk-hc {
       padding: 8px 4px;
@@ -484,7 +484,7 @@ export class TripPlanner extends LitElement {
       font-size: 11.5px;
       font-weight: 600;
       color: var(--text-secondary);
-      border-left: 1px solid rgba(255, 248, 235, 0.06);
+      border-left: 1px solid var(--gridline);
       cursor: pointer;
       line-height: 1.3;
     }
@@ -515,15 +515,15 @@ export class TripPlanner extends LitElement {
       color: var(--text-tertiary);
       text-align: right;
       padding: 4px 8px 0;
-      border-bottom: 1px solid rgba(255, 248, 235, 0.05);
+      border-bottom: 1px solid var(--gridline);
       box-sizing: border-box;
     }
     .wk-col {
       position: relative;
-      border-left: 1px solid rgba(255, 248, 235, 0.06);
+      border-left: 1px solid var(--gridline);
       background-image: repeating-linear-gradient(
-        rgba(255, 248, 235, 0.05) 0,
-        rgba(255, 248, 235, 0.05) 1px,
+        var(--gridline) 0,
+        var(--gridline) 1px,
         transparent 1px,
         transparent ${ROWH}px
       );
@@ -571,24 +571,34 @@ export class TripPlanner extends LitElement {
     }
     .wk-evt .wkdel:hover { color: #fff; }
     .sched {
-      position: relative;
+      /* Fixed visible height + internal scroll so the Day view is the
+         SAME height as the Week view (.wk-body, also 460px) — was
+         intrinsic-height which made the page scroll on long days. */
+      max-height: 460px;
+      overflow-y: auto;
       border-radius: var(--radius-tile);
       border: 1px solid var(--glass-border);
       background: rgba(255, 248, 235, 0.03);
-      overflow: hidden;
+      scrollbar-width: thin;
+    }
+    /* Inner wrapper carries the full intrinsic height so the
+       absolutely-positioned .sched-track spans ALL hours (not just
+       the 460px viewport — same trick the week .wk-col uses). */
+    .sched-inner {
+      position: relative;
     }
     .sched-row {
       display: grid;
       grid-template-columns: 62px 1fr;
       height: ${ROWH}px;
-      border-bottom: 1px solid rgba(255, 248, 235, 0.06);
+      border-bottom: 1px solid var(--gridline);
     }
     .sched-row:last-child { border-bottom: none; }
     .sched-row .hr {
       font-size: 11px;
       color: var(--text-tertiary);
       padding: 6px 10px 0;
-      border-right: 1px solid rgba(255, 248, 235, 0.06);
+      border-right: 1px solid var(--gridline);
       text-align: right;
     }
     .sched-track {
@@ -1043,17 +1053,19 @@ export class TripPlanner extends LitElement {
                 </div>
 
                 <div class="sched">
-                  ${rows}
-                  <div
-                    class="sched-track"
-                    @pointerdown=${(e) => this._gridDown(e, dayKey, lo, hi)}
-                  >
-                    ${blocks.length
-                      ? blocks
-                      : html`<div class="sched-empty">
-                          Drag to block out a time — or add an item below.
-                        </div>`}
-                    ${this._selGhost(dayKey, lo)}
+                  <div class="sched-inner">
+                    ${rows}
+                    <div
+                      class="sched-track"
+                      @pointerdown=${(e) => this._gridDown(e, dayKey, lo, hi)}
+                    >
+                      ${blocks.length
+                        ? blocks
+                        : html`<div class="sched-empty">
+                            Drag to block out a time — or add an item below.
+                          </div>`}
+                      ${this._selGhost(dayKey, lo)}
+                    </div>
                   </div>
                 </div>
               `}

@@ -75,8 +75,8 @@ export class YearlyView extends LitElement {
     .month {
       padding: 6px 5px 4px;
       border-radius: 9px;
-      background: rgba(255, 248, 235, 0.06);
-      border: 1px solid rgba(255, 248, 235, 0.14);
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border);
       transition: background 200ms ease, border-color 200ms ease;
       cursor: pointer;
     }
@@ -111,8 +111,8 @@ export class YearlyView extends LitElement {
     .cell {
       aspect-ratio: 1 / 1;
       border-radius: 3px;
-      background: rgba(255, 248, 235, 0.09);
-      box-shadow: inset 0 0 0 1px rgba(255, 248, 235, 0.07);
+      background: var(--gridline);
+      box-shadow: inset 0 0 0 1px var(--gridline);
       position: relative;
       transition: transform 120ms ease, box-shadow 120ms ease;
     }

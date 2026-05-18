@@ -154,20 +154,20 @@ export class InsightCard extends LitElement {
        Mirrors the app's domain mapping (motor=blue, language=amber,
        social=rose, cognitive=purple, cross=teal). */
     .fam-motor { background: linear-gradient(135deg, rgba(107,154,196,0.13), rgba(107,154,196,0.04)); }
-    .fam-motor .icirc { background: rgba(107,154,196,0.22); color:#9fc4e8; }
-    .fam-motor .cat .type { color:#9fc4e8; }
+    .fam-motor .icirc { background: rgba(107,154,196,0.22); color: var(--ink-blue); }
+    .fam-motor .cat .type { color: var(--ink-blue); }
     .fam-language { background: linear-gradient(135deg, rgba(212,168,67,0.13), rgba(212,168,67,0.04)); }
-    .fam-language .icirc { background: rgba(212,168,67,0.22); color:#ecca7e; }
-    .fam-language .cat .type { color:#ecca7e; }
+    .fam-language .icirc { background: rgba(212,168,67,0.22); color: var(--ink-amber); }
+    .fam-language .cat .type { color: var(--ink-amber); }
     .fam-social { background: linear-gradient(135deg, rgba(201,138,138,0.13), rgba(201,138,138,0.04)); }
-    .fam-social .icirc { background: rgba(201,138,138,0.22); color:#e8b3b3; }
-    .fam-social .cat .type { color:#e8b3b3; }
+    .fam-social .icirc { background: rgba(201,138,138,0.22); color: var(--ink-rose); }
+    .fam-social .cat .type { color: var(--ink-rose); }
     .fam-cognitive { background: linear-gradient(135deg, rgba(139,123,181,0.13), rgba(139,123,181,0.04)); }
-    .fam-cognitive .icirc { background: rgba(139,123,181,0.22); color:#c3b6e0; }
-    .fam-cognitive .cat .type { color:#c3b6e0; }
+    .fam-cognitive .icirc { background: rgba(139,123,181,0.22); color: var(--ink-purple); }
+    .fam-cognitive .cat .type { color: var(--ink-purple); }
     .fam-cross { background: linear-gradient(135deg, rgba(61,155,143,0.13), rgba(61,155,143,0.04)); }
-    .fam-cross .icirc { background: rgba(61,155,143,0.22); color:#7fd3c6; }
-    .fam-cross .cat .type { color:#7fd3c6; }
+    .fam-cross .icirc { background: rgba(61,155,143,0.22); color: var(--ink-teal); }
+    .fam-cross .cat .type { color: var(--ink-teal); }
   `;
 
   render() {

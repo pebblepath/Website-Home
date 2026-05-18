@@ -195,7 +195,7 @@ export class ChildOverview extends LitElement {
       font-size: 12.5px;
       font-weight: 600;
       background: rgba(61, 155, 143, 0.18);
-      color: #9fded2;
+      color: var(--ink-teal);
       border: 1px solid rgba(61, 155, 143, 0.35);
     }
     .progress {
@@ -299,8 +299,8 @@ export class ChildOverview extends LitElement {
       font-weight: 600;
       white-space: nowrap;
     }
-    .ms-stat.done { background: rgba(79, 194, 107, 0.18); color: #a6e6b8; }
-    .ms-stat.emerging { background: rgba(212, 168, 67, 0.18); color: #ecca7e; }
+    .ms-stat.done { background: rgba(79, 194, 107, 0.18); color: var(--ink-green); }
+    .ms-stat.emerging { background: rgba(212, 168, 67, 0.18); color: var(--ink-amber); }
     .ms-stat.up { background: rgba(255, 248, 235, 0.08); color: var(--text-secondary); }
 
     .two-col {
@@ -707,7 +707,6 @@ export class ChildOverview extends LitElement {
       <section>
         <div class="section-head">
           <h2>Milestone areas</h2>
-          <p class="note">From ${child.name}'s PebblePath path</p>
         </div>
         <div class="domains">
           ${DOMAINS.map((d) => {
@@ -728,10 +727,6 @@ export class ChildOverview extends LitElement {
       <section>
         <div class="section-head">
           <h2>Timeline</h2>
-          <p class="note">
-            Every dot is a logged milestone · the longer you use
-            PebblePath, the richer this gets
-          </p>
         </div>
         <div class="panel">
           <div class="timeline">

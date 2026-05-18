@@ -91,11 +91,27 @@
   --hairline: rgba(255, 248, 235, 0.10);
   --field-bg: rgba(255, 248, 235, 0.06);
   --bubble-link-pb: #7fd3c6;
-  /* Nav-bar ink — stays light in BOTH themes: the top/bottom nav
-     bars keep their dark colour in light mode (Thomas), so their
-     idle/hover text must NOT follow the flipping --text-* tokens. */
+  /* Calendar gridlines (planner rows, monthly + yearly cells) —
+     near-invisible on the sand bg by default, so this is themed. */
+  --gridline: rgba(255, 248, 235, 0.06);
+  /* Nav-bar surface + ink. The bars stay DARK in dark mode; in
+     light mode the bg flips to the brand deep green (Thomas), but
+     the ink stays light in BOTH themes (must NOT follow --text-*). */
+  --chrome-bg: rgba(20, 12, 6, 0.42);
   --chrome-fg: rgba(255, 248, 235, 0.66);
   --chrome-fg-strong: rgba(255, 248, 235, 0.96);
+  /* Accent INK for pills / status chips / insight eyebrows that sit
+     on a faint same-hue tint. Dark = the light pastels (read on the
+     dark bg); light = darker saturated shades (read on the sand).
+     One token per recurring hue — route every washed-out chip here
+     instead of hardcoding a pastel. */
+  --ink-teal: #9fded2;
+  --ink-green: #a6e6b8;
+  --ink-amber: #ecca7e;
+  --ink-blue: #9fc4e8;
+  --ink-rose: #e8b3b3;
+  --ink-purple: #c3b6e0;
+  --ink-terracotta: #e6c3ab;
   /* Planner event-block tints — translucent over the planner surface;
      opacities tuned so white block text reads on the dusk surface. */
   --evt-meal: rgba(212, 168, 67, 0.32);
@@ -115,15 +131,16 @@
    ───────────────────────────────────────────────────────────────── */
 html.theme-light {
   /* Sand → brand green. Off-white/sand carries most of it (website
-     privacy palette); the warm corner is the brand deep green
-     (#1f5c54, the navbar green) instead of terracotta (Thomas). */
+     privacy palette); the warm corner is the LIGHTER brand green
+     (#3d9b8f teal-pebble, not the deep #1f5c54 — Thomas wanted it
+     a little lighter). The deep #1f5c54 is the NAV-bar colour. */
   --gradient-dusk: linear-gradient(
     140deg,
     #faf8f5 0%,
     #f2ede3 24%,
     #e8dcc8 50%,
-    #9fbfae 76%,
-    #1f5c54 100%
+    #a9cabb 76%,
+    #3d9b8f 100%
   );
 
   /* Calendar "today" + trip accents need dark-readable fills on a
@@ -151,8 +168,22 @@ html.theme-light {
   --hairline: rgba(44, 62, 64, 0.1);
   --field-bg: rgba(44, 62, 64, 0.05);
   --bubble-link-pb: #1f7a6e;
-  /* (no --chrome-bg override: the nav bars keep their dark colour
-     in light mode — Thomas — with --chrome-fg light text on top.) */
+  /* Gridlines must read on the pale bg → darker than the dark-mode
+     light hairline. */
+  --gridline: rgba(44, 62, 64, 0.16);
+  /* Nav bars → PebblePath brand DEEP green in light mode (Thomas:
+     "brand dark green, not dark grey"). --chrome-fg stays light so
+     the tab labels read on the green bar. */
+  --chrome-bg: rgba(31, 92, 84, 0.94);
+  /* Accent ink → darker saturated shades so pills/eyebrows read on
+     the pale sand bg (Thomas: "most pills unreadable in light"). */
+  --ink-teal: #1f7a6e;
+  --ink-green: #2e8049;
+  --ink-amber: #8a6712;
+  --ink-blue: #3f6f9e;
+  --ink-rose: #a85a5a;
+  --ink-purple: #6b5a96;
+  --ink-terracotta: #9a5638;
   /* Light theme: same hues, more saturated so the white block label
      still reads against the pale planner surface. */
   --evt-meal: rgba(196, 140, 40, 0.82);
