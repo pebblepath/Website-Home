@@ -164,7 +164,7 @@ export class ChildOverview extends LitElement {
     }
 
     /* Child hero card — mirrors the iOS app card: per-child theme
-       gradient, the playtime_watermark.jpg behind it, a left-side
+       gradient, the playgroundv2.jpg watermark behind it, a left-side
        theme colour-filter + soft blur for text legibility, white
        text. (--theme + --wm are set inline per child.) */
     .child-card {
@@ -381,7 +381,10 @@ export class ChildOverview extends LitElement {
     /* "Timeline" longitudinal view — concept-faithful. */
     .timeline {
       position: relative;
-      padding: 8px 4px 4px;
+      /* Generous top pad reserves a clear band for the "Today"
+         marker chip so it isn't crammed against the panel's top
+         edge (2026-05-18 redesign). */
+      padding: 40px 4px 4px;
       /* lane-label width + the 14px lane gap = the left pad the
          "now" marker and axis align to. Made a custom property so
          the ≤560px refinement can shrink it without desyncing. */
@@ -401,7 +404,10 @@ export class ChildOverview extends LitElement {
       flex: 1;
       position: relative;
       height: 2px;
-      background: rgba(255, 248, 235, 0.12);
+      /* Theme-aware rail — the hardcoded near-white (0.12) was
+         invisible on the light sand surface. glass-border-strong
+         reads as a definite line in BOTH themes. */
+      background: var(--glass-border-strong);
       border-radius: 2px;
     }
     .tl-track i {
@@ -411,7 +417,9 @@ export class ChildOverview extends LitElement {
       height: 12px;
       border-radius: 50%;
       transform: translate(-50%, -50%);
-      box-shadow: 0 0 0 3px rgba(20, 12, 6, 0.35);
+      /* Punch-through halo matches the card surface in both themes
+         so the dot reads as sitting cleanly on the rail. */
+      box-shadow: 0 0 0 3px var(--panel-solid);
     }
     .tl-lane.motor .tl-track i { background: #6b9ac4; }
     .tl-lane.language .tl-track i { background: #d4a843; }
@@ -419,24 +427,33 @@ export class ChildOverview extends LitElement {
     .tl-lane.cognitive .tl-track i { background: #8b7bb5; }
     .tl-track i.future {
       background: transparent !important;
-      border: 2px dashed rgba(255, 248, 235, 0.3);
+      border: 2px dashed var(--glass-border-strong);
       box-shadow: none;
     }
     .tl-now {
       position: absolute;
-      top: 0;
+      /* Line begins just under the reserved top band (the chip
+         sits in that band) and runs down through the lanes. */
+      top: 34px;
       bottom: 24px;
       width: 2px;
       background: linear-gradient(180deg, #4fc26b, transparent);
     }
     .tl-now span {
       position: absolute;
-      top: -22px;
+      /* Pill chip floats in the reserved 40px top band with clear
+         margin from the panel edge and the first lane. */
+      top: -28px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 11px;
+      padding: 3px 11px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--ink-green) 18%, transparent);
+      border: 1px solid color-mix(in srgb, var(--ink-green) 50%, transparent);
+      font-size: 10.5px;
       font-weight: 700;
-      color: #7fdc97;
+      letter-spacing: 0.02em;
+      color: var(--ink-green);
       white-space: nowrap;
     }
     .tl-axis {
@@ -761,7 +778,7 @@ export class ChildOverview extends LitElement {
       <section>
         <div
           class="child-card"
-          style="--theme:${theme};--wm:url('${import.meta.env.BASE_URL}assets/playtime_watermark.jpg');"
+          style="--theme:${theme};--wm:url('${import.meta.env.BASE_URL}assets/playgroundv2.jpg');"
         >
           <span class="ring">
             <member-chip
