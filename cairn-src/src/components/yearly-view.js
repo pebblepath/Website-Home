@@ -99,9 +99,11 @@ export class YearlyView extends LitElement {
       text-align: center;
     }
     .month.current .name {
-      /* White, not teal — the dark-teal sat poorly against the
-         warm gradient backdrop and was hard to read. */
-      color: #fff;
+      /* Same colour as every other month (Thomas) — the current
+         month is already differentiated by its tinted tile + the
+         today marker; a different text colour read as inconsistent
+         (and white was wrong on the light theme). */
+      color: var(--text-secondary);
     }
     .mini-grid {
       display: grid;

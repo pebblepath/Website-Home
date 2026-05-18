@@ -238,7 +238,11 @@ export class TripCard extends LitElement {
       border: 1px solid rgba(255, 248, 235, 0.32);
       font-size: 12px;
       font-weight: 600;
-      color: var(--text-primary);
+      /* Always white — the badge sits on a photo thumbnail, so it
+         must not follow the theme (charcoal in light = unreadable
+         on the image). The frosted light pill + white text reads on
+         any cover. */
+      color: #fff;
       z-index: 2;
     }
     .body {

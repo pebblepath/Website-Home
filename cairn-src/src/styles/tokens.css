@@ -170,7 +170,7 @@ html.theme-light {
   --bubble-link-pb: #1f7a6e;
   /* Gridlines must read on the pale bg → darker than the dark-mode
      light hairline. */
-  --gridline: rgba(44, 62, 64, 0.16);
+  --gridline: rgba(44, 62, 64, 0.22);
   /* Nav bars → PebblePath brand DEEP green in light mode (Thomas:
      "brand dark green, not dark grey"). --chrome-fg stays light so
      the tab labels read on the green bar. */

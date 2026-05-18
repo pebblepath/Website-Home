@@ -163,17 +163,65 @@ export class ChildOverview extends LitElement {
       border-color: rgba(61, 155, 143, 0.45);
     }
 
-    /* child card */
+    /* Child hero card — mirrors the iOS app card: per-child theme
+       gradient, the playtime_watermark.jpg behind it, a left-side
+       theme colour-filter + soft blur for text legibility, white
+       text. (--theme + --wm are set inline per child.) */
     .child-card {
+      position: relative;
+      overflow: hidden;
       display: flex;
       align-items: center;
       gap: 22px;
       flex-wrap: wrap;
+      padding: 24px;
+      border-radius: var(--radius-card);
+      color: #fff;
+      background: linear-gradient(
+        135deg,
+        var(--theme, var(--teal-pebble)) 0%,
+        color-mix(in srgb, var(--theme, var(--teal-pebble)) 58%, #ffffff) 100%
+      );
+      box-shadow: 0 6px 22px rgba(20, 50, 46, 0.22);
+    }
+    .child-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--wm) center / cover no-repeat;
+      opacity: 0.15;
+      /* Blur the watermark itself (cheap filter, no backdrop
+         compositing) — same softened look as the iOS card's
+         backdrop-blur but without the heavy stacked-blur cost. */
+      filter: blur(2px);
+      transform: scale(1.06);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .child-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 62%;
+      background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--theme, var(--teal-pebble)) 88%, transparent) 0%,
+        color-mix(in srgb, var(--theme, var(--teal-pebble)) 55%, transparent) 50%,
+        transparent 100%
+      );
+      z-index: 0;
+      pointer-events: none;
+    }
+    .child-card > * {
+      position: relative;
+      z-index: 1;
     }
     .ring {
       border-radius: 999px;
-      padding: 4px;
-      background: var(--theme, var(--teal-pebble));
+      padding: 3px;
+      background: rgba(255, 255, 255, 0.85);
       display: inline-flex;
     }
     .meta h2 {
@@ -181,9 +229,10 @@ export class ChildOverview extends LitElement {
       font-family: var(--font-display);
       font-size: 26px;
       letter-spacing: -0.02em;
+      color: #fff;
     }
     .meta .sub {
-      color: var(--text-secondary);
+      color: rgba(255, 255, 255, 0.85);
       font-size: 14px;
       margin-top: 3px;
     }
@@ -194,28 +243,26 @@ export class ChildOverview extends LitElement {
       border-radius: var(--radius-pill);
       font-size: 12.5px;
       font-weight: 600;
-      background: rgba(61, 155, 143, 0.18);
-      color: var(--ink-teal);
-      border: 1px solid rgba(61, 155, 143, 0.35);
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.32);
     }
-    /* Identity · headline-stat as ONE left-aligned cluster with a
-       hairline divider — NOT margin-left:auto (which stranded the %
-       mid-panel on the full-bleed Children card). Reads as an
-       intentional hero band at any container width; matches Today. */
+    /* Identity · headline-stat as ONE left-aligned cluster, divider
+       in white-alpha (reads on the coloured card). */
     .progress {
       margin-left: 6px;
       padding-left: 28px;
-      border-left: 1px solid var(--hairline);
+      border-left: 1px solid rgba(255, 255, 255, 0.28);
       text-align: left;
     }
     .progress .big {
       font-family: var(--font-display);
       font-size: 30px;
       font-weight: 700;
-      color: var(--text-primary);
+      color: #fff;
     }
     .progress .lbl {
-      color: var(--text-secondary);
+      color: rgba(255, 255, 255, 0.85);
       font-size: 12.5px;
       margin-top: 2px;
     }
@@ -473,6 +520,7 @@ export class ChildOverview extends LitElement {
         gap: 14px;
         flex-wrap: nowrap;
         align-items: center;
+        padding: 16px;
       }
       .meta {
         flex: 1;
@@ -711,28 +759,29 @@ export class ChildOverview extends LitElement {
         : ''}
 
       <section>
-        <div class="panel">
-          <div class="child-card" style="--theme:${theme};">
-            <span class="ring">
-              <member-chip
-                .name=${child.name}
-                .photo=${child.profilePhotoURL ?? ''}
-                .hue=${150}
-                size="72"
-              ></member-chip>
-            </span>
-            <div class="meta">
-              <h2>${child.name}</h2>
-              <div class="sub">${ageLabel(child.dateOfBirth)}</div>
-              <span class="agepill"
-                >${achievedAll.length} of ${ms.length} milestones
-                achieved</span
-              >
-            </div>
-            <div class="progress">
-              <div class="big">${overallPct}%</div>
-              <div class="lbl">of tracked milestones</div>
-            </div>
+        <div
+          class="child-card"
+          style="--theme:${theme};--wm:url('${import.meta.env.BASE_URL}assets/playtime_watermark.jpg');"
+        >
+          <span class="ring">
+            <member-chip
+              .name=${child.name}
+              .photo=${child.profilePhotoURL ?? ''}
+              .hue=${150}
+              size="72"
+            ></member-chip>
+          </span>
+          <div class="meta">
+            <h2>${child.name}</h2>
+            <div class="sub">${ageLabel(child.dateOfBirth)}</div>
+            <span class="agepill"
+              >${achievedAll.length} of ${ms.length} milestones
+              achieved</span
+            >
+          </div>
+          <div class="progress">
+            <div class="big">${overallPct}%</div>
+            <div class="lbl">of tracked milestones</div>
           </div>
         </div>
       </section>

@@ -398,7 +398,7 @@ export class TripPlanner extends LitElement {
       padding: 9px 15px;
       border-radius: var(--radius-pill);
       background: var(--glass-fill);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--glass-border-strong);
       color: var(--text-secondary);
       cursor: pointer;
       font-family: var(--font-body);
@@ -415,11 +415,13 @@ export class TripPlanner extends LitElement {
       color: var(--text-tertiary);
     }
     .day-pill.on {
-      background: rgba(61, 155, 143, 0.22);
+      /* Solid teal (was a 0.22 tint) — white text washed out on it
+         in light mode; solid reads on both themes. */
+      background: var(--teal-pebble);
       color: #fff;
-      border-color: rgba(61, 155, 143, 0.45);
+      border-color: var(--teal-pebble);
     }
-    .day-pill.on small { color: #bfe6df; }
+    .day-pill.on small { color: rgba(255, 255, 255, 0.82); }
 
     /* Day | Week segmented toggle + optional week pager. */
     .pl-modebar {
@@ -434,14 +436,14 @@ export class TripPlanner extends LitElement {
       padding: 3px;
       border-radius: var(--radius-pill);
       background: var(--glass-fill);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--glass-border-strong);
     }
     .view-toggle button {
       padding: 6px 16px;
       border-radius: var(--radius-pill);
       border: none;
       background: transparent;
-      color: var(--text-tertiary);
+      color: var(--text-secondary);
       font-family: var(--font-body);
       font-size: 12.5px;
       font-weight: 600;
@@ -449,9 +451,9 @@ export class TripPlanner extends LitElement {
       transition: all 150ms ease;
     }
     .view-toggle button.on {
-      background: rgba(61, 155, 143, 0.22);
+      background: var(--teal-pebble);
       color: #fff;
-      box-shadow: inset 0 0 0 1px rgba(61, 155, 143, 0.45);
+      box-shadow: inset 0 0 0 1px rgba(61, 155, 143, 0.55);
     }
     .wk-pager {
       display: inline-flex;
@@ -503,7 +505,7 @@ export class TripPlanner extends LitElement {
       color: var(--text-tertiary);
     }
     .wk-head .wk-hc.on {
-      background: rgba(61, 155, 143, 0.18);
+      background: var(--teal-pebble);
       color: #fff;
     }
     .wk-head .wk-hc.on small { color: #bfe6df; }
@@ -519,7 +521,7 @@ export class TripPlanner extends LitElement {
     .wk-gutter .wk-hr {
       height: ${ROWH}px;
       font-size: 10.5px;
-      color: var(--text-tertiary);
+      color: var(--text-secondary);
       text-align: right;
       padding: 4px 8px 0;
       border-bottom: 1px solid var(--gridline);
@@ -603,7 +605,7 @@ export class TripPlanner extends LitElement {
     .sched-row:last-child { border-bottom: none; }
     .sched-row .hr {
       font-size: 11px;
-      color: var(--text-tertiary);
+      color: var(--text-secondary);
       padding: 6px 10px 0;
       border-right: 1px solid var(--gridline);
       text-align: right;
@@ -714,7 +716,7 @@ export class TripPlanner extends LitElement {
     .add-row input,
     .add-row select {
       background: var(--field-bg);
-      border: 1px solid var(--glass-border);
+      border: 1px solid var(--glass-border-strong);
       color: var(--text-primary);
       border-radius: var(--radius-pill);
       padding: 8px 13px;
