@@ -1988,13 +1988,13 @@ var ft=Object.defineProperty;var vt=(c,e,t)=>e in c?ft(c,e,{enumerable:!0,config
     }
     .ring.connections {
       width: 92%;
-      border: 1.5px dashed rgba(139, 123, 181, 0.45);
-      background: rgba(139, 123, 181, 0.07);
+      border: 1.5px dashed rgba(139, 123, 181, 0.6);
+      background: rgba(139, 123, 181, 0.2);
     }
     .ring.family {
       width: 54%;
-      border: 1.5px dashed rgba(31, 92, 84, 0.5);
-      background: rgba(31, 92, 84, 0.1);
+      border: 1.5px dashed rgba(31, 92, 84, 0.65);
+      background: rgba(31, 92, 84, 0.22);
     }
     .node {
       position: absolute;
@@ -8621,21 +8621,21 @@ They'll lose access to shared trips, celebrations and any read-only child access
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" stroke-linecap="round"/></svg>
                 </span>
                 <div class="sl"><b>You</b><span>The centre — your point of view.</span></div>
-                <span class="set-pill" style="color:var(--ink-blue);border-color:rgba(63,111,158,.4);">You</span>
+                <span class="set-pill" style="color:var(--ink-blue);border-color:var(--ink-blue);">You</span>
               </div>
               <div class="set-row">
                 <span class="si" style="color:var(--ink-green);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="7" rx="3" ry="1.4"/><ellipse cx="12" cy="12" rx="6" ry="2.4"/><ellipse cx="12" cy="17" rx="8" ry="3"/></svg>
                 </span>
                 <div class="sl"><b>Your family</b><span>Your co-parent and your children.</span></div>
-                <span class="set-pill" style="color:var(--ink-green);border-color:rgba(46,128,73,.4);">Full access</span>
+                <span class="set-pill" style="color:var(--ink-green);border-color:var(--ink-green);">Full access</span>
               </div>
               <div class="set-row">
                 <span class="si" style="color:var(--ink-purple);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg>
                 </span>
                 <div class="sl"><b>Your connections</b><span>Everyone who joined by invitation. Equal accounts.</span></div>
-                <span class="set-pill" style="color:var(--ink-purple);border-color:rgba(107,90,150,.4);">Activities only</span>
+                <span class="set-pill" style="color:var(--ink-purple);border-color:var(--ink-purple);">Activities only</span>
               </div>
             </glass-panel>
           </div>
@@ -11413,4 +11413,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(mt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",mt);
-//# sourceMappingURL=index-VZKfCDFb.js.map
+//# sourceMappingURL=index-O2OPc0TL.js.map
