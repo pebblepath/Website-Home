@@ -80,13 +80,13 @@ export class FamilyCircle extends LitElement {
     }
     .ring.connections {
       width: 92%;
-      border: 1.5px dashed rgba(139, 123, 181, 0.45);
-      background: rgba(139, 123, 181, 0.07);
+      border: 1.5px dashed rgba(139, 123, 181, 0.6);
+      background: rgba(139, 123, 181, 0.2);
     }
     .ring.family {
       width: 54%;
-      border: 1.5px dashed rgba(31, 92, 84, 0.5);
-      background: rgba(31, 92, 84, 0.1);
+      border: 1.5px dashed rgba(31, 92, 84, 0.65);
+      background: rgba(31, 92, 84, 0.22);
     }
     .node {
       position: absolute;
