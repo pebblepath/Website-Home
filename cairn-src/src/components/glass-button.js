@@ -102,18 +102,24 @@ export class GlassButton extends LitElement {
        opaque enough that white text stays legible regardless of the
        surface behind it). Additive variant — primary/ghost untouched. */
     .frost-teal {
-      background: color-mix(in srgb, var(--teal-pebble) 60%, transparent);
-      backdrop-filter: blur(20px) saturate(160%);
-      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      /* iOS = ppTeal(#3d9b8f) @ ~0.65 OVER .ultraThinMaterial (a
+         near-white frost) on the light Daybreak wallpaper, which
+         reads as a soft MUTED SAGE-teal — NOT the vivid 60% teal the
+         old color-mix + saturate(160%) produced. This fixed sage
+         (#3d9b8f blended ~38% toward white, lightly translucent) +
+         no saturation boost matches the iOS Register pill. */
+      background: rgba(124, 186, 175, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       color: #fff;
-      text-shadow: 0 1px 1px rgba(20, 12, 6, 0.3);
+      text-shadow: 0 1px 2px rgba(20, 12, 6, 0.34);
       border-color: rgba(255, 255, 255, 0.4);
       box-shadow:
-        0 8px 22px rgba(61, 155, 143, 0.32),
-        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+        0 8px 22px rgba(61, 155, 143, 0.26),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
     .frost-teal:hover:not(:disabled) {
-      background: color-mix(in srgb, var(--teal-pebble) 72%, transparent);
+      background: rgba(112, 176, 165, 0.92);
       border-color: rgba(255, 255, 255, 0.55);
     }
     /* Neutral frosted sibling of frost-teal — the iOS welcome Login
