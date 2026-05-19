@@ -13,6 +13,17 @@ on:
 permissions:
   contents: write
 
+# Serialize Build Cairn runs per branch. Without this, two runs for
+# the same/overlapping SHA can race on the auto-commit `git push` —
+# the loser fails the "Commit + push if changed" step with a
+# non-fast-forward (a benign but noisy red X; the winner still deploys
+# correctly). cancel-in-progress: false QUEUES instead of cancelling,
+# so every commit's bundle is built in order and a duplicate run for
+# an already-built SHA simply finds no diff and exits green.
+concurrency:
+  group: build-cairn-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
