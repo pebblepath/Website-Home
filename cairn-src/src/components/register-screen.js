@@ -687,7 +687,6 @@ export class RegisterScreen extends LitElement {
     return html`
       <button class="back" @click=${() => this._go('welcome')}>‹ Back</button>
       <h1 style="margin-top:6px;">Welcome back</h1>
-      <p class="lede">Sign in to pick up where you left off.</p>
       <div class="step">
         <div>
           <label>Email</label>
@@ -801,7 +800,6 @@ export class RegisterScreen extends LitElement {
     return html`
       <button class="back" @click=${() => this._go('welcome')}>‹ Back</button>
       <h1 style="margin-top:6px;">Create your account</h1>
-      <p class="lede">You're a full member from the first tap.</p>
       <div class="step">
         <div>
           <label>Your name</label>
