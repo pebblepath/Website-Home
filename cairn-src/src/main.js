@@ -4,6 +4,7 @@ import './components/cairn-mark.js';
 import './components/yearly-view.js';
 import './components/trip-form.js';
 import './components/event-form.js';
+import './components/family-circle.js';
 import './components/manage-members-modal.js';
 import './components/all-trips-modal.js';
 import './components/import-calendar-modal.js';

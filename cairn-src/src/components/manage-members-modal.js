@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import './glass-panel.js';
 import './glass-button.js';
 import './member-chip.js';
+import './family-circle.js';
 import { dataStore } from '../services/data.js';
 import { toast } from '../services/toast.js';
 
@@ -516,11 +517,16 @@ export class ManageMembersModal extends LitElement {
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
           <div class="header">
-            <h2>Manage members</h2>
+            <h2>Your family</h2>
             <button class="close" @click=${this._onCancel} aria-label="Close">×</button>
           </div>
 
-          <h3>Immediate family · ${this.immediate.length}</h3>
+          <family-circle
+            .immediate=${this.immediate}
+            .extended=${this.extended}
+          ></family-circle>
+
+          <h3>Your family · ${this.immediate.length}</h3>
           ${this.immediate.length === 0
             ? html`<div class="empty">No one in immediate yet.</div>`
             : this.immediate.map(
@@ -538,7 +544,7 @@ export class ManageMembersModal extends LitElement {
                         ${m.role === 'self'
                           ? 'You'
                           : m.role === 'co-parent'
-                          ? 'Co-parent (PebblePath)'
+                          ? 'Co-parent'
                           : m.role === 'child'
                           ? 'Child'
                           : 'Family'}
@@ -548,7 +554,7 @@ export class ManageMembersModal extends LitElement {
                 `,
               )}
 
-          <h3>Extended family · ${this.extended.length}</h3>
+          <h3>Your connections · ${this.extended.length}</h3>
           ${this.extended.length === 0
             ? html`<div class="empty">
                 Anyone you invite via Cairn (grandparents, aunts, uncles, etc.) will appear here.
@@ -565,7 +571,7 @@ export class ManageMembersModal extends LitElement {
                     ></member-chip>
                     <div class="body">
                       <div class="name">${m.displayName}</div>
-                      <div class="role">Cairn — extended</div>
+                      <div class="role">Connection</div>
                     </div>
                     ${this.canRemove
                       ? html`<button
