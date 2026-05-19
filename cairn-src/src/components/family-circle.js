@@ -185,10 +185,10 @@ export class FamilyCircle extends LitElement {
           <div class="ring family"></div>
 
           ${conn.map((m, i) =>
-            this._node(m, 40, this._pos(i, conn.length, 37, -90)),
+            this._node(m, 28, this._pos(i, conn.length, 37, -90)),
           )}
           ${fam.map((m, i) =>
-            this._node(m, 46, this._pos(i, fam.length, 19, innerPhase)),
+            this._node(m, 28, this._pos(i, fam.length, 19, innerPhase)),
           )}
 
           <div class="you">
@@ -197,7 +197,7 @@ export class FamilyCircle extends LitElement {
                 .name=${self?.displayName ?? 'You'}
                 .photo=${self?.photoURL ?? ''}
                 .hue=${self?.hue ?? 198}
-                size="64"
+                size="28"
               ></member-chip>
             </div>
             <span class="cap">You</span>

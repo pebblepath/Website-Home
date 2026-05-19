@@ -1450,7 +1450,7 @@ export class HomeScreen extends LitElement {
       align-items: center;
       gap: 8px;
       padding: 9px 16px;
-      border: none;
+      border: 1px solid transparent;
       background: transparent;
       color: var(--chrome-fg);
       cursor: pointer;
@@ -1460,7 +1460,15 @@ export class HomeScreen extends LitElement {
       letter-spacing: -0.005em;
       border-radius: var(--radius-pill);
       white-space: nowrap;
-      transition: color 0.2s ease, background 0.2s ease;
+      /* Longer cubic-bezier transition on color/bg/border/shadow so
+         the active tab softly slides into / out of the liquid-glass
+         pill state when you click between tabs (vs the previous
+         snappy 0.2s ease). */
+      transition:
+        color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        background 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.45s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .tab svg {
       width: 16px;
@@ -1469,12 +1477,22 @@ export class HomeScreen extends LitElement {
     .tab:hover {
       color: var(--chrome-fg-strong);
     }
+    /* Liquid-glass active pill — frosted-white wash over the topbar's
+       brand-green chrome (replaces the prior solid sage gradient).
+       Matches the rest of the Portal's glass aesthetic. */
     .tab.active {
       color: #fff;
-      background-image: var(--gradient-sage);
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.22),
+        rgba(255, 255, 255, 0.08)
+      );
+      backdrop-filter: blur(14px) saturate(160%);
+      -webkit-backdrop-filter: blur(14px) saturate(160%);
+      border-color: rgba(255, 255, 255, 0.28);
       box-shadow:
-        0 4px 14px rgba(31, 92, 84, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        0 4px 14px rgba(20, 50, 46, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.32);
     }
     /* Below ~1000px the labels drop to icon-only so 5 tabs + brand +
        Activity + avatar still fit the 68px bar. */
@@ -1690,6 +1708,14 @@ export class HomeScreen extends LitElement {
        here without disturbing My Cairn's grid-2). */
     .today-insight-row {
       grid-template-columns: 1fr 1.1fr;
+      /* Override the parent .grid-2's align-items:start so the two
+         glass-panels in this row stretch to the same height (the
+         Recently-achieved card was sizing to its short content while
+         the Growth-insight card was taller). */
+      align-items: stretch;
+    }
+    .today-insight-row > glass-panel {
+      height: 100%;
     }
     @media (max-width: 1024px) {
       .today-top {
@@ -3828,7 +3854,7 @@ export class HomeScreen extends LitElement {
                 <span class="si" style="color:var(--ink-blue);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" stroke-linecap="round"/></svg>
                 </span>
-                <div class="sl"><b>You</b><span>The centre — your point of view.</span></div>
+                <div class="sl"><b>You</b><span>Your account, your perspective.</span></div>
                 <span class="set-pill" style="color:var(--ink-blue);border-color:var(--ink-blue);">You</span>
               </div>
               <div class="set-row">
@@ -3842,7 +3868,7 @@ export class HomeScreen extends LitElement {
                 <span class="si" style="color:var(--ink-purple);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg>
                 </span>
-                <div class="sl"><b>Your connections</b><span>Everyone who joined by invitation. Equal accounts.</span></div>
+                <div class="sl"><b>Your connections</b><span>Everyone who joined by invitation.</span></div>
                 <span class="set-pill" style="color:var(--ink-purple);border-color:var(--ink-purple);">Activities only</span>
               </div>
             </glass-panel>
@@ -3857,7 +3883,7 @@ export class HomeScreen extends LitElement {
         <glass-panel padding="md" variant="strong">
           <div class="set-row">
             <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg></span>
-            <div class="sl"><b>${name}</b><span>${email || 'Account & profile'}</span></div>
+            <div class="sl"><b>Profile Settings</b><span>Your photo, display name, sign out.</span></div>
             <button class="link" @click=${() => (this._profileOpen = true)}>Edit</button>
           </div>
           <div class="set-row">
