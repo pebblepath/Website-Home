@@ -4178,9 +4178,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
               width="56"
               height="56"
             />
-            <div class="mark-name">Portal</div>
+            <div class="mark-name">PebblePath</div>
           </div>
-          <div class="companion">PebblePath companion</div>
+          <div class="companion">Web Portal</div>
         </div>
         <glass-panel padding="lg" lifted variant="strong">
           ${this.joinCode?s`<div class="invite-banner">
@@ -4234,7 +4234,6 @@ They'll lose access to shared trips, celebrations and any read-only child access
               </div>`}
           ${this.error?s`<div class="error">${this.error}</div>`:""}
         </glass-panel>
-        <div class="footnote">Beta Version</div>
       </div>
     `}}_(Te,"properties",{error:{state:!0},busy:{state:!0},joinCode:{type:String},_codeInputOpen:{state:!0},_code:{state:!0}}),_(Te,"styles",z`
     * {
@@ -10995,4 +10994,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(bt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",bt);
-//# sourceMappingURL=index-A3_nIEXV.js.map
+//# sourceMappingURL=index-BHyhLqJD.js.map
