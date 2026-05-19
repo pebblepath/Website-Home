@@ -1930,8 +1930,8 @@ var ft=Object.defineProperty;var vt=(c,e,t)=>e in c?ft(c,e,{enumerable:!0,config
           <div class="ring connections"></div>
           <div class="ring family"></div>
 
-          ${i.map((a,s)=>this._node(a,40,this._pos(s,i.length,37,-90)))}
-          ${t.map((a,s)=>this._node(a,46,this._pos(s,t.length,19,r)))}
+          ${i.map((a,s)=>this._node(a,28,this._pos(s,i.length,37,-90)))}
+          ${t.map((a,s)=>this._node(a,28,this._pos(s,t.length,19,r)))}
 
           <div class="you">
             <div class="ringwrap">
@@ -1939,7 +1939,7 @@ var ft=Object.defineProperty;var vt=(c,e,t)=>e in c?ft(c,e,{enumerable:!0,config
                 .name=${(e==null?void 0:e.displayName)??"You"}
                 .photo=${(e==null?void 0:e.photoURL)??""}
                 .hue=${(e==null?void 0:e.hue)??198}
-                size="64"
+                size="28"
               ></member-chip>
             </div>
             <span class="cap">You</span>
@@ -8594,7 +8594,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
               </div>`}
         </glass-panel>
       </section>
-    `}_setTheme(e){this._themeLight=e;try{document.documentElement.classList.toggle("theme-light",e),localStorage.setItem("portalTheme",e?"light":"dark");const t=document.querySelector('meta[name="theme-color"]');t&&t.setAttribute("content",e?"#f2ede3":"#1f5c54")}catch{}}_renderCairnTab(){var r,a,s;const e=((r=this.user)==null?void 0:r.displayName)??"You",t=((a=this.user)==null?void 0:a.email)??"",i=((s=this.family)==null?void 0:s.name)??"Your family";return o`
+    `}_setTheme(e){this._themeLight=e;try{document.documentElement.classList.toggle("theme-light",e),localStorage.setItem("portalTheme",e?"light":"dark");const t=document.querySelector('meta[name="theme-color"]');t&&t.setAttribute("content",e?"#f2ede3":"#1f5c54")}catch{}}_renderCairnTab(){var t,i,r;(t=this.user)==null||t.displayName,(i=this.user)==null||i.email;const e=((r=this.family)==null?void 0:r.name)??"Your family";return o`
       ${this._renderTabHeader("Settings","Who's in your circle, and what each level can see")}
 
       <section>
@@ -8620,7 +8620,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 <span class="si" style="color:var(--ink-blue);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" stroke-linecap="round"/></svg>
                 </span>
-                <div class="sl"><b>You</b><span>The centre — your point of view.</span></div>
+                <div class="sl"><b>You</b><span>Your account, your perspective.</span></div>
                 <span class="set-pill" style="color:var(--ink-blue);border-color:var(--ink-blue);">You</span>
               </div>
               <div class="set-row">
@@ -8634,7 +8634,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 <span class="si" style="color:var(--ink-purple);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg>
                 </span>
-                <div class="sl"><b>Your connections</b><span>Everyone who joined by invitation. Equal accounts.</span></div>
+                <div class="sl"><b>Your connections</b><span>Everyone who joined by invitation.</span></div>
                 <span class="set-pill" style="color:var(--ink-purple);border-color:var(--ink-purple);">Activities only</span>
               </div>
             </glass-panel>
@@ -8649,12 +8649,12 @@ They'll lose access to shared trips, celebrations and any read-only child access
         <glass-panel padding="md" variant="strong">
           <div class="set-row">
             <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6"/></svg></span>
-            <div class="sl"><b>${e}</b><span>${t||"Account & profile"}</span></div>
+            <div class="sl"><b>Profile Settings</b><span>Your photo, display name, sign out.</span></div>
             <button class="link" @click=${()=>this._profileOpen=!0}>Edit</button>
           </div>
           <div class="set-row">
             <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="3"/></svg></span>
-            <div class="sl"><b>${i}</b><span>Family name &amp; invite codes</span></div>
+            <div class="sl"><b>${e}</b><span>Family name &amp; invite codes</span></div>
             <button class="link" @click=${()=>this._membersOpen=!0}>Manage</button>
           </div>
           <div class="set-row">
@@ -10208,7 +10208,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       align-items: center;
       gap: 8px;
       padding: 9px 16px;
-      border: none;
+      border: 1px solid transparent;
       background: transparent;
       color: var(--chrome-fg);
       cursor: pointer;
@@ -10218,7 +10218,15 @@ They'll lose access to shared trips, celebrations and any read-only child access
       letter-spacing: -0.005em;
       border-radius: var(--radius-pill);
       white-space: nowrap;
-      transition: color 0.2s ease, background 0.2s ease;
+      /* Longer cubic-bezier transition on color/bg/border/shadow so
+         the active tab softly slides into / out of the liquid-glass
+         pill state when you click between tabs (vs the previous
+         snappy 0.2s ease). */
+      transition:
+        color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        background 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.45s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .tab svg {
       width: 16px;
@@ -10227,12 +10235,22 @@ They'll lose access to shared trips, celebrations and any read-only child access
     .tab:hover {
       color: var(--chrome-fg-strong);
     }
+    /* Liquid-glass active pill — frosted-white wash over the topbar's
+       brand-green chrome (replaces the prior solid sage gradient).
+       Matches the rest of the Portal's glass aesthetic. */
     .tab.active {
       color: #fff;
-      background-image: var(--gradient-sage);
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.22),
+        rgba(255, 255, 255, 0.08)
+      );
+      backdrop-filter: blur(14px) saturate(160%);
+      -webkit-backdrop-filter: blur(14px) saturate(160%);
+      border-color: rgba(255, 255, 255, 0.28);
       box-shadow:
-        0 4px 14px rgba(31, 92, 84, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        0 4px 14px rgba(20, 50, 46, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.32);
     }
     /* Below ~1000px the labels drop to icon-only so 5 tabs + brand +
        Activity + avatar still fit the 68px bar. */
@@ -10448,6 +10466,14 @@ They'll lose access to shared trips, celebrations and any read-only child access
        here without disturbing My Cairn's grid-2). */
     .today-insight-row {
       grid-template-columns: 1fr 1.1fr;
+      /* Override the parent .grid-2's align-items:start so the two
+         glass-panels in this row stretch to the same height (the
+         Recently-achieved card was sizing to its short content while
+         the Growth-insight card was taller). */
+      align-items: stretch;
+    }
+    .today-insight-row > glass-panel {
+      height: 100%;
     }
     @media (max-width: 1024px) {
       .today-top {
@@ -11413,4 +11439,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(mt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",mt);
-//# sourceMappingURL=index-BVMOsFjT.js.map
+//# sourceMappingURL=index-BoSHuTRX.js.map
