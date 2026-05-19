@@ -153,6 +153,24 @@ var mt=Object.defineProperty;var ft=(p,e,t)=>e in p?mt(p,e,{enumerable:!0,config
       background: color-mix(in srgb, var(--teal-pebble) 72%, transparent);
       border-color: rgba(255, 255, 255, 0.55);
     }
+    /* Neutral frosted sibling of frost-teal — the iOS welcome Login
+       button (PebbleTranslucentButtonStyle, no tint). ghost was too
+       faint to read against the dusk glass; this carries a visible
+       grey wash + a clearly-present border. Theme-safe: --text-primary
+       is cream on dark / charcoal on light, so the wash, border AND
+       label all stay legible on either surface. */
+    .frost-neutral {
+      background: color-mix(in srgb, var(--text-primary) 16%, transparent);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      color: var(--text-primary);
+      border-color: color-mix(in srgb, var(--text-primary) 42%, transparent);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    }
+    .frost-neutral:hover:not(:disabled) {
+      background: color-mix(in srgb, var(--text-primary) 23%, transparent);
+      border-color: color-mix(in srgb, var(--text-primary) 56%, transparent);
+    }
   `);customElements.define("glass-button",me);class fe extends A{constructor(){super(),this.size=44}render(){const e=this.size;return s`
       <svg
         viewBox="0 0 64 64"
@@ -4567,7 +4585,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         </glass-panel>
       </div>
     `}_renderWelcome(){return s`
-      <h1>Your family's path, together.</h1>
+      <h1>Let's connect</h1>
       <p class="lede">
         ${this._invited?"You've been invited to a family — register or sign in to join.":"One shared space for the whole family."}
       </p>
@@ -4583,7 +4601,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         </div>
         <div class="actions">
           <glass-button
-            variant="ghost"
+            variant="frost-neutral"
             ?disabled=${this.busy}
             @click=${()=>this._go("login")}
           >
@@ -4595,19 +4613,21 @@ They'll lose access to shared trips, celebrations and any read-only child access
       <div class="providers">
         <button
           class="provider-btn"
+          aria-label=${this.busy?i:"Continue with Google"}
+          title="Continue with Google"
           ?disabled=${this.busy||!N}
           @click=${e}
         >
           ${this._iconGoogle()}
-          ${this.busy?i:"Continue with Google"}
         </button>
         <button
           class="provider-btn apple"
+          aria-label=${this.busy?i:"Continue with Apple"}
+          title="Continue with Apple"
           ?disabled=${this.busy||!N}
           @click=${t}
         >
           ${this._iconApple()}
-          ${this.busy?i:"Continue with Apple"}
         </button>
       </div>
     `}_renderLogin(){return s`
@@ -4962,28 +4982,29 @@ They'll lose access to shared trips, celebrations and any read-only child access
       background: rgba(61, 155, 143, 0.25);
     }
 
+    /* iOS-app parity — Apple + Google sit SIDE BY SIDE as icon-only
+       squares (the iOS SocialSignInButtons HStack: Apple black,
+       Google white-with-border, centered on the row). */
     .providers {
       display: flex;
-      flex-direction: column;
-      gap: 8px;
+      flex-direction: row;
+      justify-content: center;
+      gap: 14px;
     }
     .provider-btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      width: 100%;
-      min-height: 44px;
-      padding: 0 14px;
-      border-radius: var(--radius-pill);
-      /* Google brand style: white background, dark text, hairline
-         border. Matches the iOS Google sign-in button. */
+      flex: 0 0 auto;
+      width: 84px;
+      height: 48px;
+      padding: 0;
+      border-radius: 14px;
+      /* Google brand style: white background, hairline border.
+         Matches the iOS Google sign-in button. */
       border: 1px solid rgba(0, 0, 0, 0.12);
       background: #fff;
       color: #3c4043;
-      font: inherit;
-      font-size: 14px;
-      font-weight: 600;
       cursor: pointer;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
       transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
@@ -5002,7 +5023,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       background: #1a1a1a;
     }
     .provider-btn:disabled { opacity: 0.55; cursor: not-allowed; }
-    .provider-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .provider-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
 
     .toggle-row {
       display: flex;
@@ -11025,4 +11046,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(bt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",bt);
-//# sourceMappingURL=index-BucSEez5.js.map
+//# sourceMappingURL=index-Du8RPLGp.js.map
