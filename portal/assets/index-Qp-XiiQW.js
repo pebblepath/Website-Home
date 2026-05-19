@@ -139,18 +139,24 @@ var mt=Object.defineProperty;var ft=(p,e,t)=>e in p?mt(p,e,{enumerable:!0,config
        opaque enough that white text stays legible regardless of the
        surface behind it). Additive variant — primary/ghost untouched. */
     .frost-teal {
-      background: color-mix(in srgb, var(--teal-pebble) 60%, transparent);
-      backdrop-filter: blur(20px) saturate(160%);
-      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      /* iOS = ppTeal(#3d9b8f) @ ~0.65 OVER .ultraThinMaterial (a
+         near-white frost) on the light Daybreak wallpaper, which
+         reads as a soft MUTED SAGE-teal — NOT the vivid 60% teal the
+         old color-mix + saturate(160%) produced. This fixed sage
+         (#3d9b8f blended ~38% toward white, lightly translucent) +
+         no saturation boost matches the iOS Register pill. */
+      background: rgba(124, 186, 175, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       color: #fff;
-      text-shadow: 0 1px 1px rgba(20, 12, 6, 0.3);
+      text-shadow: 0 1px 2px rgba(20, 12, 6, 0.34);
       border-color: rgba(255, 255, 255, 0.4);
       box-shadow:
-        0 8px 22px rgba(61, 155, 143, 0.32),
-        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+        0 8px 22px rgba(61, 155, 143, 0.26),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
     .frost-teal:hover:not(:disabled) {
-      background: color-mix(in srgb, var(--teal-pebble) 72%, transparent);
+      background: rgba(112, 176, 165, 0.92);
       border-color: rgba(255, 255, 255, 0.55);
     }
     /* Neutral frosted sibling of frost-teal — the iOS welcome Login
@@ -10992,4 +10998,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(bt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",bt);
-//# sourceMappingURL=index-BIivPSlO.js.map
+//# sourceMappingURL=index-Qp-XiiQW.js.map
