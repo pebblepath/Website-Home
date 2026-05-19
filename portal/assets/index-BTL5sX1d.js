@@ -4051,6 +4051,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
       justify-content: center;
       min-height: 100vh;
       padding: 24px;
+      /* Brand typography parity (matches register/sign-in + iOS):
+         body defaults to Inter; headings below use Nunito. */
+      font-family: var(--font-body);
     }
     .wrap {
       width: 100%;
@@ -4074,7 +4077,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
     }
     h1 {
-      font-family: var(--font-display);
+      font-family: var(--font-nunito);
       font-size: clamp(26px, 4vw, 34px);
       line-height: 1.15;
       letter-spacing: -0.02em;
@@ -4090,7 +4093,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       padding: 14px 0 22px;
     }
     .family-name {
-      font-family: var(--font-display);
+      font-family: var(--font-nunito);
       font-size: 22px;
       font-weight: 600;
       letter-spacing: -0.015em;
@@ -4176,7 +4179,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       border: 1px solid var(--glass-border);
       border-radius: var(--radius-tile);
       cursor: pointer;
-      font-family: var(--font-display);
+      font-family: var(--font-nunito);
       font-weight: 600;
       font-size: 15.5px;
       color: var(--text-primary);
@@ -4247,7 +4250,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
               @click=${this._handleSignIn}
             >
               ${this._renderGoogleIcon()}
-              ${this.busy?"Signing in…":this._codeInputOpen&&this._code.trim()?"Continue with Google & join":"Continue with Google"}
+              ${this.busy?"Signing in…":this._codeInputOpen&&this._code.trim()?"Sign in with Google & join":"Sign in with Google"}
             </button>
           </div>
           ${this.joinCode?"":s`<div class="have-code">
@@ -4293,6 +4296,10 @@ They'll lose access to shared trips, celebrations and any read-only child access
       justify-content: center;
       min-height: 100vh;
       padding: 24px;
+      /* Brand typography parity (matches register-screen + iOS):
+         whole screen defaults to the PebblePath body font (Inter);
+         the h1 below uses Nunito. */
+      font-family: var(--font-body);
     }
     .wrap {
       width: 100%;
@@ -4381,7 +4388,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
     }
 
     h1 {
-      font-family: var(--font-display);
+      /* Nunito — PebblePath brand heading font (was --font-display =
+         Bricolage Grotesque, the Portal/Cairn display font). */
+      font-family: var(--font-nunito);
       font-size: clamp(28px, 4.5vw, 38px);
       line-height: 1.15;
       letter-spacing: -0.02em;
@@ -11021,4 +11030,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(bt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",bt);
-//# sourceMappingURL=index-COnuSYlo.js.map
+//# sourceMappingURL=index-BTL5sX1d.js.map
