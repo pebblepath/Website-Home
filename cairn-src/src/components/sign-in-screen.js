@@ -380,9 +380,9 @@ export class SignInScreen extends LitElement {
               width="56"
               height="56"
             />
-            <div class="mark-name">Portal</div>
+            <div class="mark-name">PebblePath</div>
           </div>
-          <div class="companion">PebblePath companion</div>
+          <div class="companion">Web Portal</div>
         </div>
         <glass-panel padding="lg" lifted variant="strong">
           ${this.joinCode
@@ -455,7 +455,6 @@ export class SignInScreen extends LitElement {
             : ''}
           ${this.error ? html`<div class="error">${this.error}</div>` : ''}
         </glass-panel>
-        <div class="footnote">Beta Version</div>
       </div>
     `;
   }
