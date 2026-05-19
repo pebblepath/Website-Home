@@ -1954,10 +1954,14 @@ var ft=Object.defineProperty;var vt=(c,e,t)=>e in c?ft(c,e,{enumerable:!0,config
       display: block;
     }
     /* 15% shorter than wide — trims the dead space above/below the
-       rings. The circle itself stays full-size: the square `.disc`
+       rings. The circle itself stays full-size: the square .disc
        (sized by WIDTH) holds the rings/avatars and is centred in
        the shorter stage, overflowing symmetrically into the
-       surrounding glass-panel padding (overflow visible). */
+       surrounding glass-panel padding (overflow visible).
+       IMPORTANT — do not use backticks anywhere inside this css
+       template, not even in comments: JS parses the template as
+       text and a backtick terminates it (broke the Portal once
+       2026-05-19; see flat-family-model-plan.md). */
     .stage {
       position: relative;
       width: 100%;
@@ -11409,4 +11413,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(mt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",mt);
-//# sourceMappingURL=index-f883VBko.js.map
+//# sourceMappingURL=index-VZKfCDFb.js.map
