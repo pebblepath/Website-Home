@@ -111,39 +111,6 @@ export class FamilyCircle extends LitElement {
       font-weight: 600;
       color: var(--text-secondary);
     }
-    .legend {
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-      padding: 14px 16px;
-      border-radius: var(--radius-tile);
-      background: var(--glass-fill);
-      border: 1px solid var(--glass-border);
-    }
-    .legend .row {
-      display: flex;
-      align-items: flex-start;
-      gap: 11px;
-    }
-    .legend .dot {
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      margin-top: 4px;
-    }
-    .legend .ttl {
-      font-family: var(--font-display);
-      font-weight: 600;
-      font-size: 13.5px;
-      color: var(--text-primary);
-    }
-    .legend .desc {
-      font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.45;
-      margin-top: 2px;
-    }
   `;
 
   _self() {
@@ -193,7 +160,6 @@ export class FamilyCircle extends LitElement {
     // Inner ring phase-offset half a step so a lone inner avatar
     // never stacks on a lone outer one (the iOS collision fix).
     const innerPhase = -90 + 180 / Math.max(1, fam.length);
-    const isJustYou = fam.length === 0 && conn.length === 0;
 
     return html`
       <div class="stage">
@@ -217,36 +183,6 @@ export class FamilyCircle extends LitElement {
             ></member-chip>
           </div>
           <span class="cap">You</span>
-        </div>
-      </div>
-
-      <div class="legend">
-        <div class="row">
-          <div class="dot" style="background:var(--dusty-blue);"></div>
-          <div>
-            <div class="ttl">You</div>
-            <div class="desc">The centre — your point of view.</div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="dot" style="background:var(--sage-deep);"></div>
-          <div>
-            <div class="ttl">Your family</div>
-            <div class="desc">
-              ${isJustYou
-                ? 'Your co-parent and your children will appear here.'
-                : 'Your co-parent and your children.'}
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="dot" style="background:var(--purple-muted);"></div>
-          <div>
-            <div class="ttl">Your connections</div>
-            <div class="desc">
-              Everyone who joined by invitation. Equal accounts.
-            </div>
-          </div>
         </div>
       </div>
     `;

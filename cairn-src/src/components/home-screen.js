@@ -3809,29 +3809,41 @@ export class HomeScreen extends LitElement {
         <div class="grid-2">
           <div>
             <div class="section-head">
-              <h2>Your Cairn</h2>
+              <h2>Your Circles</h2>
               <button class="link" @click=${() => (this._membersOpen = true)}>
                 Manage members
               </button>
             </div>
-            ${this._renderCairnStackPanel()}
+            <glass-panel padding="md" variant="strong">
+              <family-circle
+                .immediate=${this._liveImmediate()}
+                .extended=${this._liveExtended()}
+              ></family-circle>
+            </glass-panel>
           </div>
           <div>
             <div class="section-head"><h2>What each level sees</h2></div>
             <glass-panel padding="md" variant="strong">
               <div class="set-row">
-                <span class="si" style="color:var(--ink-terracotta);">
+                <span class="si" style="color:var(--ink-blue);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" stroke-linecap="round"/></svg>
                 </span>
-                <div class="sl"><b>You &amp; co-parents</b><span>Children · milestones · Pebble · activities · everything</span></div>
-                <span class="set-pill" style="color:var(--ink-terracotta);border-color:rgba(198,123,92,.4);">Full access</span>
+                <div class="sl"><b>You</b><span>The centre — your point of view.</span></div>
+                <span class="set-pill" style="color:var(--ink-blue);border-color:rgba(63,111,158,.4);">You</span>
               </div>
               <div class="set-row">
-                <span class="si" style="color:var(--ink-teal);">
+                <span class="si" style="color:var(--ink-green);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="7" rx="3" ry="1.4"/><ellipse cx="12" cy="12" rx="6" ry="2.4"/><ellipse cx="12" cy="17" rx="8" ry="3"/></svg>
                 </span>
-                <div class="sl"><b>Extended family</b><span>Activities and Pebble only — no child data, unless approved.</span></div>
-                <span class="set-pill" style="color:var(--ink-teal);border-color:rgba(61,155,143,.4);">Activities only</span>
+                <div class="sl"><b>Your family</b><span>Your co-parent and your children.</span></div>
+                <span class="set-pill" style="color:var(--ink-green);border-color:rgba(46,128,73,.4);">Full access</span>
+              </div>
+              <div class="set-row">
+                <span class="si" style="color:var(--ink-purple);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg>
+                </span>
+                <div class="sl"><b>Your connections</b><span>Everyone who joined by invitation. Equal accounts.</span></div>
+                <span class="set-pill" style="color:var(--ink-purple);border-color:rgba(107,90,150,.4);">Activities only</span>
               </div>
             </glass-panel>
           </div>
