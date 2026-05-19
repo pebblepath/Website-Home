@@ -1924,13 +1924,13 @@ var ft=Object.defineProperty;var vt=(p,e,t)=>e in p?ft(p,e,{enumerable:!0,config
         ></member-chip>
         <span class="cap">${r}</span>
       </div>
-    `}render(){const e=this._self(),t=this._family(),i=this._connections(),r=-90+180/Math.max(1,t.length),a=t.length===0&&i.length===0;return o`
+    `}render(){const e=this._self(),t=this._family(),i=this._connections(),r=-90+180/Math.max(1,t.length);return o`
       <div class="stage">
         <div class="ring connections"></div>
         <div class="ring family"></div>
 
-        ${i.map((s,n)=>this._node(s,40,this._pos(n,i.length,40,-90)))}
-        ${t.map((s,n)=>this._node(s,46,this._pos(n,t.length,24,r)))}
+        ${i.map((a,s)=>this._node(a,40,this._pos(s,i.length,40,-90)))}
+        ${t.map((a,s)=>this._node(a,46,this._pos(s,t.length,24,r)))}
 
         <div class="you">
           <div class="ringwrap">
@@ -1942,34 +1942,6 @@ var ft=Object.defineProperty;var vt=(p,e,t)=>e in p?ft(p,e,{enumerable:!0,config
             ></member-chip>
           </div>
           <span class="cap">You</span>
-        </div>
-      </div>
-
-      <div class="legend">
-        <div class="row">
-          <div class="dot" style="background:var(--dusty-blue);"></div>
-          <div>
-            <div class="ttl">You</div>
-            <div class="desc">The centre — your point of view.</div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="dot" style="background:var(--sage-deep);"></div>
-          <div>
-            <div class="ttl">Your family</div>
-            <div class="desc">
-              ${a?"Your co-parent and your children will appear here.":"Your co-parent and your children."}
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="dot" style="background:var(--purple-muted);"></div>
-          <div>
-            <div class="ttl">Your connections</div>
-            <div class="desc">
-              Everyone who joined by invitation. Equal accounts.
-            </div>
-          </div>
         </div>
       </div>
     `}}_(Pe,"properties",{immediate:{type:Array},extended:{type:Array}}),_(Pe,"styles",z`
@@ -2045,39 +2017,6 @@ var ft=Object.defineProperty;var vt=(p,e,t)=>e in p?ft(p,e,{enumerable:!0,config
       font-weight: 600;
       color: var(--text-secondary);
     }
-    .legend {
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
-      padding: 14px 16px;
-      border-radius: var(--radius-tile);
-      background: var(--glass-fill);
-      border: 1px solid var(--glass-border);
-    }
-    .legend .row {
-      display: flex;
-      align-items: flex-start;
-      gap: 11px;
-    }
-    .legend .dot {
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      margin-top: 4px;
-    }
-    .legend .ttl {
-      font-family: var(--font-display);
-      font-weight: 600;
-      font-size: 13.5px;
-      color: var(--text-primary);
-    }
-    .legend .desc {
-      font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.45;
-      margin-top: 2px;
-    }
   `);customElements.define("family-circle",Pe);let q=null,Je=null;function Wt(){return q||(q=document.createElement("div"),q.id="cairn-toast-host",Object.assign(q.style,{position:"fixed",bottom:"24px",left:"50%",transform:"translateX(-50%)",zIndex:9999,pointerEvents:"none"}),document.body.appendChild(q),q)}function y(p,{duration:e=2800}={}){const t=Wt();clearTimeout(Je),t.innerHTML="";const i=document.createElement("div");i.textContent=p,Object.assign(i.style,{padding:"12px 18px",background:"rgba(20, 12, 6, 0.78)",backdropFilter:"blur(24px) saturate(180%)",webkitBackdropFilter:"blur(24px) saturate(180%)",border:"1px solid rgba(255, 248, 235, 0.22)",borderRadius:"999px",color:"rgba(255, 248, 235, 0.96)",fontFamily:"'Inter', system-ui, sans-serif",fontSize:"13.5px",fontWeight:"500",letterSpacing:"0.005em",boxShadow:"0 12px 32px rgba(20, 12, 6, 0.45)",pointerEvents:"auto",transform:"translateY(8px)",opacity:"0",transition:"opacity 200ms ease, transform 240ms ease"}),t.appendChild(i),requestAnimationFrame(()=>{i.style.opacity="1",i.style.transform="translateY(0)"}),Je=setTimeout(()=>{i.style.opacity="0",i.style.transform="translateY(8px)",setTimeout(()=>i.remove(),260)},e)}class Me extends A{constructor(){super(),this.open=!1,this.family=null,this.immediate=[],this.extended=[],this.canRemove=!1,this._busy=!1,this._newGroupName="",this._editingGroupId=null,this._removingUid=null,this._addingChild=!1,this._childName="",this._childDob="",this._savingChild=!1}_toggleAddChild(){this._addingChild=!this._addingChild,this._addingChild||(this._childName="",this._childDob="")}async _saveChild(){const e=(this._childName??"").trim();if(!e||this._savingChild)return;if(!this._childDob){y("Add your child's date of birth.");return}const t=new Date(`${this._childDob}T00:00:00`);if(Number.isNaN(t.getTime())){y("That date of birth doesn't look right.");return}const i=m.familyId;if(!i){y("Can't add a child — no family yet.");return}this._savingChild=!0;try{await m.createChild(i,{name:e,dateOfBirth:t}),y(`${e} added.`),this._childName="",this._childDob="",this._addingChild=!1}catch(r){console.error("Add child failed:",r),y((r==null?void 0:r.code)==="permission-denied"?"Only a parent in this family can add a child.":`Couldn't add the child: ${(r==null?void 0:r.message)??"try again"}`,{duration:5e3})}finally{this._savingChild=!1}}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _createSubGroup(){const e=this._newGroupName.trim();if(!(!e||this._busy)){this._busy=!0;try{const t=await m.saveSubGroup({name:e,memberIds:[]});this._newGroupName="",this._editingGroupId=t,y(`Sub-group "${e}" created.`)}catch(t){y(`Couldn't create: ${t.code??t.message}`,{duration:5e3})}finally{this._busy=!1}}}async _toggleSubGroupMember(e,t){var s,n;const i=(n=(s=this.family)==null?void 0:s.subGroups)==null?void 0:n[e];if(!i)return;const r=i.memberIds??[],a=r.includes(t)?r.filter(l=>l!==t):[...r,t];try{await m.saveSubGroup({id:e,name:i.name,memberIds:a})}catch(l){y(`Couldn't update: ${l.code??l.message}`,{duration:5e3})}}async _deleteSubGroup(e,t){if(confirm(`Delete the "${t}" sub-group?`))try{await m.deleteSubGroup(e),this._editingGroupId===e&&(this._editingGroupId=null),y("Sub-group deleted.")}catch(i){y(`Couldn't delete: ${i.code??i.message}`,{duration:5e3})}}async _removeMember(e){var i;if(this._removingUid)return;const t=e.displayName||"this person";if(confirm(`Remove ${t} from ${((i=this.family)==null?void 0:i.name)??"your family"}?
 
 They'll lose access to shared trips, celebrations and any read-only child access. You can re-invite them anytime with the invite code.`)){this._removingUid=e.uid;try{await m.removeCairnMember(e.uid),y(`${t} removed.`)}catch(r){y(`Couldn't remove: ${r.code??r.message}`,{duration:5e3})}finally{this._removingUid=null}}}async _regenerate(){if(!this._busy){this._busy=!0;try{await m.regenerateCairnInviteCode(),y("New invite code generated.")}catch(e){console.error(e),y(`Couldn't generate code: ${e.code??e.message}`,{duration:5e3})}finally{this._busy=!1}}}_inviteLink(e){return`${window.location.origin}/portal/?join=${e}`}async _copyLink(){var t;const e=(t=this.family)==null?void 0:t.cairnInviteCode;if(e)try{await navigator.clipboard.writeText(this._inviteLink(e)),y("Invite link copied to clipboard.")}catch{y("Could not copy — try long-press the link instead.")}}async _share(){var i,r;const e=(i=this.family)==null?void 0:i.cairnInviteCode;if(!e)return;const t=this._inviteLink(e);if(navigator.share)try{await navigator.share({title:"Join my family on Cairn",text:`Join ${((r=this.family)==null?void 0:r.name)??"our family"} on Cairn — our shared family calendar.`,url:t})}catch{}else this._copyLink()}_expiryText(e){if(!e)return"";const t=e.toDate?e.toDate():new Date(e),r=Math.max(0,Math.round((t-new Date)/(1440*60*1e3)));return r===0?"Expires today":r===1?"Expires tomorrow":`Expires in ${r} days`}render(){var r,a,s,n;if(!this.open)return o``;const e=(r=this.family)==null?void 0:r.cairnInviteCode,t=(a=this.family)==null?void 0:a.cairnInviteCodeExpiresAt,i=t&&(t.toDate?t.toDate():new Date(t))<new Date;return o`
@@ -2085,16 +2024,11 @@ They'll lose access to shared trips, celebrations and any read-only child access
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
           <div class="header">
-            <h2>Your family</h2>
+            <h2>Manage members</h2>
             <button class="close" @click=${this._onCancel} aria-label="Close">×</button>
           </div>
 
-          <family-circle
-            .immediate=${this.immediate}
-            .extended=${this.extended}
-          ></family-circle>
-
-          <h3>Your family · ${this.immediate.length}</h3>
+          <h3>Immediate family · ${this.immediate.length}</h3>
           ${this.immediate.length===0?o`<div class="empty">No one in immediate yet.</div>`:this.immediate.map(l=>o`
                   <div class="member-row">
                     <member-chip
@@ -2106,13 +2040,13 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     <div class="body">
                       <div class="name">${l.displayName}</div>
                       <div class="role">
-                        ${l.role==="self"?"You":l.role==="co-parent"?"Co-parent":l.role==="child"?"Child":"Family"}
+                        ${l.role==="self"?"You":l.role==="co-parent"?"Co-parent (PebblePath)":l.role==="child"?"Child":"Family"}
                       </div>
                     </div>
                   </div>
                 `)}
 
-          <h3>Your connections · ${this.extended.length}</h3>
+          <h3>Extended family · ${this.extended.length}</h3>
           ${this.extended.length===0?o`<div class="empty">
                 Anyone you invite via Cairn (grandparents, aunts, uncles, etc.) will appear here.
                 They can see trips and celebrations but not PebblePath child data.
@@ -2126,7 +2060,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     ></member-chip>
                     <div class="body">
                       <div class="name">${l.displayName}</div>
-                      <div class="role">Connection</div>
+                      <div class="role">Cairn — extended</div>
                     </div>
                     ${this.canRemove?o`<button
                           class="remove-btn"
@@ -8674,29 +8608,41 @@ They'll lose access to shared trips, celebrations and any read-only child access
         <div class="grid-2">
           <div>
             <div class="section-head">
-              <h2>Your Cairn</h2>
+              <h2>Your Circles</h2>
               <button class="link" @click=${()=>this._membersOpen=!0}>
                 Manage members
               </button>
             </div>
-            ${this._renderCairnStackPanel()}
+            <glass-panel padding="md" variant="strong">
+              <family-circle
+                .immediate=${this._liveImmediate()}
+                .extended=${this._liveExtended()}
+              ></family-circle>
+            </glass-panel>
           </div>
           <div>
             <div class="section-head"><h2>What each level sees</h2></div>
             <glass-panel padding="md" variant="strong">
               <div class="set-row">
-                <span class="si" style="color:var(--ink-terracotta);">
+                <span class="si" style="color:var(--ink-blue);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" stroke-linecap="round"/></svg>
                 </span>
-                <div class="sl"><b>You &amp; co-parents</b><span>Children · milestones · Pebble · activities · everything</span></div>
-                <span class="set-pill" style="color:var(--ink-terracotta);border-color:rgba(198,123,92,.4);">Full access</span>
+                <div class="sl"><b>You</b><span>The centre — your point of view.</span></div>
+                <span class="set-pill" style="color:var(--ink-blue);border-color:rgba(63,111,158,.4);">You</span>
               </div>
               <div class="set-row">
-                <span class="si" style="color:var(--ink-teal);">
+                <span class="si" style="color:var(--ink-green);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="7" rx="3" ry="1.4"/><ellipse cx="12" cy="12" rx="6" ry="2.4"/><ellipse cx="12" cy="17" rx="8" ry="3"/></svg>
                 </span>
-                <div class="sl"><b>Extended family</b><span>Activities and Pebble only — no child data, unless approved.</span></div>
-                <span class="set-pill" style="color:var(--ink-teal);border-color:rgba(61,155,143,.4);">Activities only</span>
+                <div class="sl"><b>Your family</b><span>Your co-parent and your children.</span></div>
+                <span class="set-pill" style="color:var(--ink-green);border-color:rgba(46,128,73,.4);">Full access</span>
+              </div>
+              <div class="set-row">
+                <span class="si" style="color:var(--ink-purple);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg>
+                </span>
+                <div class="sl"><b>Your connections</b><span>Everyone who joined by invitation. Equal accounts.</span></div>
+                <span class="set-pill" style="color:var(--ink-purple);border-color:rgba(107,90,150,.4);">Activities only</span>
               </div>
             </glass-panel>
           </div>
@@ -11474,4 +11420,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(mt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",mt);
-//# sourceMappingURL=index-D53QMT1U.js.map
+//# sourceMappingURL=index-B-cOG3AE.js.map
