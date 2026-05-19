@@ -1444,13 +1444,54 @@ export class HomeScreen extends LitElement {
       border-radius: var(--radius-pill);
       background: rgba(255, 248, 235, 0.06);
       border: 1px solid var(--glass-border);
+      /* Anchor for the absolutely-positioned .tab-slider — the slider
+         rides inside .tabs padding-box and slides left/right to
+         overlay whichever tab is active. */
+      position: relative;
+    }
+    /* The active visual lives on this ONE absolutely-positioned
+       element — it tracks the active tab by transforming horizontally,
+       giving a true iOS-26 liquid-glass pill that morphs across the
+       bar rather than one pill fading off and another fading in.
+       Position + width are set inline by _positionTabSlider() (Lit
+       firstUpdated / updated). */
+    .tab-slider {
+      position: absolute;
+      top: 5px;
+      bottom: 5px;
+      left: 0;
+      width: 0;
+      transform: translateX(0);
+      border-radius: var(--radius-pill);
+      pointer-events: none;
+      z-index: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.32) 0%,
+        rgba(255, 255, 255, 0.12) 55%,
+        rgba(255, 255, 255, 0.22) 100%
+      );
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow:
+        0 6px 18px rgba(20, 50, 46, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.55),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+      transition:
+        transform 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+        width 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+    }
+    .tab-slider.ready {
+      opacity: 1;
     }
     .tab {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       padding: 9px 16px;
-      border: 1px solid transparent;
+      border: none;
       background: transparent;
       color: var(--chrome-fg);
       cursor: pointer;
@@ -1460,15 +1501,11 @@ export class HomeScreen extends LitElement {
       letter-spacing: -0.005em;
       border-radius: var(--radius-pill);
       white-space: nowrap;
-      /* Longer cubic-bezier transition on color/bg/border/shadow so
-         the active tab softly slides into / out of the liquid-glass
-         pill state when you click between tabs (vs the previous
-         snappy 0.2s ease). */
-      transition:
-        color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-        background 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-        border-color 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-        box-shadow 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      /* Above the slider so the label stays crisp on the liquid-glass
+         pill underneath. */
+      position: relative;
+      z-index: 1;
+      transition: color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .tab svg {
       width: 16px;
@@ -1477,22 +1514,8 @@ export class HomeScreen extends LitElement {
     .tab:hover {
       color: var(--chrome-fg-strong);
     }
-    /* Liquid-glass active pill — frosted-white wash over the topbar's
-       brand-green chrome (replaces the prior solid sage gradient).
-       Matches the rest of the Portal's glass aesthetic. */
     .tab.active {
       color: #fff;
-      background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.22),
-        rgba(255, 255, 255, 0.08)
-      );
-      backdrop-filter: blur(14px) saturate(160%);
-      -webkit-backdrop-filter: blur(14px) saturate(160%);
-      border-color: rgba(255, 255, 255, 0.28);
-      box-shadow:
-        0 4px 14px rgba(20, 50, 46, 0.28),
-        inset 0 1px 0 rgba(255, 255, 255, 0.32);
     }
     /* Below ~1000px the labels drop to icon-only so 5 tabs + brand +
        Activity + avatar still fit the 68px bar. */
@@ -2243,6 +2266,9 @@ export class HomeScreen extends LitElement {
         this._refreshConnectionMembers();
       }
     }
+    if (changed.has('_activeTab')) {
+      this._positionTabSlider({ animate: true });
+    }
   }
 
   _liveTrips() {
@@ -2835,6 +2861,7 @@ export class HomeScreen extends LitElement {
   _renderTabBar() {
     return html`
       <nav class="tabs" role="tablist" aria-label="Sections">
+        <span class="tab-slider" aria-hidden="true"></span>
         ${this._tabDefs().map(
           (t) => html`<button
             class="tab ${this._activeTab === t.id ? 'active' : ''}"
@@ -2847,6 +2874,59 @@ export class HomeScreen extends LitElement {
         )}
       </nav>
     `;
+  }
+
+  // ── Top-tab sliding liquid-glass indicator ──────────────────────
+  // The active visual is a single absolutely-positioned `.tab-slider`
+  // that rides inside `.tabs`. We measure the active tab's
+  // offsetLeft + offsetWidth and write them to the slider's inline
+  // `transform: translateX()` / `width:` — the CSS cubic-bezier
+  // transition (.tab-slider in static styles) then animates the move.
+  // First mount snaps in place (no slide-from-zero); subsequent
+  // _activeTab changes animate.
+  _positionTabSlider({ animate = true } = {}) {
+    const tabs = this.renderRoot?.querySelector('.tabs');
+    if (!tabs) return;
+    const slider = tabs.querySelector('.tab-slider');
+    const active = tabs.querySelector('.tab.active');
+    if (!slider || !active) return;
+    if (!animate) {
+      // Snap into position on first paint (and on resize) without
+      // sliding from 0 — kill the transition for this frame, force a
+      // reflow, then restore it.
+      const prev = slider.style.transition;
+      slider.style.transition = 'none';
+      slider.style.transform = `translateX(${active.offsetLeft}px)`;
+      slider.style.width = `${active.offsetWidth}px`;
+      // eslint-disable-next-line no-unused-expressions
+      slider.offsetWidth; // force reflow
+      slider.classList.add('ready');
+      requestAnimationFrame(() => {
+        slider.style.transition = prev || '';
+      });
+      return;
+    }
+    slider.classList.add('ready');
+    slider.style.transform = `translateX(${active.offsetLeft}px)`;
+    slider.style.width = `${active.offsetWidth}px`;
+  }
+
+  firstUpdated(changedProps) {
+    super.firstUpdated?.(changedProps);
+    this._positionTabSlider({ animate: false });
+    const tabs = this.renderRoot?.querySelector('.tabs');
+    if (tabs && typeof ResizeObserver !== 'undefined') {
+      this._tabsRO = new ResizeObserver(() => {
+        this._positionTabSlider({ animate: false });
+      });
+      this._tabsRO.observe(tabs);
+    }
+  }
+
+  disconnectedCallback() {
+    this._tabsRO?.disconnect();
+    this._tabsRO = null;
+    super.disconnectedCallback();
   }
 
   /** Phones (≤720px): a real iOS-style fixed bottom tab bar — the

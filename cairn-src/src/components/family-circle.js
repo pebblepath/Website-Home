@@ -80,13 +80,30 @@ export class FamilyCircle extends LitElement {
     }
     .ring.connections {
       width: 92%;
-      border: 1.5px dashed rgba(139, 123, 181, 0.6);
-      background: rgba(139, 123, 181, 0.2);
+      border: 1.5px dashed rgba(139, 123, 181, 0.7);
+      background: rgba(139, 123, 181, 0.42);
+      /* Donut shape — mask out the inner area where the family ring
+         sits so the two rings don't color-mix. The family ring is
+         54% of the disc; the connections ring is 92%, so the family
+         radius as a fraction of the connections radius is
+         54/92 ≈ 0.587. With closest-side (50% of element width as the
+         100% reference), the family radius is 58.7% of that gradient
+         radius. A 4% gradient transition smooths the edge. */
+      -webkit-mask-image: radial-gradient(
+        circle closest-side,
+        transparent 58%,
+        #000 62%
+      );
+      mask-image: radial-gradient(
+        circle closest-side,
+        transparent 58%,
+        #000 62%
+      );
     }
     .ring.family {
       width: 54%;
-      border: 1.5px dashed rgba(31, 92, 84, 0.65);
-      background: rgba(31, 92, 84, 0.22);
+      border: 1.5px dashed rgba(31, 92, 84, 0.75);
+      background: rgba(31, 92, 84, 0.45);
     }
     .node {
       position: absolute;
