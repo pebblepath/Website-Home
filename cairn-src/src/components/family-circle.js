@@ -45,11 +45,24 @@ export class FamilyCircle extends LitElement {
     :host {
       display: block;
     }
+    /* 15% shorter than wide — trims the dead space above/below the
+       rings. The circle itself stays full-size: the square `.disc`
+       (sized by WIDTH) holds the rings/avatars and is centred in
+       the shorter stage, overflowing symmetrically into the
+       surrounding glass-panel padding (overflow visible). */
     .stage {
       position: relative;
       width: 100%;
       max-width: 340px;
-      margin: 4px auto 18px;
+      margin: 0 auto;
+      aspect-ratio: 1 / 0.85;
+    }
+    .disc {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
       aspect-ratio: 1 / 1;
     }
     .ring {
@@ -163,26 +176,28 @@ export class FamilyCircle extends LitElement {
 
     return html`
       <div class="stage">
-        <div class="ring connections"></div>
-        <div class="ring family"></div>
+        <div class="disc">
+          <div class="ring connections"></div>
+          <div class="ring family"></div>
 
-        ${conn.map((m, i) =>
-          this._node(m, 40, this._pos(i, conn.length, 40, -90)),
-        )}
-        ${fam.map((m, i) =>
-          this._node(m, 46, this._pos(i, fam.length, 24, innerPhase)),
-        )}
+          ${conn.map((m, i) =>
+            this._node(m, 40, this._pos(i, conn.length, 37, -90)),
+          )}
+          ${fam.map((m, i) =>
+            this._node(m, 46, this._pos(i, fam.length, 19, innerPhase)),
+          )}
 
-        <div class="you">
-          <div class="ringwrap">
-            <member-chip
-              .name=${self?.displayName ?? 'You'}
-              .photo=${self?.photoURL ?? ''}
-              .hue=${self?.hue ?? 198}
-              size="64"
-            ></member-chip>
+          <div class="you">
+            <div class="ringwrap">
+              <member-chip
+                .name=${self?.displayName ?? 'You'}
+                .photo=${self?.photoURL ?? ''}
+                .hue=${self?.hue ?? 198}
+                size="64"
+              ></member-chip>
+            </div>
+            <span class="cap">You</span>
           </div>
-          <span class="cap">You</span>
         </div>
       </div>
     `;

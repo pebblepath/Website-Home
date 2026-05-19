@@ -33,6 +33,8 @@ export class ManageMembersModal extends LitElement {
     _childName: { state: true },
     _childDob: { state: true },
     _savingChild: { state: true },
+    _editingLabelUid: { state: true },
+    _labelDraft: { state: true },
   };
 
   constructor() {
@@ -50,6 +52,32 @@ export class ManageMembersModal extends LitElement {
     this._childName = '';
     this._childDob = '';
     this._savingChild = false;
+    this._editingLabelUid = null;
+    this._labelDraft = '';
+  }
+
+  /** Owner-private label for a connection. Read from the OWNER's
+   *  own user doc (dataStore.state.user.memberLabels) — never the
+   *  member's profile, so it's only ever visible to the owner. */
+  _memberLabel(uid) {
+    const v = dataStore.state.user?.memberLabels?.[uid];
+    return v && v.trim() ? v.trim() : '';
+  }
+
+  _startLabelEdit(uid) {
+    this._editingLabelUid = uid;
+    this._labelDraft = this._memberLabel(uid);
+  }
+
+  async _saveLabel(uid) {
+    const draft = this._labelDraft;
+    this._editingLabelUid = null;
+    try {
+      await dataStore.setMemberLabel(uid, draft);
+    } catch (e) {
+      toast(`Couldn't save label: ${e.code ?? e.message}`, { duration: 4000 });
+    }
+    this.requestUpdate();
   }
 
   _toggleAddChild() {
@@ -199,6 +227,42 @@ export class ManageMembersModal extends LitElement {
       color: var(--text-tertiary);
       letter-spacing: -0.005em;
       margin-top: 2px;
+    }
+    .role-edit {
+      margin-top: 2px;
+      background: transparent;
+      border: 1px dashed var(--glass-border);
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      padding: 2px 9px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+    .role-edit:hover {
+      color: var(--text-primary);
+      border-color: var(--glass-border-strong);
+    }
+    .role-edit .pen {
+      opacity: 0.55;
+      margin-left: 5px;
+      font-size: 11px;
+    }
+    .label-input {
+      margin-top: 2px;
+      width: 150px;
+      background: rgba(255, 248, 235, 0.06);
+      border: 1px solid var(--glass-border-strong);
+      border-radius: 999px;
+      padding: 3px 11px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 12.5px;
+    }
+    .label-input:focus {
+      outline: none;
+      border-color: var(--dusty-blue);
     }
     .member-row .remove-btn {
       flex-shrink: 0;
@@ -565,7 +629,29 @@ export class ManageMembersModal extends LitElement {
                     ></member-chip>
                     <div class="body">
                       <div class="name">${m.displayName}</div>
-                      <div class="role">Cairn — extended</div>
+                      ${this._editingLabelUid === m.uid
+                        ? html`<input
+                            class="label-input"
+                            .value=${this._labelDraft}
+                            placeholder="Connection"
+                            @input=${(e) => (this._labelDraft = e.target.value)}
+                            @keydown=${(e) => {
+                              if (e.key === 'Enter') this._saveLabel(m.uid);
+                              if (e.key === 'Escape')
+                                this._editingLabelUid = null;
+                            }}
+                            @blur=${() => this._saveLabel(m.uid)}
+                          />`
+                        : html`<button
+                            class="role-edit"
+                            title="Set a private label only you can see"
+                            @click=${() => this._startLabelEdit(m.uid)}
+                          >
+                            ${this._memberLabel(m.uid) || 'Connection'}<span
+                              class="pen"
+                              >✎</span
+                            >
+                          </button>`}
                     </div>
                     ${this.canRemove
                       ? html`<button
@@ -580,7 +666,13 @@ export class ManageMembersModal extends LitElement {
                 `,
               )}
 
-          ${this.extended.length > 0 || Object.keys(this.family?.subGroups ?? {}).length > 0
+          ${/* P4-B 2026-05-19 — sub-groups UI hidden for now to avoid
+               confusion (Thomas); revisit later. Block + the
+               _createSubGroup/_toggleSubGroupMember/_deleteSubGroup
+               methods kept dormant: remove the "false &&" prefix
+               below to restore the original condition. */
+          false &&
+          (this.extended.length > 0 || Object.keys(this.family?.subGroups ?? {}).length > 0)
             ? html`
                 <h3>Sub-groups</h3>
                 ${Object.entries(this.family?.subGroups ?? {}).map(

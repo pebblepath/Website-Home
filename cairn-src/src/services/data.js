@@ -924,6 +924,21 @@ class FamilyDataStore extends EventTarget {
     );
   }
 
+  /** P4-B — owner-private custom member label ("Grandpa", "Aunt").
+   *  Stored on the OWNER's OWN user doc as a map
+   *  `memberLabels.{memberUid}`. Only the owner can read/write
+   *  their own user doc (the per-user rule), so it is private by
+   *  construction — NO rule change, NOT a privilege grant (it
+   *  changes no access, only a label the owner sees). Blank value
+   *  is stored as '' and treated as "no label" on read (falls back
+   *  to the default). */
+  async setMemberLabel(memberUid, label) {
+    if (!this._uid || !memberUid) return;
+    await updateDoc(doc(db, 'users', this._uid), {
+      [`memberLabels.${memberUid}`]: (label ?? '').trim(),
+    });
+  }
+
   /** PP member approves: add the uid to `childViewers` (full-array
    *  write — no arrayUnion import needed; last-write-wins is fine at
    *  this cadence) AND stamp the request approved. */
