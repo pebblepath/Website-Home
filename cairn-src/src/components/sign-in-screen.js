@@ -89,9 +89,9 @@ export class SignInScreen extends LitElement {
     }
     .companion {
       font-family: var(--font-nunito);
-      font-weight: 600;
-      font-size: 11.5px;
-      letter-spacing: 0.18em;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.17em;
       text-transform: uppercase;
       color: var(--text-tertiary);
       /* Sits below the wordmark in a quiet, "subtitle" voice — same
@@ -101,21 +101,21 @@ export class SignInScreen extends LitElement {
     .companion::before {
       content: '';
       display: inline-block;
-      width: 18px;
+      width: 24px;
       height: 1px;
       background: var(--text-tertiary);
       vertical-align: middle;
-      margin-right: 10px;
+      margin-right: 12px;
       opacity: 0.6;
     }
     .companion::after {
       content: '';
       display: inline-block;
-      width: 18px;
+      width: 24px;
       height: 1px;
       background: var(--text-tertiary);
       vertical-align: middle;
-      margin-left: 10px;
+      margin-left: 12px;
       opacity: 0.6;
     }
 

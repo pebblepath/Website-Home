@@ -131,7 +131,7 @@ export class RegisterScreen extends LitElement {
     }
     .wrap {
       width: 100%;
-      max-width: 480px;
+      max-width: 412px;
     }
     .brand {
       display: flex;
@@ -175,9 +175,9 @@ export class RegisterScreen extends LitElement {
     }
     .companion {
       font-family: var(--font-nunito);
-      font-weight: 600;
-      font-size: 11.5px;
-      letter-spacing: 0.18em;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.17em;
       text-transform: uppercase;
       color: var(--teal-pebble);
     }
@@ -185,14 +185,14 @@ export class RegisterScreen extends LitElement {
     .companion::after {
       content: '';
       display: inline-block;
-      width: 18px;
+      width: 24px;
       height: 1px;
       background: var(--teal-pebble);
       vertical-align: middle;
       opacity: 0.55;
     }
-    .companion::before { margin-right: 10px; }
-    .companion::after { margin-left: 10px; }
+    .companion::before { margin-right: 12px; }
+    .companion::after { margin-left: 12px; }
 
     h1 {
       margin: 0 0 6px;
@@ -403,8 +403,19 @@ export class RegisterScreen extends LitElement {
       text-underline-offset: 3px;
       padding: 0;
     }
-    .actions { display: flex; gap: 10px; margin-top: 4px; }
-    .actions glass-button { flex: 1; }
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    /* iOS-welcome parity — the CTAs are centered pills, not
+       edge-to-edge bars. Narrower than the panel so the card reads
+       lighter. */
+    .actions glass-button {
+      flex: 0 1 248px;
+      max-width: 248px;
+    }
 
     /* P3-6 — 18+/Terms+Privacy consent row (gates Create). Scoped
        resets so the global full-width input rule doesn't stretch the
@@ -591,7 +602,7 @@ export class RegisterScreen extends LitElement {
       <div class="step">
         <div class="actions">
           <glass-button
-            variant="primary"
+            variant="frost-teal"
             ?disabled=${this.busy}
             @click=${() => this._go('register')}
           >
@@ -604,7 +615,7 @@ export class RegisterScreen extends LitElement {
             ?disabled=${this.busy}
             @click=${() => this._go('login')}
           >
-            I already have an account
+            Login
           </glass-button>
         </div>
       </div>

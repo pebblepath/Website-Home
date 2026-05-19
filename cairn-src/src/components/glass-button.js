@@ -95,6 +95,27 @@ export class GlassButton extends LitElement {
       background: var(--glass-fill-strong);
       border-color: var(--glass-border-strong);
     }
+    /* Parity with the iOS welcome screen's Register button —
+       PebbleTranslucentButtonStyle(tint: .ppTeal): a teal wash sitting
+       OVER frosted glass, white label, a hairline white border. Reads
+       as a brand-tinted frosted pill in BOTH themes (the teal mix is
+       opaque enough that white text stays legible regardless of the
+       surface behind it). Additive variant — primary/ghost untouched. */
+    .frost-teal {
+      background: color-mix(in srgb, var(--teal-pebble) 60%, transparent);
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      color: #fff;
+      text-shadow: 0 1px 1px rgba(20, 12, 6, 0.3);
+      border-color: rgba(255, 255, 255, 0.4);
+      box-shadow:
+        0 8px 22px rgba(61, 155, 143, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    }
+    .frost-teal:hover:not(:disabled) {
+      background: color-mix(in srgb, var(--teal-pebble) 72%, transparent);
+      border-color: rgba(255, 255, 255, 0.55);
+    }
   `;
 
   render() {
