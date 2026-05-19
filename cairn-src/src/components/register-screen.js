@@ -341,28 +341,29 @@ export class RegisterScreen extends LitElement {
       background: rgba(61, 155, 143, 0.25);
     }
 
+    /* iOS-app parity — Apple + Google sit SIDE BY SIDE as icon-only
+       squares (the iOS SocialSignInButtons HStack: Apple black,
+       Google white-with-border, centered on the row). */
     .providers {
       display: flex;
-      flex-direction: column;
-      gap: 8px;
+      flex-direction: row;
+      justify-content: center;
+      gap: 14px;
     }
     .provider-btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      width: 100%;
-      min-height: 44px;
-      padding: 0 14px;
-      border-radius: var(--radius-pill);
-      /* Google brand style: white background, dark text, hairline
-         border. Matches the iOS Google sign-in button. */
+      flex: 0 0 auto;
+      width: 84px;
+      height: 48px;
+      padding: 0;
+      border-radius: 14px;
+      /* Google brand style: white background, hairline border.
+         Matches the iOS Google sign-in button. */
       border: 1px solid rgba(0, 0, 0, 0.12);
       background: #fff;
       color: #3c4043;
-      font: inherit;
-      font-size: 14px;
-      font-weight: 600;
       cursor: pointer;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
       transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
@@ -381,7 +382,7 @@ export class RegisterScreen extends LitElement {
       background: #1a1a1a;
     }
     .provider-btn:disabled { opacity: 0.55; cursor: not-allowed; }
-    .provider-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .provider-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
 
     .toggle-row {
       display: flex;
@@ -593,7 +594,7 @@ export class RegisterScreen extends LitElement {
   // pre-auth Join card.
   _renderWelcome() {
     return html`
-      <h1>Your family's path, together.</h1>
+      <h1>Let's connect</h1>
       <p class="lede">
         ${this._invited
           ? "You've been invited to a family — register or sign in to join."
@@ -611,7 +612,7 @@ export class RegisterScreen extends LitElement {
         </div>
         <div class="actions">
           <glass-button
-            variant="ghost"
+            variant="frost-neutral"
             ?disabled=${this.busy}
             @click=${() => this._go('login')}
           >
@@ -627,19 +628,21 @@ export class RegisterScreen extends LitElement {
       <div class="providers">
         <button
           class="provider-btn"
+          aria-label=${this.busy ? busyText : 'Continue with Google'}
+          title="Continue with Google"
           ?disabled=${this.busy || !isConfigured}
           @click=${google}
         >
           ${this._iconGoogle()}
-          ${this.busy ? busyText : 'Continue with Google'}
         </button>
         <button
           class="provider-btn apple"
+          aria-label=${this.busy ? busyText : 'Continue with Apple'}
+          title="Continue with Apple"
           ?disabled=${this.busy || !isConfigured}
           @click=${apple}
         >
           ${this._iconApple()}
-          ${this.busy ? busyText : 'Continue with Apple'}
         </button>
       </div>
     `;
