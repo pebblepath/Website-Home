@@ -823,7 +823,7 @@ export class ManageMembersModal extends LitElement {
                 </glass-button>
               `}
 
-          <h3>Connection invite code</h3>
+          <h3>Cairn invite code</h3>
           ${code && !codeExpired
             ? html`
                 <div class="invite-box">
