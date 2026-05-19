@@ -1863,6 +1863,271 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
+   * Flat-family model Phase 3 P3-5 (2026-05-19) — Slice P3-5a.
+   * THE web parity twin of iOS `FirestoreService.createFamily`.
+   * UNWIRED in P3-5a (no caller yet) → behaviour-neutral, safe to
+   * ship before any deploy (the 2C-1 discipline). P3-5b wires it
+   * into the onboarding-wizard's "Yes, I have children" branch.
+   *
+   * C-i (Thomas, AskUserQuestion 2026-05-19): when a web user
+   * answers "I have children" their new family is created
+   * PP-style — the creator goes into `memberIds` (NOT
+   * `createCairnOnlyFamily`'s empty `memberIds`) so they can
+   * author children (the deployed `/children` CREATE rule is
+   * `isFamilyMember` = uid ∈ memberIds). `createCairnOnlyFamily`
+   * is untouched and stays the "no children / family-coordinator"
+   * path.
+   *
+   * NON-ESCALATION (the validated 2C-3 Proof-A structural
+   * argument): this writes a BRAND-NEW family doc where the
+   * caller is `createdBy` AND the sole `memberIds` entry. The
+   * family has no other members and no pre-existing children, so
+   * self-promotion to `memberIds` here grants access to NOTHING
+   * that existed before. The deployed `/families` CREATE rule's
+   * PP branch independently enforces exactly this
+   * (`memberIds == [uid] && createdBy == uid`; no `createdInApp`
+   * required) — a stale/raced UI cannot widen it. ZERO rules
+   * change (verified). Field set mirrors `createCairnOnlyFamily`
+   * EXACTLY except: (a) `memberIds: [uid]` not `[]`, (b) no
+   * `createdInApp: 'cairn'` (this is the PP path; `createdInApp`
+   * is telemetry per 2C-3 — we don't mislabel), (c) the iOS 2C-2
+   * dual code write (`inviteCode` + `cairnInviteCode`, same
+   * 6-char string, 30-day) so BOTH the unified and legacy lookup
+   * paths resolve it, (d) the user doc gets `familyId` + owner
+   * role (NOT `cairnFamilyId`).
+   */
+  async createPebblePathFamily(familyName) {
+    if (!db) throw new Error('Firebase not configured.');
+    const authUser = auth?.currentUser;
+    const uid = authUser?.uid;
+    if (!uid) throw new Error('Not signed in.');
+    const name = (familyName ?? '').trim();
+    if (!name) throw new Error('Family name is required.');
+
+    const now = new Date();
+    // 2C-2 unified 6-char connect code (the SAME helper
+    // createCairnOnlyFamily uses — no CAIRN- prefix).
+    const code = newCairnInviteCode();
+    const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    const profile = {
+      displayName: authUser.displayName ?? '',
+      profilePhotoURL: authUser.photoURL ?? null,
+      role: 'admin',
+      joinedAt: now,
+      updatedAt: now,
+    };
+
+    const familyDoc = {
+      name,
+      createdBy: uid,
+      // C-i: the creator IS a PebblePath member (the only diff vs
+      // createCairnOnlyFamily that matters for child authoring).
+      memberIds: [uid],
+      // Also a first-class flat-ring member of their own family so
+      // the Portal connections model is consistent (harmless: the
+      // PP CREATE rule branch only constrains memberIds; isCairn-
+      // Member already ORs memberIds in regardless).
+      cairnMemberIds: [uid],
+      connectedFamilyIds: [],
+      cairnMaxMembers: 20,
+      // iOS 2C-2 dual-write so the one shared code resolves via
+      // BOTH the unified (cairnInviteCode) and legacy (inviteCode)
+      // lookup paths, 30-day on both.
+      inviteCode: code,
+      inviteCodeExpiresAt: expiresAt,
+      cairnInviteCode: code,
+      cairnInviteCodeExpiresAt: expiresAt,
+      memberProfiles: { [uid]: profile },
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    };
+
+    const ref = await addDoc(collection(db, 'families'), familyDoc);
+
+    // Upsert user doc — PP path: `familyId` (NOT `cairnFamilyId`)
+    // + owner role, mirroring iOS createFamily's user-doc update.
+    await setDoc(
+      doc(db, 'users', uid),
+      {
+        email: authUser.email ?? '',
+        displayName: authUser.displayName ?? '',
+        profilePhotoURL: authUser.photoURL ?? null,
+        familyId: ref.id,
+        role: 'owner',
+        notificationPreferences: {
+          milestoneReminders: false,
+          tipNotifications: false,
+          schoolDeadlines: false,
+        },
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true },
+    );
+
+    return ref.id;
+  }
+
+  /**
+   * Flat-family model Phase 3 P3-5 (2026-05-19) — Slice P3-5a.
+   * Web parity twin of iOS `FirestoreService.createChild` +
+   * `AppState.addChild`'s `parentIds` stamp. UNWIRED in P3-5a →
+   * behaviour-neutral. P3-5b wires it after
+   * `createPebblePathFamily` on the "I have children" branch.
+   *
+   * `parentIds := family.memberIds` is the Phase-1 model (iOS
+   * `AppState.addChild`: `draft.parentIds = currentFamily
+   * .memberIds`). The deployed `/children` CREATE rule is
+   * `isFamilyMember(familyId)` (uid ∈ memberIds) — satisfied
+   * because the caller just created a PP family with themselves
+   * in `memberIds` (C-i). ZERO rules change.
+   *
+   * β SAFETY-NET DISCRIMINATOR (Thomas, AskUserQuestion
+   * 2026-05-19): the child doc is stamped `needsServerSeed: true`.
+   * The P3-5d Cloud Function `onChildCreated` seeds milestones
+   * ONLY for docs carrying this flag, then clears it (idempotent).
+   * iOS `createChild` never sets the flag and keeps its
+   * synchronous client-seed BYTE-UNCHANGED — so the CF never
+   * touches an iOS-created child (zero regression to the shipped,
+   * dogfooded iOS path) and there is no create-race: the
+   * discriminator is explicit, not timing-based.
+   *
+   * @param {string} familyId  the PP family (creator in memberIds)
+   * @param {{name:string,dateOfBirth:Date,developmentalFlags?:string[],region?:string}} childData
+   * @returns {Promise<string>} the new child doc id
+   */
+  async createChild(familyId, childData) {
+    if (!db) throw new Error('Firebase not configured.');
+    const uid = auth?.currentUser?.uid;
+    if (!uid) throw new Error('Not signed in.');
+    if (!familyId) throw new Error('No family.');
+    const name = (childData?.name ?? '').trim();
+    if (!name) throw new Error("Child's name is required.");
+    if (!(childData?.dateOfBirth instanceof Date)) {
+      throw new Error("Child's date of birth is required.");
+    }
+
+    // parentIds := the family's current memberIds (Phase-1 model).
+    // Read fresh via the dynamic-import getDoc pattern used by
+    // _recordMutualConnection (getDoc is not in the top imports).
+    const { getDoc } = await import('firebase/firestore');
+    const famSnap = await getDoc(doc(db, 'families', familyId));
+    const memberIds = famSnap.exists()
+      ? (Array.isArray(famSnap.data()?.memberIds) ? famSnap.data().memberIds : [])
+      : [];
+    // Defensive: the caller (creator) must be a member; if the
+    // read somehow missed, fall back to [uid] so parentIds is
+    // never empty for the creating parent.
+    const parentIds = memberIds.length ? memberIds : [uid];
+
+    const childDoc = {
+      name,
+      dateOfBirth: childData.dateOfBirth,
+      profilePhotoURL: null,
+      developmentalFlags: Array.isArray(childData?.developmentalFlags)
+        ? childData.developmentalFlags
+        : [],
+      pediatricianNotes: null,
+      region: childData?.region ?? null,
+      parentIds,
+      // β safety-net discriminator — see the doc comment above.
+      needsServerSeed: true,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    };
+
+    const ref = await addDoc(
+      collection(db, 'families', familyId, 'children'),
+      childDoc,
+    );
+    return ref.id;
+  }
+
+  /**
+   * Flat-family model Phase 3 P3-5 (2026-05-19) — Slice P3-5a.
+   * Web parity twin of iOS `AppState.requestToBeCoParent` /
+   * `FirestoreService.createCoParentRequest` — the deferred web
+   * parent-prompt (P3-INHERITED from the 2C-4e deferral). UNWIRED
+   * in P3-5a → behaviour-neutral. P3-5c wires it into
+   * `join-family-screen`'s post-join "are you a parent of a child
+   * here?" step.
+   *
+   * Files a 2A `coParentRequests/{uid}` claim (status 'pending').
+   * The claim GRANTS NOTHING — an existing parent of THIS child
+   * must confirm it (the 2A approve flow), and the deployed
+   * `coParentRequests` CREATE rule independently enforces
+   * `uid == reqUid && isCairnMember(fid) && !isChildParent &&
+   * status == 'pending'`. ZERO rules change (the rule shipped
+   * with iOS 2A and already admits this web cairn-member write).
+   * Doc shape mirrors iOS `createCoParentRequest` byte-for-byte
+   * (doc id == uid; uid / displayName / status / requestedAt).
+   *
+   * @param {string} childId  a child in the joined (cairn) family
+   */
+  async requestToBeCoParent(childId) {
+    if (!db) throw new Error('Firebase not configured.');
+    const uid = auth?.currentUser?.uid;
+    if (!uid) throw new Error('Not signed in.');
+    // The joined family the redeemer is a flat (cairn) member of.
+    const familyId =
+      this._currentFamilyId ??
+      this.state.user?.cairnFamilyId ??
+      this.state.user?.familyId ??
+      null;
+    if (!familyId) throw new Error('No family.');
+    if (!childId) throw new Error('No child.');
+    const displayName =
+      this.state.user?.displayName ??
+      auth?.currentUser?.displayName ??
+      '';
+
+    await setDoc(
+      doc(
+        db,
+        'families',
+        familyId,
+        'children',
+        childId,
+        'coParentRequests',
+        uid,
+      ),
+      {
+        uid,
+        displayName,
+        status: 'pending',
+        requestedAt: serverTimestamp(),
+      },
+    );
+  }
+
+  /**
+   * Flat-family model Phase 3 P3-5 (2026-05-19) — Slice P3-5c.
+   * One-shot read of the children in a (joined) family, for the
+   * `join-family-screen` post-join parent-prompt. Web parity twin
+   * of iOS `AppState.fetchCairnChildren`. Read-only, no listener.
+   *
+   * The deployed `/children` DOC read rule is `isCairnMember`, so a
+   * fresh connect-code redeemer (now in `cairnMemberIds`) may read
+   * the child docs — name/DOB/photo ONLY; their per-child
+   * dev/health subcollections stay `isChildParent` and 0-result.
+   * Best-effort: a failed/denied read returns [] so the prompt
+   * just doesn't show (the join still succeeds). NOT
+   * privilege-sensitive (a read; grants nothing).
+   */
+  async fetchFamilyChildren(familyId) {
+    if (!db || !familyId) return [];
+    try {
+      const snap = await getDocs(
+        collection(db, 'families', familyId, 'children'),
+      );
+      return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    } catch (e) {
+      console.warn('[parent-prompt] fetchFamilyChildren skipped (non-fatal):', e);
+      return [];
+    }
+  }
+
+  /**
    * Phase 3A: generate or regenerate the Cairn invite code. Caller must be
    * a PP member (rules enforce). 30-day expiry — extended-family invites
    * move on human time, not the 7-day co-parent timeline.

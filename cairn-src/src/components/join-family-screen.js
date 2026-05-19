@@ -24,6 +24,20 @@ export class JoinFamilyScreen extends LitElement {
     _loading: { state: true },
     _joining: { state: true },
     _error: { state: true },
+    // P3-5c (2026-05-19) — the deferred web parent-prompt
+    // (P3-INHERITED from the 2C-4e deferral; parity with iOS
+    // CairnConnectionView's 2C-4d parentPromptContent). After a
+    // successful join we interstitial: "are you a parent of a
+    // child here?" → tap a child → file a 2A claim
+    // (requestToBeCoParent). The claim GRANTS NOTHING — an
+    // existing parent confirms it (the explicit 2A flow). The
+    // `joined` event is deliberately delayed until the prompt is
+    // answered (app-shell keeps rendering us while joinCode is
+    // set — verified; no app-shell change needed).
+    _step: { state: true }, // 'join' | 'parent'
+    _children: { state: true },
+    _claiming: { state: true },
+    _claimedName: { state: true },
   };
 
   constructor() {
@@ -33,6 +47,11 @@ export class JoinFamilyScreen extends LitElement {
     this._loading = true;
     this._joining = false;
     this._error = '';
+    this._step = 'join';
+    this._children = [];
+    this._claiming = false;
+    this._claimedName = null;
+    this._joinedFamilyId = null;
   }
 
   willUpdate(changed) {
@@ -86,13 +105,59 @@ export class JoinFamilyScreen extends LitElement {
       // joinFamilyAsCairn — a drop-in.
       const familyId = await dataStore.redeemConnectCode(this.code);
       toast(`Welcome to ${this._family?.name ?? 'the family'}.`);
-      this.dispatchEvent(new CustomEvent('joined', { detail: { familyId } }));
+      this._joinedFamilyId = familyId;
+      // P3-5c — the deferred web parent-prompt. The redeemer is now
+      // a flat (cairnMemberIds) member; if the family has children,
+      // ask whether one is theirs BEFORE finishing (so they can
+      // file a 2A claim — an existing parent confirms it; the
+      // privilege-escalation guardrail is the product). No children
+      // → nothing to claim → finish straight through.
+      const kids = await dataStore.fetchFamilyChildren(familyId);
+      if (Array.isArray(kids) && kids.length) {
+        this._children = kids;
+        this._step = 'parent';
+        // NB: deliberately do NOT dispatch `joined` yet — app-shell
+        // keeps rendering us while joinCode is set; _finishJoin
+        // dispatches it once the prompt is answered.
+      } else {
+        this.dispatchEvent(new CustomEvent('joined', { detail: { familyId } }));
+      }
     } catch (e) {
       console.error(e);
       this._error = e?.message ?? 'Could not join.';
     } finally {
       this._joining = false;
     }
+  }
+
+  // P3-5c — tapping a child files a 2A co-parent claim. It grants
+  // NOTHING; an existing parent of THIS child must confirm it (the
+  // deployed coParentRequests rule independently enforces this).
+  async _claimChild(child) {
+    if (this._claiming || !child?.id) return;
+    this._claiming = true;
+    this._error = '';
+    try {
+      await dataStore.requestToBeCoParent(child.id);
+      this._claimedName = child.name ?? 'your child';
+    } catch (e) {
+      console.error(e);
+      this._error = e?.message ?? "Couldn't send the request.";
+    } finally {
+      this._claiming = false;
+    }
+  }
+
+  _notAParent() {
+    this._finishJoin();
+  }
+
+  _finishJoin() {
+    this.dispatchEvent(
+      new CustomEvent('joined', {
+        detail: { familyId: this._joinedFamilyId },
+      }),
+    );
   }
 
   _cancel() {
@@ -217,9 +282,135 @@ export class JoinFamilyScreen extends LitElement {
       background: rgba(255, 248, 235, 0.08);
       border-radius: 6px;
     }
+    /* P3-5c — parent-prompt child rows. */
+    .prompt-lede {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 14.5px;
+      line-height: 1.55;
+      margin: 0 0 18px;
+    }
+    .child-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 4px 0 18px;
+    }
+    .child-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      width: 100%;
+      text-align: left;
+      background: rgba(255, 248, 235, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-tile);
+      cursor: pointer;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 15.5px;
+      color: var(--text-primary);
+      transition: background 180ms ease, border-color 180ms ease;
+    }
+    .child-btn:hover:not(:disabled) {
+      background: rgba(255, 248, 235, 0.09);
+      border-color: var(--glass-border-strong);
+    }
+    .child-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .sent {
+      text-align: center;
+      color: var(--teal-pebble);
+      font-size: 15px;
+      line-height: 1.5;
+      margin: 8px 0 20px;
+    }
   `;
 
+  // P3-5c — the post-join parent-prompt (parity with iOS
+  // CairnConnectionView's 2C-4d parentPromptContent). Tapping a
+  // child files a 2A claim that GRANTS NOTHING until an existing
+  // parent confirms; "No" / after-sent → finish into the app.
+  _renderParentPrompt() {
+    const familyName = this._family?.name ?? 'this family';
+    return html`
+      <div class="wrap">
+        <div class="mark">
+          <img
+            class="brand-icon"
+            src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
+            srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
+            alt="Cairn"
+            width="44"
+            height="44"
+            style="border-radius:11px;display:block;box-shadow:0 4px 16px rgba(0,0,0,0.25);"
+          />
+          <div class="mark-name">Portal</div>
+        </div>
+        <glass-panel padding="lg" variant="strong" lifted>
+          ${this._claimedName
+            ? html`
+                <h1>Request sent</h1>
+                <div class="sent">
+                  ✓ We've asked an existing parent to confirm you as
+                  ${this._claimedName}'s parent. You won't see their
+                  information until they do.
+                </div>
+                <div class="actions">
+                  <glass-button
+                    variant="primary"
+                    size="lg"
+                    full
+                    @click=${this._finishJoin}
+                  >
+                    Continue
+                  </glass-button>
+                </div>
+              `
+            : html`
+                <h1>Are you a parent in ${familyName}?</h1>
+                <p class="prompt-lede">
+                  If one of these children is yours, ask to be added as
+                  their parent — an existing parent confirms it. You
+                  won't see a child's information until they do.
+                </p>
+                <div class="child-list">
+                  ${this._children.map(
+                    (child) => html`
+                      <button
+                        class="child-btn"
+                        ?disabled=${this._claiming}
+                        @click=${() => this._claimChild(child)}
+                      >
+                        <span>${child.name ?? 'Child'}</span>
+                        <span aria-hidden="true">›</span>
+                      </button>
+                    `,
+                  )}
+                </div>
+                <div class="actions">
+                  <glass-button
+                    variant="ghost"
+                    size="lg"
+                    full
+                    ?disabled=${this._claiming}
+                    @click=${this._notAParent}
+                  >
+                    No, I'm not a parent here
+                  </glass-button>
+                </div>
+                ${this._error
+                  ? html`<div class="error">${this._error}</div>`
+                  : ''}
+              `}
+        </glass-panel>
+      </div>
+    `;
+  }
+
   render() {
+    if (this._step === 'parent') return this._renderParentPrompt();
     const inviter = this._inviterFromFamily(this._family);
     const cairnCount = (this._family?.cairnMemberIds ?? this._family?.memberIds ?? []).length;
     const ppCount = (this._family?.memberIds ?? []).length;

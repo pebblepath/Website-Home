@@ -33,6 +33,15 @@ export class OnboardingWizard extends LitElement {
     _familyName: { state: true },
     _busy: { state: true },
     _error: { state: true },
+    // P3-5b (2026-05-19) — flat-family "Do you have children?"
+    // branch (functional parity with iOS P3-4b; design-sandbox/17).
+    // Captured on the create path so we route to the right
+    // family-create: with children → createPebblePathFamily (C-i:
+    // creator in memberIds, can author children) + createChild;
+    // without → the existing createCairnOnlyFamily (unchanged,
+    // first-class family-coordinator member — "No" is NOT lesser).
+    _childName: { state: true },
+    _childDob: { state: true },
     /** 'welcome' (default — brand-new user) or 'recovery' (signed-in
      *  user came in via Login but has no family pointer). Affects only
      *  the choose-step heading + lede so the message lands as
@@ -43,11 +52,16 @@ export class OnboardingWizard extends LitElement {
   constructor() {
     super();
     this.user = null;
-    this._mode = 'choose'; // 'choose' | 'join' | 'create' | 'download'
+    // P3-5b — added 'children' (the "Do you have children?" branch)
+    // + 'addchild' (the single-child add on the with-children path)
+    // modes.
+    this._mode = 'choose'; // choose|join|create|children|addchild|download
     this._code = '';
     this._familyName = '';
     this._busy = false;
     this._error = '';
+    this._childName = '';
+    this._childDob = ''; // <input type="date"> value (YYYY-MM-DD)
     this._flavor = 'welcome';
     // Detect login-intent flag the register-screen stashed when the
     // user clicked the Sign-in card. Consumed-and-cleared here so a
@@ -290,7 +304,32 @@ export class OnboardingWizard extends LitElement {
     );
   }
 
-  async _submitCreate() {
+  // P3-5b — the family-name step no longer creates the family
+  // directly. It advances to the "Do you have children?" branch,
+  // because the ANSWER decides which family-create runs (C-i):
+  //   • Yes → createPebblePathFamily (creator in memberIds → can
+  //           author children) + createChild
+  //   • No  → the existing createCairnOnlyFamily (byte-unchanged;
+  //           a first-class family-coordinator member — NOT lesser)
+  _goChildrenQuestion() {
+    const name = (this._familyName ?? '').trim();
+    if (!name) {
+      this._error = 'Give your family a name.';
+      return;
+    }
+    this._error = '';
+    this._go('children');
+  }
+
+  _goAddChild() {
+    this._error = '';
+    this._go('addchild');
+  }
+
+  // "No" outcome — byte-identical to the pre-P3-5b _submitCreate
+  // (the existing Cairn-only / family-coordinator path). "No" is a
+  // first-class member, never a dead-end or a lesser tier.
+  async _submitNoChildren() {
     const name = (this._familyName ?? '').trim();
     if (!name) {
       this._error = 'Give your family a name.';
@@ -309,6 +348,53 @@ export class OnboardingWizard extends LitElement {
       this._error = e?.code === 'permission-denied'
         ? "Couldn't create the family — Firestore rules may not be deployed yet."
         : `Couldn't create the family: ${e?.message ?? 'try again'}`;
+    } finally {
+      this._busy = false;
+    }
+  }
+
+  // "Yes" outcome — C-i: PP-style family (creator in memberIds) so
+  // the child can be authored (the deployed /children CREATE rule
+  // is isFamilyMember). Then createChild stamps parentIds :=
+  // memberIds (Phase-1) + needsServerSeed (the β safety-net CF
+  // seeds milestones). User-doc listener picks up `familyId` →
+  // app-shell drops to the dashboard (same pattern as the No path).
+  async _submitWithChild() {
+    const name = (this._familyName ?? '').trim();
+    const childName = (this._childName ?? '').trim();
+    if (!name) {
+      this._error = 'Give your family a name.';
+      return;
+    }
+    if (!childName) {
+      this._error = "Add your child's name.";
+      return;
+    }
+    if (!this._childDob) {
+      this._error = "Add your child's date of birth.";
+      return;
+    }
+    const dob = new Date(`${this._childDob}T00:00:00`);
+    if (Number.isNaN(dob.getTime())) {
+      this._error = "That date of birth doesn't look right.";
+      return;
+    }
+    this._busy = true;
+    this._error = '';
+    try {
+      const fid = await dataStore.createPebblePathFamily(name);
+      await dataStore.createChild(fid, {
+        name: childName,
+        dateOfBirth: dob,
+      });
+      toast(`Welcome to ${name}.`);
+      // user-doc listener fires with familyId set; app-shell
+      // re-evaluates _needsOnboarding() (now false) → dashboard.
+    } catch (e) {
+      console.error('Create family + child failed:', e);
+      this._error = e?.code === 'permission-denied'
+        ? "Couldn't set up your family — Firestore rules may not be deployed yet."
+        : `Couldn't set up your family: ${e?.message ?? 'try again'}`;
     } finally {
       this._busy = false;
     }
@@ -335,6 +421,8 @@ export class OnboardingWizard extends LitElement {
   render() {
     if (this._mode === 'join') return this._renderJoin();
     if (this._mode === 'create') return this._renderCreate();
+    if (this._mode === 'children') return this._renderChildren();
+    if (this._mode === 'addchild') return this._renderAddChild();
     if (this._mode === 'download') return this._renderDownload();
     return this._renderChoose();
   }
@@ -443,9 +531,9 @@ export class OnboardingWizard extends LitElement {
                 .value=${this._familyName}
                 @input=${(e) => (this._familyName = e.target.value)}
                 @keydown=${(e) => {
-                  if (e.key === 'Enter' && !this._busy) {
+                  if (e.key === 'Enter') {
                     e.preventDefault();
-                    this._submitCreate();
+                    this._goChildrenQuestion();
                   }
                 }}
                 maxlength="64"
@@ -455,10 +543,110 @@ export class OnboardingWizard extends LitElement {
             <div class="actions">
               <glass-button
                 variant="primary"
-                ?disabled=${this._busy}
-                @click=${this._submitCreate}
+                @click=${this._goChildrenQuestion}
               >
-                ${this._busy ? 'Creating…' : 'Create family'}
+                Continue
+              </glass-button>
+            </div>
+          </div>
+        </glass-panel>
+      </div>
+    `;
+  }
+
+  // P3-5b — the flat-family "Do you have children?" branch
+  // (functional parity with iOS P3-4b; design-sandbox/17). The
+  // answer routes the family-create (C-i): Yes → PP-style family
+  // + child; No → the existing Cairn-only / family-coordinator
+  // family. "No" is a first-class member, never a lesser tier.
+  _renderChildren() {
+    return html`
+      <div class="wrap">
+        <glass-panel padding="lg" variant="strong" lifted>
+          <button class="back" @click=${() => this._go('create')}>‹ Back</button>
+          <h1 style="margin-top:10px;">Do you have children you want to add?</h1>
+          <p class="lede">
+            Adding a child is what makes you their parent — the only role
+            in PebblePath. You can always add one later.
+          </p>
+          <div class="options">
+            <button
+              class="option"
+              ?disabled=${this._busy}
+              @click=${this._goAddChild}
+            >
+              <span class="icon-cell sage">${this._iconCreate()}</span>
+              <span>
+                <div class="label">Yes — add my child</div>
+                <div class="desc">
+                  Set up milestones, tips and Pebble for your child.
+                </div>
+              </span>
+            </button>
+            <button
+              class="option"
+              ?disabled=${this._busy}
+              @click=${this._submitNoChildren}
+            >
+              <span class="icon-cell tide">${this._iconJoin()}</span>
+              <span>
+                <div class="label">
+                  ${this._busy ? 'Setting up…' : "No — I'm setting up for the family"}
+                </div>
+                <div class="desc">
+                  Grandparents, aunts and uncles, a partner, a friend of
+                  the family — everyone gets the full space. No children
+                  needed, and it's never a lesser membership.
+                </div>
+              </span>
+            </button>
+          </div>
+          ${this._error ? html`<div class="error">${this._error}</div>` : ''}
+        </glass-panel>
+      </div>
+    `;
+  }
+
+  // P3-5b — single-child add on the "Yes" path (design-sandbox/17
+  // web "Add your child": name + birthday). More children can be
+  // added later in the app. Submits createPebblePathFamily +
+  // createChild together (C-i + β).
+  _renderAddChild() {
+    return html`
+      <div class="wrap">
+        <glass-panel padding="lg" variant="strong" lifted>
+          <button class="back" @click=${() => this._go('children')}>‹ Back</button>
+          <h1 style="margin-top:10px;">Add your child</h1>
+          <p class="lede">
+            You can add another anytime in the app.
+          </p>
+          <div class="step">
+            <div>
+              <label>Child's name</label>
+              <input
+                type="text"
+                placeholder="Felix"
+                .value=${this._childName}
+                @input=${(e) => (this._childName = e.target.value)}
+                maxlength="64"
+              />
+            </div>
+            <div>
+              <label>Date of birth</label>
+              <input
+                type="date"
+                .value=${this._childDob}
+                @input=${(e) => (this._childDob = e.target.value)}
+              />
+            </div>
+            ${this._error ? html`<div class="error">${this._error}</div>` : ''}
+            <div class="actions">
+              <glass-button
+                variant="primary"
+                ?disabled=${this._busy}
+                @click=${this._submitWithChild}
+              >
+                ${this._busy ? 'Setting up…' : 'Create family'}
               </glass-button>
             </div>
           </div>
@@ -475,10 +663,9 @@ export class OnboardingWizard extends LitElement {
           <h1 style="margin-top:10px;">PebblePath on iPhone</h1>
           <div class="download-card">
             <p>
-              Sign in on the app — your family will sync to Cairn
-              automatically. PebblePath is our iPhone app for tracking
-              your kids' milestones, daily wins, and Pebble's
-              parenting advisor.
+              Sign in on the app — your family syncs automatically.
+              PebblePath is our iPhone app for tracking your kids'
+              milestones, daily wins, and Pebble's parenting advisor.
             </p>
             <a
               class="app-store-cta"
@@ -491,9 +678,9 @@ export class OnboardingWizard extends LitElement {
             <div class="alt">
               Or
               <a @click=${() => this._go('create')}>
-                use Cairn standalone for now
+                set up your family on the web for now
               </a>
-              — you can connect PebblePath later.
+              — you can connect the app later.
             </div>
           </div>
         </glass-panel>
