@@ -10734,12 +10734,11 @@ They'll lose access to shared trips, celebrations and any read-only child access
               <span class="icon-cell tide">${this._iconJoin()}</span>
               <span>
                 <div class="label">
-                  ${this._busy?"Setting up…":"No — I'm setting up for the family"}
+                  ${this._busy?"Setting up…":"No — I'm setting up for myself"}
                 </div>
                 <div class="desc">
                   Grandparents, aunts and uncles, a partner, a friend of
-                  the family — everyone gets the full space. No children
-                  needed, and it's never a lesser membership.
+                  the family — everyone gets the full space.
                 </div>
               </span>
             </button>
@@ -10858,16 +10857,23 @@ They'll lose access to shared trips, celebrations and any read-only child access
     .option .icon-cell.sage { background: var(--gradient-sage); }
     .option .icon-cell.amber { background: var(--gradient-amber); }
     .option .icon-cell svg { width: 22px; height: 22px; }
+    /* P3-6b fix (Thomas 2026-05-19) — this wizard renders on a LIGHT
+       glass panel, but --text-primary/--text-secondary are Portal's
+       DUSK (white) text vars → white-on-light, unreadable. Use
+       --teal-pebble (the dark green h1/.lede already use correctly),
+       opacity for the secondary hierarchy. Same fix applied to
+       label / input / placeholder / .back below. */
     .option .label {
       font-family: var(--font-display);
       font-weight: 600;
       font-size: 15.5px;
       letter-spacing: -0.01em;
-      color: var(--text-primary);
+      color: var(--teal-pebble);
     }
     .option .desc {
       font-size: 12.5px;
-      color: var(--text-secondary);
+      color: var(--teal-pebble);
+      opacity: 0.78;
       line-height: 1.45;
       margin-top: 2px;
     }
@@ -10881,7 +10887,8 @@ They'll lose access to shared trips, celebrations and any read-only child access
       display: block;
       font-size: 13px;
       font-weight: 600;
-      color: var(--text-secondary);
+      color: var(--teal-pebble);
+      opacity: 0.82;
       letter-spacing: -0.005em;
       margin-bottom: 6px;
     }
@@ -10893,7 +10900,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       border: 1px solid rgba(255, 248, 235, 0.22);
       border-radius: var(--radius-input);
       padding: 10px 14px;
-      color: var(--text-primary);
+      color: var(--teal-pebble);
       font-family: var(--font-body);
       font-size: 16px;
       outline: none;
@@ -10909,7 +10916,8 @@ They'll lose access to shared trips, celebrations and any read-only child access
       background: rgba(255, 248, 235, 0.12);
     }
     input::placeholder {
-      color: rgba(255, 248, 235, 0.32);
+      color: var(--teal-pebble);
+      opacity: 0.42;
     }
     .actions {
       display: flex;
@@ -10925,14 +10933,15 @@ They'll lose access to shared trips, celebrations and any read-only child access
     .back {
       background: transparent;
       border: none;
-      color: var(--text-secondary);
+      color: var(--teal-pebble);
+      opacity: 0.85;
       font: inherit;
       font-size: 13.5px;
       cursor: pointer;
       padding: 4px 6px;
       align-self: flex-start;
     }
-    .back:hover { color: var(--text-primary); }
+    .back:hover { opacity: 1; }
     /* P3-6b — .download-card / .app-store-cta / .alt styles removed
        with _renderDownload (the "get the iOS app" card). */
   `);customElements.define("onboarding-wizard",qe);const K="cairn:pendingJoinCode",rt="cairn:pendingCreateFamily";class bt extends A{constructor(){super(),this.authUser=null,this.loading=!0;const e=new URLSearchParams(window.location.search);if(this.preview=e.has("preview"),this._resetMode=e.has("reset"),this._resetMode)try{localStorage.removeItem(K)}catch{}const t=e.get("join");if(t&&!this._resetMode)try{localStorage.setItem(K,t)}catch{}let i=null;if(!this._resetMode)try{i=localStorage.getItem(K)}catch{}this.joinCode=this._resetMode?null:t??i??null,this.pebbleUser=null,this.family=null,this.children=[],this.trips=[],this.events=[],this.holidays=[],this.ppFamily=null,this.ppIsMember=!1,this.ppChildren=[],this.selectedChildId=null,this.childMilestones=[],this.childInsights=[],this.childDailyCard=null,this.childPebbleMessages=[],this.childPebbleSessions=[],this.ppIsChildViewer=!1,this.incomingChildRequests=[],this.myChildAccessRequest=null,this._unsubAuth=null,this._onDataChange=()=>{this.pebbleUser=f.state.user,this.family=f.state.family,this.children=f.state.children,this.trips=f.state.trips,this.events=f.state.events,this.holidays=f.state.holidays,this.ppFamily=f.state.ppFamily,this.ppIsMember=f.state.ppIsMember,this.ppChildren=f.state.ppChildren,this.selectedChildId=f.state.selectedChildId,this.childMilestones=f.state.childMilestones,this.childInsights=f.state.childInsights,this.childDailyCard=f.state.childDailyCard,this.childPebbleMessages=f.state.childPebbleMessages,this.childPebbleSessions=f.state.childPebbleSessions,this.ppIsChildViewer=f.state.ppIsChildViewer,this.incomingChildRequests=f.state.incomingChildRequests,this.myChildAccessRequest=f.state.myChildAccessRequest,this.userDocResolved=f.userDocResolved},this.userDocResolved=!1}_clearJoinState(){this.joinCode=null;try{localStorage.removeItem(K)}catch{}const e=new URL(window.location.href);e.searchParams.delete("join"),window.history.replaceState({},"",e.toString())}connectedCallback(){if(super.connectedCallback(),typeof document<"u"&&document.documentElement.style.setProperty("--pre-login-bg","url('/portal/assets/pebblepath-daybreak-empty.png')"),this.preview){this.loading=!1;return}f.addEventListener("change",this._onDataChange),this._unsubAuth=ct(e=>{if(this.authUser=e,this.loading=!1,e){if(!this._resetMode)try{const t=localStorage.getItem(K);t&&!this.joinCode&&(this.joinCode=t)}catch{}f.start(e.uid),this._consumePendingCreate()}else f.stop(),this.userDocResolved=!1})}async _consumePendingCreate(){let e=null;try{e=localStorage.getItem(rt)}catch{}if(e){try{localStorage.removeItem(rt)}catch{}try{await f.createCairnOnlyFamily(e),x(`Welcome to ${e}.`)}catch(t){console.error("Pending family create failed:",t),x((t==null?void 0:t.code)==="permission-denied"?"Couldn't create the family — Firestore rules may need a redeploy.":`Couldn't create the family: ${(t==null?void 0:t.message)??"try again"}`,{duration:5e3})}}}disconnectedCallback(){var e;super.disconnectedCallback(),(e=this._unsubAuth)==null||e.call(this),f.removeEventListener("change",this._onDataChange)}_composeViewer(){var i,r;const e=this.authUser,t=(i=this.pebbleUser)==null?void 0:i.displayName;return{uid:e.uid,displayName:t&&t.trim()||e.displayName||"You",email:e.email??((r=this.pebbleUser)==null?void 0:r.email)??"",photoURL:pt(e,this.pebbleUser)}}_needsOnboarding(){var t,i;return!this.authUser||this.joinCode?!1:this._resetMode?!0:this.userDocResolved?!(((t=this.pebbleUser)==null?void 0:t.familyId)??((i=this.pebbleUser)==null?void 0:i.cairnFamilyId)??null):!1}updated(){this.setAttribute("data-route",this._currentRoute())}_currentRoute(){return this.loading?"loading":this.preview?"home":this.authUser?this.joinCode?"join":this._needsOnboarding()?"wizard":"home":"register"}render(){return this.loading?s``:this.preview?s`<home-screen preview></home-screen>`:this.authUser?this.joinCode?s`
@@ -10973,4 +10982,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(bt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",bt);
-//# sourceMappingURL=index-ChJJTpIG.js.map
+//# sourceMappingURL=index-DMpYcsz-.js.map
