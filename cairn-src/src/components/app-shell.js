@@ -292,8 +292,8 @@ export class AppShell extends LitElement {
           .user=${this.authUser}
           @join-code=${(e) => {
             // User pasted a code in the wizard — feed it into the
-            // existing join-family-screen flow (writes to
-            // /families/{id}.cairnMemberIds via dataStore.joinFamilyAsCairn).
+            // join-family-screen flow (writes to
+            // /families/{id}.cairnMemberIds via dataStore.redeemConnectCode).
             this.joinCode = e.detail.code;
             try {
               localStorage.setItem(PENDING_JOIN_KEY, e.detail.code);

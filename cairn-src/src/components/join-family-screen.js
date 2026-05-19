@@ -45,13 +45,20 @@ export class JoinFamilyScreen extends LitElement {
     this._loading = true;
     this._error = '';
     try {
-      const family = await dataStore.findFamilyByCairnCode(this.code);
+      // Phase 2C Slice 4e (2026-05-18): dual-accept lookup (unified
+      // 6-char OR legacy CAIRN-XXXX in cairnInviteCode OR legacy PP
+      // inviteCode) — parity with iOS findFamilyByConnectCode.
+      const family = await dataStore.findFamilyByConnectCode(this.code);
       if (!family) {
         this._error = 'Invite code not found. Check it was typed correctly.';
         this._family = null;
       } else {
-        const exp = family.cairnInviteCodeExpiresAt?.toDate?.()
-          ?? (family.cairnInviteCodeExpiresAt ? new Date(family.cairnInviteCodeExpiresAt) : null);
+        // Validate the expiry of the field that actually matched.
+        const rawExp = family._matchedCodeKind === 'pp'
+          ? family.inviteCodeExpiresAt
+          : family.cairnInviteCodeExpiresAt;
+        const exp = rawExp?.toDate?.()
+          ?? (rawExp ? new Date(rawExp) : null);
         if (!exp || exp < new Date()) {
           this._error = 'This invite code has expired. Ask the family for a fresh one.';
           this._family = null;
@@ -72,7 +79,12 @@ export class JoinFamilyScreen extends LitElement {
     this._joining = true;
     this._error = '';
     try {
-      const familyId = await dataStore.joinFamilyAsCairn(this.code);
+      // Phase 2C Slice 4e (2026-05-18): unified connect-code
+      // redemption (dual-accept) — parity with iOS redeemConnectCode.
+      // Same return (familyId) + same side-effects (→ cairnMemberIds,
+      // NEVER memberIds; mutual connection) as the superseded
+      // joinFamilyAsCairn — a drop-in.
+      const familyId = await dataStore.redeemConnectCode(this.code);
       toast(`Welcome to ${this._family?.name ?? 'the family'}.`);
       this.dispatchEvent(new CustomEvent('joined', { detail: { familyId } }));
     } catch (e) {

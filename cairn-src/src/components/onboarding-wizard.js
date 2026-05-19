@@ -262,24 +262,28 @@ export class OnboardingWizard extends LitElement {
   }
 
   _submitJoin() {
-    const raw = (this._code ?? '').trim().toUpperCase();
+    // Phase 2C Slice 4e (2026-05-18): the unified connect code is a
+    // plain 6-char code (no CAIRN- prefix — 2C-2). Accept that AND a
+    // pasted legacy CAIRN-XXXX (dual-accept resolves both server-side
+    // via findFamilyByConnectCode). Pass the code through AS-IS — no
+    // forced normalization that would mangle one of the two formats.
+    const raw = (this._code ?? '').trim().toUpperCase().replace(/\s+/g, '');
     if (!raw) {
-      this._error = 'Paste the family code you were sent.';
+      this._error = 'Paste the connect code you were sent.';
       return;
     }
-    const normalized = raw.startsWith('CAIRN-')
-      ? raw
-      : `CAIRN-${raw.replace(/^CAIRN-?/i, '')}`;
-    if (!/^CAIRN-[A-Z0-9]{3,6}$/.test(normalized)) {
-      this._error = "Codes look like CAIRN-XXXX.";
+    const isUnified = /^[A-Z0-9]{6}$/.test(raw);
+    const isLegacyCairn = /^CAIRN-[A-Z0-9]{3,6}$/.test(raw);
+    if (!isUnified && !isLegacyCairn) {
+      this._error = 'Connect codes are 6 characters.';
       return;
     }
     this._error = '';
-    // Hand off to app-shell — it'll route to join-family-screen which
-    // already handles the actual cairnMemberIds write.
+    // Hand off to app-shell — it routes to join-family-screen, which
+    // does the unified redeemConnectCode write (→ cairnMemberIds).
     this.dispatchEvent(
       new CustomEvent('join-code', {
-        detail: { code: normalized },
+        detail: { code: raw },
         bubbles: true,
         composed: true,
       }),
@@ -354,7 +358,7 @@ export class OnboardingWizard extends LitElement {
               <span class="icon-cell tide">${this._iconJoin()}</span>
               <span>
                 <div class="label">Join an existing family</div>
-                <div class="desc">Paste the CAIRN-XXXX code from your invite.</div>
+                <div class="desc">Paste the 6-character connect code from your invite.</div>
               </span>
             </button>
             <button class="option" @click=${() => this._go('create')}>
@@ -384,8 +388,8 @@ export class OnboardingWizard extends LitElement {
           <button class="back" @click=${() => this._go('choose')}>‹ Back</button>
           <h1 style="margin-top:10px;">Join a family</h1>
           <p class="lede">
-            Paste the code you were sent. Codes look like
-            <strong>CAIRN-XXXX</strong>.
+            Paste the connect code you were sent. It's
+            <strong>6 characters</strong>.
           </p>
           <div class="step">
             <div>
@@ -393,7 +397,7 @@ export class OnboardingWizard extends LitElement {
               <input
                 class="code"
                 type="text"
-                placeholder="CAIRN-XXXX"
+                placeholder="ABC123"
                 .value=${this._code}
                 @input=${(e) => (this._code = e.target.value)}
                 @keydown=${(e) => {

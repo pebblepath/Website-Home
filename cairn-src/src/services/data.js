@@ -1431,35 +1431,75 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
-   * Phase 3A.2: atomically add the signed-in user to a family's cairnMemberIds
-   * via the `isJoiningOwnUidAsCairn` rule path. Also writes a memberProfile
-   * entry (so the family doc surfaces the joiner's name + photo) and creates
-   * or updates the user doc with `cairnFamilyId` so the data store auto-
-   * subscribes after the join completes.
+   * Phase 2C Slice 1 (2026-05-18). Dual-accept connect-code lookup —
+   * THE unified connect-code resolver. `cairnInviteCode` is the
+   * unified field (2C-2): for a post-2C-2 family it holds the new
+   * 6-char code; for a pre-2C-2 Cairn-only family it still holds an
+   * old `CAIRN-XXXX`; either way an exact-match query resolves it.
+   * Checked FIRST. Then the legacy PP `inviteCode` (6-char) as the
+   * back-compat fallback for pre-2C-2 PP families that only ever
+   * had `inviteCode`. A post-2C-2 family carries the SAME 6-char
+   * string in both fields — the cairn-first order makes that
+   * resolve as 'cairn' (30-day expiry), which is correct.
+   * No-collision note (2C-1's "prefix" reasoning is obsolete after
+   * 2C-2): the two fields can legitimately hold the same value now;
+   * cairn-first ordering is deliberate and unambiguous.
    *
-   * Throws with .code = 'expired' | 'not-found' | 'already-member' | 'full'
-   * for distinguishable error UX. Other errors propagate.
+   * Returns the family doc augmented with `_matchedCodeKind`
+   * ('cairn' | 'pp') so the redeem path validates the matching
+   * expiry field. Null on no match. Rides the existing open
+   * `/families` `list` rule (any signed-in user) — same as the PP
+   * and Cairn code lookups already do; NO rules change.
+   *
+   * WIRED in 2C-4e: `join-family-screen._lookup` calls this for the
+   * pre-join preview; `redeemConnectCode` calls it for the join.
    */
-  async joinFamilyAsCairn(code) {
+  async findFamilyByConnectCode(code) {
     if (!db) throw new Error('Firebase not configured.');
+    const cairnSnap = await getDocs(
+      query(collection(db, 'families'), where('cairnInviteCode', '==', code)),
+    );
+    if (!cairnSnap.empty) {
+      const d = cairnSnap.docs[0];
+      return { id: d.id, ...d.data(), _matchedCodeKind: 'cairn' };
+    }
+    const ppSnap = await getDocs(
+      query(collection(db, 'families'), where('inviteCode', '==', code)),
+    );
+    if (!ppSnap.empty) {
+      const d = ppSnap.docs[0];
+      return { id: d.id, ...d.data(), _matchedCodeKind: 'pp' };
+    }
+    return null;
+  }
+
+  // Phase 2C Slice 4e (2026-05-18): the legacy `joinFamilyAsCairn`
+  // (Cairn-code-only lookup) was DELETED here — zero callers after
+  // join-family-screen rewired to `redeemConnectCode`. The unified
+  // `redeemConnectCode` supersedes it: dual-accept lookup
+  // (`findFamilyByConnectCode`) + the SAME shared write mechanics
+  // (`_applyCairnJoin` → `cairnMemberIds`, NEVER `memberIds`; mutual
+  // connection). Same return (familyId) + same side-effects, just
+  // also resolving the unified 6-char + legacy PP code. Don't
+  // re-introduce a Cairn-code-only join — use `redeemConnectCode`.
+
+  /**
+   * Phase 2C Slice 1 (2026-05-18). Extracted verbatim from
+   * joinFamilyAsCairn: the shared, security-critical "add me to this
+   * family's cairnMemberIds + memberProfile, sync my user doc,
+   * record the mutual connection" mechanics. The caller resolves
+   * `family` (by whichever code format) and validates expiry FIRST.
+   *
+   * SECURITY SPINE: routes ONLY to `cairnMemberIds` (the
+   * non-escalating flat-member tier), NEVER `memberIds` /
+   * `parentIds`. So redeeming ANY code format through here grants
+   * flat membership only; becoming a child's parent stays the
+   * separate explicit 2A confirm step. Atomic update still matches
+   * `isJoiningOwnUidAsCairn()` exactly — NO firestore.rules change.
+   */
+  async _applyCairnJoin(family) {
     const uid = auth?.currentUser?.uid;
     if (!uid) throw new Error('Not signed in.');
-
-    const family = await this.findFamilyByCairnCode(code);
-    if (!family) {
-      const err = new Error('Invite code not found.');
-      err.code = 'not-found';
-      throw err;
-    }
-
-    const exp = family.cairnInviteCodeExpiresAt?.toDate?.()
-      ?? (family.cairnInviteCodeExpiresAt ? new Date(family.cairnInviteCodeExpiresAt) : null);
-    if (!exp || exp < new Date()) {
-      const err = new Error('This invite code has expired.');
-      err.code = 'expired';
-      throw err;
-    }
-
     const beforeCairn = family.cairnMemberIds ?? [];
     const memberIds = family.memberIds ?? [];
     const authUser = auth.currentUser;
@@ -1538,8 +1578,56 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
+   * Phase 2C Slice 1 (2026-05-18). The ONE unified connect-code
+   * redemption: dual-accept lookup (ANY legacy code format) → flat
+   * `cairnMemberIds` membership + mutual connection. This is the
+   * forward path the unified onboarding (2C-4) will call instead of
+   * joinFamilyAsCairn.
+   *
+   * SECURITY SPINE: redeeming ANY code — INCLUDING an old PP 6-char
+   * that historically meant "co-parent" → `memberIds` — grants ONLY
+   * flat membership here, NEVER `memberIds` / child `parentIds`.
+   * Co-parenting is the separate explicit 2A confirm step. One code
+   * can't reach family-admin rights or child data. This intentional
+   * de-escalation of the legacy PP code is inert until 2C-4 wires
+   * this path into the UI.
+   *
+   * ADDITIVE + UNWIRED in 2C-1 (behaviour-neutral): nothing calls
+   * this yet. Rides the existing isJoiningOwnUidAsCairn branch (same
+   * writes as joinFamilyAsCairn) — NO firestore.rules change.
+   *
+   * Throws .code = 'not-found' | 'expired' | 'full' for error UX.
+   */
+  async redeemConnectCode(code) {
+    if (!db) throw new Error('Firebase not configured.');
+    const uid = auth?.currentUser?.uid;
+    if (!uid) throw new Error('Not signed in.');
+
+    const family = await this.findFamilyByConnectCode(code);
+    if (!family) {
+      const err = new Error('Invite code not found.');
+      err.code = 'not-found';
+      throw err;
+    }
+
+    // Validate the expiry of the code field that actually matched.
+    const rawExp = family._matchedCodeKind === 'pp'
+      ? family.inviteCodeExpiresAt
+      : family.cairnInviteCodeExpiresAt;
+    const exp = rawExp?.toDate?.()
+      ?? (rawExp ? new Date(rawExp) : null);
+    if (!exp || exp < new Date()) {
+      const err = new Error('This invite code has expired.');
+      err.code = 'expired';
+      throw err;
+    }
+
+    return this._applyCairnJoin(family);
+  }
+
+  /**
    * Flat-family model — Phase 2B Slice 1b (2026-05-18). Records the
-   * MUTUAL family↔family connection after a CAIRN-code redemption.
+   * MUTUAL family↔family connection after a connect-code redemption.
    * Additive + best-effort: a failure here NEVER fails the join (the
    * connection is recoverable on any later re-entry — `arrayUnion` is
    * idempotent — and the join is the critical path).
@@ -1998,12 +2086,24 @@ export async function resolveConnectionMemberIds(family) {
   return [...out];
 }
 
-/** Cairn invite code generator. Format: CAIRN-XXXX (4 chars). */
+/**
+ * Unified connect-code generator — Phase 2C Slice 2 (2026-05-18).
+ * ONE code format across both surfaces: a plain 6-char code, NO
+ * `CAIRN-` prefix (the prefix was old-sub-brand; we're collapsing
+ * to one identity). Charset is identical to iOS
+ * `FirestoreService.generateInviteCode` (no I/L/O/0/1 — avoids
+ * manual-typing confusion + keeps codes visually identical
+ * regardless of which surface minted them). 30-day expiry is set
+ * by the callers (createCairnOnlyFamily / regenerateCairnInviteCode),
+ * unchanged. The code lives in the `cairnInviteCode` field — the
+ * unified connect-code field; legacy PP `inviteCode` stays
+ * read-only for back-compat (dual-accept via findFamilyByConnectCode).
+ * Function name kept so existing callers need no change.
+ */
 export function newCairnInviteCode() {
-  // No I/O/0/1 to avoid confusion when typed manually.
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let code = 'CAIRN-';
-  for (let i = 0; i < 4; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
   return code;
 }
 
