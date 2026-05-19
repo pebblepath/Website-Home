@@ -160,16 +160,23 @@ export class OnboardingWizard extends LitElement {
     .option .icon-cell.sage { background: var(--gradient-sage); }
     .option .icon-cell.amber { background: var(--gradient-amber); }
     .option .icon-cell svg { width: 22px; height: 22px; }
+    /* P3-6b fix (Thomas 2026-05-19) — this wizard renders on a LIGHT
+       glass panel, but --text-primary/--text-secondary are Portal's
+       DUSK (white) text vars → white-on-light, unreadable. Use
+       --teal-pebble (the dark green h1/.lede already use correctly),
+       opacity for the secondary hierarchy. Same fix applied to
+       label / input / placeholder / .back below. */
     .option .label {
       font-family: var(--font-display);
       font-weight: 600;
       font-size: 15.5px;
       letter-spacing: -0.01em;
-      color: var(--text-primary);
+      color: var(--teal-pebble);
     }
     .option .desc {
       font-size: 12.5px;
-      color: var(--text-secondary);
+      color: var(--teal-pebble);
+      opacity: 0.78;
       line-height: 1.45;
       margin-top: 2px;
     }
@@ -183,7 +190,8 @@ export class OnboardingWizard extends LitElement {
       display: block;
       font-size: 13px;
       font-weight: 600;
-      color: var(--text-secondary);
+      color: var(--teal-pebble);
+      opacity: 0.82;
       letter-spacing: -0.005em;
       margin-bottom: 6px;
     }
@@ -195,7 +203,7 @@ export class OnboardingWizard extends LitElement {
       border: 1px solid rgba(255, 248, 235, 0.22);
       border-radius: var(--radius-input);
       padding: 10px 14px;
-      color: var(--text-primary);
+      color: var(--teal-pebble);
       font-family: var(--font-body);
       font-size: 16px;
       outline: none;
@@ -211,7 +219,8 @@ export class OnboardingWizard extends LitElement {
       background: rgba(255, 248, 235, 0.12);
     }
     input::placeholder {
-      color: rgba(255, 248, 235, 0.32);
+      color: var(--teal-pebble);
+      opacity: 0.42;
     }
     .actions {
       display: flex;
@@ -227,14 +236,15 @@ export class OnboardingWizard extends LitElement {
     .back {
       background: transparent;
       border: none;
-      color: var(--text-secondary);
+      color: var(--teal-pebble);
+      opacity: 0.85;
       font: inherit;
       font-size: 13.5px;
       cursor: pointer;
       padding: 4px 6px;
       align-self: flex-start;
     }
-    .back:hover { color: var(--text-primary); }
+    .back:hover { opacity: 1; }
     /* P3-6b — .download-card / .app-store-cta / .alt styles removed
        with _renderDownload (the "get the iOS app" card). */
   `;
@@ -558,12 +568,11 @@ export class OnboardingWizard extends LitElement {
               <span class="icon-cell tide">${this._iconJoin()}</span>
               <span>
                 <div class="label">
-                  ${this._busy ? 'Setting up…' : "No — I'm setting up for the family"}
+                  ${this._busy ? 'Setting up…' : "No — I'm setting up for myself"}
                 </div>
                 <div class="desc">
                   Grandparents, aunts and uncles, a partner, a friend of
-                  the family — everyone gets the full space. No children
-                  needed, and it's never a lesser membership.
+                  the family — everyone gets the full space.
                 </div>
               </span>
             </button>
