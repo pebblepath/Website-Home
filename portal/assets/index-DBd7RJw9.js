@@ -1930,8 +1930,8 @@ var mt=Object.defineProperty;var ft=(c,e,t)=>e in c?mt(c,e,{enumerable:!0,config
           <div class="ring connections"></div>
           <div class="ring family"></div>
 
-          ${i.map((a,s)=>this._node(a,28,this._pos(s,i.length,37,-90)))}
-          ${t.map((a,s)=>this._node(a,28,this._pos(s,t.length,19,r)))}
+          ${i.map((a,s)=>this._node(a,36,this._pos(s,i.length,37,-90)))}
+          ${t.map((a,s)=>this._node(a,36,this._pos(s,t.length,19,r)))}
 
           <div class="you">
             <div class="ringwrap">
@@ -1939,7 +1939,7 @@ var mt=Object.defineProperty;var ft=(c,e,t)=>e in c?mt(c,e,{enumerable:!0,config
                 .name=${(e==null?void 0:e.displayName)??"You"}
                 .photo=${(e==null?void 0:e.photoURL)??""}
                 .hue=${(e==null?void 0:e.hue)??198}
-                size="28"
+                size="36"
               ></member-chip>
             </div>
             <span class="cap">You</span>
@@ -11376,4 +11376,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}v(bt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",bt);
-//# sourceMappingURL=index-q-etEd0P.js.map
+//# sourceMappingURL=index-DBd7RJw9.js.map
