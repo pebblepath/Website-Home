@@ -122,6 +122,11 @@ export class RegisterScreen extends LitElement {
       justify-content: center;
       min-height: 100vh;
       padding: 24px;
+      /* Brand typography parity with the iOS app: the whole pre-login
+         flow defaults to the PebblePath body font (Inter); headings
+         below switch to Nunito. Scoping it here means no text in this
+         flow can fall back to the Portal's Cairn display font. */
+      font-family: var(--font-body);
       /* +50% backdrop blur for the pre-login box only. --glass-blur is
          a CSS custom property so it cascades through the nested
          glass-panel's shadow root; overriding it here scopes the
@@ -200,7 +205,10 @@ export class RegisterScreen extends LitElement {
 
     h1 {
       margin: 0 0 6px;
-      font-family: var(--font-display);
+      /* Nunito — the PebblePath brand heading font (iOS uses it for
+         all titles); was --font-display = Bricolage Grotesque, the
+         Portal/Cairn display font, which broke brand parity. */
+      font-family: var(--font-nunito);
       font-weight: 700;
       font-size: 22px;
       letter-spacing: -0.02em;
@@ -257,7 +265,7 @@ export class RegisterScreen extends LitElement {
     .card .icon-cell.amber { background: var(--gradient-amber); }
     .card .icon-cell svg { width: 22px; height: 22px; fill: currentColor; }
     .card .label {
-      font-family: var(--font-display);
+      font-family: var(--font-nunito);
       font-weight: 600;
       font-size: 15px;
       letter-spacing: -0.005em;
