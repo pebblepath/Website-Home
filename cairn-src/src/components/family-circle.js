@@ -76,13 +76,16 @@ export class FamilyCircle extends LitElement {
     }
     .ring.connections {
       width: 92%;
-      border: 1.5px dashed rgba(139, 123, 181, 0.45);
-      background: rgba(139, 123, 181, 0.07);
+      /* color-mix lets the alpha ride a real token so the rings
+         are visible on BOTH light cream AND dark glass; the
+         previous hard-coded rgba at 7-10% disappeared on dark. */
+      border: 1.5px dashed color-mix(in srgb, var(--purple-muted) 60%, transparent);
+      background: color-mix(in srgb, var(--purple-muted) 18%, transparent);
     }
     .ring.family {
       width: 54%;
-      border: 1.5px dashed rgba(31, 92, 84, 0.5);
-      background: rgba(31, 92, 84, 0.1);
+      border: 1.5px dashed color-mix(in srgb, var(--sage-deep) 65%, transparent);
+      background: color-mix(in srgb, var(--sage-deep) 22%, transparent);
     }
     .node {
       position: absolute;

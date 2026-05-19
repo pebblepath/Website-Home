@@ -3674,7 +3674,7 @@ export class HomeScreen extends LitElement {
     const allMembers = this._liveImmediate().concat(this._liveExtended());
     const scope = html`<div class="scope shared">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 2.5-5 6-5s6 2 6 5M15 17c2 0 5 1 5 3" stroke-linecap="round"/></svg>
-      Shared with your Cairn
+      Shared with your connections
     </div>`;
     return html`
       ${this._renderTabHeader(
@@ -3829,21 +3829,21 @@ export class HomeScreen extends LitElement {
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" stroke-linecap="round"/></svg>
                 </span>
                 <div class="sl"><b>You</b><span>The centre — your point of view.</span></div>
-                <span class="set-pill" style="color:var(--ink-blue);border-color:rgba(63,111,158,.4);">You</span>
+                <span class="set-pill" style="color:var(--ink-blue);border-color:color-mix(in srgb, var(--ink-blue) 50%, transparent);">You</span>
               </div>
               <div class="set-row">
                 <span class="si" style="color:var(--ink-green);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="7" rx="3" ry="1.4"/><ellipse cx="12" cy="12" rx="6" ry="2.4"/><ellipse cx="12" cy="17" rx="8" ry="3"/></svg>
                 </span>
                 <div class="sl"><b>Your family</b><span>Your co-parent and your children.</span></div>
-                <span class="set-pill" style="color:var(--ink-green);border-color:rgba(46,128,73,.4);">Full access</span>
+                <span class="set-pill" style="color:var(--ink-green);border-color:color-mix(in srgb, var(--ink-green) 50%, transparent);">Full access</span>
               </div>
               <div class="set-row">
                 <span class="si" style="color:var(--ink-purple);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg>
                 </span>
                 <div class="sl"><b>Your connections</b><span>Everyone who joined by invitation. Equal accounts.</span></div>
-                <span class="set-pill" style="color:var(--ink-purple);border-color:rgba(107,90,150,.4);">Activities only</span>
+                <span class="set-pill" style="color:var(--ink-purple);border-color:color-mix(in srgb, var(--ink-purple) 50%, transparent);">Activities only</span>
               </div>
             </glass-panel>
           </div>
