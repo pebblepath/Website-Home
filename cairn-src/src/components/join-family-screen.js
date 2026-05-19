@@ -346,7 +346,7 @@ export class JoinFamilyScreen extends LitElement {
             height="44"
             style="border-radius:11px;display:block;box-shadow:0 4px 16px rgba(0,0,0,0.25);"
           />
-          <div class="mark-name">Portal</div>
+          <div class="mark-name">PebblePath</div>
         </div>
         <glass-panel padding="lg" variant="strong" lifted>
           ${this._claimedName
@@ -426,7 +426,7 @@ export class JoinFamilyScreen extends LitElement {
             height="44"
             style="border-radius:11px;display:block;box-shadow:0 4px 16px rgba(0,0,0,0.25);"
           />
-          <div class="mark-name">Portal</div>
+          <div class="mark-name">PebblePath</div>
         </div>
         <glass-panel padding="lg" variant="strong" lifted>
           ${this._loading
