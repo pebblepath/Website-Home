@@ -3951,6 +3951,222 @@ export class HomeScreen extends LitElement {
       ></profile-sheet>
     `;
   }
+  _childData() {
+    if (this.preview) {
+      return {
+        hasPP: true,
+        readonly: false,
+        children: mockChildren,
+        child: mockChild,
+        milestones: mockMilestones,
+        insights: mockInsights,
+        dailyCard: mockDailyCard,
+        pebbleMessages: mockChildPebbleMessages,
+        pebbleSessions: [],
+      };
+    }
+    const children = this.ppChildren ?? [];
+    const child =
+      children.find((c) => c.id === this.selectedChildId) ??
+      children[0] ??
+      null;
+    // Batch F: a parent-approved read-only child viewer also gets the
+    // Children surface — but in readonly mode (no Pebble/pediatrician/
+    // write). ppIsMember stays the full-rights gate.
+    const canSee = Boolean((this.ppIsMember || this.ppIsChildViewer) && child);
+    return {
+      hasPP: canSee,
+      readonly: Boolean(this.ppIsChildViewer && !this.ppIsMember),
+      children,
+      child,
+      milestones: this.childMilestones ?? [],
+      insights: this.childInsights ?? [],
+      dailyCard: this.childDailyCard ?? null,
+      pebbleMessages: this.childPebbleMessages ?? [],
+      pebbleSessions: this.childPebbleSessions ?? [],
+    };
+  }
+
+  _onSelectChild(e) {
+    if (this.preview) return;
+    dataStore.selectChild(e.detail);
+  }
+
+  _onAskPebble(e) {
+    this._pebblePrefill = e.detail ?? '';
+    this._activeTab = 'pebble';
+  }
+
+  // ── Batch F — child-view access request/approval handlers ──
+  async _requestChildAccess() {
+    if (this.preview) return;
+    try {
+      await dataStore.requestChildAccess();
+      toast("Request sent — a parent will be notified.");
+    } catch (err) {
+      toast(`Couldn't send request: ${err.code ?? err.message}`, {
+        duration: 5000,
+      });
+    }
+  }
+
+  async _withdrawChildAccess() {
+    if (this.preview) return;
+    try {
+      await dataStore.withdrawChildAccessRequest();
+      toast('Request withdrawn.');
+    } catch (err) {
+      toast(`Couldn't withdraw: ${err.code ?? err.message}`, {
+        duration: 4000,
+      });
+    }
+  }
+
+  async _approveChildAccess(uid) {
+    try {
+      await dataStore.approveChildAccess(uid);
+      toast('Access granted — read-only Children view.');
+    } catch (err) {
+      toast(`Couldn't approve: ${err.code ?? err.message}`, {
+        duration: 5000,
+      });
+    }
+  }
+
+  async _declineChildAccess(uid) {
+    try {
+      await dataStore.declineChildAccess(uid);
+      toast('Request declined.');
+    } catch (err) {
+      toast(`Couldn't decline: ${err.code ?? err.message}`, {
+        duration: 4000,
+      });
+    }
+  }
+
+  async _revokeChildViewer(uid) {
+    try {
+      await dataStore.revokeChildViewer(uid);
+      toast('Read-only access revoked.');
+    } catch (err) {
+      toast(`Couldn't revoke: ${err.code ?? err.message}`, {
+        duration: 4000,
+      });
+    }
+  }
+
+  _ageShort(dob) {
+    if (!dob || Number.isNaN(dob.getTime?.() ?? NaN)) return '';
+    const now = new Date();
+    let m =
+      (now.getFullYear() - dob.getFullYear()) * 12 +
+      (now.getMonth() - dob.getMonth());
+    if (now.getDate() < dob.getDate()) m -= 1;
+    m = Math.max(0, m);
+    const y = Math.floor(m / 12);
+    const mm = m % 12;
+    if (y === 0) return `${mm} mo`;
+    return `${y}y${mm ? ` ${mm}m` : ''}`;
+  }
+
+  /** TODAY — the landing glance: greeting + real upcoming activities +
+   *  celebrations, plus a real child snapshot (parents) or a teaser. */
+  _ageLong(dob) {
+    if (!dob || Number.isNaN(dob.getTime?.() ?? NaN)) return '';
+    const now = new Date();
+    let m =
+      (now.getFullYear() - dob.getFullYear()) * 12 +
+      (now.getMonth() - dob.getMonth());
+    if (now.getDate() < dob.getDate()) m -= 1;
+    m = Math.max(0, m);
+    const y = Math.floor(m / 12);
+    const mm = m % 12;
+    if (y === 0) return `${mm} month${mm === 1 ? '' : 's'}`;
+    const ms = mm ? `, ${mm} month${mm === 1 ? '' : 's'}` : '';
+    return `${y} year${y === 1 ? '' : 's'}${ms}`;
+  }
+
+  /** Combined upcoming activities (trips + celebrations) for Today's
+   *  "Coming up" glance — soonest first, max 3. */
+  _comingUp() {
+    const out = [];
+    for (const t of this._filteredTrips()) {
+      if (!t.start) continue;
+      out.push({
+        kind: 'trip',
+        title: t.title || 'Trip',
+        sub: t.location || t.lodgingHost || '',
+        date: t.start,
+        chip: this._fmtRangeShort(t.start, t.end),
+      });
+    }
+    for (const e of this._filteredEvents()) {
+      if (!e.date) continue;
+      const d = parseLocalDate(e.date);
+      if (!d) continue;
+      out.push({
+        // school-import events get the distinct "external" treatment
+        // (icon + colour), same family as holidays (Ellie ③).
+        kind: e.source === 'school-import' ? 'external' : 'event',
+        title: e.title || 'Celebration',
+        sub: '',
+        date: e.date,
+        chip: d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
+      });
+    }
+    // Public-holiday overlay — upcoming only (a glance, not history).
+    const todayKey = new Date().toISOString().slice(0, 10);
+    for (const h of this.holidays ?? []) {
+      if (!h.date || h.date < todayKey) continue;
+      const d = parseLocalDate(h.date);
+      if (!d) continue;
+      out.push({
+        kind: 'holiday',
+        title: h.title || 'Public holiday',
+        sub: 'Public holiday',
+        date: h.date,
+        chip: d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
+      });
+    }
+    return out
+      .sort((a, b) => String(a.date).localeCompare(String(b.date)))
+      .slice(0, 5);
+  }
+
+  _fmtRangeShort(start, end) {
+    const s = parseLocalDate(start);
+    const e = parseLocalDate(end);
+    if (!s) return '';
+    const sm = s.toLocaleDateString('en-GB', { month: 'short' });
+    if (!e || (s.getDate() === e.getDate() && sm === e.toLocaleDateString('en-GB', { month: 'short' }))) {
+      return `${s.getDate()} ${sm}`;
+    }
+    const em = e.toLocaleDateString('en-GB', { month: 'short' });
+    return sm === em ? `${s.getDate()}–${e.getDate()} ${sm}` : `${s.getDate()} ${sm} – ${e.getDate()} ${em}`;
+  }
+
+  _tripGico() {
+    return html`<span class="gico trip"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.62 3.05a1 1 0 0 0-1.12-.18L3.7 10.3c-.86.38-.83 1.62.05 1.95l6.06 2.27 2.27 6.06c.33.88 1.57.9 1.95.05L21.8 4.17a1 1 0 0 0-.18-1.12zM10.5 12.7l6.4-5.7-4.9 6.6-.1.1z"/></svg></span>`;
+  }
+  _eventGico() {
+    return html`<span class="gico event"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.1 6.7C10.4 5 9.2 3.7 7.8 3.3c-1-.3-1.9.1-2.2.9-.4 1 .2 2.1 1 2.7 1 .75 2.5 1.05 4.5 1.05z"/><path d="M12.9 6.7c.7-1.7 1.9-3 3.3-3.4 1-.3 1.9.1 2.2.9.4 1-.2 2.1-1 2.7-1 .75-2.5 1.05-4.5 1.05z"/><rect x="3" y="8" width="8.1" height="3.5" rx="1"/><rect x="12.9" y="8" width="8.1" height="3.5" rx="1"/><rect x="4.1" y="11.7" width="7" height="9.1" rx="1.4"/><rect x="12.9" y="11.7" width="7" height="9.1" rx="1.4"/></svg></span>`;
+  }
+  // External/imported sources (Ellie ③) — visually distinct from
+  // user-created trips/celebrations. Holiday = a calendar glyph
+  // (calendar.svg, 2026-05-18 — replaced the prior sun glyph);
+  // school-import = a school building.
+  _holidayGico() {
+    return html`<span class="gico holiday"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 4V6M15 4H10.5M3 10V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V10H3Z"/><path d="M3 10V6C3 4.89543 3.89543 4 5 4H7"/><path d="M7 2V6"/><path d="M21 10V6C21 4.89543 20.1046 4 19 4H18.5"/></svg></span>`;
+  }
+  _schoolGico() {
+    return html`<span class="gico school"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-5 9 5-9 5-9-5z"/><path d="M7 12.5V17c0 1 2.5 2.5 5 2.5s5-1.5 5-2.5v-4.5M21 10v5"/></svg></span>`;
+  }
+  _gicoFor(c) {
+    if (c.kind === 'trip') return this._tripGico();
+    if (c.kind === 'holiday') return this._holidayGico();
+    if (c.kind === 'external') return this._schoolGico();
+    return this._eventGico();
+  }
 }
 
 customElements.define('home-screen', HomeScreen);
