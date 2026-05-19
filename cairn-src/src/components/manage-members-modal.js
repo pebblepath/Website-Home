@@ -545,8 +545,8 @@ export class ManageMembersModal extends LitElement {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Join my family on Cairn',
-          text: `Join ${this.family?.name ?? 'our family'} on Cairn — our shared family calendar.`,
+          title: 'Join my family on PebblePath',
+          text: `Join ${this.family?.name ?? 'our family'} on PebblePath — our shared family calendar.`,
           url,
         });
       } catch {
