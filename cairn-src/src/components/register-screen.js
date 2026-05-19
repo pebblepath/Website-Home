@@ -131,7 +131,11 @@ export class RegisterScreen extends LitElement {
     }
     .wrap {
       width: 100%;
-      max-width: 412px;
+      /* 460 (not 412) so the side-by-side "Sign in with Google /
+         Apple" provider pair shows its FULL label on desktop without
+         truncating. On mobile the pair stacks (media query below) so
+         width there is a non-issue. */
+      max-width: 460px;
     }
     .brand {
       display: flex;
@@ -341,10 +345,11 @@ export class RegisterScreen extends LitElement {
       background: rgba(61, 155, 143, 0.25);
     }
 
-    /* iOS-app parity — Apple + Google SIDE BY SIDE, each labelled
-       "Continue with …". The pair fills the row 50/50 so together
-       they're exactly as wide as the Create account / Sign in button
-       above them. */
+    /* iOS-app parity — Apple + Google, each labelled "Sign in with …".
+       Desktop: SIDE BY SIDE, 50/50, so the pair is exactly as wide as
+       the Create account / Sign in button above (the widened .wrap
+       guarantees the full label fits). Mobile: STACKED full-width
+       (media query below) so the full label always reads on a phone. */
     .providers {
       display: flex;
       flex-direction: row;
@@ -391,6 +396,18 @@ export class RegisterScreen extends LitElement {
     .provider-btn span {
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+    /* Phones: stack the two providers full-width so "Sign in with
+       Google / Apple" always shows in full (side-by-side halves are
+       too narrow on a phone). Slightly larger label since there's
+       now a full row of width. */
+    @media (max-width: 480px) {
+      .providers {
+        flex-direction: column;
+      }
+      .provider-btn {
+        font-size: 13px;
+      }
     }
 
     .toggle-row {
@@ -649,7 +666,7 @@ export class RegisterScreen extends LitElement {
           @click=${google}
         >
           ${this._iconGoogle()}
-          <span>${this.busy ? busyText : 'Continue with Google'}</span>
+          <span>${this.busy ? busyText : 'Sign in with Google'}</span>
         </button>
         <button
           class="provider-btn apple"
@@ -657,7 +674,7 @@ export class RegisterScreen extends LitElement {
           @click=${apple}
         >
           ${this._iconApple()}
-          <span>${this.busy ? busyText : 'Continue with Apple'}</span>
+          <span>${this.busy ? busyText : 'Sign in with Apple'}</span>
         </button>
       </div>
     `;
