@@ -5,23 +5,27 @@ import './glass-panel.js';
 import './glass-button.js';
 
 /**
- * Post-sign-in onboarding wizard for users who just authenticated and
- * have no family yet. Mirrors the PebblePath iOS onboarding wizard's
- * three-option pattern:
+ * Post-auth onboarding wizard (the user authenticated via
+ * register-screen — P3-6a — and has no family yet). P3-6b
+ * (2026-05-19): the choose step now MIRRORS iOS FamilySetupView
+ * ("Set up your family") — exactly two options, iOS copy + order:
  *
- *   1. Join an existing family — paste a CAIRN-XXXX code; app-shell
- *      picks up the code and routes through `join-family-screen`.
- *   2. Start a new family — name input + `createCairnOnlyFamily`. New
- *      family doc tagged `createdInApp: 'cairn'`, viewer lands in the
- *      dashboard immediately afterwards.
- *   3. Get the PebblePath app — quiet App Store link for parents who
- *      stumbled onto Cairn first. We don't force them off the web —
- *      they can still pick option 2 to use Cairn standalone.
+ *   create → Start a new family → name → the P3-5 "Do you have
+ *            children?" branch (Yes: createPebblePathFamily +
+ *            createChild · No: createCairnOnlyFamily). Mirrors
+ *            iOS FamilySetup → AddChild step-0.
+ *   join   → I have an invite code → dispatch `join-code`;
+ *            app-shell routes through join-family-screen
+ *            (→ redeemConnectCode → flat member + the post-join
+ *            parent-prompt).
+ *
+ * The Cairn-era third option ("I have the PebblePath app" App
+ * Store nudge) was REMOVED — it made no sense post-auth and iOS
+ * FamilySetup has no such step (Thomas smoke-test 2026-05-19).
  *
  * Events:
- *   join-code   — { detail: { code } } when option 1 submits a code;
- *                 the parent (app-shell) wires this into the existing
- *                 join-family flow.
+ *   join-code — { detail: { code } } when the join path submits a
+ *               code; app-shell wires it into the join-family flow.
  */
 const PENDING_LOGIN_KEY = 'cairn:pendingLoginIntent';
 
@@ -231,43 +235,8 @@ export class OnboardingWizard extends LitElement {
       align-self: flex-start;
     }
     .back:hover { color: var(--text-primary); }
-
-    .download-card {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      align-items: center;
-      text-align: center;
-      padding: 8px 4px;
-    }
-    .download-card p {
-      margin: 0;
-      color: var(--text-secondary);
-      font-size: 14px;
-      line-height: 1.55;
-    }
-    .download-card .app-store-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 11px 18px;
-      border-radius: var(--radius-pill);
-      background: #000;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      text-decoration: none;
-    }
-    .download-card .alt {
-      color: var(--text-tertiary);
-      font-size: 12.5px;
-    }
-    .download-card .alt a {
-      color: var(--terracotta);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      cursor: pointer;
-    }
+    /* P3-6b — .download-card / .app-store-cta / .alt styles removed
+       with _renderDownload (the "get the iOS app" card). */
   `;
 
   _go(mode) {
@@ -412,55 +381,53 @@ export class OnboardingWizard extends LitElement {
       <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4zm0 4.7l1.6 3.2 3.6.5-2.6 2.5.6 3.5L12 14.7l-3.2 1.7.6-3.5-2.6-2.5 3.6-.5L12 6.7z"/>
     </svg>`;
   }
-  _iconDownload() {
-    return html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-    </svg>`;
-  }
+  // P3-6b — _iconDownload removed with the "I have the PebblePath
+  // app" card (no longer part of the post-auth family-setup choose).
 
   render() {
     if (this._mode === 'join') return this._renderJoin();
     if (this._mode === 'create') return this._renderCreate();
     if (this._mode === 'children') return this._renderChildren();
     if (this._mode === 'addchild') return this._renderAddChild();
-    if (this._mode === 'download') return this._renderDownload();
     return this._renderChoose();
   }
 
+  // P3-6b (2026-05-19) — the post-auth choose step now mirrors iOS
+  // FamilySetupView ("Set up your family"): exactly TWO options
+  // (Start a new family / I have an invite code), iOS copy + order.
+  // The Cairn-era "I have the PebblePath app" download card is
+  // REMOVED — it made no sense post-auth (Thomas smoke-test
+  // 2026-05-19) and iOS FamilySetup has no such option. The recovery
+  // flavour (signed-in user with no family pointer) keeps a distinct
+  // heading but the same 2 options. Portal keeps its own dusk-glass
+  // skin + icons (literal = flow/copy/options, not a visual reskin —
+  // feedback_portal_keeps_own_identity.md).
   _renderChoose() {
-    const firstName = (this.user?.displayName ?? '').trim().split(/\s+/)[0] || 'there';
     const isRecovery = this._flavor === 'recovery';
     const heading = isRecovery
-      ? `Hi ${firstName} — we couldn't find a family on your account.`
-      : `Welcome, ${firstName}.`;
+      ? "We couldn't find a family on your account"
+      : 'Set up your family';
     const lede = isRecovery
-      ? 'Join an existing family with your invite code, or start a new one.'
-      : "Let's get you all set up.";
+      ? 'Start a new family, or join one with an invite code.'
+      : 'Your family is one shared space — everyone you invite is a member.';
     return html`
       <div class="wrap">
         <glass-panel padding="lg" variant="strong" lifted>
           <h1>${heading}</h1>
           <p class="lede">${lede}</p>
           <div class="options">
-            <button class="option" @click=${() => this._go('join')}>
-              <span class="icon-cell tide">${this._iconJoin()}</span>
-              <span>
-                <div class="label">Join an existing family</div>
-                <div class="desc">Paste the 6-character connect code from your invite.</div>
-              </span>
-            </button>
             <button class="option" @click=${() => this._go('create')}>
               <span class="icon-cell sage">${this._iconCreate()}</span>
               <span>
                 <div class="label">Start a new family</div>
-                <div class="desc">Create a family planner account.</div>
+                <div class="desc">You'll be the first member. Invite others with a code next.</div>
               </span>
             </button>
-            <button class="option" @click=${() => this._go('download')}>
-              <span class="icon-cell amber">${this._iconDownload()}</span>
+            <button class="option" @click=${() => this._go('join')}>
+              <span class="icon-cell tide">${this._iconJoin()}</span>
               <span>
-                <div class="label">I have the PebblePath app</div>
-                <div class="desc">Sign in on the app — your family will sync.</div>
+                <div class="label">I have an invite code</div>
+                <div class="desc">Join a family someone shared a connect code with you for.</div>
               </span>
             </button>
           </div>
@@ -655,38 +622,9 @@ export class OnboardingWizard extends LitElement {
     `;
   }
 
-  _renderDownload() {
-    return html`
-      <div class="wrap">
-        <glass-panel padding="lg" variant="strong" lifted>
-          <button class="back" @click=${() => this._go('choose')}>‹ Back</button>
-          <h1 style="margin-top:10px;">PebblePath on iPhone</h1>
-          <div class="download-card">
-            <p>
-              Sign in on the app — your family syncs automatically.
-              PebblePath is our iPhone app for tracking your kids'
-              milestones, daily wins, and Pebble's parenting advisor.
-            </p>
-            <a
-              class="app-store-cta"
-              href="https://apps.apple.com/app/pebblepath"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              ⌘ Get PebblePath on the App Store
-            </a>
-            <div class="alt">
-              Or
-              <a @click=${() => this._go('create')}>
-                set up your family on the web for now
-              </a>
-              — you can connect the app later.
-            </div>
-          </div>
-        </glass-panel>
-      </div>
-    `;
-  }
+  // P3-6b — _renderDownload removed. The "get the iOS app" nudge is
+  // a marketing-site concern, not part of the post-auth family-setup
+  // wizard; iOS FamilySetupView has no such step.
 }
 
 customElements.define('onboarding-wizard', OnboardingWizard);
