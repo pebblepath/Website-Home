@@ -391,6 +391,27 @@ export class OnboardingWizard extends LitElement {
       <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4zm0 4.7l1.6 3.2 3.6.5-2.6 2.5.6 3.5L12 14.7l-3.2 1.7.6-3.5-2.6-2.5 3.6-.5L12 6.7z"/>
     </svg>`;
   }
+  // "+" — used for "Start a new family" and "Yes, add a child"
+  // (replaced the shield-star, which read as a rating/award glyph).
+  _iconPlus() {
+    return html`<svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.4"
+      stroke-linecap="round"
+      aria-hidden="true"
+    >
+      <path d="M12 5v14M5 12h14" />
+    </svg>`;
+  }
+  // Single person/torso — used for "No, this is not a parent account"
+  // (distinct from the group glyph used for "I have an invite code").
+  _iconPerson() {
+    return html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+    </svg>`;
+  }
   // P3-6b — _iconDownload removed with the "I have the PebblePath
   // app" card (no longer part of the post-auth family-setup choose).
 
@@ -427,17 +448,17 @@ export class OnboardingWizard extends LitElement {
           <p class="lede">${lede}</p>
           <div class="options">
             <button class="option" @click=${() => this._go('create')}>
-              <span class="icon-cell sage">${this._iconCreate()}</span>
+              <span class="icon-cell sage">${this._iconPlus()}</span>
               <span>
                 <div class="label">Start a new family</div>
-                <div class="desc">You'll be the first member. Invite others with a code next.</div>
+                <div class="desc">You'll be the first member, you can then add connections with your family invite code.</div>
               </span>
             </button>
             <button class="option" @click=${() => this._go('join')}>
               <span class="icon-cell tide">${this._iconJoin()}</span>
               <span>
                 <div class="label">I have an invite code</div>
-                <div class="desc">Join a family someone shared a connect code with you for.</div>
+                <div class="desc">Join a family on PebblePath.</div>
               </span>
             </button>
           </div>
@@ -541,10 +562,10 @@ export class OnboardingWizard extends LitElement {
       <div class="wrap">
         <glass-panel padding="lg" variant="strong" lifted>
           <button class="back" @click=${() => this._go('create')}>‹ Back</button>
-          <h1 style="margin-top:10px;">Do you have children you want to add?</h1>
+          <h1 style="margin-top:10px;">Do you have children to add?</h1>
           <p class="lede">
-            Adding a child is what makes you their parent — the only role
-            in PebblePath. You can always add one later.
+            This will create a parent role for you in PebblePath, you can
+            always add this later.
           </p>
           <div class="options">
             <button
@@ -552,11 +573,12 @@ export class OnboardingWizard extends LitElement {
               ?disabled=${this._busy}
               @click=${this._goAddChild}
             >
-              <span class="icon-cell sage">${this._iconCreate()}</span>
+              <span class="icon-cell sage">${this._iconPlus()}</span>
               <span>
-                <div class="label">Yes — add my child</div>
+                <div class="label">Yes, I want to add a child.</div>
                 <div class="desc">
-                  Set up milestones, tips and Pebble for your child.
+                  Sets up child milestones, growth insights, tips, and
+                  Pebble advisor for your family.
                 </div>
               </span>
             </button>
@@ -565,14 +587,13 @@ export class OnboardingWizard extends LitElement {
               ?disabled=${this._busy}
               @click=${this._submitNoChildren}
             >
-              <span class="icon-cell tide">${this._iconJoin()}</span>
+              <span class="icon-cell tide">${this._iconPerson()}</span>
               <span>
                 <div class="label">
-                  ${this._busy ? 'Setting up…' : "No — I'm setting up for myself"}
+                  ${this._busy ? 'Setting up…' : 'No, this is not a parent account.'}
                 </div>
                 <div class="desc">
-                  Grandparents, aunts and uncles, a partner, a friend of
-                  the family — everyone gets the full space.
+                  Collaborate on the family activity planner together.
                 </div>
               </span>
             </button>

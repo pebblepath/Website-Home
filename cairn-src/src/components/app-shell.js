@@ -263,6 +263,12 @@ export class AppShell extends LitElement {
     if (this.preview) return 'home';
     if (!this.authUser) return 'register';
     if (this.joinCode) return 'join';
+    // Auth done but the user-doc snapshot hasn't fired yet — we don't
+    // yet know wizard-vs-dashboard. Treat it as 'wizard' for the
+    // BACKGROUND only (keeps the Daybreak wallpaper continuous on the
+    // Create-account → Set-up-family path); render() shows nothing
+    // during this gap so the empty dashboard never flashes.
+    if (!this.userDocResolved && !this._resetMode) return 'wizard';
     if (this._needsOnboarding()) return 'wizard';
     return 'home';
   }
@@ -285,6 +291,15 @@ export class AppShell extends LitElement {
           @cancel=${() => this._clearJoinState()}
         ></join-family-screen>
       `;
+    }
+    // Auth resolved but the user-doc snapshot hasn't fired yet: we
+    // can't tell if this account needs onboarding or has a family.
+    // Render nothing (over the continuous Daybreak wallpaper — see
+    // _currentRoute) so a brand-new account doesn't flash the empty
+    // dashboard between "Create account" and "Set up your family".
+    // ?reset=1 + preview bypass (they don't depend on the user doc).
+    if (!this.userDocResolved && !this._resetMode) {
+      return html``;
     }
     if (this._needsOnboarding()) {
       return html`
