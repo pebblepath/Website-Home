@@ -46,10 +46,12 @@ export class OnboardingWizard extends LitElement {
     // first-class family-coordinator member — "No" is NOT lesser).
     _childName: { state: true },
     _childDob: { state: true },
-    // Optional child avatar chosen on the "Add your child" step.
-    // _childPhotoBlob = processed 512² JPEG; _childPhotoPreview =
-    // object-URL for the on-screen circle. Uploaded post-createChild.
+    // Optional avatars. *PhotoBlob = processed 512² JPEG (not
+    // reactive); *PhotoPreview = object-URL for the on-screen circle
+    // (reactive). Child → uploaded post-createChild; parent →
+    // uploaded post-family-create (both submit paths).
     _childPhotoPreview: { state: true },
+    _parentPhotoPreview: { state: true },
     /** 'welcome' (default — brand-new user) or 'recovery' (signed-in
      *  user came in via Login but has no family pointer). Affects only
      *  the choose-step heading + lede so the message lands as
@@ -72,6 +74,8 @@ export class OnboardingWizard extends LitElement {
     this._childDob = ''; // <input type="date"> value (YYYY-MM-DD)
     this._childPhotoBlob = null;     // processed Blob (not reactive)
     this._childPhotoPreview = null;  // object-URL string (reactive)
+    this._parentPhotoBlob = null;
+    this._parentPhotoPreview = null;
     this._flavor = 'welcome';
     // Detect login-intent flag the register-screen stashed when the
     // user clicked the Sign-in card. Consumed-and-cleared here so a
@@ -251,70 +255,85 @@ export class OnboardingWizard extends LitElement {
       align-self: flex-start;
     }
     .back:hover { opacity: 1; }
-    /* Child avatar picker (onboarding "Add your child") — optional;
-       the chosen image is center-square cropped + resized to 512²
-       JPEG client-side before upload to the Build-14 Storage path. */
-    .kid-photo {
+    /* Avatar picker (onboarding "Add your child" + "Start a new
+       family" parent photo) — optional; the chosen image is
+       center-square cropped + resized to 512² JPEG client-side
+       before upload to the Build-14 Storage path. The OUTER button
+       is overflow:visible so the camera badge isn't clipped; only
+       the inner .ring clips the image to a circle. The ring border
+       is brand green (was a near-white that vanished on the light
+       Daybreak wallpaper). */
+    .av-pick {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 8px;
       margin-bottom: 2px;
     }
-    .kid-photo button {
+    .av-pick button {
       position: relative;
       width: 84px;
       height: 84px;
-      border-radius: 999px;
-      border: 2px solid rgba(255, 248, 235, 0.28);
-      background: rgba(255, 248, 235, 0.08);
+      background: transparent;
+      border: none;
       padding: 0;
       cursor: pointer;
+      overflow: visible;
+      color: var(--teal-pebble);
+    }
+    .av-pick .ring {
+      width: 84px;
+      height: 84px;
+      border-radius: 999px;
       overflow: hidden;
+      border: 2px solid var(--teal-pebble);
+      background: rgba(61, 155, 143, 0.12);
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      color: var(--teal-pebble);
-      transition: border-color 180ms ease, background 180ms ease;
+      box-sizing: border-box;
+      transition: border-color 180ms ease, box-shadow 180ms ease;
     }
-    .kid-photo button:hover {
-      border-color: var(--teal-pebble);
+    .av-pick button:hover .ring {
+      border-color: var(--sage-mid, #2d7567);
+      box-shadow: 0 0 0 4px rgba(61, 155, 143, 0.16);
     }
-    .kid-photo img {
+    .av-pick img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
-    .kid-photo .ph {
-      width: 30px;
-      height: 30px;
-      opacity: 0.55;
+    .av-pick .ph {
+      width: 34px;
+      height: 34px;
+      opacity: 0.6;
     }
-    .kid-photo .cam {
+    .av-pick .cam {
       position: absolute;
-      right: 0;
-      bottom: 0;
-      width: 26px;
-      height: 26px;
+      right: -1px;
+      bottom: -1px;
+      width: 28px;
+      height: 28px;
       border-radius: 999px;
       background: var(--teal-pebble);
       color: #fff;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      border: 2px solid var(--panel-solid, #fffcf7);
       box-shadow: 0 1px 4px rgba(20, 12, 6, 0.3);
     }
-    .kid-photo .cam svg {
+    .av-pick .cam svg {
       width: 14px;
       height: 14px;
     }
-    .kid-photo .cap {
+    .av-pick .cap {
       font-size: 12px;
       color: var(--teal-pebble);
-      opacity: 0.7;
+      opacity: 0.75;
     }
-    .kid-photo input[type='file'] {
+    .av-pick input[type='file'] {
       display: none;
     }
     /* P3-6b — .download-card / .app-store-cta / .alt styles removed
@@ -389,7 +408,8 @@ export class OnboardingWizard extends LitElement {
     this._busy = true;
     this._error = '';
     try {
-      await dataStore.createCairnOnlyFamily(name);
+      const fid = await dataStore.createCairnOnlyFamily(name);
+      await this._uploadParentPhotoIfAny(fid);
       toast(`Welcome to ${name}.`);
       // The user-doc listener fires with cairnFamilyId set; app-shell
       // re-evaluates _needsOnboarding() (now false) and renders the
@@ -453,6 +473,7 @@ export class OnboardingWizard extends LitElement {
           toast("Family created — couldn't save the photo, add it later.");
         }
       }
+      await this._uploadParentPhotoIfAny(fid);
       toast(`Welcome to ${name}.`);
       // user-doc listener fires with familyId set; app-shell
       // re-evaluates _needsOnboarding() (now false) → dashboard.
@@ -608,6 +629,13 @@ export class OnboardingWizard extends LitElement {
             others as soon as you're in.
           </p>
           <div class="step">
+            ${this._renderAvatarPicker({
+              preview: this._parentPhotoPreview,
+              inputId: 'parent-photo-file',
+              onPick: this._pickParentPhoto,
+              onChange: this._onParentPhotoChosen,
+              ariaLabel: 'Add your profile photo',
+            })}
             <div>
               <label>Family name</label>
               <input
@@ -691,40 +719,114 @@ export class OnboardingWizard extends LitElement {
     `;
   }
 
+  // Shared circular avatar-picker markup (child + parent). The outer
+  // <button> is overflow:visible so the camera badge sits ON the
+  // ring edge instead of being clipped; only the inner .ring clips
+  // the image to a circle and carries the brand-green border.
+  _renderAvatarPicker({ preview, inputId, onPick, onChange, ariaLabel }) {
+    return html`
+      <div class="av-pick">
+        <button type="button" @click=${onPick} aria-label=${ariaLabel}>
+          <span class="ring">
+            ${preview
+              ? html`<img src=${preview} alt="" />`
+              : html`<svg
+                  class="ph"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                  />
+                </svg>`}
+          </span>
+          <span class="cam">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M9 3l-1.8 2H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3H9zm3 5a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 .001 6.001A3 3 0 0 0 12 10z"
+              />
+            </svg>
+          </span>
+        </button>
+        <span class="cap"
+          >${preview ? 'Tap to change' : 'Add a photo (optional)'}</span
+        >
+        <input
+          id=${inputId}
+          type="file"
+          accept="image/*"
+          @change=${onChange}
+        />
+      </div>
+    `;
+  }
+
+  // Best-effort parent-avatar upload once the family exists (the
+  // user-avatar Storage rule requires family membership, so this can
+  // only run post-family-create). NEVER throws — a photo failure
+  // must not block onboarding.
+  async _uploadParentPhotoIfAny(familyId) {
+    if (!this._parentPhotoBlob || !familyId) return;
+    try {
+      await dataStore.uploadUserAvatar(familyId, this._parentPhotoBlob);
+    } catch (err) {
+      console.warn('parent avatar upload failed (non-fatal):', err);
+      toast("Family created — couldn't save your photo, add it later.");
+    }
+  }
+
   _pickChildPhoto() {
     this.renderRoot.querySelector('#kid-photo-file')?.click();
   }
+  _pickParentPhoto() {
+    this.renderRoot.querySelector('#parent-photo-file')?.click();
+  }
 
   async _onChildPhotoChosen(e) {
+    const blob = await this._readPickedImage(e);
+    if (!blob) return;
+    this._childPhotoBlob = blob;
+    if (this._childPhotoPreview) URL.revokeObjectURL(this._childPhotoPreview);
+    this._childPhotoPreview = URL.createObjectURL(blob);
+  }
+
+  async _onParentPhotoChosen(e) {
+    const blob = await this._readPickedImage(e);
+    if (!blob) return;
+    this._parentPhotoBlob = blob;
+    if (this._parentPhotoPreview) URL.revokeObjectURL(this._parentPhotoPreview);
+    this._parentPhotoPreview = URL.createObjectURL(blob);
+  }
+
+  // Validate + process a file <input> change into a 512² JPEG blob.
+  // Returns null (with a toast) on any rejection so callers stay tiny.
+  async _readPickedImage(e) {
     const file = e.target.files?.[0];
     e.target.value = ''; // allow re-picking the same file
-    if (!file) return;
+    if (!file) return null;
     if (!file.type.startsWith('image/')) {
       toast('Pick an image file (JPG, PNG, etc.).');
-      return;
+      return null;
     }
     if (file.size > 15 * 1024 * 1024) {
       toast('That photo is very large — pick one under 15 MB.');
-      return;
+      return null;
     }
     try {
-      const blob = await this._processChildImage(file);
-      this._childPhotoBlob = blob;
-      if (this._childPhotoPreview) {
-        URL.revokeObjectURL(this._childPhotoPreview);
-      }
-      this._childPhotoPreview = URL.createObjectURL(blob);
+      return await this._processAvatarImage(file);
     } catch (err) {
-      console.warn('child photo processing failed:', err);
+      console.warn('photo processing failed:', err);
       toast("Couldn't read that image — try another.");
+      return null;
     }
   }
 
   // Center-square crop + downscale to a 512² JPEG before upload —
-  // mirrors iOS LocalImageStore.processForAvatar so web + iOS child
+  // mirrors iOS LocalImageStore.processForAvatar so web + iOS
   // avatars look consistent and the Storage object stays small
   // (~30–80 KB vs a multi-MB phone photo).
-  async _processChildImage(file) {
+  async _processAvatarImage(file) {
     let bmp;
     try {
       bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
@@ -765,48 +867,13 @@ export class OnboardingWizard extends LitElement {
             You can add another anytime in the app.
           </p>
           <div class="step">
-            <div class="kid-photo">
-              <button
-                type="button"
-                @click=${this._pickChildPhoto}
-                aria-label="Add a photo of your child"
-              >
-                ${this._childPhotoPreview
-                  ? html`<img src=${this._childPhotoPreview} alt="" />`
-                  : html`<svg
-                      class="ph"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-                      />
-                    </svg>`}
-                <span class="cam">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M9 3l-1.8 2H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3H9zm3 5a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 .001 6.001A3 3 0 0 0 12 10z"
-                    />
-                  </svg>
-                </span>
-              </button>
-              <span class="cap"
-                >${this._childPhotoPreview
-                  ? 'Tap to change'
-                  : 'Add a photo (optional)'}</span
-              >
-              <input
-                id="kid-photo-file"
-                type="file"
-                accept="image/*"
-                @change=${this._onChildPhotoChosen}
-              />
-            </div>
+            ${this._renderAvatarPicker({
+              preview: this._childPhotoPreview,
+              inputId: 'kid-photo-file',
+              onPick: this._pickChildPhoto,
+              onChange: this._onChildPhotoChosen,
+              ariaLabel: 'Add a photo of your child',
+            })}
             <div>
               <label>Child's name</label>
               <input

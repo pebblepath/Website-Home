@@ -2084,6 +2084,52 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
+   * Upload the signed-in user's avatar to the Build-14 path
+   * `families/{familyId}/avatars/users/{uid}` + stamp
+   * `users/{uid}.profilePhotoURL` + mirror into
+   * `family.memberProfiles.{uid}` (co-parents/extended family read
+   * profiles off the family doc, not /users/{uid}). Byte-identical
+   * to profile-sheet.js's user-avatar logic — factored here so the
+   * onboarding wizard can set the parent photo as soon as the family
+   * exists (the user-avatar Storage rule requires family membership,
+   * so this can only run post-family-create). iOS reads
+   * users/{uid}.profilePhotoURL → the photo syncs cross-platform.
+   * ZERO rules change (the deployed user-avatar write rule already
+   * admits own-uid + isCairnMember). Best-effort: callers treat a
+   * failure as non-fatal.
+   *
+   * @param {string} familyId
+   * @param {Blob|File} blob  already-processed image (≤5 MB, image/*)
+   * @returns {Promise<string>} the download URL
+   */
+  async uploadUserAvatar(familyId, blob) {
+    if (!db || !storage) throw new Error('Firebase not configured.');
+    const uid = auth?.currentUser?.uid;
+    if (!uid) throw new Error('Not signed in.');
+    if (!familyId) throw new Error('No family.');
+    if (!blob) throw new Error('No image.');
+    const contentType =
+      blob.type && blob.type.startsWith('image/') ? blob.type : 'image/jpeg';
+    const ref = storageRef(storage, `families/${familyId}/avatars/users/${uid}`);
+    await uploadBytes(ref, blob, { contentType });
+    const url = await getDownloadURL(ref);
+    await updateDoc(doc(db, 'users', uid), {
+      profilePhotoURL: url,
+      updatedAt: serverTimestamp(),
+    });
+    try {
+      await updateDoc(doc(db, 'families', familyId), {
+        [`memberProfiles.${uid}.profilePhotoURL`]: url,
+        [`memberProfiles.${uid}.updatedAt`]: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+    } catch (famErr) {
+      console.warn('memberProfiles photo fan-out failed:', famErr);
+    }
+    return url;
+  }
+
+  /**
    * Flat-family model Phase 3 P3-5 (2026-05-19) — Slice P3-5a.
    * Web parity twin of iOS `AppState.requestToBeCoParent` /
    * `FirestoreService.createCoParentRequest` — the deferred web
