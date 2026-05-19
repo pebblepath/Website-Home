@@ -117,22 +117,26 @@ export class GlassButton extends LitElement {
       border-color: rgba(255, 255, 255, 0.55);
     }
     /* Neutral frosted sibling of frost-teal — the iOS welcome Login
-       button (PebbleTranslucentButtonStyle, no tint). ghost was too
-       faint to read against the dusk glass; this carries a visible
-       grey wash + a clearly-present border. Theme-safe: --text-primary
-       is cream on dark / charcoal on light, so the wash, border AND
-       label all stay legible on either surface. */
+       button (PebbleTranslucentButtonStyle, no tint): a clearly
+       visible LIGHT translucent pill with a white label, sitting over
+       the dusk pre-login backdrop. The earlier --text-primary mix was
+       still too faint; this is a fixed light frost (the pre-login page
+       has no theme toggle, so it's always the dark surface — a light
+       pill + white text is the iOS-faithful, high-visibility look). */
     .frost-neutral {
-      background: color-mix(in srgb, var(--text-primary) 16%, transparent);
+      background: rgba(255, 255, 255, 0.4);
       backdrop-filter: blur(20px) saturate(160%);
       -webkit-backdrop-filter: blur(20px) saturate(160%);
-      color: var(--text-primary);
-      border-color: color-mix(in srgb, var(--text-primary) 42%, transparent);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+      color: #fff;
+      text-shadow: 0 1px 2px rgba(20, 12, 6, 0.28);
+      border-color: rgba(255, 255, 255, 0.58);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.32),
+        0 6px 18px rgba(20, 12, 6, 0.14);
     }
     .frost-neutral:hover:not(:disabled) {
-      background: color-mix(in srgb, var(--text-primary) 23%, transparent);
-      border-color: color-mix(in srgb, var(--text-primary) 56%, transparent);
+      background: rgba(255, 255, 255, 0.48);
+      border-color: rgba(255, 255, 255, 0.72);
     }
   `;
 

@@ -341,29 +341,34 @@ export class RegisterScreen extends LitElement {
       background: rgba(61, 155, 143, 0.25);
     }
 
-    /* iOS-app parity — Apple + Google sit SIDE BY SIDE as icon-only
-       squares (the iOS SocialSignInButtons HStack: Apple black,
-       Google white-with-border, centered on the row). */
+    /* iOS-app parity — Apple + Google SIDE BY SIDE, each labelled
+       "Continue with …". The pair fills the row 50/50 so together
+       they're exactly as wide as the Create account / Sign in button
+       above them. */
     .providers {
       display: flex;
       flex-direction: row;
-      justify-content: center;
-      gap: 14px;
+      gap: 10px;
     }
     .provider-btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      flex: 0 0 auto;
-      width: 84px;
-      height: 48px;
-      padding: 0;
-      border-radius: 14px;
+      gap: 8px;
+      flex: 1 1 0;
+      min-width: 0;
+      min-height: 44px;
+      padding: 0 10px;
+      border-radius: var(--radius-pill);
+      white-space: nowrap;
       /* Google brand style: white background, hairline border.
          Matches the iOS Google sign-in button. */
       border: 1px solid rgba(0, 0, 0, 0.12);
       background: #fff;
       color: #3c4043;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 600;
       cursor: pointer;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
       transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
@@ -382,7 +387,11 @@ export class RegisterScreen extends LitElement {
       background: #1a1a1a;
     }
     .provider-btn:disabled { opacity: 0.55; cursor: not-allowed; }
-    .provider-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
+    .provider-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .provider-btn span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     .toggle-row {
       display: flex;
@@ -410,10 +419,17 @@ export class RegisterScreen extends LitElement {
       gap: 10px;
       margin-top: 4px;
     }
-    /* iOS-welcome parity — the CTAs are centered pills, not
-       edge-to-edge bars. Narrower than the panel so the card reads
-       lighter. */
+    /* Form submit buttons (Create account / Sign in) span the full
+       inner width — the side-by-side provider pair below them matches
+       this width. */
     .actions glass-button {
+      flex: 1;
+    }
+    /* iOS-welcome parity — ONLY the welcome Register/Login CTAs are
+       centered narrow pills (not edge-to-edge), so the landing card
+       reads lighter. Scoped via .cta so it doesn't shrink the form
+       submit buttons. */
+    .actions.cta glass-button {
       flex: 0 1 248px;
       max-width: 248px;
     }
@@ -423,12 +439,13 @@ export class RegisterScreen extends LitElement {
        checkbox. Mirrors iOS CreateAccountView's LegalConsentRow. */
     .consent {
       display: flex;
-      align-items: flex-start;
-      gap: 10px;
+      align-items: center;
+      gap: 8px;
       margin: 4px 0 2px;
-      font-size: 13px;
-      line-height: 1.45;
-      color: var(--text-secondary);
+      font-size: 10.5px;
+      line-height: 1.3;
+      white-space: nowrap;
+      color: var(--teal-pebble);
       cursor: pointer;
     }
     .consent input[type='checkbox'] {
@@ -579,7 +596,7 @@ export class RegisterScreen extends LitElement {
           </div>
           <div class="companion">Web Portal</div>
         </div>
-        <glass-panel padding="lg" lifted variant="strong">
+        <glass-panel padding="md" lifted variant="strong">
           ${this._step === 'welcome' ? this._renderWelcome() : ''}
           ${this._step === 'register' ? this._renderRegister() : ''}
           ${this._step === 'login' ? this._renderLogin() : ''}
@@ -601,7 +618,7 @@ export class RegisterScreen extends LitElement {
           : 'One shared space for the whole family.'}
       </p>
       <div class="step">
-        <div class="actions">
+        <div class="actions cta">
           <glass-button
             variant="frost-teal"
             ?disabled=${this.busy}
@@ -610,7 +627,7 @@ export class RegisterScreen extends LitElement {
             Register
           </glass-button>
         </div>
-        <div class="actions">
+        <div class="actions cta">
           <glass-button
             variant="frost-neutral"
             ?disabled=${this.busy}
@@ -628,21 +645,19 @@ export class RegisterScreen extends LitElement {
       <div class="providers">
         <button
           class="provider-btn"
-          aria-label=${this.busy ? busyText : 'Continue with Google'}
-          title="Continue with Google"
           ?disabled=${this.busy || !isConfigured}
           @click=${google}
         >
           ${this._iconGoogle()}
+          <span>${this.busy ? busyText : 'Continue with Google'}</span>
         </button>
         <button
           class="provider-btn apple"
-          aria-label=${this.busy ? busyText : 'Continue with Apple'}
-          title="Continue with Apple"
           ?disabled=${this.busy || !isConfigured}
           @click=${apple}
         >
           ${this._iconApple()}
+          <span>${this.busy ? busyText : 'Continue with Apple'}</span>
         </button>
       </div>
     `;
@@ -704,10 +719,6 @@ export class RegisterScreen extends LitElement {
           apple: () => this._runAuth(() => signInWithApple()),
           busyText: 'Signing in…',
         })}
-        <div class="toggle-row">
-          <span>New here?</span>
-          <button @click=${() => this._go('register')}>Create an account</button>
-        </div>
       </div>
     `;
   }
@@ -847,10 +858,6 @@ export class RegisterScreen extends LitElement {
           apple: () => this._runAuth(() => signInWithApple()),
           busyText: 'Creating…',
         })}
-        <div class="toggle-row">
-          <span>Already have an account?</span>
-          <button @click=${() => this._go('login')}>Sign in</button>
-        </div>
       </div>
     `;
   }
