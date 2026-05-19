@@ -72,21 +72,23 @@
     <!-- Theme bootstrap — apply the saved light/dark choice to <html>
          BEFORE first paint so there's no flash. Toggle lives in
          Settings (Tab 5) and persists in localStorage('portalTheme').
-         Default = dark (the original look). -->
+         Default = LIGHT; dark is opt-in (portalTheme === 'dark'). -->
     <script>
       (function () {
+        function light() {
+          document.documentElement.classList.add('theme-light');
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute('content', '#f2ede3');
+        }
         try {
-          if (localStorage.getItem('portalTheme') === 'light') {
-            document.documentElement.classList.add('theme-light');
-            var m = document.querySelector('meta[name="theme-color"]');
-            if (m) m.setAttribute('content', '#f2ede3');
-          }
+          if (localStorage.getItem('portalTheme') !== 'dark') light();
         } catch (e) {
-          /* private mode / storage blocked — stay on default dark */
+          /* private mode / storage blocked — still default to light */
+          light();
         }
       })();
     </script>
-    <script type="module" crossorigin src="/portal/assets/index-BLmyheZR.js"></script>
+    <script type="module" crossorigin src="/portal/assets/index-DtNncpxQ.js"></script>
     <link rel="modulepreload" crossorigin href="/portal/assets/lit-dM6tPkba.js">
     <link rel="modulepreload" crossorigin href="/portal/assets/firebase-core-DEm61vaB.js">
     <link rel="modulepreload" crossorigin href="/portal/assets/firebase-functions-ID3qFl3p.js">
