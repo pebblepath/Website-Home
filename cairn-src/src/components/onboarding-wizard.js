@@ -46,6 +46,10 @@ export class OnboardingWizard extends LitElement {
     // first-class family-coordinator member — "No" is NOT lesser).
     _childName: { state: true },
     _childDob: { state: true },
+    // Optional child avatar chosen on the "Add your child" step.
+    // _childPhotoBlob = processed 512² JPEG; _childPhotoPreview =
+    // object-URL for the on-screen circle. Uploaded post-createChild.
+    _childPhotoPreview: { state: true },
     /** 'welcome' (default — brand-new user) or 'recovery' (signed-in
      *  user came in via Login but has no family pointer). Affects only
      *  the choose-step heading + lede so the message lands as
@@ -66,6 +70,8 @@ export class OnboardingWizard extends LitElement {
     this._error = '';
     this._childName = '';
     this._childDob = ''; // <input type="date"> value (YYYY-MM-DD)
+    this._childPhotoBlob = null;     // processed Blob (not reactive)
+    this._childPhotoPreview = null;  // object-URL string (reactive)
     this._flavor = 'welcome';
     // Detect login-intent flag the register-screen stashed when the
     // user clicked the Sign-in card. Consumed-and-cleared here so a
@@ -245,6 +251,72 @@ export class OnboardingWizard extends LitElement {
       align-self: flex-start;
     }
     .back:hover { opacity: 1; }
+    /* Child avatar picker (onboarding "Add your child") — optional;
+       the chosen image is center-square cropped + resized to 512²
+       JPEG client-side before upload to the Build-14 Storage path. */
+    .kid-photo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+    .kid-photo button {
+      position: relative;
+      width: 84px;
+      height: 84px;
+      border-radius: 999px;
+      border: 2px solid rgba(255, 248, 235, 0.28);
+      background: rgba(255, 248, 235, 0.08);
+      padding: 0;
+      cursor: pointer;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--teal-pebble);
+      transition: border-color 180ms ease, background 180ms ease;
+    }
+    .kid-photo button:hover {
+      border-color: var(--teal-pebble);
+    }
+    .kid-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .kid-photo .ph {
+      width: 30px;
+      height: 30px;
+      opacity: 0.55;
+    }
+    .kid-photo .cam {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: var(--teal-pebble);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 4px rgba(20, 12, 6, 0.3);
+    }
+    .kid-photo .cam svg {
+      width: 14px;
+      height: 14px;
+    }
+    .kid-photo .cap {
+      font-size: 12px;
+      color: var(--teal-pebble);
+      opacity: 0.7;
+    }
+    .kid-photo input[type='file'] {
+      display: none;
+    }
     /* P3-6b — .download-card / .app-store-cta / .alt styles removed
        with _renderDownload (the "get the iOS app" card). */
   `;
@@ -362,10 +434,25 @@ export class OnboardingWizard extends LitElement {
     this._error = '';
     try {
       const fid = await dataStore.createPebblePathFamily(name);
-      await dataStore.createChild(fid, {
+      const childId = await dataStore.createChild(fid, {
         name: childName,
         dateOfBirth: dob,
       });
+      // Optional avatar — best-effort, NEVER blocks onboarding. The
+      // family + child already exist; if the upload fails the photo
+      // can be set later in the app/Settings.
+      if (this._childPhotoBlob) {
+        try {
+          await dataStore.uploadChildAvatar(
+            fid,
+            childId,
+            this._childPhotoBlob,
+          );
+        } catch (photoErr) {
+          console.warn('child avatar upload failed (non-fatal):', photoErr);
+          toast("Family created — couldn't save the photo, add it later.");
+        }
+      }
       toast(`Welcome to ${name}.`);
       // user-doc listener fires with familyId set; app-shell
       // re-evaluates _needsOnboarding() (now false) → dashboard.
@@ -604,6 +691,66 @@ export class OnboardingWizard extends LitElement {
     `;
   }
 
+  _pickChildPhoto() {
+    this.renderRoot.querySelector('#kid-photo-file')?.click();
+  }
+
+  async _onChildPhotoChosen(e) {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // allow re-picking the same file
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast('Pick an image file (JPG, PNG, etc.).');
+      return;
+    }
+    if (file.size > 15 * 1024 * 1024) {
+      toast('That photo is very large — pick one under 15 MB.');
+      return;
+    }
+    try {
+      const blob = await this._processChildImage(file);
+      this._childPhotoBlob = blob;
+      if (this._childPhotoPreview) {
+        URL.revokeObjectURL(this._childPhotoPreview);
+      }
+      this._childPhotoPreview = URL.createObjectURL(blob);
+    } catch (err) {
+      console.warn('child photo processing failed:', err);
+      toast("Couldn't read that image — try another.");
+    }
+  }
+
+  // Center-square crop + downscale to a 512² JPEG before upload —
+  // mirrors iOS LocalImageStore.processForAvatar so web + iOS child
+  // avatars look consistent and the Storage object stays small
+  // (~30–80 KB vs a multi-MB phone photo).
+  async _processChildImage(file) {
+    let bmp;
+    try {
+      bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
+    } catch {
+      // Safari < 16 ignores the options bag — retry without it.
+      bmp = await createImageBitmap(file);
+    }
+    const side = Math.min(bmp.width, bmp.height);
+    const sx = (bmp.width - side) / 2;
+    const sy = (bmp.height - side) / 2;
+    const out = 512;
+    const canvas = document.createElement('canvas');
+    canvas.width = out;
+    canvas.height = out;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(bmp, sx, sy, side, side, 0, 0, out, out);
+    bmp.close?.();
+    return await new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (b) => (b ? resolve(b) : reject(new Error('toBlob returned null'))),
+        'image/jpeg',
+        0.85,
+      );
+    });
+  }
+
   // P3-5b — single-child add on the "Yes" path (design-sandbox/17
   // web "Add your child": name + birthday). More children can be
   // added later in the app. Submits createPebblePathFamily +
@@ -618,6 +765,48 @@ export class OnboardingWizard extends LitElement {
             You can add another anytime in the app.
           </p>
           <div class="step">
+            <div class="kid-photo">
+              <button
+                type="button"
+                @click=${this._pickChildPhoto}
+                aria-label="Add a photo of your child"
+              >
+                ${this._childPhotoPreview
+                  ? html`<img src=${this._childPhotoPreview} alt="" />`
+                  : html`<svg
+                      class="ph"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                      />
+                    </svg>`}
+                <span class="cam">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M9 3l-1.8 2H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3H9zm3 5a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 .001 6.001A3 3 0 0 0 12 10z"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <span class="cap"
+                >${this._childPhotoPreview
+                  ? 'Tap to change'
+                  : 'Add a photo (optional)'}</span
+              >
+              <input
+                id="kid-photo-file"
+                type="file"
+                accept="image/*"
+                @change=${this._onChildPhotoChosen}
+              />
+            </div>
             <div>
               <label>Child's name</label>
               <input

@@ -2044,6 +2044,46 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
+   * Upload a child's avatar to the Build-14 cross-device Storage path
+   * `families/{familyId}/avatars/children/{childId}` (no extension —
+   * contentType metadata drives serving) and stamp the resulting
+   * download URL onto the child doc's `profilePhotoURL`. Mirrors the
+   * user-avatar pattern in profile-sheet.js so a photo set during web
+   * onboarding flows to iOS (which reads child `profilePhotoURL`) and
+   * back via the data.js Storage fallback (≈L731).
+   *
+   * Deployed Storage rule already admits this write
+   * (`/avatars/children/{childId}` allow write: isFamilyMember +
+   * <5 MB + image/*) — the onboarding "Yes, add a child" creator is
+   * in memberIds. ZERO rules change. Best-effort by design: the
+   * caller treats a failure as non-fatal (the family + child are
+   * already created; the photo can be set later in the app).
+   *
+   * @param {string} familyId
+   * @param {string} childId
+   * @param {Blob|File} blob  already-processed image (≤5 MB, image/*)
+   * @returns {Promise<string>} the download URL
+   */
+  async uploadChildAvatar(familyId, childId, blob) {
+    if (!db || !storage) throw new Error('Firebase not configured.');
+    if (!familyId || !childId) throw new Error('Missing family/child id.');
+    if (!blob) throw new Error('No image.');
+    const contentType =
+      blob.type && blob.type.startsWith('image/') ? blob.type : 'image/jpeg';
+    const ref = storageRef(
+      storage,
+      `families/${familyId}/avatars/children/${childId}`,
+    );
+    await uploadBytes(ref, blob, { contentType });
+    const url = await getDownloadURL(ref);
+    await updateDoc(doc(db, 'families', familyId, 'children', childId), {
+      profilePhotoURL: url,
+      updatedAt: serverTimestamp(),
+    });
+    return url;
+  }
+
+  /**
    * Flat-family model Phase 3 P3-5 (2026-05-19) — Slice P3-5a.
    * Web parity twin of iOS `AppState.requestToBeCoParent` /
    * `FirestoreService.createCoParentRequest` — the deferred web
