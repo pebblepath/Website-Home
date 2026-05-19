@@ -3674,7 +3674,7 @@ export class HomeScreen extends LitElement {
     const allMembers = this._liveImmediate().concat(this._liveExtended());
     const scope = html`<div class="scope shared">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 2.5-5 6-5s6 2 6 5M15 17c2 0 5 1 5 3" stroke-linecap="round"/></svg>
-      Shared with your Cairn
+      Shared with your connections
     </div>`;
     return html`
       ${this._renderTabHeader(
