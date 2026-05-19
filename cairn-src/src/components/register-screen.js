@@ -185,7 +185,7 @@ export class RegisterScreen extends LitElement {
     .companion {
       font-family: var(--font-nunito);
       font-weight: 700;
-      font-size: 15px;
+      font-size: 14px;
       letter-spacing: 0.17em;
       text-transform: uppercase;
       color: var(--teal-pebble);
@@ -285,15 +285,27 @@ export class RegisterScreen extends LitElement {
       gap: 12px;
     }
     .back {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      margin: 0 0 2px -6px;
       background: transparent;
       border: none;
+      border-radius: 999px;
       color: var(--teal-pebble);
-      font: inherit;
-      font-size: 13.5px;
-      font-weight: 600;
       cursor: pointer;
-      padding: 4px 6px;
+      padding: 0;
       align-self: flex-start;
+      transition: background 160ms ease;
+    }
+    .back:hover {
+      background: rgba(61, 155, 143, 0.12);
+    }
+    .back svg {
+      width: 20px;
+      height: 20px;
     }
     .back:hover { color: var(--teal-pebble); opacity: 0.75; }
 
@@ -309,15 +321,15 @@ export class RegisterScreen extends LitElement {
     input[type='email'],
     input[type='password'] {
       width: 100%;
-      min-height: 44px;
+      min-height: 40px;
       box-sizing: border-box;
       background: rgba(255, 255, 255, 0.6);
       border: 1px solid rgba(61, 155, 143, 0.3);
       border-radius: var(--radius-input);
-      padding: 10px 14px;
+      padding: 8px 12px;
       color: var(--teal-pebble);
       font-family: var(--font-body);
-      font-size: 16px;
+      font-size: 14px;
       outline: none;
       transition: border-color 200ms ease, background 200ms ease;
     }
@@ -421,7 +433,7 @@ export class RegisterScreen extends LitElement {
     .toggle-row {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
       gap: 10px;
       font-size: 13px;
       color: var(--teal-pebble);
@@ -433,7 +445,7 @@ export class RegisterScreen extends LitElement {
       color: var(--terracotta-deep, #8b5a3e);
       cursor: pointer;
       font: inherit;
-      font-weight: 600;
+      font-weight: 500;
       text-decoration: underline;
       text-underline-offset: 3px;
       padding: 0;
@@ -693,7 +705,22 @@ export class RegisterScreen extends LitElement {
   // · Forgot password · Sign in · Apple · Google.
   _renderLogin() {
     return html`
-      <button class="back" @click=${() => this._go('welcome')}>‹ Back</button>
+      <button
+        class="back"
+        aria-label="Back"
+        @click=${() => this._go('welcome')}
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </button>
       <h1 style="margin-top:6px;">Welcome back</h1>
       <div class="step">
         <div>
@@ -806,7 +833,22 @@ export class RegisterScreen extends LitElement {
       this._consent &&
       !this.busy;
     return html`
-      <button class="back" @click=${() => this._go('welcome')}>‹ Back</button>
+      <button
+        class="back"
+        aria-label="Back"
+        @click=${() => this._go('welcome')}
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </button>
       <h1 style="margin-top:6px;">Create your account</h1>
       <div class="step">
         <div>

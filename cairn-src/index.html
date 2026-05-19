@@ -56,6 +56,20 @@
     />
     <link rel="stylesheet" href="/src/styles/tokens.css" />
 
+    <!-- Preload the pre-login Daybreak wallpaper so the browser starts
+         fetching it immediately (in parallel with the JS bundle)
+         instead of waiting for app-shell JS to compute BASE_URL and
+         inject the --pre-login-bg CSS var. Relative href resolves to
+         /assets/… in dev and /portal/assets/… in prod — same URL the
+         app-shell injects, so it's a cache hit, not a double fetch.
+         (Now a 161 KB JPEG, down from an 11.6 MB PNG.) -->
+    <link
+      rel="preload"
+      as="image"
+      fetchpriority="high"
+      href="assets/pebblepath-daybreak-empty.jpg"
+    />
+
     <!-- Theme bootstrap — apply the saved light/dark choice to <html>
          BEFORE first paint so there's no flash. Toggle lives in
          Settings (Tab 5) and persists in localStorage('portalTheme').

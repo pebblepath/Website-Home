@@ -94,7 +94,7 @@ export class SignInScreen extends LitElement {
     .companion {
       font-family: var(--font-nunito);
       font-weight: 700;
-      font-size: 15px;
+      font-size: 14px;
       letter-spacing: 0.17em;
       text-transform: uppercase;
       color: var(--text-tertiary);
