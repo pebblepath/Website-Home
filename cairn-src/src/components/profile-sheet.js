@@ -100,7 +100,7 @@ export class ProfileSheet extends LitElement {
   }
 
   async _signOut() {
-    if (!confirm('Sign out of Cairn?')) return;
+    if (!confirm('Sign out of PebblePath?')) return;
     this.dispatchEvent(new Event('cancel'));
     await signOutUser();
   }

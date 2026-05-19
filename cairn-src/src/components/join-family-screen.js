@@ -453,7 +453,7 @@ export class JoinFamilyScreen extends LitElement {
                     : ''}
                   <div class="family-name">${this._family.name ?? 'A family'}</div>
                   <div class="meta">
-                    ${cairnCount} ${cairnCount === 1 ? 'person' : 'people'} on Cairn${
+                    ${cairnCount} ${cairnCount === 1 ? 'person' : 'people'} on the Portal${
                       ppCount && ppCount < cairnCount ? ` · ${ppCount} on PebblePath` : ''
                     }
                   </div>
@@ -486,7 +486,7 @@ export class JoinFamilyScreen extends LitElement {
                 </p>
                 <div class="actions">
                   <glass-button variant="primary" size="lg" full @click=${this._cancel}>
-                    Continue to Cairn
+                    Continue to Portal
                   </glass-button>
                 </div>
               `}

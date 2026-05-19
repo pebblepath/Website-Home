@@ -48,7 +48,7 @@ function lodgingSourceLabel(t) {
  */
 function formatTripForShare(t, memberMap) {
   const lines = [];
-  lines.push(t.title || 'Cairn activity');
+  lines.push(t.title || 'Portal activity');
   if (t.location) lines.push(t.location);
   if (t.start && t.end) {
     const s = parseLocalDate(t.start);
@@ -376,7 +376,7 @@ export class TripCard extends LitElement {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `Cairn — ${t.title ?? 'activity'}`,
+          title: `Portal — ${t.title ?? 'activity'}`,
           text,
         });
       } catch {

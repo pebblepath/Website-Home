@@ -377,7 +377,7 @@ export class SchoolImportModal extends LitElement {
                 <div class="hint">
                   Imported events are tagged so they're visually distinct
                   from your own activities, and shared with your whole
-                  Cairn.
+                  family.
                 </div>
               `
             : ''}

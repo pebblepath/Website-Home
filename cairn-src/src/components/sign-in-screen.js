@@ -393,7 +393,7 @@ export class SignInScreen extends LitElement {
         <glass-panel padding="lg" lifted variant="strong">
           ${this.joinCode
             ? html`<div class="invite-banner">
-                <strong>You've been invited to a family on Cairn.</strong><br />
+                <strong>You've been invited to a family on PebblePath.</strong><br />
                 Sign in to continue — we'll show you the family next.
                 <br /><code>${this.joinCode}</code>
               </div>`

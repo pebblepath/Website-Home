@@ -393,7 +393,7 @@ export class ImportCalendarModal extends LitElement {
           </div>
           <p class="lede">
             Looking at your <strong>primary Google Calendar</strong> for the next 90 days.
-            Tick the events you want as Cairn activities — the rest stay where they are.
+            Tick the events you want as Portal activities — the rest stay where they are.
           </p>
 
           ${!this._started
@@ -402,7 +402,7 @@ export class ImportCalendarModal extends LitElement {
                   <p class="intro-lede">
                     We'll pull the next <strong>90 days</strong> from your
                     primary Google Calendar so you can pick which events
-                    become Cairn activities. Read-only — Cairn never edits
+                    become Portal activities. Read-only — Portal never edits
                     your calendar.
                   </p>
                   <div class="note">
@@ -463,7 +463,7 @@ export class ImportCalendarModal extends LitElement {
                           </div>
                         </div>
                         ${event._alreadyImported
-                          ? html`<span class="badge">In Cairn</span>`
+                          ? html`<span class="badge">In Portal</span>`
                           : ''}
                       </div>
                     `,
