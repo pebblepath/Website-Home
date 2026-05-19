@@ -4640,7 +4640,6 @@ They'll lose access to shared trips, celebrations and any read-only child access
     `}_renderLogin(){return s`
       <button class="back" @click=${()=>this._go("welcome")}>‹ Back</button>
       <h1 style="margin-top:6px;">Welcome back</h1>
-      <p class="lede">Sign in to pick up where you left off.</p>
       <div class="step">
         <div>
           <label>Email</label>
@@ -4682,7 +4681,6 @@ They'll lose access to shared trips, celebrations and any read-only child access
     `}_submitEmailAuth(){const e=(this._email??"").trim(),t=this._password??"";if(this._step==="register"){const i=(this._displayName??"").trim();if(!i){this.error="Please enter your name.";return}if(!e.includes("@")){this.error="That email doesn't look right.";return}if(t.length<6){this.error="Pick a password with at least 6 characters.";return}if(!this._consent){this.error="Please confirm you are 18+ and agree to the Terms and Privacy Policy.";return}this._runAuth(()=>nt(e,t,i))}else{if(!e||!t){this.error="Email and password are required.";return}this._runAuth(()=>ot(e,t))}}async _sendReset(){const e=(this._email??"").trim();if(!e){this.error="Enter your email first, then tap Forgot password.";return}this.busy=!0,this.error="";try{await lt(e),this._resetSent=!0}catch(t){this.error=this._humanizeAuthError(t)}finally{this.busy=!1}}_renderRegister(){const e=(this._displayName??"").trim().length>0&&(this._email??"").includes("@")&&(this._password??"").length>=6&&this._consent&&!this.busy;return s`
       <button class="back" @click=${()=>this._go("welcome")}>‹ Back</button>
       <h1 style="margin-top:6px;">Create your account</h1>
-      <p class="lede">You're a full member from the first tap.</p>
       <div class="step">
         <div>
           <label>Your name</label>
@@ -11015,4 +11013,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(bt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",bt);
-//# sourceMappingURL=index-C_l0N6aB.js.map
+//# sourceMappingURL=index-BkOX718y.js.map
