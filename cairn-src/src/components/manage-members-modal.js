@@ -29,6 +29,10 @@ export class ManageMembersModal extends LitElement {
     _newGroupName: { state: true },
     _editingGroupId: { state: true },
     _removingUid: { state: true },
+    _addingChild: { state: true },
+    _childName: { state: true },
+    _childDob: { state: true },
+    _savingChild: { state: true },
   };
 
   constructor() {
@@ -42,6 +46,55 @@ export class ManageMembersModal extends LitElement {
     this._newGroupName = '';
     this._editingGroupId = null;
     this._removingUid = null;
+    this._addingChild = false;
+    this._childName = '';
+    this._childDob = '';
+    this._savingChild = false;
+  }
+
+  _toggleAddChild() {
+    this._addingChild = !this._addingChild;
+    if (!this._addingChild) {
+      this._childName = '';
+      this._childDob = '';
+    }
+  }
+
+  async _saveChild() {
+    const name = (this._childName ?? '').trim();
+    if (!name || this._savingChild) return;
+    if (!this._childDob) {
+      toast("Add your child's date of birth.");
+      return;
+    }
+    const dob = new Date(`${this._childDob}T00:00:00`);
+    if (Number.isNaN(dob.getTime())) {
+      toast("That date of birth doesn't look right.");
+      return;
+    }
+    const fid = dataStore.familyId;
+    if (!fid) {
+      toast("Can't add a child — no family yet.");
+      return;
+    }
+    this._savingChild = true;
+    try {
+      await dataStore.createChild(fid, { name, dateOfBirth: dob });
+      toast(`${name} added.`);
+      this._childName = '';
+      this._childDob = '';
+      this._addingChild = false;
+    } catch (e) {
+      console.error('Add child failed:', e);
+      toast(
+        e?.code === 'permission-denied'
+          ? 'Only a parent in this family can add a child.'
+          : `Couldn't add the child: ${e?.message ?? 'try again'}`,
+        { duration: 5000 },
+      );
+    } finally {
+      this._savingChild = false;
+    }
   }
 
   static styles = css`
@@ -308,6 +361,19 @@ export class ManageMembersModal extends LitElement {
       display: flex;
       gap: 8px;
       margin-top: 10px;
+    }
+    .add-child-form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .add-child-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .add-child-actions glass-button {
+      flex: 1;
     }
   `;
 
@@ -613,6 +679,57 @@ export class ManageMembersModal extends LitElement {
                 </div>
               `
             : ''}
+
+          <h3>Children</h3>
+          ${this._addingChild
+            ? html`
+                <div class="add-child-form">
+                  <input
+                    class="new-group-input"
+                    type="text"
+                    placeholder="Child's name"
+                    .value=${this._childName}
+                    @input=${(e) => (this._childName = e.target.value)}
+                    @keydown=${(e) => {
+                      if (e.key === 'Enter') this._saveChild();
+                    }}
+                  />
+                  <input
+                    class="new-group-input"
+                    type="date"
+                    aria-label="Date of birth"
+                    .value=${this._childDob}
+                    @input=${(e) => (this._childDob = e.target.value)}
+                  />
+                  <div class="add-child-actions">
+                    <glass-button
+                      variant="primary"
+                      ?disabled=${this._savingChild ||
+                      !this._childName.trim() ||
+                      !this._childDob}
+                      @click=${this._saveChild}
+                    >
+                      ${this._savingChild ? 'Adding…' : 'Add child'}
+                    </glass-button>
+                    <glass-button
+                      variant="ghost"
+                      ?disabled=${this._savingChild}
+                      @click=${this._toggleAddChild}
+                    >
+                      Cancel
+                    </glass-button>
+                  </div>
+                </div>
+              `
+            : html`
+                <glass-button
+                  variant="ghost"
+                  full
+                  @click=${this._toggleAddChild}
+                >
+                  + Add a child
+                </glass-button>
+              `}
 
           <h3>Cairn invite code</h3>
           ${code && !codeExpired

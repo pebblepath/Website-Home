@@ -188,13 +188,18 @@ export class ChildOverview extends LitElement {
       content: '';
       position: absolute;
       inset: 0;
-      background: var(--wm) center / cover no-repeat;
+      /* 100% auto (was cover + scale 1.06) — the card is wide & short,
+         so cover zoomed hard into a tiny crop on desktop. Sizing to
+         full card WIDTH at the image's natural aspect shows the whole
+         horizontal scene (much more of the original image); the short
+         card just trims top/bottom. Scale removed (was pure extra
+         zoom). */
+      background: var(--wm) center / 100% auto no-repeat;
       opacity: 0.15;
       /* Blur the watermark itself (cheap filter, no backdrop
          compositing) — same softened look as the iOS card's
          backdrop-blur but without the heavy stacked-blur cost. */
       filter: blur(2px);
-      transform: scale(1.06);
       z-index: 0;
       pointer-events: none;
     }
@@ -623,6 +628,32 @@ export class ChildOverview extends LitElement {
       line-height: 1.55;
       padding: 6px 0;
     }
+    /* Growth-insights empty state — was a bare sentence stranded at
+       the top-left of a tall panel. Centered column + icon + bounded
+       text so it reads as a deliberate "coming soon" card. */
+    .insights-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 12px;
+      min-height: 168px;
+      padding: 28px 24px;
+    }
+    .insights-empty svg {
+      width: 30px;
+      height: 30px;
+      color: var(--teal-pebble);
+      opacity: 0.65;
+    }
+    .insights-empty p {
+      margin: 0;
+      max-width: 320px;
+      color: var(--text-secondary);
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
   `;
 
   _domainStats(key) {
@@ -911,9 +942,26 @@ export class ChildOverview extends LitElement {
           <div>
             <div class="section-head"><h2>Growth insights</h2></div>
             ${insights.length === 0
-              ? html`<div class="panel empty">
-                  Pebble is still learning about ${child.name} — insights
-                  appear as more milestones are logged in the app.
+              ? html`<div class="panel insights-empty">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15l-1.9-4.1L5.5 9l4.6-1.4L12 3z"
+                    />
+                    <path d="M18 14l.9 2.2L21 17l-2.1.8L18 20l-.9-2.2L15 17l2.1-.8L18 14z" />
+                  </svg>
+                  <p>
+                    Pebble is still learning about ${child.name} — growth
+                    insights appear here as more milestones are logged in
+                    the app.
+                  </p>
                 </div>`
               : html`<div class="insight-stack">
                   ${insights.map(

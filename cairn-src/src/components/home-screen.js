@@ -3081,7 +3081,7 @@ export class HomeScreen extends LitElement {
                         <path d="M14 8v6l4 2.5" fill="none" stroke="url(#es-grad)" stroke-width="2" stroke-linecap="round" />
                       </svg>
                     </div>
-                    <div class="empty-title">A blank calendar — full of room.</div>
+                    <div class="empty-title">Let's plan something fun.</div>
                     <div class="empty-sub">
                       Plan a trip, weekend, or outing — or pull what's already
                       in your Google Calendar.
