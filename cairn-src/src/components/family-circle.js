@@ -46,10 +46,14 @@ export class FamilyCircle extends LitElement {
       display: block;
     }
     /* 15% shorter than wide — trims the dead space above/below the
-       rings. The circle itself stays full-size: the square `.disc`
+       rings. The circle itself stays full-size: the square .disc
        (sized by WIDTH) holds the rings/avatars and is centred in
        the shorter stage, overflowing symmetrically into the
-       surrounding glass-panel padding (overflow visible). */
+       surrounding glass-panel padding (overflow visible).
+       IMPORTANT — do not use backticks anywhere inside this css
+       template, not even in comments: JS parses the template as
+       text and a backtick terminates it (broke the Portal once
+       2026-05-19; see flat-family-model-plan.md). */
     .stage {
       position: relative;
       width: 100%;
