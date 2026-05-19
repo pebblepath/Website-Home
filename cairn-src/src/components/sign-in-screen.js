@@ -32,6 +32,10 @@ export class SignInScreen extends LitElement {
       justify-content: center;
       min-height: 100vh;
       padding: 24px;
+      /* Brand typography parity (matches register-screen + iOS):
+         whole screen defaults to the PebblePath body font (Inter);
+         the h1 below uses Nunito. */
+      font-family: var(--font-body);
     }
     .wrap {
       width: 100%;
@@ -120,7 +124,9 @@ export class SignInScreen extends LitElement {
     }
 
     h1 {
-      font-family: var(--font-display);
+      /* Nunito — PebblePath brand heading font (was --font-display =
+         Bricolage Grotesque, the Portal/Cairn display font). */
+      font-family: var(--font-nunito);
       font-size: clamp(28px, 4.5vw, 38px);
       line-height: 1.15;
       letter-spacing: -0.02em;
@@ -408,8 +414,8 @@ export class SignInScreen extends LitElement {
               ${this.busy
                 ? 'Signing in…'
                 : this._codeInputOpen && this._code.trim()
-                ? 'Continue with Google & join'
-                : 'Continue with Google'}
+                ? 'Sign in with Google & join'
+                : 'Sign in with Google'}
             </button>
           </div>
           ${!this.joinCode

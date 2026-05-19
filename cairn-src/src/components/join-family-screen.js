@@ -183,6 +183,9 @@ export class JoinFamilyScreen extends LitElement {
       justify-content: center;
       min-height: 100vh;
       padding: 24px;
+      /* Brand typography parity (matches register/sign-in + iOS):
+         body defaults to Inter; headings below use Nunito. */
+      font-family: var(--font-body);
     }
     .wrap {
       width: 100%;
@@ -206,7 +209,7 @@ export class JoinFamilyScreen extends LitElement {
       text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
     }
     h1 {
-      font-family: var(--font-display);
+      font-family: var(--font-nunito);
       font-size: clamp(26px, 4vw, 34px);
       line-height: 1.15;
       letter-spacing: -0.02em;
@@ -222,7 +225,7 @@ export class JoinFamilyScreen extends LitElement {
       padding: 14px 0 22px;
     }
     .family-name {
-      font-family: var(--font-display);
+      font-family: var(--font-nunito);
       font-size: 22px;
       font-weight: 600;
       letter-spacing: -0.015em;
@@ -308,7 +311,7 @@ export class JoinFamilyScreen extends LitElement {
       border: 1px solid var(--glass-border);
       border-radius: var(--radius-tile);
       cursor: pointer;
-      font-family: var(--font-display);
+      font-family: var(--font-nunito);
       font-weight: 600;
       font-size: 15.5px;
       color: var(--text-primary);
