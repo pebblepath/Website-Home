@@ -12,30 +12,47 @@ import './glass-button.js';
 import './cairn-mark.js';
 
 /**
- * Phase-2 pre-auth registration landing — replaces the simpler sign-in
- * screen with a 3-card "what do you want to do?" menu before the user
- * authenticates. Each card expands into a focused sub-flow:
+ * Flat-family Phase 3 P3-6 (2026-05-19) — pre-auth registration
+ * LITERAL-MIRROR of the iOS pre-auth flow (Thomas, AskUserQuestion
+ * 2026-05-19: chose B "literal iOS-mirror rebuild" for the
+ * registration surface; this refines the otherwise-functional parity
+ * bar for THIS surface specifically). The old Cairn-era 3-card
+ * chooser (Sign in / Join CAIRN-XXXX / Create-on-Cairn) is replaced
+ * by iOS's three steps:
  *
- *   1. Existing account → email/password + Apple + Google (PP users
- *      land directly on the dashboard since their familyId is already
- *      set; brand-new accounts created here drop into the post-auth
- *      wizard if no family pointer exists yet).
- *   2. New family → captures family name pre-auth, signs in, then
- *      `createCairnOnlyFamily` runs via the same path the post-auth
- *      wizard uses.
- *   3. Join with code → CAIRN-XXXX input, sign in, falls through to
- *      `join-family-screen` via the existing localStorage handoff.
+ *   welcome  → iOS WelcomeView   : two CTAs, Register / Login.
+ *   register → iOS CreateAccountView : Name · Email · Password(6+) ·
+ *              18+/Terms+Privacy consent (GATES submit) · Create
+ *              account · Apple · Google.
+ *   login    → iOS SignInView    : Email · Password · Forgot
+ *              password · Sign in · Apple · Google.
  *
- * Auth providers (email, Google, Apple) live on every card so users
- * can pick the method that matches their existing PP credentials.
+ * Email/password is now FIRST-CLASS on BOTH register and login
+ * alongside Apple/Google (the old Create/Join cards offered NO
+ * email/password — the parity gap Thomas caught in smoke test).
  *
- * Events emitted to app-shell:
- *   pending-create — { detail: { familyName } } — stash the family
- *     name on localStorage so app-shell can run createCairnOnlyFamily
- *     after auth completes.
+ * Register does NOT pre-stash a family name anymore. Like iOS, you
+ * authenticate FIRST; the post-auth onboarding-wizard (the P3-5
+ * "Do you have children?" branch + family create/join) owns family
+ * + child setup. This is REQUIRED by the literal mirror and also
+ * fixes the P3-5 bypass (the old pre-stash → createCairnOnlyFamily
+ * skipped the new children branch entirely).
+ *
+ * Visual identity: Portal KEEPS its own dusk-glass + stone-mark
+ * chrome (the brand block in render() is byte-unchanged) — "literal"
+ * means flow/steps/fields/methods literal, NOT a visual reskin to
+ * the iOS app's look. Locked: feedback_portal_keeps_own_identity.md;
+ * design-sandbox/17 masthead ("two native skins").
+ *
+ * The standalone pre-auth "Join a family" card is REMOVED (iOS has
+ * none — joining is post-auth via the onboarding-wizard's join path,
+ * or a shared ?join= link → join-family-screen). A signed-out user
+ * who arrives via ?join= still works: the code is stashed to
+ * PENDING_JOIN_KEY and consumed post-auth (app-shell → join-family-
+ * screen), so the invite-link flow is preserved without a pre-auth
+ * join card.
  */
 
-const PENDING_CREATE_KEY = 'cairn:pendingCreateFamily';
 const PENDING_JOIN_KEY = 'cairn:pendingJoinCode';
 const PENDING_LOGIN_KEY = 'cairn:pendingLoginIntent';
 
@@ -44,17 +61,21 @@ export class RegisterScreen extends LitElement {
     error: { state: true },
     busy: { state: true },
     joinCode: { type: String },
-    /** 'choose' | 'login' | 'create' | 'join' */
+    /** P3-6 — 'welcome' | 'register' | 'login' (iOS-mirror steps;
+     *  replaced the old 'choose'|'login'|'create'|'join'). */
     _step: { state: true },
-    /** Which auth method the user picked inside a step. */
-    _authMode: { state: true },
     _email: { state: true },
     _password: { state: true },
-    _confirmPassword: { state: true },
     _displayName: { state: true },
-    _familyName: { state: true },
+    /** P3-6 — 18+/Terms+Privacy consent, mirrors iOS
+     *  CreateAccountView's LegalConsentRow; GATES the Create button. */
+    _consent: { state: true },
     _code: { state: true },
     _resetSent: { state: true },
+    /** P3-6 — set when a signed-out user arrived via ?join= so the
+     *  welcome step can show an "you've been invited" note (the code
+     *  itself is stashed to PENDING_JOIN_KEY for post-auth). */
+    _invited: { state: true },
   };
 
   constructor() {
@@ -62,22 +83,34 @@ export class RegisterScreen extends LitElement {
     this.error = '';
     this.busy = false;
     this.joinCode = '';
-    this._step = 'choose';
-    this._authMode = null;
+    this._step = 'welcome';
     this._email = '';
     this._password = '';
-    this._confirmPassword = '';
     this._displayName = '';
-    this._familyName = '';
+    this._consent = false;
     this._code = '';
     this._resetSent = false;
+    this._invited = false;
   }
 
   willUpdate(changed) {
-    if (changed.has('joinCode') && this.joinCode && this._step === 'choose') {
-      // Landed via ?join=URL — drop the user straight on the join card.
-      this._code = this.joinCode;
-      this._step = 'join';
+    if (changed.has('joinCode') && this.joinCode && !this._invited) {
+      // P3-6 — signed-out user arrived via a shared ?join= invite
+      // link. There is no pre-auth join card anymore (iOS has none).
+      // Stash the code to PENDING_JOIN_KEY so app-shell routes them
+      // to join-family-screen AFTER they register/sign in (the
+      // existing post-auth handoff), and flag `_invited` so the
+      // welcome step can show a gentle "you've been invited" note.
+      // Pass the code through as-is (2C unified it to a plain 6-char
+      // code; the dual-accept lookup handles legacy CAIRN- too — do
+      // NOT re-prefix).
+      try {
+        localStorage.setItem(
+          PENDING_JOIN_KEY,
+          (this.joinCode ?? '').trim().toUpperCase(),
+        );
+      } catch { /* private mode */ }
+      this._invited = true;
     }
   }
 
@@ -373,6 +406,36 @@ export class RegisterScreen extends LitElement {
     .actions { display: flex; gap: 10px; margin-top: 4px; }
     .actions glass-button { flex: 1; }
 
+    /* P3-6 — 18+/Terms+Privacy consent row (gates Create). Scoped
+       resets so the global full-width input rule doesn't stretch the
+       checkbox. Mirrors iOS CreateAccountView's LegalConsentRow. */
+    .consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 4px 0 2px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+    .consent input[type='checkbox'] {
+      width: 18px;
+      min-width: 18px;
+      height: 18px;
+      min-height: 18px;
+      margin: 1px 0 0;
+      padding: 0;
+      accent-color: var(--teal-pebble);
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+    .consent a {
+      color: var(--teal-pebble);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
     .error {
       color: var(--rose-soft);
       font-size: 13px;
@@ -410,21 +473,9 @@ export class RegisterScreen extends LitElement {
 
   // ─── Inline icons ──────────────────────────────────────────────────
 
-  _iconLogin() {
-    return html`<svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zM20 19h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/>
-    </svg>`;
-  }
-  _iconCreate() {
-    return html`<svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4zm0 4.7l1.6 3.2 3.6.5-2.6 2.5.6 3.5L12 14.7l-3.2 1.7.6-3.5-2.6-2.5 3.6-.5L12 6.7z"/>
-    </svg>`;
-  }
-  _iconJoin() {
-    return html`<svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M16 11c1.66 0 3-1.34 3-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-    </svg>`;
-  }
+  // P3-6 — _iconLogin/_iconCreate/_iconJoin removed: they were the
+  // old 3-card chooser icons; the iOS-mirror welcome step uses plain
+  // CTAs, not iconned cards. _iconGoogle/_iconApple stay (providers).
   _iconGoogle() {
     return html`<svg viewBox="0 0 48 48" aria-hidden="true">
       <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.65 4.65-6.08 8-11.3 8-6.63 0-12-5.37-12-12s5.37-12 12-12c3.06 0 5.84 1.15 7.96 3.04l5.66-5.66C34.05 6.05 29.27 4 24 4 12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20c0-1.34-.14-2.65-.4-3.5z"/>
@@ -444,13 +495,12 @@ export class RegisterScreen extends LitElement {
   _go(step) {
     this._step = step;
     this.error = '';
-    this._authMode = null;
     this._resetSent = false;
-    // Stash intent so app-shell can tailor the post-auth wizard heading
-    // if the user lands without a family pointer. Cleared by the wizard
-    // (or app-shell) once consumed. Only stash for the Login card —
-    // Create/Join already have their own stashes (PENDING_CREATE_KEY,
-    // PENDING_JOIN_KEY) that get consumed when the auth completes.
+    // Stash login-intent so app-shell can tailor the post-auth
+    // onboarding-wizard heading ("we couldn't find your family"
+    // recovery copy) when a returning user signs in but has no
+    // family pointer. Register clears it (a brand-new account is
+    // the "welcome" flavour, not "recovery").
     try {
       if (step === 'login') {
         localStorage.setItem(PENDING_LOGIN_KEY, '1');
@@ -491,26 +541,12 @@ export class RegisterScreen extends LitElement {
     return e?.message ?? 'Sign-in failed. Try again.';
   }
 
-  _stashCreateIntent() {
-    const name = (this._familyName ?? '').trim();
-    if (!name) return false;
-    try {
-      localStorage.setItem(PENDING_CREATE_KEY, name);
-    } catch { /* private mode */ }
-    return true;
-  }
-
-  _stashJoinIntent() {
-    const raw = (this._code ?? '').trim().toUpperCase();
-    if (!raw) return false;
-    const normalized = raw.startsWith('CAIRN-')
-      ? raw
-      : `CAIRN-${raw.replace(/^CAIRN-?/i, '')}`;
-    try {
-      localStorage.setItem(PENDING_JOIN_KEY, normalized);
-    } catch { /* private mode */ }
-    return true;
-  }
+  // P3-6 — _stashCreateIntent removed: Register no longer captures a
+  // family name pre-auth (family + children are post-auth via the
+  // P3-5 onboarding-wizard, mirroring iOS). _stashJoinIntent removed:
+  // the pre-auth join card is gone; willUpdate() now stashes a
+  // ?join= code to PENDING_JOIN_KEY directly (un-prefixed — 2C
+  // unified the code; dual-accept handles legacy CAIRN-).
 
   // ─── Render ───────────────────────────────────────────────────────
 
@@ -532,10 +568,9 @@ export class RegisterScreen extends LitElement {
           <div class="companion">PebblePath companion</div>
         </div>
         <glass-panel padding="lg" lifted variant="strong">
-          ${this._step === 'choose' ? this._renderChoose() : ''}
+          ${this._step === 'welcome' ? this._renderWelcome() : ''}
+          ${this._step === 'register' ? this._renderRegister() : ''}
           ${this._step === 'login' ? this._renderLogin() : ''}
-          ${this._step === 'create' ? this._renderCreate() : ''}
-          ${this._step === 'join' ? this._renderJoin() : ''}
           ${!isConfigured ? this._renderConfigHint() : ''}
         </glass-panel>
         <div class="footnote">Beta Version</div>
@@ -543,32 +578,36 @@ export class RegisterScreen extends LitElement {
     `;
   }
 
-  _renderChoose() {
+  // P3-6 — iOS WelcomeView mirror: brand chrome (in render()) +
+  // two CTAs (Register / Login). No Cairn 3-card chooser, no
+  // pre-auth Join card.
+  _renderWelcome() {
     return html`
-      <h1>Family Activity Portal</h1>
-      <p class="lede">Visiting or Returning from PebblePath?</p>
-      <div class="cards">
-        <button class="card" @click=${() => this._go('login')}>
-          <span class="icon-cell tide" aria-hidden="true">${this._iconLogin()}</span>
-          <span>
-            <div class="label">Sign in</div>
-            <div class="desc">For accounts already connected to a family.</div>
-          </span>
-        </button>
-        <button class="card" @click=${() => this._go('join')}>
-          <span class="icon-cell amber" aria-hidden="true">${this._iconJoin()}</span>
-          <span>
-            <div class="label">Join an existing family</div>
-            <div class="desc">Paste your CAIRN-XXXX invite code.</div>
-          </span>
-        </button>
-        <button class="card" @click=${() => this._go('create')}>
-          <span class="icon-cell sage" aria-hidden="true">${this._iconCreate()}</span>
-          <span>
-            <div class="label">Create my own account</div>
-            <div class="desc">Start a new family planner on Cairn.</div>
-          </span>
-        </button>
+      <h1>Your family's path, together.</h1>
+      <p class="lede">
+        ${this._invited
+          ? "You've been invited to a family — register or sign in to join."
+          : 'One shared space for the whole family.'}
+      </p>
+      <div class="step">
+        <div class="actions">
+          <glass-button
+            variant="primary"
+            ?disabled=${this.busy}
+            @click=${() => this._go('register')}
+          >
+            Register
+          </glass-button>
+        </div>
+        <div class="actions">
+          <glass-button
+            variant="ghost"
+            ?disabled=${this.busy}
+            @click=${() => this._go('login')}
+          >
+            I already have an account
+          </glass-button>
+        </div>
       </div>
     `;
   }
@@ -596,39 +635,15 @@ export class RegisterScreen extends LitElement {
     `;
   }
 
+  // P3-6 — iOS SignInView mirror (de-toggled: Login is its own step
+  // now, not an _authMode toggle of a shared form). Email · Password
+  // · Forgot password · Sign in · Apple · Google.
   _renderLogin() {
-    const isSignUp = this._authMode === 'signup';
     return html`
-      <button class="back" @click=${() => this._go('choose')}>‹ Back</button>
-      <h1 style="margin-top:6px;">${isSignUp ? 'Create your account' : 'Welcome back'}</h1>
-      <p class="lede">
-        ${isSignUp
-          ? 'Pick the method you want for sign-in next time.'
-          : 'Sign in with the same method you used on PebblePath.'}
-      </p>
-      ${this._renderProviders({
-        google: () =>
-          this._runAuth(() => signIn()),
-        apple: () =>
-          this._runAuth(() => signInWithApple()),
-        busyText: 'Signing in…',
-      })}
-      <div class="or">or use email</div>
+      <button class="back" @click=${() => this._go('welcome')}>‹ Back</button>
+      <h1 style="margin-top:6px;">Welcome back</h1>
+      <p class="lede">Sign in to pick up where you left off.</p>
       <div class="step">
-        ${isSignUp
-          ? html`
-              <div>
-                <label>Your name</label>
-                <input
-                  type="text"
-                  placeholder="First Last"
-                  .value=${this._displayName}
-                  @input=${(e) => (this._displayName = e.target.value)}
-                  autocomplete="name"
-                />
-              </div>
-            `
-          : ''}
         <div>
           <label>Email</label>
           <input
@@ -643,10 +658,10 @@ export class RegisterScreen extends LitElement {
           <label>Password</label>
           <input
             type="password"
-            placeholder="At least 6 characters"
+            placeholder="Your password"
             .value=${this._password}
             @input=${(e) => (this._password = e.target.value)}
-            autocomplete=${isSignUp ? 'new-password' : 'current-password'}
+            autocomplete="current-password"
             @keydown=${(e) => {
               if (e.key === 'Enter' && !this.busy) {
                 e.preventDefault();
@@ -654,6 +669,9 @@ export class RegisterScreen extends LitElement {
               }
             }}
           />
+        </div>
+        <div class="toggle-row">
+          <button @click=${this._sendReset}>Forgot password?</button>
         </div>
         ${this.error ? html`<div class="error">${this.error}</div>` : ''}
         ${this._resetSent
@@ -665,48 +683,45 @@ export class RegisterScreen extends LitElement {
             ?disabled=${this.busy}
             @click=${this._submitEmailAuth}
           >
-            ${this.busy
-              ? isSignUp
-                ? 'Creating…'
-                : 'Signing in…'
-              : isSignUp
-              ? 'Create account'
-              : 'Sign in'}
+            ${this.busy ? 'Signing in…' : 'Sign in'}
           </glass-button>
         </div>
+        ${this._renderProviders({
+          google: () => this._runAuth(() => signIn()),
+          apple: () => this._runAuth(() => signInWithApple()),
+          busyText: 'Signing in…',
+        })}
         <div class="toggle-row">
-          ${isSignUp
-            ? html`
-                <span>Already have an account?</span>
-                <button @click=${() => { this._authMode = null; this.error = ''; }}>
-                  Sign in
-                </button>
-              `
-            : html`
-                <button @click=${this._sendReset}>Forgot password?</button>
-                <span>·</span>
-                <button @click=${() => { this._authMode = 'signup'; this.error = ''; }}>
-                  Create account
-                </button>
-              `}
+          <span>New here?</span>
+          <button @click=${() => this._go('register')}>Create an account</button>
         </div>
       </div>
     `;
   }
 
+  // P3-6 — branches on the step (register/login are now distinct
+  // steps, not an _authMode toggle). Register mirrors iOS
+  // CreateAccountView.canSubmit exactly: name + email@ + pw≥6 +
+  // consent. Login mirrors SignInView: email + password (no length
+  // gate — same as iOS).
   _submitEmailAuth() {
-    const isSignUp = this._authMode === 'signup';
     const email = (this._email ?? '').trim();
     const pw = this._password ?? '';
-    if (!email || !pw) {
-      this.error = 'Email and password are required.';
-      return;
-    }
-    if (isSignUp) {
-      this._runAuth(() =>
-        signUpWithEmail(email, pw, (this._displayName ?? '').trim()),
-      );
+    if (this._step === 'register') {
+      const name = (this._displayName ?? '').trim();
+      if (!name) { this.error = 'Please enter your name.'; return; }
+      if (!email.includes('@')) { this.error = "That email doesn't look right."; return; }
+      if (pw.length < 6) { this.error = 'Pick a password with at least 6 characters.'; return; }
+      if (!this._consent) {
+        this.error = 'Please confirm you are 18+ and agree to the Terms and Privacy Policy.';
+        return;
+      }
+      this._runAuth(() => signUpWithEmail(email, pw, name));
     } else {
+      if (!email || !pw) {
+        this.error = 'Email and password are required.';
+        return;
+      }
       this._runAuth(() => signInWithEmail(email, pw));
     }
   }
@@ -729,86 +744,102 @@ export class RegisterScreen extends LitElement {
     }
   }
 
-  _renderCreate() {
+  // P3-6 — iOS CreateAccountView mirror: Name · Email · Password(6+)
+  // · 18+/Terms+Privacy consent (GATES Create) · Create account ·
+  // Apple · Google. No family-name capture here — family + children
+  // are post-auth via the P3-5 onboarding-wizard (mirrors iOS:
+  // authenticate first, onboarding after). The Create button is
+  // disabled until the same conditions iOS canSubmit enforces.
+  _renderRegister() {
+    const canSubmit =
+      (this._displayName ?? '').trim().length > 0 &&
+      (this._email ?? '').includes('@') &&
+      (this._password ?? '').length >= 6 &&
+      this._consent &&
+      !this.busy;
     return html`
-      <button class="back" @click=${() => this._go('choose')}>‹ Back</button>
-      <h1 style="margin-top:6px;">Start a new family</h1>
-      <p class="lede">
-        Name your family — you can rename it later and invite others
-        as soon as you're in.
-      </p>
+      <button class="back" @click=${() => this._go('welcome')}>‹ Back</button>
+      <h1 style="margin-top:6px;">Create your account</h1>
+      <p class="lede">You're a full member from the first tap.</p>
       <div class="step">
         <div>
-          <label>Family name</label>
+          <label>Your name</label>
           <input
             type="text"
-            placeholder="The Paris Family"
-            .value=${this._familyName}
-            @input=${(e) => (this._familyName = e.target.value)}
-            maxlength="64"
+            placeholder="First Last"
+            .value=${this._displayName}
+            @input=${(e) => (this._displayName = e.target.value)}
+            autocomplete="name"
           />
         </div>
+        <div>
+          <label>Email</label>
+          <input
+            type="email"
+            placeholder="you@example.com"
+            .value=${this._email}
+            @input=${(e) => (this._email = e.target.value)}
+            autocomplete="email"
+          />
+        </div>
+        <div>
+          <label>Password</label>
+          <input
+            type="password"
+            placeholder="At least 6 characters"
+            .value=${this._password}
+            @input=${(e) => (this._password = e.target.value)}
+            autocomplete="new-password"
+            @keydown=${(e) => {
+              if (e.key === 'Enter' && !this.busy) {
+                e.preventDefault();
+                this._submitEmailAuth();
+              }
+            }}
+          />
+        </div>
+        <label class="consent">
+          <input
+            type="checkbox"
+            .checked=${this._consent}
+            @change=${(e) => (this._consent = e.target.checked)}
+          />
+          <span>
+            I'm 18 or older and agree to the
+            <a
+              href="https://pebblepath.ai/terms"
+              target="_blank"
+              rel="noopener noreferrer"
+            >Terms</a>
+            and
+            <a
+              href="https://pebblepath.ai/privacy"
+              target="_blank"
+              rel="noopener noreferrer"
+            >Privacy Policy</a>.
+          </span>
+        </label>
         ${this.error ? html`<div class="error">${this.error}</div>` : ''}
-        <p style="font-size:12.5px;color:var(--teal-pebble);opacity:0.82;margin:6px 0 0;">
-          Continue with a sign-in method — we'll create the family right
-          after.
-        </p>
+        <div class="actions">
+          <glass-button
+            variant="primary"
+            ?disabled=${!canSubmit}
+            @click=${this._submitEmailAuth}
+          >
+            ${this.busy ? 'Creating account…' : 'Create account'}
+          </glass-button>
+        </div>
         ${this._renderProviders({
-          google: () => this._continueCreate(() => signIn()),
-          apple: () => this._continueCreate(() => signInWithApple()),
+          google: () => this._runAuth(() => signIn()),
+          apple: () => this._runAuth(() => signInWithApple()),
           busyText: 'Creating…',
         })}
-      </div>
-    `;
-  }
-
-  _continueCreate(authFn) {
-    if (!this._stashCreateIntent()) {
-      this.error = 'Give your family a name first.';
-      return;
-    }
-    this._runAuth(authFn);
-  }
-
-  _renderJoin() {
-    return html`
-      <button class="back" @click=${() => this._go('choose')}>‹ Back</button>
-      <h1 style="margin-top:6px;">Join a family</h1>
-      <p class="lede">
-        Paste the code you were sent. Codes look like
-        <strong>CAIRN-XXXX</strong>.
-      </p>
-      <div class="step">
-        <div>
-          <label>Family code</label>
-          <input
-            class="code"
-            type="text"
-            placeholder="CAIRN-XXXX"
-            .value=${this._code}
-            @input=${(e) => (this._code = e.target.value)}
-            autocapitalize="characters"
-            autocomplete="off"
-            spellcheck="false"
-            maxlength="14"
-          />
+        <div class="toggle-row">
+          <span>Already have an account?</span>
+          <button @click=${() => this._go('login')}>Sign in</button>
         </div>
-        ${this.error ? html`<div class="error">${this.error}</div>` : ''}
-        ${this._renderProviders({
-          google: () => this._continueJoin(() => signIn()),
-          apple: () => this._continueJoin(() => signInWithApple()),
-          busyText: 'Joining…',
-        })}
       </div>
     `;
-  }
-
-  _continueJoin(authFn) {
-    if (!this._stashJoinIntent()) {
-      this.error = 'Paste your CAIRN-XXXX code first.';
-      return;
-    }
-    this._runAuth(authFn);
   }
 
   _renderConfigHint() {
