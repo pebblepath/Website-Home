@@ -602,7 +602,7 @@ export class ManageMembersModal extends LitElement {
                         ${m.role === 'self'
                           ? 'You'
                           : m.role === 'co-parent'
-                          ? 'Co-parent (PebblePath)'
+                          ? 'Co-parent'
                           : m.role === 'child'
                           ? 'Child'
                           : 'Family'}
@@ -619,13 +619,15 @@ export class ManageMembersModal extends LitElement {
                 They can see trips and celebrations but not PebblePath child data.
               </div>`
             : this.extended.map((m) => {
-                // PP co-parents + children belong here for non-PP viewers
-                // (see deriveExtendedMembers). They aren't private
-                // labels the viewer assigns — render the role as plain
-                // text and skip the remove affordance for them.
+                // Co-parents belong here for non-parent viewers (see
+                // deriveExtendedMembers). They aren't private labels the
+                // viewer assigns — render the role as plain text and
+                // skip the remove affordance for them. `child` is
+                // retained defensively even though non-parent viewers
+                // no longer see children through derivation.
                 const isFixedRole = m.role === 'co-parent' || m.role === 'child';
                 const fixedRoleLabel =
-                  m.role === 'co-parent' ? 'Co-parent (PebblePath)' : 'Child';
+                  m.role === 'co-parent' ? 'Co-parent' : 'Child';
                 return html`
                   <div class="member-row">
                     <member-chip

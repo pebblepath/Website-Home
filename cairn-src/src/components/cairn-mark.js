@@ -34,7 +34,7 @@ export class CairnMark extends LitElement {
         width=${s}
         height=${s}
         xmlns="http://www.w3.org/2000/svg"
-        aria-label="Cairn"
+        aria-label="Portal"
       >
         <defs>
           <linearGradient id="cm-stone-warm" x1="0" y1="0" x2="0" y2="1">

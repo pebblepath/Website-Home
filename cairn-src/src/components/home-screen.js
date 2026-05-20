@@ -2263,10 +2263,12 @@ export class HomeScreen extends LitElement {
   _liveExtended() {
     if (this.preview) return mockMembers.filter((m) => m.circles.includes('extended'));
     // Previously hard-coded to [] — that was the bug where joined
-    // extended members never appeared on the dashboard. Read the
-    // cairn ring from the family doc instead. `children` is consulted
-    // for non-PP viewers (a grandparent's My Connections includes the
-    // children of the family they're connected to).
+    // connection-ring members never appeared on the dashboard. Read
+    // the connection ring from the family doc instead. `children` is
+    // accepted by deriveExtendedMembers for signature stability but is
+    // not surfaced to non-parent viewers (children stay private to
+    // parents); see deriveExtendedMembers for the viewer-perspective
+    // rule.
     return deriveExtendedMembers(this.user?.uid, this.family, this.children);
   }
 
@@ -2393,17 +2395,17 @@ export class HomeScreen extends LitElement {
   /** Trip visibility resolver — decides whether the viewer should see
    *  this trip in their feed.
    *
-   *  PP family members (`memberIds`) see EVERY trip in their family
-   *  regardless of the visibility flag — they're the household; trips
-   *  scoped to "extended" or with no visibility set still belong to
-   *  them. This is also a safety net for legacy trips written before
-   *  the visibility field defaulted to 'family' in trip-form.
+   *  Parents (`memberIds`) see EVERY trip in their family regardless
+   *  of the visibility flag — they're the household; trips scoped to
+   *  "extended" or with no visibility set still belong to them. This
+   *  is also a safety net for legacy trips written before the
+   *  visibility field defaulted to 'family' in trip-form.
    *
-   *  Cairn-only members (in `cairnMemberIds` but not `memberIds`) see
+   *  Non-parent members (in `cairnMemberIds` but not `memberIds`) see
    *  trips where they're explicitly named (attendees / viewers) OR
    *  where visibility is `family` / `extended` — the whole point of
-   *  the Cairn ring is to share trips with extended family. Personal
-   *  trips stay creator-only.
+   *  the connection ring is to share trips beyond the parents.
+   *  Personal trips stay creator-only.
    */
   _userCanSeeTrip(trip) {
     const uid = this.user?.uid;
@@ -2413,16 +2415,16 @@ export class HomeScreen extends LitElement {
 
     const memberIds = this.family?.memberIds ?? [];
     const cairnIds = this.family?.cairnMemberIds ?? memberIds;
-    const isPPMember = memberIds.includes(uid);
-    const isCairnMember = cairnIds.includes(uid);
+    const isParent = memberIds.includes(uid);
+    const isConnectionMember = cairnIds.includes(uid);
 
-    // PP family members see everything in their family.
-    if (isPPMember) return true;
+    // Parents see everything in their family.
+    if (isParent) return true;
 
     // Outside the ring entirely: no read.
-    if (!isCairnMember) return false;
+    if (!isConnectionMember) return false;
 
-    // Cairn-only members: family + extended trips, with optional
+    // Non-parent members: family + extended trips, with optional
     // sub-group targeting for extended.
     const visibility = trip.visibility || 'family';
     if (visibility === 'personal') return false;
@@ -2556,11 +2558,11 @@ export class HomeScreen extends LitElement {
    * Render a cairn stone.
    *
    * Drop-target opt-in: pass `dropTargetId` ('extended' or a sub-group
-   * id) and the stone wires up dragover/drop so Cairn-only members can
+   * id) and the stone wires up dragover/drop so non-parent members can
    * be moved between rings by drag.
    *
    * Chip draggability: each chip is draggable when `draggable(member)`
-   * returns true (typically: Cairn-only members, not self, not PP-only).
+   * returns true (typically: non-parent members, not self, not parents).
    * dragstart writes `text/cairn-uid` to dataTransfer; that's what the
    * drop handler reads back.
    */
@@ -2861,7 +2863,7 @@ export class HomeScreen extends LitElement {
    *  parent-APPROVED childViewers (Thomas, 2026-05-17 — an approved
    *  viewer gets read-only child data AND full Pebble, same as
    *  parents; the `askPebbleAboutChild` CF + Firestore rules admit
-   *  childViewers). Cairn-only ring members with NO approval get NO
+   *  childViewers). Non-parent ring members with NO approval get NO
    *  Pebble — the tab is removed from the nav entirely (replaces the
    *  old activities-advisor fallback). Preview keeps it (mock=parent).
    */
@@ -3272,7 +3274,7 @@ export class HomeScreen extends LitElement {
       </glass-panel>`;
 
     if (!cd.hasPP || !cd.child) {
-      // Cairn-only / no PP child — greeting + activities glance only.
+      // Non-parent viewer / no child to surface — greeting + activities glance only.
       return html`
         ${this._renderTodayHeader(scope)}
         <section>${comingPanel}</section>
@@ -3878,7 +3880,7 @@ export class HomeScreen extends LitElement {
             class="brand-icon"
             src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
             srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
-            alt="Cairn"
+            alt="Portal"
             width="38"
             height="38"
           />

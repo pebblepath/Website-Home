@@ -100,7 +100,7 @@ class FamilyDataStore extends EventTarget {
       ppIsChildViewer: false,
       // The requester's own access-request doc { status } | null.
       myChildAccessRequest: null,
-      // PP members: pending requests awaiting approve/decline.
+      // parents: pending requests awaiting approve/decline.
       incomingChildRequests: [],
       ppChildren: [],
       selectedChildId: null,
@@ -157,7 +157,7 @@ class FamilyDataStore extends EventTarget {
       // the relative's family when they visit Cairn web. Without this
       // priority, a PP parent who joins a parent-in-law's Cairn ring would
       // silently keep loading their own family + see permission-denied on
-      // the joined family's trips. Users with only `familyId` (Cairn-only
+      // the joined family's trips. Users with only `familyId` (non-parent
       // for their own household) fall through to the PP pointer.
       const fid =
         this.state.user?.cairnFamilyId ?? this.state.user?.familyId ?? null;
@@ -485,7 +485,7 @@ class FamilyDataStore extends EventTarget {
    * Member gate: `ppIsMember` = the viewer is in this family's
    * `memberIds`. The Firestore rules already enforce parent-only
    * access to milestones/insights/dailyCards/pebbleMessages
-   * server-side (a Cairn-only joiner gets PERMISSION_DENIED). The
+   * server-side (a non-parent joiner gets PERMISSION_DENIED). The
    * client gate just decides whether to render the surface vs. the
    * parent-only empty state — it never relaxes a rule.
    */
@@ -506,7 +506,7 @@ class FamilyDataStore extends EventTarget {
             Array.isArray(fam.childViewers) &&
             fam.childViewers.includes(this._uid),
         );
-        // PP members see the pending access-request queue; a viewer
+        // parents see the pending access-request queue; a viewer
         // is dropped from childViewers if a parent later revokes —
         // reconcile so access deactivates live.
         if (isMember) this._subscribeIncomingRequests(ppFid);
@@ -561,7 +561,7 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
-   * Batch F — PP members listen to the pending child-access request
+   * Batch F — parents listen to the pending child-access request
    * queue. Rule restricts this collection's read to members (+ each
    * requester's own doc), so a non-member never reaches here.
    */
@@ -890,12 +890,12 @@ class FamilyDataStore extends EventTarget {
   // methods, are the trust boundary):
   //   • A request NEVER grants access. requestChildAccess only writes
   //     a `pending` doc.
-  //   • Only a PP member can approve; approval adds the uid to the
+  //   • Only a parent can approve; approval adds the uid to the
   //     family's `childViewers` (a read-only tier — milestones +
   //     insights only, never memberIds / Pebble / write).
   //   • The requester can neither self-approve (rule: status update
   //     is member-only) nor self-add to childViewers (rule: the
-  //     Cairn-only update branch forbids touching childViewers).
+  //     non-parent update branch forbids touching childViewers).
   // ───────────────────────────────────────────────────────────────
 
   /** Requester (extended-ring member, no own PP household) asks the
@@ -939,7 +939,7 @@ class FamilyDataStore extends EventTarget {
     });
   }
 
-  /** PP member approves: add the uid to `childViewers` (full-array
+  /** parent approves: add the uid to `childViewers` (full-array
    *  write — no arrayUnion import needed; last-write-wins is fine at
    *  this cadence) AND stamp the request approved. */
   async approveChildAccess(reqUid) {
@@ -966,7 +966,7 @@ class FamilyDataStore extends EventTarget {
     );
   }
 
-  /** PP member declines: stamp the request only — no grant. */
+  /** parent declines: stamp the request only — no grant. */
   async declineChildAccess(reqUid) {
     const fid = this._ppFamilyId;
     if (!fid || !this.state.ppIsMember) {
@@ -982,7 +982,7 @@ class FamilyDataStore extends EventTarget {
     );
   }
 
-  /** PP member revokes a previously-granted viewer: drop the uid
+  /** parent revokes a previously-granted viewer: drop the uid
    *  from `childViewers` (access deactivates live via the viewer's
    *  _reconcileChildViewer) + best-effort flip their request doc so
    *  it doesn't linger as approved. */
@@ -1421,7 +1421,7 @@ class FamilyDataStore extends EventTarget {
 
   /**
    * Phase 3B: edit a child's birthday from Cairn (since PP TestFlight
-   * doesn't yet have child-edit settings). Only PP family members can
+   * doesn't yet have child-edit settings). Only parents can
    * write per the existing `/children/` rules.
    */
   async updateChildBirthday(childId, dateOfBirth) {
@@ -1449,7 +1449,7 @@ class FamilyDataStore extends EventTarget {
    * Phase 2C Slice 1 (2026-05-18). Dual-accept connect-code lookup —
    * THE unified connect-code resolver. `cairnInviteCode` is the
    * unified field (2C-2): for a post-2C-2 family it holds the new
-   * 6-char code; for a pre-2C-2 Cairn-only family it still holds an
+   * 6-char code; for a pre-2C-2 non-parent family it still holds an
    * old `CAIRN-XXXX`; either way an exact-match query resolves it.
    * Checked FIRST. Then the legacy PP `inviteCode` (6-char) as the
    * back-compat fallback for pre-2C-2 PP families that only ever
@@ -1543,7 +1543,7 @@ class FamilyDataStore extends EventTarget {
 
     const cap = family.cairnMaxMembers ?? 20;
     if (beforeCairn.length >= cap) {
-      const err = new Error('This family\'s Cairn ring is full.');
+      const err = new Error('This family\'s connection ring is full.');
       err.code = 'full';
       throw err;
     }
@@ -1656,7 +1656,7 @@ class FamilyDataStore extends EventTarget {
    * So the strict `isJoiningOwnUidAsCairn` join rule is UNTOUCHED — no
    * firestore.rules change, no rule deploy for this slice.
    *
-   * Familyless / Cairn-only redeemer (no own family doc yet) → skipped;
+   * Familyless / non-parent redeemer (no own family doc yet) → skipped;
    * deferred to 2C account/family unification (consistent with the
    * "build on CAIRN now, unify in 2C" sequencing).
    */
@@ -1665,7 +1665,7 @@ class FamilyDataStore extends EventTarget {
       const { getDoc, arrayUnion } = await import('firebase/firestore');
       const meSnap = await getDoc(doc(db, 'users', uid));
       const myFamilyId = meSnap.exists() ? meSnap.data()?.familyId : null;
-      // No own family yet (Cairn-only / familyless) → defer to 2C.
+      // No own family yet (non-parent / familyless) → defer to 2C.
       // Can't connect a family to itself.
       if (!myFamilyId || myFamilyId === hostFamilyId) return;
       await updateDoc(doc(db, 'families', hostFamilyId), {
@@ -1745,10 +1745,10 @@ class FamilyDataStore extends EventTarget {
    * and pulls them from every sub-group — one atomic family-doc
    * write (the sub-collection request doc is a separate delete).
    *
-   * Scope guard: refuses to remove a PP member (anyone in
+   * Scope guard: refuses to remove a parent (anyone in
    * `memberIds`). Removing a co-parent is an account-level action,
    * not a "manage the ring" action — and the firestore.rules keep
-   * `createdBy` immutable regardless. Caller must be a PP member
+   * `createdBy` immutable regardless. Caller must be a parent
    * (the modal only surfaces the control to them); the member
    * update branch in firestore.rules allows mutating cairnMemberIds
    * + memberProfiles + childViewers + subGroups.
@@ -1759,7 +1759,7 @@ class FamilyDataStore extends EventTarget {
     const fam = this.state.family ?? {};
     const memberIds = Array.isArray(fam.memberIds) ? fam.memberIds : [];
     if (memberIds.includes(uid)) {
-      throw new Error('PP members can’t be removed from the ring here.');
+      throw new Error('parents can’t be removed from the ring here.');
     }
     const { deleteField } = await import('firebase/firestore');
     const patch = { updatedAt: serverTimestamp() };
@@ -1797,11 +1797,11 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
-   * Cairn-only family creation — used by the onboarding wizard when a
+   * non-parent family creation — used by the onboarding wizard when a
    * brand-new signed-in user picks "Start a new family" without an
    * invite code. Writes a family doc tagged `createdInApp: 'cairn'`
    * with the viewer in `cairnMemberIds` (NOT `memberIds`, since PP's
-   * /children/ + /milestones/ flows shouldn't activate for a Cairn-only
+   * /children/ + /milestones/ flows shouldn't activate for a non-parent
    * household). Generates the invite code so the user can immediately
    * invite extended family.
    *
@@ -1832,9 +1832,9 @@ class FamilyDataStore extends EventTarget {
       name,
       createdBy: uid,
       createdInApp: 'cairn',
-      // No PebblePath memberIds — this is a Cairn-only household.
+      // No parentIds — this is a non-parent household.
       // memberIds is intentionally an empty array so PP-side queries
-      // (children, milestones) treat this family as "no PP members
+      // (children, milestones) treat this family as "no parents
       // yet" rather than throwing on the missing field.
       memberIds: [],
       cairnMemberIds: [uid],
@@ -1935,7 +1935,7 @@ class FamilyDataStore extends EventTarget {
     const familyDoc = {
       name,
       createdBy: uid,
-      // C-i: the creator IS a PebblePath member (the only diff vs
+      // C-i: the creator IS a parent (the only diff vs
       // createCairnOnlyFamily that matters for child authoring).
       memberIds: [uid],
       // Also a first-class flat-ring member of their own family so
@@ -2230,7 +2230,7 @@ class FamilyDataStore extends EventTarget {
 
   /**
    * Phase 3A: generate or regenerate the Cairn invite code. Caller must be
-   * a PP member (rules enforce). 30-day expiry — extended-family invites
+   * a parent (rules enforce). 30-day expiry — extended-family invites
    * move on human time, not the 7-day co-parent timeline.
    */
   async regenerateCairnInviteCode() {
@@ -2307,55 +2307,61 @@ export function resolvePhoto(authUser, pebbleUser) {
 }
 
 /**
- * Phase 3A: extended-family members are anyone in `cairnMemberIds`
- * but NOT in `memberIds` (PP co-parents) and NOT the viewer themself.
- * Falls back to empty when the family hasn't been migrated yet.
+ * Connection-ring members — anyone in `cairnMemberIds` but NOT in
+ * `memberIds` (co-parents) and NOT the viewer themself. Falls back to
+ * empty when the family hasn't been migrated yet.
+ *
+ * Terminology: every account is the same kind of account. The only
+ * differentiator is whether the viewer is a *parent* of a child in
+ * this family — i.e. whether `uid` is in `family.memberIds`.
  *
  * Viewer perspective:
- *   - PP viewer (in memberIds): extended = cairn ring minus self minus
- *     PP co-parents (those render in immediate via deriveImmediateMembers).
- *   - Non-PP viewer (Cairn-only connection like a grandparent): extended
- *     = every OTHER human member of the family they're connected to —
- *     PP co-parents (from memberIds) AND other Cairn-only joiners (from
- *     cairnMemberIds), unioned and minus self. Children are NOT
- *     surfaced (they stay private to parents — no child permissions
- *     means a non-PP viewer never sees a child's name/photo through
- *     this derivation, regardless of what Firestore happens to return).
+ *   - Parent (uid in memberIds): My Connections = cairn ring minus
+ *     self minus co-parents (those render in My Family via
+ *     deriveImmediateMembers).
+ *   - Non-parent (the viewer is a connection — e.g. a grandparent):
+ *     My Connections = every OTHER human member of the family they're
+ *     connected to — co-parents (from memberIds) AND other non-parent
+ *     members (from cairnMemberIds), unioned and minus self. Children
+ *     are NOT surfaced (they stay private to parents — a non-parent
+ *     viewer never sees a child's name/photo through this derivation,
+ *     regardless of what Firestore happens to return on the wire).
  *
- * `children` is accepted for signature stability but unused — only PP
- * viewers see children, via deriveImmediateMembers.
+ * `children` is accepted for signature stability but unused — only
+ * parent viewers see children, via deriveImmediateMembers.
  */
 export function deriveExtendedMembers(uid, family, _children = []) {
   if (!family) return [];
   const memberIds = family.memberIds ?? [];
   const cairnIds = family.cairnMemberIds ?? family.memberIds ?? [];
   const profiles = family.memberProfiles ?? {};
-  const isPPViewer = memberIds.includes(uid);
-  // Non-PP viewers need the PP co-parents folded in — they sit in
-  // memberIds, NOT cairnMemberIds (PP parents never go through the
-  // Cairn join path). Union so Ellie/Thomas surface for Grandpa.
-  const ringIds = isPPViewer
+  const isParent = memberIds.includes(uid);
+  // Non-parent viewers need the co-parents folded in — they sit in
+  // memberIds, NOT cairnMemberIds (parents never go through the
+  // connection join path). Union so co-parents surface for a
+  // grandparent / friend / sibling.
+  const ringIds = isParent
     ? cairnIds
     : Array.from(new Set([...cairnIds, ...memberIds]));
   const out = [];
   let hue = 280;
   for (const otherUid of ringIds) {
     if (otherUid === uid) continue;
-    // PP viewer: skip their own co-parents (already in immediate).
-    // Non-PP viewer: keep them — they're the parents the viewer is
+    // Parent viewer: skip their own co-parents (already in My Family).
+    // Non-parent viewer: keep them — they're the parents the viewer is
     // connected to.
-    if (isPPViewer && memberIds.includes(otherUid)) continue;
+    if (isParent && memberIds.includes(otherUid)) continue;
     const profile = profiles[otherUid];
     const url = profile?.profilePhotoURL;
-    const otherIsPPMember = memberIds.includes(otherUid);
+    const otherIsParent = memberIds.includes(otherUid);
     out.push({
       uid: otherUid,
       displayName: profile?.displayName ?? 'Family',
       photoURL: typeof url === 'string' && /^https?:\/\//i.test(url) ? url : null,
-      // Preserve PP co-parent identity for non-PP viewers so the modal
-      // shows "Co-parent (PebblePath)" instead of an editable Connection
-      // pencil for someone who isn't actually their connection to label.
-      role: otherIsPPMember ? 'co-parent' : 'extended',
+      // Preserve co-parent identity for non-parent viewers so the modal
+      // shows "Co-parent" instead of an editable Connection pencil for
+      // someone who isn't actually their connection to label.
+      role: otherIsParent ? 'co-parent' : 'extended',
       circles: ['extended'],
       hue,
     });
@@ -2434,7 +2440,7 @@ export async function deriveConnectionMembers(uid, family) {
  * Slice 3 starts passing them). `cairnMemberIds` is KEPT in `extended`
  * for back-compat so existing ring-shared trips never vanish on
  * re-save; connections are ADDED, not a replacement.
- * The owner is always included so a Cairn-only creator (empty
+ * The owner is always included so a non-parent creator (empty
  * memberIds) never loses sight of their own trip. Recompute on every
  * save; `_backfillVisibleTo` populates legacy docs.
  *
@@ -2504,28 +2510,28 @@ export function newCairnInviteCode() {
 export function deriveImmediateMembers(uid, authUser, pebbleUser, family, children) {
   const out = [];
   const memberIds = new Set(family?.memberIds ?? []);
-  const isPPViewer = memberIds.has(uid);
+  const isParent = memberIds.has(uid);
   // Self always appears first — the dashboard renders the "Self" pebble
-  // for PP viewers and uses this entry for any "is this me?" check.
-  // For Cairn-only viewers (not in memberIds) the cairn-stack render
-  // skips the self pebble and surfaces the viewer in the Extended row
-  // instead; this entry is still useful for greetings, profile pills.
+  // for parent viewers and uses this entry for any "is this me?" check.
+  // For non-parent viewers (not in memberIds) the cairn-stack render
+  // skips the self pebble and surfaces the viewer in the Connections
+  // row instead; this entry is still useful for greetings, profile pills.
   out.push({
     uid,
     displayName: authUser?.displayName ?? pebbleUser?.displayName ?? 'You',
     photoURL: resolvePhoto(authUser, pebbleUser),
-    role: isPPViewer ? 'self' : 'self-extended',
+    role: isParent ? 'self' : 'self-extended',
     circles: ['immediate'],
     hue: 198,
   });
-  // Non-PP viewer (a Cairn-only connection like a grandparent): their
-  // "My family" stops at them. The Paris co-parents + Felix are NOT
-  // their immediate family — those people belong in My Connections,
+  // Non-parent viewer (a connection — e.g. a grandparent): their
+  // "My family" stops at them. The family's co-parents + children are
+  // NOT their immediate family — those people belong in My Connections,
   // surfaced via deriveExtendedMembers.
-  if (!isPPViewer) return out;
-  // memberProfiles includes Cairn joiners too (joinFamilyAsCairn writes
-  // an entry per joiner). Filter to PP `memberIds` only so the Family
-  // stone never surfaces extended-family members as "immediate".
+  if (!isParent) return out;
+  // memberProfiles includes non-parent joiners too (joinFamilyAsCairn
+  // writes an entry per joiner). Filter to `memberIds` only so the
+  // Family stone never surfaces non-parent members as immediate.
   const profiles = family?.memberProfiles ?? {};
   for (const [otherUid, profile] of Object.entries(profiles)) {
     if (otherUid === uid) continue;

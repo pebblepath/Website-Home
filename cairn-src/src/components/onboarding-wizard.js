@@ -397,7 +397,7 @@ export class OnboardingWizard extends LitElement {
   }
 
   // "No" outcome — byte-identical to the pre-P3-5b _submitCreate
-  // (the existing Cairn-only / family-coordinator path). "No" is a
+  // (the existing non-parent / family-coordinator path). "No" is a
   // first-class member, never a dead-end or a lesser tier.
   async _submitNoChildren() {
     const name = (this._familyName ?? '').trim();
@@ -669,8 +669,8 @@ export class OnboardingWizard extends LitElement {
 
   // P3-5b — the flat-family "Do you have children?" branch
   // (functional parity with iOS P3-4b; design-sandbox/17). The
-  // answer routes the family-create (C-i): Yes → PP-style family
-  // + child; No → the existing Cairn-only / family-coordinator
+  // answer routes the family-create (C-i): Yes → parent-style family
+  // + child; No → the existing non-parent / family-coordinator
   // family. "No" is a first-class member, never a lesser tier.
   _renderChildren() {
     return html`

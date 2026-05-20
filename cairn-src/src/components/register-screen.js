@@ -625,7 +625,7 @@ export class RegisterScreen extends LitElement {
               class="brand-icon"
               src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
               srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
-              alt="Cairn"
+              alt="Portal"
               width="56"
               height="56"
             />

@@ -344,7 +344,7 @@ export class JoinFamilyScreen extends LitElement {
             class="brand-icon"
             src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
             srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
-            alt="Cairn"
+            alt="Portal"
             width="44"
             height="44"
             style="border-radius:11px;display:block;box-shadow:0 4px 16px rgba(0,0,0,0.25);"
@@ -424,7 +424,7 @@ export class JoinFamilyScreen extends LitElement {
             class="brand-icon"
             src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
             srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
-            alt="Cairn"
+            alt="Portal"
             width="44"
             height="44"
             style="border-radius:11px;display:block;box-shadow:0 4px 16px rgba(0,0,0,0.25);"
