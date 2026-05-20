@@ -2315,24 +2315,35 @@ export function resolvePhoto(authUser, pebbleUser) {
  *   - PP viewer (in memberIds): extended = cairn ring minus self minus
  *     PP co-parents (those render in immediate via deriveImmediateMembers).
  *   - Non-PP viewer (Cairn-only connection like a grandparent): extended
- *     = everyone in the family they're connected to except themself —
- *     PP co-parents + children + other cairn-only members. That's the
- *     viewer's "My Connections", since their "My Family" is just them.
- *     `children` is optional and only consulted for non-PP viewers.
+ *     = every OTHER human member of the family they're connected to —
+ *     PP co-parents (from memberIds) AND other Cairn-only joiners (from
+ *     cairnMemberIds), unioned and minus self. Children are NOT
+ *     surfaced (they stay private to parents — no child permissions
+ *     means a non-PP viewer never sees a child's name/photo through
+ *     this derivation, regardless of what Firestore happens to return).
+ *
+ * `children` is accepted for signature stability but unused — only PP
+ * viewers see children, via deriveImmediateMembers.
  */
-export function deriveExtendedMembers(uid, family, children = []) {
+export function deriveExtendedMembers(uid, family, _children = []) {
   if (!family) return [];
-  const cairnIds = family.cairnMemberIds ?? family.memberIds ?? [];
   const memberIds = family.memberIds ?? [];
+  const cairnIds = family.cairnMemberIds ?? family.memberIds ?? [];
   const profiles = family.memberProfiles ?? {};
   const isPPViewer = memberIds.includes(uid);
+  // Non-PP viewers need the PP co-parents folded in — they sit in
+  // memberIds, NOT cairnMemberIds (PP parents never go through the
+  // Cairn join path). Union so Ellie/Thomas surface for Grandpa.
+  const ringIds = isPPViewer
+    ? cairnIds
+    : Array.from(new Set([...cairnIds, ...memberIds]));
   const out = [];
   let hue = 280;
-  // Cairn ring minus self. For PP viewers also skip their PP co-parents
-  // (already in immediate); for non-PP viewers KEEP them so the parents
-  // they're connected to appear under My Connections.
-  for (const otherUid of cairnIds) {
+  for (const otherUid of ringIds) {
     if (otherUid === uid) continue;
+    // PP viewer: skip their own co-parents (already in immediate).
+    // Non-PP viewer: keep them — they're the parents the viewer is
+    // connected to.
     if (isPPViewer && memberIds.includes(otherUid)) continue;
     const profile = profiles[otherUid];
     const url = profile?.profilePhotoURL;
@@ -2349,25 +2360,6 @@ export function deriveExtendedMembers(uid, family, children = []) {
       hue,
     });
     hue = (hue + 47) % 360;
-  }
-  // Children of the connected family surface here for non-PP viewers
-  // (e.g. a grandparent sees Felix in My Connections, not My Family).
-  // PP viewers' children render in immediate via deriveImmediateMembers.
-  if (!isPPViewer) {
-    let cHue = 142;
-    for (const child of children ?? []) {
-      const url = child.profilePhotoURL;
-      out.push({
-        uid: `child:${child.id}`,
-        displayName: child.name,
-        photoURL: typeof url === 'string' && /^https?:\/\//i.test(url) ? url : null,
-        role: 'child',
-        circles: ['extended'],
-        hue: cHue,
-        dateOfBirth: child.dateOfBirth,
-      });
-      cHue = (cHue + 58) % 360;
-    }
   }
   return out;
 }
