@@ -59,11 +59,11 @@ export class TripForm extends LitElement {
     _showOutboundDetails: { state: true },
     _showReturnDetails: { state: true },
     _showFlight: { state: true },
-    /** Per-leg lookup state: 'idle' | 'loading' | 'ok' | 'error' */
-    _outboundLookupState: { state: true },
-    _outboundLookupMessage: { state: true },
-    _returnLookupState: { state: true },
-    _returnLookupMessage: { state: true },
+    // Flight-lookup state removed 2026-05-20 — aviationstack
+    // free-tier coverage was too patchy to be useful; flight
+    // section is manual entry only. `lookupFlight` Cloud Function
+    // stays deployed but uninvoked. Re-add the state declarations
+    // when/if a paid aviation API replaces it.
   };
 
   constructor() {
@@ -89,86 +89,17 @@ export class TripForm extends LitElement {
     this._showOutboundDetails = false;
     this._showReturnDetails = false;
     this._showFlight = false;
-    this._outboundLookupState = 'idle';
-    this._outboundLookupMessage = '';
-    this._returnLookupState = 'idle';
-    this._returnLookupMessage = '';
-    this._lastLookedUpOutbound = '';
-    this._lastLookedUpReturn = '';
+    // (lookup-state instance vars removed 2026-05-20)
   }
 
-  /**
-   * Auto-fill flight details from a flight number via the `lookupFlight`
-   * Cloud Function. Triggered when the user leaves the flight-number
-   * field. Only overwrites empty fields so manual edits aren't clobbered.
-   * Leg is 'outbound' or 'return' — selects which set of draft fields
-   * to populate and which lookup-state to drive.
-   */
-  async _runFlightLookup(leg) {
-    const isReturn = leg === 'return';
-    const numKey = isReturn ? 'returnFlightNumber' : 'flightNumber';
-    const number = (this._draft[numKey] ?? '').trim();
-    if (!number) return;
-    const normalized = number.toUpperCase().replace(/[^A-Z0-9]/g, '');
-    if (!/^[A-Z]{2,3}\d{1,4}[A-Z]?$/.test(normalized)) {
-      this[isReturn ? '_returnLookupState' : '_outboundLookupState'] = 'idle';
-      return;
-    }
-    const lastKey = isReturn ? '_lastLookedUpReturn' : '_lastLookedUpOutbound';
-    const dateForLookup = isReturn ? this._draft.end : this._draft.start;
-    const cacheKey = `${normalized}|${dateForLookup ?? ''}`;
-    if (this[lastKey] === cacheKey) return;
-
-    const stateKey = isReturn ? '_returnLookupState' : '_outboundLookupState';
-    const msgKey = isReturn ? '_returnLookupMessage' : '_outboundLookupMessage';
-    this[stateKey] = 'loading';
-    this[msgKey] = '';
-    try {
-      const data = await dataStore.lookupFlight(normalized, dateForLookup);
-      if (!data) return;
-      this[lastKey] = cacheKey;
-      const airlineKey = isReturn ? 'returnFlightAirline' : 'flightAirline';
-      const dAirKey = isReturn ? 'returnFlightDepartAirport' : 'flightDepartAirport';
-      const aAirKey = isReturn ? 'returnFlightArriveAirport' : 'flightArriveAirport';
-      const dTimeKey = isReturn ? 'returnFlightDepartTime' : 'flightDepartTime';
-      const aTimeKey = isReturn ? 'returnFlightArriveTime' : 'flightArriveTime';
-      // datetime-local wants "YYYY-MM-DDTHH:mm" — slice the API's ISO.
-      const fmt = (iso) => (iso ? String(iso).slice(0, 16) : '');
-      const patch = {};
-      if (!this._draft[airlineKey] && data.airline) patch[airlineKey] = data.airline;
-      if (!this._draft[dAirKey] && data.depart?.iata) patch[dAirKey] = data.depart.iata;
-      if (!this._draft[aAirKey] && data.arrive?.iata) patch[aAirKey] = data.arrive.iata;
-      if (!this._draft[dTimeKey] && data.depart?.scheduledTime)
-        patch[dTimeKey] = fmt(data.depart.scheduledTime);
-      if (!this._draft[aTimeKey] && data.arrive?.scheduledTime)
-        patch[aTimeKey] = fmt(data.arrive.scheduledTime);
-      if (Object.keys(patch).length === 0) {
-        this[stateKey] = 'idle';
-        return;
-      }
-      this._draft = { ...this._draft, ...patch };
-      if (patch[dAirKey] || patch[aAirKey]) {
-        if (isReturn) this._showReturnDetails = true;
-        else this._showOutboundDetails = true;
-      }
-      this[stateKey] = 'ok';
-      this[msgKey] = `Filled from ${data.airline ?? 'flight record'}.`;
-    } catch (e) {
-      console.warn('Flight lookup failed:', e);
-      this[stateKey] = 'error';
-      if (e?.code === 'functions/failed-precondition') {
-        this[msgKey] = 'Auto-fill not configured — enter details manually.';
-      } else if (e?.code === 'functions/not-found') {
-        this[msgKey] = "Couldn't find that flight — enter details manually.";
-      } else if (e?.code === 'functions/invalid-argument') {
-        this[msgKey] = "That doesn't look like a flight number.";
-      } else if (e?.code === 'functions/unauthenticated') {
-        this[msgKey] = 'Sign in to use flight lookup.';
-      } else {
-        this[msgKey] = 'Flight lookup unavailable — enter details manually.';
-      }
-    }
-  }
+  // `_runFlightLookup` removed 2026-05-20. aviationstack's free
+  // tier coverage was too patchy to be useful — real flight
+  // numbers returned "not found" often enough that the auto-fill
+  // UX was net-negative. Manual entry only now; the
+  // `lookupFlight` Cloud Function stays deployed but uninvoked
+  // from any client. Re-add this method (and the state vars at
+  // the top of the class) when/if a paid aviation API replaces
+  // aviationstack.
 
   willUpdate(changed) {
     if (changed.has('trip') || changed.has('open')) {
@@ -965,26 +896,8 @@ export class TripForm extends LitElement {
     this._set('targetSubGroups', next);
   }
 
-  _renderFlightLookupStatus(leg) {
-    const isReturn = leg === 'return';
-    const state = isReturn ? this._returnLookupState : this._outboundLookupState;
-    const msg = isReturn ? this._returnLookupMessage : this._outboundLookupMessage;
-    if (state === 'idle') {
-      return html`<div class="hint">
-        Tip: paste a flight number — we'll fetch airline + airports + times for you.
-      </div>`;
-    }
-    if (state === 'loading') {
-      return html`<div class="lookup-status">
-        <div class="spinner"></div>
-        Looking up flight…
-      </div>`;
-    }
-    if (state === 'ok') {
-      return html`<div class="lookup-status lookup-ok">✓ ${msg}</div>`;
-    }
-    return html`<div class="lookup-status lookup-error">${msg}</div>`;
-  }
+  // (`_renderFlightLookupStatus` removed 2026-05-20 with the
+  //  lookup itself. No status chrome needed for manual entry.)
 
   _onSave() {
     const d = this._draft;
@@ -1282,8 +1195,6 @@ export class TripForm extends LitElement {
                     placeholder="AF1234"
                     .value=${d.flightNumber}
                     @input=${(e) => this._set('flightNumber', e.target.value)}
-                    @change=${() => this._runFlightLookup('outbound')}
-                    @blur=${() => this._runFlightLookup('outbound')}
                   />
                 </div>
                 <div class="field" style="margin-bottom:0;">
@@ -1316,7 +1227,6 @@ export class TripForm extends LitElement {
                     </div>
                   `
                 : ''}
-              ${this._renderFlightLookupStatus('outbound')}
             </div>
 
             ${this._showReturn
@@ -1362,8 +1272,6 @@ export class TripForm extends LitElement {
                           .value=${d.returnFlightNumber}
                           @input=${(e) =>
                             this._set('returnFlightNumber', e.target.value)}
-                          @change=${() => this._runFlightLookup('return')}
-                          @blur=${() => this._runFlightLookup('return')}
                         />
                       </div>
                       <div class="field" style="margin-bottom:0;">
@@ -1405,7 +1313,6 @@ export class TripForm extends LitElement {
                           </div>
                         `
                       : ''}
-                    ${this._renderFlightLookupStatus('return')}
                   </div>
                 `
               : html`
