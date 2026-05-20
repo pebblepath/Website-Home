@@ -4010,7 +4010,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         target="_blank"
         rel="noopener"
       >
-        Get the app on iPhone <span class="arrow">→</span>
+        Download the app <span class="arrow">→</span>
       </a>
     `}}y(ut,"styles",z`
     :host {
@@ -4047,9 +4047,10 @@ They'll lose access to shared trips, celebrations and any read-only child access
       font-family: var(--font-pebble);
       font-weight: 400;
       font-size: 30px;
-      /* Themeable: cream on the dark bg, charcoal on the light sand
-         (was hardcoded near-white → washed-out in light mode). */
-      color: var(--text-primary);
+      /* --brand-wordmark-color is theme-aware: cream on the dark
+         dusk-glass surface, SAGE-DEEP (the brand dark-green that the
+         navbar uses) on the light sand backdrop. */
+      color: var(--brand-wordmark-color);
       letter-spacing: 0.04em;
       line-height: 1;
       text-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
@@ -7012,7 +7013,16 @@ They'll lose access to shared trips, celebrations and any read-only child access
       color: var(--text-primary);
       border-color: rgba(61, 155, 143, 0.4);
     }
-    .rail-item .lock { width: 11px; height: 11px; flex-shrink: 0; color: #e6c3ab; }
+    .rail-item .lock {
+      width: 11px;
+      height: 11px;
+      flex-shrink: 0;
+      /* Theme-aware — was hardcoded #e6c3ab (pale terracotta) which
+         vanished on the light cream rail bg. var(--ink-terracotta)
+         resolves to a dark terracotta in light mode + the same
+         pale cream in dark mode → visible in both. */
+      color: var(--ink-terracotta);
+    }
     .rail-item .rail-title {
       flex: 1;
       min-width: 0;
@@ -7071,14 +7081,20 @@ They'll lose access to shared trips, celebrations and any read-only child access
     }
     .privtoggle button svg { width: 13px; height: 13px; }
     .privtoggle button.on.fam {
-      background: rgba(61, 155, 143, 0.2);
+      background: rgba(61, 155, 143, 0.28);
       color: var(--bubble-link-pb);
-      box-shadow: inset 0 0 0 1px rgba(61, 155, 143, 0.4);
+      box-shadow: inset 0 0 0 1px rgba(61, 155, 143, 0.55);
     }
+    /* Was color:#e6c3ab (pale terracotta) — readable on the dusk
+       glass but vanished on the light cream Daybreak surface.
+       var(--ink-terracotta) is theme-aware (dark terracotta in light
+       mode / pale cream in dark) → clearly "on" in BOTH themes.
+       Opacities bumped from 0.20/0.45 → 0.28/0.55 for a stronger
+       selected state. Mirror change applied to .fam for symmetry. */
     .privtoggle button.on.priv {
-      background: rgba(198, 123, 92, 0.2);
-      color: #e6c3ab;
-      box-shadow: inset 0 0 0 1px rgba(198, 123, 92, 0.45);
+      background: rgba(198, 123, 92, 0.28);
+      color: var(--ink-terracotta);
+      box-shadow: inset 0 0 0 1px rgba(198, 123, 92, 0.55);
     }
     .rail-toggle {
       display: none;
@@ -7169,9 +7185,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
       border-radius: var(--radius-pill);
       font-size: 12px;
       font-weight: 600;
-      background: rgba(198, 123, 92, 0.16);
-      color: #e6c3ab;
-      border: 1px solid rgba(198, 123, 92, 0.4);
+      background: rgba(198, 123, 92, 0.18);
+      color: var(--ink-terracotta);
+      border: 1px solid rgba(198, 123, 92, 0.45);
     }
     .privtag svg { width: 13px; height: 13px; }
     /* Message rows with sender-attribution avatars (concept .msg).
@@ -7326,10 +7342,14 @@ They'll lose access to shared trips, celebrations and any read-only child access
        circle (fixes "input not rounded / wrong colour / not centred"). */
     .composer {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       align-items: center;
       margin-top: 18px;
-      padding: 7px 7px 7px 16px;
+      /* Roomier padding so typed text doesn't read as crammed in the
+         top-left of the pill. The textarea is align-items:center
+         vertically so the extra top/bottom keeps the text visually
+         balanced inside the composer height. */
+      padding: 10px 10px 10px 20px;
       border-radius: var(--radius-pill);
       background: var(--glass-fill);
       border: 1px solid var(--glass-border);
@@ -7344,7 +7364,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
       resize: none;
       background: transparent;
       border: none;
-      padding: 7px 0;
+      /* 4px top/bottom + composer's 10px = ~14px breathing room
+         from the pill edge to the text baseline at min-height. */
+      padding: 4px 2px;
       color: var(--text-primary);
       font-family: var(--font-body);
       font-size: 14px;
@@ -8449,7 +8471,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       </section>
     `}_renderActivitiesTab(){var i,r;const e=this._liveImmediate().concat(this._liveExtended()),t=o`<div class="scope shared">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 2.5-5 6-5s6 2 6 5M15 17c2 0 5 1 5 3" stroke-linecap="round"/></svg>
-      Shared with your connections
+      Shared with connections
     </div>`;return o`
       ${this._renderTabHeader("Activities",((i=this.family)==null?void 0:i.name)??"Your family",t)}
       ${this._renderComingUpSection()}
@@ -8579,7 +8601,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
           <div class="set-row">
             <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/></svg></span>
-            <div class="sl"><b>Appearance</b><span>Light or dark theme — applies across the Portal.</span></div>
+            <div class="sl"><b>Appearance</b><span>Applies across the Portal.</span></div>
             <div class="theme-seg" role="group" aria-label="Theme">
               <button
                 class=${this._themeLight?"on":""}
@@ -11423,4 +11445,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}y(mt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",mt);
-//# sourceMappingURL=index-CUUyR_rN.js.map
+//# sourceMappingURL=index-6nnYTyoM.js.map
