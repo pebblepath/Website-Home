@@ -2,45 +2,100 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portal — pebblepath.ai/portal</title>
-    <meta name="robots" content="noindex" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#1f5c54" />
+    <meta name="color-scheme" content="dark light" />
+
+    <title>Portal — for every little adventure</title>
+    <meta
+      name="description"
+      content="Private portal for your trips, activities, birthdays and anniversaries — for your whole family."
+    />
     <link rel="canonical" href="https://pebblepath.ai/portal/" />
 
-    <!-- 2026-05-16 — /cairn/ was renamed to /portal/. This is a
-         permanent redirect stub kept ONLY so existing bookmarks, the
-         already-shipped iOS "Open Cairn" link, and previously-shared
-         ?join=/?code= invite links keep working. The Build-Cairn
-         Action no longer writes this directory (it builds /portal/),
-         so this file is stable. The old built assets that may still
-         sit alongside this file are orphaned + inert (this page
-         redirects before anything references them). -->
+    <!-- Favicon — the polished Cairn pebble-stack mark
+         (assets/cairn-icon.png) is the Portal's tab icon and keeps its
+         OWN identity (NOT the PebblePath app icon). The old
+         favicon.svg <link> was REMOVED 2026-05-16: browsers prefer an
+         SVG favicon over PNG, and favicon.svg is a cruder hand-drawn
+         stones rendition — it was overriding the correct polished PNG
+         in the tab. orphaned public/favicon.svg left in place, inert. -->
+    <link rel="icon" type="image/png" sizes="256x256" href="assets/cairn-icon.png" />
+    <link rel="apple-touch-icon" href="assets/cairn-icon-2x.png" />
+    <meta name="apple-mobile-web-app-title" content="Portal" />
 
-    <!-- OG/Twitter point at /portal/ so any old /cairn/ link shared in
-         iMessage/Slack/etc. still unfurls to the right card. -->
+    <!-- Open Graph (Facebook, LinkedIn, Slack, Discord, iMessage). -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Portal" />
     <meta property="og:title" content="Portal — for every little adventure" />
-    <meta property="og:description" content="Private portal for your trips, activities, birthdays and anniversaries — for your whole family." />
+    <meta
+      property="og:description"
+      content="Private portal for your trips, activities, birthdays and anniversaries — for your whole family."
+    />
     <meta property="og:url" content="https://pebblepath.ai/portal/" />
     <meta property="og:image" content="https://pebblepath.ai/portal/og-card.svg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Portal — for every little adventure" />
+    <meta property="og:locale" content="en_GB" />
+
+    <!-- Twitter / X. -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Portal — for every little adventure" />
+    <meta
+      name="twitter:description"
+      content="Private portal for your trips, activities, birthdays and anniversaries — for your whole family."
+    />
     <meta name="twitter:image" content="https://pebblepath.ai/portal/og-card.svg" />
 
-    <!-- noscript fallback (won't carry the query string — the JS path
-         below is the normal case and preserves ?join=/?code= + hash). -->
-    <meta http-equiv="refresh" content="0; url=/portal/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600;700&family=Nunito:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Preload the pre-login Daybreak wallpaper so the browser starts
+         fetching it immediately (in parallel with the JS bundle)
+         instead of waiting for app-shell JS to compute BASE_URL and
+         inject the --pre-login-bg CSS var. Relative href resolves to
+         /assets/… in dev and /portal/assets/… in prod — same URL the
+         app-shell injects, so it's a cache hit, not a double fetch.
+         (Now a 161 KB JPEG, down from an 11.6 MB PNG.) -->
+    <link
+      rel="preload"
+      as="image"
+      fetchpriority="high"
+      href="assets/pebblepath-daybreak-empty.jpg"
+    />
+
+    <!-- Theme bootstrap — apply the saved light/dark choice to <html>
+         BEFORE first paint so there's no flash. Toggle lives in
+         Settings (Tab 5) and persists in localStorage('portalTheme').
+         Default = LIGHT; dark is opt-in (portalTheme === 'dark'). -->
     <script>
-      // Preserve invite params (?join= / ?code=) and any hash so old
-      // bookmarks + the shipped iOS link + shared invites resolve to
-      // the same place. replace() (not assign) so /cairn/ doesn't
-      // linger in history / break the back button.
-      location.replace('/portal/' + location.search + location.hash);
+      (function () {
+        function light() {
+          document.documentElement.classList.add('theme-light');
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute('content', '#f2ede3');
+        }
+        try {
+          if (localStorage.getItem('portalTheme') !== 'dark') light();
+        } catch (e) {
+          /* private mode / storage blocked — still default to light */
+          light();
+        }
+      })();
     </script>
+    <script type="module" crossorigin src="/portal/assets/index-B5xfbuw1.js"></script>
+    <link rel="modulepreload" crossorigin href="/portal/assets/lit-dM6tPkba.js">
+    <link rel="modulepreload" crossorigin href="/portal/assets/firebase-core-DEm61vaB.js">
+    <link rel="modulepreload" crossorigin href="/portal/assets/firebase-functions-ID3qFl3p.js">
+    <link rel="modulepreload" crossorigin href="/portal/assets/firebase-storage-BqMFCgVD.js">
+    <link rel="stylesheet" crossorigin href="/portal/assets/index-Dc2vNEXe.css">
   </head>
   <body>
-    Portal has moved to
-    <a href="/portal/">pebblepath.ai/portal</a>. Redirecting…
+    <cairn-app></cairn-app>
   </body>
 </html>
