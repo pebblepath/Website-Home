@@ -2235,10 +2235,15 @@
   <!-- 2026-05-14: desktop nav now shows BOTH affordances — "Login"
        (translucent ghost pill → Cairn web sign-in) and "Download"
        (terracotta primary pill → App Store) — same hierarchy as the
-       mobile menu so the two surfaces match. -->
+       mobile menu so the two surfaces match.
+       2026-05-20: nav-login label is now auth-state aware — defaults to
+       "Login / Register" for signed-out visitors; flipped to
+       "Open Portal" by the Firebase auth-state listener at the bottom
+       of the page when the user is already signed in (same origin as
+       /portal/, so the persisted session is shared). -->
   <div class="nav-links" id="nav-links">
-    <a href="/portal/" class="nav-login">
-      Portal
+    <a href="/portal/" class="nav-login" id="nav-login" data-default-label="Login / Register" data-authed-label="Open Portal">
+      Login / Register
     </a>
     <a href="https://apps.apple.com/app/pebblepath-ai/" class="nav-cta" target="_blank" rel="noopener">
       <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM248.6 84.7c33.5-39.8 30.4-76 29.4-89-29.6 1.7-63.8 20.1-83.3 42.7-21.5 24.2-34.1 54.1-31.4 87.6 32 2.5 61.1-13.9 85.3-41.3z"/></svg>
@@ -2989,6 +2994,49 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
     });
   });
 })();
+</script>
+
+<!-- 2026-05-20 — Auth-state aware nav button.
+     Marketing home is served from the same origin as /portal/, so
+     Firebase Auth's IndexedDB persistence is shared. Initializing the
+     same Firebase project here lets us read the current user (if any)
+     and flip the nav pill from "Login / Register" → "Open Portal"
+     without any cross-app handoff. Config below is the same public
+     web config baked into the Portal build (apiKey is a public
+     identifier; access is gated by Firebase Security Rules). Default
+     HTML label is "Login / Register" so signed-out visitors (the
+     majority) see the correct text instantly; signed-in returnees see
+     a brief flicker as auth resolves (~300ms), which is acceptable. -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+
+  try {
+    const app = initializeApp({
+      apiKey: "AIzaSyA6NKZNLVBeeLrXcLJSXus5M832AxpI2wk",
+      authDomain: "pebblepath-992b6.firebaseapp.com",
+      projectId: "pebblepath-992b6",
+      storageBucket: "pebblepath-992b6.firebasestorage.app",
+      messagingSenderId: "497141667291",
+      appId: "1:497141667291:web:ee84c186db54389d10c3fe",
+    });
+    const auth = getAuth(app);
+
+    const navLogin = document.getElementById('nav-login');
+    onAuthStateChanged(auth, (user) => {
+      if (!navLogin) return;
+      const label = user
+        ? (navLogin.dataset.authedLabel || 'Open Portal')
+        : (navLogin.dataset.defaultLabel || 'Login / Register');
+      navLogin.textContent = label;
+      navLogin.setAttribute('aria-label', label);
+    });
+  } catch (e) {
+    /* If Firebase fails to load (offline, blocked, etc.), the static
+       "Login / Register" default is a safe fallback — the link still
+       routes to /portal/, which handles auth-state routing itself. */
+    console.warn('[pebblepath] nav auth probe failed:', e);
+  }
 </script>
 
 </body>
