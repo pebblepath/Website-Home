@@ -80,8 +80,12 @@ export class FamilyCircle extends LitElement {
     }
     .ring.connections {
       width: 92%;
-      border: 1.5px dashed rgba(139, 123, 181, 0.7);
-      background: rgba(139, 123, 181, 0.42);
+      /* Tier 3 swapped from purple → terracotta (#c67b5c → rgb 198,
+         123, 92) to match the brand. Opacities reduced slightly now
+         that the donut mask prevents color-mixing with the inner
+         ring. */
+      border: 1.5px dashed rgba(198, 123, 92, 0.6);
+      background: rgba(198, 123, 92, 0.32);
       /* Donut shape — mask out the inner area where the family ring
          sits so the two rings don't color-mix. The family ring is
          54% of the disc; the connections ring is 92%, so the family
@@ -102,8 +106,9 @@ export class FamilyCircle extends LitElement {
     }
     .ring.family {
       width: 54%;
-      border: 1.5px dashed rgba(31, 92, 84, 0.75);
-      background: rgba(31, 92, 84, 0.45);
+      /* Opacity reduced slightly alongside the Tier 3 change. */
+      border: 1.5px dashed rgba(31, 92, 84, 0.65);
+      background: rgba(31, 92, 84, 0.35);
     }
     .node {
       position: absolute;

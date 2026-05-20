@@ -1588,7 +1588,11 @@ export class HomeScreen extends LitElement {
         font-size: 10px;
         letter-spacing: -0.005em;
         border-radius: 12px;
-        transition: color 0.18s ease;
+        /* Above the bn-slider so the label/icon stay crisp on the
+           liquid-glass pill underneath. */
+        position: relative;
+        z-index: 1;
+        transition: color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .bn-tab svg {
         width: 21px;
@@ -1598,6 +1602,43 @@ export class HomeScreen extends LitElement {
         /* teal-pebble (#3d9b8f) was too dim on the dark-green bar;
            a bright light-teal reads clearly as the active tab. */
         color: #8fe0d2;
+      }
+      /* Mirror of the top .tab-slider — same iOS-26 liquid-glass
+         pill that rides inside the bottom bar, sized for the larger
+         vertical bn-tab content (icon + label). Position+width set
+         inline by _positionTabSlider(). Larger corner radius (14)
+         wraps the vertical bn-tab a touch more generously than the
+         12px on the buttons themselves. */
+      .bn-slider {
+        position: absolute;
+        top: 8px;
+        bottom: calc(8px + env(safe-area-inset-bottom));
+        left: 0;
+        width: 0;
+        transform: translateX(0);
+        border-radius: 14px;
+        pointer-events: none;
+        z-index: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.32) 0%,
+          rgba(255, 255, 255, 0.12) 55%,
+          rgba(255, 255, 255, 0.22) 100%
+        );
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow:
+          0 6px 18px rgba(20, 50, 46, 0.34),
+          inset 0 1px 0 rgba(255, 255, 255, 0.55),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+        transition:
+          transform 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+          width 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+      }
+      .bn-slider.ready {
+        opacity: 1;
       }
       main {
         padding: 18px 16px calc(82px + env(safe-area-inset-bottom));
@@ -2884,16 +2925,30 @@ export class HomeScreen extends LitElement {
   // transition (.tab-slider in static styles) then animates the move.
   // First mount snaps in place (no slide-from-zero); subsequent
   // _activeTab changes animate.
+  // Position BOTH the top-tab slider and the mobile bottom-nav slider.
+  // Either container may be display:none at a given viewport (the
+  // mobile breakpoint hides .tabs; the desktop one hides .bottomnav),
+  // in which case offsetParent === null and we skip — the slider stays
+  // at width:0/opacity:0 until its container becomes visible.
   _positionTabSlider({ animate = true } = {}) {
-    const tabs = this.renderRoot?.querySelector('.tabs');
-    if (!tabs) return;
-    const slider = tabs.querySelector('.tab-slider');
-    const active = tabs.querySelector('.tab.active');
+    this._slideOn('.tabs', '.tab-slider', '.tab.active', animate);
+    this._slideOn('.bottomnav', '.bn-slider', '.bn-tab.active', animate);
+  }
+
+  _slideOn(containerSel, sliderSel, activeSel, animate) {
+    const container = this.renderRoot?.querySelector(containerSel);
+    if (!container) return;
+    const slider = container.querySelector(sliderSel);
+    const active = container.querySelector(activeSel);
     if (!slider || !active) return;
+    // offsetParent === null when this side of the tab system is
+    // display:none at the current viewport (mobile bottomnav on
+    // desktop / desktop tabs on mobile).
+    if (active.offsetParent === null) return;
     if (!animate) {
       // Snap into position on first paint (and on resize) without
-      // sliding from 0 — kill the transition for this frame, force a
-      // reflow, then restore it.
+      // sliding from 0 — kill the transition for this frame, force
+      // a reflow, then restore it.
       const prev = slider.style.transition;
       slider.style.transition = 'none';
       slider.style.transform = `translateX(${active.offsetLeft}px)`;
@@ -2914,12 +2969,14 @@ export class HomeScreen extends LitElement {
   firstUpdated(changedProps) {
     super.firstUpdated?.(changedProps);
     this._positionTabSlider({ animate: false });
-    const tabs = this.renderRoot?.querySelector('.tabs');
-    if (tabs && typeof ResizeObserver !== 'undefined') {
+    if (typeof ResizeObserver !== 'undefined') {
       this._tabsRO = new ResizeObserver(() => {
         this._positionTabSlider({ animate: false });
       });
-      this._tabsRO.observe(tabs);
+      const tabs = this.renderRoot?.querySelector('.tabs');
+      const bnav = this.renderRoot?.querySelector('.bottomnav');
+      if (tabs) this._tabsRO.observe(tabs);
+      if (bnav) this._tabsRO.observe(bnav);
     }
   }
 
@@ -2937,6 +2994,7 @@ export class HomeScreen extends LitElement {
   _renderBottomNav() {
     return html`
       <nav class="bottomnav" role="tablist" aria-label="Sections">
+        <span class="bn-slider" aria-hidden="true"></span>
         ${this._tabDefs().map(
           (t) => html`<button
             class="bn-tab ${this._activeTab === t.id ? 'active' : ''}"
@@ -3497,11 +3555,11 @@ export class HomeScreen extends LitElement {
                 <span class="set-pill" style="color:var(--ink-green);border-color:var(--ink-green);">Full access</span>
               </div>
               <div class="set-row">
-                <span class="si" style="color:var(--ink-purple);">
+                <span class="si" style="color:var(--ink-terracotta);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg>
                 </span>
                 <div class="sl"><b>Your connections</b><span>Everyone who joined by invitation.</span></div>
-                <span class="set-pill" style="color:var(--ink-purple);border-color:var(--ink-purple);">Activities only</span>
+                <span class="set-pill" style="color:var(--ink-terracotta);border-color:var(--ink-terracotta);">Activities only</span>
               </div>
             </glass-panel>
           </div>
