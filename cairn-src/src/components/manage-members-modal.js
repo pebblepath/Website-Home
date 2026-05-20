@@ -584,9 +584,9 @@ export class ManageMembersModal extends LitElement {
             <button class="close" @click=${this._onCancel} aria-label="Close">×</button>
           </div>
 
-          <h3>Immediate family · ${this.immediate.length}</h3>
+          <h3>My family · ${this.immediate.length}</h3>
           ${this.immediate.length === 0
-            ? html`<div class="empty">No one in immediate yet.</div>`
+            ? html`<div class="empty">No one in your family yet.</div>`
             : this.immediate.map(
                 (m) => html`
                   <div class="member-row">
@@ -612,14 +612,21 @@ export class ManageMembersModal extends LitElement {
                 `,
               )}
 
-          <h3>Extended family · ${this.extended.length}</h3>
+          <h3>My connections · ${this.extended.length}</h3>
           ${this.extended.length === 0
             ? html`<div class="empty">
-                Anyone you invite via Cairn (grandparents, aunts, uncles, etc.) will appear here.
+                Anyone you invite (grandparents, aunts, uncles, etc.) will appear here.
                 They can see trips and celebrations but not PebblePath child data.
               </div>`
-            : this.extended.map(
-                (m) => html`
+            : this.extended.map((m) => {
+                // PP co-parents + children belong here for non-PP viewers
+                // (see deriveExtendedMembers). They aren't private
+                // labels the viewer assigns — render the role as plain
+                // text and skip the remove affordance for them.
+                const isFixedRole = m.role === 'co-parent' || m.role === 'child';
+                const fixedRoleLabel =
+                  m.role === 'co-parent' ? 'Co-parent (PebblePath)' : 'Child';
+                return html`
                   <div class="member-row">
                     <member-chip
                       .name=${m.displayName}
@@ -629,7 +636,9 @@ export class ManageMembersModal extends LitElement {
                     ></member-chip>
                     <div class="body">
                       <div class="name">${m.displayName}</div>
-                      ${this._editingLabelUid === m.uid
+                      ${isFixedRole
+                        ? html`<div class="role">${fixedRoleLabel}</div>`
+                        : this._editingLabelUid === m.uid
                         ? html`<input
                             class="label-input"
                             .value=${this._labelDraft}
@@ -653,7 +662,7 @@ export class ManageMembersModal extends LitElement {
                             >
                           </button>`}
                     </div>
-                    ${this.canRemove
+                    ${this.canRemove && !isFixedRole
                       ? html`<button
                           class="remove-btn"
                           ?disabled=${this._removingUid === m.uid}
@@ -663,8 +672,8 @@ export class ManageMembersModal extends LitElement {
                         </button>`
                       : ''}
                   </div>
-                `,
-              )}
+                `;
+              })}
 
           ${/* P4-B 2026-05-19 — sub-groups UI hidden for now to avoid
                confusion (Thomas); revisit later. Block + the
@@ -723,7 +732,7 @@ export class ManageMembersModal extends LitElement {
                               )}
                               ${this.extended.length === 0
                                 ? html`<span style="color:var(--text-tertiary);font-size:13px;">
-                                    Invite extended family first, then group them here.
+                                    Invite connections first, then group them here.
                                   </span>`
                                 : ''}
                             </div>
@@ -828,7 +837,7 @@ export class ManageMembersModal extends LitElement {
             ? html`
                 <div class="invite-box">
                   <div class="invite-code">${code}</div>
-                  <div class="invite-meta">${this._expiryText(expiresAt)} · share this code with extended family</div>
+                  <div class="invite-meta">${this._expiryText(expiresAt)} · share this code with your connections</div>
                   <div class="invite-actions">
                     <glass-button variant="primary" @click=${this._share} ?disabled=${this._busy}>
                       Share invite
@@ -845,8 +854,8 @@ export class ManageMembersModal extends LitElement {
             : html`
                 <div class="invite-empty">
                   ${codeExpired
-                    ? 'Your invite code has expired. Generate a new one to invite extended family.'
-                    : 'No invite code yet. Generate one to share Cairn with extended family.'}
+                    ? 'Your invite code has expired. Generate a new one to invite connections.'
+                    : 'No invite code yet. Generate one to invite people to connect with you.'}
                   <br />
                   <glass-button variant="primary" @click=${this._regenerate} ?disabled=${this._busy}>
                     ${this._busy ? 'Generating…' : 'Generate invite code'}

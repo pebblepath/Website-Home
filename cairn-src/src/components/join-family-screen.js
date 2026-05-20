@@ -461,7 +461,7 @@ export class JoinFamilyScreen extends LitElement {
                 <div class="what-you-get">
                   <strong>You'll see</strong>
                   shared trips, family birthdays, and anniversaries.
-                  You won't see PebblePath's child-development data — that stays private to the immediate family.
+                  You won't see PebblePath's child-development data — that stays private to the parents.
                 </div>
                 <div class="actions">
                   <glass-button

@@ -1122,7 +1122,7 @@ export class TripForm extends LitElement {
                 </div>
                 ${(this.extendedMembers ?? []).length > 0
                   ? html`
-                      <div class="att-group-label">Extended family</div>
+                      <div class="att-group-label">My connections</div>
                       <div class="attendees">
                         ${this.extendedMembers.map(
                           (m) => html`

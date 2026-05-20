@@ -2310,28 +2310,64 @@ export function resolvePhoto(authUser, pebbleUser) {
  * Phase 3A: extended-family members are anyone in `cairnMemberIds`
  * but NOT in `memberIds` (PP co-parents) and NOT the viewer themself.
  * Falls back to empty when the family hasn't been migrated yet.
+ *
+ * Viewer perspective:
+ *   - PP viewer (in memberIds): extended = cairn ring minus self minus
+ *     PP co-parents (those render in immediate via deriveImmediateMembers).
+ *   - Non-PP viewer (Cairn-only connection like a grandparent): extended
+ *     = everyone in the family they're connected to except themself —
+ *     PP co-parents + children + other cairn-only members. That's the
+ *     viewer's "My Connections", since their "My Family" is just them.
+ *     `children` is optional and only consulted for non-PP viewers.
  */
-export function deriveExtendedMembers(uid, family) {
+export function deriveExtendedMembers(uid, family, children = []) {
   if (!family) return [];
   const cairnIds = family.cairnMemberIds ?? family.memberIds ?? [];
   const memberIds = family.memberIds ?? [];
   const profiles = family.memberProfiles ?? {};
+  const isPPViewer = memberIds.includes(uid);
   const out = [];
   let hue = 280;
+  // Cairn ring minus self. For PP viewers also skip their PP co-parents
+  // (already in immediate); for non-PP viewers KEEP them so the parents
+  // they're connected to appear under My Connections.
   for (const otherUid of cairnIds) {
-    if (memberIds.includes(otherUid)) continue; // PP member already in immediate
-    if (otherUid === uid) continue; // viewer rendered in immediate
+    if (otherUid === uid) continue;
+    if (isPPViewer && memberIds.includes(otherUid)) continue;
     const profile = profiles[otherUid];
     const url = profile?.profilePhotoURL;
+    const otherIsPPMember = memberIds.includes(otherUid);
     out.push({
       uid: otherUid,
       displayName: profile?.displayName ?? 'Family',
       photoURL: typeof url === 'string' && /^https?:\/\//i.test(url) ? url : null,
-      role: 'extended',
+      // Preserve PP co-parent identity for non-PP viewers so the modal
+      // shows "Co-parent (PebblePath)" instead of an editable Connection
+      // pencil for someone who isn't actually their connection to label.
+      role: otherIsPPMember ? 'co-parent' : 'extended',
       circles: ['extended'],
       hue,
     });
     hue = (hue + 47) % 360;
+  }
+  // Children of the connected family surface here for non-PP viewers
+  // (e.g. a grandparent sees Felix in My Connections, not My Family).
+  // PP viewers' children render in immediate via deriveImmediateMembers.
+  if (!isPPViewer) {
+    let cHue = 142;
+    for (const child of children ?? []) {
+      const url = child.profilePhotoURL;
+      out.push({
+        uid: `child:${child.id}`,
+        displayName: child.name,
+        photoURL: typeof url === 'string' && /^https?:\/\//i.test(url) ? url : null,
+        role: 'child',
+        circles: ['extended'],
+        hue: cHue,
+        dateOfBirth: child.dateOfBirth,
+      });
+      cHue = (cHue + 58) % 360;
+    }
   }
   return out;
 }
@@ -2490,6 +2526,11 @@ export function deriveImmediateMembers(uid, authUser, pebbleUser, family, childr
     circles: ['immediate'],
     hue: 198,
   });
+  // Non-PP viewer (a Cairn-only connection like a grandparent): their
+  // "My family" stops at them. The Paris co-parents + Felix are NOT
+  // their immediate family — those people belong in My Connections,
+  // surfaced via deriveExtendedMembers.
+  if (!isPPViewer) return out;
   // memberProfiles includes Cairn joiners too (joinFamilyAsCairn writes
   // an entry per joiner). Filter to PP `memberIds` only so the Family
   // stone never surfaces extended-family members as "immediate".

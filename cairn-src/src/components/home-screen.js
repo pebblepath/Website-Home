@@ -2264,8 +2264,10 @@ export class HomeScreen extends LitElement {
     if (this.preview) return mockMembers.filter((m) => m.circles.includes('extended'));
     // Previously hard-coded to [] — that was the bug where joined
     // extended members never appeared on the dashboard. Read the
-    // cairn ring from the family doc instead.
-    return deriveExtendedMembers(this.user?.uid, this.family);
+    // cairn ring from the family doc instead. `children` is consulted
+    // for non-PP viewers (a grandparent's My Connections includes the
+    // children of the family they're connected to).
+    return deriveExtendedMembers(this.user?.uid, this.family, this.children);
   }
 
   /** Flat-family Phase 2B Slice 3b-ii — the "Connections" picker
