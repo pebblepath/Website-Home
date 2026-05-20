@@ -117,6 +117,7 @@ class FamilyDataStore extends EventTarget {
     this._unsubTrips = null;
     this._unsubEvents = null;
     this._currentFamilyId = null;
+    this._inviteCodeMigratedFamilyId = null;
     this._holidayKey = null;
     this._ppFamilyId = null;
     this._selectedChildId = null;
@@ -342,13 +343,20 @@ class FamilyDataStore extends EventTarget {
   _subscribeFamily(familyId) {
     this._unsubFamily = onSnapshot(doc(db, 'families', familyId), (snap) => {
       this.state.family = snap.exists() ? { id: snap.id, ...snap.data() } : null;
-      // Batch F: a user with NO own PP household who a parent
-      // approved as a child viewer resolves the PP-household to THIS
-      // (Cairn-resolved) family, read-only. Reconciled here so a
-      // live approval (childViewers change) activates access without
-      // a reload. Pure fallback — members are untouched.
+      // Batch F: a user with NO own parent household who a parent
+      // approved as a child viewer resolves the parent-household to
+      // THIS (resolved) family, read-only. Reconciled here so a live
+      // approval (childViewers change) activates access without a
+      // reload. Pure fallback — members are untouched.
       this._reconcileChildViewer();
       this._loadHolidays();
+      // One-shot silent migration to the unified 6-char invite-code
+      // format. Legacy codes minted before Phase 2C Slice 2
+      // (2026-05-18) still carry the deprecated `CAIRN-XXXX` prefix;
+      // back-compat redemption keeps working, but the visible code
+      // should match the new format. Only parents can write to the
+      // family doc, so non-parent viewers no-op silently.
+      this._maybeMigrateInviteCodeFormat();
       this._emit();
     });
     // Batch F: the requester's own access-request doc (id = uid) on
@@ -2245,6 +2253,49 @@ class FamilyDataStore extends EventTarget {
     return { code, expiresAt };
   }
 
+  /**
+   * One-shot silent migration to the unified 6-char invite-code
+   * format. Phase 2C Slice 2 (2026-05-18) collapsed the old
+   * `CAIRN-XXXX` prefix into a flat 6-char code; the resolver still
+   * accepts both, but families created before that date still hold a
+   * prefixed code in their `cairnInviteCode` field. This regenerates
+   * it on next family-doc load so existing parents see the new
+   * format without having to hit Regenerate themselves.
+   *
+   * Guard rails:
+   *   - Memoised via `_inviteCodeMigratedFamilyId` so it fires at most
+   *     once per session per family (the family-doc snapshot fires on
+   *     every change).
+   *   - Only the parent (in memberIds) can write to the family doc;
+   *     non-parent viewers no-op silently to keep PERMISSION_DENIED
+   *     out of the console.
+   *   - Best-effort: any write failure swallows back to a console
+   *     log — no toast, no surfacing. The old code still works.
+   */
+  _maybeMigrateInviteCodeFormat() {
+    const fam = this.state.family;
+    if (!fam || !this._uid) return;
+    if (this._inviteCodeMigratedFamilyId === fam.id) return;
+    const code = fam.cairnInviteCode;
+    if (!code || typeof code !== 'string') return;
+    // New-format codes are exactly 6 chars with no separator. Anything
+    // containing a hyphen is the deprecated `CAIRN-XXXX` shape.
+    if (!code.includes('-')) {
+      this._inviteCodeMigratedFamilyId = fam.id;
+      return;
+    }
+    const memberIds = Array.isArray(fam.memberIds) ? fam.memberIds : [];
+    if (!memberIds.includes(this._uid)) return; // non-parent — no write permission
+    this._inviteCodeMigratedFamilyId = fam.id; // memo BEFORE await so we don't double-fire
+    this.regenerateCairnInviteCode().catch((e) => {
+      // Drop the memo so a subsequent family-doc tick can retry once.
+      // (Permission errors / rules tightening are the only realistic
+      // failures; both are non-recoverable from the client, so silently
+      // accept and leave the legacy code in place.)
+      console.debug('invite-code format migration deferred:', e?.code ?? e?.message ?? e);
+    });
+  }
+
   stop() {
     this._unsubUser?.();
     this._unsubFamily?.();
@@ -2260,6 +2311,7 @@ class FamilyDataStore extends EventTarget {
     this._teardownPpFamily();
     this._uid = null;
     this._currentFamilyId = null;
+    this._inviteCodeMigratedFamilyId = null;
     this._holidayKey = null;
     this._ppFamilyId = null;
     this.userDocResolved = false;
