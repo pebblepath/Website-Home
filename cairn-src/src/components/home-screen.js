@@ -121,6 +121,16 @@ export class HomeScreen extends LitElement {
      *  is an async one-shot fetch (`deriveConnectionMembers`) refreshed
      *  from `updated()` when the family's connection set changes. */
     _connectionMembers: { state: true },
+    /** P7 Item 3 (2026-05-20) — per-child 2A claim affordance on the
+     *  Children gate. `_claimingChildId` blocks double-tap while the
+     *  Firestore write is in flight; `_claimedChildName` shows a
+     *  one-shot "✓ Request sent for {name}" confirmation in the gate.
+     *  Session-local; resets on a fresh visit to the tab. The
+     *  underlying `requestToBeCoParent` GRANTS NOTHING — an existing
+     *  parent confirms it (the deployed coParentRequests rule enforces
+     *  this independently). */
+    _claimingChildId: { state: true },
+    _claimedChildName: { state: true },
   };
 
   constructor() {
@@ -148,6 +158,11 @@ export class HomeScreen extends LitElement {
     this.ppIsChildViewer = false;
     this.incomingChildRequests = [];
     this.myChildAccessRequest = null;
+    // P7 Item 3 — 2A claim state. Null = no claim sent this session;
+    // string = which child's name was just claimed (for the
+    // confirmation toast inside the gate).
+    this._claimingChildId = null;
+    this._claimedChildName = null;
     this._pebblePrefill = '';
     this._plannerOpen = false;
     this._plannerTrip = null;
@@ -953,6 +968,88 @@ export class HomeScreen extends LitElement {
     }
     .empty-cta:active {
       transform: translateY(1px) scale(0.99);
+    }
+
+    /* P7 Item 3 (2026-05-20) — 2A claim section on the Children gate.
+       Sits below the read-only Request Access affordance as a secondary
+       option for actual parents/caregivers. Uses the same .empty-*
+       typographic scale so the gate reads as one cohesive surface. */
+    .claim-section {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      max-width: 440px;
+      width: 100%;
+    }
+    .claim-title {
+      font-family: var(--font-display);
+      font-size: 15.5px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      color: var(--text-primary);
+    }
+    .claim-sub {
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.55;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .claim-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
+    .claim-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(61, 155, 143, 0.10);
+      border: 1px solid rgba(61, 155, 143, 0.30);
+      border-radius: var(--radius-tile);
+      color: var(--teal-pebble);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: background 180ms ease, border-color 180ms ease, transform 160ms ease;
+      text-align: left;
+    }
+    .claim-btn:hover:not(:disabled) {
+      background: rgba(61, 155, 143, 0.16);
+      border-color: rgba(61, 155, 143, 0.45);
+    }
+    .claim-btn:active:not(:disabled) {
+      transform: translateY(1px) scale(0.99);
+    }
+    .claim-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+    .claim-chev {
+      color: rgba(61, 155, 143, 0.65);
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .claim-sent {
+      color: var(--teal-pebble);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 13.5px;
+      text-align: center;
+      padding: 10px 14px;
+      background: rgba(61, 155, 143, 0.10);
+      border: 1px solid rgba(61, 155, 143, 0.25);
+      border-radius: var(--radius-tile);
+      width: 100%;
     }
 
     /* Celebrations (left) + Your Cairn (right) share the EXACT column
@@ -3706,6 +3803,54 @@ export class HomeScreen extends LitElement {
         </button>
         ${backBtn}
       </div>
+      ${this._renderParentClaimSection(kids)}
+    `;
+  }
+
+  /** P7 Item 3 (2026-05-20) — 2A "I'm a parent or caregiver of {child}"
+   *  affordance, surfaced as a secondary section on the Children gate.
+   *  Visible only when the family has children; sits BELOW the
+   *  read-only request affordance so the read-only path stays the
+   *  primary CTA for non-parents who simply want to follow. The 2A
+   *  claim is for users who ARE a parent or active caregiver of a
+   *  specific child — distinct from the family-level read-only flow.
+   *  Mirrors iOS ChildrenView.nonParentClaimSection. */
+  _renderParentClaimSection(kids) {
+    if (!Array.isArray(kids) || kids.length === 0) return '';
+    if (this._claimedChildName) {
+      return html`
+        <div class="claim-section">
+          <div class="claim-sent">
+            ✓ Claim sent for ${this._claimedChildName} — an existing
+            parent will confirm you.
+          </div>
+        </div>
+      `;
+    }
+    return html`
+      <div class="claim-section">
+        <div class="claim-title">
+          Are you a parent or caregiver of one of them?
+        </div>
+        <div class="claim-sub">
+          Claim the link — an existing parent confirms it. You'll get
+          the full child experience once approved.
+        </div>
+        <div class="claim-list">
+          ${kids.map(
+            (child) => html`
+              <button
+                class="claim-btn"
+                ?disabled=${this._claimingChildId !== null}
+                @click=${() => this._claimChildAsParent(child)}
+              >
+                <span>I'm a parent or caregiver of ${child.name ?? 'this child'}</span>
+                <span class="claim-chev" aria-hidden="true">›</span>
+              </button>
+            `,
+          )}
+        </div>
+      </div>
     `;
   }
 
@@ -4057,6 +4202,28 @@ export class HomeScreen extends LitElement {
   _onAskPebble(e) {
     this._pebblePrefill = e.detail ?? '';
     this._activeTab = 'pebble';
+  }
+
+  // ── P7 Item 3 (2026-05-20) — per-child 2A claim handler ──
+  // Files a co-parent claim against `requestToBeCoParent`. The claim
+  // GRANTS NOTHING; an existing parent of the child must confirm it
+  // (the deployed coParentRequests rule independently enforces this).
+  // Mirrors iOS ChildrenView.nonParentClaimSection + Portal
+  // join-family-screen.js _claimChild (same underlying dataStore call).
+  async _claimChildAsParent(child) {
+    if (this.preview) return;
+    if (!child?.id || this._claimingChildId) return;
+    this._claimingChildId = child.id;
+    try {
+      await dataStore.requestToBeCoParent(child.id);
+      this._claimedChildName = child.name ?? 'your child';
+    } catch (err) {
+      toast(`Couldn't send the request: ${err.code ?? err.message}`, {
+        duration: 5000,
+      });
+    } finally {
+      this._claimingChildId = null;
+    }
   }
 
   // ── Batch F — child-view access request/approval handlers ──

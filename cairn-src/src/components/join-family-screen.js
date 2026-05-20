@@ -356,8 +356,8 @@ export class JoinFamilyScreen extends LitElement {
             ? html`
                 <h1>Request sent</h1>
                 <div class="sent">
-                  ✓ We've asked an existing parent to confirm you as
-                  ${this._claimedName}'s parent. You won't see their
+                  ✓ We've asked an existing parent to confirm your
+                  link to ${this._claimedName}. You won't see their
                   information until they do.
                 </div>
                 <div class="actions">
@@ -372,11 +372,12 @@ export class JoinFamilyScreen extends LitElement {
                 </div>
               `
             : html`
-                <h1>Are you a parent in ${familyName}?</h1>
+                <h1>Are you a parent or caregiver in ${familyName}?</h1>
                 <p class="prompt-lede">
-                  If one of these children is yours, ask to be added as
-                  their parent — an existing parent confirms it. You
-                  won't see a child's information until they do.
+                  If you're a parent or active caregiver of one of
+                  these children, ask to be linked to them — an
+                  existing parent confirms it. You won't see a child's
+                  information until they do.
                 </p>
                 <div class="child-list">
                   ${this._children.map(
@@ -400,7 +401,7 @@ export class JoinFamilyScreen extends LitElement {
                     ?disabled=${this._claiming}
                     @click=${this._notAParent}
                   >
-                    No, I'm not a parent here
+                    No, I'm not a parent or caregiver here
                   </glass-button>
                 </div>
                 ${this._error
