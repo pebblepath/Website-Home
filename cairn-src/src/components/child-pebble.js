@@ -509,7 +509,16 @@ export class ChildPebble extends LitElement {
       color: var(--text-primary);
       border-color: rgba(61, 155, 143, 0.4);
     }
-    .rail-item .lock { width: 11px; height: 11px; flex-shrink: 0; color: #e6c3ab; }
+    .rail-item .lock {
+      width: 11px;
+      height: 11px;
+      flex-shrink: 0;
+      /* Theme-aware — was hardcoded #e6c3ab (pale terracotta) which
+         vanished on the light cream rail bg. var(--ink-terracotta)
+         resolves to a dark terracotta in light mode + the same
+         pale cream in dark mode → visible in both. */
+      color: var(--ink-terracotta);
+    }
     .rail-item .rail-title {
       flex: 1;
       min-width: 0;
@@ -568,14 +577,20 @@ export class ChildPebble extends LitElement {
     }
     .privtoggle button svg { width: 13px; height: 13px; }
     .privtoggle button.on.fam {
-      background: rgba(61, 155, 143, 0.2);
+      background: rgba(61, 155, 143, 0.28);
       color: var(--bubble-link-pb);
-      box-shadow: inset 0 0 0 1px rgba(61, 155, 143, 0.4);
+      box-shadow: inset 0 0 0 1px rgba(61, 155, 143, 0.55);
     }
+    /* Was color:#e6c3ab (pale terracotta) — readable on the dusk
+       glass but vanished on the light cream Daybreak surface.
+       var(--ink-terracotta) is theme-aware (dark terracotta in light
+       mode / pale cream in dark) → clearly "on" in BOTH themes.
+       Opacities bumped from 0.20/0.45 → 0.28/0.55 for a stronger
+       selected state. Mirror change applied to .fam for symmetry. */
     .privtoggle button.on.priv {
-      background: rgba(198, 123, 92, 0.2);
-      color: #e6c3ab;
-      box-shadow: inset 0 0 0 1px rgba(198, 123, 92, 0.45);
+      background: rgba(198, 123, 92, 0.28);
+      color: var(--ink-terracotta);
+      box-shadow: inset 0 0 0 1px rgba(198, 123, 92, 0.55);
     }
     .rail-toggle {
       display: none;
@@ -666,9 +681,9 @@ export class ChildPebble extends LitElement {
       border-radius: var(--radius-pill);
       font-size: 12px;
       font-weight: 600;
-      background: rgba(198, 123, 92, 0.16);
-      color: #e6c3ab;
-      border: 1px solid rgba(198, 123, 92, 0.4);
+      background: rgba(198, 123, 92, 0.18);
+      color: var(--ink-terracotta);
+      border: 1px solid rgba(198, 123, 92, 0.45);
     }
     .privtag svg { width: 13px; height: 13px; }
     /* Message rows with sender-attribution avatars (concept .msg).
@@ -823,10 +838,14 @@ export class ChildPebble extends LitElement {
        circle (fixes "input not rounded / wrong colour / not centred"). */
     .composer {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       align-items: center;
       margin-top: 18px;
-      padding: 7px 7px 7px 16px;
+      /* Roomier padding so typed text doesn't read as crammed in the
+         top-left of the pill. The textarea is align-items:center
+         vertically so the extra top/bottom keeps the text visually
+         balanced inside the composer height. */
+      padding: 10px 10px 10px 20px;
       border-radius: var(--radius-pill);
       background: var(--glass-fill);
       border: 1px solid var(--glass-border);
@@ -841,7 +860,9 @@ export class ChildPebble extends LitElement {
       resize: none;
       background: transparent;
       border: none;
-      padding: 7px 0;
+      /* 4px top/bottom + composer's 10px = ~14px breathing room
+         from the pill edge to the text baseline at min-height. */
+      padding: 4px 2px;
       color: var(--text-primary);
       font-family: var(--font-body);
       font-size: 14px;

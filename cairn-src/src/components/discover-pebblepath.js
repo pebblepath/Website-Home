@@ -42,9 +42,10 @@ export class DiscoverPebblePath extends LitElement {
       font-family: var(--font-pebble);
       font-weight: 400;
       font-size: 30px;
-      /* Themeable: cream on the dark bg, charcoal on the light sand
-         (was hardcoded near-white → washed-out in light mode). */
-      color: var(--text-primary);
+      /* --brand-wordmark-color is theme-aware: cream on the dark
+         dusk-glass surface, SAGE-DEEP (the brand dark-green that the
+         navbar uses) on the light sand backdrop. */
+      color: var(--brand-wordmark-color);
       letter-spacing: 0.04em;
       line-height: 1;
       text-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
@@ -96,7 +97,7 @@ export class DiscoverPebblePath extends LitElement {
         target="_blank"
         rel="noopener"
       >
-        Get the app on iPhone <span class="arrow">→</span>
+        Download the app <span class="arrow">→</span>
       </a>
     `;
   }

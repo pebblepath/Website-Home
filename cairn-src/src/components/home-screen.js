@@ -3390,7 +3390,7 @@ export class HomeScreen extends LitElement {
     const allMembers = this._liveImmediate().concat(this._liveExtended());
     const scope = html`<div class="scope shared">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 2.5-5 6-5s6 2 6 5M15 17c2 0 5 1 5 3" stroke-linecap="round"/></svg>
-      Shared with your connections
+      Shared with connections
     </div>`;
     return html`
       ${this._renderTabHeader(
@@ -3583,7 +3583,7 @@ export class HomeScreen extends LitElement {
           </div>
           <div class="set-row">
             <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8 6 18M18 6l1.8-1.8"/></svg></span>
-            <div class="sl"><b>Appearance</b><span>Light or dark theme — applies across the Portal.</span></div>
+            <div class="sl"><b>Appearance</b><span>Applies across the Portal.</span></div>
             <div class="theme-seg" role="group" aria-label="Theme">
               <button
                 class=${this._themeLight ? 'on' : ''}

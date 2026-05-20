@@ -66,6 +66,12 @@
   --text-secondary: rgba(255, 248, 235, 0.66);
   --text-tertiary: rgba(255, 248, 235, 0.42);
 
+  /* Footer "PebblePath" wordmark (discover-pebblepath). On dark it
+     reads as cream over the dusk glass; in the light theme it
+     swaps to --sage-deep (the brand dark green that the navbar
+     uses) for a stronger brand cue on the sand backdrop. */
+  --brand-wordmark-color: var(--text-primary);
+
   /* ── Radii ───────────────────────────────────────────────────── */
   --radius-pill: 999px;
   --radius-card: 24px;
@@ -160,6 +166,9 @@ html.theme-light {
   --text-primary: rgba(44, 62, 64, 0.96);
   --text-secondary: rgba(44, 62, 64, 0.64);
   --text-tertiary: rgba(44, 62, 64, 0.44);
+
+  /* Footer wordmark — dark green brand cue on the light sand. */
+  --brand-wordmark-color: var(--sage-deep);
 
   /* Semantic flips. */
   --heading-fill: linear-gradient(180deg, #2c3e40 0%, rgba(44, 62, 64, 0.78) 100%);
