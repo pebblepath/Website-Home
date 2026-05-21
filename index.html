@@ -1872,25 +1872,24 @@
      .pv-trash + their sub-rules and @keyframes near line 637+) ARE
      still in use — do not delete. */
   .privacy-band{
-    background:#fff;
+    background:transparent;
     border:1px solid var(--light-gray);
     border-radius:24px;
     padding:32px 36px;
-    box-shadow:0 4px 24px rgba(31,92,84,.07);
     position:relative;
     overflow:hidden;
   }
-  .privacy-band::before{                 /* teal accent edge */
-    content:'';position:absolute;left:0;top:0;bottom:0;width:5px;
-    background:linear-gradient(var(--teal-light),var(--teal-dark));
-  }
+  /* 2026-05-21 — removed: the teal left accent bar (.privacy-band::before)
+     and the white card fill + box-shadow. Privacy band now reads as a
+     transparent terracotta-accented frame, matching the warmer accent
+     used elsewhere on the site for emphasis surfaces. */
   .privacy-band-head{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
   .privacy-lock{
     width:48px;height:48px;border-radius:14px;flex-shrink:0;
-    background:rgba(61,155,143,.12);
+    background:rgba(198,123,92,.14);
     display:flex;align-items:center;justify-content:center;
   }
-  .privacy-lock svg{width:26px;height:26px;color:var(--teal-dark)}
+  .privacy-lock svg{width:26px;height:26px;color:var(--terracotta-dark)}
   .privacy-band-title{flex:1;min-width:240px}
   .privacy-band-title .feature-label{margin-bottom:4px}
   .privacy-band-title h2{
@@ -1899,7 +1898,7 @@
   }
   .privacy-more{
     font-family:'Nunito',sans-serif;font-weight:800;font-size:13px;
-    color:var(--teal-dark);text-decoration:none;white-space:nowrap;
+    color:var(--terracotta-dark);text-decoration:none;white-space:nowrap;
     display:inline-flex;align-items:center;gap:6px;
   }
   .privacy-more svg{width:14px;height:14px}
@@ -1908,10 +1907,10 @@
   .privacy-point{display:flex;flex-direction:column;gap:8px}
   .privacy-point-icon{
     width:34px;height:34px;border-radius:10px;flex-shrink:0;
-    background:rgba(61,155,143,.10);
+    background:rgba(198,123,92,.12);
     display:flex;align-items:center;justify-content:center;
   }
-  .privacy-point-icon svg{width:19px;height:19px;color:var(--teal-dark)}
+  .privacy-point-icon svg{width:19px;height:19px;color:var(--terracotta-dark)}
   .privacy-point h3{
     font-family:'Nunito',sans-serif;font-weight:800;
     font-size:15px;color:var(--charcoal);
@@ -2368,8 +2367,8 @@
 
 <!-- BENEFITS -->
 <section class="benefits reveal" id="features">
-  <h2>Not just for parents &mdash;<br class="mobile-break"> for the whole family.</h2>
-  <p class="subtitle">PebblePath brings your child's development and your family's life into one calm space. Everyone you invite &mdash; co-parents, grandparents, caregivers &mdash; joins as an equal member.</p>
+  <h2>For the whole family.</h2>
+  <p class="subtitle">PebblePath brings your child's development and your family's life into one calm space. Everyone you invite &mdash; co-parents, grandparents, caregivers.</p>
   <div class="benefits-grid">
     <div class="benefit-card">
       <div class="benefit-icon motor">
@@ -2385,7 +2384,7 @@
         </svg>
       </div>
       <h3>Personalized milestones</h3>
-      <p>200+ developmental milestones tailored to each child's age across motor, language, social-emotional, and cognitive domains &mdash; so the whole family can follow along.</p>
+      <p>200+ developmental milestones tailored to each child's age across motor, language, social-emotional, and cognitive domains.</p>
     </div>
     <div class="benefit-card">
       <div class="benefit-icon pebble">
@@ -2412,7 +2411,7 @@
         </svg>
       </div>
       <h3>Family Portal</h3>
-      <p>Plan trips, weekends, birthdays &amp; anniversaries together &mdash; with grandparents, co-parents and caregivers all in one shared space.</p>
+      <p>Plan trips, weekends, birthdays &amp; anniversaries together &mdash; with grandparents, siblings and caregivers.</p>
     </div>
   </div>
 </section>
@@ -2627,7 +2626,7 @@
         </li>
         <li>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          <span><b>Pebble Advisor</b> &mdash; learns your family's context through milestones over time.</span>
+          <span><b>Pebble Advisor</b> &mdash; learns your family's patterns over time.</span>
         </li>
         <li>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
@@ -2635,7 +2634,7 @@
         </li>
         <li>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          <span><b>Built for the whole family</b> &mdash; real-time sync across every member you invite.</span>
+          <span><b>Collaboration</b> &mdash; real-time sync across every member you invite.</span>
         </li>
         <li>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
