@@ -131,6 +131,17 @@ export class HomeScreen extends LitElement {
      *  this independently). */
     _claimingChildId: { state: true },
     _claimedChildName: { state: true },
+    /** Phase 9 — post-registration "Join another family" surface in the
+     *  Settings tab. The Account row hosts an inline code input + Join
+     *  button (no separate sheet). State is session-local; resets on
+     *  page reload. The redemption itself routes through
+     *  `dataStore.redeemConnectCode` — the same already-shipped path
+     *  used by the onboarding `join-family-screen`. NOT privilege-
+     *  sensitive on its own (adds to `cairnMemberIds` only). */
+    _joinAnotherCode: { state: true },
+    _joinAnotherBusy: { state: true },
+    _joinAnotherError: { state: true },
+    _joinAnotherSuccessName: { state: true },
   };
 
   constructor() {
@@ -163,6 +174,11 @@ export class HomeScreen extends LitElement {
     // confirmation toast inside the gate).
     this._claimingChildId = null;
     this._claimedChildName = null;
+    // P9 — Settings → Join another family
+    this._joinAnotherCode = '';
+    this._joinAnotherBusy = false;
+    this._joinAnotherError = '';
+    this._joinAnotherSuccessName = '';
     this._pebblePrefill = '';
     this._plannerOpen = false;
     this._plannerTrip = null;
@@ -204,6 +220,52 @@ export class HomeScreen extends LitElement {
     // user-controlled via prev/next or yearly month-tap.
     const t = new Date();
     this._displayMonth = new Date(t.getFullYear(), t.getMonth(), 1);
+  }
+
+  // P9 — Settings → Join another family. Input formatter that keeps the
+  // value alphanumeric + uppercase + 6 chars max. Same shape as the
+  // onboarding `join-family-screen` and iOS `JoinFamilyView`.
+  _onJoinAnotherCodeInput(e) {
+    const raw = (e.target?.value ?? '').toString();
+    const cleaned = raw
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, '')
+      .slice(0, 6);
+    if (cleaned !== raw) e.target.value = cleaned;
+    this._joinAnotherCode = cleaned;
+    if (this._joinAnotherError) this._joinAnotherError = '';
+  }
+
+  async _attemptJoinAnotherFamily() {
+    const code = (this._joinAnotherCode ?? '').trim();
+    if (code.length !== 6 || this._joinAnotherBusy) return;
+    this._joinAnotherBusy = true;
+    this._joinAnotherError = '';
+    this._joinAnotherSuccessName = '';
+    try {
+      // Pre-look up the family by code so we can capture its name for
+      // the success state — `redeemConnectCode` only returns the
+      // familyId. If the lookup misses we abort here with a clearer
+      // error before mutating anything.
+      const fam = await dataStore.findFamilyByConnectCode(code);
+      if (!fam) {
+        this._joinAnotherError =
+          "Couldn't find that family. Double-check the code with whoever invited you.";
+        return;
+      }
+      const joinedName = fam.name || 'the family';
+      await dataStore.redeemConnectCode(code);
+      this._joinAnotherSuccessName = joinedName;
+      toast(`Joined ${joinedName}.`);
+      this._joinAnotherCode = '';
+    } catch (e) {
+      console.error('Join another family failed:', e);
+      this._joinAnotherError =
+        e?.message?.replace(/^Error:\s*/, '') ??
+        "Couldn't join — double-check the code with whoever invited you.";
+    } finally {
+      this._joinAnotherBusy = false;
+    }
   }
 
   async _saveFamilyName(e) {
@@ -2314,6 +2376,61 @@ export class HomeScreen extends LitElement {
       color: var(--text-tertiary);
       font-style: italic;
     }
+    /* P9 — Settings → Join another family. The code input + Join
+       button live on a SECOND line below the row description so the
+       narrow-viewport Settings tab (one-column grid) doesn't squash
+       either the description or the input. */
+    .join-cluster {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .join-cluster input.join-code {
+      width: 110px;
+      font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo,
+        monospace);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 7px 8px;
+      border-radius: var(--radius-input);
+      background: var(--glass-fill-strong);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+    }
+    .join-cluster input.join-code:focus {
+      outline: none;
+      border-color: var(--terracotta);
+    }
+    .join-cluster button.join-go {
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      background: var(--gradient-cta);
+      color: #fff;
+      border: 1px solid rgba(255, 248, 235, 0.22);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+      font-size: 12.5px;
+    }
+    .join-cluster button.join-go:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .join-error {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--rose-soft, var(--terracotta));
+    }
+    .join-success {
+      margin-top: 8px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+    }
     .set-pill {
       display: inline-flex;
       align-items: center;
@@ -3712,8 +3829,64 @@ export class HomeScreen extends LitElement {
             <div class="sl"><b>PebblePath Premium</b><span>Unlimited Pebble, summaries, and insights.</span></div>
             <span class="set-meta">Managed in the app</span>
           </div>
+          ${this._renderJoinAnotherFamilyRow()}
         </glass-panel>
       </section>
+    `;
+  }
+
+  /** Phase 9 — Settings → "Join another family". Inline 6-char code
+   *  input + Join button. Routes through `dataStore.redeemConnectCode`,
+   *  the already-shipped flat-member redeem path. NOT privilege-
+   *  sensitive (adds to `cairnMemberIds` only). */
+  _renderJoinAnotherFamilyRow() {
+    const code = this._joinAnotherCode ?? '';
+    const canJoin = code.length === 6 && !this._joinAnotherBusy;
+    return html`
+      <div class="set-row" style="align-items:flex-start;">
+        <span class="si" style="margin-top:2px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/><circle cx="12" cy="12" r="9"/></svg></span>
+        <div class="sl">
+          <b>Join another family</b>
+          <span>Paste a 6-character connect code to join an additional family.</span>
+          <div class="join-cluster">
+            <input
+              class="join-code"
+              type="text"
+              inputmode="latin"
+              autocapitalize="characters"
+              autocomplete="off"
+              autocorrect="off"
+              spellcheck="false"
+              maxlength="6"
+              placeholder="ABC123"
+              .value=${code}
+              ?disabled=${this._joinAnotherBusy}
+              @input=${(e) => this._onJoinAnotherCodeInput(e)}
+              @keydown=${(e) => {
+                if (e.key === 'Enter' && canJoin) {
+                  this._attemptJoinAnotherFamily();
+                }
+              }}
+              aria-label="Connect code"
+            />
+            <button
+              class="join-go"
+              ?disabled=${!canJoin}
+              @click=${() => this._attemptJoinAnotherFamily()}
+            >
+              ${this._joinAnotherBusy ? 'Joining…' : 'Join'}
+            </button>
+          </div>
+          ${this._joinAnotherError
+            ? html`<div class="join-error">${this._joinAnotherError}</div>`
+            : ''}
+          ${this._joinAnotherSuccessName
+            ? html`<div class="join-success">
+                ✓ Joined ${this._joinAnotherSuccessName}.
+              </div>`
+            : ''}
+        </div>
+      </div>
     `;
   }
 
