@@ -1906,18 +1906,29 @@
   .privacy-points{display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
   .privacy-point{display:flex;flex-direction:column;gap:8px}
   .privacy-point-icon{
-    width:34px;height:34px;border-radius:10px;flex-shrink:0;
+    width:44px;height:44px;border-radius:12px;flex-shrink:0;
     background:rgba(198,123,92,.12);
     display:flex;align-items:center;justify-content:center;
   }
-  .privacy-point-icon svg{width:19px;height:19px;color:var(--terracotta-dark)}
+  .privacy-point-icon svg{width:24px;height:24px;color:var(--terracotta-dark)}
   .privacy-point h3{
     font-family:'Nunito',sans-serif;font-weight:800;
-    font-size:15px;color:var(--charcoal);
+    font-size:17px;color:var(--charcoal);
   }
   .privacy-point p{font-size:12.5px;line-height:1.55;color:var(--warm-gray)}
   @media(max-width:820px){
     .privacy-points{grid-template-columns:repeat(2,1fr);gap:24px}
+  }
+  /* 2026-05-21 — Mobile (≤768px): drop the "Our full privacy approach"
+     link (the section is self-contained at phone widths, and the link
+     still lives in the footer); stack the band head into a centered
+     column with the lock icon above the heading; center each commitment
+     so icon → title → body read down the middle. */
+  @media(max-width:768px){
+    .privacy-more{display:none}
+    .privacy-band-head{flex-direction:column;align-items:center;text-align:center}
+    .privacy-band-title{flex:0 1 auto;min-width:0;text-align:center}
+    .privacy-point{align-items:center;text-align:center}
   }
   @media(max-width:520px){
     .privacy-points{grid-template-columns:1fr}
