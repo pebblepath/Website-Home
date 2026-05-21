@@ -990,6 +990,86 @@ class FamilyDataStore extends EventTarget {
     );
   }
 
+  // ─── Phase 11 — Parent-initiated direct elevation ──────────────────
+  //
+  // The acting parent taps a connection in the Family Circle / manage-
+  // members modal + picks a tier. Two writes mirror the approve-path
+  // destinations (`childViewers` for read-only, `Child.parentIds` for
+  // parent tier) — ZERO new Firestore rules. Distinction from
+  // `approveChildAccess`: no prior request doc; the parent initiates
+  // without one. Both writes are member/parent-only via the deployed
+  // rules, independent of any request-doc state.
+  //
+  // Privilege-escalation guarantees live in the rules + the UI
+  // eligibility filter (manage-members-modal only surfaces the
+  // "Grant access" affordance for `ppIsMember` viewers on rows in the
+  // extended `cairnMembers` set). See
+  // docs/P11-parent-elevation-from-family-circle-plan.md.
+
+  /** Direct grant of READ-ONLY (`childViewers`) access by an acting
+   *  parent. No request doc required. Mirror of `approveChildAccess`
+   *  minus the request-side update. Member-only via the deployed
+   *  `/families` update rule arm. */
+  async grantChildViewerDirectly(uid) {
+    const fid = this._ppFamilyId;
+    if (!fid || !this.state.ppIsMember) {
+      throw new Error('Only a parent can grant access.');
+    }
+    const cur = Array.isArray(this.state.ppFamily?.childViewers)
+      ? this.state.ppFamily.childViewers
+      : [];
+    if (cur.includes(uid)) return; // idempotent — already a viewer
+    await updateDoc(doc(db, 'families', fid), {
+      childViewers: [...cur, uid],
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  /** Direct grant of PARENT (`Child.parentIds`) access by an acting
+   *  parent. Writes the uid to each of the acting parent's own
+   *  children's `parentIds` arrays. The acting parent must be in
+   *  `parentIds` of each child or the rule's `isChildParent` check
+   *  rejects the write — we filter `state.ppChildren` to those
+   *  children here as a defence-in-depth. Snapshotted at grant time
+   *  (future-added children don't retroactively extend the grant —
+   *  matches the iOS + P8 invariant). Returns the array of child
+   *  display names that were updated, so the caller can show a toast
+   *  like "Added as a parent of Felix & Luna". */
+  async grantParentAccessForOwnChildren(uid) {
+    const fid = this._ppFamilyId;
+    if (!fid || !this.state.ppIsMember) {
+      throw new Error('Only a parent can grant access.');
+    }
+    const myUid = this._uid;
+    if (!myUid) throw new Error('Not signed in.');
+    const kids = Array.isArray(this.state.ppChildren)
+      ? this.state.ppChildren
+      : [];
+    const mine = kids.filter(
+      (c) =>
+        c?.id &&
+        Array.isArray(c.parentIds) &&
+        c.parentIds.includes(myUid),
+    );
+    if (mine.length === 0) return [];
+    const grantedNames = [];
+    for (const child of mine) {
+      const cur = Array.isArray(child.parentIds) ? child.parentIds : [];
+      if (cur.includes(uid)) {
+        // Already a parent of this one — count it as "granted" so the
+        // toast still reads sensibly across a mixed already/not state.
+        grantedNames.push(child.name ?? 'your child');
+        continue;
+      }
+      await updateDoc(doc(db, 'families', fid, 'children', child.id), {
+        parentIds: [...cur, uid],
+        updatedAt: serverTimestamp(),
+      });
+      grantedNames.push(child.name ?? 'your child');
+    }
+    return grantedNames;
+  }
+
   /** parent revokes a previously-granted viewer: drop the uid
    *  from `childViewers` (access deactivates live via the viewer's
    *  _reconcileChildViewer) + best-effort flip their request doc so

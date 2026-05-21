@@ -35,6 +35,16 @@ export class ManageMembersModal extends LitElement {
     _savingChild: { state: true },
     _editingLabelUid: { state: true },
     _labelDraft: { state: true },
+    /** Phase 11 — parent-initiated upgrade. When the acting parent
+     *  taps "Grant access" on a connection row, this is set to the
+     *  row's uid and the inline tier-picker expands beneath the row.
+     *  Tapping a tier fires the grant via `dataStore` + collapses.
+     *  Null otherwise. */
+    _grantTargetUid: { state: true },
+    /** Per-row grant in-flight flag. Holds the uid currently being
+     *  granted; drives the disabled-state on both tier buttons so a
+     *  double-click during the network round-trip doesn't fire twice. */
+    _grantingUid: { state: true },
   };
 
   constructor() {
@@ -54,6 +64,61 @@ export class ManageMembersModal extends LitElement {
     this._savingChild = false;
     this._editingLabelUid = null;
     this._labelDraft = '';
+    // Phase 11 — null when no inline tier-picker is expanded.
+    this._grantTargetUid = null;
+    this._grantingUid = null;
+  }
+
+  // ── Phase 11 — parent-initiated direct elevation ──────────────────
+
+  _toggleGrantPicker(uid) {
+    // Collapse any open label edit on this row so the two affordances
+    // don't fight for the same vertical slot.
+    if (this._editingLabelUid === uid) this._editingLabelUid = null;
+    this._grantTargetUid = this._grantTargetUid === uid ? null : uid;
+  }
+
+  async _grantReadOnly(uid, name) {
+    if (this._grantingUid) return;
+    this._grantingUid = uid;
+    try {
+      await dataStore.grantChildViewerDirectly(uid);
+      toast(`Read-only access granted to ${name}.`);
+      this._grantTargetUid = null;
+    } catch (e) {
+      console.error('grantChildViewerDirectly failed:', e);
+      toast(`Couldn't grant access: ${e.code ?? e.message}`, { duration: 5000 });
+    } finally {
+      this._grantingUid = null;
+    }
+  }
+
+  async _grantParent(uid, name) {
+    if (this._grantingUid) return;
+    this._grantingUid = uid;
+    try {
+      const grantedNames = await dataStore.grantParentAccessForOwnChildren(uid);
+      if (!grantedNames || grantedNames.length === 0) {
+        toast(
+          "No children to grant access to — add a child first, then try again.",
+          { duration: 5000 },
+        );
+      } else if (grantedNames.length === 1) {
+        toast(`${name} is now a parent of ${grantedNames[0]}.`);
+      } else if (grantedNames.length === 2) {
+        toast(`${name} is now a parent of ${grantedNames[0]} & ${grantedNames[1]}.`);
+      } else {
+        const head = grantedNames.slice(0, -1).join(', ');
+        const tail = grantedNames[grantedNames.length - 1];
+        toast(`${name} is now a parent of ${head} & ${tail}.`);
+      }
+      this._grantTargetUid = null;
+    } catch (e) {
+      console.error('grantParentAccessForOwnChildren failed:', e);
+      toast(`Couldn't grant access: ${e.code ?? e.message}`, { duration: 5000 });
+    } finally {
+      this._grantingUid = null;
+    }
   }
 
   /** Owner-private label for a connection. Read from the OWNER's
@@ -209,13 +274,27 @@ export class ManageMembersModal extends LitElement {
       gap: 12px;
       padding: 10px 6px;
       border-bottom: 1px solid rgba(255, 248, 235, 0.06);
+      /* Phase 11 — the right-side pills (Grant access + Remove) need
+         to wrap onto a second line on narrow viewports, otherwise
+         they overlap the body column's name + label. Allow the row
+         to flow vertically when content can't fit horizontally. */
+      flex-wrap: wrap;
     }
     .member-row:last-child {
       border-bottom: none;
     }
     .member-row .body {
       flex: 1;
-      min-width: 0;
+      /* Phase 11 — was min-width:0 (let body shrink to nothing).
+         With the Grant access pill added at narrow viewports the
+         body got squashed until its content overlapped the pills.
+         Setting a sensible minimum forces the right-side pills onto
+         a new wrapped line instead — see flex-wrap:wrap above. */
+      /* prettier-ignore — never put backticks in CSS comments inside
+         a Lit css tagged template; they terminate the template
+         silently and only blow up at module-eval time (node --check
+         catches it; Vite build does NOT). */
+      min-width: 140px;
     }
     .member-row .name {
       font-size: 14.5px;
@@ -284,6 +363,112 @@ export class ManageMembersModal extends LitElement {
     .member-row .remove-btn:disabled {
       opacity: 0.5;
       cursor: default;
+    }
+    /* Phase 11 — "Grant access" pill on connection rows + the inline
+       tier-picker that expands beneath the row when tapped. Inline
+       (not a nested modal) so the tier-tap stays close to the row
+       it acts on; mirrors the iOS sheet's two-card vertical stack. */
+    .member-row .grant-btn {
+      flex-shrink: 0;
+      background: rgba(61, 155, 143, 0.14);
+      border: 1px solid rgba(61, 155, 143, 0.4);
+      color: var(--ink-teal, var(--text-primary));
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 160ms ease;
+    }
+    .member-row .grant-btn:hover {
+      background: rgba(61, 155, 143, 0.22);
+      border-color: rgba(61, 155, 143, 0.6);
+    }
+    .grant-picker {
+      /* prettier-ignore — Lit css tagged-template gotcha: backticks
+         here would terminate the template even inside a CSS comment.
+         Renders as a sibling block AFTER its .member-row (Lit map
+         emits both; parent is a flex column so the picker stacks
+         naturally below). Indented to align with the row's name
+         column (avatar = 36px + 12px gap = 48px). */
+      margin: 4px 0 14px 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-right: 4px;
+    }
+    .grant-picker-head {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 0 4px 4px;
+    }
+    .grant-picker-head b {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .grant-picker-sub {
+      font-size: 11.5px;
+      color: var(--text-tertiary);
+    }
+    .tier-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: var(--radius-input);
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      text-align: left;
+      cursor: pointer;
+      transition: all 160ms ease;
+    }
+    .tier-card:hover {
+      background: var(--glass-fill-strong);
+      border-color: var(--glass-border-strong);
+    }
+    .tier-card:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+    .tier-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .tier-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+    .tier-text {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .tier-text b {
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+    .tier-text span {
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+    .tier-chev {
+      flex-shrink: 0;
+      color: var(--text-tertiary);
+      font-size: 18px;
+      line-height: 1;
     }
     .empty {
       color: var(--text-tertiary);
@@ -666,6 +851,15 @@ export class ManageMembersModal extends LitElement {
                     </div>
                     ${this.canRemove && !isFixedRole
                       ? html`<button
+                          class="grant-btn"
+                          @click=${() => this._toggleGrantPicker(m.uid)}
+                          title="Grant ${m.displayName} access to child data"
+                        >
+                          ${this._grantTargetUid === m.uid ? 'Cancel' : 'Grant access'}
+                        </button>`
+                      : ''}
+                    ${this.canRemove && !isFixedRole
+                      ? html`<button
                           class="remove-btn"
                           ?disabled=${this._removingUid === m.uid}
                           @click=${() => this._removeMember(m)}
@@ -674,6 +868,52 @@ export class ManageMembersModal extends LitElement {
                         </button>`
                       : ''}
                   </div>
+                  ${this._grantTargetUid === m.uid
+                    ? html`<div class="grant-picker">
+                        <div class="grant-picker-head">
+                          <b>Pick a level for ${m.displayName}</b>
+                          <span class="grant-picker-sub"
+                            >Tap one — it takes effect immediately. You can revoke read-only anytime in Settings.</span
+                          >
+                        </div>
+                        <button
+                          class="tier-card"
+                          ?disabled=${this._grantingUid === m.uid}
+                          @click=${() => this._grantReadOnly(m.uid, m.displayName)}
+                        >
+                          <span class="tier-icon" style="background:rgba(61,155,143,.14);color:var(--ink-teal);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/></svg>
+                          </span>
+                          <span class="tier-text">
+                            <b>Read-only access</b>
+                            <span
+                              >See milestones, growth insights, and Pebble's
+                              notes. Can't mark milestones, edit, or use
+                              Pebble.</span
+                            >
+                          </span>
+                          <span class="tier-chev">›</span>
+                        </button>
+                        <button
+                          class="tier-card"
+                          ?disabled=${this._grantingUid === m.uid}
+                          @click=${() => this._grantParent(m.uid, m.displayName)}
+                        >
+                          <span class="tier-icon" style="background:rgba(201,138,138,.18);color:var(--ink-terracotta);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5"/><path d="M14.5 20c0-2 2-3.5 4.5-3.5s4.5 1.5 4.5 3.5"/></svg>
+                          </span>
+                          <span class="tier-text">
+                            <b>Parent or caregiver</b>
+                            <span
+                              >Becomes a parent of your children. Can mark
+                              milestones, ask Pebble, edit child info, export
+                              pediatrician PDF. Same access as you.</span
+                            >
+                          </span>
+                          <span class="tier-chev">›</span>
+                        </button>
+                      </div>`
+                    : ''}
                 `;
               })}
 
