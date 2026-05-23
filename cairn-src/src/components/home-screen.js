@@ -2950,6 +2950,22 @@ export class HomeScreen extends LitElement {
     });
   }
 
+  /** 2026-05-22 — Calendar Mode B done-screen "Open day plan" handler.
+   *  ImportCalendarModal fires `open-trip-planner` with `detail.tripId`;
+   *  we look up the trip in dataStore + route to its planner. Closes the
+   *  import modal first so the planner has the foreground when it lands.
+   *  Mirrors iOS's app.pendingTripPlannerOpen → ActivitiesView pickup. */
+  _onOpenTripPlannerFromImport(e) {
+    const tripId = e?.detail?.tripId;
+    if (!tripId) return;
+    this._importOpen = false;
+    const trip = (dataStore.state.trips ?? []).find((t) => t.id === tripId);
+    if (!trip) return;
+    // Defer one tick so the just-closed import modal is fully out of
+    // the DOM stacking context before the planner expands.
+    requestAnimationFrame(() => this._openPlanner(trip));
+  }
+
   _openEdit(trip) {
     if (this.preview) {
       toast('Sign in to edit real activities.');
@@ -4323,6 +4339,7 @@ export class HomeScreen extends LitElement {
       <import-calendar-modal
         ?open=${this._importOpen}
         @cancel=${() => (this._importOpen = false)}
+        @open-trip-planner=${(e) => this._onOpenTripPlannerFromImport(e)}
       ></import-calendar-modal>
 
       <school-import-modal

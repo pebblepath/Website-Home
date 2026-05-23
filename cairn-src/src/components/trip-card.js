@@ -395,10 +395,15 @@ export class TripCard extends LitElement {
   render() {
     const t = this.trip;
     if (!t) return html``;
-    const cover = t.coverImage
-      ? `background-image: url(${t.coverImage});`
+    // Display precedence (mirrors iOS Trip.previewImage docstring):
+    // user-supplied previewImage beats the auto-derived lodging
+    // coverImage so trips don't all look like hotel rooms. Either
+    // can be a Storage URL (uploaded) OR a directly-pasted image URL.
+    const displayImage = (t.previewImage && String(t.previewImage).trim()) || t.coverImage;
+    const cover = displayImage
+      ? `background-image: url(${displayImage});`
       : `background: ${gradientForTrip(t)};`;
-    const coverClass = t.coverImage ? 'cover has-image' : 'cover';
+    const coverClass = displayImage ? 'cover has-image' : 'cover';
     const memberMap = new Map(this.members.map((m) => [m.uid, m]));
     const attendees = (t.attendees ?? []).map((uid) => memberMap.get(uid)).filter(Boolean);
     const shown = attendees.slice(0, 4);

@@ -26,11 +26,22 @@ export class ImportCalendarModal extends LitElement {
     _importing: { state: true },
     /** Gate the Google OAuth popup behind an explicit "Connect" tap +
      *  an expectations note. During the beta the unverified-app +
-     *  raw `…firebaseapp.com` Google screens are unavoidable (fixing
+     *  raw firebaseapp.com Google screens are unavoidable (fixing
      *  them = OAuth verification / custom auth domain, both deferred
      *  pre-public-launch). Auto-firing the popup on open made testers
      *  hit those screens with zero context; this primes them first. */
     _started: { state: true },
+    /** 2026-05-22 — null = chooser, 'newTrips' = current behaviour
+     *  (each event becomes its own Trip), 'addToTrip' = each event
+     *  becomes a PlanItem on a user-picked existing Trip. */
+    _mode: { state: true },
+    /** Mode B — id of the chosen Trip the imported events will land in. */
+    _targetTripId: { state: true },
+    /** Mode B — events whose start date fell outside the chosen trip's
+     *  inclusive range. Surfaced on the done screen. */
+    _skippedOutOfRange: { state: true },
+    /** Mode B — count of items just added, for the done copy. */
+    _addedCount: { state: true },
   };
 
   constructor() {
@@ -42,15 +53,47 @@ export class ImportCalendarModal extends LitElement {
     this._error = '';
     this._importing = false;
     this._started = false;
+    this._mode = null;
+    this._targetTripId = '';
+    this._skippedOutOfRange = 0;
+    this._addedCount = 0;
   }
 
   willUpdate(changed) {
-    // Reset to the intro step each time the modal (re)opens — do NOT
-    // auto-fire the Google popup; the user starts it from the intro.
+    // Reset to the chooser step each time the modal (re)opens — do
+    // NOT auto-fire the Google popup; the user starts it from the
+    // intro. Mode + trip selections reset too so each open is a
+    // fresh import session.
     if (changed.has('open') && this.open) {
       this._started = false;
       this._error = '';
+      this._mode = null;
+      this._targetTripId = '';
+      this._skippedOutOfRange = 0;
+      this._addedCount = 0;
     }
+  }
+
+  /** Trips eligible as Mode B destinations: any trip whose end date is
+   *  today or later. Sorted by start date ascending. */
+  _eligibleTrips() {
+    const today = new Date().toISOString().slice(0, 10);
+    const trips = Array.isArray(dataStore.state.trips) ? dataStore.state.trips : [];
+    return trips
+      .filter((t) => t && t.end && String(t.end) >= today)
+      .sort((a, b) => String(a.start || '').localeCompare(String(b.start || '')));
+  }
+
+  _pickMode(mode) {
+    this._mode = mode;
+    if (mode === 'newTrips') {
+      // Skip straight past trip-picker; the existing intro / connect
+      // flow takes over from here.
+    }
+  }
+
+  _pickTrip(tripId) {
+    this._targetTripId = tripId;
   }
 
   _start() {
@@ -114,6 +157,42 @@ export class ImportCalendarModal extends LitElement {
     const toImport = this._events.filter((e) => this._selected.has(e.id));
     let okCount = 0;
     let failCount = 0;
+    let skipped = 0;
+    if (this._mode === 'addToTrip') {
+      // Mode B — each event becomes a PlanItem on the chosen trip.
+      // Skip events outside the trip's inclusive date range (locked
+      // fork): drop them with a count rather than clamp to nearest day.
+      const trip = this._eligibleTrips().find((t) => t.id === this._targetTripId);
+      if (!trip) {
+        this._importing = false;
+        toast('Couldn’t find that activity. Try again.', { duration: 4000 });
+        return;
+      }
+      for (const event of toImport) {
+        const startDay = event.start?.date ?? event.start?.dateTime?.slice(0, 10);
+        if (!startDay) { skipped++; continue; }
+        if (startDay < trip.start || startDay > trip.end) {
+          skipped++;
+          continue;
+        }
+        const planItem = this._calendarEventToPlanItem(event, startDay);
+        try {
+          await dataStore.addPlanItem(trip.id, planItem);
+          okCount++;
+        } catch (err) {
+          console.error('addPlanItem failed for event', event.id, err);
+          failCount++;
+        }
+      }
+      this._importing = false;
+      this._skippedOutOfRange = skipped;
+      this._addedCount = okCount;
+      // Stay in the modal — switch to the done screen with the
+      // "Open day plan" CTA (handled by render's mode==='addToTrip'
+      // && _addedCount > 0 branch).
+      return;
+    }
+    // Mode A — original behaviour. Each event becomes a Trip.
     for (const event of toImport) {
       const trip = normalizeCalendarEventToTrip(event, uid);
       try {
@@ -132,6 +211,66 @@ export class ImportCalendarModal extends LitElement {
     }
     this._events = [];
     this._selected = new Set();
+    this.dispatchEvent(new Event('cancel'));
+  }
+
+  /** Heuristic planItem-type assignment (mirrors iOS
+   *  CalendarConnectSheet.heuristicPlanItemType). Falls back to
+   *  'visit' so each imported item shows a meaningful icon in the
+   *  planner; user can edit per-item later. */
+  _calendarEventToPlanItem(event, startDay) {
+    const text = `${event.summary ?? ''} ${event.description ?? ''}`.toLowerCase();
+    let type = 'visit';
+    if (/(lunch|dinner|breakfast|brunch|coffee|restaurant|caf[eé])/i.test(text)) {
+      type = 'meal';
+    } else if (/(flight|airline|airport|drive|train|taxi|uber|lyft|transfer)/i.test(text)) {
+      type = 'travel';
+    }
+    // Time + duration only for timed events (not all-day).
+    let time = '';
+    let durationMins = undefined;
+    if (event.start?.dateTime && event.end?.dateTime) {
+      const s = new Date(event.start.dateTime);
+      const e = new Date(event.end.dateTime);
+      const hh = String(s.getHours()).padStart(2, '0');
+      const mm = String(s.getMinutes()).padStart(2, '0');
+      time = `${hh}:${mm}`;
+      const mins = Math.round((e - s) / 60000);
+      if (mins > 0) durationMins = Math.min(mins, 600);
+    }
+    return {
+      title: (event.summary || '(untitled)').trim(),
+      type,
+      day: startDay,
+      time,
+      durationMins,
+    };
+  }
+
+  /** Forward the "Open day plan" intent to home-screen via a custom
+   *  event. home-screen's listener routes the user into the trip's
+   *  detail / planner view, mirroring the iOS pendingTripPlannerOpen
+   *  pattern. */
+  _openPlannerForTarget() {
+    if (!this._targetTripId) return;
+    this.dispatchEvent(
+      new CustomEvent('open-trip-planner', {
+        detail: { tripId: this._targetTripId },
+        bubbles: true,
+        composed: true,
+      }),
+    );
+    this._closeAndReset();
+  }
+
+  _closeAndReset() {
+    this._events = [];
+    this._selected = new Set();
+    this._mode = null;
+    this._targetTripId = '';
+    this._skippedOutOfRange = 0;
+    this._addedCount = 0;
+    this._started = false;
     this.dispatchEvent(new Event('cancel'));
   }
 
@@ -377,12 +516,141 @@ export class ImportCalendarModal extends LitElement {
       gap: 10px;
       margin-top: 18px;
     }
+    /* Mode chooser (new) */
+    .mode-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 6px;
+    }
+    .mode-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px;
+      width: 100%;
+      text-align: left;
+      background: var(--glass-surface, rgba(255, 248, 235, 0.04));
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      cursor: pointer;
+      color: inherit;
+      transition: background 180ms ease, transform 180ms ease;
+    }
+    .mode-card:hover:not(.disabled) {
+      background: rgba(255, 248, 235, 0.08);
+      transform: translateY(-1px);
+    }
+    .mode-card.disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+    .mode-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .mode-card-icon-a {
+      background: linear-gradient(135deg, #3d9b8f, #1f5c54);
+      box-shadow: 0 2px 4px rgba(61, 155, 143, 0.3);
+    }
+    .mode-card-icon-b {
+      background: linear-gradient(135deg, #6bb4e8 0%, #4a90e2 55%, #3d9b8f 100%);
+      box-shadow: 0 2px 4px rgba(74, 144, 226, 0.3);
+    }
+    .mode-card.disabled .mode-card-icon-b {
+      background: linear-gradient(135deg, var(--text-tertiary), var(--text-secondary));
+      box-shadow: none;
+    }
+    .mode-card-body { flex: 1; min-width: 0; }
+    .mode-card-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .mode-card-subtitle {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      line-height: 1.45;
+    }
+    /* Trip picker rows (Mode B step 0.5) */
+    .trip-picker-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 6px;
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+    .trip-pick-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      width: 100%;
+      text-align: left;
+      background: var(--glass-surface, rgba(255, 248, 235, 0.04));
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      cursor: pointer;
+      color: inherit;
+      transition: background 180ms ease;
+    }
+    .trip-pick-row:hover {
+      background: rgba(255, 248, 235, 0.08);
+    }
+    .trip-pick-body { flex: 1; min-width: 0; }
+    .trip-pick-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .trip-pick-dates {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 3px;
+    }
+    .trip-pick-chev {
+      font-size: 18px;
+      color: var(--text-tertiary);
+      flex-shrink: 0;
+    }
+    /* Mode B done — skipped-out-of-range note */
+    .skipped-note {
+      padding: 10px 14px;
+      background: rgba(212, 168, 67, 0.12);
+      border: 1px solid rgba(212, 168, 67, 0.30);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-size: 13px;
+      margin-top: 10px;
+    }
   `;
 
   render() {
     if (!this.open) return html``;
     const importable = this._events.filter((e) => !e._alreadyImported);
     const allSelected = importable.length > 0 && this._selected.size === importable.length;
+
+    // Phase routing. Order:
+    //   1. _mode === null               → mode chooser
+    //   2. mode='addToTrip' + no target → trip picker
+    //   3. mode='addToTrip' + done      → success screen with planner CTA
+    //   4. else                         → existing intro / load / list flow
+    const showModeChooser = this._mode === null;
+    const showTripPicker = this._mode === 'addToTrip' && !this._targetTripId;
+    const showDoneScreen =
+      this._mode === 'addToTrip' && this._addedCount > 0 && !this._importing;
+
     return html`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
@@ -391,13 +659,148 @@ export class ImportCalendarModal extends LitElement {
             <h2>Import from Google Calendar</h2>
             <button class="close" @click=${this._onCancel} aria-label="Close">×</button>
           </div>
-          <p class="lede">
-            Looking at your <strong>primary Google Calendar</strong> for the next 90 days.
-            Tick the events you want as Portal activities — the rest stay where they are.
-          </p>
 
-          ${!this._started
-            ? html`
+          ${showModeChooser
+            ? this._renderModeChooser()
+            : showTripPicker
+            ? this._renderTripPicker()
+            : showDoneScreen
+            ? this._renderDone()
+            : this._renderLoadAndList(importable, allSelected)}
+        </glass-panel>
+      </div>
+    `;
+  }
+
+  /** Step 0: pick mode. Two big-tap-target cards. */
+  _renderModeChooser() {
+    const eligible = this._eligibleTrips();
+    const canModeB = eligible.length > 0;
+    return html`
+      <p class="lede">What would you like to do with your calendar events?</p>
+      <div class="mode-cards">
+        <button class="mode-card" @click=${() => this._pickMode('newTrips')}>
+          <div class="mode-card-icon mode-card-icon-a">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="12" y1="18" x2="12" y2="12"></line>
+              <line x1="9" y1="15" x2="15" y2="15"></line>
+            </svg>
+          </div>
+          <div class="mode-card-body">
+            <div class="mode-card-title">New Activities from calendar</div>
+            <div class="mode-card-subtitle">Each event becomes its own Activity.</div>
+          </div>
+        </button>
+        <button
+          class="mode-card ${canModeB ? '' : 'disabled'}"
+          ?disabled=${!canModeB}
+          @click=${() => canModeB && this._pickMode('addToTrip')}
+        >
+          <div class="mode-card-icon mode-card-icon-b">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+              <line x1="12" y1="14" x2="12" y2="18"></line>
+              <line x1="10" y1="16" x2="14" y2="16"></line>
+            </svg>
+          </div>
+          <div class="mode-card-body">
+            <div class="mode-card-title">Add events to an existing Activity</div>
+            <div class="mode-card-subtitle">
+              ${canModeB
+                ? html`Pick a trip — events become items in its day planner.`
+                : html`You'll need a current or upcoming Activity first.`}
+            </div>
+          </div>
+        </button>
+      </div>
+    `;
+  }
+
+  /** Step 0.5 (Mode B only): pick destination trip. */
+  _renderTripPicker() {
+    const eligible = this._eligibleTrips();
+    return html`
+      <p class="lede">
+        Which Activity should these events join? Each imported event becomes
+        an item in the trip's day planner.
+      </p>
+      <div class="trip-picker-list">
+        ${eligible.map(
+          (t) => html`
+            <button class="trip-pick-row" @click=${() => this._pickTrip(t.id)}>
+              <div class="trip-pick-body">
+                <div class="trip-pick-title">${t.title || '(untitled trip)'}</div>
+                <div class="trip-pick-dates">${this._fmtTripRange(t)}</div>
+              </div>
+              <span class="trip-pick-chev">›</span>
+            </button>
+          `,
+        )}
+      </div>
+      <div class="intro-actions">
+        <glass-button variant="ghost" @click=${() => (this._mode = null)}>
+          Back
+        </glass-button>
+      </div>
+    `;
+  }
+
+  _fmtTripRange(t) {
+    const s = t.start ? new Date(t.start) : null;
+    const e = t.end ? new Date(t.end) : null;
+    if (!s) return '';
+    const opts = { day: 'numeric', month: 'short' };
+    if (!e || +e === +s) return s.toLocaleDateString('en-GB', opts);
+    return `${s.toLocaleDateString('en-GB', opts)} – ${e.toLocaleDateString('en-GB', opts)}`;
+  }
+
+  /** Mode B done screen. Shows imported count + skipped-out-of-range
+   *  note + the "Open day plan" CTA. */
+  _renderDone() {
+    const trip = this._eligibleTrips().find((t) => t.id === this._targetTripId);
+    const tripName = trip?.title || 'your Activity';
+    return html`
+      <p class="lede">
+        Added <strong>${this._addedCount}</strong>
+        ${this._addedCount === 1 ? 'item' : 'items'} to
+        <strong>${tripName}</strong>'s day planner.
+      </p>
+      ${this._skippedOutOfRange > 0
+        ? html`<div class="skipped-note">
+            Skipped ${this._skippedOutOfRange}
+            ${this._skippedOutOfRange === 1 ? 'event' : 'events'}
+            outside the trip's dates.
+          </div>`
+        : ''}
+      <div class="intro-actions">
+        <glass-button variant="ghost" @click=${this._closeAndReset}>
+          Close
+        </glass-button>
+        <glass-button variant="primary" @click=${this._openPlannerForTarget}>
+          Open day plan
+        </glass-button>
+      </div>
+    `;
+  }
+
+  /** Existing intro / load / list flow (Mode A path, OR Mode B once
+   *  destination trip is picked). */
+  _renderLoadAndList(importable, allSelected) {
+    return html`
+      <p class="lede">
+        Looking at your <strong>primary Google Calendar</strong> for the next 90 days.
+        ${this._mode === 'addToTrip'
+          ? html`Tick the events you want as items in the trip's day planner — the rest stay where they are.`
+          : html`Tick the events you want as Portal activities — the rest stay where they are.`}
+      </p>
+
+      ${!this._started
+        ? html`
                 <div class="intro">
                   <p class="intro-lede">
                     We'll pull the next <strong>90 days</strong> from your
@@ -486,13 +889,13 @@ export class ImportCalendarModal extends LitElement {
                         ? 'Importing…'
                         : this._selected.size === 0
                         ? 'Pick events'
+                        : this._mode === 'addToTrip'
+                        ? `Add ${this._selected.size} ${this._selected.size === 1 ? 'item' : 'items'}`
                         : `Import ${this._selected.size} ${this._selected.size === 1 ? 'activity' : 'activities'}`}
                     </glass-button>
                   </div>
                 </div>
               `}
-        </glass-panel>
-      </div>
     `;
   }
 }

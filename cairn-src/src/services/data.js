@@ -1387,6 +1387,28 @@ class FamilyDataStore extends EventTarget {
     return { storagePath: path, fileType };
   }
 
+  /**
+   * Upload a trip preview image. File is whatever the <input type=file>
+   * yielded (no client-side resize for simplicity — Storage caps at
+   * 5MB per the rule + browser image rendering is forgiving). Returns
+   * the Storage download URL, which the caller stores on the trip's
+   * `previewImage` field. UUID-named so successive uploads (image
+   * replacement) don't collide with stale CDN cache entries.
+   */
+  async uploadTripPreview(file) {
+    if (!storage || !this._currentFamilyId) {
+      throw new Error('Storage unavailable.');
+    }
+    if (!/^image\//.test(file.type || '')) {
+      throw new Error('Preview image must be an image file.');
+    }
+    const previewId = (crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+    const path = `families/${this._currentFamilyId}/trip-previews/${previewId}`;
+    const ref = storageRef(storage, path);
+    await uploadBytes(ref, file, { contentType: file.type });
+    return await getDownloadURL(ref);
+  }
+
   /** Call the extractSchoolCalendar CF → candidate events for review.
    *  Returns [] gracefully if the CF isn't deployed yet. */
   async extractSchoolCalendarEvents(storagePath, fileType) {

@@ -55,6 +55,8 @@ export class TripForm extends LitElement {
     _error: { state: true },
     _previewing: { state: true },
     _previewError: { state: true },
+    _uploadingPreviewImage: { state: true },
+    _previewImageError: { state: true },
     _showReturn: { state: true },
     _showOutboundDetails: { state: true },
     _showReturnDetails: { state: true },
@@ -83,6 +85,8 @@ export class TripForm extends LitElement {
     this._error = '';
     this._previewing = false;
     this._previewError = '';
+    this._uploadingPreviewImage = false;
+    this._previewImageError = '';
     this._previewDebounce = null;
     this._lastPreviewedUrl = '';
     this._showReturn = false;
@@ -210,6 +214,7 @@ export class TripForm extends LitElement {
       lodgingUrl: '',
       lodgingHost: '',
       lodgingTitle: '',
+      previewImage: '',
       flightAirline: '',
       flightNumber: '',
       flightDepartAirport: '',
@@ -256,6 +261,7 @@ export class TripForm extends LitElement {
       returnFlightArriveAirport: trip.returnFlightArriveAirport ?? '',
       returnFlightArriveTime: trip.returnFlightArriveTime ?? '',
       coverImage: trip.coverImage ?? '',
+      previewImage: trip.previewImage ?? '',
       notes: trip.notes ?? '',
     };
   }
@@ -632,6 +638,61 @@ export class TripForm extends LitElement {
       cursor: not-allowed;
       animation: spin 1s linear infinite;
     }
+    /* Preview-image (new field — takes precedence over lodging cover) */
+    .preview-image-help {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+    .preview-image-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .preview-upload-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--teal-pebble);
+      background: rgba(61, 155, 143, 0.10);
+      border: 1px solid rgba(61, 155, 143, 0.30);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 180ms ease;
+    }
+    .preview-upload-btn:hover {
+      background: rgba(61, 155, 143, 0.18);
+    }
+    .preview-upload-btn[data-busy] {
+      opacity: 0.7;
+      cursor: progress;
+    }
+    .preview-upload-btn .upload-icon {
+      font-size: 14px;
+    }
+    .preview-clear-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-tertiary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+    .preview-clear-btn:hover { color: var(--text-secondary); }
+    .preview-image-thumb {
+      margin-top: 10px;
+      width: 100%;
+      height: 120px;
+      border-radius: 10px;
+      background-size: cover;
+      background-position: center;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
     .preview-loading,
     .preview-error {
       font-size: 12px;
@@ -799,6 +860,49 @@ export class TripForm extends LitElement {
 
   _set(field, value) {
     this._draft = { ...this._draft, [field]: value };
+  }
+
+  /** Display + persist precedence: pasted URL beats uploaded Storage
+   *  URL beats nothing. Mirrors iOS TripFormView.resolvedPreviewImage. */
+  _resolvedPreviewImage() {
+    const url = (this._draft.previewImage || '').trim();
+    if (url) return url;
+    if (this._uploadedPreviewImageUrl) return this._uploadedPreviewImageUrl;
+    return '';
+  }
+
+  /** File input handler — upload to Storage, stash the returned URL on
+   *  _uploadedPreviewImageUrl. Save path serialises _resolvedPreviewImage()
+   *  onto trip.previewImage. */
+  async _onPreviewImageUpload(e) {
+    const file = e.target?.files?.[0];
+    if (!file) return;
+    this._previewImageError = '';
+    this._uploadingPreviewImage = true;
+    try {
+      const url = await dataStore.uploadTripPreview(file);
+      this._uploadedPreviewImageUrl = url;
+      // If the URL field is empty, mirror the uploaded URL into it
+      // so the field stays a single source of truth on save. (Save
+      // path reads trip.previewImage directly, so this also keeps
+      // the form's serialisation consistent.)
+      if (!(this._draft.previewImage || '').trim()) {
+        this._set('previewImage', url);
+      }
+    } catch (err) {
+      console.warn('Preview image upload failed:', err);
+      this._previewImageError = err?.message || 'Upload failed.';
+    } finally {
+      this._uploadingPreviewImage = false;
+      // Reset the input so the same file can be re-picked if needed.
+      e.target.value = '';
+    }
+  }
+
+  _clearPreviewImage() {
+    this._set('previewImage', '');
+    this._uploadedPreviewImageUrl = '';
+    this._previewImageError = '';
   }
 
   _onLodgingChange(value) {
@@ -1079,6 +1183,50 @@ export class TripForm extends LitElement {
                         )}
                       </div>
                     `
+                  : ''}
+              </div>
+              <div class="field">
+                <label>Preview image</label>
+                <div class="preview-image-help">
+                  Shown as the cover instead of the lodging photo. Upload one, or paste an image URL.
+                </div>
+                <div class="preview-image-controls">
+                  <label class="preview-upload-btn" ?data-busy=${this._uploadingPreviewImage}>
+                    ${this._uploadingPreviewImage
+                      ? html`<span class="spinner"></span> Uploading…`
+                      : html`<span class="upload-icon">📷</span> Upload image`}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      @change=${(e) => this._onPreviewImageUpload(e)}
+                      ?disabled=${this._uploadingPreviewImage}
+                      hidden
+                    />
+                  </label>
+                  ${this._resolvedPreviewImage()
+                    ? html`<button
+                        type="button"
+                        class="preview-clear-btn"
+                        @click=${() => this._clearPreviewImage()}
+                      >
+                        Clear
+                      </button>`
+                    : ''}
+                </div>
+                <div style="display:flex;gap:8px;align-items:stretch;margin-top:8px;">
+                  <input
+                    type="url"
+                    placeholder="Or paste an image URL"
+                    .value=${d.previewImage}
+                    @input=${(e) => this._set('previewImage', e.target.value)}
+                    style="flex:1;min-width:0;"
+                  />
+                </div>
+                ${this._previewImageError
+                  ? html`<div class="preview-error">${this._previewImageError}</div>`
+                  : ''}
+                ${this._resolvedPreviewImage()
+                  ? html`<div class="preview-image-thumb" style="background-image:url(${this._resolvedPreviewImage()});"></div>`
                   : ''}
               </div>
               ${this.formMode !== 'activity'
