@@ -1224,8 +1224,11 @@ export class HomeScreen extends LitElement {
       gap: 6px;
       margin-top: 6px;
     }
+    /* Week strip fills the panel's content area — height delegated
+       to .cal-section. The 1fr-row pattern keeps day columns equal
+       within whatever height the container provides. */
     .cal-week-strip-detailed {
-      min-height: 360px;
+      height: 100%;
     }
     .cal-week-day {
       display: flex;
@@ -1315,17 +1318,25 @@ export class HomeScreen extends LitElement {
       padding: 2px 4px;
       opacity: 0.5;
     }
-    /* Calendar panel — fixed height so flipping between Week / Month
-       / Year doesn't shift the page layout. Anchored to Annual's
-       natural height. The wrapping <section class="cal-section">
-       reserves the height; inner glass-panel fills it. */
+    /* Calendar panel — STRICT fixed height (2026-05-23 follow-up).
+       min-height alone didn't equalize: Year's 6×2 (or 4×3 below
+       1024px) natural grid blew well past 420px, and Week's content
+       sat short below the threshold. Now: section is 480px exact,
+       inner glass-panel fills + scrolls if a view needs more (Year
+       on narrow viewports stays at-a-glance; if it overflows the
+       user scrolls within the panel). */
     .cal-section {
-      min-height: 420px;
+      height: 480px;
       display: flex;
     }
     .cal-section > glass-panel {
       flex: 1;
       display: block;
+      overflow-y: auto;
+      /* Hide scrollbar — the toggle is the canonical view-switcher;
+         scroll is a fallback for very tall Yearly grids on narrow
+         viewports. */
+      scrollbar-width: thin;
     }
     .cal-head {
       display: flex;
@@ -3290,6 +3301,11 @@ export class HomeScreen extends LitElement {
       // currentColor inherits the active/inactive tab tint.
       icon: html`<pebble-icon></pebble-icon>`,
     };
+    // 2026-05-23 — tab order: Today · Children · Pebble (centre) ·
+    // Activities · Settings. Matches iOS AppTab.allCases order so the
+    // middle slot is Pebble on both surfaces (parity).
+    // Activities icon updated to mountain.2 style (matching iOS
+    // mountain.2.fill SF Symbol).
     return [
       {
         id: 'today',
@@ -3301,12 +3317,12 @@ export class HomeScreen extends LitElement {
         label: 'Children',
         icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M5 21c0-4 3-6 7-6s7 2 7 6" /></svg>`,
       },
+      ...(this._pebbleAvailable ? [pebbleTab] : []),
       {
         id: 'activities',
         label: 'Activities',
-        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 9h18M8 2v4M16 2v4" /></svg>`,
+        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 19 L8 9 L13 15"/><path d="M11 17 L17 9 L22 18"/></svg>`,
       },
-      ...(this._pebbleAvailable ? [pebbleTab] : []),
       {
         id: 'cairn',
         label: 'Settings',
@@ -3846,7 +3862,7 @@ export class HomeScreen extends LitElement {
               ? html`<div class="daily">
                   <div class="tag">
                     <pebble-icon size="16"></pebble-icon>
-                    Pebble's daily
+                    Pebble Daily
                   </div>
                   <h3>${dc.title}</h3>
                   <p>${dc.body}</p>
@@ -3865,7 +3881,7 @@ export class HomeScreen extends LitElement {
               : html`<div class="daily">
                   <div class="tag">
                     <pebble-icon size="16"></pebble-icon>
-                    Pebble's daily
+                    Pebble Daily
                   </div>
                   <h3>Pebble's note is on its way</h3>
                   <p>A fresh observation about ${cd.child.name} appears here each day once Pebble has enough to go on.</p>
