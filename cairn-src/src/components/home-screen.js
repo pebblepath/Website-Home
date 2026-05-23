@@ -2656,7 +2656,15 @@ export class HomeScreen extends LitElement {
 
   _filteredEvents() {
     const memberIds = new Set(this._filteredMembers().map((m) => m.uid));
-    return this._liveEvents().filter((e) => e.personIds.some((id) => memberIds.has(id)));
+    return this._liveEvents().filter((e) => {
+      // Defensive: a Firestore event doc can lack `personIds` (legacy
+      // docs, or docs imported without the field). Without this guard
+      // `.some()` throws TypeError and the whole Today tab + nav-bar
+      // render bails. Treat missing personIds as "applies to no one"
+      // — the event drops out of the filter rather than crashing.
+      const ids = Array.isArray(e?.personIds) ? e.personIds : [];
+      return ids.some((id) => memberIds.has(id));
+    });
   }
 
   /**
