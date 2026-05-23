@@ -1226,7 +1226,7 @@ export class TripForm extends LitElement {
                   ? html`<div class="preview-error">${this._previewImageError}</div>`
                   : ''}
                 ${this._resolvedPreviewImage()
-                  ? html`<div class="preview-image-thumb" style="background-image:url(${this._resolvedPreviewImage()});"></div>`
+                  ? html`<div class="preview-image-thumb" style='background-image:url("${this._resolvedPreviewImage()}");'></div>`
                   : ''}
               </div>
               ${this.formMode !== 'activity'
@@ -1264,7 +1264,7 @@ export class TripForm extends LitElement {
                         : ''}
                       ${!this._previewing && d.coverImage
                         ? html`<div class="preview">
-                            <div class="thumb" style="background-image:url(${d.coverImage});"></div>
+                            <div class="thumb" style='background-image:url("${d.coverImage}");'></div>
                             <div class="meta">
                               <div class="meta-title">${d.lodgingTitle || d.lodgingUrl}</div>
                               <div class="meta-host">${d.lodgingHost || ''}</div>

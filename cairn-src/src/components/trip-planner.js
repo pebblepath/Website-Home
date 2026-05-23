@@ -34,7 +34,11 @@ const DURATIONS = [
   { m: 240, label: '4 h' },
   { m: 480, label: 'All day' },
 ];
-const ROWH = 56; // px per hour — matches concept .sched-row height
+// 2026-05-22 — was 56 px/hr; reduced to 40 to compress the planner
+// vertically. ROWH is the single source of truth, so all positioning
+// math (top offsets, block heights, drag-create snap, stripe lines)
+// scales automatically.
+const ROWH = 40; // px per hour
 
 function parseYMD(s) {
   const m = String(s ?? '').match(/^(\d{4})-(\d{2})-(\d{2})/);
@@ -201,6 +205,11 @@ export class TripPlanner extends LitElement {
           this._teardown();
           this._subId = id;
           this._dayKey = this._days()[0]?.key ?? '';
+          // 2026-05-22 — multi-day trips default to Week view. A
+          // single-day trip has nothing to gain from the 7-column
+          // grid, so it stays on Day. User can still flip manually
+          // via the segmented control.
+          this._view = this._days().length > 1 ? 'week' : 'day';
           this._unsub = dataStore.planItemsListener(id, (items) => {
             this._items = items;
           });

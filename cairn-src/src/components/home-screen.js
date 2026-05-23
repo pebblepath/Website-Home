@@ -101,6 +101,9 @@ export class HomeScreen extends LitElement {
     _eventFormEvent: { state: true },
     _eventFormBusy: { state: true },
     _displayMonth: { state: true },
+    /** 2026-05-22 — single-card calendar with view-toggle replaced
+     *  the stacked monthly + yearly panels. 'week' | 'month' | 'year'. */
+    _calendarView: { state: true },
     _allTripsOpen: { state: true },
     _editingFamilyName: { state: true },
     _importOpen: { state: true },
@@ -220,6 +223,9 @@ export class HomeScreen extends LitElement {
     // user-controlled via prev/next or yearly month-tap.
     const t = new Date();
     this._displayMonth = new Date(t.getFullYear(), t.getMonth(), 1);
+    // Default to Month — same default the old stacked layout opened
+    // with. User can flip via the new segmented toggle.
+    this._calendarView = 'month';
   }
 
   // P9 — Settings → Join another family. Input formatter that keeps the
@@ -915,10 +921,33 @@ export class HomeScreen extends LitElement {
       }
     }
 
+    /* 2026-05-22 — was a wrapping grid that grew taller as trips
+       accumulated. Switched to a horizontal scroll-snap carousel so
+       the section stays one row tall + lets users browse many
+       activities without vertical scroll. There's no hard cap on
+       trips shown; all eligible trips render and the user swipes
+       through them. */
     .trips-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      display: flex;
       gap: 18px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-padding-left: 0;
+      padding-bottom: 6px;
+      /* Hide scrollbar — the carousel rhythm is the affordance. */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .trips-row::-webkit-scrollbar { display: none; }
+    .trips-row > trip-card {
+      flex: 0 0 320px;
+      scroll-snap-align: start;
+    }
+    @media (max-width: 480px) {
+      .trips-row > trip-card {
+        flex: 0 0 86%;
+      }
     }
 
     /* Celebrations — two-column layout (Birthdays | Anniversaries)
@@ -1154,6 +1183,97 @@ export class HomeScreen extends LitElement {
         grid-template-columns: 1fr;
       }
     }
+    /* Calendar view toggle (Week / Month / Year) — replaces the
+       stacked two-panel layout 2026-05-22. Mirrors the date-range
+       picker / circle-switcher segmented chip pattern. */
+    .cal-view-toggle {
+      display: inline-flex;
+      gap: 2px;
+      padding: 3px;
+      background: rgba(255, 248, 235, 0.06);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+    .cal-view-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 160ms ease, color 160ms ease;
+    }
+    .cal-view-btn:hover {
+      color: var(--text-primary);
+    }
+    .cal-view-btn.on {
+      background: var(--teal-pebble);
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(61, 155, 143, 0.30);
+    }
+    /* Weekly strip (compact 7-day overview) */
+    .cal-week-strip {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .cal-week-day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 12px 4px 14px;
+      background: rgba(255, 248, 235, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      cursor: pointer;
+      color: inherit;
+      font-family: var(--font-body);
+      transition: background 180ms ease, transform 180ms ease;
+    }
+    .cal-week-day:hover {
+      background: rgba(255, 248, 235, 0.10);
+      transform: translateY(-1px);
+    }
+    .cal-week-day.today {
+      background: rgba(61, 155, 143, 0.18);
+      border-color: rgba(61, 155, 143, 0.45);
+    }
+    .cal-week-dow {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+    }
+    .cal-week-day.today .cal-week-dow {
+      color: var(--teal-pebble);
+    }
+    .cal-week-num {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .cal-week-dots {
+      display: flex;
+      gap: 3px;
+      height: 6px;
+      align-items: center;
+    }
+    .cal-week-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--text-tertiary);
+    }
+    .cal-week-dot.trip { background: var(--teal-pebble); }
+    .cal-week-dot.event { background: #d4a843; }
     .cal-head {
       display: flex;
       align-items: center;
@@ -3424,31 +3544,126 @@ export class HomeScreen extends LitElement {
 
   _renderCalendarsSection() {
     const today = new Date();
+    const v = this._calendarView ?? 'month';
     return html`
         <section>
-          <div class="cal-row">
-            <glass-panel padding="md" variant="strong" stretch>
-              ${this._renderMonthly()}
-            </glass-panel>
-            <glass-panel padding="md" variant="strong" stretch>
-              <div class="cal-head">
-                <h3>${this._displayMonth?.getFullYear() ?? today.getFullYear()}</h3>
-                <div style="font-size:12px;color:var(--text-tertiary);">Yearly</div>
-              </div>
-              <yearly-view
-                .year=${this._displayMonth?.getFullYear() ?? today.getFullYear()}
-                .tripDays=${this._tripDensityByDay(
-                  this._displayMonth?.getFullYear() ?? today.getFullYear(),
-                )}
-                .trips=${this._circleTrips()}
-                .events=${this._liveEvents()}
-                .holidays=${this.holidays ?? []}
-                .today=${today}
-                @month-select=${(e) => this._jumpToMonth(e.detail.year, e.detail.month)}
-              ></yearly-view>
-            </glass-panel>
-          </div>
+          <glass-panel padding="md" variant="strong" stretch>
+            <div class="cal-view-toggle" role="tablist" aria-label="Calendar view">
+              ${[
+                { id: 'week', label: 'Week' },
+                { id: 'month', label: 'Month' },
+                { id: 'year', label: 'Year' },
+              ].map(
+                (opt) => html`
+                  <button
+                    role="tab"
+                    aria-selected=${v === opt.id ? 'true' : 'false'}
+                    class="cal-view-btn ${v === opt.id ? 'on' : ''}"
+                    @click=${() => (this._calendarView = opt.id)}
+                  >
+                    ${opt.label}
+                  </button>
+                `,
+              )}
+            </div>
+            ${v === 'week'
+              ? this._renderWeekly()
+              : v === 'year'
+              ? html`
+                  <div class="cal-head">
+                    <h3>${this._displayMonth?.getFullYear() ?? today.getFullYear()}</h3>
+                  </div>
+                  <yearly-view
+                    .year=${this._displayMonth?.getFullYear() ?? today.getFullYear()}
+                    .tripDays=${this._tripDensityByDay(
+                      this._displayMonth?.getFullYear() ?? today.getFullYear(),
+                    )}
+                    .trips=${this._circleTrips()}
+                    .events=${this._liveEvents()}
+                    .holidays=${this.holidays ?? []}
+                    .today=${today}
+                    @month-select=${(e) => {
+                      this._jumpToMonth(e.detail.year, e.detail.month);
+                      this._calendarView = 'month';
+                    }}
+                  ></yearly-view>
+                `
+              : this._renderMonthly()}
+          </glass-panel>
         </section>
+    `;
+  }
+
+  /** 2026-05-22 — compact 7-day strip starting on Sunday of THIS
+   *  week. Each day shows the date number + day-of-week label + dot
+   *  density for trips/events landing on it. Today is highlighted.
+   *  Tap a day → jump to that month + flip to Month view. */
+  _renderWeekly() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    // Anchor on the Sunday at-or-before today; mirrors Portal's
+    // existing monthly grid (Sunday-first). User-locale week-start
+    // is a later polish — for now Sunday-first matches Month view.
+    const sunday = new Date(today);
+    sunday.setDate(today.getDate() - today.getDay());
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(sunday);
+      d.setDate(sunday.getDate() + i);
+      days.push(d);
+    }
+    const isSameDay = (a, b) =>
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate();
+    // Count how many trips/events touch each day (capped at 3 dots
+    // so a busy day doesn't render a runaway dot column).
+    const countFor = (day) => {
+      const key = day.toISOString().slice(0, 10);
+      let trips = 0;
+      for (const t of this._circleTrips()) {
+        if (!t.start || !t.end) continue;
+        if (key >= String(t.start) && key <= String(t.end)) trips++;
+      }
+      let events = 0;
+      for (const e of this._liveEvents()) {
+        if (!e.date) continue;
+        if (String(e.date) === key) events++;
+      }
+      return { trips, events, total: trips + events };
+    };
+    return html`
+      <div class="cal-head">
+        <h3>This week</h3>
+        <div style="font-size:12px;color:var(--text-tertiary);">
+          ${sunday.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}
+          –
+          ${days[6].toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}
+        </div>
+      </div>
+      <div class="cal-week-strip">
+        ${days.map((d) => {
+          const { trips, events, total } = countFor(d);
+          const dots = Math.min(3, total);
+          const isToday = isSameDay(d, today);
+          return html`
+            <button
+              class="cal-week-day ${isToday ? 'today' : ''}"
+              @click=${() => {
+                this._jumpToMonth(d.getFullYear(), d.getMonth());
+                this._calendarView = 'month';
+              }}
+              aria-label="${d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}, ${total} ${total === 1 ? 'item' : 'items'}"
+            >
+              <div class="cal-week-dow">${d.toLocaleDateString('en-GB', { weekday: 'short' }).slice(0, 3)}</div>
+              <div class="cal-week-num">${d.getDate()}</div>
+              <div class="cal-week-dots">
+                ${Array(dots).fill(0).map((_, i) => html`<span class="cal-week-dot ${i < trips ? 'trip' : 'event'}"></span>`)}
+              </div>
+            </button>
+          `;
+        })}
+      </div>
     `;
   }
 

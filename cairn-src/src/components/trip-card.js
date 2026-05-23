@@ -400,8 +400,15 @@ export class TripCard extends LitElement {
     // coverImage so trips don't all look like hotel rooms. Either
     // can be a Storage URL (uploaded) OR a directly-pasted image URL.
     const displayImage = (t.previewImage && String(t.previewImage).trim()) || t.coverImage;
+    // Quote the URL inside CSS url(). Unquoted url() can't handle
+    // parens/colons inside the URL — e.g. a midwestliving thumb URL
+    // like `.../filters:no_upscale():max_bytes(150000)/...` parses
+    // as broken because CSS sees the inner () as nested parens.
+    // Double-quoted url() is safe for any URL except those containing
+    // a literal " (extremely rare in real-world image URLs). Same
+    // pattern applied to trip-form's thumbnail preview.
     const cover = displayImage
-      ? `background-image: url(${displayImage});`
+      ? `background-image: url("${displayImage}");`
       : `background: ${gradientForTrip(t)};`;
     const coverClass = displayImage ? 'cover has-image' : 'cover';
     const memberMap = new Map(this.members.map((m) => [m.uid, m]));
