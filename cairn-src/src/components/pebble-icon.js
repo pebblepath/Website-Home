@@ -56,7 +56,7 @@ export class PebbleIcon extends LitElement {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
-        style="display:inline-block;vertical-align:middle;"
+        style="display:inline-block;vertical-align:middle;position:relative;top:-2px;"
       >
         <ellipse cx="12" cy="21.5" rx="9.5" ry="1.8"
           stroke=${c} stroke-width="1" stroke-opacity="0.2"></ellipse>

@@ -1215,25 +1215,31 @@ export class HomeScreen extends LitElement {
       color: #fff;
       box-shadow: 0 2px 6px rgba(61, 155, 143, 0.30);
     }
-    /* Weekly strip (compact 7-day overview) */
+    /* Weekly strip — 7 day-columns with stacked items. Sized to fill
+       the Annual view's natural height so the calendar panel doesn't
+       jump as the user flips between views. */
     .cal-week-strip {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 6px;
       margin-top: 6px;
     }
+    .cal-week-strip-detailed {
+      min-height: 360px;
+    }
     .cal-week-day {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding: 12px 4px 14px;
+      align-items: stretch;
+      gap: 6px;
+      padding: 10px 6px 12px;
       background: rgba(255, 248, 235, 0.04);
       border: 1px solid var(--glass-border);
       border-radius: 14px;
       cursor: pointer;
       color: inherit;
       font-family: var(--font-body);
+      text-align: left;
       transition: background 180ms ease, transform 180ms ease;
     }
     .cal-week-day:hover {
@@ -1243,6 +1249,13 @@ export class HomeScreen extends LitElement {
     .cal-week-day.today {
       background: rgba(61, 155, 143, 0.18);
       border-color: rgba(61, 155, 143, 0.45);
+    }
+    .cal-week-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 4px;
+      padding: 0 2px;
     }
     .cal-week-dow {
       font-size: 11px;
@@ -1256,24 +1269,64 @@ export class HomeScreen extends LitElement {
     }
     .cal-week-num {
       font-family: var(--font-display);
-      font-size: 19px;
+      font-size: 17px;
       font-weight: 700;
       color: var(--text-primary);
+      line-height: 1;
     }
-    .cal-week-dots {
+    /* Per-day item stack (2026-05-23) — replaces the dot row. */
+    .cal-week-items {
       display: flex;
+      flex-direction: column;
       gap: 3px;
-      height: 6px;
-      align-items: center;
+      flex: 1;
+      min-height: 0;
     }
-    .cal-week-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 999px;
-      background: var(--text-tertiary);
+    .cal-week-chip {
+      display: block;
+      padding: 4px 6px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--text-primary);
+      background: rgba(255, 248, 235, 0.06);
+      border-left: 2px solid var(--text-tertiary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
-    .cal-week-dot.trip { background: var(--teal-pebble); }
-    .cal-week-dot.event { background: #d4a843; }
+    .cal-week-chip.trip {
+      background: rgba(61, 155, 143, 0.14);
+      border-left-color: var(--teal-pebble);
+    }
+    .cal-week-chip.event {
+      background: rgba(212, 168, 67, 0.14);
+      border-left-color: #d4a843;
+    }
+    .cal-week-more {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      padding: 2px 4px;
+    }
+    .cal-week-empty {
+      color: var(--text-tertiary);
+      font-size: 12px;
+      padding: 2px 4px;
+      opacity: 0.5;
+    }
+    /* Calendar panel — fixed height so flipping between Week / Month
+       / Year doesn't shift the page layout. Anchored to Annual's
+       natural height. The wrapping <section class="cal-section">
+       reserves the height; inner glass-panel fills it. */
+    .cal-section {
+      min-height: 420px;
+      display: flex;
+    }
+    .cal-section > glass-panel {
+      flex: 1;
+      display: block;
+    }
     .cal-head {
       display: flex;
       align-items: center;
@@ -3548,7 +3601,7 @@ export class HomeScreen extends LitElement {
     const today = new Date();
     const v = this._calendarView ?? 'month';
     return html`
-        <section>
+        <section class="cal-section">
           <glass-panel padding="md" variant="strong" stretch>
             <div class="cal-view-toggle" role="tablist" aria-label="Calendar view">
               ${[
@@ -3597,9 +3650,11 @@ export class HomeScreen extends LitElement {
   }
 
   /** 2026-05-22 — compact 7-day strip starting on Sunday of THIS
-   *  week. Each day shows the date number + day-of-week label + dot
-   *  density for trips/events landing on it. Today is highlighted.
-   *  Tap a day → jump to that month + flip to Month view. */
+   *  week. Each day shows date + day-of-week + a stacked list of the
+   *  actual trips/events landing on it (chips, color-coded). Today
+   *  highlighted. Tap a day → jump to that month + flip to Month view.
+   *  2026-05-23 — promoted from dot-density to inline item titles so
+   *  the user can actually see what's on each day. */
   _renderWeekly() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -3618,21 +3673,25 @@ export class HomeScreen extends LitElement {
       a.getFullYear() === b.getFullYear() &&
       a.getMonth() === b.getMonth() &&
       a.getDate() === b.getDate();
-    // Count how many trips/events touch each day (capped at 3 dots
-    // so a busy day doesn't render a runaway dot column).
-    const countFor = (day) => {
+    /** Collect every trip-day + event landing on `day` as a flat list
+     *  of { title, type } chips for inline rendering. Trip span days
+     *  share the trip's title; events show theirs. */
+    const itemsFor = (day) => {
       const key = day.toISOString().slice(0, 10);
-      let trips = 0;
+      const out = [];
       for (const t of this._circleTrips()) {
         if (!t.start || !t.end) continue;
-        if (key >= String(t.start) && key <= String(t.end)) trips++;
+        if (key >= String(t.start) && key <= String(t.end)) {
+          out.push({ title: t.title || 'Trip', type: 'trip', id: t.id });
+        }
       }
-      let events = 0;
       for (const e of this._liveEvents()) {
         if (!e.date) continue;
-        if (String(e.date) === key) events++;
+        if (String(e.date) === key) {
+          out.push({ title: e.title || 'Event', type: 'event', id: e.id });
+        }
       }
-      return { trips, events, total: trips + events };
+      return out;
     };
     return html`
       <div class="cal-head">
@@ -3643,24 +3702,32 @@ export class HomeScreen extends LitElement {
           ${days[6].toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}
         </div>
       </div>
-      <div class="cal-week-strip">
+      <div class="cal-week-strip cal-week-strip-detailed">
         ${days.map((d) => {
-          const { trips, events, total } = countFor(d);
-          const dots = Math.min(3, total);
+          const items = itemsFor(d);
           const isToday = isSameDay(d, today);
           return html`
             <button
-              class="cal-week-day ${isToday ? 'today' : ''}"
+              class="cal-week-day cal-week-day-detailed ${isToday ? 'today' : ''}"
               @click=${() => {
                 this._jumpToMonth(d.getFullYear(), d.getMonth());
                 this._calendarView = 'month';
               }}
-              aria-label="${d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}, ${total} ${total === 1 ? 'item' : 'items'}"
+              aria-label="${d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}, ${items.length} ${items.length === 1 ? 'item' : 'items'}"
             >
-              <div class="cal-week-dow">${d.toLocaleDateString('en-GB', { weekday: 'short' }).slice(0, 3)}</div>
-              <div class="cal-week-num">${d.getDate()}</div>
-              <div class="cal-week-dots">
-                ${Array(dots).fill(0).map((_, i) => html`<span class="cal-week-dot ${i < trips ? 'trip' : 'event'}"></span>`)}
+              <div class="cal-week-head">
+                <span class="cal-week-dow">${d.toLocaleDateString('en-GB', { weekday: 'short' }).slice(0, 3)}</span>
+                <span class="cal-week-num">${d.getDate()}</span>
+              </div>
+              <div class="cal-week-items">
+                ${items.length === 0
+                  ? html`<span class="cal-week-empty">—</span>`
+                  : items.slice(0, 4).map(
+                      (it) => html`<span class="cal-week-chip ${it.type}" title=${it.title}>${it.title}</span>`,
+                    )}
+                ${items.length > 4
+                  ? html`<span class="cal-week-more">+${items.length - 4} more</span>`
+                  : ''}
               </div>
             </button>
           `;
