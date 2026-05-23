@@ -1183,6 +1183,23 @@ export class HomeScreen extends LitElement {
         grid-template-columns: 1fr;
       }
     }
+    /* Activities tab icon — mountain.png used as a CSS mask so it
+       picks up currentColor like the other inline-SVG tab icons.
+       The PNG is solid black on transparent; the mask treats its
+       opaque pixels as the icon shape and the background-color
+       paints through. Net: icon = whatever the surrounding text
+       color is (white on the dark-teal topbar). 2026-05-23.
+       prettier-ignore — keep this comment single-line per the
+       no-backticks-in-css-templates rule. */
+    .mountain-icon {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      background-color: currentColor;
+      -webkit-mask: var(--mountain-src) center / contain no-repeat;
+      mask: var(--mountain-src) center / contain no-repeat;
+      vertical-align: middle;
+    }
     /* Calendar view toggle (Week / Month / Year) — replaces the
        stacked two-panel layout 2026-05-22. Mirrors the date-range
        picker / circle-switcher segmented chip pattern. */
@@ -1332,11 +1349,63 @@ export class HomeScreen extends LitElement {
     .cal-section > glass-panel {
       flex: 1;
       display: block;
+      /* Year on narrow viewports can need more than 480 — keep
+         scroll as the fallback, but Month + Week fit exactly via the
+         flex column below. */
       overflow-y: auto;
-      /* Hide scrollbar — the toggle is the canonical view-switcher;
-         scroll is a fallback for very tall Yearly grids on narrow
-         viewports. */
       scrollbar-width: thin;
+    }
+    /* Flex column: toggle stays at its natural height; view-pane
+       fills the rest so Month grid + Weekly strip auto-size to fit
+       the 480px panel (was: Month overflowed + cropped, Week sat
+       short — fixed 2026-05-23). */
+    .cal-inner {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+    }
+    .cal-view-pane {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Monthly + Weekly grids fill the pane vertically; their own
+       inner content (rows, days) auto-sizes via the grid layout. */
+    .cal-view-pane .cal-grid {
+      flex: 1;
+      min-height: 0;
+      /* DOW header row auto-height + 6 fr rows for weeks. Replaces
+         the per-cell aspect-ratio (which made cells too tall on wide
+         viewports → overflowed the 480 panel). */
+      grid-template-rows: auto repeat(6, 1fr);
+    }
+    .cal-view-pane .cal-cell {
+      /* Override the aspect-ratio: 3/2 from the legacy cal-cell
+         styles. Each cell now stretches to fill its grid-row track
+         (1fr each, defined above). */
+      aspect-ratio: auto;
+      min-height: 0;
+    }
+    /* Yearly view inside the pane — fills the available height. The
+       internal grid handles its own scroll when content overflows. */
+    .cal-view-pane > yearly-view {
+      flex: 1;
+      min-height: 0;
+      display: block;
+    }
+    /* cal-head (the H3 + nav buttons row) stays at its natural
+       height inside the flex column. */
+    .cal-view-pane > .cal-head {
+      flex: 0 0 auto;
+    }
+    /* Weekly strip fills the remaining pane height, so each day
+       column has room for the item chips (was: short content sat
+       cropped at top with empty space below). */
+    .cal-view-pane > .cal-week-strip {
+      flex: 1;
+      min-height: 0;
     }
     .cal-head {
       display: flex;
@@ -3321,7 +3390,18 @@ export class HomeScreen extends LitElement {
       {
         id: 'activities',
         label: 'Activities',
-        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 19 L8 9 L13 15"/><path d="M11 17 L17 9 L22 18"/></svg>`,
+        // 2026-05-23 — pixel-identical to iOS (same mountain.png
+        // asset). Rendered via CSS mask + background:currentColor
+        // so the icon TINTS to the nav text color (white on the
+        // dark-teal topbar). Pure <img> renders the PNG black —
+        // visible but off-brand. Mask + currentColor lets the icon
+        // inherit whatever color cascade from the tab matches the
+        // other inline SVG icons.
+        icon: html`<span
+          class="mountain-icon"
+          style="--mountain-src:url(${import.meta.env.BASE_URL}mountain.png)"
+          aria-hidden="true"
+        ></span>`,
       },
       {
         id: 'cairn',
@@ -3619,47 +3699,55 @@ export class HomeScreen extends LitElement {
     return html`
         <section class="cal-section">
           <glass-panel padding="md" variant="strong" stretch>
-            <div class="cal-view-toggle" role="tablist" aria-label="Calendar view">
-              ${[
-                { id: 'week', label: 'Week' },
-                { id: 'month', label: 'Month' },
-                { id: 'year', label: 'Year' },
-              ].map(
-                (opt) => html`
-                  <button
-                    role="tab"
-                    aria-selected=${v === opt.id ? 'true' : 'false'}
-                    class="cal-view-btn ${v === opt.id ? 'on' : ''}"
-                    @click=${() => (this._calendarView = opt.id)}
-                  >
-                    ${opt.label}
-                  </button>
-                `,
-              )}
+            <!-- Flex column: toggle is auto-height, view fills the
+                 remaining 480 - toggle height. cal-view-pane has
+                 height:100% + min-height:0 so its inner grids /
+                 strips can size to fit. -->
+            <div class="cal-inner">
+              <div class="cal-view-toggle" role="tablist" aria-label="Calendar view">
+                ${[
+                  { id: 'week', label: 'Week' },
+                  { id: 'month', label: 'Month' },
+                  { id: 'year', label: 'Year' },
+                ].map(
+                  (opt) => html`
+                    <button
+                      role="tab"
+                      aria-selected=${v === opt.id ? 'true' : 'false'}
+                      class="cal-view-btn ${v === opt.id ? 'on' : ''}"
+                      @click=${() => (this._calendarView = opt.id)}
+                    >
+                      ${opt.label}
+                    </button>
+                  `,
+                )}
+              </div>
+              <div class="cal-view-pane">
+                ${v === 'week'
+                  ? this._renderWeekly()
+                  : v === 'year'
+                  ? html`
+                      <div class="cal-head">
+                        <h3>${this._displayMonth?.getFullYear() ?? today.getFullYear()}</h3>
+                      </div>
+                      <yearly-view
+                        .year=${this._displayMonth?.getFullYear() ?? today.getFullYear()}
+                        .tripDays=${this._tripDensityByDay(
+                          this._displayMonth?.getFullYear() ?? today.getFullYear(),
+                        )}
+                        .trips=${this._circleTrips()}
+                        .events=${this._liveEvents()}
+                        .holidays=${this.holidays ?? []}
+                        .today=${today}
+                        @month-select=${(e) => {
+                          this._jumpToMonth(e.detail.year, e.detail.month);
+                          this._calendarView = 'month';
+                        }}
+                      ></yearly-view>
+                    `
+                  : this._renderMonthly()}
+              </div>
             </div>
-            ${v === 'week'
-              ? this._renderWeekly()
-              : v === 'year'
-              ? html`
-                  <div class="cal-head">
-                    <h3>${this._displayMonth?.getFullYear() ?? today.getFullYear()}</h3>
-                  </div>
-                  <yearly-view
-                    .year=${this._displayMonth?.getFullYear() ?? today.getFullYear()}
-                    .tripDays=${this._tripDensityByDay(
-                      this._displayMonth?.getFullYear() ?? today.getFullYear(),
-                    )}
-                    .trips=${this._circleTrips()}
-                    .events=${this._liveEvents()}
-                    .holidays=${this.holidays ?? []}
-                    .today=${today}
-                    @month-select=${(e) => {
-                      this._jumpToMonth(e.detail.year, e.detail.month);
-                      this._calendarView = 'month';
-                    }}
-                  ></yearly-view>
-                `
-              : this._renderMonthly()}
           </glass-panel>
         </section>
     `;
