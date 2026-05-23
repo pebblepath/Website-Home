@@ -245,7 +245,7 @@ var vt=Object.defineProperty;var yt=(p,e,t)=>e in p?vt(p,e,{enumerable:!0,config
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
-        style="display:inline-block;vertical-align:middle;"
+        style="display:inline-block;vertical-align:middle;position:relative;top:-2px;"
       >
         <ellipse cx="12" cy="21.5" rx="9.5" ry="1.8"
           stroke=${t} stroke-width="1" stroke-opacity="0.2"></ellipse>
@@ -8804,7 +8804,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
               `}
         </section>
     `}_renderCalendarsSection(){var i,r,a;const e=new Date,t=this._calendarView??"month";return o`
-        <section>
+        <section class="cal-section">
           <glass-panel padding="md" variant="strong" stretch>
             <div class="cal-view-toggle" role="tablist" aria-label="Calendar view">
               ${[{id:"week",label:"Week"},{id:"month",label:"Month"},{id:"year",label:"Year"}].map(s=>o`
@@ -8834,7 +8834,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 `:this._renderMonthly()}
           </glass-panel>
         </section>
-    `}_renderWeekly(){const e=new Date;e.setHours(0,0,0,0);const t=new Date(e);t.setDate(e.getDate()-e.getDay());const i=[];for(let s=0;s<7;s++){const n=new Date(t);n.setDate(t.getDate()+s),i.push(n)}const r=(s,n)=>s.getFullYear()===n.getFullYear()&&s.getMonth()===n.getMonth()&&s.getDate()===n.getDate(),a=s=>{const n=s.toISOString().slice(0,10);let d=0;for(const g of this._circleTrips())!g.start||!g.end||n>=String(g.start)&&n<=String(g.end)&&d++;let l=0;for(const g of this._liveEvents())g.date&&String(g.date)===n&&l++;return{trips:d,events:l,total:d+l}};return o`
+    `}_renderWeekly(){const e=new Date;e.setHours(0,0,0,0);const t=new Date(e);t.setDate(e.getDate()-e.getDay());const i=[];for(let s=0;s<7;s++){const n=new Date(t);n.setDate(t.getDate()+s),i.push(n)}const r=(s,n)=>s.getFullYear()===n.getFullYear()&&s.getMonth()===n.getMonth()&&s.getDate()===n.getDate(),a=s=>{const n=s.toISOString().slice(0,10),d=[];for(const l of this._circleTrips())!l.start||!l.end||n>=String(l.start)&&n<=String(l.end)&&d.push({title:l.title||"Trip",type:"trip",id:l.id});for(const l of this._liveEvents())l.date&&String(l.date)===n&&d.push({title:l.title||"Event",type:"event",id:l.id});return d};return o`
       <div class="cal-head">
         <h3>This week</h3>
         <div style="font-size:12px;color:var(--text-tertiary);">
@@ -8843,17 +8843,20 @@ They'll lose access to shared trips, celebrations and any read-only child access
           ${i[6].toLocaleDateString("en-GB",{month:"short",day:"numeric"})}
         </div>
       </div>
-      <div class="cal-week-strip">
-        ${i.map(s=>{const{trips:n,total:d}=a(s),l=Math.min(3,d),g=r(s,e);return o`
+      <div class="cal-week-strip cal-week-strip-detailed">
+        ${i.map(s=>{const n=a(s),d=r(s,e);return o`
             <button
-              class="cal-week-day ${g?"today":""}"
+              class="cal-week-day cal-week-day-detailed ${d?"today":""}"
               @click=${()=>{this._jumpToMonth(s.getFullYear(),s.getMonth()),this._calendarView="month"}}
-              aria-label="${s.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"})}, ${d} ${d===1?"item":"items"}"
+              aria-label="${s.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"})}, ${n.length} ${n.length===1?"item":"items"}"
             >
-              <div class="cal-week-dow">${s.toLocaleDateString("en-GB",{weekday:"short"}).slice(0,3)}</div>
-              <div class="cal-week-num">${s.getDate()}</div>
-              <div class="cal-week-dots">
-                ${Array(l).fill(0).map((c,h)=>o`<span class="cal-week-dot ${h<n?"trip":"event"}"></span>`)}
+              <div class="cal-week-head">
+                <span class="cal-week-dow">${s.toLocaleDateString("en-GB",{weekday:"short"}).slice(0,3)}</span>
+                <span class="cal-week-num">${s.getDate()}</span>
+              </div>
+              <div class="cal-week-items">
+                ${n.length===0?o`<span class="cal-week-empty">—</span>`:n.slice(0,4).map(l=>o`<span class="cal-week-chip ${l.type}" title=${l.title}>${l.title}</span>`)}
+                ${n.length>4?o`<span class="cal-week-more">+${n.length-4} more</span>`:""}
               </div>
             </button>
           `})}
@@ -10397,25 +10400,31 @@ They'll lose access to shared trips, celebrations and any read-only child access
       color: #fff;
       box-shadow: 0 2px 6px rgba(61, 155, 143, 0.30);
     }
-    /* Weekly strip (compact 7-day overview) */
+    /* Weekly strip — 7 day-columns with stacked items. Sized to fill
+       the Annual view's natural height so the calendar panel doesn't
+       jump as the user flips between views. */
     .cal-week-strip {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 6px;
       margin-top: 6px;
     }
+    .cal-week-strip-detailed {
+      min-height: 360px;
+    }
     .cal-week-day {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding: 12px 4px 14px;
+      align-items: stretch;
+      gap: 6px;
+      padding: 10px 6px 12px;
       background: rgba(255, 248, 235, 0.04);
       border: 1px solid var(--glass-border);
       border-radius: 14px;
       cursor: pointer;
       color: inherit;
       font-family: var(--font-body);
+      text-align: left;
       transition: background 180ms ease, transform 180ms ease;
     }
     .cal-week-day:hover {
@@ -10425,6 +10434,13 @@ They'll lose access to shared trips, celebrations and any read-only child access
     .cal-week-day.today {
       background: rgba(61, 155, 143, 0.18);
       border-color: rgba(61, 155, 143, 0.45);
+    }
+    .cal-week-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 4px;
+      padding: 0 2px;
     }
     .cal-week-dow {
       font-size: 11px;
@@ -10438,24 +10454,64 @@ They'll lose access to shared trips, celebrations and any read-only child access
     }
     .cal-week-num {
       font-family: var(--font-display);
-      font-size: 19px;
+      font-size: 17px;
       font-weight: 700;
       color: var(--text-primary);
+      line-height: 1;
     }
-    .cal-week-dots {
+    /* Per-day item stack (2026-05-23) — replaces the dot row. */
+    .cal-week-items {
       display: flex;
+      flex-direction: column;
       gap: 3px;
-      height: 6px;
-      align-items: center;
+      flex: 1;
+      min-height: 0;
     }
-    .cal-week-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 999px;
-      background: var(--text-tertiary);
+    .cal-week-chip {
+      display: block;
+      padding: 4px 6px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--text-primary);
+      background: rgba(255, 248, 235, 0.06);
+      border-left: 2px solid var(--text-tertiary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
-    .cal-week-dot.trip { background: var(--teal-pebble); }
-    .cal-week-dot.event { background: #d4a843; }
+    .cal-week-chip.trip {
+      background: rgba(61, 155, 143, 0.14);
+      border-left-color: var(--teal-pebble);
+    }
+    .cal-week-chip.event {
+      background: rgba(212, 168, 67, 0.14);
+      border-left-color: #d4a843;
+    }
+    .cal-week-more {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      padding: 2px 4px;
+    }
+    .cal-week-empty {
+      color: var(--text-tertiary);
+      font-size: 12px;
+      padding: 2px 4px;
+      opacity: 0.5;
+    }
+    /* Calendar panel — fixed height so flipping between Week / Month
+       / Year doesn't shift the page layout. Anchored to Annual's
+       natural height. The wrapping <section class="cal-section">
+       reserves the height; inner glass-panel fills it. */
+    .cal-section {
+      min-height: 420px;
+      display: flex;
+    }
+    .cal-section > glass-panel {
+      flex: 1;
+      display: block;
+    }
     .cal-head {
       display: flex;
       align-items: center;
@@ -12261,4 +12317,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}y(mt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",mt);
-//# sourceMappingURL=index-CmRrE6fd.js.map
+//# sourceMappingURL=index-Dd9ClTP6.js.map
