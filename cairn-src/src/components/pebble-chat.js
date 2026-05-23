@@ -452,12 +452,11 @@ export class PebbleChat extends LitElement {
   `;
 
   _renderPebbleIcon() {
-    return html`
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="9" />
-        <circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" />
-      </svg>
-    `;
+    // 2026-05-23 — was a double-ring (archery target) inline SVG;
+    // swapped to the canonical Pebble Ripple Stone via the shared
+    // <pebble-icon> element. Production dome mode (white@33%) reads
+    // correctly on the tealDeep chat-avatar background.
+    return html`<pebble-icon color="#fff"></pebble-icon>`;
   }
 
   render() {

@@ -3233,7 +3233,9 @@ export class HomeScreen extends LitElement {
     const pebbleTab = {
       id: 'pebble',
       label: 'Pebble',
-      icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" /></svg>`,
+      // 2026-05-23 — Pebble Ripple Stone (was double-ring target).
+      // currentColor inherits the active/inactive tab tint.
+      icon: html`<pebble-icon></pebble-icon>`,
     };
     return [
       {
@@ -3776,7 +3778,7 @@ export class HomeScreen extends LitElement {
             ${dc
               ? html`<div class="daily">
                   <div class="tag">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/></svg>
+                    <pebble-icon size="16"></pebble-icon>
                     Pebble's daily
                   </div>
                   <h3>${dc.title}</h3>
@@ -3795,7 +3797,7 @@ export class HomeScreen extends LitElement {
                 </div>`
               : html`<div class="daily">
                   <div class="tag">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/></svg>
+                    <pebble-icon size="16"></pebble-icon>
                     Pebble's daily
                   </div>
                   <h3>Pebble's note is on its way</h3>
@@ -4354,10 +4356,7 @@ export class HomeScreen extends LitElement {
         <glass-panel padding="lg" variant="strong">
           <div class="empty-hero">
             <div class="empty-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="#3d9b8f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="9" />
-                <circle cx="12" cy="12" r="4.5" fill="#3d9b8f" stroke="none" />
-              </svg>
+              <pebble-icon size="42" color="#3d9b8f"></pebble-icon>
             </div>
             <div class="empty-title">Pebble is for parents</div>
             <div class="empty-sub">
@@ -4380,7 +4379,8 @@ export class HomeScreen extends LitElement {
     if (!this._pebbleAvailable) return '';
     const cd = this._childData();
     if (!cd.child) return '';
-    const pico = html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none"/></svg>`;
+    // 2026-05-23 — Pebble Ripple Stone (was double-ring target).
+    const pico = html`<pebble-icon></pebble-icon>`;
     return html`
       <button
         class="pebble-fab"

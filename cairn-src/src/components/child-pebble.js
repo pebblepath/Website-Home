@@ -942,7 +942,9 @@ export class ChildPebble extends LitElement {
   `;
 
   _pico() {
-    return html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4.5" fill="currentColor" stroke="none" /></svg>`;
+    // 2026-05-23 — Pebble Ripple Stone via shared element. Color
+    // intentionally `currentColor` so caller styles cascade.
+    return html`<pebble-icon></pebble-icon>`;
   }
 
   // Sender attribution — co-parents on a shared family see who asked

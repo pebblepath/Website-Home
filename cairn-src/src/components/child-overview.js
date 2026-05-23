@@ -666,7 +666,9 @@ export class ChildOverview extends LitElement {
   }
 
   _pebbleIcon() {
-    return html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none" /></svg>`;
+    // 2026-05-23 — Pebble Ripple Stone via shared element. Color
+    // intentionally `currentColor` so caller styles cascade.
+    return html`<pebble-icon></pebble-icon>`;
   }
 
   _ageMonths(dob) {
