@@ -1501,6 +1501,55 @@ export class HomeScreen extends LitElement {
       word-break: break-word;
       margin-top: auto;
     }
+    /* 2026-05-23 — Google-Calendar-style event chips per cell.
+       Stacked vertically; truncated; color-coded by kind. */
+    .cal-cell .cal-cell-chips {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      width: 100%;
+      margin-top: 3px;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .cal-cell-chip {
+      display: block;
+      font-size: 10px;
+      line-height: 1.25;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: var(--text-primary);
+      background: rgba(255, 248, 235, 0.10);
+      border-left: 2px solid var(--text-tertiary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .cal-cell-chip.chip-trip {
+      background: rgba(61, 155, 143, 0.18);
+      border-left-color: var(--teal-pebble);
+      color: var(--text-primary);
+    }
+    .cal-cell-chip.chip-event {
+      background: rgba(212, 168, 67, 0.18);
+      border-left-color: #d4a843;
+      color: var(--text-primary);
+    }
+    .cal-cell-chip.chip-holiday {
+      background: rgba(122, 158, 126, 0.18);
+      border-left-color: rgba(122, 158, 126, 0.8);
+      color: var(--text-primary);
+    }
+    .cal-cell-more {
+      font-size: 9.5px;
+      color: var(--text-tertiary);
+      font-weight: 600;
+      padding: 1px 4px;
+    }
+    /* Hide single-label legacy slot when chips are present (chips
+       supersede the single .cal-cell-label). Today's "Today" fallback
+       still uses .cal-cell-label when items.length === 0. */
     @media (max-width: 480px) {
       .cal-cell .cal-cell-label {
         display: none;
@@ -2629,16 +2678,36 @@ export class HomeScreen extends LitElement {
       color: var(--text-tertiary);
       font-style: italic;
     }
-    /* P9 — Settings → Join another family. The code input + Join
-       button live on a SECOND line below the row description so the
-       narrow-viewport Settings tab (one-column grid) doesn't squash
-       either the description or the input. */
+    /* 2026-05-23 — Join-another-family row: input + button live in
+       the row right column (flex grid: si | sl | join-cluster),
+       aligned with the rest of the settings rows pill/badge slot.
+       On narrow viewports the row wraps so the input+button drop to
+       a new line below the .sl (still inside the row). The
+       .set-row-join-another wrapper class flips flex-wrap + adjusts
+       margin-top on the wrapped state. */
     .join-cluster {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-top: 8px;
+      flex-shrink: 0;
+    }
+    .set-row-join-another {
       flex-wrap: wrap;
+    }
+    .set-row-join-another > .join-feedback {
+      /* Errors / success copy wraps onto a full-width row below the
+         input + button. The negative left-margin counts back past
+         the icon column so the feedback aligns under the label
+         text (visual hierarchy: feedback applies to the label). */
+      flex-basis: 100%;
+      margin-left: 50px;
+    }
+    @media (max-width: 560px) {
+      .set-row-join-another > .join-cluster {
+        flex-basis: 100%;
+        margin-left: 50px;
+        margin-top: 6px;
+      }
     }
     .join-cluster input.join-code {
       width: 110px;
@@ -3050,12 +3119,14 @@ export class HomeScreen extends LitElement {
     const firstDay = new Date(year, month, 1).getDay();
     const offset = (firstDay + 6) % 7;
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    // Per-day label map — Map<day, string>. Lets the cell render a short
-    // text caption (event title or trip title) underneath the day number
-    // so the colour isn't the only signal.
-    const dayLabels = new Map();
-    const pushLabel = (day, label) => {
-      if (!dayLabels.has(day)) dayLabels.set(day, label);
+    // 2026-05-23 — per-day items list (Google-Calendar style chips).
+    // Was a Map<day, string> showing one label; now Array<{title, kind}>
+    // so each cell can render multiple colored chips. Chip kind drives
+    // the chip color (trip = teal, event = amber, holiday = sage).
+    const dayItems = new Map();
+    const pushItem = (day, title, kind) => {
+      if (!dayItems.has(day)) dayItems.set(day, []);
+      dayItems.get(day).push({ title: title ?? '', kind });
     };
     const events = [];
     for (const ev of this._filteredEvents()) {
@@ -3063,7 +3134,7 @@ export class HomeScreen extends LitElement {
       if (!d) continue;
       if (d.getFullYear() === year && d.getMonth() === month) {
         events.push(d.getDate());
-        pushLabel(d.getDate(), ev.title ?? '');
+        pushItem(d.getDate(), ev.title ?? '', 'event');
       }
     }
     const tripDays = new Set();
@@ -3079,18 +3150,18 @@ export class HomeScreen extends LitElement {
       const end = e.getMonth() === month ? e.getDate() : daysInMonth;
       for (let d = start; d <= end; d++) {
         tripDays.add(d);
-        pushLabel(d, t.title ?? '');
+        pushItem(d, t.title ?? '', 'trip');
       }
     }
-    // Public-holiday overlay on the grid (Ellie ③) — distinct dot
-    // colour + the holiday name as the cell label.
+    // Public-holiday overlay on the grid (Ellie ③) — chip color
+    // sage; supplements the existing trip/event chips.
     const holidayDays = new Set();
     for (const h of this.holidays ?? []) {
       const d = parseLocalDate(h.date);
       if (!d) continue;
       if (d.getFullYear() === year && d.getMonth() === month) {
         holidayDays.add(d.getDate());
-        pushLabel(d.getDate(), h.title ?? 'Holiday');
+        pushItem(d.getDate(), h.title ?? 'Holiday', 'holiday');
       }
     }
     const cells = [];
@@ -3102,9 +3173,16 @@ export class HomeScreen extends LitElement {
       const hasEvent = events.includes(d);
       const hasTrip = tripDays.has(d);
       const hasHoliday = holidayDays.has(d);
-      // Today gets its own preview label like trips/events do, so the
-      // cell carries text (not just colour) consistently.
-      const label = isToday ? (dayLabels.get(d) ?? 'Today') : dayLabels.get(d);
+      // 2026-05-23 — Google-Calendar-style: show up to 2 chips per
+      // cell + a "+N" overflow when there are more. Chip color set
+      // via .chip-{kind}. Title attribute lists all items for hover.
+      const items = dayItems.get(d) ?? [];
+      const cap = 2;
+      const visibleItems = items.slice(0, cap);
+      const overflow = Math.max(0, items.length - cap);
+      const hoverTitle = items.length
+        ? `${d} — ${items.map((it) => it.title).filter(Boolean).join(' · ')}`
+        : '';
       const cls = [
         'cal-cell',
         isToday ? 'today' : '',
@@ -3114,9 +3192,20 @@ export class HomeScreen extends LitElement {
       ]
         .filter(Boolean)
         .join(' ');
-      cells.push(html`<div class=${cls} title=${label ? `${d} — ${label}` : ''}>
+      cells.push(html`<div class=${cls} title=${hoverTitle}>
         <span class="cal-cell-day">${d}</span>
-        ${label ? html`<span class="cal-cell-label">${label}</span>` : ''}
+        ${visibleItems.length === 0 && isToday
+          ? html`<span class="cal-cell-label">Today</span>`
+          : visibleItems.length > 0
+          ? html`<div class="cal-cell-chips">
+              ${visibleItems.map(
+                (it) => html`<span class="cal-cell-chip chip-${it.kind}">${it.title || it.kind}</span>`,
+              )}
+              ${overflow > 0
+                ? html`<span class="cal-cell-more">+${overflow}</span>`
+                : ''}
+            </div>`
+          : ''}
       </div>`);
     }
     const monthName = new Date(year, month, 1).toLocaleString('en-GB', {
@@ -3984,7 +4073,14 @@ export class HomeScreen extends LitElement {
 
       <section>
         <div class="grid-2 today-insight-row">
-          <glass-panel padding="md" variant="strong">
+          <!-- 2026-05-23 — stretch attribute on both panels so the
+               glass-panel inner .panel + .content divs fill the host
+               (which was already height:100% via align-items:stretch
+               on the grid row). Without stretch, the bg/border chrome
+               sized to natural content while the host was stretched —
+               making Recently-achieved visually shorter than Growth-
+               insight even though the grid track matched. -->
+          <glass-panel padding="md" variant="strong" stretch>
             <div class="cal-head"><h3>Recently achieved</h3>
               <button class="link" @click=${() => (this._activeTab = 'children')}>See all</button></div>
             ${recently.length === 0
@@ -3997,7 +4093,7 @@ export class HomeScreen extends LitElement {
                   </div>`,
                 )}
           </glass-panel>
-          <glass-panel padding="md" variant="strong">
+          <glass-panel padding="md" variant="strong" stretch>
             <div class="cal-head"><h3>Growth insight</h3>
               <button class="link" @click=${() => (this._activeTab = 'children')}>More insights</button></div>
             ${insight
@@ -4255,49 +4351,55 @@ export class HomeScreen extends LitElement {
     const code = this._joinAnotherCode ?? '';
     const canJoin = code.length === 6 && !this._joinAnotherBusy;
     return html`
-      <div class="set-row" style="align-items:flex-start;">
-        <span class="si" style="margin-top:2px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/><circle cx="12" cy="12" r="9"/></svg></span>
+      <div class="set-row set-row-join-another">
+        <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/><circle cx="12" cy="12" r="9"/></svg></span>
         <div class="sl">
           <b>Join another family</b>
-          <span>Paste a 6-character connect code to join an additional family.</span>
-          <div class="join-cluster">
-            <input
-              class="join-code"
-              type="text"
-              inputmode="latin"
-              autocapitalize="characters"
-              autocomplete="off"
-              autocorrect="off"
-              spellcheck="false"
-              maxlength="6"
-              placeholder="ABC123"
-              .value=${code}
-              ?disabled=${this._joinAnotherBusy}
-              @input=${(e) => this._onJoinAnotherCodeInput(e)}
-              @keydown=${(e) => {
-                if (e.key === 'Enter' && canJoin) {
-                  this._attemptJoinAnotherFamily();
-                }
-              }}
-              aria-label="Connect code"
-            />
-            <button
-              class="join-go"
-              ?disabled=${!canJoin}
-              @click=${() => this._attemptJoinAnotherFamily()}
-            >
-              ${this._joinAnotherBusy ? 'Joining…' : 'Join'}
-            </button>
-          </div>
-          ${this._joinAnotherError
-            ? html`<div class="join-error">${this._joinAnotherError}</div>`
-            : ''}
-          ${this._joinAnotherSuccessName
-            ? html`<div class="join-success">
-                ✓ Joined ${this._joinAnotherSuccessName}.
-              </div>`
-            : ''}
+          <span>Paste a 6-character connect code.</span>
         </div>
+        <!-- 2026-05-23 — input + button moved to the row's right
+             column to align with the rest of the settings rows
+             (pill/badge slot). The join-cluster takes the right side
+             on desktop; wraps to a second line below the .sl on
+             narrow viewports via the @media rule on .set-row-join-
+             another. -->
+        <div class="join-cluster">
+          <input
+            class="join-code"
+            type="text"
+            inputmode="latin"
+            autocapitalize="characters"
+            autocomplete="off"
+            autocorrect="off"
+            spellcheck="false"
+            maxlength="6"
+            placeholder="ABC123"
+            .value=${code}
+            ?disabled=${this._joinAnotherBusy}
+            @input=${(e) => this._onJoinAnotherCodeInput(e)}
+            @keydown=${(e) => {
+              if (e.key === 'Enter' && canJoin) {
+                this._attemptJoinAnotherFamily();
+              }
+            }}
+            aria-label="Connect code"
+          />
+          <button
+            class="join-go"
+            ?disabled=${!canJoin}
+            @click=${() => this._attemptJoinAnotherFamily()}
+          >
+            ${this._joinAnotherBusy ? 'Joining…' : 'Join'}
+          </button>
+        </div>
+        ${this._joinAnotherError
+          ? html`<div class="join-error join-feedback">${this._joinAnotherError}</div>`
+          : ''}
+        ${this._joinAnotherSuccessName
+          ? html`<div class="join-success join-feedback">
+              ✓ Joined ${this._joinAnotherSuccessName}.
+            </div>`
+          : ''}
       </div>
     `;
   }
