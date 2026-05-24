@@ -101,6 +101,9 @@ export class HomeScreen extends LitElement {
     _eventFormEvent: { state: true },
     _eventFormBusy: { state: true },
     _displayMonth: { state: true },
+    /** 2026-05-22 — single-card calendar with view-toggle replaced
+     *  the stacked monthly + yearly panels. 'week' | 'month' | 'year'. */
+    _calendarView: { state: true },
     _allTripsOpen: { state: true },
     _editingFamilyName: { state: true },
     _importOpen: { state: true },
@@ -220,6 +223,9 @@ export class HomeScreen extends LitElement {
     // user-controlled via prev/next or yearly month-tap.
     const t = new Date();
     this._displayMonth = new Date(t.getFullYear(), t.getMonth(), 1);
+    // Default to Month — same default the old stacked layout opened
+    // with. User can flip via the new segmented toggle.
+    this._calendarView = 'month';
   }
 
   // P9 — Settings → Join another family. Input formatter that keeps the
@@ -1197,6 +1203,210 @@ export class HomeScreen extends LitElement {
     /* Calendar view toggle (Week / Month / Year) — replaces the
        stacked two-panel layout 2026-05-22. Mirrors the date-range
        picker / circle-switcher segmented chip pattern. */
+    .cal-view-toggle {
+      display: inline-flex;
+      gap: 2px;
+      padding: 3px;
+      background: rgba(255, 248, 235, 0.06);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+    .cal-view-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 160ms ease, color 160ms ease;
+    }
+    .cal-view-btn:hover {
+      color: var(--text-primary);
+    }
+    .cal-view-btn.on {
+      background: var(--teal-pebble);
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(61, 155, 143, 0.30);
+    }
+    /* Weekly strip — 7 day-columns with stacked items. Sized to fill
+       the Annual view's natural height so the calendar panel doesn't
+       jump as the user flips between views. */
+    .cal-week-strip {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-top: 6px;
+    }
+    /* Week strip fills the panel's content area — height delegated
+       to .cal-section. The 1fr-row pattern keeps day columns equal
+       within whatever height the container provides. */
+    .cal-week-strip-detailed {
+      height: 100%;
+    }
+    .cal-week-day {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 6px;
+      padding: 10px 6px 12px;
+      background: rgba(255, 248, 235, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      cursor: pointer;
+      color: inherit;
+      font-family: var(--font-body);
+      text-align: left;
+      transition: background 180ms ease, transform 180ms ease;
+    }
+    .cal-week-day:hover {
+      background: rgba(255, 248, 235, 0.10);
+      transform: translateY(-1px);
+    }
+    .cal-week-day.today {
+      background: rgba(61, 155, 143, 0.18);
+      border-color: rgba(61, 155, 143, 0.45);
+    }
+    .cal-week-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 4px;
+      padding: 0 2px;
+    }
+    .cal-week-dow {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+    }
+    .cal-week-day.today .cal-week-dow {
+      color: var(--teal-pebble);
+    }
+    .cal-week-num {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    /* Per-day item stack (2026-05-23) — replaces the dot row. */
+    .cal-week-items {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex: 1;
+      min-height: 0;
+    }
+    .cal-week-chip {
+      display: block;
+      padding: 4px 6px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 1.25;
+      color: var(--text-primary);
+      background: rgba(255, 248, 235, 0.06);
+      border-left: 2px solid var(--text-tertiary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .cal-week-chip.trip {
+      background: rgba(61, 155, 143, 0.14);
+      border-left-color: var(--teal-pebble);
+    }
+    .cal-week-chip.event {
+      background: rgba(212, 168, 67, 0.14);
+      border-left-color: #d4a843;
+    }
+    .cal-week-more {
+      font-size: 10px;
+      color: var(--text-tertiary);
+      padding: 2px 4px;
+    }
+    .cal-week-empty {
+      color: var(--text-tertiary);
+      font-size: 12px;
+      padding: 2px 4px;
+      opacity: 0.5;
+    }
+    /* Calendar panel — STRICT fixed height (2026-05-23 follow-up).
+       min-height alone didn't equalize: Year's 6×2 (or 4×3 below
+       1024px) natural grid blew well past 420px, and Week's content
+       sat short below the threshold. Now: section is 480px exact,
+       inner glass-panel fills + scrolls if a view needs more (Year
+       on narrow viewports stays at-a-glance; if it overflows the
+       user scrolls within the panel). */
+    .cal-section {
+      height: 480px;
+      display: flex;
+    }
+    .cal-section > glass-panel {
+      flex: 1;
+      display: block;
+      /* Year on narrow viewports can need more than 480 — keep
+         scroll as the fallback, but Month + Week fit exactly via the
+         flex column below. */
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+    /* Flex column: toggle stays at its natural height; view-pane
+       fills the rest so Month grid + Weekly strip auto-size to fit
+       the 480px panel (was: Month overflowed + cropped, Week sat
+       short — fixed 2026-05-23). */
+    .cal-inner {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+    }
+    .cal-view-pane {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Monthly + Weekly grids fill the pane vertically; their own
+       inner content (rows, days) auto-sizes via the grid layout. */
+    .cal-view-pane .cal-grid {
+      flex: 1;
+      min-height: 0;
+      /* DOW header row auto-height + 6 fr rows for weeks. Replaces
+         the per-cell aspect-ratio (which made cells too tall on wide
+         viewports → overflowed the 480 panel). */
+      grid-template-rows: auto repeat(6, 1fr);
+    }
+    .cal-view-pane .cal-cell {
+      /* Override the aspect-ratio: 3/2 from the legacy cal-cell
+         styles. Each cell now stretches to fill its grid-row track
+         (1fr each, defined above). */
+      aspect-ratio: auto;
+      min-height: 0;
+    }
+    /* Yearly view inside the pane — fills the available height. The
+       internal grid handles its own scroll when content overflows. */
+    .cal-view-pane > yearly-view {
+      flex: 1;
+      min-height: 0;
+      display: block;
+    }
+    /* cal-head (the H3 + nav buttons row) stays at its natural
+       height inside the flex column. */
+    .cal-view-pane > .cal-head {
+      flex: 0 0 auto;
+    }
+    /* Weekly strip fills the remaining pane height, so each day
+       column has room for the item chips (was: short content sat
+       cropped at top with empty space below). */
+    .cal-view-pane > .cal-week-strip {
+      flex: 1;
+      min-height: 0;
+    }
     .cal-head {
       display: flex;
       align-items: center;
@@ -1291,6 +1501,55 @@ export class HomeScreen extends LitElement {
       word-break: break-word;
       margin-top: auto;
     }
+    /* 2026-05-23 — Google-Calendar-style event chips per cell.
+       Stacked vertically; truncated; color-coded by kind. */
+    .cal-cell .cal-cell-chips {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      width: 100%;
+      margin-top: 3px;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .cal-cell-chip {
+      display: block;
+      font-size: 10px;
+      line-height: 1.25;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: var(--text-primary);
+      background: rgba(255, 248, 235, 0.10);
+      border-left: 2px solid var(--text-tertiary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .cal-cell-chip.chip-trip {
+      background: rgba(61, 155, 143, 0.18);
+      border-left-color: var(--teal-pebble);
+      color: var(--text-primary);
+    }
+    .cal-cell-chip.chip-event {
+      background: rgba(212, 168, 67, 0.18);
+      border-left-color: #d4a843;
+      color: var(--text-primary);
+    }
+    .cal-cell-chip.chip-holiday {
+      background: rgba(122, 158, 126, 0.18);
+      border-left-color: rgba(122, 158, 126, 0.8);
+      color: var(--text-primary);
+    }
+    .cal-cell-more {
+      font-size: 9.5px;
+      color: var(--text-tertiary);
+      font-weight: 600;
+      padding: 1px 4px;
+    }
+    /* Hide single-label legacy slot when chips are present (chips
+       supersede the single .cal-cell-label). Today's "Today" fallback
+       still uses .cal-cell-label when items.length === 0. */
     @media (max-width: 480px) {
       .cal-cell .cal-cell-label {
         display: none;
@@ -2860,14 +3119,14 @@ export class HomeScreen extends LitElement {
     const firstDay = new Date(year, month, 1).getDay();
     const offset = (firstDay + 6) % 7;
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    // 2026-05-23 — reverted from per-day chip list back to one
-    // label per cell. Single label-string per day (first item wins);
-    // dot+pill in the cell signals presence; hover-title carries the
-    // full list. Kept the trip/event/holiday classifier so cell tint
-    // (.has-event / .has-trip / .has-holiday) still works.
-    const dayLabels = new Map();
-    const pushLabel = (day, label) => {
-      if (!dayLabels.has(day) && label) dayLabels.set(day, label);
+    // 2026-05-23 — per-day items list (Google-Calendar style chips).
+    // Was a Map<day, string> showing one label; now Array<{title, kind}>
+    // so each cell can render multiple colored chips. Chip kind drives
+    // the chip color (trip = teal, event = amber, holiday = sage).
+    const dayItems = new Map();
+    const pushItem = (day, title, kind) => {
+      if (!dayItems.has(day)) dayItems.set(day, []);
+      dayItems.get(day).push({ title: title ?? '', kind });
     };
     const events = [];
     for (const ev of this._filteredEvents()) {
@@ -2875,7 +3134,7 @@ export class HomeScreen extends LitElement {
       if (!d) continue;
       if (d.getFullYear() === year && d.getMonth() === month) {
         events.push(d.getDate());
-        pushLabel(d.getDate(), ev.title ?? '');
+        pushItem(d.getDate(), ev.title ?? '', 'event');
       }
     }
     const tripDays = new Set();
@@ -2891,17 +3150,18 @@ export class HomeScreen extends LitElement {
       const end = e.getMonth() === month ? e.getDate() : daysInMonth;
       for (let d = start; d <= end; d++) {
         tripDays.add(d);
-        pushLabel(d, t.title ?? '');
+        pushItem(d, t.title ?? '', 'trip');
       }
     }
-    // Public-holiday overlay on the grid.
+    // Public-holiday overlay on the grid (Ellie ③) — chip color
+    // sage; supplements the existing trip/event chips.
     const holidayDays = new Set();
     for (const h of this.holidays ?? []) {
       const d = parseLocalDate(h.date);
       if (!d) continue;
       if (d.getFullYear() === year && d.getMonth() === month) {
         holidayDays.add(d.getDate());
-        pushLabel(d.getDate(), h.title ?? 'Holiday');
+        pushItem(d.getDate(), h.title ?? 'Holiday', 'holiday');
       }
     }
     const cells = [];
@@ -2913,7 +3173,16 @@ export class HomeScreen extends LitElement {
       const hasEvent = events.includes(d);
       const hasTrip = tripDays.has(d);
       const hasHoliday = holidayDays.has(d);
-      const label = dayLabels.get(d);
+      // 2026-05-23 — Google-Calendar-style: show up to 2 chips per
+      // cell + a "+N" overflow when there are more. Chip color set
+      // via .chip-{kind}. Title attribute lists all items for hover.
+      const items = dayItems.get(d) ?? [];
+      const cap = 2;
+      const visibleItems = items.slice(0, cap);
+      const overflow = Math.max(0, items.length - cap);
+      const hoverTitle = items.length
+        ? `${d} — ${items.map((it) => it.title).filter(Boolean).join(' · ')}`
+        : '';
       const cls = [
         'cal-cell',
         isToday ? 'today' : '',
@@ -2923,12 +3192,19 @@ export class HomeScreen extends LitElement {
       ]
         .filter(Boolean)
         .join(' ');
-      cells.push(html`<div class=${cls} title=${label ?? ''}>
+      cells.push(html`<div class=${cls} title=${hoverTitle}>
         <span class="cal-cell-day">${d}</span>
-        ${label
-          ? html`<span class="cal-cell-label">${label}</span>`
-          : isToday
+        ${visibleItems.length === 0 && isToday
           ? html`<span class="cal-cell-label">Today</span>`
+          : visibleItems.length > 0
+          ? html`<div class="cal-cell-chips">
+              ${visibleItems.map(
+                (it) => html`<span class="cal-cell-chip chip-${it.kind}">${it.title || it.kind}</span>`,
+              )}
+              ${overflow > 0
+                ? html`<span class="cal-cell-more">+${overflow}</span>`
+                : ''}
+            </div>`
           : ''}
       </div>`);
     }
@@ -3508,37 +3784,148 @@ export class HomeScreen extends LitElement {
 
   _renderCalendarsSection() {
     const today = new Date();
-    // 2026-05-23 — reverted from a Week/Month/Year segmented toggle
-    // (chip-per-cell month + weekly strip with detailed item chips,
-    // fixed 480px height) back to the original side-by-side
-    // Monthly + Yearly stacked-card layout. The dormant _renderWeekly
-    // method, _calendarView state, and the chip + weekly-strip CSS
-    // rules were stripped in the same revert.
+    const v = this._calendarView ?? 'month';
     return html`
-        <section>
-          <div class="cal-row">
-            <glass-panel padding="md" variant="strong" stretch>
-              ${this._renderMonthly()}
-            </glass-panel>
-            <glass-panel padding="md" variant="strong" stretch>
-              <div class="cal-head">
-                <h3>${this._displayMonth?.getFullYear() ?? today.getFullYear()}</h3>
-                <div style="font-size:12px;color:var(--text-tertiary);">Yearly</div>
-              </div>
-              <yearly-view
-                .year=${this._displayMonth?.getFullYear() ?? today.getFullYear()}
-                .tripDays=${this._tripDensityByDay(
-                  this._displayMonth?.getFullYear() ?? today.getFullYear(),
+        <section class="cal-section">
+          <glass-panel padding="md" variant="strong" stretch>
+            <!-- Flex column: toggle is auto-height, view fills the
+                 remaining 480 - toggle height. cal-view-pane has
+                 height:100% + min-height:0 so its inner grids /
+                 strips can size to fit. -->
+            <div class="cal-inner">
+              <div class="cal-view-toggle" role="tablist" aria-label="Calendar view">
+                ${[
+                  { id: 'week', label: 'Week' },
+                  { id: 'month', label: 'Month' },
+                  { id: 'year', label: 'Year' },
+                ].map(
+                  (opt) => html`
+                    <button
+                      role="tab"
+                      aria-selected=${v === opt.id ? 'true' : 'false'}
+                      class="cal-view-btn ${v === opt.id ? 'on' : ''}"
+                      @click=${() => (this._calendarView = opt.id)}
+                    >
+                      ${opt.label}
+                    </button>
+                  `,
                 )}
-                .trips=${this._circleTrips()}
-                .events=${this._liveEvents()}
-                .holidays=${this.holidays ?? []}
-                .today=${today}
-                @month-select=${(e) => this._jumpToMonth(e.detail.year, e.detail.month)}
-              ></yearly-view>
-            </glass-panel>
-          </div>
+              </div>
+              <div class="cal-view-pane">
+                ${v === 'week'
+                  ? this._renderWeekly()
+                  : v === 'year'
+                  ? html`
+                      <div class="cal-head">
+                        <h3>${this._displayMonth?.getFullYear() ?? today.getFullYear()}</h3>
+                      </div>
+                      <yearly-view
+                        .year=${this._displayMonth?.getFullYear() ?? today.getFullYear()}
+                        .tripDays=${this._tripDensityByDay(
+                          this._displayMonth?.getFullYear() ?? today.getFullYear(),
+                        )}
+                        .trips=${this._circleTrips()}
+                        .events=${this._liveEvents()}
+                        .holidays=${this.holidays ?? []}
+                        .today=${today}
+                        @month-select=${(e) => {
+                          this._jumpToMonth(e.detail.year, e.detail.month);
+                          this._calendarView = 'month';
+                        }}
+                      ></yearly-view>
+                    `
+                  : this._renderMonthly()}
+              </div>
+            </div>
+          </glass-panel>
         </section>
+    `;
+  }
+
+  /** 2026-05-22 — compact 7-day strip starting on Sunday of THIS
+   *  week. Each day shows date + day-of-week + a stacked list of the
+   *  actual trips/events landing on it (chips, color-coded). Today
+   *  highlighted. Tap a day → jump to that month + flip to Month view.
+   *  2026-05-23 — promoted from dot-density to inline item titles so
+   *  the user can actually see what's on each day. */
+  _renderWeekly() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    // Anchor on the Sunday at-or-before today; mirrors Portal's
+    // existing monthly grid (Sunday-first). User-locale week-start
+    // is a later polish — for now Sunday-first matches Month view.
+    const sunday = new Date(today);
+    sunday.setDate(today.getDate() - today.getDay());
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(sunday);
+      d.setDate(sunday.getDate() + i);
+      days.push(d);
+    }
+    const isSameDay = (a, b) =>
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate();
+    /** Collect every trip-day + event landing on `day` as a flat list
+     *  of { title, type } chips for inline rendering. Trip span days
+     *  share the trip's title; events show theirs. */
+    const itemsFor = (day) => {
+      const key = day.toISOString().slice(0, 10);
+      const out = [];
+      for (const t of this._circleTrips()) {
+        if (!t.start || !t.end) continue;
+        if (key >= String(t.start) && key <= String(t.end)) {
+          out.push({ title: t.title || 'Trip', type: 'trip', id: t.id });
+        }
+      }
+      for (const e of this._liveEvents()) {
+        if (!e.date) continue;
+        if (String(e.date) === key) {
+          out.push({ title: e.title || 'Event', type: 'event', id: e.id });
+        }
+      }
+      return out;
+    };
+    return html`
+      <div class="cal-head">
+        <h3>This week</h3>
+        <div style="font-size:12px;color:var(--text-tertiary);">
+          ${sunday.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}
+          –
+          ${days[6].toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}
+        </div>
+      </div>
+      <div class="cal-week-strip cal-week-strip-detailed">
+        ${days.map((d) => {
+          const items = itemsFor(d);
+          const isToday = isSameDay(d, today);
+          return html`
+            <button
+              class="cal-week-day cal-week-day-detailed ${isToday ? 'today' : ''}"
+              @click=${() => {
+                this._jumpToMonth(d.getFullYear(), d.getMonth());
+                this._calendarView = 'month';
+              }}
+              aria-label="${d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}, ${items.length} ${items.length === 1 ? 'item' : 'items'}"
+            >
+              <div class="cal-week-head">
+                <span class="cal-week-dow">${d.toLocaleDateString('en-GB', { weekday: 'short' }).slice(0, 3)}</span>
+                <span class="cal-week-num">${d.getDate()}</span>
+              </div>
+              <div class="cal-week-items">
+                ${items.length === 0
+                  ? html`<span class="cal-week-empty">—</span>`
+                  : items.slice(0, 4).map(
+                      (it) => html`<span class="cal-week-chip ${it.type}" title=${it.title}>${it.title}</span>`,
+                    )}
+                ${items.length > 4
+                  ? html`<span class="cal-week-more">+${items.length - 4} more</span>`
+                  : ''}
+              </div>
+            </button>
+          `;
+        })}
+      </div>
     `;
   }
 
