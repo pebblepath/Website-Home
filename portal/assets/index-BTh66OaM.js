@@ -12,6 +12,14 @@ var vt=Object.defineProperty;var yt=(p,e,t)=>e in p?vt(p,e,{enumerable:!0,config
     :host([stretch]) .panel {
       height: 100%;
     }
+    /* 2026-05-23 — also stretch the inner .content wrapper so a
+       slotted flex-column (e.g. the calendar section cal-inner)
+       can use height 100% and have it actually cascade. Without
+       this rule the slot parent .content sized to natural content
+       only, and the calendar Week/Month views sat at half-height. */
+    :host([stretch]) .content {
+      height: 100%;
+    }
     .panel {
       position: relative;
       border-radius: var(--radius-card);
@@ -12409,4 +12417,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}y(mt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",mt);
-//# sourceMappingURL=index-CKsvsQsc.js.map
+//# sourceMappingURL=index-BTh66OaM.js.map
