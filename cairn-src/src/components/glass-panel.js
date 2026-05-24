@@ -33,6 +33,14 @@ export class GlassPanel extends LitElement {
     :host([stretch]) .panel {
       height: 100%;
     }
+    /* 2026-05-23 — also stretch the inner .content wrapper so a
+       slotted flex-column (e.g. the calendar section cal-inner)
+       can use height 100% and have it actually cascade. Without
+       this rule the slot parent .content sized to natural content
+       only, and the calendar Week/Month views sat at half-height. */
+    :host([stretch]) .content {
+      height: 100%;
+    }
     .panel {
       position: relative;
       border-radius: var(--radius-card);
