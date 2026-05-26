@@ -88,6 +88,11 @@ export class ChildOverview extends LitElement {
     // the visibility note. Milestones/timeline/insights are
     // inherently read-only displays already.
     readonly: { type: Boolean, reflect: true },
+    /** 2026-05-24 — `{ lane: <key>, idx: <number> }` when a timeline
+     *  dot was tapped to surface its milestone popover; null when no
+     *  dot is focused. Both hover (native `title` attr) and click
+     *  show the milestone, but only click sticks. */
+    _focusedDot: { state: true },
   };
 
   constructor() {
@@ -98,6 +103,31 @@ export class ChildOverview extends LitElement {
     this.insights = [];
     this.dailyCard = null;
     this.readonly = false;
+    this._focusedDot = null;
+    // 2026-05-24 — dismiss the timeline-dot popover on any click that
+    // doesn't touch a dot or the popover itself. composedPath crosses
+    // the shadow boundary so we can see the actual click target inside
+    // our shadow root.
+    this._onDocClick = (e) => {
+      if (this._focusedDot == null) return;
+      const path = e.composedPath?.() ?? [];
+      const onUs = path.some(
+        (el) =>
+          el?.classList?.contains?.('tl-dot') ||
+          el?.classList?.contains?.('tl-popover'),
+      );
+      if (!onUs) this._focusedDot = null;
+    };
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    document.addEventListener('click', this._onDocClick);
+  }
+
+  disconnectedCallback() {
+    document.removeEventListener('click', this._onDocClick);
+    super.disconnectedCallback();
   }
 
   static styles = css`
@@ -415,25 +445,85 @@ export class ChildOverview extends LitElement {
       background: var(--glass-border-strong);
       border-radius: 2px;
     }
-    .tl-track i {
+    /* 2026-05-24 — was an i element (presentational). Now a button so
+       each dot is keyboard-focusable, screen-reader-announced, and
+       carries a click handler that toggles the milestone popover.
+       Visual styling intentionally identical to the old i look — button
+       defaults reset, lane color via parent class, halo preserved. */
+    .tl-track .tl-dot {
       position: absolute;
       top: 50%;
       width: 12px;
       height: 12px;
       border-radius: 50%;
       transform: translate(-50%, -50%);
-      /* Punch-through halo matches the card surface in both themes
-         so the dot reads as sitting cleanly on the rail. */
       box-shadow: 0 0 0 3px var(--panel-solid);
+      /* Button reset. */
+      padding: 0;
+      border: none;
+      cursor: pointer;
+      font: inherit;
+      color: inherit;
+      transition: transform 140ms ease, box-shadow 140ms ease;
     }
-    .tl-lane.motor .tl-track i { background: #6b9ac4; }
-    .tl-lane.language .tl-track i { background: #d4a843; }
-    .tl-lane.social .tl-track i { background: #c98a8a; }
-    .tl-lane.cognitive .tl-track i { background: #8b7bb5; }
-    .tl-track i.future {
+    .tl-track .tl-dot:hover,
+    .tl-track .tl-dot.on {
+      transform: translate(-50%, -50%) scale(1.35);
+    }
+    .tl-track .tl-dot:focus-visible {
+      outline: 2px solid var(--ink-green);
+      outline-offset: 3px;
+    }
+    .tl-lane.motor .tl-track .tl-dot { background: #6b9ac4; }
+    .tl-lane.language .tl-track .tl-dot { background: #d4a843; }
+    .tl-lane.social .tl-track .tl-dot { background: #c98a8a; }
+    .tl-lane.cognitive .tl-track .tl-dot { background: #8b7bb5; }
+    .tl-track .tl-dot.future {
       background: transparent !important;
       border: 2px dashed var(--glass-border-strong);
       box-shadow: none;
+    }
+    /* Milestone popover — appears above a clicked dot. Positioned via
+       inline left:X% so it lines up with the dot column; translate
+       centers it horizontally and lifts it above the rail. Arrow drawn
+       via ::after pointing back down at the dot. */
+    .tl-popover {
+      position: absolute;
+      bottom: calc(100% + 10px);
+      transform: translateX(-50%);
+      min-width: 140px;
+      max-width: 220px;
+      padding: 8px 12px;
+      background: var(--panel-solid);
+      border: 1px solid var(--glass-border-strong);
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+      z-index: 4;
+      pointer-events: auto;
+    }
+    .tl-popover::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid var(--panel-solid);
+    }
+    .tl-popover-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-bottom: 2px;
+    }
+    .tl-popover-meta {
+      font-size: 11.5px;
+      color: var(--text-tertiary);
+      line-height: 1.2;
     }
     .tl-now {
       position: absolute;
@@ -706,6 +796,27 @@ export class ChildOverview extends LitElement {
     axisMax = Math.ceil(axisMax / 6) * 6;
     const pos = (mm) =>
       Math.min(98, Math.max(2, ((mm ?? 0) / axisMax) * 100));
+    const fmt = (mm) => {
+      if (mm <= 0) return 'birth';
+      if (mm < 24) return `${mm} mo`;
+      if (mm % 12 === 0) return `${mm / 12} yr`;
+      return `${(mm / 12).toFixed(1).replace(/\.0$/, '')} yr`;
+    };
+    // 2026-05-24 — each dot now carries the milestone metadata so the
+    // render can show real data on hover + click (title attr + popover).
+    // ageLabel collapses to "at X" when start==end so the popover stays
+    // compact for point-in-time milestones.
+    const dotFor = (m, isFuture) => {
+      const s = m.ageRangeStartMonths ?? 0;
+      const e = m.ageRangeEndMonths ?? s;
+      return {
+        left: pos(s),
+        future: !!isFuture,
+        title: m.title ?? '',
+        status: m.status,
+        ageLabel: s === e ? `at ${fmt(s)}` : `${fmt(s)}–${fmt(e)}`,
+      };
+    };
     const lanes = [
       { key: 'motor', cls: 'motor', name: 'Motor' },
       { key: 'language', cls: 'language', name: 'Language' },
@@ -727,26 +838,16 @@ export class ChildOverview extends LitElement {
           done[Math.round((i * (done.length - 1)) / 6)],
         );
       }
-      const dots = picks.map((m) => ({
-        left: pos(m.ageRangeStartMonths),
-        future: false,
-      }));
+      const dots = picks.map((m) => dotFor(m, false));
       const next = inDom
         .filter((m) => m.status !== 'achieved')
         .sort(
           (a, b) =>
             (a.ageRangeStartMonths ?? 0) - (b.ageRangeStartMonths ?? 0),
         )[0];
-      if (next)
-        dots.push({ left: pos(next.ageRangeStartMonths), future: true });
+      if (next) dots.push(dotFor(next, true));
       return { ...ln, dots };
     });
-    const fmt = (mm) => {
-      if (mm <= 0) return 'birth';
-      if (mm < 24) return `${mm} mo`;
-      if (mm % 12 === 0) return `${mm / 12} yr`;
-      return `${(mm / 12).toFixed(1).replace(/\.0$/, '')} yr`;
-    };
     const axis = Array.from({ length: 7 }, (_, i) =>
       fmt(Math.round((i * axisMax) / 6)),
     );
@@ -772,7 +873,7 @@ export class ChildOverview extends LitElement {
       .slice(0, 4);
     const comingUp = ms
       .filter((m) => m.status !== 'achieved')
-      .slice(0, 5);
+      .slice(0, 4);
     const theme = child.themeColorHex || 'var(--teal-pebble)';
     const insights = this.insights ?? [];
     const tl = this._timelineModel();
@@ -872,12 +973,50 @@ export class ChildOverview extends LitElement {
               (ln) => html`<div class="tl-lane ${ln.cls}">
                 <div class="tl-name">${ln.name}</div>
                 <div class="tl-track">
-                  ${ln.dots.map(
-                    (dt) => html`<i
-                      class=${dt.future ? 'future' : ''}
-                      style="left:${dt.left}%"
-                    ></i>`,
-                  )}
+                  ${ln.dots.map((dt, idx) => {
+                    const focused =
+                      this._focusedDot?.lane === ln.key &&
+                      this._focusedDot?.idx === idx;
+                    const statusWord =
+                      dt.status === 'achieved'
+                        ? 'Achieved'
+                        : dt.status === 'emerging'
+                          ? 'Emerging'
+                          : 'Upcoming';
+                    const titleAttr = dt.title
+                      ? `${dt.title} · ${dt.ageLabel} · ${statusWord}`
+                      : `${dt.ageLabel} · ${statusWord}`;
+                    return html`
+                      <button
+                        type="button"
+                        class=${'tl-dot' + (dt.future ? ' future' : '') + (focused ? ' on' : '')}
+                        style="left:${dt.left}%"
+                        title=${titleAttr}
+                        aria-label=${titleAttr}
+                        @click=${(e) => {
+                          e.stopPropagation();
+                          this._focusedDot = focused
+                            ? null
+                            : { lane: ln.key, idx };
+                        }}
+                      ></button>
+                      ${focused
+                        ? html`<div
+                            class="tl-popover"
+                            style="left:${dt.left}%"
+                          >
+                            ${dt.title
+                              ? html`<div class="tl-popover-title">
+                                  ${dt.title}
+                                </div>`
+                              : ''}
+                            <div class="tl-popover-meta">
+                              ${dt.ageLabel} · ${statusWord}
+                            </div>
+                          </div>`
+                        : ''}
+                    `;
+                  })}
                 </div>
               </div>`,
             )}
