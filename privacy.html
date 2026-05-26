@@ -211,7 +211,7 @@ footer a:hover { opacity: 1; }
 
 <div class="eyebrow">Privacy Policy</div>
 <h1>How we handle your information</h1>
-<p class="meta"><strong>Effective date:</strong> May 2, 2026 · <strong>Last updated:</strong> May 2, 2026</p>
+<p class="meta"><strong>Effective date:</strong> May 26, 2026 · <strong>Last updated:</strong> May 26, 2026</p>
 
 <p class="intro">This Privacy Policy describes how PebblePath ("PebblePath," "we," "us," or "our") collects, uses, and shares information when you use the PebblePath mobile application and the website at <a href="https://pebblepath.ai">pebblepath.ai</a> (together, the "Service").</p>
 
@@ -341,8 +341,15 @@ footer a:hover { opacity: 1; }
 <ul>
   <li>TLS/HTTPS for data in transit between the app and our servers.</li>
   <li>Encryption at rest for data stored in Cloud Firestore, Cloud Storage, and authentication systems.</li>
+  <li>AI advisor credentials are held server-side: requests to the AI advisor (Pebble) route through hardened cloud functions that verify your identity before processing. AI provider credentials are never embedded in the mobile app or transmitted from your device.</li>
+  <li>Personal name minimization in AI processing: before any request reaches our AI provider (Anthropic), our server replaces children's first names with non-identifying placeholders (e.g., <code>{{CHILD_NAME}}</code>). The placeholder is replaced with the actual name on our server before the response is returned to your device, so the AI provider's servers never receive the actual name. Other inputs (date of birth, milestone titles, mood summaries, parent observation text) still transit because they are the meaningful context required for personalized guidance.</li>
+  <li>Hardware-attested request verification via Firebase App Check: every request to our database, file storage, and cloud functions must carry an unforgeable token proving it originates from the genuine PebblePath app on a real device (Apple App Attest on iOS) or a real browser session (reCAPTCHA Enterprise on the web).</li>
+  <li>Server-enforced privacy for messages marked private: when you mark a Pebble conversation as private, the database itself refuses to return those messages to anyone other than the sender (enforced via per-message visibility lists in our database security rules — not a client-side filter that could be bypassed).</li>
+  <li>Optional biometric lock on the iOS app: a setting (off by default) requires Face ID, Touch ID, or device passcode each time you open PebblePath after being away for more than 30 seconds. Biometric data never leaves your device; authentication happens entirely in the iPhone's secure enclave.</li>
+  <li>Tamper-resistant audit log: sensitive administrative actions (removing a child profile, regenerating an invite code, granting another user access to a child) write tamper-resistant entries to our database. Only our Cloud Functions (running with administrative privileges) can write these entries; clients cannot edit or delete them. Family members can view this log via the app's Settings → Security → Admin Activity log surface.</li>
+  <li>Web security headers on pebblepath.ai: our web property serves a Content Security Policy, Strict-Transport-Security (HSTS), X-Frame-Options, X-Content-Type-Options, Referrer-Policy, and Permissions-Policy on every response, protecting against script injection, clickjacking, MIME-type confusion, downgrade attacks, and unwanted referrer leakage.</li>
   <li>Role-based access in our backend; no PebblePath employee or contractor has routine access to child profile data without an operational reason.</li>
-  <li>Strict Firestore Security Rules so that only members of a family can read that family's data.</li>
+  <li>Strict per-child access rules: only a child's parents can read or modify that child's developmental data by default. Other family or extended-circle members must be explicitly granted access by a parent.</li>
   <li>Multi-factor authentication on all administrative accounts.</li>
   <li>Per-platform device protection: photos picked from your library remain on your device unless you choose to use the co-parent photo handoff feature, which uploads briefly to encrypted Cloud Storage and is deleted after the co-parent's device receives it.</li>
 </ul>
