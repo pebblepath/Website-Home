@@ -2297,6 +2297,91 @@
     transition: opacity 0.6s ease, transform 0.6s ease;
   }
   .reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ===== THE PEBBLE BRAIN (Convergence) ===== */
+.brain-sec{
+  background:radial-gradient(120% 120% at 50% 6%,#2C7C72 0%,#1F5C54 52%,#184a44 100%);
+  text-align:center; padding:80px 40px;
+}
+.brain-sec .brain-inner{ max-width:1120px; margin:0 auto; }
+.brain-sec h2{
+  font-family:'Nunito',sans-serif; font-weight:800; font-size:42px;
+  line-height:1.14; letter-spacing:-.6px; color:#fff; margin:0;
+}
+.brain-sec .brain-sub{
+  font-size:17px; line-height:1.62; color:#CDE3DF; max-width:680px;
+  margin:18px auto 0;
+}
+.brain-sec .brain-converge{
+  position:relative; width:920px; height:510px; margin:34px auto 0;
+}
+.brain-sec .brain-lines{ position:absolute; inset:0; width:920px; height:510px; }
+.brain-sec .brain-ico{
+  position:absolute; width:54px; height:54px; transform:translate(-50%,-50%);
+  border-radius:50%; background:rgba(125,212,200,.15);
+  border:1.6px solid rgba(125,212,200,.6);
+  display:flex; align-items:center; justify-content:center; z-index:4;
+}
+.brain-sec .brain-ico svg{ width:25px; height:25px; }
+.brain-sec .brain-ilabel{
+  position:absolute; transform:translate(-50%,-50%); z-index:4;
+  font-size:15.5px; font-weight:600; color:#E4F2EF; white-space:nowrap;
+}
+.brain-sec .brain-orb{
+  position:absolute; left:460px; top:238px; width:166px; height:166px;
+  transform:translate(-50%,-50%); border-radius:50%; z-index:5;
+  background:radial-gradient(circle at 38% 30%,#5EC4B4 0%,#3D9B8F 44%,#2D7A70 80%,#235F57 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  animation:brain-orbpulse 4.6s ease-in-out infinite;
+}
+.brain-sec .brain-orb-name{
+  font-family:'Fredoka',sans-serif; font-weight:600; font-size:17px;
+  color:#FFFFFF; margin-top:3px;
+}
+@keyframes brain-orbpulse{
+  0%,100%{ box-shadow:0 0 0 11px rgba(125,212,200,.10),0 0 0 26px rgba(125,212,200,.05),0 0 58px 5px rgba(125,212,200,.46); }
+  50%{ box-shadow:0 0 0 15px rgba(125,212,200,.14),0 0 0 36px rgba(125,212,200,.07),0 0 84px 13px rgba(125,212,200,.64); }
+}
+.brain-sec .brain-brief{
+  position:absolute; left:460px; top:396px; transform:translateX(-50%);
+  width:620px; text-align:center; z-index:5;
+}
+.brain-sec .brain-bg-k{
+  font-family:'Nunito',sans-serif; font-weight:800; font-size:11px;
+  letter-spacing:2px; text-transform:uppercase; color:#7DD4C8; margin-bottom:10px;
+}
+.brain-sec .brain-bg-line{
+  font-family:'Nunito',sans-serif; font-weight:700; font-size:18.5px;
+  line-height:1.5; color:#fff; text-shadow:0 0 26px rgba(125,212,200,.5);
+}
+.brain-sec .brain-bg-line b{ color:#7DD4C8; font-weight:800; }
+
+/* mobile fallback — scale the fixed-width composition to fit narrower viewports */
+@media (max-width: 1000px){
+  .brain-sec{ padding:64px 24px; }
+  .brain-sec h2{ font-size:34px; }
+  .brain-sec .brain-converge{
+    transform:scale(0.72); transform-origin:top center;
+    margin-bottom:-142px;
+  }
+}
+@media (max-width: 720px){
+  .brain-sec{ padding:54px 18px; }
+  .brain-sec h2{ font-size:28px; }
+  .brain-sec .brain-sub{ font-size:15px; }
+  .brain-sec .brain-converge{
+    transform:scale(0.50); transform-origin:top center;
+    margin-bottom:-255px;
+  }
+}
+@media (max-width: 480px){
+  .brain-sec h2{ font-size:24px; }
+  .brain-sec .brain-converge{
+    transform:scale(0.38); transform-origin:top center;
+    margin-bottom:-316px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2423,6 +2508,85 @@
       </div>
       <h3>Family Portal</h3>
       <p>Plan trips, weekends, birthdays &amp; anniversaries together &mdash; with grandparents, siblings and caregivers.</p>
+    </div>
+  </div>
+</section>
+
+<!-- THE PEBBLE BRAIN -->
+<section class="brain-sec reveal" id="brain">
+  <div class="brain-inner">
+    <h2>A hundred little things.<br>One calm next step.</h2>
+    <p class="brain-sub">School emails, calendar invites, daycare notes, the weather, an upcoming trip &mdash; Pebble quietly takes it all in, and hands back exactly what tomorrow needs.</p>
+
+    <div class="brain-converge">
+      <svg class="brain-lines" viewBox="0 0 920 510" fill="none">
+        <defs>
+          <radialGradient id="brainDotG" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#E6FBF6"/><stop offset="100%" stop-color="#7DD4C8"/>
+          </radialGradient>
+          <linearGradient id="brainLineG" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="rgba(125,212,200,.06)"/>
+            <stop offset="100%" stop-color="rgba(125,212,200,.6)"/>
+          </linearGradient>
+        </defs>
+        <g stroke="url(#brainLineG)" stroke-width="1.7">
+          <path id="brP1" d="M150 150 Q300 200 460 238"/>
+          <path id="brP2" d="M360 102 Q410 170 460 238"/>
+          <path id="brP3" d="M560 102 Q510 170 460 238"/>
+          <path id="brP4" d="M770 150 Q620 200 460 238"/>
+          <path id="brP5" d="M108 286 Q280 262 460 238"/>
+          <path id="brP6" d="M812 286 Q640 262 460 238"/>
+        </g>
+        <path id="brPOut" d="M460 321 L460 381" stroke="rgba(125,212,200,.45)" stroke-width="2" stroke-dasharray="2 6"/>
+        <g>
+          <circle r="4.5" fill="url(#brainDotG)"><animateMotion dur="2.6s" repeatCount="indefinite"><mpath href="#brP1"/></animateMotion></circle>
+          <circle r="4.5" fill="url(#brainDotG)"><animateMotion dur="3.0s" begin="0.5s" repeatCount="indefinite"><mpath href="#brP2"/></animateMotion></circle>
+          <circle r="4.5" fill="url(#brainDotG)"><animateMotion dur="2.8s" begin="1.1s" repeatCount="indefinite"><mpath href="#brP3"/></animateMotion></circle>
+          <circle r="4.5" fill="url(#brainDotG)"><animateMotion dur="3.3s" begin="0.3s" repeatCount="indefinite"><mpath href="#brP4"/></animateMotion></circle>
+          <circle r="4.5" fill="url(#brainDotG)"><animateMotion dur="2.9s" begin="1.5s" repeatCount="indefinite"><mpath href="#brP5"/></animateMotion></circle>
+          <circle r="4.5" fill="url(#brainDotG)"><animateMotion dur="3.1s" begin="0.8s" repeatCount="indefinite"><mpath href="#brP6"/></animateMotion></circle>
+          <circle r="5" fill="url(#brainDotG)"><animateMotion dur="2.1s" begin="0.2s" repeatCount="indefinite"><mpath href="#brPOut"/></animateMotion></circle>
+        </g>
+      </svg>
+
+      <div class="brain-ico" style="left:150px;top:150px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 8l9 6 9-6"/></svg></div>
+      <div class="brain-ilabel" style="left:150px;top:90px;">School email</div>
+
+      <div class="brain-ico" style="left:360px;top:102px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg></div>
+      <div class="brain-ilabel" style="left:360px;top:42px;">Calendar invite</div>
+
+      <div class="brain-ico" style="left:560px;top:102px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linejoin="round"><path d="M4 19V7l8-3 8 3v12M4 19h16M9 19v-5h6v5"/></svg></div>
+      <div class="brain-ilabel" style="left:560px;top:42px;">Daycare note</div>
+
+      <div class="brain-ico" style="left:770px;top:150px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.6"/><path d="M12 2.4v2.6M12 19v2.6M2.4 12h2.6M19 12h2.6M5 5l1.85 1.85M17.15 17.15L19 19M19 5l-1.85 1.85M6.85 17.15L5 19"/></svg></div>
+      <div class="brain-ilabel" style="left:770px;top:90px;">Tomorrow's weather</div>
+
+      <div class="brain-ico" style="left:108px;top:286px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M9 7V5h6v2"/><path d="M3 12h18"/></svg></div>
+      <div class="brain-ilabel" style="left:108px;top:226px;">Family trip</div>
+
+      <div class="brain-ico" style="left:812px;top:286px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a8 8 0 01-11.5 7.2L4 20l1.3-4.5A8 8 0 1120 11.5z"/></svg></div>
+      <div class="brain-ilabel" style="left:812px;top:226px;">A quick note</div>
+
+      <div class="brain-orb">
+        <svg width="54" height="54" viewBox="0 0 24 24" fill="none">
+          <ellipse cx="12" cy="21.5" rx="9.5" ry="1.8" stroke="#fff" stroke-width="1" stroke-opacity="0.28"/>
+          <ellipse cx="12" cy="20.5" rx="6.5" ry="1.2" stroke="#fff" stroke-width="1" stroke-opacity="0.45"/>
+          <path fill="#fff" d="M4.5 13C4.5 8.8 7.8 7 12 7C16.2 7 19.5 8.8 19.5 13C19.5 17.2 16.2 19.5 12 19.5C7.8 19.5 4.5 17.2 4.5 13Z"/>
+          <path fill="#1F5C54" fill-opacity="0.30" d="M7.5 10.5C8 8.5 9.8 7.8 12 7.8C14.2 7.8 16 8.5 16 10.5C16 12 14.2 12.5 12 12.5C9.8 12.5 7.5 12 7.5 10.5Z"/>
+        </svg>
+        <span class="brain-orb-name">Pebble</span>
+      </div>
+
+      <div class="brain-brief">
+        <div class="brain-bg-k">Tomorrow, ready before you wake</div>
+        <div class="brain-bg-line">It's <b>splash day</b> &mdash; 62&deg;F. Felix needs <b>water shoes &amp; a towel</b>. Lunch is covered, and <b>Thomas is on pickup</b>.</div>
+      </div>
     </div>
   </div>
 </section>
