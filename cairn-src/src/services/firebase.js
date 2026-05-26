@@ -1,5 +1,9 @@
 import { initializeApp } from 'firebase/app';
 import {
+  initializeAppCheck,
+  ReCaptchaEnterpriseProvider,
+} from 'firebase/app-check';
+import {
   getAuth,
   GoogleAuthProvider,
   OAuthProvider,
@@ -55,6 +59,45 @@ const firebaseConfig = {
 export const isConfigured = Boolean(firebaseConfig.apiKey && firebaseConfig.projectId);
 
 export const app = isConfigured ? initializeApp(firebaseConfig) : null;
+
+// ─── App Check ─────────────────────────────────────────────────────────
+// Tier 1 #2 (2026-05-24). Every Firebase request from Portal now carries
+// an App Check token verified by reCAPTCHA Enterprise. Once the
+// Firestore / Storage / Functions services are flipped to "Enforce" in
+// Firebase Console, requests without a valid token are rejected — this
+// stops the "scripted scraper using the public Firebase API key" attack
+// class.
+//
+// CRITICAL ORDERING: initializeAppCheck MUST be called AFTER initializeApp
+// but BEFORE any service is touched (getAuth, getFirestore, etc.).
+// Calling it later means the first batch of service requests won't carry
+// tokens — they'll show up as "unverified" in metrics + get rejected
+// once we flip Enforce.
+//
+// Localhost dev: setting self.FIREBASE_APPCHECK_DEBUG_TOKEN = true makes
+// Firebase mint a debug token (logged in browser console on first
+// request) which Thomas registers in Firebase Console → App Check →
+// Portal → "Manage debug tokens". After that, dev runs from localhost
+// are treated as verified. Production runs from pebblepath.ai use
+// reCAPTCHA Enterprise like normal users.
+//
+// Site key (public — safe to commit, paired with allow-list of domains
+// in reCAPTCHA Enterprise console: pebblepath.ai + localhost):
+const RECAPTCHA_ENTERPRISE_SITE_KEY = '6LcRxvosAAAAAM2kb_rubOHlX39yOW73WbaIB_w4';
+
+if (isConfigured && typeof window !== 'undefined' && window.location?.hostname === 'localhost') {
+  // Vite HMR re-evaluates this module; setting the flag is idempotent.
+  // eslint-disable-next-line no-restricted-globals
+  self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+}
+
+export const appCheck = isConfigured
+  ? initializeAppCheck(app, {
+      provider: new ReCaptchaEnterpriseProvider(RECAPTCHA_ENTERPRISE_SITE_KEY),
+      isTokenAutoRefreshEnabled: true,
+    })
+  : null;
+
 export const auth = isConfigured ? getAuth(app) : null;
 export const db = isConfigured ? getFirestore(app) : null;
 export const functions = isConfigured ? getFunctions(app, 'us-central1') : null;
