@@ -3001,20 +3001,16 @@ export class HomeScreen extends LitElement {
     const dayMs = 24 * 60 * 60 * 1000;
     const daysFromToday = (d) => Math.round((d - today) / dayMs);
 
-    // 1. Ongoing trip wins above all (you're actually in it right now).
-    for (const t of this._circleTrips()) {
-      if (!t.start || !t.end) continue;
-      const s = parseLocalDate(t.start);
-      const e = parseLocalDate(t.end);
-      s.setHours(0, 0, 0, 0);
-      e.setHours(0, 0, 0, 0);
-      if (s <= today && today <= e) {
-        const dayN = daysFromToday(s) + 1;
-        const total = daysFromToday(e) - daysFromToday(s) + 1;
-        const where = t.location?.trim() || t.title;
-        return `Day ${dayN} of ${total} in ${where}.`;
-      }
-    }
+    // 2026-05-24 — dropped the ongoing-trip callout ("Day N of M in
+    // X."). Two reasons: (a) it told the user something they already
+    // know — they're on the trip right now — so it didn't earn its
+    // hero-line spot; (b) the original math was inverted —
+    // `dayN = daysFromToday(s) + 1` where `daysFromToday(s) = (s -
+    // today)/dayMs`, so for any past start the dayN went negative
+    // (started 4 days ago → "Day -3 of 5"). The ongoing-trip case
+    // is still visible elsewhere — it appears in Coming up + on the
+    // Activities tab — so removing this branch doesn't hide the
+    // trip, just stops it from owning hero-line attention.
 
     // 2. Find the soonest upcoming trip OR event, whichever is closer.
     let best = null;
