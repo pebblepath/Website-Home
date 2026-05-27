@@ -428,9 +428,12 @@
     z-index: 1;
   }
   .hero-content { position: relative; z-index: 2; max-width: 720px; margin: 0 auto; }
-  /* Hero wordmark — same Ponari/white treatment as iOS Welcome screen */
+  /* Hero wordmark — same Ponari/white treatment as iOS Welcome screen.
+     2026-05-21 — bumped down 72 → 62 after the "for every little
+     milestone" tagline below it was removed; the wordmark was sized
+     to anchor a 2-line lockup and felt oversized as a standalone. */
   .hero-wordmark {
-    font-size: 72px;
+    font-size: 62px;
     margin-bottom: 14px;
     display: inline-block;
   }
@@ -2315,7 +2318,7 @@
       max-width: 340px;
       margin-left: auto; margin-right: auto;
     }
-    .hero-wordmark { font-size: 60px; margin-bottom: 12px; }
+    .hero-wordmark { font-size: 52px; margin-bottom: 12px; }
     .hero-buttons { flex-direction: column; align-items: center; gap: 10px; margin-top: 8px; }
     .hero-buttons .btn-secondary { width: 100%; max-width: 280px; text-align: center; padding: 12px 24px; font-size: 14px; }
     .hero-mobile-download { display: inline-flex; width: 100%; max-width: 280px; }
@@ -2768,8 +2771,7 @@
   <div class="hero-inner">
     <div class="hero-content">
       <div class="pp-wordmark hero-wordmark">PebblePath</div>
-      <h1>for every little milestone</h1>
-      <p>One shared space for growing together &mdash; proactive AI guidance, and a family hub to collaborate between parents, siblings, and caregivers.</p>
+      <p>Shared space for growing together &mdash; proactive AI guidance, and a family hub to collaborate between parents, siblings, and caregivers.</p>
       <div class="hero-buttons">
         <!-- TODO: Once App Store ID is assigned, swap href to https://apps.apple.com/app/pebblepath-ai/id<XXXXXXXXX> -->
         <a href="https://apps.apple.com/app/pebblepath-ai/" class="hero-mobile-download" target="_blank" rel="noopener">
