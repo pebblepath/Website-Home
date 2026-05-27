@@ -2299,10 +2299,23 @@
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
 /* ===== THE PEBBLE BRAIN (Convergence) ===== */
+/* Background matches the Growing With You / .intelligence section so the
+   two dark-teal panels feel like sisters. */
 .brain-sec{
-  background:radial-gradient(120% 120% at 50% 6%,#2C7C72 0%,#1F5C54 52%,#184a44 100%);
-  text-align:center; padding:80px 40px;
+  position:relative; overflow:hidden;
+  background:
+    radial-gradient(ellipse 50% 40% at 12% 22%,rgba(61,155,143,0.45),transparent 65%),
+    radial-gradient(ellipse 45% 35% at 88% 30%,rgba(212,168,67,0.28),transparent 65%),
+    radial-gradient(ellipse 60% 50% at 50% 100%,rgba(198,123,92,0.32),transparent 65%),
+    linear-gradient(160deg,var(--teal-deep) 0%,var(--teal-dark) 50%,var(--teal) 100%);
+  text-align:center; padding:36px 40px 64px;
 }
+.brain-sec::before{
+  content:''; position:absolute; inset:0; pointer-events:none; opacity:0.5;
+  background-image:radial-gradient(rgba(255,248,235,0.05) 1px,transparent 1px);
+  background-size:3px 3px;
+}
+.brain-sec > *{ position:relative; z-index:1; }
 .brain-sec .brain-inner{ max-width:1120px; margin:0 auto; }
 .brain-sec h2{
   font-family:'Nunito',sans-serif; font-weight:800; font-size:42px;
@@ -2358,7 +2371,7 @@
 
 /* mobile fallback — scale the fixed-width composition to fit narrower viewports */
 @media (max-width: 1000px){
-  .brain-sec{ padding:64px 24px; }
+  .brain-sec{ padding:30px 24px 60px; }
   .brain-sec h2{ font-size:34px; }
   .brain-sec .brain-converge{
     transform:scale(0.72); transform-origin:top center;
@@ -2366,7 +2379,7 @@
   }
 }
 @media (max-width: 720px){
-  .brain-sec{ padding:54px 18px; }
+  .brain-sec{ padding:26px 18px 48px; }
   .brain-sec h2{ font-size:28px; }
   .brain-sec .brain-sub{ font-size:15px; }
   .brain-sec .brain-converge{
@@ -2515,8 +2528,7 @@
 <!-- THE PEBBLE BRAIN -->
 <section class="brain-sec reveal" id="brain">
   <div class="brain-inner">
-    <h2>A hundred little things.<br>One calm next step.</h2>
-    <p class="brain-sub">School emails, calendar invites, daycare notes, the weather, an upcoming trip &mdash; Pebble quietly takes it all in, and hands back exactly what tomorrow needs.</p>
+    <h2>A hundred little things. Simplified.</h2>
 
     <div class="brain-converge">
       <svg class="brain-lines" viewBox="0 0 920 510" fill="none">
