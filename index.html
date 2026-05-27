@@ -774,14 +774,15 @@
     50% { transform: translateY(6px); opacity: 1; }
   }
   .showcase-grid {
-    display: grid;
-    /* Phone column scales with viewport (300 → 400px); text column takes
-       a sensible width band so the layout breathes on big monitors. */
-    grid-template-columns: clamp(300px, 26vw, 400px) minmax(360px, 480px);
-    max-width: 1100px; margin: 0 auto;
-    position: relative;
-    gap: clamp(32px, 4vw, 56px);
-    justify-content: center;
+    /* 2026-05-21 — parallax retired. The .showcase-grid was the desktop
+       sticky-phone + scroll-triggered feature-step layout; replaced by the
+       carousel that now runs at every viewport. Markup left in place under
+       <section id="showcase"> for easy revert; just `display:none` here.
+       Mobile @media block below also sets display:none — redundant but
+       harmless. To restore the parallax: revert this rule to display:grid
+       with the old grid-template-columns + max-width + gap + justify-content
+       (commit history a49d9d6 has the original). */
+    display: none;
   }
   .showcase-left, .showcase-right { display: flex; flex-direction: column; }
   .showcase-left { display: none; }
@@ -1983,10 +1984,172 @@
      screenshots. Default display:none so it never shows on desktop;
      the mobile media query (max-width:768px) flips it on. Uses native
      CSS scroll-snap-x for the swipe; tiny JS just updates dot state. */
-  .ms-carousel { display: none; position: relative; }
-  /* "Scroll/Swipe" verb swap: desktop shows "Scroll", mobile shows "Swipe" */
+  /* 2026-05-21 — carousel was previously mobile-only (display:none here,
+     flipped to display:block inside @media max-width:768px). Now visible
+     at all viewports; desktop gets a wider phone-on-left + text-on-right
+     slide layout via the new @media (min-width:769px) block further down.
+     Mobile rules inside the existing max-width:768px block are unchanged. */
+  .ms-carousel { display: block; position: relative; }
+  /* Verb-swap spans were removed from the subhead 2026-05-21; rules kept
+     as no-ops in case markup ever wants to re-add them. */
   .ss-verb-mobile { display: none; }
   .ss-verb-desktop { display: inline; }
+
+  /* Arrows are display:none by default — hidden on mobile (where swipe is
+     the canonical affordance); the desktop @media block below unhides
+     them. */
+  .ms-arrow { display: none; }
+
+  /* ============================================================
+     DESKTOP CAROUSEL (≥769px) — same .ms-carousel markup that drives
+     the mobile carousel, restyled wider for desktop:
+       - One slide at a time, no neighbor peek (cleaner at laptop widths)
+       - Phone on left + caption on right (matches the orientation users
+         already see in the retired scroll-driven parallax)
+       - Prev/next arrows replace the swipe-hint chevron
+       - Pagination dots + drag scrolling preserved from the mobile build
+     The mobile @media block (max-width:768px) further down owns the
+     mobile-specific overrides (column slide layout, 76vw flex-basis,
+     etc.); both blocks coexist cleanly because they don't overlap.
+     ============================================================ */
+  @media (min-width: 769px) {
+    .ms-carousel {
+      max-width: 1100px;
+      margin: 12px auto 0;
+      padding: 0 64px;            /* gutter for prev/next arrows */
+      position: relative;
+    }
+    .ms-track {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 0;                      /* no peek — one slide fills the track */
+      padding: 12px 0 20px;
+    }
+    .ms-track::-webkit-scrollbar { display: none; }
+    .ms-slide {
+      flex: 0 0 100%;              /* one slide per carousel width */
+      max-width: 100%;
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 56px;
+      padding: 16px 24px;
+    }
+    .ms-slide[hidden],
+    .ms-slide.ms-slide-hidden { display: none !important; }
+    .ms-phone {
+      width: 280px;
+      aspect-ratio: 700 / 1520;
+      border-radius: 32px;
+      overflow: hidden;
+      background: #000;
+      box-shadow:
+        0 24px 56px rgba(44,62,64,0.20),
+        0 0 0 1px rgba(0,0,0,0.04);
+      margin: 0;
+      flex-shrink: 0;
+    }
+    .ms-phone img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .ms-text {
+      text-align: left;
+      max-width: 420px;
+      padding: 0;
+      flex: 0 1 420px;
+    }
+    .ms-text .feature-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.6px;
+      color: var(--terracotta);
+      margin-bottom: 10px;
+    }
+    .ms-text h3 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--charcoal);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+    .ms-text p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--warm-gray);
+    }
+    .ms-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 6px 0 4px;
+    }
+    .ms-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      border: 0;
+      padding: 0;
+      background: rgba(44,62,64,0.20);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s, width 0.25s ease;
+    }
+    .ms-dot.is-active {
+      background: var(--teal-dark);
+      width: 24px;
+      border-radius: 4px;
+    }
+    /* Prev/next arrow buttons — sit in the carousel gutters, vertically
+       centered with the slide content. */
+    .ms-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.94);
+      border: 1px solid var(--light-gray);
+      box-shadow: 0 6px 18px rgba(44,62,64,0.10);
+      color: var(--teal-dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+      z-index: 4;
+    }
+    .ms-arrow:hover:not(:disabled) {
+      background: #fff;
+      transform: translateY(-50%) scale(1.06);
+      box-shadow: 0 8px 22px rgba(44,62,64,0.16);
+    }
+    .ms-arrow:focus-visible {
+      outline: 2px solid var(--teal-dark);
+      outline-offset: 2px;
+    }
+    .ms-arrow:disabled {
+      opacity: 0.32;
+      cursor: default;
+      box-shadow: none;
+    }
+    .ms-arrow svg { width: 20px; height: 20px; }
+    .ms-arrow.ms-arrow-prev { left: 8px; }
+    .ms-arrow.ms-arrow-next { right: 8px; }
+    /* Swipe-hint chevron is mobile-only — arrows replace it on desktop. */
+    .ms-swipe-hint { display: none; }
+  }
   /* ============================================================ */
 
   /* MOBILE FEATURE CARDS (replaces parallax on mobile) */
@@ -2617,7 +2780,7 @@
        band on desktop while you scroll through the feature steps below. -->
   <div class="showcase-head">
     <h2 class="showcase-heading">See it in action.</h2>
-    <p class="showcase-subhead"><span class="ss-verb-desktop">Scroll</span><span class="ss-verb-mobile">Swipe</span> to explore the app experience.</p>
+    <p class="showcase-subhead">Explore the app experience.</p>
     <div class="scroll-hint">
       <span>Scroll to explore</span>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
@@ -2711,6 +2874,15 @@
        screenshots. Shown only on mobile (max-width: 768px). Native CSS
        scroll-snap-x for the swipe behavior; tiny JS for dot pagination. -->
   <div class="ms-carousel" aria-roledescription="carousel" aria-label="App screenshots">
+    <!-- Prev/next arrows — display:flex on desktop (≥769px), display:none
+         on mobile (swipe is canonical there). Wired by the existing
+         carousel IIFE; disabled state set when at the first/last slide. -->
+    <button type="button" class="ms-arrow ms-arrow-prev" id="msPrev" aria-label="Previous slide">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <button type="button" class="ms-arrow ms-arrow-next" id="msNext" aria-label="Next slide">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
     <div class="ms-dots" id="msDots" aria-hidden="true">
       <button type="button" class="ms-dot is-active" data-index="0"></button>
       <button type="button" class="ms-dot" data-index="1"></button>
@@ -3290,6 +3462,37 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
       hideHint();
     });
   });
+
+  // Prev / next arrows — desktop-only (CSS hides them on mobile). Reads the
+  // current index from whichever dot is .is-active, scrolls the adjacent
+  // slide into view via the same scroll-snap mechanism the dots + swipe
+  // use, then updates the disabled state. Added 2026-05-21 alongside the
+  // desktop carousel rollout — the carousel pattern now drives every
+  // viewport, replacing the desktop scroll-driven parallax.
+  const prevBtn = document.getElementById('msPrev');
+  const nextBtn = document.getElementById('msNext');
+  function currentIndex() {
+    const i = dots.findIndex((d) => d.classList.contains('is-active'));
+    return i === -1 ? 0 : i;
+  }
+  function go(delta) {
+    const target = slides[currentIndex() + delta];
+    if (!target) return;
+    target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    hideHint();
+  }
+  function updateArrowStates() {
+    const i = currentIndex();
+    if (prevBtn) prevBtn.disabled = i <= 0;
+    if (nextBtn) nextBtn.disabled = i >= slides.length - 1;
+  }
+  if (prevBtn) prevBtn.addEventListener('click', () => go(-1));
+  if (nextBtn) nextBtn.addEventListener('click', () => go(1));
+  // Refresh arrow state whenever the active slide changes (driven by the
+  // scroll-snap landing on the next slide → IntersectionObserver above
+  // flips .is-active on the corresponding dot).
+  track.addEventListener('scroll', updateArrowStates, { passive: true });
+  updateArrowStates();
 })();
 </script>
 
