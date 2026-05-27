@@ -578,15 +578,38 @@
     35%           { opacity: 1;    transform: scale(1); }
   }
 
-  /* Card 2 — Pebble breathes (inner disc gently scales). */
-  .bi-pebble-inner {
+  /* Card 2 — Pebble Ripple Stone (replaces 2026-05-21 the old
+     double-ring + breathing inner disc). Two ripple rings emanate
+     outward from the base of the stone like water ripples,
+     staggered so the cycle is continuous. The body + dome stay
+     static. The old `.bi-pebble-inner` class + biPebbleBreathe
+     keyframe is dead code now (kept the keyframe block removed
+     to avoid clutter; if a future surface wants it back, see
+     commit history). */
+  .bi-pebble-ring {
     transform-box: fill-box;
     transform-origin: center;
-    animation: biPebbleBreathe 2.6s ease-in-out infinite;
+    animation: biPebbleRipple 2.6s ease-out infinite;
   }
-  @keyframes biPebbleBreathe {
-    0%, 100% { transform: scale(1);    opacity: 1; }
-    50%      { transform: scale(1.28); opacity: 0.82; }
+  .bi-pebble-ring.bi-pebble-ring-inner { animation-delay: 1.3s; }
+  @keyframes biPebbleRipple {
+    0%   { transform: scale(0.78); opacity: 0.65; }
+    100% { transform: scale(1.45); opacity: 0;    }
+  }
+
+  /* Card 3 — Family Portal cairn. Each stacked stone breathes
+     subtly with a staggered delay so the stack reads as alive
+     without being busy. Inline SVG opacity attributes on each
+     ellipse are preserved (animation only touches transform). */
+  .bi-portal-stone {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: biPortalStoneBreathe 3.6s ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * 0.28s);
+  }
+  @keyframes biPortalStoneBreathe {
+    0%, 100% { transform: scale(1);    }
+    50%      { transform: scale(1.05); }
   }
 
   /* Card 3 — Report rows appear softly IN ORDER (1, 2, 3) within a
@@ -693,7 +716,8 @@
   .privacy-card-icon .pv-shield-family { width: 32px; height: 32px; }
 
   /* Card hover amplifies the motion (faster cycles) */
-  .benefit-card:hover .bi-pebble-inner   { animation-duration: 1.4s; }
+  .benefit-card:hover .bi-pebble-ring    { animation-duration: 1.8s; }
+  .benefit-card:hover .bi-portal-stone   { animation-duration: 2.2s; }
   .benefit-card:hover .bi-trail-dot      { animation-duration: 1.8s; }
   .benefit-card:hover .bi-report-row.r1,
   .benefit-card:hover .bi-report-row.r2,
@@ -705,7 +729,8 @@
 
   @media (prefers-reduced-motion: reduce) {
     .bi-trail-dot,
-    .bi-pebble-inner,
+    .bi-pebble-ring,
+    .bi-portal-stone,
     .bi-report-row,
     .bi-ai-eye,
     .pv-lock-shackle,
@@ -715,6 +740,7 @@
       animation: none;
     }
     .bi-trail-dot { opacity: 1; }
+    .bi-pebble-ring { opacity: 0.5; }   /* static rings still visible */
     .bi-report-row { transform: scaleX(1); opacity: 1; }
     .pv-noads-slash { stroke-dashoffset: 0; }
   }
@@ -1460,7 +1486,9 @@
      human framing of the section title. */
   .intel-photo {
     margin: 0;
-    max-width: 420px; width: 100%;
+    /* 2026-05-21 — image scaled down 15% (420 → 357 px max) so the
+       photo sits with more breathing room next to the text column. */
+    max-width: 357px; width: 100%;
     border-radius: 24px;
     overflow: hidden;
     box-shadow: 0 18px 50px rgba(44,62,64,0.20),
@@ -2128,11 +2156,13 @@
       display: block;              /* overrides the base display:none */
       max-width: 920px;
       /* 2026-05-21 — tighter padding pass:
-         - margin-top 18 → 6 (less gap between strip and caption);
-         - min-height 112 → 96 (one-line captions take ~93 px
-           content + a small buffer is enough);
+         - margin-top 18 → 6 then bumped → 14 (Thomas wanted a few more
+           pixels above the eyebrows — slight breathing room without
+           re-introducing the original gap);
+         - min-height 112 → 96 (one-line captions take ~93 px content +
+           a small buffer is enough);
          - vertical padding stays implicit (margin handles it). */
-      margin: 6px auto 0;
+      margin: 14px auto 0;
       padding: 0 16px;
       text-align: center;
       min-height: 96px;
@@ -2757,7 +2787,7 @@
 <!-- BENEFITS -->
 <section class="benefits reveal" id="features">
   <h2>For the whole family.</h2>
-  <p class="subtitle">PebblePath brings your child's development and your family's life into one calm space.</p>
+  <p class="subtitle">PebblePath brings your family life and parenting together into a calm shared space.</p>
   <div class="benefits-grid">
     <div class="benefit-card">
       <div class="benefit-icon motor">
@@ -2777,9 +2807,21 @@
     </div>
     <div class="benefit-card">
       <div class="benefit-icon pebble">
+        <!-- 2026-05-21 — Pebble icon replaced with the canonical Pebble
+             Ripple Stone (river-stone body + dome highlight + two
+             ripple rings at the base). Matches iOS PebbleRippleIcon
+             + Portal <pebble-icon>. The two rings animate outward
+             continuously, staggered, like water ripples emanating
+             from the stone. See `feedback_pebble_ripple_icon.md`. -->
         <svg class="bi-svg bi-pebble" width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <circle cx="12" cy="12" r="10" stroke="#3D9B8F" stroke-width="1.8" fill="none"/>
-          <circle class="bi-pebble-inner" cx="12" cy="12" r="5.5" fill="#3D9B8F"/>
+          <ellipse class="bi-pebble-ring bi-pebble-ring-outer" cx="12" cy="21" rx="8" ry="1.6"
+            stroke="#3D9B8F" stroke-width="1.1" stroke-opacity="0.5" fill="none"/>
+          <ellipse class="bi-pebble-ring bi-pebble-ring-inner" cx="12" cy="20.2" rx="5.2" ry="1.1"
+            stroke="#3D9B8F" stroke-width="1.1" stroke-opacity="0.65" fill="none"/>
+          <path fill="#3D9B8F"
+            d="M4.5 13C4.5 8.8 7.8 7 12 7C16.2 7 19.5 8.8 19.5 13C19.5 17.2 16.2 19.5 12 19.5C7.8 19.5 4.5 17.2 4.5 13Z"/>
+          <path fill="#ffffff" fill-opacity="0.33"
+            d="M7.5 10.5C8 8.5 9.8 7.8 12 7.8C14.2 7.8 16 8.5 16 10.5C16 12 14.2 12.5 12 12.5C9.8 12.5 7.5 12 7.5 10.5Z"/>
         </svg>
       </div>
       <h3>Pebble, your AI advisor</h3>
@@ -2787,16 +2829,18 @@
     </div>
     <div class="benefit-card">
       <div class="benefit-icon social">
-        <!-- Family Portal — stacked stones glyph echoing Cairn's logo,
-             rendered in the same warm coral that Cairn's CTA gradient
-             uses so the two surfaces feel like sisters. -->
+        <!-- Family Portal — stacked cairn stones glyph echoing the Portal
+             brand mark. 2026-05-21 — each stone now animated with a
+             subtle scale-breath, staggered bottom→top so the stack
+             feels alive (matches the gentle "breathing" energy on
+             the other two card icons). -->
         <svg class="bi-svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C98A8A" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <!-- Five stacked stones (base → top), filled, with gentle highlight strokes. -->
-          <ellipse cx="12" cy="20" rx="7" ry="1.8" fill="#C98A8A" opacity="0.9"/>
-          <ellipse cx="11" cy="16.5" rx="5.5" ry="1.6" fill="#C98A8A" opacity="0.85"/>
-          <ellipse cx="12.5" cy="13" rx="4.2" ry="1.4" fill="#C98A8A" opacity="0.8"/>
-          <ellipse cx="11.5" cy="9.8" rx="3" ry="1.2" fill="#C98A8A" opacity="0.75"/>
-          <ellipse cx="12" cy="7" rx="2" ry="1" fill="#C98A8A" opacity="0.7"/>
+          <!-- Five stacked stones (base → top), each --i drives stagger. -->
+          <ellipse class="bi-portal-stone" style="--i: 0" cx="12"   cy="20"   rx="7"   ry="1.8" fill="#C98A8A" opacity="0.9"/>
+          <ellipse class="bi-portal-stone" style="--i: 1" cx="11"   cy="16.5" rx="5.5" ry="1.6" fill="#C98A8A" opacity="0.85"/>
+          <ellipse class="bi-portal-stone" style="--i: 2" cx="12.5" cy="13"   rx="4.2" ry="1.4" fill="#C98A8A" opacity="0.8"/>
+          <ellipse class="bi-portal-stone" style="--i: 3" cx="11.5" cy="9.8"  rx="3"   ry="1.2" fill="#C98A8A" opacity="0.75"/>
+          <ellipse class="bi-portal-stone" style="--i: 4" cx="12"   cy="7"    rx="2"   ry="1"   fill="#C98A8A" opacity="0.7"/>
         </svg>
       </div>
       <h3>Family Portal</h3>
@@ -2808,7 +2852,7 @@
 <!-- THE PEBBLE BRAIN -->
 <section class="brain-sec reveal" id="brain">
   <div class="brain-inner">
-    <h2>A hundred little things. Simplified.</h2>
+    <h2>A hundred little things, simplified.</h2>
 
     <div class="brain-converge">
       <svg class="brain-lines" viewBox="0 0 920 510" fill="none">
@@ -2948,7 +2992,7 @@
         <div class="feature-step-content">
           <div class="feature-label">Dashboard</div>
           <h3>Everything at a glance.</h3>
-          <p>Today's milestones, what's coming up, and the family plans on the horizon — all in one calm, focused view.</p>
+          <p>Today's milestones, what's coming up, and the family plans on the horizon.</p>
         </div>
       </div>
       <div class="feature-step" data-screen="3">
@@ -2969,14 +3013,14 @@
         <div class="feature-step-content">
           <div class="feature-label">Tips & Guidance</div>
           <h3>What to focus on next.</h3>
-          <p>Proactive, personalized tips refreshed weekly based on your child's unique trajectory — for your child, and for whoever's caring for them.</p>
+          <p>Proactive, personalized tips refreshed weekly based on your child's unique trajectory.</p>
         </div>
       </div>
       <div class="feature-step" data-screen="5">
         <div class="feature-step-content">
           <div class="feature-label">Activities &amp; Portal</div>
           <h3>Plan life together.</h3>
-          <p>Trips, weekend plans, birthdays and anniversaries &mdash; shared with everyone in your family.</p>
+          <p>Trips, weekend plans, birthdays and anniversaries.</p>
         </div>
       </div>
       <div class="feature-step" data-screen="4">
@@ -3020,7 +3064,7 @@
         <div class="ms-text">
           <div class="feature-label">Dashboard</div>
           <h3>Everything at a glance.</h3>
-          <p>Today's milestones, what's coming up, and the family plans on the horizon &mdash; all in one calm view.</p>
+          <p>Today's milestones, what's coming up, and the family plans on the horizon.</p>
         </div>
       </div>
       <div class="ms-slide">
@@ -3044,7 +3088,7 @@
         <div class="ms-text">
           <div class="feature-label">Tips &amp; Guidance</div>
           <h3>What to focus on next.</h3>
-          <p>Proactive, personalized tips refreshed weekly &mdash; for your child, and for whoever's caring for them.</p>
+          <p>Proactive, personalized tips refreshed weekly.</p>
         </div>
       </div>
       <div class="ms-slide">
@@ -3052,7 +3096,7 @@
         <div class="ms-text">
           <div class="feature-label">Activities &amp; Portal</div>
           <h3>Plan life together.</h3>
-          <p>Trips, weekend plans, birthdays and anniversaries &mdash; shared with everyone in your family.</p>
+          <p>Trips, weekend plans, birthdays and anniversaries.</p>
         </div>
       </div>
       <div class="ms-slide">
@@ -3089,7 +3133,7 @@
       <div class="mf-phone"><div class="mf-phone-inner" id="mf-screen-0"></div></div>
       <div class="mf-label">Dashboard</div>
       <h3>Everything at a glance.</h3>
-      <p>Today's milestones, what's coming up, and the family plans on the horizon — all in one calm view.</p>
+      <p>Today's milestones, what's coming up, and the family plans on the horizon.</p>
     </div>
     <div class="mobile-feature-card">
       <div class="mf-phone"><div class="mf-phone-inner" id="mf-screen-3"></div></div>
@@ -3107,13 +3151,13 @@
       <div class="mf-phone"><div class="mf-phone-inner" id="mf-screen-2"></div></div>
       <div class="mf-label">Tips & Guidance</div>
       <h3>What to focus on next.</h3>
-      <p>Proactive, personalized tips refreshed weekly — for your child, and for whoever's caring for them.</p>
+      <p>Proactive, personalized tips refreshed weekly.</p>
     </div>
     <div class="mobile-feature-card">
       <div class="mf-phone"><div class="mf-phone-inner" id="mf-screen-5"></div></div>
       <div class="mf-label">Activities &amp; Portal</div>
       <h3>Plan life together.</h3>
-      <p>Trips, weekend plans, birthdays and anniversaries &mdash; shared with everyone in your family.</p>
+      <p>Trips, weekend plans, birthdays and anniversaries.</p>
     </div>
     <div class="mobile-feature-card">
       <div class="mf-phone"><div class="mf-phone-inner" id="mf-screen-4"></div></div>
@@ -3277,7 +3321,7 @@
   <div class="pricing-inner">
     <div class="pricing-header">
       <h2>Join the family.</h2>
-      <p class="pricing-lede">All milestones, the dashboard, tips and one pediatrician PDF a month &mdash; free, forever. Premium unlocks unlimited Pebble AI for everyone in your family.</p>
+      <p class="pricing-lede">Premium unlocks unlimited Pebble AI for everyone in your family.</p>
     </div>
 
     <div class="pricing-grid">
@@ -3305,7 +3349,7 @@
         </div>
         <ul class="pricing-list">
           <li>Unlimited Pebble AI questions</li>
-          <li>One subscription, shared by the whole family</li>
+          <li>One subscription shared by the family</li>
           <li>Weekend Planner &mdash; local activity ideas</li>
           <li>Cross-domain pattern detection &amp; insights</li>
           <li>Unlimited pediatrician summaries</li>
