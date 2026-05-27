@@ -1789,8 +1789,16 @@
 
   /* PRIVACY & SAFETY — replaces testimonials. Light sand surface reads as
      "calm, trustworthy" while staying gentle against the off-white
-     intelligence section above. */
+     intelligence section above.
+     2026-05-21 — section HIDDEN pending the Security Hardening sprint
+     (see project_security_hardening_sprint.md). When the audit lands,
+     this section gets a rewrite to float the most important + most
+     recent commitments (App Check + Cloud-Functions-isolated Anthropic
+     key in particular). To re-enable: delete the `display: none;` line
+     below. Mobile @media rule + the markup + the animated SVG icons
+     all remain intact for fast re-enable. */
   .privacy {
+    display: none;
     padding: 56px 48px;
     background: var(--sand-light);
     opacity: 0; transform: translateY(30px);
@@ -2615,6 +2623,33 @@
    to revisit. */
 .brain-sec .brain-bg-line b{ color:#7DD4C8; font-weight:800; }
 
+/* 2026-05-21 — "live generation" pop-in for the brief line. Each
+   .brain-chunk fades + slides up in sequence, gated by the
+   .brain-sec.visible class flipped by the page's IntersectionObserver
+   (see the .reveal pattern). --i on each span drives a per-chunk
+   delay so the message reads like Pebble is typing it out. Default
+   (section not yet visible) keeps chunks hidden; once .visible
+   flips on, each chunk animates with stagger. Respects reduced-motion. */
+.brain-sec .brain-chunk{
+  display:inline-block;
+  opacity:0;
+  transform:translateY(6px);
+}
+.brain-sec.visible .brain-chunk{
+  animation:brain-chunk-pop 0.52s ease-out forwards;
+  animation-delay:calc(var(--i, 0) * 0.18s + 0.25s);
+}
+.brain-line-aria{
+  position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);
+}
+@keyframes brain-chunk-pop{
+  from { opacity:0; transform:translateY(6px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@media (prefers-reduced-motion: reduce){
+  .brain-sec .brain-chunk{ opacity:1; transform:none; animation:none; }
+}
+
 /* mobile fallback — scale the fixed-width composition to fit narrower viewports */
 /* Tablet — still uses the desktop converge SVG, just downscaled. */
 @media (max-width: 1000px){
@@ -2764,7 +2799,7 @@
 <!-- BENEFITS -->
 <section class="benefits reveal" id="features">
   <h2>For the whole family.</h2>
-  <p class="subtitle">PebblePath brings your child's development and your family's life into one calm space. Everyone you invite &mdash; co-parents, grandparents, caregivers.</p>
+  <p class="subtitle">PebblePath brings your child's development and your family's life into one calm space.</p>
   <div class="benefits-grid">
     <div class="benefit-card">
       <div class="benefit-icon motor">
@@ -2884,7 +2919,17 @@
 
       <div class="brain-brief">
         <div class="brain-bg-k">Tomorrow, ready before you wake</div>
-        <div class="brain-bg-line">It's <b>splash day</b> &mdash; 62&deg;F. Felix needs <b>water shoes &amp; a towel</b>. Lunch is covered, and <b>Thomas is on pickup</b>.</div>
+        <div class="brain-bg-line">
+          <!-- 2026-05-21 — Each phrase wrapped in a .brain-chunk so the
+               line "types out" left-to-right when .brain-sec.visible is
+               toggled by the page's IntersectionObserver. Custom --i
+               drives the per-chunk animation-delay (see CSS rule below
+               the .brain-bg-line block). Aria-label gives screen
+               readers the full sentence in one go so the staggered
+               reveal doesn't fragment the message for assistive tech. -->
+          <span class="brain-line-aria" aria-label="It's splash day. 62 degrees Fahrenheit. Felix needs water shoes and a towel. Lunch is covered, and Thomas is on pickup."></span>
+          <span class="brain-chunk" style="--i:0" aria-hidden="true">It's </span><span class="brain-chunk" style="--i:1" aria-hidden="true"><b>splash day</b> </span><span class="brain-chunk" style="--i:2" aria-hidden="true">&mdash; 62&deg;F. </span><span class="brain-chunk" style="--i:3" aria-hidden="true">Felix needs </span><span class="brain-chunk" style="--i:4" aria-hidden="true"><b>water shoes &amp; a towel</b>. </span><span class="brain-chunk" style="--i:5" aria-hidden="true">Lunch is covered, and </span><span class="brain-chunk" style="--i:6" aria-hidden="true"><b>Thomas is on pickup</b>.</span>
+        </div>
       </div>
     </div>
   </div>
@@ -3132,8 +3177,8 @@
   <div class="intelligence-inner">
     <div class="intelligence-text">
       <div class="feature-label">Growing With You</div>
-      <h2>The longer you use it,<br class="mobile-break"> the smarter it gets.</h2>
-      <p>Most apps give you a static checklist. PebblePath builds a living model of your child &mdash; connecting milestones across time and domains to surface insights no generic tool can &mdash; all inside one space your whole family shares.</p>
+      <h2>Calmly learning over time</h2>
+      <p>PebblePath builds a living model of your family. Connecting everyone together to save you time and surface valuable insights, within a private shared space.</p>
       <ul class="intelligence-points">
         <li>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
@@ -3636,11 +3681,33 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
   // On mobile this is also benign — tapping a slide centers it via
   // scrollIntoView; the observer then fires setActive on the new
   // most-visible slide (so this direct call is just a fast-path).
+  //
+  // Hover (desktop only): mouseenter → setActive after a 160 ms
+  // intent delay so the active doesn't churn as the mouse glides
+  // across the strip. mouseleave during the delay cancels. Touch
+  // devices never fire mouseenter, so this is a pure desktop
+  // enhancement — click still works as the canonical interaction
+  // and as the fallback. Added 2026-05-21 per dogfood feedback
+  // ("can we make the carousel zoom/swap with a hover over").
   slides.forEach((slide, i) => {
     slide.addEventListener('click', () => {
       slide.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
       setActive(i);
       hideHint();
+    });
+    let hoverTimer = null;
+    slide.addEventListener('mouseenter', () => {
+      hoverTimer = setTimeout(() => {
+        setActive(i);
+        hideHint();
+        hoverTimer = null;
+      }, 160);
+    });
+    slide.addEventListener('mouseleave', () => {
+      if (hoverTimer) {
+        clearTimeout(hoverTimer);
+        hoverTimer = null;
+      }
     });
   });
 
