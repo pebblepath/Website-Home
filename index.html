@@ -2028,7 +2028,11 @@
        (set on .showcase-section in the base rule). */
     .showcase-section { background: #fff; }
     .ms-carousel {
-      max-width: 1100px;
+      /* 2026-05-21 — bumped max-width 1100 → 1240 so the 6 × 150-px
+         thumbnail strip (≈ 990 px wide) floats inside the carousel
+         with ~69 px of breathing room on each side instead of
+         butting up against the prev/next arrows. */
+      max-width: 1240px;
       margin: 12px auto 0;
       padding: 0 56px;            /* gutter for prev/next arrows */
       position: relative;
@@ -2056,12 +2060,15 @@
       display: block;              /* phone is the only visible content */
       padding: 0;
       cursor: pointer;
-      opacity: 0.42;
+      /* 2026-05-21 — bumped non-active opacity 0.42 → 0.65 so the
+         screenshots stay readable even when faded; hover 0.7 → 0.85
+         keeps the affordance gradient (default < hover < active). */
+      opacity: 0.65;
       transform: scale(0.94);
       transform-origin: center center;
       transition: opacity 0.32s ease, transform 0.32s ease;
     }
-    .ms-slide:hover { opacity: 0.7; }
+    .ms-slide:hover { opacity: 0.85; }
     .ms-slide.is-active {
       opacity: 1;
       transform: scale(1.06);
@@ -2103,11 +2110,17 @@
        between captions doesn't jump the page. */
     .ms-caption {
       display: block;              /* overrides the base display:none */
-      max-width: 560px;
+      /* 2026-05-21 — bumped max-width 560 → 920 so the longest captions
+         (Dashboard ~98 chars, Tips ~99 chars, Activities ~89 chars)
+         fit on a single line at the 16-px body font. The min-height
+         is dialled back from 138 → 112 because one-line captions need
+         less vertical space (eyebrow 11 + 10 margin + h3 34 + 12
+         margin + body 26 ≈ 93 px → 112 with comfortable buffer). */
+      max-width: 920px;
       margin: 18px auto 4px;
       padding: 0 16px;
       text-align: center;
-      min-height: 138px;
+      min-height: 112px;
       transition: opacity 0.18s ease;
     }
     .ms-caption.is-swapping { opacity: 0; }
@@ -2132,7 +2145,9 @@
       font-size: 16px;
       line-height: 1.6;
       color: var(--warm-gray);
-      max-width: 460px;
+      /* 2026-05-21 — removed the 460-px max-width that was constraining
+         body copy to wrap on multiple lines; now uses the full parent
+         max-width (920) so the longest one-liners fit. */
       margin: 0 auto;
     }
     .ms-dots {
@@ -2193,8 +2208,14 @@
       cursor: default;
     }
     .ms-arrow svg { width: 18px; height: 18px; }
-    .ms-arrow.ms-arrow-prev { left: 6px; }
-    .ms-arrow.ms-arrow-next { right: 6px; }
+    /* 2026-05-21 — arrows pushed further outside (left/right 6 → −8)
+       to clear the thumbnail strip's edges. Negative offsets put each
+       arrow ~8 px past the carousel's content-box edge, sitting inside
+       the 56-px padding gutter — still within the carousel bounds but
+       visually separated from the screenshots. Combined with the wider
+       max-width (1240), the arrow-to-strip gap is now ~33 px. */
+    .ms-arrow.ms-arrow-prev { left: -8px; }
+    .ms-arrow.ms-arrow-next { right: -8px; }
     /* Swipe-hint chevron is mobile-only — arrows replace it on desktop. */
     .ms-swipe-hint { display: none; }
   }
@@ -2587,11 +2608,12 @@
   line-height:1.5; color:#fff; text-shadow:0 0 26px rgba(125,212,200,.5);
 }
 /* Bold inline highlights in the brief ("splash day", "Thomas is on
-   pickup") rendered in terracotta against the dark-teal panel — same
-   accent color the rest of the site uses for emphasis. Was #7DD4C8
-   (teal-glow) before; flipped to terracotta 2026-05-21 for warmer
-   pop against the green mesh background. */
-.brain-sec .brain-bg-line b{ color:var(--terracotta); font-weight:800; }
+   pickup") rendered in teal-glow against the dark-teal panel.
+   Terracotta was tried 2026-05-21 (warmer pop) but felt worse in
+   practice — the green-on-green of the teal-glow blends with the
+   panel mesh more harmoniously. Keep #7DD4C8 unless Thomas asks
+   to revisit. */
+.brain-sec .brain-bg-line b{ color:#7DD4C8; font-weight:800; }
 
 /* mobile fallback — scale the fixed-width composition to fit narrower viewports */
 /* Tablet — still uses the desktop converge SVG, just downscaled. */
