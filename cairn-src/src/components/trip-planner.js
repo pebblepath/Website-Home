@@ -238,6 +238,22 @@ export class TripPlanner extends LitElement {
     this.dispatchEvent(new Event('cancel'));
   }
 
+  /** 2026-05-24 — surface the trip's edit form without forcing the
+   *  user to close the planner and scroll back up to the trip card's
+   *  pencil. Parent (home-screen) routes this through its existing
+   *  _openEdit(trip) which mounts <trip-form> with the right field
+   *  set. Bubbles + composed so the listener can sit at the host. */
+  _openEdit() {
+    if (!this.trip) return;
+    this.dispatchEvent(
+      new CustomEvent('edit-trip', {
+        detail: { trip: this.trip },
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  }
+
   _days() {
     const s = parseYMD(this.trip?.start);
     const e = parseYMD(this.trip?.end) ?? s;
@@ -376,6 +392,16 @@ export class TripPlanner extends LitElement {
     }
     .who-adds { display: inline-flex; align-items: center; }
     .who-adds member-chip { margin-right: -6px; }
+    /* 2026-05-24 — the edit pencil + close X share a small flex row
+       pinned top-right so the user can edit the trip itself (dates,
+       flights, lodging) without scrolling back up to the trip card. */
+    .pl-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .pl-edit,
     .pl-close {
       background: var(--glass-fill);
       border: 1px solid var(--glass-border);
@@ -389,11 +415,16 @@ export class TripPlanner extends LitElement {
       justify-content: center;
       font-size: 16px;
       flex-shrink: 0;
+      padding: 0;
+      transition: color 140ms ease, border-color 140ms ease;
     }
+    .pl-edit:hover,
     .pl-close:hover {
       color: var(--text-primary);
       border-color: var(--glass-border-strong);
     }
+    .pl-edit:hover { color: var(--teal-pebble); border-color: var(--teal-pebble); }
+    .pl-edit svg { width: 17px; height: 17px; display: block; }
     .day-rail {
       display: flex;
       gap: 8px;
@@ -1047,7 +1078,17 @@ export class TripPlanner extends LitElement {
                 </span>
               </div>
             </div>
-            <button class="pl-close" @click=${this._close} aria-label="Close planner">×</button>
+            <div class="pl-actions">
+              <button
+                class="pl-edit"
+                @click=${this._openEdit}
+                aria-label="Edit trip"
+                title="Edit trip"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+              </button>
+              <button class="pl-close" @click=${this._close} aria-label="Close planner">×</button>
+            </div>
           </div>
 
           <div class="pl-modebar">

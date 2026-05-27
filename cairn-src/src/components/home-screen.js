@@ -4786,6 +4786,17 @@ export class HomeScreen extends LitElement {
           this._plannerOpen = false;
           this._plannerTrip = null;
         }}
+        @edit-trip=${(e) => {
+          // 2026-05-24 — planner's edit pencil routes the trip into
+          // the existing trip-form sheet via _openEdit. Close the
+          // planner first so the form lands on a clean stacking
+          // context (and the user comes back to it via the trip
+          // card afterward if they want to keep planning).
+          const trip = e.detail?.trip ?? this._plannerTrip;
+          this._plannerOpen = false;
+          this._plannerTrip = null;
+          if (trip) this._openEdit(trip);
+        }}
       ></trip-planner>
       ${this._renderCalendarsSection()}
       ${this._renderCelebrationsSection()}
