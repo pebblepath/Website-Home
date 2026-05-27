@@ -1267,7 +1267,9 @@ export class HomeScreen extends LitElement {
        --cat-bg, --cat-ink custom properties consumed by the chip
        rules). */
 
-    .cal-section { display: block; margin: 0; }
+    /* margin-bottom puts air between the calendar workspace and the
+       Celebrations section below it on the Activities tab. */
+    .cal-section { display: block; margin: 0 0 28px 0; }
     .cal-ws { display: flex; flex-direction: column; }
     .cal-ws-divider { height: 1px; background: var(--hairline); }
 
@@ -1352,7 +1354,17 @@ export class HomeScreen extends LitElement {
     @media (max-width: 900px) {
       .cal-side { border-right: none; border-bottom: 1px solid var(--hairline); }
     }
-    .cal-main { padding: 18px 20px 24px; min-height: 600px; overflow-x: auto; }
+    /* 2026-05-24 — fixed height (not min-height) so the workspace
+       doesn't resize when the user flips Week / Month / Year.
+       Calibrated to Month's natural full-bleed height: 6 week rows
+       × 114px (684) + DOW row + small margin (22) + cal-main top/
+       bottom padding (42) = 748px → rounded up to 760px to leave a
+       small margin for Week's variable all-day lane (max 3 lanes ×
+       23px). overflow-y: auto is the safety net for any view that
+       grows past this in edge cases. overflow-x kept for narrow
+       viewports where the 8-column Week / Month grids can extend
+       past the available width. */
+    .cal-main { padding: 18px 20px 24px; height: 760px; overflow: auto; }
 
     /* ── sidebar: mini-month ──────────────────────────────── */
     .cal-mini-top {
