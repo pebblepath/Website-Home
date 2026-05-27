@@ -6,7 +6,6 @@ import './circle-switcher.js';
 import './member-chip.js';
 import './trip-card.js';
 import './event-row.js';
-import './yearly-view.js';
 import './trip-form.js';
 import './event-form.js';
 import './manage-members-modal.js';
@@ -102,8 +101,23 @@ export class HomeScreen extends LitElement {
     _eventFormBusy: { state: true },
     _displayMonth: { state: true },
     /** 2026-05-22 — single-card calendar with view-toggle replaced
-     *  the stacked monthly + yearly panels. 'week' | 'month' | 'year'. */
+     *  the stacked monthly + yearly panels. 'week' | 'month' | 'year'.
+     *  2026-05-24 — Activities calendar workspace redesign (design 28)
+     *  reuses this state; default flipped from 'month' to 'week'. */
     _calendarView: { state: true },
+    /** 2026-05-24 — design 28. Filter map for the new sidebar Calendars
+     *  legend. Session-only (a page refresh resets to all-on). Keys are
+     *  the 5 category ids: trip, plan, holiday, event, celebrate. */
+    _calFilters: { state: true },
+    /** 2026-05-24 — design 28. Anchor (Sunday) for the visible week in
+     *  Week view. Independent of _displayMonth so flipping Week prev/
+     *  next doesn't drag the Month-view focus along (and vice-versa).
+     *  Reset to today's Sunday by the toolbar Today button. */
+    _displayWeekStart: { state: true },
+    /** 2026-05-24 — design 28. Plan items overlapping the visible week.
+     *  Map<tripId, PlanItem[]>. Subscribed when Week view is active +
+     *  the visible-week trip set changes; torn down otherwise. */
+    _weekPlanItems: { state: true },
     _allTripsOpen: { state: true },
     _editingFamilyName: { state: true },
     _importOpen: { state: true },
@@ -223,9 +237,37 @@ export class HomeScreen extends LitElement {
     // user-controlled via prev/next or yearly month-tap.
     const t = new Date();
     this._displayMonth = new Date(t.getFullYear(), t.getMonth(), 1);
-    // Default to Month — same default the old stacked layout opened
-    // with. User can flip via the new segmented toggle.
-    this._calendarView = 'month';
+    // 2026-05-24 — design 28: default flipped from 'month' to 'week'.
+    // The redesigned Week view IS the headline shape — "what is
+    // happening this week" is the most useful default for a family.
+    this._calendarView = 'week';
+    // 2026-05-24 — design 28. Sunday-anchored week start.
+    const _t = new Date(t);
+    _t.setHours(0, 0, 0, 0);
+    this._displayWeekStart = new Date(_t);
+    this._displayWeekStart.setDate(_t.getDate() - _t.getDay());
+    // 2026-05-24 — design 28. All five filters on by default.
+    this._calFilters = {
+      trip: true,
+      plan: true,
+      holiday: true,
+      event: true,
+      celebrate: true,
+    };
+    // 2026-05-24 — design 28. Plan items for visible-week trips. Map
+    // keyed by tripId. Populated by _syncWeekPlanSubs (see below).
+    this._weekPlanItems = new Map();
+    // Internal lifecycle handle — not a Lit prop. Array of
+    // { tripId, unsub } so we can tear down per-trip listeners
+    // selectively as the visible-week trip set changes.
+    this._weekPlanUnsubs = [];
+  }
+
+  // 2026-05-24 — design 28. Helper used by the plan-item sync to scope
+  // the visible week. Wrapped so we can swap the anchor logic later
+  // without touching the listener code.
+  _visibleWeekStart() {
+    return new Date(this._displayWeekStart);
   }
 
   // P9 — Settings → Join another family. Input formatter that keeps the
@@ -1200,213 +1242,6 @@ export class HomeScreen extends LitElement {
       mask: var(--mountain-src) center / contain no-repeat;
       vertical-align: middle;
     }
-    /* Calendar view toggle (Week / Month / Year) — replaces the
-       stacked two-panel layout 2026-05-22. Mirrors the date-range
-       picker / circle-switcher segmented chip pattern. */
-    .cal-view-toggle {
-      display: inline-flex;
-      gap: 2px;
-      padding: 3px;
-      background: rgba(255, 248, 235, 0.06);
-      border: 1px solid var(--glass-border);
-      border-radius: 999px;
-      margin-bottom: 14px;
-    }
-    .cal-view-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      font-family: var(--font-body);
-      font-size: 13px;
-      font-weight: 500;
-      padding: 6px 16px;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: background 160ms ease, color 160ms ease;
-    }
-    .cal-view-btn:hover {
-      color: var(--text-primary);
-    }
-    .cal-view-btn.on {
-      background: var(--teal-pebble);
-      color: #fff;
-      box-shadow: 0 2px 6px rgba(61, 155, 143, 0.30);
-    }
-    /* Weekly strip — 7 day-columns with stacked items. Sized to fill
-       the Annual view's natural height so the calendar panel doesn't
-       jump as the user flips between views. */
-    .cal-week-strip {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      margin-top: 6px;
-    }
-    /* Week strip fills the panel's content area — height delegated
-       to .cal-section. The 1fr-row pattern keeps day columns equal
-       within whatever height the container provides. */
-    .cal-week-strip-detailed {
-      height: 100%;
-    }
-    .cal-week-day {
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 6px;
-      padding: 10px 6px 12px;
-      background: rgba(255, 248, 235, 0.04);
-      border: 1px solid var(--glass-border);
-      border-radius: 14px;
-      cursor: pointer;
-      color: inherit;
-      font-family: var(--font-body);
-      text-align: left;
-      transition: background 180ms ease, transform 180ms ease;
-    }
-    .cal-week-day:hover {
-      background: rgba(255, 248, 235, 0.10);
-      transform: translateY(-1px);
-    }
-    .cal-week-day.today {
-      background: rgba(61, 155, 143, 0.18);
-      border-color: rgba(61, 155, 143, 0.45);
-    }
-    .cal-week-head {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 4px;
-      padding: 0 2px;
-    }
-    .cal-week-dow {
-      font-size: 11px;
-      color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-weight: 600;
-    }
-    .cal-week-day.today .cal-week-dow {
-      color: var(--teal-pebble);
-    }
-    .cal-week-num {
-      font-family: var(--font-display);
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--text-primary);
-      line-height: 1;
-    }
-    /* Per-day item stack (2026-05-23) — replaces the dot row. */
-    .cal-week-items {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-      flex: 1;
-      min-height: 0;
-    }
-    .cal-week-chip {
-      display: block;
-      padding: 4px 6px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 500;
-      line-height: 1.25;
-      color: var(--text-primary);
-      background: rgba(255, 248, 235, 0.06);
-      border-left: 2px solid var(--text-tertiary);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .cal-week-chip.trip {
-      background: rgba(61, 155, 143, 0.14);
-      border-left-color: var(--teal-pebble);
-    }
-    .cal-week-chip.event {
-      background: rgba(212, 168, 67, 0.14);
-      border-left-color: #d4a843;
-    }
-    .cal-week-more {
-      font-size: 10px;
-      color: var(--text-tertiary);
-      padding: 2px 4px;
-    }
-    .cal-week-empty {
-      color: var(--text-tertiary);
-      font-size: 12px;
-      padding: 2px 4px;
-      opacity: 0.5;
-    }
-    /* Calendar panel — STRICT fixed height (2026-05-23 follow-up).
-       min-height alone didn't equalize: Year's 6×2 (or 4×3 below
-       1024px) natural grid blew well past 420px, and Week's content
-       sat short below the threshold. Now: section is 480px exact,
-       inner glass-panel fills + scrolls if a view needs more (Year
-       on narrow viewports stays at-a-glance; if it overflows the
-       user scrolls within the panel). */
-    .cal-section {
-      height: 480px;
-      display: flex;
-    }
-    .cal-section > glass-panel {
-      flex: 1;
-      display: block;
-      /* Year on narrow viewports can need more than 480 — keep
-         scroll as the fallback, but Month + Week fit exactly via the
-         flex column below. */
-      overflow-y: auto;
-      scrollbar-width: thin;
-    }
-    /* Flex column: toggle stays at its natural height; view-pane
-       fills the rest so Month grid + Weekly strip auto-size to fit
-       the 480px panel (was: Month overflowed + cropped, Week sat
-       short — fixed 2026-05-23). */
-    .cal-inner {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      min-height: 0;
-    }
-    .cal-view-pane {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-    }
-    /* Monthly + Weekly grids fill the pane vertically; their own
-       inner content (rows, days) auto-sizes via the grid layout. */
-    .cal-view-pane .cal-grid {
-      flex: 1;
-      min-height: 0;
-      /* DOW header row auto-height + 6 fr rows for weeks. Replaces
-         the per-cell aspect-ratio (which made cells too tall on wide
-         viewports → overflowed the 480 panel). */
-      grid-template-rows: auto repeat(6, 1fr);
-    }
-    .cal-view-pane .cal-cell {
-      /* Override the aspect-ratio: 3/2 from the legacy cal-cell
-         styles. Each cell now stretches to fill its grid-row track
-         (1fr each, defined above). */
-      aspect-ratio: auto;
-      min-height: 0;
-    }
-    /* Yearly view inside the pane — fills the available height. The
-       internal grid handles its own scroll when content overflows. */
-    .cal-view-pane > yearly-view {
-      flex: 1;
-      min-height: 0;
-      display: block;
-    }
-    /* cal-head (the H3 + nav buttons row) stays at its natural
-       height inside the flex column. */
-    .cal-view-pane > .cal-head {
-      flex: 0 0 auto;
-    }
-    /* Weekly strip fills the remaining pane height, so each day
-       column has room for the item chips (was: short content sat
-       cropped at top with empty space below). */
-    .cal-view-pane > .cal-week-strip {
-      flex: 1;
-      min-height: 0;
-    }
     .cal-head {
       display: flex;
       align-items: center;
@@ -1419,197 +1254,426 @@ export class HomeScreen extends LitElement {
       font-size: 17px;
       font-weight: 600;
     }
-    .cal-head .nav {
-      display: flex;
-      gap: 6px;
+
+    /* ══ Activities calendar workspace (design 28, 2026-05-24) ══
+       Replaces the prior single-card calendar (Week/Month/Year
+       toggle + chip-per-cell month + weekly strip). New shape =
+       toolbar across the top, sidebar with mini-month + filters
+       on the left, main pane with Week / Month / Year on the
+       right. All-day chips + monthly spanning bars use a shared
+       category color carrier via the cat-trip / cat-plan / cat-
+       holiday / cat-event / cat-celebrate classes (rules at the
+       bottom of this block — they map a category id to --cat,
+       --cat-bg, --cat-ink custom properties consumed by the chip
+       rules). */
+
+    .cal-section { display: block; margin: 0; }
+    .cal-ws { display: flex; flex-direction: column; }
+    .cal-ws-divider { height: 1px; background: var(--hairline); }
+
+    /* ── toolbar ─────────────────────────────────────────── */
+    .cal-tb {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; padding: 16px 20px; flex-wrap: wrap;
     }
-    .cal-nav-btn {
-      width: 36px;
-      height: 36px;
-      border-radius: 999px;
-      background: var(--glass-fill);
-      border: 1px solid var(--glass-border);
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px;
-      font-family: var(--font-body);
+    .cal-tb-l { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .cal-tb-r { display: flex; align-items: center; gap: 10px; }
+    .cal-today-btn {
+      font-family: var(--font-body); font-weight: 600; font-size: 13px;
+      color: var(--text-primary); background: var(--glass-fill);
+      border: 1px solid var(--glass-border); padding: 9px 15px;
+      border-radius: var(--radius-pill); cursor: pointer;
+      transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+    }
+    .cal-today-btn:hover {
+      border-color: var(--teal-pebble); color: var(--teal-pebble);
+      background: var(--glass-fill-strong);
+    }
+    .cal-nav { display: flex; gap: 4px; }
+    .cal-nav button {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 1px solid var(--glass-border); background: var(--glass-fill);
+      color: var(--text-secondary); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
       padding: 0;
     }
-    .cal-nav-btn:hover {
-      color: var(--text-primary);
-      border-color: var(--glass-border-strong);
+    .cal-nav button:hover {
+      border-color: var(--teal-pebble); color: var(--teal-pebble);
+      background: var(--glass-fill-strong);
     }
-    .cal-today-btn {
-      width: auto;
-      padding: 0 12px;
-      font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+    .cal-nav button svg { width: 16px; height: 16px; display: block; }
+    .cal-period { display: flex; flex-direction: column; line-height: 1.15; margin-left: 4px; }
+    .cal-period .pt {
+      font-family: var(--font-display); font-weight: 700; font-size: 21px;
+      letter-spacing: -0.02em; color: var(--text-primary);
     }
-    .cal-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
+    .cal-period .ps {
+      font-size: 12px; color: var(--text-tertiary); font-weight: 500; margin-top: 1px;
     }
-    .cal-dow {
-      font-size: 11px;
-      color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      text-align: center;
-      padding: 6px 0;
+    .cal-vswitch {
+      display: flex; gap: 3px; padding: 3px;
+      background: var(--glass-fill); border: 1px solid var(--glass-border);
+      border-radius: var(--radius-pill);
     }
-    .cal-cell {
-      /* Shorter cells (3:2 ratio instead of square) so the monthly
-         card has less vertical weight — keeps trip cards as the
-         primary focus of the page. */
-      aspect-ratio: 3 / 2;
-      border-radius: 8px;
-      background: rgba(255, 248, 235, 0.04);
-      border: 1px solid var(--gridline);
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: flex-start;
-      padding: 3px 5px 4px;
-      font-size: 11.5px;
-      color: var(--text-secondary);
-      gap: 1px;
-      position: relative;
-      overflow: hidden;
+    .cal-vswitch button {
+      border: none; background: transparent;
+      font-family: var(--font-body); font-weight: 600; font-size: 13px;
+      color: var(--text-secondary); padding: 8px 17px;
+      border-radius: var(--radius-pill); cursor: pointer;
+      transition: background 160ms ease, color 160ms ease;
     }
-    .cal-cell .cal-cell-day {
-      font-weight: 600;
+    .cal-vswitch button:hover { color: var(--text-primary); }
+    .cal-vswitch button.on {
+      background: var(--teal-pebble); color: #fff;
+      box-shadow: 0 2px 7px rgba(61, 155, 143, 0.40);
     }
-    .cal-cell .cal-cell-label {
-      font-size: 10px;
-      line-height: 1.15;
-      font-weight: 500;
-      width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
-      -webkit-box-orient: vertical;
-      opacity: 0.95;
-      text-align: left;
-      word-break: break-word;
-      margin-top: auto;
+    .cal-add {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: var(--font-body); font-weight: 600; font-size: 13px;
+      color: #fff; background-image: var(--gradient-cta);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      padding: 9px 16px; border-radius: var(--radius-pill);
+      cursor: pointer; transition: filter 160ms ease;
+      box-shadow: 0 3px 10px rgba(139, 90, 62, 0.32);
     }
-    /* 2026-05-23 — Google-Calendar-style event chips per cell.
-       Stacked vertically; truncated; color-coded by kind. */
-    .cal-cell .cal-cell-chips {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      width: 100%;
-      margin-top: 3px;
-      min-height: 0;
-      overflow: hidden;
+    .cal-add:hover { background-image: var(--gradient-cta-hover); }
+    .cal-add svg { width: 15px; height: 15px; display: block; }
+
+    /* ── body ────────────────────────────────────────────── */
+    .cal-ws-body { display: grid; grid-template-columns: 248px 1fr; }
+    @media (max-width: 900px) {
+      .cal-ws-body { grid-template-columns: 1fr; }
     }
-    .cal-cell-chip {
-      display: block;
-      font-size: 10px;
-      line-height: 1.25;
-      font-weight: 600;
-      padding: 1px 5px;
-      border-radius: 4px;
-      color: var(--text-primary);
-      background: rgba(255, 248, 235, 0.10);
-      border-left: 2px solid var(--text-tertiary);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    .cal-side {
+      border-right: 1px solid var(--hairline);
+      padding: 18px 16px; background: var(--glass-fill);
     }
-    .cal-cell-chip.chip-trip {
-      background: rgba(61, 155, 143, 0.18);
-      border-left-color: var(--teal-pebble);
+    @media (max-width: 900px) {
+      .cal-side { border-right: none; border-bottom: 1px solid var(--hairline); }
+    }
+    .cal-main { padding: 18px 20px 24px; min-height: 600px; overflow-x: auto; }
+
+    /* ── sidebar: mini-month ──────────────────────────────── */
+    .cal-mini-top {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .cal-mini-top .mm {
+      font-family: var(--font-display); font-weight: 700; font-size: 14px;
       color: var(--text-primary);
     }
-    .cal-cell-chip.chip-event {
-      background: rgba(212, 168, 67, 0.18);
-      border-left-color: #d4a843;
-      color: var(--text-primary);
+    .cal-mini-arrows { display: flex; gap: 2px; }
+    .cal-mini-arrows button {
+      width: 24px; height: 24px; border: none; background: transparent;
+      border-radius: 6px; color: var(--text-tertiary); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 140ms ease, color 140ms ease;
     }
-    .cal-cell-chip.chip-holiday {
-      background: rgba(122, 158, 126, 0.18);
-      border-left-color: rgba(122, 158, 126, 0.8);
-      color: var(--text-primary);
+    .cal-mini-arrows button:hover {
+      background: var(--glass-fill-strong); color: var(--text-primary);
     }
-    .cal-cell-more {
-      font-size: 9.5px;
-      color: var(--text-tertiary);
-      font-weight: 600;
-      padding: 1px 4px;
+    .cal-mini-arrows svg { width: 13px; height: 13px; display: block; }
+    .cal-mini-dow {
+      display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 2px;
     }
-    /* Hide single-label legacy slot when chips are present (chips
-       supersede the single .cal-cell-label). Today's "Today" fallback
-       still uses .cal-cell-label when items.length === 0. */
-    @media (max-width: 480px) {
-      .cal-cell .cal-cell-label {
-        display: none;
-      }
+    .cal-mini-dow span {
+      text-align: center; font-size: 10px; font-weight: 700;
+      color: var(--text-tertiary); padding: 3px 0;
     }
-    @media (max-width: 480px) {
-      .cal-grid {
-        gap: 4px;
-      }
-      .cal-cell {
-        padding: 4px 2px;
-        font-size: 11.5px;
-        border-radius: 8px;
-      }
-      .cal-nav-btn {
-        width: 32px;
-        height: 32px;
-      }
+    .cal-mini-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+    .cal-mini-d {
+      aspect-ratio: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-size: 11.5px; font-weight: 600; color: var(--text-secondary);
+      position: relative; border-radius: 7px; cursor: pointer;
+      transition: background 120ms ease;
     }
-    .cal-cell.empty {
+    .cal-mini-d:hover { background: var(--glass-fill-strong); }
+    .cal-mini-d.muted { color: var(--text-tertiary); opacity: 0.55; }
+    .cal-mini-d.today {
+      background: var(--teal-pebble); color: #fff; font-weight: 700;
+    }
+    .cal-mini-d .dot {
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--cat, var(--teal-pebble));
+      position: absolute; bottom: 3px;
+    }
+    .cal-mini-d.today .dot { background: #fff; }
+
+    /* ── sidebar: filters ─────────────────────────────────── */
+    .cal-side-h {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-tertiary);
+      margin: 22px 4px 8px;
+    }
+    .cal-filt {
+      display: flex; align-items: center; gap: 10px;
+      padding: 7px 8px; border-radius: 9px; cursor: pointer;
+      transition: background 140ms ease;
+      user-select: none;
+    }
+    .cal-filt:hover { background: var(--glass-fill-strong); }
+    .cal-filt .sw {
+      width: 17px; height: 17px; border-radius: 5px;
+      background: var(--cat);
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      transition: background 140ms ease, box-shadow 140ms ease;
+    }
+    .cal-filt .sw svg { width: 11px; height: 11px; color: #fff; }
+    .cal-filt .nm {
+      font-size: 13px; font-weight: 600; color: var(--text-primary); flex: 1;
+    }
+    .cal-filt .ct {
+      font-size: 11.5px; font-weight: 600; color: var(--text-tertiary);
+    }
+    .cal-filt.off .sw {
       background: transparent;
-      border-color: transparent;
+      box-shadow: inset 0 0 0 1.5px var(--text-tertiary);
     }
-    .cal-cell.today {
-      background: var(--today-bg);
-      color: var(--today-fg);
-      font-weight: 700;
-      border-color: rgba(255, 248, 235, 0.5);
+    .cal-filt.off .nm, .cal-filt.off .ct { color: var(--text-tertiary); }
+
+    /* ── category color carriers ──────────────────────────── */
+    /* Each row writes --cat (solid for swatches + chip accent bars),
+       --cat-bg (low-alpha tint for chip backgrounds — works in BOTH
+       themes), and --cat-ink (chip text). Pure-rule mapping so any
+       descendant chip inherits the right palette. */
+    .cat-trip {
+      --cat: var(--teal-pebble);
+      --cat-bg: rgba(61, 155, 143, 0.16);
+      --cat-ink: var(--text-primary);
     }
-    /* Holiday days — teal, distinct from trip-blue + celebration-
-       amber (Ellie ③). Declared BEFORE has-event/has-trip so on a
-       day that's both, the user's own trip/celebration wins the
-       colour (this is just the public-holiday backdrop). */
-    .cal-cell.has-holiday {
-      background: var(--gradient-sage);
-      border-color: rgba(61, 155, 143, 0.6);
-      color: #fff;
-      font-weight: 600;
+    .cat-plan {
+      --cat: var(--sage-soft);
+      --cat-bg: rgba(122, 158, 126, 0.16);
+      --cat-ink: var(--text-primary);
     }
-    .cal-cell.has-event {
-      background: var(--gradient-celebration);
-      border-color: rgba(255, 240, 215, 0.55);
-      color: var(--charcoal);
-      font-weight: 600;
+    .cat-holiday {
+      --cat: var(--dusty-blue);
+      --cat-bg: rgba(107, 154, 196, 0.16);
+      --cat-ink: var(--text-primary);
     }
-    .cal-cell.has-trip {
-      background: var(--trip-day-bg);
-      border-color: rgba(74, 144, 226, 0.75);
-      color: var(--trip-day-fg);
-      font-weight: 600;
+    .cat-event {
+      --cat: var(--amber-glow);
+      --cat-bg: rgba(212, 168, 67, 0.18);
+      --cat-ink: var(--text-primary);
     }
-    .cal-cell.has-trip.has-event {
-      background: linear-gradient(
-        135deg,
-        #6bb4e8 0%,
-        #4a90e2 45%,
-        #d4a843 100%
+    .cat-celebrate {
+      --cat: var(--rose-soft);
+      --cat-bg: rgba(201, 138, 138, 0.18);
+      --cat-ink: var(--text-primary);
+    }
+
+    /* ── WEEK view ────────────────────────────────────────── */
+    .cal-week .wk-head {
+      display: grid; grid-template-columns: 54px repeat(7, 1fr);
+    }
+    .cal-week .wk-h {
+      padding: 6px 4px 10px; text-align: center;
+      border-left: 1px solid var(--hairline);
+    }
+    .cal-week .wk-h .dw {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+      color: var(--text-tertiary); text-transform: uppercase;
+    }
+    .cal-week .wk-h .nm {
+      font-family: var(--font-display); font-weight: 700; font-size: 19px;
+      color: var(--text-primary); margin-top: 3px;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+    }
+    .cal-week .wk-h.today .dw { color: var(--teal-pebble); }
+    .cal-week .wk-h.today .nm { background: var(--teal-pebble); color: #fff; }
+
+    .cal-allday {
+      display: grid; grid-template-columns: 54px repeat(7, 1fr);
+      grid-auto-rows: 23px; row-gap: 3px;
+      padding: 7px 0 9px;
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+      background: var(--glass-fill);
+    }
+    .cal-allday .ad-lbl {
+      grid-column: 1; grid-row: 1;
+      font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--text-tertiary);
+      text-align: right; padding-right: 9px; align-self: center;
+    }
+    .ad {
+      background: var(--cat-bg); color: var(--cat-ink);
+      border-left: 3px solid var(--cat); border-radius: 5px;
+      font-size: 11.5px; font-weight: 600; padding: 3px 8px;
+      margin: 0 3px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      cursor: pointer;
+      display: flex; align-items: center;
+      transition: filter 140ms ease;
+    }
+    .ad:hover { filter: brightness(0.97); }
+
+    .cal-tg {
+      display: grid; grid-template-columns: 54px repeat(7, 1fr);
+      position: relative;
+    }
+    .tg-gut { display: flex; flex-direction: column; }
+    .tg-hr {
+      height: 52px; text-align: right; padding-right: 9px;
+      font-size: 10.5px; font-weight: 600; color: var(--text-tertiary);
+      transform: translateY(-7px);
+    }
+    .tg-day {
+      position: relative; border-left: 1px solid var(--hairline);
+      min-height: 624px;
+      background: repeating-linear-gradient(
+        to bottom,
+        var(--hairline) 0 1px,
+        transparent 1px 52px
       );
-      border-color: rgba(212, 168, 67, 0.65);
-      color: var(--charcoal);
+    }
+    .tg-day.today {
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          var(--hairline) 0 1px,
+          transparent 1px 52px
+        ),
+        rgba(61, 155, 143, 0.06);
+    }
+    .tev {
+      position: absolute; left: 3px; right: 3px;
+      background: var(--cat-bg); color: var(--cat-ink);
+      border-left: 3px solid var(--cat); border-radius: 6px;
+      padding: 4px 7px; overflow: hidden; cursor: pointer;
+      transition: filter 140ms ease, box-shadow 140ms ease;
+    }
+    .tev:hover {
+      filter: brightness(0.97);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.13);
+    }
+    .tev .tt {
+      font-size: 11.5px; font-weight: 700; line-height: 1.25;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .tev .tm {
+      font-size: 10.5px; font-weight: 500; opacity: 0.85; margin-top: 1px;
+    }
+    .nowline {
+      position: absolute; left: 0; right: 0; height: 2px;
+      background: var(--terracotta); z-index: 5;
+    }
+    .nowline::before {
+      content: ''; position: absolute; left: -4px; top: -3px;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--terracotta);
+    }
+
+    /* ── MONTH view ───────────────────────────────────────── */
+    .cal-month .m-dow {
+      display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 7px;
+    }
+    .cal-month .m-dow span {
+      text-align: left; padding: 0 8px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+      color: var(--text-tertiary); text-transform: uppercase;
+    }
+    .cal-month .m-grid {
+      border: 1px solid var(--hairline);
+      border-radius: 13px; overflow: hidden;
+    }
+    .cal-month .wkrow { position: relative; }
+    .cal-month .dnums { display: grid; grid-template-columns: repeat(7, 1fr); }
+    .cal-month .dcell {
+      min-height: 114px;
+      border-right: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+      padding: 6px 8px;
+    }
+    .cal-month .wkrow:last-child .dcell { border-bottom: none; }
+    .cal-month .dcell .dn {
+      font-size: 13px; font-weight: 700; color: var(--text-secondary);
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 24px; height: 24px; border-radius: 50%;
+    }
+    .cal-month .dcell.muted { background: var(--glass-fill); }
+    .cal-month .dcell.muted .dn { color: var(--text-tertiary); opacity: 0.55; }
+    .cal-month .dcell.today .dn { background: var(--teal-pebble); color: #fff; }
+    .cal-month .devents {
+      position: absolute; left: 0; right: 0; top: 32px; bottom: 5px;
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      grid-auto-rows: 23px; row-gap: 3px;
+      pointer-events: none;
+    }
+    .cal-month .ev {
+      margin: 0 3px;
+      background: var(--cat-bg); color: var(--cat-ink);
+      border-left: 3px solid var(--cat); border-radius: 5px;
+      font-size: 11.5px; font-weight: 600; padding: 3px 7px;
+      line-height: 1.35;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      pointer-events: auto; cursor: pointer;
+      transition: filter 140ms ease;
+    }
+    .cal-month .ev:hover { filter: brightness(0.97); }
+    .cal-month .ev .ed {
+      display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--cat); margin-right: 5px; vertical-align: 1px;
+    }
+    .cal-month .evmore {
+      margin: 0 3px; padding: 2px 7px;
+      font-size: 11px; font-weight: 600; color: var(--text-tertiary);
+      pointer-events: auto; cursor: pointer;
+    }
+    .cal-month .evmore:hover { color: var(--teal-pebble); }
+
+    /* ── YEAR view ────────────────────────────────────────── */
+    .cal-year {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    }
+    @media (max-width: 820px) {
+      .cal-year { grid-template-columns: repeat(2, 1fr); }
+    }
+    .ym {
+      text-align: left;
+      background: var(--glass-fill);
+      border: 1px solid var(--hairline);
+      border-radius: 13px; padding: 13px 13px 11px;
+      cursor: pointer; transition: border-color 160ms ease,
+        box-shadow 160ms ease, transform 160ms ease, background 160ms ease;
+      font-family: var(--font-body);
+    }
+    .ym:hover {
+      border-color: var(--teal-pebble);
+      box-shadow: 0 8px 20px -10px rgba(0, 0, 0, 0.25);
+      transform: translateY(-2px);
+    }
+    .ym.cur {
+      border-color: var(--teal-pebble);
+      background: linear-gradient(180deg, rgba(61, 155, 143, 0.10), transparent 60%);
+    }
+    .ym-name {
+      font-family: var(--font-display); font-weight: 700; font-size: 14px;
+      color: var(--text-primary); margin-bottom: 7px;
+    }
+    .ym.cur .ym-name { color: var(--teal-pebble); }
+    .ym-dow {
+      display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 3px;
+    }
+    .ym-dow span {
+      text-align: center; font-size: 9px; font-weight: 700;
+      color: var(--text-tertiary);
+    }
+    .ym-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; }
+    .ym-d {
+      aspect-ratio: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-size: 10.5px; font-weight: 600; color: var(--text-secondary);
+      position: relative; border-radius: 5px;
+    }
+    .ym-d.e { color: transparent; }
+    .ym-d.today { background: var(--teal-pebble); color: #fff; font-weight: 800; }
+    .ym-d .yd {
+      width: 4px; height: 4px; border-radius: 50%;
+      background: var(--cat); position: absolute; bottom: 1px;
     }
 
     /* ── Cairn stack: flat polished pebbles in solid colors with
@@ -2850,6 +2914,24 @@ export class HomeScreen extends LitElement {
     if (changed.has('_activeTab')) {
       this._positionTabSlider({ animate: true });
     }
+    // 2026-05-24 — design 28. Manage plan-item subscriptions for the
+    // visible-week trip set. Week-only subscription set so non-week
+    // views don't carry the subscription cost. Re-evaluates whenever
+    // the view changes, the visible-week start advances, or the trips
+    // snapshot listener pushes a new set.
+    if (
+      changed.has('_calendarView') ||
+      changed.has('_displayWeekStart') ||
+      changed.has('trips')
+    ) {
+      if (this._calendarView === 'week') {
+        this._syncWeekPlanSubs();
+      } else if (changed.has('_calendarView')) {
+        // Only tear down on a view-transition AWAY from week — not
+        // every render while we're not in week mode.
+        this._dropAllWeekPlanSubs();
+      }
+    }
   }
 
   _liveTrips() {
@@ -3106,132 +3188,6 @@ export class HomeScreen extends LitElement {
    * dragstart writes `text/cairn-uid` to dataTransfer; that's what the
    * drop handler reads back.
    */
-
-  _renderMonthly() {
-    const today = new Date();
-    const disp = this._displayMonth ?? today;
-    const year = disp.getFullYear();
-    const month = disp.getMonth();
-    const firstDay = new Date(year, month, 1).getDay();
-    const offset = (firstDay + 6) % 7;
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    // 2026-05-23 — per-day items list (Google-Calendar style chips).
-    // Was a Map<day, string> showing one label; now Array<{title, kind}>
-    // so each cell can render multiple colored chips. Chip kind drives
-    // the chip color (trip = teal, event = amber, holiday = sage).
-    const dayItems = new Map();
-    const pushItem = (day, title, kind) => {
-      if (!dayItems.has(day)) dayItems.set(day, []);
-      dayItems.get(day).push({ title: title ?? '', kind });
-    };
-    const events = [];
-    for (const ev of this._filteredEvents()) {
-      const d = parseLocalDate(ev.date);
-      if (!d) continue;
-      if (d.getFullYear() === year && d.getMonth() === month) {
-        events.push(d.getDate());
-        pushItem(d.getDate(), ev.title ?? '', 'event');
-      }
-    }
-    const tripDays = new Set();
-    for (const t of this._filteredTrips()) {
-      if (!t.start || !t.end) continue;
-      const s = parseLocalDate(t.start);
-      const e = parseLocalDate(t.end);
-      if (Number.isNaN(s.getTime()) || Number.isNaN(e.getTime())) continue;
-      if (s.getFullYear() > year || e.getFullYear() < year) continue;
-      if (s.getMonth() > month && e.getMonth() > month) continue;
-      if (s.getMonth() < month && e.getMonth() < month) continue;
-      const start = s.getMonth() === month ? s.getDate() : 1;
-      const end = e.getMonth() === month ? e.getDate() : daysInMonth;
-      for (let d = start; d <= end; d++) {
-        tripDays.add(d);
-        pushItem(d, t.title ?? '', 'trip');
-      }
-    }
-    // Public-holiday overlay on the grid (Ellie ③) — chip color
-    // sage; supplements the existing trip/event chips.
-    const holidayDays = new Set();
-    for (const h of this.holidays ?? []) {
-      const d = parseLocalDate(h.date);
-      if (!d) continue;
-      if (d.getFullYear() === year && d.getMonth() === month) {
-        holidayDays.add(d.getDate());
-        pushItem(d.getDate(), h.title ?? 'Holiday', 'holiday');
-      }
-    }
-    const cells = [];
-    for (let i = 0; i < offset; i++) cells.push(html`<div class="cal-cell empty"></div>`);
-    const isCurrentMonth =
-      today.getFullYear() === year && today.getMonth() === month;
-    for (let d = 1; d <= daysInMonth; d++) {
-      const isToday = isCurrentMonth && d === today.getDate();
-      const hasEvent = events.includes(d);
-      const hasTrip = tripDays.has(d);
-      const hasHoliday = holidayDays.has(d);
-      // 2026-05-23 — Google-Calendar-style: show up to 2 chips per
-      // cell + a "+N" overflow when there are more. Chip color set
-      // via .chip-{kind}. Title attribute lists all items for hover.
-      const items = dayItems.get(d) ?? [];
-      const cap = 2;
-      const visibleItems = items.slice(0, cap);
-      const overflow = Math.max(0, items.length - cap);
-      const hoverTitle = items.length
-        ? `${d} — ${items.map((it) => it.title).filter(Boolean).join(' · ')}`
-        : '';
-      const cls = [
-        'cal-cell',
-        isToday ? 'today' : '',
-        hasEvent ? 'has-event' : '',
-        hasTrip ? 'has-trip' : '',
-        hasHoliday ? 'has-holiday' : '',
-      ]
-        .filter(Boolean)
-        .join(' ');
-      cells.push(html`<div class=${cls} title=${hoverTitle}>
-        <span class="cal-cell-day">${d}</span>
-        ${visibleItems.length === 0 && isToday
-          ? html`<span class="cal-cell-label">Today</span>`
-          : visibleItems.length > 0
-          ? html`<div class="cal-cell-chips">
-              ${visibleItems.map(
-                (it) => html`<span class="cal-cell-chip chip-${it.kind}">${it.title || it.kind}</span>`,
-              )}
-              ${overflow > 0
-                ? html`<span class="cal-cell-more">+${overflow}</span>`
-                : ''}
-            </div>`
-          : ''}
-      </div>`);
-    }
-    const monthName = new Date(year, month, 1).toLocaleString('en-GB', {
-      month: 'long',
-      year: 'numeric',
-    });
-    const showTodayBtn = !isCurrentMonth;
-    return html`
-      <div class="cal-head">
-        <h3>${monthName}</h3>
-        <div class="nav">
-          ${showTodayBtn
-            ? html`<button
-                class="cal-nav-btn cal-today-btn"
-                @click=${() => this._resetToToday()}
-                title="Jump to today"
-              >
-                Today
-              </button>`
-            : ''}
-          <button class="cal-nav-btn" @click=${() => this._shiftMonth(-1)} aria-label="Previous month">‹</button>
-          <button class="cal-nav-btn" @click=${() => this._shiftMonth(1)} aria-label="Next month">›</button>
-        </div>
-      </div>
-      <div class="cal-grid">
-        ${['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'].map((d) => html`<div class="cal-dow">${d}</div>`)}
-        ${cells}
-      </div>
-    `;
-  }
 
   _openCreate() {
     if (this.preview) {
@@ -3581,6 +3537,9 @@ export class HomeScreen extends LitElement {
   disconnectedCallback() {
     this._tabsRO?.disconnect();
     this._tabsRO = null;
+    // 2026-05-24 — design 28. Tear down any active plan-item
+    // listeners so they don't leak past component lifetime.
+    this._dropAllWeekPlanSubs();
     super.disconnectedCallback();
   }
 
@@ -3778,152 +3737,837 @@ export class HomeScreen extends LitElement {
     `;
   }
 
-  _renderCalendarsSection() {
-    const today = new Date();
-    const v = this._calendarView ?? 'month';
+  // ════════════════════════════════════════════════════════════════
+  // Activities calendar workspace (design-sandbox/28, 2026-05-24).
+  //
+  // Replaces the prior single-card calendar (Week / Month / Year toggle
+  // with chip-per-cell month + weekly strip). The new layout is the
+  // canonical Google-Calendar shape: toolbar across the top, sidebar
+  // (mini-month + Calendars filters) on the left, main pane (Week /
+  // Month / Year) on the right. Section position is unchanged — sits
+  // between _renderComingUpSection() and _renderCelebrationsSection()
+  // on the Activities tab.
+  //
+  // Categories: trip (teal) · plan (sage) · holiday (dusty blue) ·
+  // event (amber) · celebrate (rose). Each carries inline --cat /
+  // --cat-bg / --cat-ink tokens via a cat-<id> class (rules at the
+  // end of static styles).
+  //
+  // Plan items aren't snapshot-listened by home-screen normally — only
+  // <trip-planner> subscribes per-trip. For the Week time-grid to show
+  // timed plan items, we subscribe per visible-week trip while Week is
+  // active and tear down on view-change / disconnect. See _syncWeekPlanSubs.
+  // ════════════════════════════════════════════════════════════════
+
+  /** Toolbar Today button — branches by view: Week resets to today's
+   *  Sunday, Month resets _displayMonth to month-of-today, Year resets
+   *  _displayMonth to Jan 1 of current year (so the year-grid retitles). */
+  _resetCalToToday() {
+    const t = new Date();
+    if (this._calendarView === 'week') {
+      const sunday = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+      sunday.setDate(sunday.getDate() - sunday.getDay());
+      this._displayWeekStart = sunday;
+    } else if (this._calendarView === 'year') {
+      this._displayMonth = new Date(t.getFullYear(), 0, 1);
+    } else {
+      this._resetToToday();
+    }
+  }
+
+  /** Toolbar prev arrow — view-dependent. */
+  _calToolbarPrev() {
+    if (this._calendarView === 'week') {
+      const d = new Date(this._displayWeekStart);
+      d.setDate(d.getDate() - 7);
+      this._displayWeekStart = d;
+    } else if (this._calendarView === 'year') {
+      const y = this._displayMonth?.getFullYear() ?? new Date().getFullYear();
+      this._displayMonth = new Date(y - 1, 0, 1);
+    } else {
+      this._shiftMonth(-1);
+    }
+  }
+
+  /** Toolbar next arrow — view-dependent. */
+  _calToolbarNext() {
+    if (this._calendarView === 'week') {
+      const d = new Date(this._displayWeekStart);
+      d.setDate(d.getDate() + 7);
+      this._displayWeekStart = d;
+    } else if (this._calendarView === 'year') {
+      const y = this._displayMonth?.getFullYear() ?? new Date().getFullYear();
+      this._displayMonth = new Date(y + 1, 0, 1);
+    } else {
+      this._shiftMonth(1);
+    }
+  }
+
+  /** Trips whose [start, end] intersects the visible week — used to
+   *  scope the plan-item subscription set (§5 of design 28 brief). */
+  _visibleWeekTrips() {
+    const sunday = this._visibleWeekStart();
+    const sat = new Date(sunday);
+    sat.setDate(sunday.getDate() + 6);
+    sat.setHours(23, 59, 59, 999);
+    return this._circleTrips().filter((t) => {
+      if (!t.start || !t.end) return false;
+      const s = parseLocalDate(t.start);
+      const e = parseLocalDate(t.end);
+      return s && e && e >= sunday && s <= sat;
+    });
+  }
+
+  /** Attach planItem listeners for every visible-week trip; detach the
+   *  rest. Idempotent — safe to call on every render. */
+  _syncWeekPlanSubs() {
+    const wanted = new Set(this._visibleWeekTrips().map((t) => t.id));
+    // Detach trips no longer needed.
+    this._weekPlanUnsubs = (this._weekPlanUnsubs ?? []).filter(
+      ({ tripId, unsub }) => {
+        if (!wanted.has(tripId)) {
+          try { unsub(); } catch (err) { /* noop */ }
+          this._weekPlanItems.delete(tripId);
+          return false;
+        }
+        return true;
+      },
+    );
+    const have = new Set(this._weekPlanUnsubs.map((x) => x.tripId));
+    for (const tripId of wanted) {
+      if (have.has(tripId)) continue;
+      const unsub = dataStore.planItemsListener(tripId, (items) => {
+        // Copy the Map immutably so Lit notices the state change.
+        const next = new Map(this._weekPlanItems);
+        next.set(tripId, items ?? []);
+        this._weekPlanItems = next;
+      });
+      this._weekPlanUnsubs.push({ tripId, unsub });
+    }
+  }
+
+  /** Detach all plan listeners — called when Week deactivates + on
+   *  disconnectedCallback. */
+  _dropAllWeekPlanSubs() {
+    for (const { unsub } of this._weekPlanUnsubs ?? []) {
+      try { unsub(); } catch (err) { /* noop */ }
+    }
+    this._weekPlanUnsubs = [];
+    if (this._weekPlanItems.size) this._weekPlanItems = new Map();
+  }
+
+  /** Single dispatch for chip taps across Week + Month. Holiday +
+   *  unattached plan items are noops in v1. */
+  _openItem(item) {
+    if (!item || !item.ref) return;
+    if (item.cat === 'trip') {
+      this._openPlanner(item.ref);
+    } else if (item.cat === 'event' || item.cat === 'celebrate') {
+      this._eventFormEvent = item.ref;
+      this._eventFormOpen = true;
+    }
+  }
+
+  /** Dominant category for a calendar day — first match wins. Order
+   *  reflects mental model: trip is the headline, plans live inside.
+   *  Used by the mini-month + year-card dots. Plan items excluded
+   *  from dots intentionally (over-clutter). */
+  _dominantCategoryForDay(d) {
+    if (!d) return null;
+    const y = d.getFullYear();
+    const m = d.getMonth();
+    const day = d.getDate();
+    if (this._calFilters.trip) {
+      for (const t of this._circleTrips()) {
+        if (!t.start || !t.end) continue;
+        const s = parseLocalDate(t.start);
+        const e = parseLocalDate(t.end);
+        if (!s || !e) continue;
+        if (d >= s && d <= e) return 'trip';
+      }
+    }
+    if (this._calFilters.holiday) {
+      for (const h of this.holidays ?? []) {
+        const hd = parseLocalDate(h.date);
+        if (hd && hd.getFullYear() === y && hd.getMonth() === m && hd.getDate() === day) {
+          return 'holiday';
+        }
+      }
+    }
+    // Events split: birthday/anniversary → celebrate; custom → event.
+    let sawCeleb = false;
+    let sawEvent = false;
+    for (const ev of this._filteredEvents()) {
+      const ed = parseLocalDate(ev.date);
+      if (!ed || ed.getFullYear() !== y || ed.getMonth() !== m || ed.getDate() !== day) continue;
+      const cat = (ev.type === 'birthday' || ev.type === 'anniversary') ? 'celebrate' : 'event';
+      if (cat === 'celebrate') sawCeleb = true;
+      else sawEvent = true;
+    }
+    if (sawCeleb && this._calFilters.celebrate) return 'celebrate';
+    if (sawEvent && this._calFilters.event) return 'event';
+    return null;
+  }
+
+  /** Toolbar — Today / prev / next / period block on the left;
+   *  view-switcher segmented pill + Add-event CTA on the right. */
+  _renderCalToolbar(view, today) {
+    let title = '';
+    let subtitle = '';
+    if (view === 'week') {
+      const s = new Date(this._displayWeekStart);
+      const e = new Date(s);
+      e.setDate(s.getDate() + 6);
+      const fmt = (d) => d.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' });
+      const sameMonth = s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
+      title = sameMonth
+        ? `${fmt(s)} – ${e.getDate()}`
+        : `${fmt(s)} – ${fmt(e)}`;
+      subtitle = String(s.getFullYear());
+    } else if (view === 'year') {
+      const y = this._displayMonth?.getFullYear() ?? today.getFullYear();
+      title = String(y);
+      subtitle = 'Tap a month to open it';
+    } else {
+      const d = this._displayMonth ?? today;
+      title = d.toLocaleString('en-GB', { month: 'long', year: 'numeric' });
+      subtitle = String(d.getFullYear());
+    }
+    const views = [
+      { id: 'week', label: 'Week' },
+      { id: 'month', label: 'Month' },
+      { id: 'year', label: 'Year' },
+    ];
     return html`
-        <section class="cal-section">
-          <glass-panel padding="md" variant="strong" stretch>
-            <!-- Flex column: toggle is auto-height, view fills the
-                 remaining 480 - toggle height. cal-view-pane has
-                 height:100% + min-height:0 so its inner grids /
-                 strips can size to fit. -->
-            <div class="cal-inner">
-              <div class="cal-view-toggle" role="tablist" aria-label="Calendar view">
-                ${[
-                  { id: 'week', label: 'Week' },
-                  { id: 'month', label: 'Month' },
-                  { id: 'year', label: 'Year' },
-                ].map(
-                  (opt) => html`
-                    <button
-                      role="tab"
-                      aria-selected=${v === opt.id ? 'true' : 'false'}
-                      class="cal-view-btn ${v === opt.id ? 'on' : ''}"
-                      @click=${() => (this._calendarView = opt.id)}
-                    >
-                      ${opt.label}
-                    </button>
-                  `,
-                )}
-              </div>
-              <div class="cal-view-pane">
-                ${v === 'week'
-                  ? this._renderWeekly()
-                  : v === 'year'
-                  ? html`
-                      <div class="cal-head">
-                        <h3>${this._displayMonth?.getFullYear() ?? today.getFullYear()}</h3>
-                      </div>
-                      <yearly-view
-                        .year=${this._displayMonth?.getFullYear() ?? today.getFullYear()}
-                        .tripDays=${this._tripDensityByDay(
-                          this._displayMonth?.getFullYear() ?? today.getFullYear(),
-                        )}
-                        .trips=${this._circleTrips()}
-                        .events=${this._liveEvents()}
-                        .holidays=${this.holidays ?? []}
-                        .today=${today}
-                        @month-select=${(e) => {
-                          this._jumpToMonth(e.detail.year, e.detail.month);
-                          this._calendarView = 'month';
-                        }}
-                      ></yearly-view>
-                    `
-                  : this._renderMonthly()}
-              </div>
-            </div>
-          </glass-panel>
-        </section>
+      <div class="cal-tb">
+        <div class="cal-tb-l">
+          <button class="cal-today-btn" @click=${() => this._resetCalToToday()}>Today</button>
+          <div class="cal-nav">
+            <button aria-label="Previous" @click=${() => this._calToolbarPrev()}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button aria-label="Next" @click=${() => this._calToolbarNext()}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <div class="cal-period">
+            <span class="pt">${title}</span>
+            <span class="ps">${subtitle}</span>
+          </div>
+        </div>
+        <div class="cal-tb-r">
+          <div class="cal-vswitch" role="tablist" aria-label="Calendar view">
+            ${views.map(
+              (opt) => html`
+                <button
+                  role="tab"
+                  aria-selected=${view === opt.id ? 'true' : 'false'}
+                  class=${view === opt.id ? 'on' : ''}
+                  @click=${() => (this._calendarView = opt.id)}
+                >${opt.label}</button>
+              `,
+            )}
+          </div>
+          <button class="cal-add" @click=${() => this._openCreate()}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add event
+          </button>
+        </div>
+      </div>
     `;
   }
 
-  /** 2026-05-22 — compact 7-day strip starting on Sunday of THIS
-   *  week. Each day shows date + day-of-week + a stacked list of the
-   *  actual trips/events landing on it (chips, color-coded). Today
-   *  highlighted. Tap a day → jump to that month + flip to Month view.
-   *  2026-05-23 — promoted from dot-density to inline item titles so
-   *  the user can actually see what's on each day. */
-  _renderWeekly() {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    // Anchor on the Sunday at-or-before today; mirrors Portal's
-    // existing monthly grid (Sunday-first). User-locale week-start
-    // is a later polish — for now Sunday-first matches Month view.
-    const sunday = new Date(today);
-    sunday.setDate(today.getDate() - today.getDay());
-    const days = [];
-    for (let i = 0; i < 7; i++) {
-      const d = new Date(sunday);
-      d.setDate(sunday.getDate() + i);
-      days.push(d);
+  /** Mini-month inside the sidebar. Read-only navigation header
+   *  (prev/next pair) + Sun-first DOW row + 6-row date grid with
+   *  dominant-category dots. Click a day → jump to Month view. */
+  _renderCalMini(today) {
+    const disp = this._displayMonth ?? today;
+    const y = disp.getFullYear();
+    const m = disp.getMonth();
+    const monthName = disp.toLocaleString('en-GB', { month: 'long', year: 'numeric' });
+    const firstDow = new Date(y, m, 1).getDay(); // 0 = Sun
+    const daysInMonth = new Date(y, m + 1, 0).getDate();
+    const prevMonthDays = new Date(y, m, 0).getDate();
+    const cells = [];
+    // Leading muted days from prior month.
+    for (let i = firstDow - 1; i >= 0; i--) {
+      const d = prevMonthDays - i;
+      cells.push({ day: d, muted: true, real: new Date(y, m - 1, d) });
     }
-    const isSameDay = (a, b) =>
+    for (let d = 1; d <= daysInMonth; d++) {
+      cells.push({ day: d, muted: false, real: new Date(y, m, d) });
+    }
+    // Pad to 42 with next-month days so the grid is stable height.
+    let nextDay = 1;
+    while (cells.length < 42) {
+      cells.push({ day: nextDay, muted: true, real: new Date(y, m + 1, nextDay) });
+      nextDay++;
+    }
+    const isSame = (a, b) =>
       a.getFullYear() === b.getFullYear() &&
       a.getMonth() === b.getMonth() &&
       a.getDate() === b.getDate();
-    /** Collect every trip-day + event landing on `day` as a flat list
-     *  of { title, type } chips for inline rendering. Trip span days
-     *  share the trip's title; events show theirs. */
-    const itemsFor = (day) => {
-      const key = day.toISOString().slice(0, 10);
-      const out = [];
-      for (const t of this._circleTrips()) {
-        if (!t.start || !t.end) continue;
-        if (key >= String(t.start) && key <= String(t.end)) {
-          out.push({ title: t.title || 'Trip', type: 'trip', id: t.id });
-        }
-      }
-      for (const e of this._liveEvents()) {
-        if (!e.date) continue;
-        if (String(e.date) === key) {
-          out.push({ title: e.title || 'Event', type: 'event', id: e.id });
-        }
-      }
-      return out;
-    };
     return html`
-      <div class="cal-head">
-        <h3>This week</h3>
-        <div style="font-size:12px;color:var(--text-tertiary);">
-          ${sunday.toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}
-          –
-          ${days[6].toLocaleDateString('en-GB', { month: 'short', day: 'numeric' })}
+      <div class="cal-mini">
+        <div class="cal-mini-top">
+          <span class="mm">${monthName}</span>
+          <div class="cal-mini-arrows">
+            <button @click=${() => this._shiftMonth(-1)} aria-label="Previous month">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button @click=${() => this._shiftMonth(1)} aria-label="Next month">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
         </div>
-      </div>
-      <div class="cal-week-strip cal-week-strip-detailed">
-        ${days.map((d) => {
-          const items = itemsFor(d);
-          const isToday = isSameDay(d, today);
-          return html`
-            <button
-              class="cal-week-day cal-week-day-detailed ${isToday ? 'today' : ''}"
+        <div class="cal-mini-dow">
+          <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+        </div>
+        <div class="cal-mini-grid">
+          ${cells.map((c) => {
+            const isToday = isSame(c.real, today);
+            const dom = isToday ? null : this._dominantCategoryForDay(c.real);
+            const cls = [
+              'cal-mini-d',
+              c.muted ? 'muted' : '',
+              isToday ? 'today' : '',
+            ].filter(Boolean).join(' ');
+            return html`<div
+              class=${cls}
               @click=${() => {
-                this._jumpToMonth(d.getFullYear(), d.getMonth());
+                this._displayMonth = new Date(c.real.getFullYear(), c.real.getMonth(), 1);
                 this._calendarView = 'month';
               }}
-              aria-label="${d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}, ${items.length} ${items.length === 1 ? 'item' : 'items'}"
             >
-              <div class="cal-week-head">
-                <span class="cal-week-dow">${d.toLocaleDateString('en-GB', { weekday: 'short' }).slice(0, 3)}</span>
-                <span class="cal-week-num">${d.getDate()}</span>
-              </div>
-              <div class="cal-week-items">
-                ${items.length === 0
-                  ? html`<span class="cal-week-empty">—</span>`
-                  : items.slice(0, 4).map(
-                      (it) => html`<span class="cal-week-chip ${it.type}" title=${it.title}>${it.title}</span>`,
-                    )}
-                ${items.length > 4
-                  ? html`<span class="cal-week-more">+${items.length - 4} more</span>`
+              ${c.day}
+              ${dom ? html`<span class=${'dot cat-' + dom}></span>` : ''}
+            </div>`;
+          })}
+        </div>
+      </div>
+    `;
+  }
+
+  /** Filter chips — 5 categories, click toggles in/out of _calFilters.
+   *  Counts show what's currently in the data (week-only for plans). */
+  _renderCalFilters() {
+    const trips = this._circleTrips();
+    const events = this._filteredEvents();
+    const customEvents = events.filter((e) => e.type === 'custom');
+    const celebEvents = events.filter(
+      (e) => e.type === 'birthday' || e.type === 'anniversary',
+    );
+    const planTotal = Array.from(this._weekPlanItems.values()).reduce(
+      (n, arr) => n + (Array.isArray(arr) ? arr.length : 0),
+      0,
+    );
+    const yearForHolidays =
+      this._displayMonth?.getFullYear() ?? new Date().getFullYear();
+    const holidays = (this.holidays ?? []).filter(
+      (h) => parseLocalDate(h.date)?.getFullYear() === yearForHolidays,
+    );
+    const rows = [
+      { id: 'trip', label: 'Trips', count: trips.length },
+      { id: 'plan', label: 'Plans', count: planTotal },
+      { id: 'holiday', label: 'Holidays', count: holidays.length },
+      { id: 'event', label: 'Events', count: customEvents.length },
+      { id: 'celebrate', label: 'Celebrations', count: celebEvents.length },
+    ];
+    return html`
+      <div class="cal-side-h">Calendars</div>
+      <div class="cal-filt-list">
+        ${rows.map((r) => {
+          const on = this._calFilters[r.id] !== false;
+          return html`
+            <div
+              class=${'cal-filt cat-' + r.id + (on ? '' : ' off')}
+              @click=${() =>
+                (this._calFilters = { ...this._calFilters, [r.id]: !on })}
+              role="checkbox"
+              aria-checked=${on ? 'true' : 'false'}
+              tabindex="0"
+              @keydown=${(e) => {
+                if (e.key === ' ' || e.key === 'Enter') {
+                  e.preventDefault();
+                  this._calFilters = { ...this._calFilters, [r.id]: !on };
+                }
+              }}
+            >
+              <span class="sw">
+                ${on
+                  ? html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
                   : ''}
-              </div>
-            </button>
+              </span>
+              <span class="nm">${r.label}</span>
+              <span class="ct">${r.count}</span>
+            </div>
           `;
         })}
       </div>
     `;
   }
+
+  /** Greedy lane assignment — items get the lowest lane index whose
+   *  last-placed item ended before this one starts. Used by Week +
+   *  Month all-day rows. */
+  _assignLanes(items) {
+    const sorted = [...items].sort(
+      (a, b) => a.colStart - b.colStart || b.span - a.span,
+    );
+    const lanes = []; // lanes[i] = next-free colStart
+    for (const it of sorted) {
+      let placed = false;
+      for (let i = 0; i < lanes.length; i++) {
+        if (lanes[i] <= it.colStart) {
+          it.lane = i + 1;
+          lanes[i] = it.colStart + it.span;
+          placed = true;
+          break;
+        }
+      }
+      if (!placed) {
+        it.lane = lanes.length + 1;
+        lanes.push(it.colStart + it.span);
+      }
+    }
+    return sorted;
+  }
+
+  /** Week view — 7 days × hour grid 8 AM → 8 PM, 12 rows at 52px.
+   *  All-day lane above the grid carries trips/events/holidays;
+   *  timed plan items render inside the day columns. */
+  _renderCalWeek(today) {
+    const sunday = new Date(this._displayWeekStart);
+    sunday.setHours(0, 0, 0, 0);
+    const sat = new Date(sunday);
+    sat.setDate(sunday.getDate() + 6);
+    sat.setHours(23, 59, 59, 999);
+    const days = Array.from({ length: 7 }, (_, i) => {
+      const d = new Date(sunday);
+      d.setDate(sunday.getDate() + i);
+      return d;
+    });
+    const isSame = (a, b) =>
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate();
+
+    // ── All-day items ───────────────────────────────────────
+    const allDay = [];
+    if (this._calFilters.trip) {
+      for (const t of this._circleTrips()) {
+        if (!t.start || !t.end) continue;
+        const s = parseLocalDate(t.start);
+        const e = parseLocalDate(t.end);
+        if (!s || !e) continue;
+        if (e < sunday || s > sat) continue;
+        const clipS = s < sunday ? sunday : s;
+        const clipE = e > sat ? sat : e;
+        const colStart = clipS.getDay() + 2; // col 1 = gutter, col 2 = Sun
+        const dayDiff = Math.round((clipE - clipS) / (24 * 60 * 60 * 1000));
+        const span = Math.max(1, dayDiff + 1);
+        allDay.push({
+          cat: 'trip',
+          title: t.title || 'Trip',
+          colStart,
+          span,
+          ref: t,
+        });
+      }
+    }
+    for (const ev of this._filteredEvents()) {
+      const d = parseLocalDate(ev.date);
+      if (!d) continue;
+      if (d < sunday || d > sat) continue;
+      const cat = (ev.type === 'birthday' || ev.type === 'anniversary')
+        ? 'celebrate' : 'event';
+      if (!this._calFilters[cat]) continue;
+      allDay.push({
+        cat,
+        title: ev.title || (cat === 'celebrate' ? 'Celebration' : 'Event'),
+        colStart: d.getDay() + 2,
+        span: 1,
+        ref: ev,
+      });
+    }
+    if (this._calFilters.holiday) {
+      for (const h of this.holidays ?? []) {
+        const d = parseLocalDate(h.date);
+        if (!d) continue;
+        if (d < sunday || d > sat) continue;
+        allDay.push({
+          cat: 'holiday',
+          title: h.title || 'Holiday',
+          colStart: d.getDay() + 2,
+          span: 1,
+          ref: h,
+        });
+      }
+    }
+    // All-day plan items (time === '') join the lane too.
+    if (this._calFilters.plan) {
+      for (const [tripId, items] of this._weekPlanItems.entries()) {
+        for (const it of items ?? []) {
+          if (!it || !it.day) continue;
+          const d = parseLocalDate(it.day);
+          if (!d || d < sunday || d > sat) continue;
+          if (it.time && String(it.time).trim() !== '') continue; // timed → grid
+          allDay.push({
+            cat: 'plan',
+            title: it.title || 'Plan',
+            colStart: d.getDay() + 2,
+            span: 1,
+            ref: { ...it, tripId },
+          });
+        }
+      }
+    }
+    const lanedAllDay = this._assignLanes(allDay).slice(0, 60); // safety cap
+
+    // ── Timed plan items ────────────────────────────────────
+    const HOURS = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+    const ROW = 52;
+    const fmtTime = (h, m) => {
+      const ampm = h < 12 ? 'AM' : 'PM';
+      const hh = ((h + 11) % 12) + 1;
+      return `${hh}:${String(m).padStart(2, '0')} ${ampm}`;
+    };
+    const timedByDay = Array.from({ length: 7 }, () => []);
+    if (this._calFilters.plan) {
+      for (const [tripId, items] of this._weekPlanItems.entries()) {
+        for (const it of items ?? []) {
+          if (!it || !it.day) continue;
+          const d = parseLocalDate(it.day);
+          if (!d || d < sunday || d > sat) continue;
+          const timeStr = String(it.time ?? '').trim();
+          if (!timeStr) continue;
+          const m = timeStr.match(/^(\d{1,2}):(\d{2})/);
+          if (!m) continue;
+          const hr = Number(m[1]);
+          const mn = Number(m[2]);
+          if (hr < 8 || hr >= 20) continue; // outside the visible window
+          const top = (hr - 8) * ROW + (mn / 60) * ROW;
+          const dur = Number.isFinite(it.durationMins) ? it.durationMins : 60;
+          const height = Math.max(24, (dur / 60) * ROW);
+          const endMin = hr * 60 + mn + dur;
+          const endH = Math.floor(endMin / 60);
+          const endM = endMin % 60;
+          const timeLabel = `${fmtTime(hr, mn)} – ${fmtTime(endH, endM)}`;
+          timedByDay[d.getDay()].push({
+            cat: 'plan',
+            title: it.title || 'Plan',
+            top, height, timeLabel,
+            ref: { ...it, tripId },
+          });
+        }
+      }
+    }
+
+    // ── Now-line ────────────────────────────────────────────
+    const now = new Date();
+    let nowCol = -1;
+    let nowTop = null;
+    if (now >= sunday && now <= sat) {
+      const nowH = now.getHours();
+      const nowM = now.getMinutes();
+      if (nowH >= 8 && nowH < 20) {
+        nowCol = now.getDay();
+        nowTop = (nowH - 8) * ROW + (nowM / 60) * ROW;
+      }
+    }
+
+    const allDayHeight = Math.max(
+      1,
+      Math.min(3, lanedAllDay.reduce((mx, it) => Math.max(mx, it.lane), 0)),
+    );
+
+    return html`
+      <div class="cal-week">
+        <div class="wk-head">
+          <div class="gut"></div>
+          ${days.map((d) => {
+            const isToday = isSame(d, today);
+            const dw = d.toLocaleDateString('en-GB', { weekday: 'short' });
+            return html`<div class=${'wk-h' + (isToday ? ' today' : '')}>
+              <div class="dw">${dw}</div>
+              <div class="nm">${d.getDate()}</div>
+            </div>`;
+          })}
+        </div>
+        <div
+          class="cal-allday"
+          style="grid-template-rows: repeat(${allDayHeight}, 23px);"
+        >
+          <div class="ad-lbl">All-day</div>
+          ${lanedAllDay
+            .filter((it) => it.lane <= 3)
+            .map(
+              (it) => html`<div
+                class=${'ad cat-' + it.cat}
+                style=${`grid-column:${it.colStart} / span ${it.span}; grid-row:${it.lane};`}
+                title=${it.title}
+                @click=${() => this._openItem(it)}
+              >${it.title}</div>`,
+            )}
+        </div>
+        <div class="cal-tg">
+          <div class="tg-gut">
+            ${HOURS.map((h) => {
+              const ampm = h < 12 ? 'AM' : 'PM';
+              const hh = ((h + 11) % 12) + 1;
+              return html`<div class="tg-hr">${hh} ${ampm}</div>`;
+            })}
+          </div>
+          ${days.map((d, idx) => {
+            const isToday = isSame(d, today);
+            const showNow = idx === nowCol && nowTop != null;
+            return html`<div class=${'tg-day' + (isToday ? ' today' : '')}>
+              ${showNow
+                ? html`<div class="nowline" style=${`top:${nowTop}px;`}></div>`
+                : ''}
+              ${timedByDay[idx].map(
+                (ev) => html`<div
+                  class=${'tev cat-' + ev.cat}
+                  style=${`top:${ev.top}px; height:${ev.height}px;`}
+                  title=${ev.title}
+                  @click=${() => this._openItem(ev)}
+                >
+                  <div class="tt">${ev.title}</div>
+                  <div class="tm">${ev.timeLabel}</div>
+                </div>`,
+              )}
+            </div>`;
+          })}
+        </div>
+      </div>
+    `;
+  }
+
+  /** Month view — 7-col Sunday-first, 6 week rows for stable height.
+   *  Trip bars span across week-internal day ranges; events/holidays
+   *  are single-day chips. Lane assignment caps at 3 + N more. */
+  _renderCalMonth(today) {
+    const disp = this._displayMonth ?? today;
+    const y = disp.getFullYear();
+    const m = disp.getMonth();
+    const firstDow = new Date(y, m, 1).getDay();
+    const daysInMonth = new Date(y, m + 1, 0).getDate();
+    const prevMonthDays = new Date(y, m, 0).getDate();
+
+    // Build the 6 week rows (each a 7-day array of {real, muted}).
+    const days42 = [];
+    for (let i = firstDow - 1; i >= 0; i--) {
+      const d = prevMonthDays - i;
+      days42.push({ real: new Date(y, m - 1, d), muted: true });
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+      days42.push({ real: new Date(y, m, d), muted: false });
+    }
+    let nextDay = 1;
+    while (days42.length < 42) {
+      days42.push({ real: new Date(y, m + 1, nextDay), muted: true });
+      nextDay++;
+    }
+    const weeks = [];
+    for (let i = 0; i < 6; i++) weeks.push(days42.slice(i * 7, i * 7 + 7));
+
+    const isSame = (a, b) =>
+      a.getFullYear() === b.getFullYear() &&
+      a.getMonth() === b.getMonth() &&
+      a.getDate() === b.getDate();
+    const dayDiff = (a, b) =>
+      Math.round(
+        (new Date(a.getFullYear(), a.getMonth(), a.getDate()) -
+          new Date(b.getFullYear(), b.getMonth(), b.getDate())) /
+        (24 * 60 * 60 * 1000),
+      );
+
+    // Per-week item buckets.
+    const allTrips = this._circleTrips();
+    const allEvents = this._filteredEvents();
+    const allHolidays = this.holidays ?? [];
+
+    return html`
+      <div class="cal-month">
+        <div class="m-dow">
+          <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+        <div class="m-grid">
+          ${weeks.map((week) => {
+            const wkStart = week[0].real;
+            const wkEnd = week[6].real;
+            const items = [];
+            if (this._calFilters.trip) {
+              for (const t of allTrips) {
+                if (!t.start || !t.end) continue;
+                const s = parseLocalDate(t.start);
+                const e = parseLocalDate(t.end);
+                if (!s || !e) continue;
+                if (e < wkStart || s > wkEnd) continue;
+                const cs = Math.max(0, dayDiff(s, wkStart));
+                const ce = Math.min(6, dayDiff(e, wkStart));
+                items.push({
+                  cat: 'trip',
+                  title: t.title || 'Trip',
+                  colStart: cs + 1,
+                  span: ce - cs + 1,
+                  ref: t,
+                });
+              }
+            }
+            for (const ev of allEvents) {
+              const d = parseLocalDate(ev.date);
+              if (!d) continue;
+              if (d < wkStart || d > wkEnd) continue;
+              const cat = (ev.type === 'birthday' || ev.type === 'anniversary')
+                ? 'celebrate' : 'event';
+              if (!this._calFilters[cat]) continue;
+              items.push({
+                cat,
+                title: ev.title || (cat === 'celebrate' ? 'Celebration' : 'Event'),
+                colStart: dayDiff(d, wkStart) + 1,
+                span: 1,
+                ref: ev,
+              });
+            }
+            if (this._calFilters.holiday) {
+              for (const h of allHolidays) {
+                const d = parseLocalDate(h.date);
+                if (!d) continue;
+                if (d < wkStart || d > wkEnd) continue;
+                items.push({
+                  cat: 'holiday',
+                  title: h.title || 'Holiday',
+                  colStart: dayDiff(d, wkStart) + 1,
+                  span: 1,
+                  ref: h,
+                });
+              }
+            }
+            const laned = this._assignLanes(items);
+            const visible = laned.filter((it) => it.lane <= 3);
+            const overflow = laned.filter((it) => it.lane > 3);
+            // Per-column overflow counts → render "+N more" in lane 3
+            // (covering the 4th+ slot).
+            const overflowByCol = new Map();
+            for (const ov of overflow) {
+              for (let c = ov.colStart; c < ov.colStart + ov.span; c++) {
+                overflowByCol.set(c, (overflowByCol.get(c) ?? 0) + 1);
+              }
+            }
+            return html`<div class="wkrow">
+              <div class="dnums">
+                ${week.map((c) => {
+                  const isToday = isSame(c.real, today);
+                  const cls = [
+                    'dcell',
+                    c.muted ? 'muted' : '',
+                    isToday ? 'today' : '',
+                  ].filter(Boolean).join(' ');
+                  return html`<div class=${cls}>
+                    <span class="dn">${c.real.getDate()}</span>
+                  </div>`;
+                })}
+              </div>
+              <div class="devents">
+                ${visible.map(
+                  (it) => html`<div
+                    class=${'ev cat-' + it.cat + (it.span > 1 ? ' span' : '')}
+                    style=${`grid-column:${it.colStart} / span ${it.span}; grid-row:${it.lane};`}
+                    title=${it.title}
+                    @click=${() => this._openItem(it)}
+                  >
+                    ${it.span === 1 ? html`<span class="ed"></span>` : ''}${it.title}
+                  </div>`,
+                )}
+                ${Array.from(overflowByCol.entries()).map(
+                  ([col, n]) => html`<div
+                    class="evmore"
+                    style=${`grid-column:${col}; grid-row:3;`}
+                  >+${n} more</div>`,
+                )}
+              </div>
+            </div>`;
+          })}
+        </div>
+      </div>
+    `;
+  }
+
+  /** Year view — 12 mini-month cards. Click → jump to Month view. */
+  _renderCalYear(today) {
+    const y = this._displayMonth?.getFullYear() ?? today.getFullYear();
+    return html`
+      <div class="cal-year">
+        ${Array.from({ length: 12 }, (_, m) => this._renderYearMonthCard(y, m, today))}
+      </div>
+    `;
+  }
+
+  _renderYearMonthCard(y, m, today) {
+    const isCur = today.getFullYear() === y && today.getMonth() === m;
+    const monthName = new Date(y, m, 1).toLocaleString('en-GB', { month: 'long' });
+    const firstDow = new Date(y, m, 1).getDay();
+    const daysInMonth = new Date(y, m + 1, 0).getDate();
+    const cells = [];
+    for (let i = 0; i < firstDow; i++) cells.push(null);
+    for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+    while (cells.length < 42) cells.push(null);
+    return html`
+      <button
+        class=${'ym' + (isCur ? ' cur' : '')}
+        @click=${() => {
+          this._displayMonth = new Date(y, m, 1);
+          this._calendarView = 'month';
+        }}
+      >
+        <div class="ym-name">${monthName}</div>
+        <div class="ym-dow">
+          <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+        </div>
+        <div class="ym-days">
+          ${cells.map((d) => {
+            if (d == null) return html`<div class="ym-d e">0</div>`;
+            const real = new Date(y, m, d);
+            const isToday =
+              today.getFullYear() === y && today.getMonth() === m && today.getDate() === d;
+            const dom = isToday ? null : this._dominantCategoryForDay(real);
+            return html`<div class=${'ym-d' + (isToday ? ' today' : '')}>
+              ${d}
+              ${dom ? html`<i class=${'yd cat-' + dom}></i>` : ''}
+            </div>`;
+          })}
+        </div>
+      </button>
+    `;
+  }
+
+  _renderCalendarsSection() {
+    const today = new Date();
+    const v = this._calendarView ?? 'week';
+    return html`
+      <section class="cal-section">
+        <glass-panel padding="none" variant="strong" stretch>
+          <div class="cal-ws">
+            ${this._renderCalToolbar(v, today)}
+            <div class="cal-ws-divider"></div>
+            <div class="cal-ws-body">
+              <aside class="cal-side">
+                ${this._renderCalMini(today)}
+                ${this._renderCalFilters()}
+              </aside>
+              <div class="cal-main">
+                ${v === 'week' ? this._renderCalWeek(today) : ''}
+                ${v === 'month' ? this._renderCalMonth(today) : ''}
+                ${v === 'year' ? this._renderCalYear(today) : ''}
+              </div>
+            </div>
+          </div>
+        </glass-panel>
+      </section>
+    `;
+  }
+
 
   _renderCelebrationsSection() {
     const filteredEvents = this._filteredEvents();

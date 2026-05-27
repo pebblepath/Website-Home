@@ -2,7 +2,6 @@ import './components/glass-panel.js';
 import './components/glass-button.js';
 import './components/cairn-mark.js';
 import './components/pebble-icon.js';
-import './components/yearly-view.js';
 import './components/trip-form.js';
 import './components/event-form.js';
 import './components/family-circle.js';
