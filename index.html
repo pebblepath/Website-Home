@@ -2044,6 +2044,76 @@
      ≥769px @media block. */
   .ms-caption { display: none; }
 
+  /* 2026-05-21 — Screenshot lightbox. Default closed: invisible +
+     pointer-events disabled so it doesn't trap clicks. .is-open
+     activates it (added by JS on slide click). Backdrop click +
+     ESC + ✕ button all close. Image gets a soft glow shadow and
+     rounded corners that mimic the in-app phone frame. */
+  .ms-lightbox {
+    position: fixed; inset: 0;
+    background: rgba(15, 32, 35, 0.92);
+    display: flex; align-items: center; justify-content: center;
+    padding: 40px;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.22s ease, visibility 0s linear 0.22s;
+  }
+  .ms-lightbox.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.22s ease, visibility 0s linear 0s;
+  }
+  .ms-lightbox-stage {
+    position: relative;
+    max-width: 90vw;
+    max-height: 86vh;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;  /* backdrop click reaches .ms-lightbox */
+  }
+  .ms-lightbox-img {
+    display: block;
+    max-width: 100%;
+    max-height: 86vh;
+    width: auto; height: auto;
+    border-radius: 24px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06);
+    pointer-events: auto;  /* clicking the image itself doesn't close */
+    transform: scale(0.96);
+    transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .ms-lightbox.is-open .ms-lightbox-img { transform: scale(1); }
+  .ms-lightbox-close {
+    position: fixed; top: 24px; right: 24px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.22);
+    color: #fff;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, transform 0.15s, border-color 0.15s;
+    z-index: 1;
+  }
+  .ms-lightbox-close:hover {
+    background: rgba(255,255,255,0.22);
+    border-color: rgba(255,255,255,0.45);
+    transform: scale(1.06);
+  }
+  .ms-lightbox-close:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+  .ms-lightbox-close svg { width: 20px; height: 20px; }
+  @media (max-width: 768px) {
+    .ms-lightbox { padding: 20px; }
+    .ms-lightbox-close { top: 16px; right: 16px; width: 40px; height: 40px; }
+  }
+  /* Body scroll lock when lightbox is open. */
+  body.is-lightbox-open { overflow: hidden; }
+
   /* ============================================================
      DESKTOP CAROUSEL (≥769px) — THUMBNAIL STRIP pattern (v2).
      All 6 screenshots visible side-by-side. The selected one is full
@@ -2103,7 +2173,9 @@
       scroll-snap-stop: always;
       display: block;              /* phone is the only visible content */
       padding: 0;
-      cursor: pointer;
+      /* zoom-in cursor signals "click to open in viewer" — added
+         alongside the lightbox 2026-05-21. */
+      cursor: zoom-in;
       /* 2026-05-21 — bumped non-active opacity 0.42 → 0.65 so the
          screenshots stay readable even when faded; hover 0.7 → 0.85
          keeps the affordance gradient (default < hover < active). */
@@ -2116,7 +2188,8 @@
     .ms-slide.is-active {
       opacity: 1;
       transform: scale(1.06);
-      cursor: default;
+      /* Active slide stays click-to-zoom — clicking opens the lightbox. */
+      cursor: zoom-in;
       z-index: 2;
       position: relative;          /* lets z-index take effect under snap-scroll */
     }
@@ -2588,6 +2661,10 @@
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   animation:brain-orbpulse 4.6s ease-in-out infinite;
 }
+/* 2026-05-21 — Pebble icon lifted 10 px so it reads "above" the
+   wordmark inside the orb. Transform-only shift keeps layout
+   intact (the orb-name stays at its original position). */
+.brain-sec .brain-orb svg{ transform:translateY(-10px); }
 .brain-sec .brain-orb-name{
   font-family:'Fredoka',sans-serif; font-weight:600; font-size:17px;
   color:#FFFFFF; margin-top:3px;
@@ -2860,10 +2937,18 @@
           <radialGradient id="brainDotG" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stop-color="#E6FBF6"/><stop offset="100%" stop-color="#7DD4C8"/>
           </radialGradient>
-          <linearGradient id="brainLineG" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="rgba(125,212,200,.06)"/>
-            <stop offset="100%" stop-color="rgba(125,212,200,.6)"/>
-          </linearGradient>
+          <!-- 2026-05-21 — switched from linearGradient (which had a
+               fixed direction relative to each path's bounding box, so
+               some paths read backwards) to a radialGradient centered
+               on Pebble (cx=460, cy=238 in userSpaceOnUse coords). All
+               6 lines now share one origin point: full opacity at the
+               Pebble center, fading to fully transparent at radius 370
+               (≈ the farthest input icon). The lines visually emanate
+               outward from Pebble and ghost away near the icon ends. -->
+          <radialGradient id="brainLineG" cx="460" cy="238" r="370" gradientUnits="userSpaceOnUse">
+            <stop offset="0%"   stop-color="rgba(125,212,200,1)"/>
+            <stop offset="100%" stop-color="rgba(125,212,200,0)"/>
+          </radialGradient>
         </defs>
         <g stroke="url(#brainLineG)" stroke-width="1.7">
           <path id="brP1" d="M150 150 Q300 200 460 238"/>
@@ -2902,7 +2987,10 @@
       <div class="brain-ilabel" style="left:770px;top:90px;">Tomorrow's weather</div>
 
       <div class="brain-ico" style="left:108px;top:286px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M9 7V5h6v2"/><path d="M3 12h18"/></svg></div>
+        <!-- 2026-05-21 — airplane (Lucide-style "send" paper-plane).
+             Replaces the previous suitcase glyph; airplane reads
+             more directly as travel/family-trip. -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg></div>
       <div class="brain-ilabel" style="left:108px;top:226px;">Family trip</div>
 
       <div class="brain-ico" style="left:812px;top:286px;">
@@ -3707,23 +3795,18 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
     });
   });
 
-  // Click any slide thumbnail → select it (desktop thumbnail-strip pattern).
-  // On mobile this is also benign — tapping a slide centers it via
-  // scrollIntoView; the observer then fires setActive on the new
-  // most-visible slide (so this direct call is just a fast-path).
-  //
-  // Hover (desktop only): mouseenter → setActive after a 160 ms
-  // intent delay so the active doesn't churn as the mouse glides
-  // across the strip. mouseleave during the delay cancels. Touch
-  // devices never fire mouseenter, so this is a pure desktop
-  // enhancement — click still works as the canonical interaction
-  // and as the fallback. Added 2026-05-21 per dogfood feedback
-  // ("can we make the carousel zoom/swap with a hover over").
+  // Click any slide thumbnail → select it + open the lightbox.
+  // Hover (desktop only): mouseenter → setActive after a 160 ms intent
+  // delay (so active doesn't churn as the mouse glides across the strip).
+  // Touch devices never fire mouseenter, so hover-select is a pure
+  // desktop enhancement; click still works as the canonical interaction
+  // and as the mobile path. Added 2026-05-21.
   slides.forEach((slide, i) => {
     slide.addEventListener('click', () => {
       slide.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
       setActive(i);
       hideHint();
+      openLightbox(i);            // 2026-05-21 — also open the viewer
     });
     let hoverTimer = null;
     slide.addEventListener('mouseenter', () => {
@@ -3739,6 +3822,70 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
         hoverTimer = null;
       }
     });
+  });
+
+  // Screenshot lightbox — opens the clicked slide's image full-size.
+  // Backdrop click / ✕ button / ESC all close. ←/→ arrow keys step
+  // between slides while the lightbox is open. Body scroll is locked
+  // (is-lightbox-open class). Added 2026-05-21.
+  const lightbox = document.getElementById('msLightbox');
+  const lightboxImg = document.getElementById('msLightboxImg');
+  const lightboxClose = document.getElementById('msLightboxClose');
+  let lightboxIdx = -1;
+  let lightboxLastFocus = null;
+
+  function openLightbox(i) {
+    if (!lightbox || !lightboxImg || i < 0 || i >= slides.length) return;
+    const img = slides[i].querySelector('img');
+    if (!img) return;
+    lightboxImg.src = img.src;
+    lightboxImg.alt = img.alt || 'App screenshot';
+    lightboxIdx = i;
+    lightboxLastFocus = document.activeElement;
+    lightbox.setAttribute('aria-hidden', 'false');
+    lightbox.classList.add('is-open');
+    document.body.classList.add('is-lightbox-open');
+    if (lightboxClose) lightboxClose.focus();
+  }
+  function closeLightbox() {
+    if (!lightbox || !lightbox.classList.contains('is-open')) return;
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('is-lightbox-open');
+    lightboxIdx = -1;
+    // Return focus to whatever opened the lightbox (typically a slide)
+    if (lightboxLastFocus && typeof lightboxLastFocus.focus === 'function') {
+      try { lightboxLastFocus.focus(); } catch (_) {}
+    }
+    lightboxLastFocus = null;
+  }
+  if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+  if (lightbox) {
+    lightbox.addEventListener('click', (e) => {
+      // Only close on backdrop click (the image has pointer-events:auto
+      // and is inside .ms-lightbox-stage which has pointer-events:none,
+      // so clicks ON the image don't bubble as the lightbox target).
+      if (e.target === lightbox) closeLightbox();
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox || !lightbox.classList.contains('is-open')) return;
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeLightbox();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      if (lightboxIdx < slides.length - 1) {
+        openLightbox(lightboxIdx + 1);
+        setActive(lightboxIdx);
+      }
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      if (lightboxIdx > 0) {
+        openLightbox(lightboxIdx - 1);
+        setActive(lightboxIdx);
+      }
+    }
   });
 
   // Seed the initial selection to slide 0 (Dashboard). At desktop this
@@ -3793,6 +3940,19 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
     console.warn('[pebblepath] nav auth probe failed:', e);
   }
 </script>
+
+<!-- 2026-05-21 — Screenshot lightbox. Sits at the body level so it
+     overlays everything. Click any .ms-slide thumbnail to open the
+     screenshot full-size; close via ✕ button, backdrop click, ESC,
+     or arrow keys to step through. -->
+<div class="ms-lightbox" id="msLightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="App screenshot viewer">
+  <button type="button" class="ms-lightbox-close" id="msLightboxClose" aria-label="Close viewer">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M6 18 18 6"/></svg>
+  </button>
+  <div class="ms-lightbox-stage">
+    <img class="ms-lightbox-img" id="msLightboxImg" alt="">
+  </div>
+</div>
 
 </body>
 </html>
