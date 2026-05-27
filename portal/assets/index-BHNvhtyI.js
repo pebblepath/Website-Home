@@ -7749,7 +7749,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       style="top:${s}px;height:${n}px;"
     >
       <span>${d}</span>
-    </div>`}willUpdate(e){var t,i;if(e.has("open")||e.has("trip")){const a=((t=this.trip)==null?void 0:t.id)??null;this.open&&a?this._subId!==a&&(this._teardown(),this._subId=a,this._dayKey=((i=this._days()[0])==null?void 0:i.key)??"",this._view=this._days().length>1?"week":"day",this._unsub=f.planItemsListener(a,r=>{this._items=r})):this.open||this._teardown()}}disconnectedCallback(){super.disconnectedCallback(),this._teardown()}_teardown(){var e;(e=this._unsub)==null||e.call(this),this._unsub=null,this._subId=null,this._items=[],window.removeEventListener("pointermove",this._onGridMove),window.removeEventListener("pointerup",this._onGridUp),this._sel=null,this._dragCtx=null}_close(){this.dispatchEvent(new Event("cancel"))}_days(){var s,n;const e=st((s=this.trip)==null?void 0:s.start),t=st((n=this.trip)==null?void 0:n.end)??e;if(!e)return[{key:"",lbl:"Day",d:"The trip"}];const i=[],a=new Date(e);let r=0;for(;a<=t&&r<31;)i.push({key:ui(a),lbl:a.toLocaleDateString("en-GB",{weekday:"short"}),d:a.toLocaleDateString("en-GB",{day:"numeric",month:"short"})}),a.setDate(a.getDate()+1),r+=1;return i.length?i:[{key:"",lbl:"Day",d:"The trip"}]}_member(e){return(this.members??[]).find(t=>t.uid===e)??null}async _add(){const e=this._title.trim();if(!e||this._busy)return;this._busy=!0;const t=this._file;try{const i=await f.addPlanItem(this.trip.id,{title:e,type:this._type,day:this._dayKey??"",time:this._time||"",durationMins:this._dur,url:this._url.trim()});if(t&&i)try{const a=await f.uploadPlanAttachment(this.trip.id,i,t);await f.updatePlanItem(this.trip.id,i,{attachmentURL:a,attachmentName:t.name||"attachment"})}catch(a){console.error("plan attachment upload failed:",a),v((a==null?void 0:a.code)==="storage/unauthorized"?"Item added — but the attachment needs the Storage rule published.":"Item added — couldn't attach the file, try again.",{duration:5e3})}this._title="",this._url="",this._file=null,this._fileName="",this._dur=60}catch(i){console.error("addPlanItem failed:",i),v((i==null?void 0:i.code)==="permission-denied"?"Couldn't add — the planner rule may need publishing.":`Couldn't add: ${(i==null?void 0:i.message)??"try again"}`,{duration:5e3})}finally{this._busy=!1}}async _remove(e){try{await f.deletePlanItem(this.trip.id,e.id)}catch(t){v(`Couldn't remove: ${(t==null?void 0:t.code)??(t==null?void 0:t.message)}`,{duration:4e3})}}_renderWeek(){const e=this._weekDays(),t=e.length||1,i=new Set(e.map(l=>l.key)),a=(this._items||[]).filter(l=>i.has(String(l.day??"")));let r=8,s=20;for(const l of a){const h=pe(l.time);if(h==null)continue;const g=Math.max(.5,(Number(l.durationMins)||60)/60);r=Math.min(r,Math.floor(h)),s=Math.max(s,Math.ceil(h+g))}r=Math.max(0,Math.min(r,8)),s=Math.min(24,Math.max(s,20));const n=[];for(let l=r;l<s;l++)n.push(o`<div class="wk-hr">${String(l).padStart(2,"0")}:00</div>`);const d=(s-r)*j;return o`
+    </div>`}willUpdate(e){var t,i;if(e.has("open")||e.has("trip")){const a=((t=this.trip)==null?void 0:t.id)??null;this.open&&a?this._subId!==a&&(this._teardown(),this._subId=a,this._dayKey=((i=this._days()[0])==null?void 0:i.key)??"",this._view=this._days().length>1?"week":"day",this._unsub=f.planItemsListener(a,r=>{this._items=r})):this.open||this._teardown()}}disconnectedCallback(){super.disconnectedCallback(),this._teardown()}_teardown(){var e;(e=this._unsub)==null||e.call(this),this._unsub=null,this._subId=null,this._items=[],window.removeEventListener("pointermove",this._onGridMove),window.removeEventListener("pointerup",this._onGridUp),this._sel=null,this._dragCtx=null}_close(){this.dispatchEvent(new Event("cancel"))}_openEdit(){this.trip&&this.dispatchEvent(new CustomEvent("edit-trip",{detail:{trip:this.trip},bubbles:!0,composed:!0}))}_days(){var s,n;const e=st((s=this.trip)==null?void 0:s.start),t=st((n=this.trip)==null?void 0:n.end)??e;if(!e)return[{key:"",lbl:"Day",d:"The trip"}];const i=[],a=new Date(e);let r=0;for(;a<=t&&r<31;)i.push({key:ui(a),lbl:a.toLocaleDateString("en-GB",{weekday:"short"}),d:a.toLocaleDateString("en-GB",{day:"numeric",month:"short"})}),a.setDate(a.getDate()+1),r+=1;return i.length?i:[{key:"",lbl:"Day",d:"The trip"}]}_member(e){return(this.members??[]).find(t=>t.uid===e)??null}async _add(){const e=this._title.trim();if(!e||this._busy)return;this._busy=!0;const t=this._file;try{const i=await f.addPlanItem(this.trip.id,{title:e,type:this._type,day:this._dayKey??"",time:this._time||"",durationMins:this._dur,url:this._url.trim()});if(t&&i)try{const a=await f.uploadPlanAttachment(this.trip.id,i,t);await f.updatePlanItem(this.trip.id,i,{attachmentURL:a,attachmentName:t.name||"attachment"})}catch(a){console.error("plan attachment upload failed:",a),v((a==null?void 0:a.code)==="storage/unauthorized"?"Item added — but the attachment needs the Storage rule published.":"Item added — couldn't attach the file, try again.",{duration:5e3})}this._title="",this._url="",this._file=null,this._fileName="",this._dur=60}catch(i){console.error("addPlanItem failed:",i),v((i==null?void 0:i.code)==="permission-denied"?"Couldn't add — the planner rule may need publishing.":`Couldn't add: ${(i==null?void 0:i.message)??"try again"}`,{duration:5e3})}finally{this._busy=!1}}async _remove(e){try{await f.deletePlanItem(this.trip.id,e.id)}catch(t){v(`Couldn't remove: ${(t==null?void 0:t.code)??(t==null?void 0:t.message)}`,{duration:4e3})}}_renderWeek(){const e=this._weekDays(),t=e.length||1,i=new Set(e.map(l=>l.key)),a=(this._items||[]).filter(l=>i.has(String(l.day??"")));let r=8,s=20;for(const l of a){const h=pe(l.time);if(h==null)continue;const g=Math.max(.5,(Number(l.durationMins)||60)/60);r=Math.min(r,Math.floor(h)),s=Math.max(s,Math.ceil(h+g))}r=Math.max(0,Math.min(r,8)),s=Math.min(24,Math.max(s,20));const n=[];for(let l=r;l<s;l++)n.push(o`<div class="wk-hr">${String(l).padStart(2,"0")}:00</div>`);const d=(s-r)*j;return o`
       <div class="wk">
         <div class="wk-head" style="--cols:${t};">
           <div class="wk-hc"></div>
@@ -7844,7 +7844,17 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 </span>
               </div>
             </div>
-            <button class="pl-close" @click=${this._close} aria-label="Close planner">×</button>
+            <div class="pl-actions">
+              <button
+                class="pl-edit"
+                @click=${this._openEdit}
+                aria-label="Edit trip"
+                title="Edit trip"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+              </button>
+              <button class="pl-close" @click=${this._close} aria-label="Close planner">×</button>
+            </div>
           </div>
 
           <div class="pl-modebar">
@@ -8024,6 +8034,16 @@ They'll lose access to shared trips, celebrations and any read-only child access
     }
     .who-adds { display: inline-flex; align-items: center; }
     .who-adds member-chip { margin-right: -6px; }
+    /* 2026-05-24 — the edit pencil + close X share a small flex row
+       pinned top-right so the user can edit the trip itself (dates,
+       flights, lodging) without scrolling back up to the trip card. */
+    .pl-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .pl-edit,
     .pl-close {
       background: var(--glass-fill);
       border: 1px solid var(--glass-border);
@@ -8037,11 +8057,16 @@ They'll lose access to shared trips, celebrations and any read-only child access
       justify-content: center;
       font-size: 16px;
       flex-shrink: 0;
+      padding: 0;
+      transition: color 140ms ease, border-color 140ms ease;
     }
+    .pl-edit:hover,
     .pl-close:hover {
       color: var(--text-primary);
       border-color: var(--glass-border-strong);
     }
+    .pl-edit:hover { color: var(--teal-pebble); border-color: var(--teal-pebble); }
+    .pl-edit svg { width: 17px; height: 17px; display: block; }
     .day-rail {
       display: flex;
       gap: 8px;
@@ -8936,6 +8961,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         .members=${e}
         .currentUid=${((a=this.user)==null?void 0:a.uid)??""}
         @cancel=${()=>{this._plannerOpen=!1,this._plannerTrip=null}}
+        @edit-trip=${r=>{var n;const s=((n=r.detail)==null?void 0:n.trip)??this._plannerTrip;this._plannerOpen=!1,this._plannerTrip=null,s&&this._openEdit(s)}}
       ></trip-planner>
       ${this._renderCalendarsSection()}
       ${this._renderCelebrationsSection()}
@@ -12459,4 +12485,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(_t,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",_t);
-//# sourceMappingURL=index-aSH_Zpvg.js.map
+//# sourceMappingURL=index-BHNvhtyI.js.map
