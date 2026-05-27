@@ -2308,7 +2308,11 @@
     radial-gradient(ellipse 45% 35% at 88% 30%,rgba(212,168,67,0.28),transparent 65%),
     radial-gradient(ellipse 60% 50% at 50% 100%,rgba(198,123,92,0.32),transparent 65%),
     linear-gradient(160deg,var(--teal-deep) 0%,var(--teal-dark) 50%,var(--teal) 100%);
-  text-align:center; padding:36px 40px 64px;
+  /* Vertical padding matches .intelligence (Growing With You) so the two
+     sister teal panels feel balanced — 36px top, 36px bottom. Previously
+     was 36/64; the asymmetric bottom was a relic of the section's first
+     cut and made the brain band visibly taller than its sister. */
+  text-align:center; padding:36px 40px;
 }
 .brain-sec::before{
   content:''; position:absolute; inset:0; pointer-events:none; opacity:0.5;
@@ -2318,8 +2322,12 @@
 .brain-sec > *{ position:relative; z-index:1; }
 .brain-sec .brain-inner{ max-width:1120px; margin:0 auto; }
 .brain-sec h2{
-  font-family:'Nunito',sans-serif; font-weight:800; font-size:42px;
-  line-height:1.14; letter-spacing:-.6px; color:#fff; margin:0;
+  /* Harmonized 2026-05-21 to match .intelligence-text h2 — was 42px
+     with letter-spacing:-.6px which read visibly heavier than its
+     sister panel. Now 36px / line-height 1.2 / no letter-spacing,
+     same as Growing With You. Weight 800 unchanged. */
+  font-family:'Nunito',sans-serif; font-weight:800; font-size:36px;
+  line-height:1.2; color:#fff; margin:0;
 }
 .brain-sec .brain-sub{
   font-size:17px; line-height:1.62; color:#CDE3DF; max-width:680px;
@@ -2364,7 +2372,7 @@
   letter-spacing:2px; text-transform:uppercase; color:#7DD4C8; margin-bottom:10px;
 }
 .brain-sec .brain-bg-line{
-  font-family:'Nunito',sans-serif; font-weight:700; font-size:18.5px;
+  font-family:'Nunito',sans-serif; font-weight:700; font-size:20px;
   line-height:1.5; color:#fff; text-shadow:0 0 26px rgba(125,212,200,.5);
 }
 .brain-sec .brain-bg-line b{ color:#7DD4C8; font-weight:800; }
