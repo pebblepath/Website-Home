@@ -2005,10 +2005,11 @@
   .ss-verb-mobile { display: none; }
   .ss-verb-desktop { display: inline; }
 
-  /* Arrows are display:none by default — hidden on mobile (where swipe is
-     the canonical affordance); the desktop @media block below unhides
-     them. */
-  .ms-arrow { display: none; }
+  /* Arrow buttons retired 2026-05-21 — desktop carousel now uses
+     hover-to-select; mobile uses swipe. The `.ms-arrow` rules below
+     (default display:none + the entire @media block ruleset) are dead
+     code since the markup was removed. Kept the class name commented
+     out as a breadcrumb in case arrows are re-added later. */
   /* Caption mirror is desktop-only too — mobile keeps in-slide .ms-text
      captions; desktop hides those and shows this single block below the
      thumbnail strip instead. Default hidden; unhidden inside the
@@ -2052,8 +2053,15 @@
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
+      /* 2026-05-21 — `safe center` centers the strip when it fits the
+         track viewport (desktop default) and falls back to flex-start
+         when content overflows (narrow desktops), so the leftmost
+         slide is always reachable via scroll. */
+      justify-content: safe center;
       gap: 18px;                   /* breathing room between thumbnails */
-      padding: 28px 12px 24px;     /* room for scaled-up active slide */
+      /* 2026-05-21 — tightened padding-bottom 24 → 12 so the strip
+         sits closer to the caption below. */
+      padding: 24px 12px 12px;
     }
     .ms-track::-webkit-scrollbar { display: none; }
     /* Each slide is a phone-shaped thumbnail at ~150px wide. Six of
@@ -2118,17 +2126,16 @@
        between captions doesn't jump the page. */
     .ms-caption {
       display: block;              /* overrides the base display:none */
-      /* 2026-05-21 — bumped max-width 560 → 920 so the longest captions
-         (Dashboard ~98 chars, Tips ~99 chars, Activities ~89 chars)
-         fit on a single line at the 16-px body font. The min-height
-         is dialled back from 138 → 112 because one-line captions need
-         less vertical space (eyebrow 11 + 10 margin + h3 34 + 12
-         margin + body 26 ≈ 93 px → 112 with comfortable buffer). */
       max-width: 920px;
-      margin: 18px auto 4px;
+      /* 2026-05-21 — tighter padding pass:
+         - margin-top 18 → 6 (less gap between strip and caption);
+         - min-height 112 → 96 (one-line captions take ~93 px
+           content + a small buffer is enough);
+         - vertical padding stays implicit (margin handles it). */
+      margin: 6px auto 0;
       padding: 0 16px;
       text-align: center;
-      min-height: 112px;
+      min-height: 96px;
       transition: opacity 0.18s ease;
     }
     .ms-caption.is-swapping { opacity: 0; }
@@ -2178,53 +2185,9 @@
       width: 24px;
       border-radius: 4px;
     }
-    /* Prev/next arrow buttons — sit in the carousel gutters, vertically
-       centered with the thumbnail strip. */
-    .ms-arrow {
-      position: absolute;
-      /* Center on the strip (not the whole carousel, since caption +
-         dots sit below). 28px track-top + ~328px strip / 2 ≈ 192px */
-      top: 192px;
-      transform: translateY(-50%);
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: #fff;
-      /* 2026-05-21 — flat arrow buttons (no drop-shadow), border alone
-         provides edge definition against the white section background. */
-      border: 1px solid var(--light-gray);
-      box-shadow: none;
-      color: var(--teal-dark);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.15s, transform 0.15s, border-color 0.2s, opacity 0.2s;
-      z-index: 4;
-    }
-    .ms-arrow:hover:not(:disabled) {
-      background: #fff;
-      transform: translateY(-50%) scale(1.06);
-      border-color: var(--teal-dark);
-    }
-    .ms-arrow:focus-visible {
-      outline: 2px solid var(--teal-dark);
-      outline-offset: 2px;
-    }
-    .ms-arrow:disabled {
-      opacity: 0.32;
-      cursor: default;
-    }
-    .ms-arrow svg { width: 18px; height: 18px; }
-    /* 2026-05-21 — arrows pushed further outside (left/right 6 → −8)
-       to clear the thumbnail strip's edges. Negative offsets put each
-       arrow ~8 px past the carousel's content-box edge, sitting inside
-       the 56-px padding gutter — still within the carousel bounds but
-       visually separated from the screenshots. Combined with the wider
-       max-width (1240), the arrow-to-strip gap is now ~33 px. */
-    .ms-arrow.ms-arrow-prev { left: -8px; }
-    .ms-arrow.ms-arrow-next { right: -8px; }
-    /* Swipe-hint chevron is mobile-only — arrows replace it on desktop. */
+    /* 2026-05-21 — Prev/next arrow CSS removed alongside HTML. Hover-to-
+       select is the canonical desktop interaction now. Swipe-hint chevron
+       is still mobile-only; explicitly hidden at desktop. */
     .ms-swipe-hint { display: none; }
   }
   /* ============================================================ */
@@ -2623,31 +2586,26 @@
    to revisit. */
 .brain-sec .brain-bg-line b{ color:#7DD4C8; font-weight:800; }
 
-/* 2026-05-21 — "live generation" pop-in for the brief line. Each
-   .brain-chunk fades + slides up in sequence, gated by the
-   .brain-sec.visible class flipped by the page's IntersectionObserver
-   (see the .reveal pattern). --i on each span drives a per-chunk
-   delay so the message reads like Pebble is typing it out. Default
-   (section not yet visible) keeps chunks hidden; once .visible
-   flips on, each chunk animates with stagger. Respects reduced-motion. */
+/* 2026-05-21 v2 — "live generation" pop-in for the brief line, on a
+   continuous loop driven by JS (see the brain-brief IIFE at the
+   bottom of <body>). Chunks default to opacity 0 + render INLINE
+   (not inline-block) so the trailing spaces inside each span render
+   as natural whitespace. opacity-only animation keeps inter-word
+   spacing pixel-perfect — inline-block + transform was breaking the
+   sentence's natural rhythm. Reduced-motion users get the message
+   rendered statically. */
 .brain-sec .brain-chunk{
-  display:inline-block;
   opacity:0;
-  transform:translateY(6px);
+  transition:opacity 0.7s ease-out;
 }
-.brain-sec.visible .brain-chunk{
-  animation:brain-chunk-pop 0.52s ease-out forwards;
-  animation-delay:calc(var(--i, 0) * 0.18s + 0.25s);
+.brain-sec .brain-chunk.is-shown{
+  opacity:1;
 }
 .brain-line-aria{
   position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);
 }
-@keyframes brain-chunk-pop{
-  from { opacity:0; transform:translateY(6px); }
-  to   { opacity:1; transform:translateY(0); }
-}
 @media (prefers-reduced-motion: reduce){
-  .brain-sec .brain-chunk{ opacity:1; transform:none; animation:none; }
+  .brain-sec .brain-chunk{ opacity:1; transition:none; }
 }
 
 /* mobile fallback — scale the fixed-width composition to fit narrower viewports */
@@ -2920,15 +2878,15 @@
       <div class="brain-brief">
         <div class="brain-bg-k">Tomorrow, ready before you wake</div>
         <div class="brain-bg-line">
-          <!-- 2026-05-21 — Each phrase wrapped in a .brain-chunk so the
-               line "types out" left-to-right when .brain-sec.visible is
-               toggled by the page's IntersectionObserver. Custom --i
-               drives the per-chunk animation-delay (see CSS rule below
-               the .brain-bg-line block). Aria-label gives screen
-               readers the full sentence in one go so the staggered
-               reveal doesn't fragment the message for assistive tech. -->
+          <!-- 2026-05-21 v2 — Each phrase wrapped in a .brain-chunk that
+               JS toggles `.is-shown` on in a continuous loop (see the
+               brain-brief IIFE at the bottom of <body>). Chunks use
+               default inline display + opacity-only animation so
+               inter-word spacing renders cleanly. .brain-line-aria
+               carries the full sentence for screen readers so the
+               staggered reveal doesn't fragment the message. -->
           <span class="brain-line-aria" aria-label="It's splash day. 62 degrees Fahrenheit. Felix needs water shoes and a towel. Lunch is covered, and Thomas is on pickup."></span>
-          <span class="brain-chunk" style="--i:0" aria-hidden="true">It's </span><span class="brain-chunk" style="--i:1" aria-hidden="true"><b>splash day</b> </span><span class="brain-chunk" style="--i:2" aria-hidden="true">&mdash; 62&deg;F. </span><span class="brain-chunk" style="--i:3" aria-hidden="true">Felix needs </span><span class="brain-chunk" style="--i:4" aria-hidden="true"><b>water shoes &amp; a towel</b>. </span><span class="brain-chunk" style="--i:5" aria-hidden="true">Lunch is covered, and </span><span class="brain-chunk" style="--i:6" aria-hidden="true"><b>Thomas is on pickup</b>.</span>
+          <span class="brain-chunk" aria-hidden="true">It's </span><span class="brain-chunk" aria-hidden="true"><b>splash day</b>. </span><span class="brain-chunk" aria-hidden="true">62&deg;F. </span><span class="brain-chunk" aria-hidden="true">Felix needs </span><span class="brain-chunk" aria-hidden="true"><b>water shoes &amp; a towel</b>. </span><span class="brain-chunk" aria-hidden="true">Lunch is covered, and </span><span class="brain-chunk" aria-hidden="true"><b>Thomas is on pickup</b>.</span>
         </div>
       </div>
     </div>
@@ -2941,7 +2899,7 @@
        band on desktop while you scroll through the feature steps below. -->
   <div class="showcase-head">
     <h2 class="showcase-heading">See it in action.</h2>
-    <p class="showcase-subhead">Explore the app experience.</p>
+    <p class="showcase-subhead"><span class="ss-verb-desktop">Hover</span><span class="ss-verb-mobile">Swipe</span> to explore the app</p>
     <div class="scroll-hint">
       <span>Scroll to explore</span>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
@@ -3035,15 +2993,9 @@
        screenshots. Shown only on mobile (max-width: 768px). Native CSS
        scroll-snap-x for the swipe behavior; tiny JS for dot pagination. -->
   <div class="ms-carousel" aria-roledescription="carousel" aria-label="App screenshots">
-    <!-- Prev/next arrows — display:flex on desktop (≥769px), display:none
-         on mobile (swipe is canonical there). Wired by the existing
-         carousel IIFE; disabled state set when at the first/last slide. -->
-    <button type="button" class="ms-arrow ms-arrow-prev" id="msPrev" aria-label="Previous slide">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
-    </button>
-    <button type="button" class="ms-arrow ms-arrow-next" id="msNext" aria-label="Next slide">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-    </button>
+    <!-- Prev/next arrows removed 2026-05-21 — hover-to-select on desktop
+         is now the canonical interaction; dots + click are the fallback
+         and the mobile path. -->
     <div class="ms-dots" id="msDots" aria-hidden="true">
       <button type="button" class="ms-dot is-active" data-index="0"></button>
       <button type="button" class="ms-dot" data-index="1"></button>
@@ -3579,6 +3531,49 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
   });
 })();
 
+// Pebble Brain brief — continuous "live generation" pop-in loop.
+// Mirrors the always-on cadence of the SVG converge animation above
+// it (the dot animateMotion paths loop indefinitely too). Each
+// .brain-chunk fades in on a stagger, the whole sentence holds for
+// ~3.5 s, then everyone fades out together; pause; loop. Tuned slower
+// + calmer than the first cut per dogfood feedback. Respects
+// prefers-reduced-motion by rendering the message statically. Added
+// 2026-05-21.
+(function () {
+  const chunks = Array.from(document.querySelectorAll('.brain-sec .brain-chunk'));
+  if (chunks.length === 0) return;
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    chunks.forEach(c => c.classList.add('is-shown'));
+    return;
+  }
+
+  const STAGGER  = 380;   // ms between successive chunk fade-ins
+  const FADE_IN  = 700;   // matches .brain-chunk transition (CSS)
+  const HOLD     = 3500;  // ms full sentence stays visible after last chunk lands
+  const FADE_OUT = 700;   // same transition runs in reverse
+  const PAUSE    = 1200;  // ms of darkness before the cycle restarts
+
+  let timers = [];
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+
+  function cycle() {
+    clearTimers();
+    chunks.forEach(c => c.classList.remove('is-shown'));
+    chunks.forEach((c, i) => {
+      timers.push(setTimeout(() => c.classList.add('is-shown'), i * STAGGER));
+    });
+    const allShownAt = (chunks.length - 1) * STAGGER + FADE_IN;
+    const fadeOutAt  = allShownAt + HOLD;
+    timers.push(setTimeout(() => {
+      chunks.forEach(c => c.classList.remove('is-shown'));
+    }, fadeOutAt));
+    timers.push(setTimeout(cycle, fadeOutAt + FADE_OUT + PAUSE));
+  }
+
+  cycle();
+})();
+
 // Mobile carousel — sync pagination dots with native scroll-snap position
 (function () {
   const track = document.getElementById('msTrack');
@@ -3608,14 +3603,6 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
   // hidden via CSS and this single block below the strip mirrors the active
   // slide's caption. Populated by setActive() below.
   const caption = document.getElementById('msCaption');
-  // Arrow buttons — refs grabbed up here (before setActive is defined)
-  // because setActive() calls updateArrowStates(), which reads from prevBtn
-  // / nextBtn. With `const`, accessing them before their initializer ran
-  // hits the temporal dead zone → ReferenceError → the IIFE crashes before
-  // attaching the arrow click listeners (which is why the arrows looked
-  // dead before this reorder was applied 2026-05-21).
-  const prevBtn = document.getElementById('msPrev');
-  const nextBtn = document.getElementById('msNext');
   function setActive(idx) {
     if (idx < 0 || idx >= slides.length) return;
     dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
@@ -3637,7 +3624,6 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
       }
     }
     if (idx > 0) hideHint();
-    updateArrowStates();
   }
 
   // IntersectionObserver — mobile-only. At desktop the entire 6-thumbnail
@@ -3716,32 +3702,8 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
   // the observer's first fire on the visible slide so there's no flicker.
   setActive(0);
 
-  // Prev / next arrow handlers — desktop-only (CSS hides them on mobile).
-  // prevBtn / nextBtn refs are grabbed earlier (above setActive's
-  // declaration) to dodge the TDZ; only the handler logic lives down here.
-  function currentIndex() {
-    const i = dots.findIndex((d) => d.classList.contains('is-active'));
-    return i === -1 ? 0 : i;
-  }
-  function go(delta) {
-    const newIdx = currentIndex() + delta;
-    if (newIdx < 0 || newIdx >= slides.length) return;
-    const target = slides[newIdx];
-    target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-    setActive(newIdx);
-    hideHint();
-  }
-  function updateArrowStates() {
-    const i = currentIndex();
-    if (prevBtn) prevBtn.disabled = i <= 0;
-    if (nextBtn) nextBtn.disabled = i >= slides.length - 1;
-  }
-  if (prevBtn) prevBtn.addEventListener('click', () => go(-1));
-  if (nextBtn) nextBtn.addEventListener('click', () => go(1));
-  // Mobile scroll-driven nav also keeps arrows in sync (observer calls
-  // setActive → setActive calls updateArrowStates). This listener is the
-  // belt-and-suspenders for any scroll that isn't a click-driven one.
-  track.addEventListener('scroll', updateArrowStates, { passive: true });
+  // Prev/next arrows retired 2026-05-21 — desktop hover-to-select + click
+  // + mobile swipe + click cover all interactions; arrows became redundant.
 })();
 </script>
 
