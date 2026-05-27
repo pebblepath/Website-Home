@@ -525,7 +525,9 @@
 
   /* BENEFITS */
   .benefits {
-    padding: 36px 48px 24px;
+    /* 2026-05-21 — bumped bottom padding 24 → 56 so the 3 benefit cards
+       have more breathing room before the Pebble Brain section below. */
+    padding: 36px 48px 56px;
     max-width: 1100px; margin: 0 auto;
   }
   .benefits h2 {
@@ -2020,6 +2022,11 @@
      own slide layout (column, big phone, caption-in-slide) unchanged.
      ============================================================ */
   @media (min-width: 769px) {
+    /* 2026-05-21 — desktop showcase background is plain white (overrides
+       the section's warm --off-white) so the phone screenshots sit on a
+       clean, neutral surface with no warm cast. Mobile keeps --off-white
+       (set on .showcase-section in the base rule). */
+    .showcase-section { background: #fff; }
     .ms-carousel {
       max-width: 1100px;
       margin: 12px auto 0;
@@ -2070,15 +2077,16 @@
       border-radius: 22px;
       overflow: hidden;
       background: #000;
-      box-shadow:
-        0 12px 28px rgba(44,62,64,0.16),
-        0 0 0 1px rgba(0,0,0,0.04);
+      /* 2026-05-21 — drop-shadows removed per design feedback. Phones sit
+         on the clean white section background; the black phone bezel
+         provides natural definition without any halo around it. The
+         .is-active state below also has no shadow — opacity + scale are
+         the active cues, not depth. */
+      box-shadow: none;
       margin: 0;
     }
     .ms-slide.is-active .ms-phone {
-      box-shadow:
-        0 24px 50px rgba(44,62,64,0.22),
-        0 0 0 1px rgba(0,0,0,0.06);
+      box-shadow: none;
     }
     .ms-phone img {
       display: block;
@@ -2158,21 +2166,23 @@
       width: 44px;
       height: 44px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.94);
+      background: #fff;
+      /* 2026-05-21 — flat arrow buttons (no drop-shadow), border alone
+         provides edge definition against the white section background. */
       border: 1px solid var(--light-gray);
-      box-shadow: 0 6px 18px rgba(44,62,64,0.10);
+      box-shadow: none;
       color: var(--teal-dark);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.15s, transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+      transition: background 0.15s, transform 0.15s, border-color 0.2s, opacity 0.2s;
       z-index: 4;
     }
     .ms-arrow:hover:not(:disabled) {
       background: #fff;
       transform: translateY(-50%) scale(1.06);
-      box-shadow: 0 8px 22px rgba(44,62,64,0.16);
+      border-color: var(--teal-dark);
     }
     .ms-arrow:focus-visible {
       outline: 2px solid var(--teal-dark);
@@ -2181,7 +2191,6 @@
     .ms-arrow:disabled {
       opacity: 0.32;
       cursor: default;
-      box-shadow: none;
     }
     .ms-arrow svg { width: 18px; height: 18px; }
     .ms-arrow.ms-arrow-prev { left: 6px; }
@@ -2577,9 +2586,15 @@
   font-family:'Nunito',sans-serif; font-weight:700; font-size:20px;
   line-height:1.5; color:#fff; text-shadow:0 0 26px rgba(125,212,200,.5);
 }
-.brain-sec .brain-bg-line b{ color:#7DD4C8; font-weight:800; }
+/* Bold inline highlights in the brief ("splash day", "Thomas is on
+   pickup") rendered in terracotta against the dark-teal panel — same
+   accent color the rest of the site uses for emphasis. Was #7DD4C8
+   (teal-glow) before; flipped to terracotta 2026-05-21 for warmer
+   pop against the green mesh background. */
+.brain-sec .brain-bg-line b{ color:var(--terracotta); font-weight:800; }
 
 /* mobile fallback — scale the fixed-width composition to fit narrower viewports */
+/* Tablet — still uses the desktop converge SVG, just downscaled. */
 @media (max-width: 1000px){
   .brain-sec{ padding:30px 24px 60px; }
   .brain-sec h2{ font-size:34px; }
@@ -2588,21 +2603,61 @@
     margin-bottom:-142px;
   }
 }
+
+/* 2026-05-21 — MOBILE BRAIN SECTION REDESIGN
+   Previously the 920×510 absolute-positioned SVG converge was scaled
+   to 50% (≤720px) and 38% (≤480px) via transform + negative margin to
+   compensate — but the input labels ("School email", "Daycare note"
+   etc.) became unreadable at that scale, and the layout felt cramped.
+   At ≤720px the visual collapses to a clean centered stack:
+     1. Heading + sub
+     2. Single Pebble orb (no input lines/labels — the "synthesize
+        from many inputs" metaphor is desktop-only)
+     3. Brief text below the orb
+   The .brain-lines / .brain-ico / .brain-ilabel elements are hidden;
+   .brain-orb + .brain-brief are repositioned from absolute → static
+   inside a flex-column .brain-converge. */
 @media (max-width: 720px){
   .brain-sec{ padding:26px 18px 48px; }
   .brain-sec h2{ font-size:28px; }
   .brain-sec .brain-sub{ font-size:15px; }
   .brain-sec .brain-converge{
-    transform:scale(0.50); transform-origin:top center;
-    margin-bottom:-255px;
+    width:100%; height:auto;
+    margin:32px auto 0;
+    transform:none;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:28px;
   }
+  /* Desktop-only flow metaphor — hidden on mobile */
+  .brain-sec .brain-lines,
+  .brain-sec .brain-ico,
+  .brain-sec .brain-ilabel { display:none; }
+  /* Pebble orb — recenter as a static flex child instead of absolute */
+  .brain-sec .brain-orb{
+    position:static;
+    left:auto; top:auto;
+    transform:none;
+    width:130px; height:130px;
+  }
+  .brain-sec .brain-orb-name{ font-size:15px; }
+  /* Brief text — stack below orb, full-width with safe max */
+  .brain-sec .brain-brief{
+    position:static;
+    left:auto; top:auto;
+    transform:none;
+    width:100%;
+    max-width:480px;
+    padding:0 6px;
+  }
+  .brain-sec .brain-bg-k{ font-size:10.5px; margin-bottom:8px; }
+  .brain-sec .brain-bg-line{ font-size:17px; }
 }
 @media (max-width: 480px){
   .brain-sec h2{ font-size:24px; }
-  .brain-sec .brain-converge{
-    transform:scale(0.38); transform-origin:top center;
-    margin-bottom:-316px;
-  }
+  .brain-sec .brain-orb{ width:114px; height:114px; }
+  .brain-sec .brain-bg-line{ font-size:16px; }
 }
 
 </style>
@@ -3486,6 +3541,14 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
   // hidden via CSS and this single block below the strip mirrors the active
   // slide's caption. Populated by setActive() below.
   const caption = document.getElementById('msCaption');
+  // Arrow buttons — refs grabbed up here (before setActive is defined)
+  // because setActive() calls updateArrowStates(), which reads from prevBtn
+  // / nextBtn. With `const`, accessing them before their initializer ran
+  // hits the temporal dead zone → ReferenceError → the IIFE crashes before
+  // attaching the arrow click listeners (which is why the arrows looked
+  // dead before this reorder was applied 2026-05-21).
+  const prevBtn = document.getElementById('msPrev');
+  const nextBtn = document.getElementById('msNext');
   function setActive(idx) {
     if (idx < 0 || idx >= slides.length) return;
     dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
@@ -3564,14 +3627,9 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
   // the observer's first fire on the visible slide so there's no flicker.
   setActive(0);
 
-  // Prev / next arrows — desktop-only (CSS hides them on mobile). Reads the
-  // current index from whichever dot is .is-active, scrolls the adjacent
-  // slide into view via the same scroll-snap mechanism the dots + swipe
-  // use, then updates the disabled state. Added 2026-05-21 alongside the
-  // desktop carousel rollout — the carousel pattern now drives every
-  // viewport, replacing the desktop scroll-driven parallax.
-  const prevBtn = document.getElementById('msPrev');
-  const nextBtn = document.getElementById('msNext');
+  // Prev / next arrow handlers — desktop-only (CSS hides them on mobile).
+  // prevBtn / nextBtn refs are grabbed earlier (above setActive's
+  // declaration) to dodge the TDZ; only the handler logic lives down here.
   function currentIndex() {
     const i = dots.findIndex((d) => d.classList.contains('is-active'));
     return i === -1 ? 0 : i;
