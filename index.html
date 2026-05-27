@@ -3507,46 +3507,61 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
       }
     }
     if (idx > 0) hideHint();
+    updateArrowStates();
   }
 
-  // IntersectionObserver: watch which slide is most-visible, mark its dot
-  // + slide active, update the caption mirror.
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
-        const idx = slides.indexOf(entry.target);
-        if (idx === -1) return;
-        setActive(idx);
-      }
+  // IntersectionObserver — mobile-only. At desktop the entire 6-thumbnail
+  // strip fits inside the track viewport (no horizontal scroll), so all 6
+  // slides intersect simultaneously on init and the observer would race to
+  // mark the LAST one active (which is what made the first cut land on
+  // Pediatrician instead of Dashboard). Desktop is fully imperative: the
+  // initial setActive(0) below seeds Dashboard, and every click handler
+  // calls setActive(idx) directly because scrollIntoView is a no-op when
+  // the target is already visible.
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  if (isMobile) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+          const idx = slides.indexOf(entry.target);
+          if (idx === -1) return;
+          setActive(idx);
+        }
+      });
+    }, {
+      root: track,
+      threshold: [0.6, 0.85],
     });
-  }, {
-    root: track,
-    threshold: [0.6, 0.85],
-  });
-  slides.forEach((s) => io.observe(s));
+    slides.forEach((s) => io.observe(s));
+  }
 
-  // Click a dot → smooth-scroll the corresponding slide into view
+  // Click a dot → scroll the corresponding slide into view AND set active
+  // directly (scrollIntoView is a no-op at desktop where the strip fits).
   dots.forEach((dot, i) => {
     dot.addEventListener('click', () => {
       const slide = slides[i];
       if (!slide) return;
       slide.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      setActive(i);
       hideHint();
     });
   });
 
   // Click any slide thumbnail → select it (desktop thumbnail-strip pattern).
-  // On mobile this is also benign — tapping a slide already shows it; the
-  // scrollIntoView call just re-centers if it was already mostly visible.
+  // On mobile this is also benign — tapping a slide centers it via
+  // scrollIntoView; the observer then fires setActive on the new
+  // most-visible slide (so this direct call is just a fast-path).
   slides.forEach((slide, i) => {
     slide.addEventListener('click', () => {
       slide.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      setActive(i);
       hideHint();
     });
   });
 
-  // Seed the caption mirror with the first slide's content so it's not
-  // empty during the brief window before IntersectionObserver fires.
+  // Seed the initial selection to slide 0 (Dashboard). At desktop this
+  // sticks because the observer isn't installed; at mobile this matches
+  // the observer's first fire on the visible slide so there's no flicker.
   setActive(0);
 
   // Prev / next arrows — desktop-only (CSS hides them on mobile). Reads the
@@ -3562,9 +3577,11 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
     return i === -1 ? 0 : i;
   }
   function go(delta) {
-    const target = slides[currentIndex() + delta];
-    if (!target) return;
+    const newIdx = currentIndex() + delta;
+    if (newIdx < 0 || newIdx >= slides.length) return;
+    const target = slides[newIdx];
     target.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    setActive(newIdx);
     hideHint();
   }
   function updateArrowStates() {
@@ -3574,11 +3591,10 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
   }
   if (prevBtn) prevBtn.addEventListener('click', () => go(-1));
   if (nextBtn) nextBtn.addEventListener('click', () => go(1));
-  // Refresh arrow state whenever the active slide changes (driven by the
-  // scroll-snap landing on the next slide → IntersectionObserver above
-  // flips .is-active on the corresponding dot).
+  // Mobile scroll-driven nav also keeps arrows in sync (observer calls
+  // setActive → setActive calls updateArrowStates). This listener is the
+  // belt-and-suspenders for any scroll that isn't a click-driven one.
   track.addEventListener('scroll', updateArrowStates, { passive: true });
-  updateArrowStates();
 })();
 </script>
 
