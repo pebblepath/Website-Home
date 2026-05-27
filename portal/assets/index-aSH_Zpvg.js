@@ -10369,7 +10369,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
        --cat-bg, --cat-ink custom properties consumed by the chip
        rules). */
 
-    .cal-section { display: block; margin: 0; }
+    /* margin-bottom puts air between the calendar workspace and the
+       Celebrations section below it on the Activities tab. */
+    .cal-section { display: block; margin: 0 0 28px 0; }
     .cal-ws { display: flex; flex-direction: column; }
     .cal-ws-divider { height: 1px; background: var(--hairline); }
 
@@ -10454,7 +10456,17 @@ They'll lose access to shared trips, celebrations and any read-only child access
     @media (max-width: 900px) {
       .cal-side { border-right: none; border-bottom: 1px solid var(--hairline); }
     }
-    .cal-main { padding: 18px 20px 24px; min-height: 600px; overflow-x: auto; }
+    /* 2026-05-24 — fixed height (not min-height) so the workspace
+       doesn't resize when the user flips Week / Month / Year.
+       Calibrated to Month's natural full-bleed height: 6 week rows
+       × 114px (684) + DOW row + small margin (22) + cal-main top/
+       bottom padding (42) = 748px → rounded up to 760px to leave a
+       small margin for Week's variable all-day lane (max 3 lanes ×
+       23px). overflow-y: auto is the safety net for any view that
+       grows past this in edge cases. overflow-x kept for narrow
+       viewports where the 8-column Week / Month grids can extend
+       past the available width. */
+    .cal-main { padding: 18px 20px 24px; height: 760px; overflow: auto; }
 
     /* ── sidebar: mini-month ──────────────────────────────── */
     .cal-mini-top {
@@ -12447,4 +12459,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(_t,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",_t);
-//# sourceMappingURL=index-B3c3ui85.js.map
+//# sourceMappingURL=index-aSH_Zpvg.js.map
