@@ -122,6 +122,23 @@ export const mockDailyCard = {
   topicForChat: "How can I support Felix's two-word speech?",
 };
 
+// Close-the-loop Slice 3 (2026-05-28) — family-scope brief mock for
+// the ?preview route. Bullet-based (brief mode); each bullet carries a
+// `kind` the Today tab maps to a categorical icon + tint.
+export const mockFamilyDailyCard = {
+  id: '2026-05-16',
+  title: 'Busy Saturday, water shoes for Felix',
+  body: 'Splash day at the park this morning, both kids back to routine by nap.',
+  topicForChat: 'What should we prep tonight for tomorrow?',
+  mode: 'brief',
+  bullets: [
+    { kind: 'plan', text: 'Splash day at 10. Park sprinklers are on for the morning.' },
+    { kind: 'weather', text: '74°F and sunny. Sun hats for both kids.' },
+    { kind: 'packing', text: "Felix's water shoes still unchecked on the bag list." },
+    { kind: 'coordinate', text: 'Ellie is on pickup. You packed the towels last night.' },
+  ],
+};
+
 export const mockChildPebbleMessages = [
   { id: 'p1', role: 'user', content: "Felix isn't saying many words yet — should I be worried at 2.5?", senderUid: 'partner' },
   { id: 'p2', role: 'assistant', content: "At 2½, every child's pace differs. From your logs Felix **uses two-word phrases** and follows two-step instructions — both strong signs. A few practical things to try, and a clear marker for when to mention it at his check-up." },

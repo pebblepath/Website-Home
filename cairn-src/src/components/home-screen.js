@@ -32,6 +32,7 @@ import {
   mockMilestones,
   mockInsights,
   mockDailyCard,
+  mockFamilyDailyCard,
   mockChildPebbleMessages,
 } from '../data/mock.js';
 import {
@@ -76,6 +77,13 @@ export class HomeScreen extends LitElement {
     childMilestones: { type: Array },
     childInsights: { type: Array },
     childDailyCard: { type: Object },
+    familyDailyCard: { type: Object },
+    // Close-the-loop Slice 4 (2026-05-28) — the four memory layers
+    // ("What Pebble Knows"), read-only.
+    pebbleAnchors: { type: Array },
+    pebbleRhythms: { type: Array },
+    pebblePatterns: { type: Array },
+    pebbleLiveContext: { type: Array },
     childPebbleMessages: { type: Array },
     childPebbleSessions: { type: Array },
     // Batch F — read-only child-viewer tier + access requests.
@@ -92,6 +100,8 @@ export class HomeScreen extends LitElement {
      *  URL param, so it never collides with app-shell's ?join / ?reset
      *  / ?preview routing. */
     _activeTab: { state: true },
+    // Close-the-loop Slice 3 (2026-05-28) — family-brief refresh spinner.
+    _refreshingFamilyBrief: { state: true },
     _formOpen: { state: true },
     _formTrip: { state: true },
     _formBusy: { state: true },
@@ -181,6 +191,12 @@ export class HomeScreen extends LitElement {
     this.childMilestones = [];
     this.childInsights = [];
     this.childDailyCard = null;
+    this.familyDailyCard = null;
+    this.pebbleAnchors = [];
+    this.pebbleRhythms = [];
+    this.pebblePatterns = [];
+    this.pebbleLiveContext = [];
+    this._wpkExpanded = new Set();
     this.childPebbleMessages = [];
     this.childPebbleSessions = [];
     this.ppIsChildViewer = false;
@@ -214,6 +230,7 @@ export class HomeScreen extends LitElement {
     // celebrations surface (the pre-tabs dashboard); My Cairn holds the
     // ring stack; Children + Pebble are the app-companion surfaces.
     this._activeTab = 'today';
+    this._refreshingFamilyBrief = false;
     this._formOpen = false;
     this._formTrip = null;
     this._formBusy = false;
@@ -2541,6 +2558,202 @@ export class HomeScreen extends LitElement {
     .daily .ask:hover {
       background: rgba(255, 255, 255, 0.24);
     }
+    /* Close-the-loop Slice 3 (2026-05-28) — family-scope brief.
+       Light informational surface (NOT the saturated teal .daily
+       card), bullet-based, mirrors the iOS InformationalBriefCard. */
+    .family-brief {
+      margin-bottom: 16px;
+    }
+    .fb-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .fb-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-teal);
+    }
+    .fb-refresh {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      border: 1px solid var(--glass-border-strong);
+      background: transparent;
+      color: var(--ink-teal);
+      cursor: pointer;
+    }
+    .fb-refresh:hover:not(:disabled) {
+      background: rgba(61, 155, 143, 0.12);
+    }
+    .fb-refresh:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+    .fb-refresh.spinning svg {
+      animation: fb-spin 0.9s linear infinite;
+    }
+    @keyframes fb-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+    .fb-title {
+      margin: 0 0 14px;
+      font-family: var(--font-display);
+      font-size: 19px;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+    }
+    .fb-bullets {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .fb-bullet {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+    }
+    .fb-ico {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fb-text {
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--text-primary);
+    }
+    .fb-body {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    /* Close-the-loop Slice 4 (2026-05-28) — "What Pebble Knows". */
+    .wpk {
+      margin-top: 8px;
+    }
+    .wpk-intro {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin: 0 0 14px;
+      padding: 0 2px;
+      line-height: 1.5;
+      max-width: 640px;
+    }
+    .wpk .section-head h3 {
+      font-family: var(--font-display);
+      font-size: 15px;
+      margin: 0;
+      letter-spacing: -0.01em;
+    }
+    .wpk-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+    }
+    .wpk-empty {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      padding: 6px 2px;
+      line-height: 1.5;
+    }
+    .wpk-rows {
+      display: flex;
+      flex-direction: column;
+    }
+    .wpk-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .wpk-row:last-child {
+      border-bottom: none;
+    }
+    .wpk-ico {
+      flex-shrink: 0;
+      width: 22px;
+      color: var(--ink-teal);
+      display: inline-flex;
+      align-items: center;
+      padding-top: 1px;
+    }
+    .wpk-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .wpk-primary {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+    .wpk-secondary {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 1px;
+    }
+    .wpk-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      margin-top: 5px;
+    }
+    .wpk-scope {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 1px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid currentColor;
+      white-space: nowrap;
+    }
+    .wpk-scope.family {
+      color: var(--ink-teal);
+    }
+    .wpk-scope.child {
+      color: var(--ink-blue);
+    }
+    .wpk-scope.member {
+      color: var(--ink-terracotta);
+    }
+    .wpk-hint {
+      font-size: 11px;
+      font-style: italic;
+      color: var(--text-tertiary);
+    }
+    .wpk-toggle {
+      margin-top: 8px;
+      background: none;
+      border: none;
+      color: var(--ink-teal);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 0;
+    }
     .child-card {
       display: flex;
       align-items: center;
@@ -4663,6 +4876,7 @@ export class HomeScreen extends LitElement {
 
     return html`
       ${this._renderTodayHeader(scope)}
+      ${this._renderFamilyBrief(cd)}
 
       <section class="today-lead">
         <div class="today-top">
@@ -4956,6 +5170,8 @@ export class HomeScreen extends LitElement {
       </section>
 
       ${this._renderChildAccessSection()}
+
+      ${this._renderWhatPebbleKnows()}
 
       <section>
         <div class="section-head"><h2>Account</h2></div>
@@ -5507,6 +5723,397 @@ export class HomeScreen extends LitElement {
       ></profile-sheet>
     `;
   }
+  // ── Close-the-loop Slice 3 (2026-05-28) — family-scope brief ──
+  //
+  // The multi-child Family Brief, generated server-side nightly
+  // (scheduledFamilyBriefs CF) + read via dataStore. Bullet-based
+  // (brief mode); each bullet carries a `kind` mapped to a categorical
+  // icon tile + tint, mirroring the iOS InformationalBriefCard. Refresh
+  // calls the refreshFamilyBrief callable (full memory-bank rebuild).
+  // Only renders when a card exists — the server only writes one for
+  // multi-child families, so presence implies N>=2.
+  _renderFamilyBrief(cd) {
+    const fc = cd.familyDailyCard;
+    if (!fc) return '';
+    const bullets = Array.isArray(fc.bullets) ? fc.bullets : [];
+    const spinning = this._refreshingFamilyBrief ? 'spinning' : '';
+    return html`
+      <section class="family-brief">
+        <glass-panel padding="md" variant="strong">
+          <div class="fb-head">
+            <div class="fb-tag">
+              <pebble-icon size="18"></pebble-icon>
+              <span>Family brief</span>
+            </div>
+            <button
+              class="fb-refresh ${spinning}"
+              title="Refresh brief"
+              aria-label="Refresh family brief"
+              ?disabled=${this._refreshingFamilyBrief}
+              @click=${() => this._onRefreshFamilyBrief()}
+            >
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12a9 9 0 1 1-2.64-6.36"></path>
+                <path d="M21 4v5h-5"></path>
+              </svg>
+            </button>
+          </div>
+          <h3 class="fb-title">${fc.title}</h3>
+          ${bullets.length
+            ? html`<ul class="fb-bullets">
+                ${bullets.map((b) => this._renderBriefBullet(b))}
+              </ul>`
+            : html`<p class="fb-body">${fc.body}</p>`}
+        </glass-panel>
+      </section>
+    `;
+  }
+
+  _renderBriefBullet(b) {
+    const kind =
+      b && typeof b.kind === 'string' ? b.kind : 'other';
+    const text = b && typeof b.text === 'string' ? b.text : '';
+    const tint = this._briefTint(kind);
+    return html`<li class="fb-bullet">
+      <span
+        class="fb-ico"
+        style="color:${tint};background:${tint}29;"
+      >${this._briefGlyph(kind)}</span>
+      <span class="fb-text">${text}</span>
+    </li>`;
+  }
+
+  /** Bullet-kind tint, mirroring the iOS BriefBulletKind tint map onto
+   *  the Portal palette (milestone-domain + brand tokens). */
+  _briefTint(kind) {
+    switch (kind) {
+      case 'plan': return '#3d9b8f'; // teal
+      case 'weather': return '#d4a843'; // amber / language
+      case 'packing': return '#8b7bb5'; // purple / cognitive
+      case 'coordinate': return '#6b9ac4'; // blue / motor
+      case 'action': return '#c67b5c'; // terracotta
+      case 'trip': return '#2d7a70'; // teal dark
+      case 'rhythm': return '#c98a8a'; // rose / social
+      case 'memory': return '#1f5c54'; // teal deep
+      default: return '#8a8f98'; // muted
+    }
+  }
+
+  /** Categorical SVG glyph per bullet kind. Stroke = currentColor so
+   *  the tint flows from the .fb-ico color. Simple, recognizable
+   *  shapes — the iOS SF Symbols don't translate 1:1 to the web. */
+  _briefGlyph(kind) {
+    const a = {
+      width: 14, height: 14, viewBox: '0 0 24 24',
+    };
+    switch (kind) {
+      case 'plan': // sparkle
+        return html`<svg viewBox=${a.viewBox} width=${a.width} height=${a.height}
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v5M12 16v5M3 12h5M16 12h5"></path>
+          <path d="M6.5 6.5l2.5 2.5M15 15l2.5 2.5M17.5 6.5L15 9M9 15l-2.5 2.5"></path>
+        </svg>`;
+      case 'weather': // sun
+        return html`<svg viewBox=${a.viewBox} width=${a.width} height=${a.height}
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"></path>
+        </svg>`;
+      case 'packing': // suitcase
+        return html`<svg viewBox=${a.viewBox} width=${a.width} height=${a.height}
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="8" width="16" height="12" rx="2"></rect>
+          <path d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path>
+        </svg>`;
+      case 'coordinate': // two people
+        return html`<svg viewBox=${a.viewBox} width=${a.width} height=${a.height}
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="8" r="3"></circle>
+          <path d="M3.5 20a5.5 5.5 0 0 1 11 0"></path>
+          <circle cx="17" cy="9" r="2.4"></circle>
+          <path d="M16 14.2a4.5 4.5 0 0 1 4.5 4.8"></path>
+        </svg>`;
+      case 'action': // checkmark
+        return html`<svg viewBox=${a.viewBox} width=${a.width} height=${a.height}
+          fill="none" stroke="currentColor" stroke-width="2.4"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12.5l4.5 4.5L19 7"></path>
+        </svg>`;
+      case 'trip': // paper plane
+        return html`<svg viewBox=${a.viewBox} width=${a.width} height=${a.height}
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 4L3 11l6 2.5L21 4z"></path>
+          <path d="M9 13.5V20l3.5-3.8"></path>
+        </svg>`;
+      case 'rhythm': // clock
+        return html`<svg viewBox=${a.viewBox} width=${a.width} height=${a.height}
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="8"></circle>
+          <path d="M12 8v4.5l3 1.8"></path>
+        </svg>`;
+      case 'memory': // heart
+        return html`<svg viewBox=${a.viewBox} width=${a.width} height=${a.height}
+          fill="currentColor" stroke="none">
+          <path d="M12 20.5S4 15.5 4 9.8A3.8 3.8 0 0 1 12 7.4 3.8 3.8 0 0 1 20 9.8c0 5.7-8 10.7-8 10.7z"></path>
+        </svg>`;
+      default: // dot
+        return html`<svg viewBox=${a.viewBox} width=${a.width} height=${a.height}
+          fill="currentColor" stroke="none">
+          <circle cx="12" cy="12" r="4"></circle>
+        </svg>`;
+    }
+  }
+
+  async _onRefreshFamilyBrief() {
+    if (this.preview || this._refreshingFamilyBrief) return;
+    this._refreshingFamilyBrief = true;
+    try {
+      await dataStore.refreshFamilyBrief();
+      // The live _unsubFamilyDaily listener picks up the overwrite —
+      // no manual state set needed.
+    } catch (err) {
+      console.warn('[Portal] refreshFamilyBrief failed:', err?.message ?? err);
+    } finally {
+      this._refreshingFamilyBrief = false;
+    }
+  }
+
+  // ── Close-the-loop Slice 4 (2026-05-28) — "What Pebble Knows" ──
+  //
+  // Read-only Portal mirror of the iOS SettingsMemoryView. Renders the
+  // four Family Memory Engine layers (Anchors / Rhythms / Patterns /
+  // Live context) as stacked panels with scope tags + a top-3 collapse.
+  // Editing stays iOS-only — the web is a transparency surface so a
+  // parent can SEE what Pebble has remembered. Parent-household only
+  // (gated on ppIsMember; the data layer only subscribes for the
+  // own-household path).
+  _renderWhatPebbleKnows() {
+    if (!this.ppIsMember) return '';
+    const anchors = this.pebbleAnchors ?? [];
+    const rhythms = this.pebbleRhythms ?? [];
+    const patterns = this.pebblePatterns ?? [];
+    const live = this.pebbleLiveContext ?? [];
+    return html`
+      <section class="wpk">
+        <div class="section-head"><h2>What Pebble knows</h2></div>
+        <p class="wpk-intro">
+          Pebble keeps a memory of your family in four layers. Edit anchors and
+          rhythms in the PebblePath app; this is a read-only view on the web.
+        </p>
+        <div class="grid-2">
+          ${this._wpkGroup({
+            label: 'Anchors',
+            subtitle: 'Rarely-changes facts: names, allergies, sizes, places.',
+            empty: 'No anchors yet. Add facts Pebble should always know in the app.',
+            items: anchors,
+            glyph: 'anchor',
+            row: (a) =>
+              this._wpkRow({
+                glyph: 'anchor',
+                primary: a.label,
+                secondary: a.value,
+                scope: a.scope,
+                childId: a.childId,
+              }),
+          })}
+          ${this._wpkGroup({
+            label: 'Rhythms',
+            subtitle: 'Routines that repeat: bedtime, school, weekly classes.',
+            empty: 'No rhythms yet. Add a routine Pebble should expect in the app.',
+            items: rhythms,
+            glyph: 'rhythm',
+            row: (r) =>
+              this._wpkRow({
+                glyph: 'rhythm',
+                primary: r.title,
+                secondary: this._wpkCadence(r),
+                scope: r.scope,
+                childId: r.childId,
+              }),
+          })}
+          ${this._wpkGroup({
+            label: 'Patterns',
+            subtitle: 'What Pebble has noticed about your family over time.',
+            empty:
+              'Patterns appear as Pebble learns from how you use the app. Nothing yet.',
+            items: patterns,
+            glyph: 'pattern',
+            row: (p) =>
+              this._wpkRow({
+                glyph: 'pattern',
+                primary: p.statement,
+                scope: p.scope,
+                childId: p.childId,
+                hint: p.confidence < 0.6 ? 'Pebble is still learning this' : '',
+              }),
+          })}
+          ${this._wpkGroup({
+            label: 'Live context',
+            subtitle: "This week's calendar, weather, handoffs, prep.",
+            empty:
+              'Calendar events, weather, and handoffs appear here. Nothing yet.',
+            items: live,
+            glyph: 'live',
+            row: (i) =>
+              this._wpkRow({
+                glyph: 'live',
+                primary: i.title,
+                secondary: this._wpkRelDate(i.validFrom),
+                scope: i.scope,
+                childId: i.childId,
+              }),
+          })}
+        </div>
+      </section>
+    `;
+  }
+
+  _wpkGroup({ label, subtitle, empty, items, row }) {
+    const expanded = this._wpkExpanded.has(label);
+    const shown = expanded ? items : items.slice(0, 3);
+    return html`
+      <div>
+        <div class="section-head"><h3>${label}</h3></div>
+        <glass-panel padding="md" variant="strong" stretch>
+          <div class="wpk-sub">${subtitle}</div>
+          ${items.length === 0
+            ? html`<div class="wpk-empty">${empty}</div>`
+            : html`<div class="wpk-rows">${shown.map(row)}</div>`}
+          ${items.length > 3
+            ? html`<button
+                class="wpk-toggle"
+                @click=${() => this._toggleWpk(label)}
+              >
+                ${expanded ? 'Show fewer' : `Show all ${items.length}`}
+              </button>`
+            : ''}
+        </glass-panel>
+      </div>
+    `;
+  }
+
+  _wpkRow({ glyph, primary, secondary, scope, childId, hint }) {
+    return html`<div class="wpk-row">
+      <span class="wpk-ico">${this._wpkGlyph(glyph)}</span>
+      <div class="wpk-body">
+        <div class="wpk-primary">${primary}</div>
+        ${secondary
+          ? html`<div class="wpk-secondary">${secondary}</div>`
+          : ''}
+        <div class="wpk-tags">
+          <span class="wpk-scope ${this._scopeClass(scope)}"
+            >${this._scopeLabel(scope, childId)}</span
+          >
+          ${hint ? html`<span class="wpk-hint">${hint}</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  _toggleWpk(label) {
+    if (this._wpkExpanded.has(label)) this._wpkExpanded.delete(label);
+    else this._wpkExpanded.add(label);
+    this.requestUpdate();
+  }
+
+  _scopeClass(scope) {
+    if (scope === 'child') return 'child';
+    if (scope === 'member') return 'member';
+    return 'family';
+  }
+
+  _scopeLabel(scope, childId) {
+    if (scope === 'member') return 'Private';
+    if (scope === 'child') {
+      const kid = (this.ppChildren ?? []).find((c) => c.id === childId);
+      return kid?.name ?? 'Child';
+    }
+    return 'Family';
+  }
+
+  _wpkCadence(r) {
+    let cadence;
+    switch (r.cadence) {
+      case 'daily': cadence = 'Daily'; break;
+      case 'weekday': cadence = 'Weekdays'; break;
+      case 'weekly':
+        cadence =
+          Array.isArray(r.daysOfWeek) && r.daysOfWeek.length
+            ? r.daysOfWeek.map((n) => this._weekdayShort(n)).filter(Boolean).join(', ')
+            : 'Weekly';
+        break;
+      case 'monthly': cadence = 'Monthly'; break;
+      case 'asNeeded': cadence = 'As needed'; break;
+      default: cadence = r.cadence || '';
+    }
+    return r.timeOfDay ? `${cadence} · ${r.timeOfDay}` : cadence;
+  }
+
+  _weekdayShort(n) {
+    return ['', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'][n] ?? '';
+  }
+
+  _wpkRelDate(ts) {
+    const millis = ts?.toMillis?.() ?? (ts ? new Date(ts).getTime() : 0);
+    if (!millis) return '';
+    const day = 24 * 3600 * 1000;
+    const startOf = (t) => {
+      const d = new Date(t);
+      d.setHours(0, 0, 0, 0);
+      return d.getTime();
+    };
+    const diff = Math.round((startOf(millis) - startOf(Date.now())) / day);
+    if (diff === 0) return 'Today';
+    if (diff === 1) return 'Tomorrow';
+    if (diff === -1) return 'Yesterday';
+    if (diff > 1) return `In ${diff} days`;
+    return `${-diff} days ago`;
+  }
+
+  _wpkGlyph(kind) {
+    const a = { width: 16, height: 16, viewBox: '0 0 24 24' };
+    switch (kind) {
+      case 'rhythm': // repeat
+        return html`<svg viewBox=${a.viewBox} width=${a.width} height=${a.height}
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 2l4 4-4 4"></path>
+          <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+          <path d="M7 22l-4-4 4-4"></path>
+          <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+        </svg>`;
+      case 'pattern': // insight / eye
+        return html`<svg viewBox=${a.viewBox} width=${a.width} height=${a.height}
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>`;
+      case 'live': // calendar
+        return html`<svg viewBox=${a.viewBox} width=${a.width} height=${a.height}
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="5" width="18" height="16" rx="2"></rect>
+          <path d="M3 9h18M8 3v4M16 3v4"></path>
+        </svg>`;
+      default: // anchor → map pin
+        return html`<svg viewBox=${a.viewBox} width=${a.width} height=${a.height}
+          fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"></path>
+          <circle cx="12" cy="9" r="2.5"></circle>
+        </svg>`;
+    }
+  }
+
   _childData() {
     if (this.preview) {
       return {
@@ -5517,6 +6124,7 @@ export class HomeScreen extends LitElement {
         milestones: mockMilestones,
         insights: mockInsights,
         dailyCard: mockDailyCard,
+        familyDailyCard: mockFamilyDailyCard,
         pebbleMessages: mockChildPebbleMessages,
         pebbleSessions: [],
       };
@@ -5538,6 +6146,7 @@ export class HomeScreen extends LitElement {
       milestones: this.childMilestones ?? [],
       insights: this.childInsights ?? [],
       dailyCard: this.childDailyCard ?? null,
+      familyDailyCard: this.familyDailyCard ?? null,
       pebbleMessages: this.childPebbleMessages ?? [],
       pebbleSessions: this.childPebbleSessions ?? [],
     };

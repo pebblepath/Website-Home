@@ -30,6 +30,11 @@ export class AppShell extends LitElement {
     childMilestones: { state: true },
     childInsights: { state: true },
     childDailyCard: { state: true },
+    familyDailyCard: { state: true },
+    pebbleAnchors: { state: true },
+    pebbleRhythms: { state: true },
+    pebblePatterns: { state: true },
+    pebbleLiveContext: { state: true },
     childPebbleMessages: { state: true },
     childPebbleSessions: { state: true },
     ppIsChildViewer: { state: true },
@@ -89,6 +94,11 @@ export class AppShell extends LitElement {
     this.childMilestones = [];
     this.childInsights = [];
     this.childDailyCard = null;
+    this.familyDailyCard = null;
+    this.pebbleAnchors = [];
+    this.pebbleRhythms = [];
+    this.pebblePatterns = [];
+    this.pebbleLiveContext = [];
     this.childPebbleMessages = [];
     this.childPebbleSessions = [];
     this.ppIsChildViewer = false;
@@ -109,6 +119,11 @@ export class AppShell extends LitElement {
       this.childMilestones = dataStore.state.childMilestones;
       this.childInsights = dataStore.state.childInsights;
       this.childDailyCard = dataStore.state.childDailyCard;
+      this.familyDailyCard = dataStore.state.familyDailyCard;
+      this.pebbleAnchors = dataStore.state.pebbleAnchors;
+      this.pebbleRhythms = dataStore.state.pebbleRhythms;
+      this.pebblePatterns = dataStore.state.pebblePatterns;
+      this.pebbleLiveContext = dataStore.state.pebbleLiveContext;
       this.childPebbleMessages = dataStore.state.childPebbleMessages;
       this.childPebbleSessions = dataStore.state.childPebbleSessions;
       this.ppIsChildViewer = dataStore.state.ppIsChildViewer;
@@ -333,6 +348,11 @@ export class AppShell extends LitElement {
         .childMilestones=${this.childMilestones}
         .childInsights=${this.childInsights}
         .childDailyCard=${this.childDailyCard}
+        .familyDailyCard=${this.familyDailyCard}
+        .pebbleAnchors=${this.pebbleAnchors}
+        .pebbleRhythms=${this.pebbleRhythms}
+        .pebblePatterns=${this.pebblePatterns}
+        .pebbleLiveContext=${this.pebbleLiveContext}
         .childPebbleMessages=${this.childPebbleMessages}
         .childPebbleSessions=${this.childPebbleSessions}
         .ppIsChildViewer=${this.ppIsChildViewer}

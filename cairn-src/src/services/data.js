@@ -107,6 +107,17 @@ class FamilyDataStore extends EventTarget {
       childMilestones: [],
       childInsights: [],
       childDailyCard: null,
+      // Close-the-loop Slice 3 (2026-05-28) — family-scope daily brief
+      // (the multi-child Family Brief). Generated server-side nightly
+      // (scheduledFamilyBriefs CF), read here. Parent-household only.
+      familyDailyCard: null,
+      // Close-the-loop Slice 4 (2026-05-28) — the four memory layers,
+      // read-only ("What Pebble Knows"). Member-private docs of the
+      // co-parent are filtered to the viewer's own uid in the listener.
+      pebbleAnchors: [],
+      pebbleRhythms: [],
+      pebblePatterns: [],
+      pebbleLiveContext: [],
       childPebbleMessages: [],
       childPebbleSessions: [],
     };
@@ -126,6 +137,13 @@ class FamilyDataStore extends EventTarget {
     this._unsubChildMs = null;
     this._unsubChildIns = null;
     this._unsubChildDaily = null;
+    this._unsubFamilyDaily = null;
+    // Close-the-loop Slice 4 (2026-05-28) — the four memory layers
+    // ("What Pebble Knows"). Read-only on the web (editing stays iOS).
+    this._unsubAnchors = null;
+    this._unsubRhythms = null;
+    this._unsubPatterns = null;
+    this._unsubLiveContext = null;
     this._unsubChildPebble = null;
     this._unsubChildSessions = null;
     // Batch F — read-only when the PP-household is resolved via the
@@ -566,6 +584,94 @@ class FamilyDataStore extends EventTarget {
         console.warn('[Portal] ppChildren subscription error:', err.code, err.message);
       },
     );
+    // Close-the-loop Slice 3 (2026-05-28) — family-scope daily brief.
+    // Family-level (not per-child): generated nightly server-side for
+    // multi-child families + written to /familyDailyCards/{YYYY-MM-DD}.
+    // Gated on the own-household path (`!_ppReadOnly`) exactly like the
+    // per-child dailyCards subscription — a read-only viewer would just
+    // get PERMISSION_DENIED churn (rule is isFamilyMember). Latest =
+    // lexicographically-max doc id (sorts chronologically, tz-free).
+    if (!this._ppReadOnly) {
+      this._unsubFamilyDaily = onSnapshot(
+        collection(db, 'families', ppFid, 'familyDailyCards'),
+        (snap) => {
+          const cards = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+          cards.sort((a, b) => String(b.id).localeCompare(String(a.id)));
+          this.state.familyDailyCard = cards[0] ?? null;
+          this._emit();
+        },
+        (err) =>
+          console.warn('[Portal] familyDailyCards error:', err.code, err.message),
+      );
+      // Close-the-loop Slice 4 — the four memory layers ("What Pebble
+      // Knows"). Same own-household gate; rules `allow list` is
+      // permissive so the listener succeeds, and we scope-filter
+      // member-private docs to the viewer's own uid client-side.
+      this._subscribePebbleMemory(ppFid);
+    }
+  }
+
+  /**
+   * Close-the-loop Slice 4 (2026-05-28) — subscribe the four Family
+   * Memory Engine layers for the read-only "What Pebble Knows" Portal
+   * surface. The Firestore rules use a permissive `allow list` + strict
+   * `allow get`, so a collection listener returns ALL docs; we filter
+   * member-private docs (scope === 'member') down to the viewer's own
+   * uid here (the co-parent's private notes must not leak). Family +
+   * child scope pass through; the render resolves child names + tags.
+   * Patterns + dismissed live-context items are dropped. Editing stays
+   * iOS-only — this is purely a read surface.
+   */
+  _subscribePebbleMemory(ppFid) {
+    const mineOnly = (d) => d.scope !== 'member' || d.memberUid === this._uid;
+    const ms = (t) => t?.toMillis?.() ?? 0;
+    this._unsubAnchors = onSnapshot(
+      collection(db, 'families', ppFid, 'anchors'),
+      (snap) => {
+        this.state.pebbleAnchors = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .filter(mineOnly)
+          .sort((a, b) => ms(b.updatedAt) - ms(a.updatedAt));
+        this._emit();
+      },
+      (err) => console.warn('[Portal] anchors error:', err.code, err.message),
+    );
+    this._unsubRhythms = onSnapshot(
+      collection(db, 'families', ppFid, 'rhythms'),
+      (snap) => {
+        this.state.pebbleRhythms = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .filter(mineOnly)
+          .sort((a, b) => ms(b.updatedAt) - ms(a.updatedAt));
+        this._emit();
+      },
+      (err) => console.warn('[Portal] rhythms error:', err.code, err.message),
+    );
+    this._unsubPatterns = onSnapshot(
+      collection(db, 'families', ppFid, 'patterns'),
+      (snap) => {
+        this.state.pebblePatterns = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .filter(mineOnly)
+          .filter((p) => !p.dismissedAt)
+          .sort((a, b) => ms(b.derivedAt) - ms(a.derivedAt));
+        this._emit();
+      },
+      (err) => console.warn('[Portal] patterns error:', err.code, err.message),
+    );
+    this._unsubLiveContext = onSnapshot(
+      collection(db, 'families', ppFid, 'liveContext'),
+      (snap) => {
+        const cutoff = Date.now() - 14 * 24 * 3600 * 1000;
+        this.state.pebbleLiveContext = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .filter(mineOnly)
+          .filter((i) => !i.dismissedAt && ms(i.validFrom) >= cutoff)
+          .sort((a, b) => ms(b.validFrom) - ms(a.validFrom));
+        this._emit();
+      },
+      (err) => console.warn('[Portal] liveContext error:', err.code, err.message),
+    );
   }
 
   /**
@@ -791,6 +897,24 @@ class FamilyDataStore extends EventTarget {
     return result.data;
   }
 
+  /**
+   * Close-the-loop Slice 3 (2026-05-28) — force-regenerate today's
+   * family-scope brief SERVER-SIDE via the `refreshFamilyBrief`
+   * callable. The CF rebuilds context from the full memory bank,
+   * overwrites /familyDailyCards/{date}, and returns the card. The
+   * live `_unsubFamilyDaily` listener also picks up the overwrite, so
+   * we don't need to set state from the return — but we return it so
+   * the caller can react (toast, optimistic render). Parent-only
+   * (CF re-enforces isFamilyMember).
+   */
+  async refreshFamilyBrief() {
+    if (!functions) throw new Error('Firebase functions not configured.');
+    if (!this._ppFamilyId) throw new Error('No PebblePath family.');
+    const fn = httpsCallable(functions, 'refreshFamilyBrief');
+    const result = await fn({ familyId: this._ppFamilyId });
+    return result.data;
+  }
+
   // ── Pebble multi-session (Portal v7) ─────────────────────────────
   // Each chat is a `pebbleSessions/{id}` doc; messages carry
   // `sessionId`. Privacy is per-SESSION (stored on the session doc;
@@ -873,9 +997,19 @@ class FamilyDataStore extends EventTarget {
     this._teardownChild();
     this._unsubPpFamily?.();
     this._unsubPpChildren?.();
+    this._unsubFamilyDaily?.();
+    this._unsubAnchors?.();
+    this._unsubRhythms?.();
+    this._unsubPatterns?.();
+    this._unsubLiveContext?.();
     this._unsubIncomingReq?.();
     this._unsubPpFamily = null;
     this._unsubPpChildren = null;
+    this._unsubFamilyDaily = null;
+    this._unsubAnchors = null;
+    this._unsubRhythms = null;
+    this._unsubPatterns = null;
+    this._unsubLiveContext = null;
     this._unsubIncomingReq = null;
     this._selectedChildId = null;
     this.state.ppFamily = null;
@@ -887,6 +1021,11 @@ class FamilyDataStore extends EventTarget {
     this.state.childMilestones = [];
     this.state.childInsights = [];
     this.state.childDailyCard = null;
+    this.state.familyDailyCard = null;
+    this.state.pebbleAnchors = [];
+    this.state.pebbleRhythms = [];
+    this.state.pebblePatterns = [];
+    this.state.pebbleLiveContext = [];
     this.state.childPebbleMessages = [];
     this.state.childPebbleSessions = [];
   }
@@ -2417,6 +2556,11 @@ class FamilyDataStore extends EventTarget {
       childMilestones: [],
       childInsights: [],
       childDailyCard: null,
+      familyDailyCard: null,
+      pebbleAnchors: [],
+      pebbleRhythms: [],
+      pebblePatterns: [],
+      pebbleLiveContext: [],
       childPebbleMessages: [],
       childPebbleSessions: [],
     };
