@@ -44,6 +44,7 @@ import {
   resolveEventOccurrence,
   parseLocalDate,
   formatLocalDate,
+  gradientForTrip,
 } from '../services/data.js';
 import { signOutUser } from '../services/firebase.js';
 import { toast } from '../services/toast.js';
@@ -102,6 +103,9 @@ export class HomeScreen extends LitElement {
     _activeTab: { state: true },
     // Close-the-loop Slice 3 (2026-05-28) — family-brief refresh spinner.
     _refreshingFamilyBrief: { state: true },
+    // "What Pebble knows" drill-down (open = detail view, like the iOS
+    // settings page push). Reset on tab-leave in updated().
+    _wpkOpen: { state: true },
     _formOpen: { state: true },
     _formTrip: { state: true },
     _formBusy: { state: true },
@@ -231,6 +235,7 @@ export class HomeScreen extends LitElement {
     // ring stack; Children + Pebble are the app-companion surfaces.
     this._activeTab = 'today';
     this._refreshingFamilyBrief = false;
+    this._wpkOpen = false;
     this._formOpen = false;
     this._formTrip = null;
     this._formBusy = false;
@@ -2558,11 +2563,115 @@ export class HomeScreen extends LitElement {
     .daily .ask:hover {
       background: rgba(255, 255, 255, 0.24);
     }
+    /* 2026-05-28 — next-trip card (replaces the per-child Pebble Daily
+       card). Fills the same left-column slot (flex:1) so it matches the
+       Coming-up panel height, exactly like .daily did. */
+    .today-top-left .next-trip {
+      flex: 1;
+    }
+    .next-trip {
+      position: relative;
+      display: block;
+      width: 100%;
+      min-height: 200px;
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      cursor: pointer;
+      text-align: left;
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 12px 30px rgba(31, 92, 84, 0.22);
+    }
+    .next-trip .nt-scrim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0) 38%,
+        rgba(20, 12, 6, 0.62) 100%
+      );
+    }
+    .next-trip .nt-overlay {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 18px 20px;
+      z-index: 1;
+    }
+    .next-trip .nt-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 4px;
+    }
+    .next-trip .nt-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+    }
+    .next-trip .nt-dates {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.85);
+      margin-top: 3px;
+    }
+    .next-trip.empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--glass-fill-strong);
+      border: 1px dashed var(--glass-border-strong);
+      box-shadow: none;
+    }
+    .next-trip .nt-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 24px;
+      text-align: center;
+      color: var(--text-secondary);
+    }
+    .next-trip .nt-empty-title {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text-primary);
+    }
+    .next-trip .nt-empty-sub {
+      font-size: 13px;
+      color: var(--ink-teal);
+    }
     /* Close-the-loop Slice 3 (2026-05-28) — family-scope brief.
        Light informational surface (NOT the saturated teal .daily
        card), bullet-based, mirrors the iOS InformationalBriefCard. */
     .family-brief {
       margin-bottom: 16px;
+    }
+    /* Pebble watermark (top-left, faint, clipped by the panel's
+       overflow:hidden) + content layered above it. */
+    .fb-card {
+      position: relative;
+    }
+    .fb-watermark {
+      position: absolute;
+      top: -30px;
+      left: -26px;
+      width: 150px;
+      height: 115px;
+      opacity: 0.1;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .fb-content {
+      position: relative;
+      z-index: 1;
     }
     .fb-head {
       display: flex;
@@ -2630,13 +2739,30 @@ export class HomeScreen extends LitElement {
       gap: 11px;
     }
     .fb-ico {
+      position: relative;
       flex-shrink: 0;
-      width: 26px;
-      height: 26px;
-      border-radius: 7px;
+      width: 28px;
+      height: 28px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+    }
+    .fb-ico-peb {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .fb-ico-glyph {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .fb-ico-glyph svg {
+      width: 14px;
+      height: 14px;
     }
     .fb-text {
       font-size: 14px;
@@ -2650,6 +2776,24 @@ export class HomeScreen extends LitElement {
       color: var(--text-secondary);
     }
     /* Close-the-loop Slice 4 (2026-05-28) — "What Pebble Knows". */
+    .wpk-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin: 0 0 6px;
+      padding: 6px 12px 6px 8px;
+      background: none;
+      border: none;
+      color: var(--ink-teal);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: var(--radius-pill);
+    }
+    .wpk-back:hover {
+      background: rgba(61, 155, 143, 0.1);
+    }
     .wpk {
       margin-top: 8px;
     }
@@ -3138,6 +3282,11 @@ export class HomeScreen extends LitElement {
     }
     if (changed.has('_activeTab')) {
       this._positionTabSlider({ animate: true });
+      // Pop the "What Pebble knows" drill-down when leaving Settings so
+      // returning to the tab lands on the root (matches iOS pop-on-leave).
+      if (this._activeTab !== 'cairn' && this._wpkOpen) {
+        this._wpkOpen = false;
+      }
     }
     // 2026-05-24 — design 28. Manage plan-item subscriptions for the
     // visible-week trip set. Week-only subscription set so non-week
@@ -4872,7 +5021,6 @@ export class HomeScreen extends LitElement {
       .sort((a, b) => (b.ageRangeStartMonths ?? 0) - (a.ageRangeStartMonths ?? 0))
       .slice(0, 3);
     const insight = (cd.insights || [])[0];
-    const dc = cd.dailyCard;
 
     return html`
       ${this._renderTodayHeader(scope)}
@@ -4901,37 +5049,7 @@ export class HomeScreen extends LitElement {
                 </div>
               </div>
             </glass-panel>
-            ${dc
-              ? html`<div class="daily">
-                  <div class="tag">
-                    <pebble-icon size="16"></pebble-icon>
-                    Pebble Daily
-                  </div>
-                  <h3>${dc.title}</h3>
-                  <p>${dc.body}</p>
-                  <button
-                    class="ask"
-                    @click=${() =>
-                      this._onAskPebble({
-                        detail:
-                          dc.topicForChat ||
-                          `Tell me more about: ${dc.title}`,
-                      })}
-                  >
-                    Ask Pebble about this →
-                  </button>
-                </div>`
-              : html`<div class="daily">
-                  <div class="tag">
-                    <pebble-icon size="16"></pebble-icon>
-                    Pebble Daily
-                  </div>
-                  <h3>Pebble's note is on its way</h3>
-                  <p>A fresh observation about ${cd.child.name} appears here each day once Pebble has enough to go on.</p>
-                  <button class="ask" @click=${() => (this._activeTab = 'pebble')}>
-                    Ask Pebble anything →
-                  </button>
-                </div>`}
+            ${this._renderNextTripCard()}
           </div>
           ${comingPanel}
         </div>
@@ -5115,6 +5233,9 @@ export class HomeScreen extends LitElement {
 
   /** MY CAIRN — levels + "what each level sees" + settings. */
   _renderCairnTab() {
+    // Drill-down: "What Pebble knows" detail (like the iOS settings
+    // page push). Opened from the Account-card row below.
+    if (this._wpkOpen) return this._renderWpkDetail();
     const name = this.user?.displayName ?? 'You';
     const email = this.user?.email ?? '';
     const famName = this.family?.name ?? 'Your family';
@@ -5171,8 +5292,6 @@ export class HomeScreen extends LitElement {
 
       ${this._renderChildAccessSection()}
 
-      ${this._renderWhatPebbleKnows()}
-
       <section>
         <div class="section-head"><h2>Account</h2></div>
         <glass-panel padding="md" variant="strong">
@@ -5216,6 +5335,21 @@ export class HomeScreen extends LitElement {
             <div class="sl"><b>PebblePath Premium</b><span>Unlimited Pebble, summaries, and insights.</span></div>
             <span class="set-meta">Managed in the app</span>
           </div>
+          ${this.ppIsMember
+            ? html`<div class="set-row">
+                <span class="si">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3l9 5-9 5-9-5 9-5z"></path>
+                    <path d="M3 13l9 5 9-5"></path>
+                  </svg>
+                </span>
+                <div class="sl">
+                  <b>What Pebble knows</b>
+                  <span>The memory Pebble keeps about your family.</span>
+                </div>
+                <button class="link" @click=${() => { this._wpkOpen = true; }}>View</button>
+              </div>`
+            : ''}
           ${this._renderJoinAnotherFamilyRow()}
         </glass-panel>
       </section>
@@ -5737,35 +5871,51 @@ export class HomeScreen extends LitElement {
     if (!fc) return '';
     const bullets = Array.isArray(fc.bullets) ? fc.bullets : [];
     const spinning = this._refreshingFamilyBrief ? 'spinning' : '';
+    // Pebble watermark (top-left, faint, behind content) mirrors the
+    // iOS dashboard-card design language. preserveAspectRatio="none"
+    // lets the silhouette fill its box from its native viewBox.
+    const wm = this._pebblePath('plan');
     return html`
       <section class="family-brief">
-        <glass-panel padding="md" variant="strong">
-          <div class="fb-head">
-            <div class="fb-tag">
-              <pebble-icon size="18"></pebble-icon>
-              <span>Family brief</span>
-            </div>
-            <button
-              class="fb-refresh ${spinning}"
-              title="Refresh brief"
-              aria-label="Refresh family brief"
-              ?disabled=${this._refreshingFamilyBrief}
-              @click=${() => this._onRefreshFamilyBrief()}
+        <glass-panel padding="sm" variant="strong">
+          <div class="fb-card">
+            <svg
+              class="fb-watermark"
+              viewBox=${wm.vb}
+              preserveAspectRatio="none"
+              aria-hidden="true"
             >
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
-                stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12a9 9 0 1 1-2.64-6.36"></path>
-                <path d="M21 4v5h-5"></path>
-              </svg>
-            </button>
+              <path d=${wm.d} fill="#3d9b8f"></path>
+            </svg>
+            <div class="fb-content">
+              <div class="fb-head">
+                <div class="fb-tag">
+                  <pebble-icon size="20"></pebble-icon>
+                  <span>Family brief</span>
+                </div>
+                <button
+                  class="fb-refresh ${spinning}"
+                  title="Refresh brief"
+                  aria-label="Refresh family brief"
+                  ?disabled=${this._refreshingFamilyBrief}
+                  @click=${() => this._onRefreshFamilyBrief()}
+                >
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                    stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12a9 9 0 1 1-2.64-6.36"></path>
+                    <path d="M21 4v5h-5"></path>
+                  </svg>
+                </button>
+              </div>
+              <h3 class="fb-title">${fc.title}</h3>
+              ${bullets.length
+                ? html`<ul class="fb-bullets">
+                    ${bullets.map((b) => this._renderBriefBullet(b))}
+                  </ul>`
+                : html`<p class="fb-body">${fc.body}</p>`}
+            </div>
           </div>
-          <h3 class="fb-title">${fc.title}</h3>
-          ${bullets.length
-            ? html`<ul class="fb-bullets">
-                ${bullets.map((b) => this._renderBriefBullet(b))}
-              </ul>`
-            : html`<p class="fb-body">${fc.body}</p>`}
         </glass-panel>
       </section>
     `;
@@ -5776,11 +5926,24 @@ export class HomeScreen extends LitElement {
       b && typeof b.kind === 'string' ? b.kind : 'other';
     const text = b && typeof b.text === 'string' ? b.text : '';
     const tint = this._briefTint(kind);
+    const peb = this._pebblePath(kind);
+    // Icon = a faint-tint pebble silhouette (the "pebble design") with
+    // the saturated-tint category glyph on top — mirrors the iOS
+    // tile-at-0.16 + saturated-glyph contrast, in the brand pebble shape.
     return html`<li class="fb-bullet">
-      <span
-        class="fb-ico"
-        style="color:${tint};background:${tint}29;"
-      >${this._briefGlyph(kind)}</span>
+      <span class="fb-ico">
+        <svg
+          class="fb-ico-peb"
+          viewBox=${peb.vb}
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path d=${peb.d} fill=${tint} fill-opacity="0.2"></path>
+        </svg>
+        <span class="fb-ico-glyph" style="color:${tint};"
+          >${this._briefGlyph(kind)}</span
+        >
+      </span>
       <span class="fb-text">${text}</span>
     </li>`;
   }
@@ -5799,6 +5962,27 @@ export class HomeScreen extends LitElement {
       case 'memory': return '#1f5c54'; // teal deep
       default: return '#8a8f98'; // muted
     }
+  }
+
+  /** Hand-drawn pebble silhouette per bullet kind. Paths are the 7
+   *  brand pebbles (a–g) ported verbatim from the iOS PebbleShapes
+   *  library / design-sandbox `<defs>`. Each kind maps to a stable
+   *  shape so a given category always renders the same pebble. */
+  _pebblePath(kind) {
+    const P = {
+      a: { vb: '0 0 100 70', d: 'M 8 38 C 6 18, 26 6, 48 8 C 72 10, 94 18, 94 38 C 94 58, 72 66, 48 64 C 22 62, 10 58, 8 38 Z' },
+      b: { vb: '0 0 80 90', d: 'M 38 6 C 56 8, 70 24, 72 46 C 74 70, 58 84, 38 84 C 16 84, 6 66, 8 44 C 10 22, 22 4, 38 6 Z' },
+      c: { vb: '0 0 90 80', d: 'M 14 26 C 18 10, 38 4, 56 8 C 78 14, 86 32, 82 50 C 76 70, 54 78, 32 72 C 12 66, 10 42, 14 26 Z' },
+      d: { vb: '0 0 70 60', d: 'M 8 30 C 8 14, 22 6, 38 8 C 54 10, 64 22, 62 36 C 60 52, 44 56, 28 54 C 14 52, 8 44, 8 30 Z' },
+      e: { vb: '0 0 110 75', d: 'M 8 38 C 6 18, 30 8, 56 10 C 84 12, 104 22, 104 40 C 102 58, 80 68, 52 66 C 24 64, 10 56, 8 38 Z' },
+      f: { vb: '0 0 95 75', d: 'M 14 24 C 18 10, 40 6, 56 12 C 70 18, 80 18, 86 30 C 90 44, 80 56, 64 60 C 48 64, 28 60, 18 50 C 10 42, 10 32, 14 24 Z' },
+      g: { vb: '0 0 80 80', d: 'M 14 20 C 20 10, 36 6, 52 10 C 68 16, 76 30, 72 48 C 66 64, 50 72, 32 66 C 16 60, 8 44, 10 30 C 12 24, 12 22, 14 20 Z' },
+    };
+    const map = {
+      plan: 'e', weather: 'a', packing: 'c', coordinate: 'g',
+      action: 'd', trip: 'f', rhythm: 'b', memory: 'c', other: 'a',
+    };
+    return P[map[kind] ?? 'a'];
   }
 
   /** Categorical SVG glyph per bullet kind. Stroke = currentColor so
@@ -5886,6 +6070,90 @@ export class HomeScreen extends LitElement {
     }
   }
 
+  // ── 2026-05-28 — Next-trip card (replaces the per-child Pebble
+  // Daily card on the Portal Home). The Family Brief above already
+  // carries the operational message; this slot becomes a trip teaser
+  // that routes to Activities on tap. ──
+
+  /** Soonest ongoing-or-upcoming trip (end >= today), by start date.
+   *  null when the circle has no current/future trips. */
+  _nextUpcomingTrip() {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    let best = null;
+    let bestStart = Infinity;
+    for (const t of this._circleTrips()) {
+      const s = parseLocalDate(t.start);
+      if (!s) continue;
+      const e = parseLocalDate(t.end) ?? s;
+      if (e < today) continue; // already ended
+      if (s.getTime() < bestStart) {
+        best = t;
+        bestStart = s.getTime();
+      }
+    }
+    return best;
+  }
+
+  /** "May 22 – 26" (same month) / "May 30 – Jun 2" / "May 22" (single day). */
+  _fmtTripRange(t) {
+    const s = parseLocalDate(t.start);
+    if (!s) return '';
+    const e = parseLocalDate(t.end) ?? s;
+    const opts = { month: 'short', day: 'numeric' };
+    const ss = s.toLocaleDateString(undefined, opts);
+    if (e.getTime() === s.getTime()) return ss;
+    const sameMonth =
+      s.getMonth() === e.getMonth() && s.getFullYear() === e.getFullYear();
+    const ee = sameMonth ? String(e.getDate()) : e.toLocaleDateString(undefined, opts);
+    return `${ss} – ${ee}`;
+  }
+
+  _renderNextTripCard() {
+    const goActivities = () => {
+      this._activeTab = 'activities';
+    };
+    const trip = this._nextUpcomingTrip();
+    if (!trip) {
+      return html`<button
+        class="next-trip empty"
+        @click=${goActivities}
+        aria-label="Plan a trip in Activities"
+      >
+        <div class="nt-empty">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none"
+            stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 4L3 11l6 2.5L21 4z"></path>
+            <path d="M9 13.5V20l3.5-3.8"></path>
+          </svg>
+          <div class="nt-empty-title">No upcoming trips</div>
+          <div class="nt-empty-sub">Plan one in Activities →</div>
+        </div>
+      </button>`;
+    }
+    const displayImage =
+      (trip.previewImage && String(trip.previewImage).trim()) || trip.coverImage;
+    const cover = displayImage
+      ? `background-image: url("${displayImage}");`
+      : `background: ${gradientForTrip(trip)};`;
+    return html`<button
+      class="next-trip ${displayImage ? 'has-image' : ''}"
+      style=${cover}
+      @click=${goActivities}
+      aria-label="${trip.title} — open in Activities"
+    >
+      <div class="nt-scrim"></div>
+      <div class="nt-overlay">
+        <div class="nt-eyebrow">Next trip</div>
+        <div class="nt-title">${trip.title}</div>
+        <div class="nt-dates">
+          ${this._fmtTripRange(trip)}${trip.location ? ` · ${trip.location}` : ''}
+        </div>
+      </div>
+    </button>`;
+  }
+
   // ── Close-the-loop Slice 4 (2026-05-28) — "What Pebble Knows" ──
   //
   // Read-only Portal mirror of the iOS SettingsMemoryView. Renders the
@@ -5895,15 +6163,25 @@ export class HomeScreen extends LitElement {
   // parent can SEE what Pebble has remembered. Parent-household only
   // (gated on ppIsMember; the data layer only subscribes for the
   // own-household path).
-  _renderWhatPebbleKnows() {
-    if (!this.ppIsMember) return '';
+  _renderWpkDetail() {
     const anchors = this.pebbleAnchors ?? [];
     const rhythms = this.pebbleRhythms ?? [];
     const patterns = this.pebblePatterns ?? [];
     const live = this.pebbleLiveContext ?? [];
     return html`
+      <button class="wpk-back" @click=${() => { this._wpkOpen = false; }}>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+          stroke="currentColor" stroke-width="2.2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 5l-7 7 7 7"></path>
+        </svg>
+        Settings
+      </button>
+      ${this._renderTabHeader(
+        'What Pebble knows',
+        'The memory Pebble keeps about your family',
+      )}
       <section class="wpk">
-        <div class="section-head"><h2>What Pebble knows</h2></div>
         <p class="wpk-intro">
           Pebble keeps a memory of your family in four layers. Edit anchors and
           rhythms in the PebblePath app; this is a read-only view on the web.
