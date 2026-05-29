@@ -2967,6 +2967,116 @@ export class HomeScreen extends LitElement {
     .fb-dark .fb-body {
       color: rgba(246, 244, 239, 0.9);
     }
+    /* 2026-05-29 — coordination footer in the Family Brief (mirrors iOS):
+       today's swap line (two parent avatars + 2-tone text) + a "Daily roles
+       & routines" link into What Pebble knows. Always-light surface, so
+       static inks; .fb-dark overrides for the Stillwater treatment. */
+    .fb-coord {
+      margin-top: 14px;
+      padding-top: 13px;
+      border-top: 1px solid rgba(44, 62, 64, 0.12);
+    }
+    .fb-coord-line {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin-bottom: 13px;
+      padding-bottom: 13px;
+      border-bottom: 1px solid rgba(44, 62, 64, 0.12);
+    }
+    .fb-coord-faces {
+      display: inline-flex;
+      flex-shrink: 0;
+    }
+    .fb-coord-faces member-chip + member-chip {
+      margin-left: -9px;
+    }
+    .fb-coord-text {
+      font-size: 14px;
+      line-height: 1.4;
+      color: rgba(44, 62, 64, 0.66);
+    }
+    .fb-coord-lead {
+      font-weight: 600;
+      color: #2c3e40;
+    }
+    .fb-coord-foot {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .fb-roles-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border: none;
+      border-radius: var(--radius-pill);
+      background: rgba(45, 122, 112, 0.14);
+      color: #2d7a70;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .fb-roles-link:hover {
+      background: rgba(45, 122, 112, 0.22);
+    }
+    .fb-dark .fb-coord {
+      border-top-color: rgba(255, 255, 255, 0.16);
+    }
+    .fb-dark .fb-coord-line {
+      border-bottom-color: rgba(255, 255, 255, 0.16);
+    }
+    .fb-dark .fb-coord-text {
+      color: rgba(246, 244, 239, 0.9);
+    }
+    .fb-dark .fb-coord-lead {
+      color: #f6f4ef;
+    }
+    .fb-dark .fb-roles-link {
+      background: rgba(125, 212, 200, 0.18);
+      color: #7dd4c8;
+    }
+    .fb-dark .fb-roles-link:hover {
+      background: rgba(125, 212, 200, 0.28);
+    }
+    /* What Pebble knows — "Daily roles & routines" panel role rows. */
+    .wpk-role-row {
+      align-items: center;
+    }
+    .wpk-role-faces {
+      display: inline-flex;
+      flex-shrink: 0;
+    }
+    .wpk-role-faces member-chip + member-chip {
+      margin-left: -10px;
+    }
+    .wpk-role-unset {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1.5px dashed rgba(61, 155, 143, 0.5);
+      color: var(--teal-pebble);
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .wpk-role-today {
+      margin-left: auto;
+      align-self: center;
+      flex-shrink: 0;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--terracotta);
+      background: rgba(198, 123, 92, 0.14);
+      border: 1px solid rgba(198, 123, 92, 0.3);
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+    }
     /* Close-the-loop Slice 4 (2026-05-28) — "What Pebble Knows". */
     .wpk-back {
       display: inline-flex;
@@ -6117,7 +6227,6 @@ export class HomeScreen extends LitElement {
           <div class="fb-content">
             <div class="fb-head">
               <div class="fb-tag">
-                <pebble-icon size="16"></pebble-icon>
                 <span>FAMILY BRIEF</span>
               </div>
               <div class="fb-fresh">
@@ -6144,10 +6253,183 @@ export class HomeScreen extends LitElement {
                   ${bullets.map((b) => this._renderBriefBullet(b))}
                 </ul>`
               : html`<p class="fb-body">${fc.body}</p>`}
+            ${this._renderBriefCoordination()}
           </div>
         </div>
       </section>
     `;
+  }
+
+  // ── Coordination roles (2026-05-29) — display-only Portal mirror of the
+  //    iOS "Daily roles & routines". A role = a rhythm with an iconKey +
+  //    an owner (usualOwnerUids). A "swap" = a liveContext handoff
+  //    override (relatedRhythmId + ownerUids + validTo). iOS writes these;
+  //    the Portal only reads + displays them.
+
+  _coordRoles() {
+    const ms = (t) => t?.toMillis?.() ?? 0;
+    return (this.pebbleRhythms ?? [])
+      .filter((r) => r.iconKey)
+      .sort((a, b) => ms(a.createdAt) - ms(b.createdAt));
+  }
+
+  _roleActiveOverride(roleId) {
+    if (!roleId) return null;
+    const now = Date.now();
+    const ms = (t) => t?.toMillis?.() ?? 0;
+    return (
+      (this.pebbleLiveContext ?? []).find(
+        (i) =>
+          i.kind === 'handoff' &&
+          i.relatedRhythmId === roleId &&
+          !i.dismissedAt &&
+          ms(i.validFrom) <= now &&
+          (i.validTo ? ms(i.validTo) >= now : true),
+      ) ?? null
+    );
+  }
+
+  _roleOwnerTodayUids(role) {
+    const ov = this._roleActiveOverride(role.id);
+    const uids = ov ? ov.ownerUids : role.usualOwnerUids;
+    return Array.isArray(uids) ? uids : [];
+  }
+
+  _roleIsOverriddenToday(role) {
+    return !!this._roleActiveOverride(role.id);
+  }
+
+  _memberName(uid) {
+    return this.ppFamily?.memberProfiles?.[uid]?.displayName ?? '';
+  }
+
+  _memberNames(uids) {
+    return uids
+      .map((u) => this._memberName(u))
+      .filter(Boolean)
+      .join(' & ');
+  }
+
+  /** Stable hue (0-359) from a uid, for member-chip's initials fallback. */
+  _hueForUid(uid) {
+    let h = 0;
+    for (const ch of String(uid)) h = (h * 31 + ch.charCodeAt(0)) % 360;
+    return h;
+  }
+
+  _openRolesInWpk() {
+    this._activeTab = 'cairn';
+    this._wpkOpen = true;
+  }
+
+  /** Family Brief coordination footer (parents only): today's swap line
+   *  when a role is overridden + an always-present "Daily roles &
+   *  routines" link into What Pebble knows. Mirrors the iOS brief footer. */
+  _renderBriefCoordination() {
+    if (!this.ppIsMember) return '';
+    const line = this._briefCoordLine();
+    return html`
+      <div class="fb-coord">
+        ${line
+          ? html`<div class="fb-coord-line">
+              <div class="fb-coord-faces">
+                ${line.faceUids.map(
+                  (u) => html`<member-chip
+                    .name=${this._memberName(u)}
+                    .photo=${this.ppFamily?.memberProfiles?.[u]?.photoURL ?? ''}
+                    .hue=${this._hueForUid(u)}
+                    size="26"
+                  ></member-chip>`,
+                )}
+              </div>
+              <div class="fb-coord-text">
+                <span class="fb-coord-lead">${line.lead}</span>${line.rest}
+              </div>
+            </div>`
+          : ''}
+        <div class="fb-coord-foot">
+          <button class="fb-roles-link" @click=${() => this._openRolesInWpk()}>
+            Daily roles &amp; routines
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none"
+              stroke="currentColor" stroke-width="2.4"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 6l6 6-6 6"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  _briefCoordLine() {
+    const overridden = this._coordRoles().filter((r) =>
+      this._roleIsOverriddenToday(r),
+    );
+    if (!overridden.length) return null;
+    if (overridden.length > 1) {
+      const someUids = [
+        ...new Set(overridden.flatMap((r) => this._roleOwnerTodayUids(r))),
+      ].slice(0, 2);
+      return {
+        faceUids: someUids,
+        lead: `Tonight: ${overridden.length} role swaps.`,
+        rest: " Tap Daily roles & routines for who's on what.",
+      };
+    }
+    const role = overridden[0];
+    const todayUids = this._roleOwnerTodayUids(role);
+    const usualUids = Array.isArray(role.usualOwnerUids)
+      ? role.usualOwnerUids
+      : [];
+    const faceUids = [...new Set([...usualUids, ...todayUids])].slice(0, 2);
+    const todayName =
+      todayUids.length === 1 && todayUids[0] === this.user?.uid
+        ? 'you'
+        : this._memberNames(todayUids) || 'someone else';
+    const usualName = this._memberNames(usualUids);
+    const title = (role.title ?? 'this').toLowerCase();
+    return {
+      faceUids,
+      lead: `Tonight: ${title} is on ${todayName}.`,
+      rest: usualName ? ` Usually ${usualName}.` : '',
+    };
+  }
+
+  /** A read-only role row for the What Pebble knows "Daily roles &
+   *  routines" panel: owner avatar(s) + role title + today/usual line. */
+  _wpkRoleRow(role) {
+    const todayUids = this._roleOwnerTodayUids(role);
+    const usualUids = Array.isArray(role.usualOwnerUids)
+      ? role.usualOwnerUids
+      : [];
+    const overridden = this._roleIsOverriddenToday(role);
+    const todayName = this._memberNames(todayUids);
+    const usualName = this._memberNames(usualUids);
+    const secondary = overridden
+      ? `Today: ${todayName || 'someone else'} · usually ${usualName || '—'}`
+      : usualName
+        ? `Usually ${usualName}`
+        : 'Not set yet';
+    const faceUids = (todayUids.length ? todayUids : usualUids).slice(0, 2);
+    return html`<div class="wpk-row wpk-role-row">
+      <span class="wpk-role-faces">
+        ${faceUids.length
+          ? faceUids.map(
+              (u) => html`<member-chip
+                .name=${this._memberName(u)}
+                .photo=${this.ppFamily?.memberProfiles?.[u]?.photoURL ?? ''}
+                .hue=${this._hueForUid(u)}
+                size="30"
+              ></member-chip>`,
+            )
+          : html`<span class="wpk-role-unset">?</span>`}
+      </span>
+      <div class="wpk-body">
+        <div class="wpk-primary">${role.title}</div>
+        <div class="wpk-secondary">${secondary}</div>
+      </div>
+      ${overridden ? html`<span class="wpk-role-today">Today</span>` : ''}
+    </div>`;
   }
 
   /** Last-generated timestamp, e.g. "6:14 am" — mirrors the iOS
@@ -6428,7 +6710,10 @@ export class HomeScreen extends LitElement {
   // own-household path).
   _renderWpkDetail() {
     const anchors = this.pebbleAnchors ?? [];
-    const rhythms = this.pebbleRhythms ?? [];
+    // Coordination roles (iconKey set) get their own panel below — exclude
+    // them from the generic Rhythms list so they don't appear twice.
+    const rhythms = (this.pebbleRhythms ?? []).filter((r) => !r.iconKey);
+    const roles = this._coordRoles();
     const patterns = this.pebblePatterns ?? [];
     const live = this.pebbleLiveContext ?? [];
     return html`
@@ -6464,6 +6749,15 @@ export class HomeScreen extends LitElement {
                 scope: a.scope,
                 childId: a.childId,
               }),
+          })}
+          ${this._wpkGroup({
+            label: 'Daily roles & routines',
+            subtitle: 'Who usually does drop-off, bath, bedtime — set in the app.',
+            empty:
+              'No roles yet. Set who usually does each routine in the PebblePath app.',
+            items: roles,
+            glyph: 'rhythm',
+            row: (r) => this._wpkRoleRow(r),
           })}
           ${this._wpkGroup({
             label: 'Rhythms',
