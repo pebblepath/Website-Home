@@ -2798,7 +2798,10 @@ export class HomeScreen extends LitElement {
       inset: -10px; /* bleed past edges so blur doesn't show a seam */
       background-position: center;
       background-size: cover;
-      filter: blur(2.5px);
+      /* 2026-05-28 — blur reduced 30% (2.5 -> 1.75) per Thomas; applies to
+         both light (daybreak) and dark (Stillwater) since they share this
+         element. */
+      filter: blur(1.75px);
     }
     .fb-bg-frost {
       position: absolute;

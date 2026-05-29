@@ -12820,7 +12820,10 @@ They'll lose access to shared trips, celebrations and any read-only child access
       inset: -10px; /* bleed past edges so blur doesn't show a seam */
       background-position: center;
       background-size: cover;
-      filter: blur(2.5px);
+      /* 2026-05-28 — blur reduced 30% (2.5 -> 1.75) per Thomas; applies to
+         both light (daybreak) and dark (Stillwater) since they share this
+         element. */
+      filter: blur(1.75px);
     }
     .fb-bg-frost {
       position: absolute;
@@ -13949,4 +13952,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(Ct,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},familyDailyCard:{state:!0},pebbleAnchors:{state:!0},pebbleRhythms:{state:!0},pebblePatterns:{state:!0},pebbleLiveContext:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",Ct);
-//# sourceMappingURL=index-C1wM2JE1.js.map
+//# sourceMappingURL=index-H8Tj-8gB.js.map
