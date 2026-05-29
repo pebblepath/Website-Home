@@ -2341,20 +2341,93 @@ export class HomeScreen extends LitElement {
       gap: 18px;
     }
     /* Child card locked to the next-trip card's height (top of each
-       column); vertically center its content in the taller panel. */
-    .today-col > glass-panel.fb-child-panel {
+       column). */
+    .today-col > .home-child-card {
       height: 200px;
       flex: 0 0 auto;
-    }
-    .today-col > glass-panel.fb-child-panel .child-card {
-      height: 100%;
-      align-items: center;
     }
     /* Bottom cards (Upcoming Activities / Growth insights) fill the
        remaining column height equally — same height across both. */
     .today-col > glass-panel.fb-bottom-card {
       flex: 1 1 auto;
       min-height: 0;
+    }
+    /* Growth-insights inner spacing — gap between the insight cards,
+       matching the Children tab. */
+    .fb-insights-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    /* 2026-05-28 — Home child card mirrors the Children-tab hero:
+       per-child theme gradient + playgroundv2 watermark + left-side
+       theme overlay + white text. (--theme + --wm set inline.) */
+    .home-child-card {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      padding: 24px;
+      border-radius: var(--radius-card);
+      color: #fff;
+      background: linear-gradient(
+        135deg,
+        var(--theme, var(--teal-pebble)) 0%,
+        color-mix(in srgb, var(--theme, var(--teal-pebble)) 58%, #ffffff) 100%
+      );
+      box-shadow: 0 6px 22px rgba(20, 50, 46, 0.22);
+    }
+    .home-child-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--wm) center / 100% auto no-repeat;
+      opacity: 0.15;
+      filter: blur(2px);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .home-child-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 62%;
+      background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--theme, var(--teal-pebble)) 88%, transparent) 0%,
+        color-mix(in srgb, var(--theme, var(--teal-pebble)) 55%, transparent) 50%,
+        transparent 100%
+      );
+      z-index: 0;
+      pointer-events: none;
+    }
+    .home-child-card > * {
+      position: relative;
+      z-index: 1;
+    }
+    /* White text overrides for the themed surface (reuse the existing
+       .child-meta / .child-progress inner structure). */
+    .home-child-card .child-photo {
+      background: rgba(255, 255, 255, 0.85);
+    }
+    .home-child-card .child-meta h2 {
+      color: #fff;
+    }
+    .home-child-card .child-meta .sub {
+      color: rgba(255, 255, 255, 0.85);
+    }
+    .home-child-card .child-progress {
+      border-left-color: rgba(255, 255, 255, 0.28);
+    }
+    .home-child-card .child-progress .big {
+      color: #fff;
+    }
+    .home-child-card .child-progress .lbl {
+      color: rgba(255, 255, 255, 0.85);
     }
     /* The Recently-achieved / Growth-insight row sits directly under
        .today-top. Use the SAME column template so the Growth-insight
@@ -2815,18 +2888,19 @@ export class HomeScreen extends LitElement {
     .fb-text {
       font-size: 15px;
       line-height: 1.4;
-      color: #2c3e40; /* 2026-05-28 — uniform bullet color (Thomas);
-                         distinction is weight only, not color */
+      /* 2026-05-28 — uniform + softened (pure #2c3e40 read too dark).
+         Matches the iOS inkSoft body tone; distinction is weight only. */
+      color: rgba(44, 62, 64, 0.66);
     }
     .fb-lead {
       font-weight: 600;
-      color: #2c3e40; /* same color as the remainder, bolder weight */
+      color: rgba(44, 62, 64, 0.66); /* same tone as the remainder */
     }
     .fb-body {
       margin: 0;
       font-size: 15px;
       line-height: 1.55;
-      color: #2c3e40;
+      color: rgba(44, 62, 64, 0.66);
     }
     /* Close-the-loop Slice 4 (2026-05-28) — "What Pebble Knows". */
     .wpk-back {
@@ -5073,27 +5147,32 @@ export class HomeScreen extends LitElement {
     // 2026-05-28 reorg (Thomas): Family Brief full-width on top; then a
     // 2-column grid — left = next-trip then Coming up; right = child
     // card then Growth insights. "Recently achieved" removed from Home.
+    // 2026-05-28 — child card now mirrors the Children-tab hero
+    // (playgroundv2 watermark + per-child theme gradient/overlay +
+    // white text), locked to the next-trip card's height.
+    const childTheme = cd.child.themeColorHex;
+    const childCardStyle =
+      `--wm:url('${import.meta.env.BASE_URL}assets/playgroundv2.jpg');` +
+      (childTheme ? `--theme:${childTheme};` : '');
     const childCard = html`
-      <glass-panel padding="md" variant="strong" stretch class="fb-child-panel">
-        <div class="child-card">
-          <span class="child-photo">
-            <member-chip
-              .name=${cd.child.name}
-              .photo=${cd.child.profilePhotoURL ?? ''}
-              .hue=${150}
-              size="72"
-            ></member-chip>
-          </span>
-          <div class="child-meta">
-            <h2>${cd.child.name}</h2>
-            <div class="sub">${this._ageLong(cd.child.dateOfBirth)}</div>
-          </div>
-          <div class="child-progress">
-            <div class="big">${pct}%</div>
-            <div class="lbl">of tracked milestones</div>
-          </div>
+      <div class="home-child-card" style="${childCardStyle}">
+        <span class="child-photo">
+          <member-chip
+            .name=${cd.child.name}
+            .photo=${cd.child.profilePhotoURL ?? ''}
+            .hue=${150}
+            size="72"
+          ></member-chip>
+        </span>
+        <div class="child-meta">
+          <h2>${cd.child.name}</h2>
+          <div class="sub">${this._ageLong(cd.child.dateOfBirth)}</div>
         </div>
-      </glass-panel>`;
+        <div class="child-progress">
+          <div class="big">${pct}%</div>
+          <div class="lbl">of tracked milestones</div>
+        </div>
+      </div>`;
 
     const insightsPanel = html`
       <glass-panel padding="md" variant="strong" stretch class="fb-bottom-card">
@@ -5101,14 +5180,16 @@ export class HomeScreen extends LitElement {
           <button class="link" @click=${() => (this._activeTab = 'children')}>More insights</button></div>
         ${insights.length === 0
           ? html`<div class="ring-note" style="padding:8px 4px;">Pebble surfaces patterns here as more of ${cd.child.name}'s milestones are logged.</div>`
-          : insights.map(
-              (insight) => html`<insight-card
-                .type=${insight.type}
-                .domain=${insight.domain}
-                .title=${insight.title}
-                .body=${insight.body}
-              ></insight-card>`,
-            )}
+          : html`<div class="fb-insights-list">
+              ${insights.map(
+                (insight) => html`<insight-card
+                  .type=${insight.type}
+                  .domain=${insight.domain}
+                  .title=${insight.title}
+                  .body=${insight.body}
+                ></insight-card>`,
+              )}
+            </div>`}
       </glass-panel>`;
 
     return html`
@@ -6665,9 +6746,8 @@ export class HomeScreen extends LitElement {
     }
     return out
       .sort((a, b) => String(a.date).localeCompare(String(b.date)))
-      // 2026-05-28 — was 5; show more so the equal-height "Upcoming
-      // Activities" card fills next to Growth insights (avoid the gap).
-      .slice(0, 8);
+      // 2026-05-28 — trimmed to 5 per Thomas (was 8).
+      .slice(0, 5);
   }
 
   _fmtRangeShort(start, end) {
