@@ -106,6 +106,9 @@ export class HomeScreen extends LitElement {
     // "What Pebble knows" drill-down (open = detail view, like the iOS
     // settings page push). Reset on tab-leave in updated().
     _wpkOpen: { state: true },
+    // Reusable packing templates ("My packing lists"), shown in the WPK
+    // detail. Subscribed in connectedCallback.
+    _packingTemplates: { state: true },
     _formOpen: { state: true },
     _formTrip: { state: true },
     _formBusy: { state: true },
@@ -236,6 +239,7 @@ export class HomeScreen extends LitElement {
     this._activeTab = 'today';
     this._refreshingFamilyBrief = false;
     this._wpkOpen = false;
+    this._packingTemplates = [];
     this._formOpen = false;
     this._formTrip = null;
     this._formBusy = false;
@@ -3025,6 +3029,25 @@ export class HomeScreen extends LitElement {
       cursor: pointer;
       padding: 4px 0;
     }
+    /* My packing lists (WPK detail). */
+    .wpk-packing {
+      margin-top: 16px;
+    }
+    .pkg-del {
+      flex-shrink: 0;
+      border: none;
+      background: transparent;
+      color: var(--text-tertiary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: var(--radius-pill);
+    }
+    .pkg-del:hover {
+      color: var(--terracotta, #c67b5c);
+      background: rgba(198, 123, 92, 0.1);
+    }
     .child-card {
       display: flex;
       align-items: center;
@@ -4035,9 +4058,19 @@ export class HomeScreen extends LitElement {
     }
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    // Packing templates ("My packing lists") — for the WPK detail.
+    this._pkgTplUnsub = dataStore.packingTemplatesListener((t) => {
+      this._packingTemplates = t;
+    });
+  }
+
   disconnectedCallback() {
     this._tabsRO?.disconnect();
     this._tabsRO = null;
+    this._pkgTplUnsub?.();
+    this._pkgTplUnsub = null;
     // 2026-05-24 — design 28. Tear down any active plan-item
     // listeners so they don't leak past component lifetime.
     this._dropAllWeekPlanSubs();
@@ -6401,8 +6434,76 @@ export class HomeScreen extends LitElement {
               }),
           })}
         </div>
+        ${this._renderPackingTemplates()}
       </section>
     `;
+  }
+
+  /** "My packing lists" — reusable templates shown in the WPK detail.
+   *  Read + delete; created via a trip's "Save this list" action (or
+   *  the iOS app). */
+  _renderPackingTemplates() {
+    const tpls = this._packingTemplates ?? [];
+    const count = (t) =>
+      (Array.isArray(t.groups) ? t.groups : []).reduce(
+        (n, g) => n + (Array.isArray(g.items) ? g.items.length : 0),
+        0,
+      );
+    return html`
+      <div class="wpk-packing">
+        <div class="section-head"><h3>My packing lists</h3></div>
+        <glass-panel padding="md" variant="strong">
+          <div class="wpk-sub">
+            Reusable lists Pebble draws from when you start a trip. Save one from
+            any trip's Packing tab.
+          </div>
+          ${tpls.length === 0
+            ? html`<div class="wpk-empty">
+                No saved lists yet. Open a trip, build its packing list, then tap
+                "Save this list for future trips".
+              </div>`
+            : html`<div class="wpk-rows">
+                ${tpls.map(
+                  (t) => html`<div class="wpk-row">
+                    <span class="wpk-ico">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                        stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="8" width="16" height="12" rx="2"></rect>
+                        <path d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path>
+                      </svg>
+                    </span>
+                    <div class="wpk-body">
+                      <div class="wpk-primary">${t.name}</div>
+                      <div class="wpk-secondary">
+                        ${count(t)} ${count(t) === 1 ? 'item' : 'items'} ·
+                        ${(Array.isArray(t.groups) ? t.groups.length : 0)}
+                        ${(Array.isArray(t.groups) ? t.groups.length : 0) === 1 ? 'group' : 'groups'}
+                      </div>
+                    </div>
+                    <button
+                      class="pkg-del"
+                      title="Delete list"
+                      @click=${() => this._deletePackingTemplate(t)}
+                    >
+                      Delete
+                    </button>
+                  </div>`,
+                )}
+              </div>`}
+        </glass-panel>
+      </div>
+    `;
+  }
+
+  async _deletePackingTemplate(t) {
+    if (this.preview || !t?.id) return;
+    if (!window.confirm(`Delete "${t.name}"? This won't affect any trip's current list.`)) return;
+    try {
+      await dataStore.deletePackingTemplate(t.id);
+    } catch (e) {
+      console.warn('[Portal] deletePackingTemplate failed:', e?.message ?? e);
+    }
   }
 
   _wpkGroup({ label, subtitle, empty, items, row }) {

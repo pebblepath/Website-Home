@@ -1463,6 +1463,206 @@ class FamilyDataStore extends EventTarget {
     );
   }
 
+  // ── Packing lists (Phase 2.4 parity — close-the-loop Slice 6) ─────
+  // Two surfaces share this layer:
+  //   • per-trip list  → families/{fid}/trips/{tid}/packingList (rule:
+  //     canCoplanTrip — the trip's audience co-plans it).
+  //   • reusable templates → families/{fid}/packingTemplates (rule:
+  //     isCairnMember). "My Packing Lists" in Settings + "Use my lists"
+  //     on a trip.
+  // Component-managed listeners (subscribe on mount, unsub on teardown),
+  // same pattern as planItemsListener.
+
+  /** Reusable packing templates for the whole circle. Family-level. */
+  packingTemplatesListener(onChange) {
+    if (!db || !this._currentFamilyId) return () => {};
+    return onSnapshot(
+      collection(db, 'families', this._currentFamilyId, 'packingTemplates'),
+      (snap) => {
+        const list = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .sort(
+            (a, b) =>
+              (b.updatedAt?.toMillis?.() ?? 0) - (a.updatedAt?.toMillis?.() ?? 0),
+          );
+        onChange(list);
+      },
+      (err) => {
+        console.warn('[Portal] packingTemplates error:', err.code, err.message);
+        onChange([]);
+      },
+    );
+  }
+
+  /** A single trip's working packing list. Sorted group then order. */
+  packingListListener(tripId, onChange) {
+    if (!db || !this._currentFamilyId || !tripId) return () => {};
+    return onSnapshot(
+      collection(db, 'families', this._currentFamilyId, 'trips', tripId, 'packingList'),
+      (snap) => {
+        const items = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => {
+            const g = String(a.groupName ?? '').localeCompare(String(b.groupName ?? ''));
+            if (g !== 0) return g;
+            return (a.order ?? 0) - (b.order ?? 0);
+          });
+        onChange(items);
+      },
+      (err) => {
+        console.warn('[Portal] packingList error:', err.code, err.message);
+        onChange([]);
+      },
+    );
+  }
+
+  _packingListCol(tripId) {
+    return collection(db, 'families', this._currentFamilyId, 'trips', tripId, 'packingList');
+  }
+
+  async addPackingItem(tripId, { groupName, text, order = 0, addedByPebble = false }) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    const uid = auth?.currentUser?.uid;
+    if (!uid) throw new Error('Not signed in.');
+    const trimmed = String(text ?? '').trim();
+    if (!trimmed) throw new Error('Add an item.');
+    const ref = await addDoc(this._packingListCol(tripId), {
+      groupName,
+      text: trimmed,
+      checked: false,
+      order,
+      addedBy: uid,
+      addedByPebble: addedByPebble === true,
+      addedAt: serverTimestamp(),
+    });
+    return ref.id;
+  }
+
+  async togglePackingItem(tripId, item) {
+    if (!db || !this._currentFamilyId || !item?.id) return;
+    await updateDoc(doc(this._packingListCol(tripId), item.id), {
+      checked: !(item.checked === true),
+    });
+  }
+
+  async updatePackingItemText(tripId, itemId, text) {
+    if (!db || !this._currentFamilyId || !itemId) return;
+    const trimmed = String(text ?? '').trim();
+    if (!trimmed) return;
+    await updateDoc(doc(this._packingListCol(tripId), itemId), { text: trimmed });
+  }
+
+  async deletePackingItem(tripId, itemId) {
+    if (!db || !this._currentFamilyId || !itemId) return;
+    await deleteDoc(doc(this._packingListCol(tripId), itemId));
+  }
+
+  /** Copy every template item into the trip's working list (checked
+   *  false), then stamp the trip's derivedFromTemplateId. Existing
+   *  items are NOT cleared (the empty-state CTA only shows when empty). */
+  async applyPackingTemplate(tripId, template) {
+    if (!db || !this._currentFamilyId || !template?.id) return;
+    const uid = auth?.currentUser?.uid;
+    if (!uid) throw new Error('Not signed in.');
+    const writes = [];
+    for (const group of Array.isArray(template.groups) ? template.groups : []) {
+      const items = Array.isArray(group.items) ? group.items : [];
+      for (const it of items.slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0))) {
+        writes.push(
+          addDoc(this._packingListCol(tripId), {
+            templateId: template.id,
+            groupName: group.name,
+            text: String(it.text ?? '').trim(),
+            checked: false,
+            order: it.order ?? 0,
+            addedBy: uid,
+            addedByPebble: it.addedByPebble === true,
+            addedAt: serverTimestamp(),
+          }),
+        );
+      }
+    }
+    if (writes.length === 0) return;
+    await Promise.all(writes);
+    await updateDoc(
+      doc(db, 'families', this._currentFamilyId, 'trips', tripId),
+      { 'packingListMeta.derivedFromTemplateId': template.id },
+    );
+  }
+
+  /** Save a trip's current items as a reusable template (grouped). */
+  async savePackingListAsTemplate(name, iconKey, items) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    const uid = auth?.currentUser?.uid;
+    if (!uid) throw new Error('Not signed in.');
+    const byGroup = new Map();
+    for (const it of Array.isArray(items) ? items : []) {
+      const g = it.groupName ?? 'Parents';
+      if (!byGroup.has(g)) byGroup.set(g, []);
+      byGroup.get(g).push(it);
+    }
+    const groups = [...byGroup.entries()].map(([gname, gitems]) => ({
+      id: crypto.randomUUID(),
+      name: gname,
+      items: gitems
+        .slice()
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        .map((it, i) => ({
+          id: crypto.randomUUID(),
+          text: String(it.text ?? '').trim(),
+          order: i,
+          addedByPebble: it.addedByPebble === true,
+        })),
+    }));
+    const now = serverTimestamp();
+    const ref = await addDoc(
+      collection(db, 'families', this._currentFamilyId, 'packingTemplates'),
+      {
+        name: String(name ?? 'My list').trim() || 'My list',
+        ...(iconKey ? { iconKey } : {}),
+        groups,
+        createdBy: uid,
+        createdAt: now,
+        updatedAt: now,
+      },
+    );
+    return ref.id;
+  }
+
+  async deletePackingTemplate(templateId) {
+    if (!db || !this._currentFamilyId || !templateId) return;
+    await deleteDoc(
+      doc(db, 'families', this._currentFamilyId, 'packingTemplates', templateId),
+    );
+  }
+
+  /** Stamp lastReviewedAt after a Pebble review run. */
+  async markPackingReviewed(tripId) {
+    if (!db || !this._currentFamilyId || !tripId) return;
+    await updateDoc(
+      doc(db, 'families', this._currentFamilyId, 'trips', tripId),
+      { 'packingListMeta.lastReviewedAt': serverTimestamp() },
+    );
+  }
+
+  /** Calls the deployed generatePackingReview CF. Returns
+   *  { additions, concerns, removals } (each [{text, groupName, reason}]). */
+  async generatePackingReview(tripId, trip, family, currentList, dismissedTexts, groupNames) {
+    if (!functions) throw new Error('Firebase functions not configured.');
+    if (!this._currentFamilyId) throw new Error('No family yet.');
+    const fn = httpsCallable(functions, 'generatePackingReview');
+    const result = await fn({
+      familyId: this._currentFamilyId,
+      tripId,
+      trip,
+      family,
+      currentList,
+      dismissedTexts,
+      groupNames,
+    });
+    return result.data;
+  }
+
   /**
    * Phase 3B: create or update a family event (birthday, anniversary, or
    * custom). Same shape as saveTrip — pass an `id` to update, omit to create.

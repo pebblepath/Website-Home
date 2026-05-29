@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import './member-chip.js';
+import './packing-list.js';
 import { dataStore } from '../services/data.js';
 import { toast } from '../services/toast.js';
 
@@ -80,6 +81,7 @@ export class TripPlanner extends LitElement {
     _view: { state: true }, // 'day' | 'week' (Google-Calendar week grid)
     _weekStart: { state: true }, // first day index when the trip > 7 days
     _sel: { state: true }, // drag-to-create selection { dayKey, aMin, bMin }
+    _tab: { state: true }, // 'plan' | 'packing'
   };
 
   constructor() {
@@ -101,6 +103,7 @@ export class TripPlanner extends LitElement {
     this._view = 'day';
     this._weekStart = 0;
     this._sel = null;
+    this._tab = 'plan';
     this._dragCtx = null; // { dayKey, lo, hi, el } captured at pointerdown
     this._onGridMove = this._gridMove.bind(this);
     this._onGridUp = this._gridUp.bind(this);
@@ -204,6 +207,7 @@ export class TripPlanner extends LitElement {
         if (this._subId !== id) {
           this._teardown();
           this._subId = id;
+          this._tab = 'plan';
           this._dayKey = this._days()[0]?.key ?? '';
           // 2026-05-22 — multi-day trips default to Week view. A
           // single-day trip has nothing to gain from the 7-column
@@ -464,6 +468,31 @@ export class TripPlanner extends LitElement {
     .day-pill.on small { color: rgba(255, 255, 255, 0.82); }
 
     /* Day | Week segmented toggle + optional week pager. */
+    /* Day plan / Packing top-level section toggle. */
+    .pl-tabs {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: var(--radius-pill);
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border-strong);
+      margin-bottom: 16px;
+    }
+    .pl-tabs button {
+      padding: 7px 18px;
+      border-radius: var(--radius-pill);
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+    .pl-tabs button.on {
+      background: var(--teal-pebble);
+      color: #fff;
+    }
     .pl-modebar {
       display: flex;
       align-items: center;
@@ -1091,6 +1120,24 @@ export class TripPlanner extends LitElement {
             </div>
           </div>
 
+          <div class="pl-tabs" role="group" aria-label="Planner section">
+            <button
+              class=${this._tab === 'plan' ? 'on' : ''}
+              @click=${() => (this._tab = 'plan')}
+            >
+              Day plan
+            </button>
+            <button
+              class=${this._tab === 'packing' ? 'on' : ''}
+              @click=${() => (this._tab = 'packing')}
+            >
+              Packing
+            </button>
+          </div>
+
+          ${this._tab === 'packing'
+            ? html`<packing-list .trip=${this.trip}></packing-list>`
+            : html`
           <div class="pl-modebar">
             <div class="view-toggle" role="group" aria-label="Planner view">
               <button
@@ -1238,6 +1285,7 @@ export class TripPlanner extends LitElement {
             Anyone on the trip can add to this plan — every item is tagged
             with who added it (like a shared sheet, on a day grid).
           </div>
+          `}
         </div>
       </section>
     `;
