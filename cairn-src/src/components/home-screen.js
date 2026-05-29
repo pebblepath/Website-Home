@@ -2332,13 +2332,29 @@ export class HomeScreen extends LitElement {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 18px;
-      align-items: start;
+      align-items: stretch; /* columns equal height → bottom cards match */
       margin-top: 4px;
     }
     .today-col {
       display: flex;
       flex-direction: column;
       gap: 18px;
+    }
+    /* Child card locked to the next-trip card's height (top of each
+       column); vertically center its content in the taller panel. */
+    .today-col > glass-panel.fb-child-panel {
+      height: 200px;
+      flex: 0 0 auto;
+    }
+    .today-col > glass-panel.fb-child-panel .child-card {
+      height: 100%;
+      align-items: center;
+    }
+    /* Bottom cards (Upcoming Activities / Growth insights) fill the
+       remaining column height equally — same height across both. */
+    .today-col > glass-panel.fb-bottom-card {
+      flex: 1 1 auto;
+      min-height: 0;
     }
     /* The Recently-achieved / Growth-insight row sits directly under
        .today-top. Use the SAME column template so the Growth-insight
@@ -2584,16 +2600,13 @@ export class HomeScreen extends LitElement {
       background: rgba(255, 255, 255, 0.24);
     }
     /* 2026-05-28 — next-trip card (replaces the per-child Pebble Daily
-       card). Fills the same left-column slot (flex:1) so it matches the
-       Coming-up panel height, exactly like .daily did. */
-    .today-top-left .next-trip {
-      flex: 1;
-    }
+       card). Fixed 200px height; the child card is locked to match. */
     .next-trip {
       position: relative;
       display: block;
       width: 100%;
-      min-height: 200px;
+      height: 200px;
+      flex: 0 0 auto;
       padding: 0;
       border: none;
       border-radius: var(--radius-card);
@@ -2677,7 +2690,7 @@ export class HomeScreen extends LitElement {
     }
     .fb-card {
       position: relative;
-      min-height: 300px;
+      min-height: 255px; /* 2026-05-28 — reduced 15% (was 300) per Thomas */
       border-radius: var(--radius-card);
       overflow: hidden;
       border: 1.5px solid rgba(255, 255, 255, 0.6);
@@ -2713,7 +2726,7 @@ export class HomeScreen extends LitElement {
     .fb-content {
       position: relative;
       z-index: 1;
-      padding: 26px;
+      padding: 20px 22px; /* 2026-05-28 — tightened for the 15% shorter card */
     }
     .fb-head {
       display: flex;
@@ -2772,9 +2785,9 @@ export class HomeScreen extends LitElement {
       }
     }
     .fb-title {
-      margin: 0 0 16px;
+      margin: 0 0 12px;
       font-family: var(--font-display);
-      font-size: 21px;
+      font-size: 20px;
       font-weight: 700;
       line-height: 1.05;
       letter-spacing: -0.01em;
@@ -2786,7 +2799,7 @@ export class HomeScreen extends LitElement {
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 11px;
     }
     .fb-bullet {
       display: flex;
@@ -2802,17 +2815,18 @@ export class HomeScreen extends LitElement {
     .fb-text {
       font-size: 15px;
       line-height: 1.4;
-      color: rgba(44, 62, 64, 0.66); /* inkSoft — the remainder */
+      color: #2c3e40; /* 2026-05-28 — uniform bullet color (Thomas);
+                         distinction is weight only, not color */
     }
     .fb-lead {
       font-weight: 600;
-      color: #2c3e40; /* ink — the bold lead */
+      color: #2c3e40; /* same color as the remainder, bolder weight */
     }
     .fb-body {
       margin: 0;
       font-size: 15px;
       line-height: 1.55;
-      color: rgba(44, 62, 64, 0.66);
+      color: #2c3e40;
     }
     /* Close-the-loop Slice 4 (2026-05-28) — "What Pebble Knows". */
     .wpk-back {
@@ -5027,8 +5041,8 @@ export class HomeScreen extends LitElement {
     </div>`;
     const coming = this._comingUp();
     const comingPanel = html`
-      <glass-panel padding="md" variant="strong" stretch>
-        <div class="cal-head"><h3>Coming up</h3>
+      <glass-panel padding="md" variant="strong" stretch class="fb-bottom-card">
+        <div class="cal-head"><h3>Upcoming Activities</h3>
           <button class="link" @click=${() => (this._activeTab = 'activities')}>All activities</button></div>
         ${coming.length === 0
           ? html`<div class="ring-note" style="padding:8px 4px;">Nothing on the calendar yet — plan something from the Activities tab.</div>`
@@ -5060,7 +5074,7 @@ export class HomeScreen extends LitElement {
     // 2-column grid — left = next-trip then Coming up; right = child
     // card then Growth insights. "Recently achieved" removed from Home.
     const childCard = html`
-      <glass-panel padding="md" variant="strong">
+      <glass-panel padding="md" variant="strong" stretch class="fb-child-panel">
         <div class="child-card">
           <span class="child-photo">
             <member-chip
@@ -5082,7 +5096,7 @@ export class HomeScreen extends LitElement {
       </glass-panel>`;
 
     const insightsPanel = html`
-      <glass-panel padding="md" variant="strong">
+      <glass-panel padding="md" variant="strong" stretch class="fb-bottom-card">
         <div class="cal-head"><h3>Growth insights</h3>
           <button class="link" @click=${() => (this._activeTab = 'children')}>More insights</button></div>
         ${insights.length === 0
@@ -6186,8 +6200,12 @@ export class HomeScreen extends LitElement {
     }
     const displayImage =
       (trip.previewImage && String(trip.previewImage).trim()) || trip.coverImage;
+    // 2026-05-28 — explicit center+cover inline so the photo is
+    // middle-aligned regardless of the `background` shorthand reset
+    // (the gradient branch's shorthand would otherwise zero the
+    // position; setting it here keeps real photos centered).
     const cover = displayImage
-      ? `background-image: url("${displayImage}");`
+      ? `background-image: url("${displayImage}"); background-position: center center; background-size: cover;`
       : `background: ${gradientForTrip(trip)};`;
     return html`<button
       class="next-trip ${displayImage ? 'has-image' : ''}"
@@ -6647,7 +6665,9 @@ export class HomeScreen extends LitElement {
     }
     return out
       .sort((a, b) => String(a.date).localeCompare(String(b.date)))
-      .slice(0, 5);
+      // 2026-05-28 — was 5; show more so the equal-height "Upcoming
+      // Activities" card fills next to Growth insights (avoid the gap).
+      .slice(0, 8);
   }
 
   _fmtRangeShort(start, end) {
