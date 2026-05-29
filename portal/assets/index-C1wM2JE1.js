@@ -10155,11 +10155,11 @@ They'll lose access to shared trips, celebrations and any read-only child access
         .pebbleUser=${this.pebbleUser}
         @cancel=${()=>this._profileOpen=!1}
       ></profile-sheet>
-    `}_renderFamilyBrief(e){const t=e.familyDailyCard;if(!t)return"";const i=Array.isArray(t.bullets)?t.bullets:[],r=this._refreshingFamilyBrief?"spinning":"",a=this._briefFreshLabel(t);return n`
-      <section class="family-brief">
+    `}_renderFamilyBrief(e){const t=e.familyDailyCard;if(!t)return"";const i=Array.isArray(t.bullets)?t.bullets:[],r=this._refreshingFamilyBrief?"spinning":"",a=this._briefFreshLabel(t),l=this._themeLight?"/portal/assets/pebblepath-daybreak-empty.jpg":"/portal/assets/pebblepath-stillwater-empty.jpg";return n`
+      <section class="family-brief ${this._themeLight?"":"fb-dark"}">
         <div class="fb-card">
           <div class="fb-bg" aria-hidden="true">
-            <div class="fb-bg-photo" style="background-image:url('${"/portal/assets/pebblepath-daybreak-empty.jpg"}');"></div>
+            <div class="fb-bg-photo" style="background-image:url('${l}');"></div>
             <div class="fb-bg-frost"></div>
             <div class="fb-bg-wash"></div>
           </div>
@@ -10189,7 +10189,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             </div>
             <h3 class="fb-title">${t.title}</h3>
             ${i.length?n`<ul class="fb-bullets">
-                  ${i.map(o=>this._renderBriefBullet(o))}
+                  ${i.map(d=>this._renderBriefBullet(d))}
                 </ul>`:n`<p class="fb-body">${t.body}</p>`}
           </div>
         </div>
@@ -12943,6 +12943,49 @@ They'll lose access to shared trips, celebrations and any read-only child access
       line-height: 1.55;
       color: rgba(44, 62, 64, 0.66);
     }
+    /* 2026-05-28 — DARK treatment (Portal dark mode = no html.theme-light),
+       mirroring the iOS FamilyBriefHeroCard Stillwater treatment: moody
+       photo (chosen in JS) + black scrim instead of the cream wash + near
+       white text + bright teal-glow eyebrow + softer border, frost dropped. */
+    .fb-dark .fb-card {
+      border-color: rgba(255, 255, 255, 0.22);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+    .fb-dark .fb-bg-frost {
+      display: none;
+    }
+    .fb-dark .fb-bg-wash {
+      background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.55) 0%,
+        rgba(0, 0, 0, 0.32) 50%,
+        rgba(0, 0, 0, 0.12) 100%
+      );
+    }
+    .fb-dark .fb-tag {
+      color: #7dd4c8;
+    }
+    .fb-dark .fb-refresh {
+      color: #7dd4c8;
+    }
+    .fb-dark .fb-refresh:hover:not(:disabled) {
+      background: rgba(125, 212, 200, 0.18);
+    }
+    .fb-dark .fb-fresh-time {
+      color: rgba(246, 244, 239, 0.55);
+    }
+    .fb-dark .fb-title {
+      color: #f6f4ef;
+    }
+    .fb-dark .fb-text {
+      color: rgba(246, 244, 239, 0.9);
+    }
+    .fb-dark .fb-lead {
+      color: #f6f4ef;
+    }
+    .fb-dark .fb-body {
+      color: rgba(246, 244, 239, 0.9);
+    }
     /* Close-the-loop Slice 4 (2026-05-28) — "What Pebble Knows". */
     .wpk-back {
       display: inline-flex;
@@ -13906,4 +13949,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(Ct,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},familyDailyCard:{state:!0},pebbleAnchors:{state:!0},pebbleRhythms:{state:!0},pebblePatterns:{state:!0},pebbleLiveContext:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",Ct);
-//# sourceMappingURL=index-BsxmCzK0.js.map
+//# sourceMappingURL=index-C1wM2JE1.js.map

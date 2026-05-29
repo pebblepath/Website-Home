@@ -2921,6 +2921,49 @@ export class HomeScreen extends LitElement {
       line-height: 1.55;
       color: rgba(44, 62, 64, 0.66);
     }
+    /* 2026-05-28 — DARK treatment (Portal dark mode = no html.theme-light),
+       mirroring the iOS FamilyBriefHeroCard Stillwater treatment: moody
+       photo (chosen in JS) + black scrim instead of the cream wash + near
+       white text + bright teal-glow eyebrow + softer border, frost dropped. */
+    .fb-dark .fb-card {
+      border-color: rgba(255, 255, 255, 0.22);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+    .fb-dark .fb-bg-frost {
+      display: none;
+    }
+    .fb-dark .fb-bg-wash {
+      background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.55) 0%,
+        rgba(0, 0, 0, 0.32) 50%,
+        rgba(0, 0, 0, 0.12) 100%
+      );
+    }
+    .fb-dark .fb-tag {
+      color: #7dd4c8;
+    }
+    .fb-dark .fb-refresh {
+      color: #7dd4c8;
+    }
+    .fb-dark .fb-refresh:hover:not(:disabled) {
+      background: rgba(125, 212, 200, 0.18);
+    }
+    .fb-dark .fb-fresh-time {
+      color: rgba(246, 244, 239, 0.55);
+    }
+    .fb-dark .fb-title {
+      color: #f6f4ef;
+    }
+    .fb-dark .fb-text {
+      color: rgba(246, 244, 239, 0.9);
+    }
+    .fb-dark .fb-lead {
+      color: #f6f4ef;
+    }
+    .fb-dark .fb-body {
+      color: rgba(246, 244, 239, 0.9);
+    }
     /* Close-the-loop Slice 4 (2026-05-28) — "What Pebble Knows". */
     .wpk-back {
       display: inline-flex;
@@ -6053,11 +6096,18 @@ export class HomeScreen extends LitElement {
     const spinning = this._refreshingFamilyBrief ? 'spinning' : '';
     const fresh = this._briefFreshLabel(fc);
     const daybreak = `${import.meta.env.BASE_URL}assets/pebblepath-daybreak-empty.jpg`;
+    const stillwater = `${import.meta.env.BASE_URL}assets/pebblepath-stillwater-empty.jpg`;
+    // 2026-05-28 — DARK mode (Portal default; no html.theme-light) swaps
+    // the daybreak photo for the moodier Stillwater + a dark treatment
+    // (scrim + light text via the fb-dark class), mirroring the iOS
+    // FamilyBriefHeroCard. _themeLight is reactive, so the Settings theme
+    // toggle reskins this live.
+    const fbPhoto = this._themeLight ? daybreak : stillwater;
     return html`
-      <section class="family-brief">
+      <section class="family-brief ${this._themeLight ? '' : 'fb-dark'}">
         <div class="fb-card">
           <div class="fb-bg" aria-hidden="true">
-            <div class="fb-bg-photo" style="background-image:url('${daybreak}');"></div>
+            <div class="fb-bg-photo" style="background-image:url('${fbPhoto}');"></div>
             <div class="fb-bg-frost"></div>
             <div class="fb-bg-wash"></div>
           </div>
