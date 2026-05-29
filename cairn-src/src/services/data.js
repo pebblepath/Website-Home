@@ -1663,6 +1663,20 @@ class FamilyDataStore extends EventTarget {
     return result.data;
   }
 
+  // ── Weekend planner (Phase 2.5 parity — close-the-loop Slice 7) ───
+  /** Calls the deployed generateFamilyPlan CF. Returns
+   *  { candidates: [{title, subtitle, date, startTime, endTime,
+   *  location, costEstimate, weatherSummary, perChildFit[],
+   *  logisticsNotes[], aggregateScore}] } sorted by score desc. */
+  async generateFamilyPlan(family, window) {
+    if (!functions) throw new Error('Firebase functions not configured.');
+    if (!this._currentFamilyId) throw new Error('No family yet.');
+    const fn = httpsCallable(functions, 'generateFamilyPlan');
+    const result = await fn({ familyId: this._currentFamilyId, family, window });
+    const candidates = result?.data?.candidates;
+    return Array.isArray(candidates) ? candidates : [];
+  }
+
   /**
    * Phase 3B: create or update a family event (birthday, anniversary, or
    * custom). Same shape as saveTrip — pass an `id` to update, omit to create.

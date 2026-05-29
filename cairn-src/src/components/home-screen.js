@@ -22,6 +22,7 @@ import './child-overview.js';
 import './child-pebble.js';
 import './insight-card.js';
 import './trip-planner.js';
+import './weekend-planner.js';
 import {
   mockUser,
   mockMembers,
@@ -103,6 +104,8 @@ export class HomeScreen extends LitElement {
     _activeTab: { state: true },
     // Close-the-loop Slice 3 (2026-05-28) — family-brief refresh spinner.
     _refreshingFamilyBrief: { state: true },
+    // Slice 7 — weekend planner modal.
+    _weekendOpen: { state: true },
     // "What Pebble knows" drill-down (open = detail view, like the iOS
     // settings page push). Reset on tab-leave in updated().
     _wpkOpen: { state: true },
@@ -238,6 +241,7 @@ export class HomeScreen extends LitElement {
     // ring stack; Children + Pebble are the app-companion surfaces.
     this._activeTab = 'today';
     this._refreshingFamilyBrief = false;
+    this._weekendOpen = false;
     this._wpkOpen = false;
     this._packingTemplates = [];
     this._formOpen = false;
@@ -982,6 +986,17 @@ export class HomeScreen extends LitElement {
     .link svg {
       width: 13px;
       height: 13px;
+    }
+    /* Slice 7 — the "Plan our weekend" entry reads as the Pebble action. */
+    .link.plan-weekend-link {
+      color: var(--ink-teal);
+      border-color: rgba(61, 155, 143, 0.32);
+      background: rgba(61, 155, 143, 0.1);
+    }
+    .link.plan-weekend-link:hover {
+      background: rgba(61, 155, 143, 0.18);
+      border-color: rgba(61, 155, 143, 0.5);
+      color: var(--ink-teal);
     }
     @media (max-width: 768px) {
       .link.hide-mobile {
@@ -4205,6 +4220,13 @@ export class HomeScreen extends LitElement {
             <h2>Coming up</h2>
             <div style="display:flex;gap:10px;align-items:center;">
               <button
+                class="link plan-weekend-link"
+                @click=${() => (this._weekendOpen = true)}
+                title="Plan our weekend with Pebble"
+              >
+                <pebble-icon size="14"></pebble-icon> Plan our weekend
+              </button>
+              <button
                 class="link hide-mobile"
                 @click=${() => (this._importOpen = true)}
               >
@@ -5278,6 +5300,10 @@ export class HomeScreen extends LitElement {
           if (trip) this._openEdit(trip);
         }}
       ></trip-planner>
+      <weekend-planner
+        ?open=${this._weekendOpen}
+        @cancel=${() => (this._weekendOpen = false)}
+      ></weekend-planner>
       ${this._renderCalendarsSection()}
       ${this._renderCelebrationsSection()}
     `;
