@@ -131,6 +131,9 @@ export const mockFamilyDailyCard = {
   body: 'Splash day at the park this morning, both kids back to routine by nap.',
   topicForChat: 'What should we prep tonight for tomorrow?',
   mode: 'brief',
+  // Timestamp-shaped (mimics a Firestore Timestamp) so the preview's
+  // "fresh" label renders like production.
+  generatedAt: { toMillis: () => new Date().setHours(6, 14, 0, 0) },
   bullets: [
     { kind: 'plan', text: 'Splash day at 10. Park sprinklers are on for the morning.' },
     { kind: 'weather', text: '74°F and sunny. Sun hats for both kids.' },

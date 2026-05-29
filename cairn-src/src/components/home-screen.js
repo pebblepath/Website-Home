@@ -2323,6 +2323,23 @@ export class HomeScreen extends LitElement {
     .today-top-left .daily {
       flex: 1;
     }
+    /* 2026-05-28 reorg — 2-column Home grid below the Family Brief.
+       Left col: next-trip + Coming up. Right col: child card + Growth
+       insights. Each column is an independent stack (natural heights);
+       align-items:start so a tall left column doesn't stretch the
+       right one. */
+    .today-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: start;
+      margin-top: 4px;
+    }
+    .today-col {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
     /* The Recently-achieved / Growth-insight row sits directly under
        .today-top. Use the SAME column template so the Growth-insight
        card is exactly as wide as the "Coming up" card above it and
@@ -2345,6 +2362,9 @@ export class HomeScreen extends LitElement {
         grid-template-columns: 1fr;
       }
       .today-insight-row {
+        grid-template-columns: 1fr;
+      }
+      .today-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -2648,66 +2668,99 @@ export class HomeScreen extends LitElement {
       font-size: 13px;
       color: var(--ink-teal);
     }
-    /* Close-the-loop Slice 3 (2026-05-28) — family-scope brief.
-       Light informational surface (NOT the saturated teal .daily
-       card), bullet-based, mirrors the iOS InformationalBriefCard. */
+    /* 2026-05-28 — Family Brief mirrors the iOS FamilyBriefHeroCard:
+       daybreak-photo background (blur + frost + warm cream wash), white
+       border + teal shadow, static dark ink (the surface is always light
+       even in Portal dark mode), pebble bullet markers + 2-tone text. */
     .family-brief {
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
-    /* Pebble watermark (top-left, faint, clipped by the panel's
-       overflow:hidden) + content layered above it. */
     .fb-card {
       position: relative;
+      min-height: 300px;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      border: 1.5px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 8px 24px rgba(61, 155, 143, 0.25);
     }
-    .fb-watermark {
+    .fb-bg {
       position: absolute;
-      top: -30px;
-      left: -26px;
-      width: 150px;
-      height: 115px;
-      opacity: 0.1;
-      pointer-events: none;
+      inset: 0;
       z-index: 0;
+    }
+    .fb-bg-photo {
+      position: absolute;
+      inset: -10px; /* bleed past edges so blur doesn't show a seam */
+      background-position: center;
+      background-size: cover;
+      filter: blur(2.5px);
+    }
+    .fb-bg-frost {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.225);
+    }
+    .fb-bg-wash {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 249, 237, 0.74) 0%,
+        rgba(255, 246, 232, 0.42) 50%,
+        rgba(255, 244, 227, 0.1) 100%
+      );
     }
     .fb-content {
       position: relative;
       z-index: 1;
+      padding: 26px;
     }
     .fb-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .fb-tag {
       display: inline-flex;
       align-items: center;
       gap: 7px;
+      font-family: var(--font-display);
       font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
+      font-weight: 800;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--ink-teal);
+      color: #2d7a70; /* static teal-dark — surface is always light */
+    }
+    .fb-fresh {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .fb-fresh-time {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(44, 62, 64, 0.5);
     }
     .fb-refresh {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 32px;
-      height: 32px;
+      width: 26px;
+      height: 26px;
       flex-shrink: 0;
+      border: none;
       border-radius: 50%;
-      border: 1px solid var(--glass-border-strong);
       background: transparent;
-      color: var(--ink-teal);
+      color: #2d7a70;
       cursor: pointer;
     }
     .fb-refresh:hover:not(:disabled) {
-      background: rgba(61, 155, 143, 0.12);
+      background: rgba(45, 122, 112, 0.12);
     }
     .fb-refresh:disabled {
-      opacity: 0.5;
+      opacity: 0.4;
       cursor: default;
     }
     .fb-refresh.spinning svg {
@@ -2719,11 +2772,13 @@ export class HomeScreen extends LitElement {
       }
     }
     .fb-title {
-      margin: 0 0 14px;
+      margin: 0 0 16px;
       font-family: var(--font-display);
-      font-size: 19px;
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 1.05;
       letter-spacing: -0.01em;
-      color: var(--text-primary);
+      color: #2c3e40; /* static ink */
     }
     .fb-bullets {
       list-style: none;
@@ -2731,49 +2786,33 @@ export class HomeScreen extends LitElement {
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
     }
     .fb-bullet {
       display: flex;
       align-items: flex-start;
-      gap: 11px;
+      gap: 12px;
     }
-    .fb-ico {
-      position: relative;
+    .fb-peb-marker {
       flex-shrink: 0;
-      width: 28px;
-      height: 28px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .fb-ico-peb {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-    .fb-ico-glyph {
-      position: relative;
-      z-index: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .fb-ico-glyph svg {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 10px;
+      margin-top: 6px;
     }
     .fb-text {
-      font-size: 14px;
-      line-height: 1.45;
-      color: var(--text-primary);
+      font-size: 15px;
+      line-height: 1.4;
+      color: rgba(44, 62, 64, 0.66); /* inkSoft — the remainder */
+    }
+    .fb-lead {
+      font-weight: 600;
+      color: #2c3e40; /* ink — the bold lead */
     }
     .fb-body {
       margin: 0;
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.55;
+      color: rgba(44, 62, 64, 0.66);
     }
     /* Close-the-loop Slice 4 (2026-05-28) — "What Pebble Knows". */
     .wpk-back {
@@ -5014,81 +5053,62 @@ export class HomeScreen extends LitElement {
     const ms = cd.milestones;
     const achieved = ms.filter((x) => x.status === 'achieved');
     const pct = ms.length ? Math.round((achieved.length / ms.length) * 100) : 0;
-    const DOM = (c) =>
-      ({ selfCare: 'motor' }[c] || c) || 'motor';
-    const recently = achieved
-      .slice()
-      .sort((a, b) => (b.ageRangeStartMonths ?? 0) - (a.ageRangeStartMonths ?? 0))
-      .slice(0, 3);
-    const insight = (cd.insights || [])[0];
+    // 2026-05-28 — Growth insights now show the top 2 (was 1).
+    const insights = (cd.insights || []).slice(0, 2);
+
+    // 2026-05-28 reorg (Thomas): Family Brief full-width on top; then a
+    // 2-column grid — left = next-trip then Coming up; right = child
+    // card then Growth insights. "Recently achieved" removed from Home.
+    const childCard = html`
+      <glass-panel padding="md" variant="strong">
+        <div class="child-card">
+          <span class="child-photo">
+            <member-chip
+              .name=${cd.child.name}
+              .photo=${cd.child.profilePhotoURL ?? ''}
+              .hue=${150}
+              size="72"
+            ></member-chip>
+          </span>
+          <div class="child-meta">
+            <h2>${cd.child.name}</h2>
+            <div class="sub">${this._ageLong(cd.child.dateOfBirth)}</div>
+          </div>
+          <div class="child-progress">
+            <div class="big">${pct}%</div>
+            <div class="lbl">of tracked milestones</div>
+          </div>
+        </div>
+      </glass-panel>`;
+
+    const insightsPanel = html`
+      <glass-panel padding="md" variant="strong">
+        <div class="cal-head"><h3>Growth insights</h3>
+          <button class="link" @click=${() => (this._activeTab = 'children')}>More insights</button></div>
+        ${insights.length === 0
+          ? html`<div class="ring-note" style="padding:8px 4px;">Pebble surfaces patterns here as more of ${cd.child.name}'s milestones are logged.</div>`
+          : insights.map(
+              (insight) => html`<insight-card
+                .type=${insight.type}
+                .domain=${insight.domain}
+                .title=${insight.title}
+                .body=${insight.body}
+              ></insight-card>`,
+            )}
+      </glass-panel>`;
 
     return html`
       ${this._renderTodayHeader(scope)}
       ${this._renderFamilyBrief(cd)}
 
-      <section class="today-lead">
-        <div class="today-top">
-          <div class="today-top-left">
-            <glass-panel padding="md" variant="strong">
-              <div class="child-card">
-                <span class="child-photo">
-                  <member-chip
-                    .name=${cd.child.name}
-                    .photo=${cd.child.profilePhotoURL ?? ''}
-                    .hue=${150}
-                    size="72"
-                  ></member-chip>
-                </span>
-                <div class="child-meta">
-                  <h2>${cd.child.name}</h2>
-                  <div class="sub">${this._ageLong(cd.child.dateOfBirth)}</div>
-                </div>
-                <div class="child-progress">
-                  <div class="big">${pct}%</div>
-                  <div class="lbl">of tracked milestones</div>
-                </div>
-              </div>
-            </glass-panel>
-            ${this._renderNextTripCard()}
-          </div>
+      <section class="today-grid">
+        <div class="today-col">
+          ${this._renderNextTripCard()}
           ${comingPanel}
         </div>
-      </section>
-
-      <section>
-        <div class="grid-2 today-insight-row">
-          <!-- 2026-05-23 — stretch attribute on both panels so the
-               glass-panel inner .panel + .content divs fill the host
-               (which was already height:100% via align-items:stretch
-               on the grid row). Without stretch, the bg/border chrome
-               sized to natural content while the host was stretched —
-               making Recently-achieved visually shorter than Growth-
-               insight even though the grid track matched. -->
-          <glass-panel padding="md" variant="strong" stretch>
-            <div class="cal-head"><h3>Recently achieved</h3>
-              <button class="link" @click=${() => (this._activeTab = 'children')}>See all</button></div>
-            ${recently.length === 0
-              ? html`<div class="ring-note" style="padding:8px 4px;">No milestones logged as achieved yet.</div>`
-              : recently.map(
-                  (m) => html`<div class="ms-row">
-                    <span class="ms-dot ${DOM(m.category)}"></span>
-                    <div class="t">${m.title}</div>
-                    <span class="ms-stat done">Achieved</span>
-                  </div>`,
-                )}
-          </glass-panel>
-          <glass-panel padding="md" variant="strong" stretch>
-            <div class="cal-head"><h3>Growth insight</h3>
-              <button class="link" @click=${() => (this._activeTab = 'children')}>More insights</button></div>
-            ${insight
-              ? html`<insight-card
-                  .type=${insight.type}
-                  .domain=${insight.domain}
-                  .title=${insight.title}
-                  .body=${insight.body}
-                ></insight-card>`
-              : html`<div class="ring-note" style="padding:8px 4px;">Pebble surfaces patterns here as more of ${cd.child.name}'s milestones are logged.</div>`}
-          </glass-panel>
+        <div class="today-col">
+          ${childCard}
+          ${insightsPanel}
         </div>
       </section>
     `;
@@ -5866,33 +5886,35 @@ export class HomeScreen extends LitElement {
   // calls the refreshFamilyBrief callable (full memory-bank rebuild).
   // Only renders when a card exists — the server only writes one for
   // multi-child families, so presence implies N>=2.
+  // Family Brief — mirrors the iOS FamilyBriefHeroCard (2026-05-28):
+  // a daybreak-photo background (blur + frost + warm cream wash), white
+  // border + teal shadow, UPPERCASE eyebrow + last-generated timestamp,
+  // static dark ink text (the surface is always light, even in Portal
+  // dark mode), small colored pebble bullet markers, and 2-tone bullet
+  // text (semibold lead + regular softer remainder).
   _renderFamilyBrief(cd) {
     const fc = cd.familyDailyCard;
     if (!fc) return '';
     const bullets = Array.isArray(fc.bullets) ? fc.bullets : [];
     const spinning = this._refreshingFamilyBrief ? 'spinning' : '';
-    // Pebble watermark (top-left, faint, behind content) mirrors the
-    // iOS dashboard-card design language. preserveAspectRatio="none"
-    // lets the silhouette fill its box from its native viewBox.
-    const wm = this._pebblePath('plan');
+    const fresh = this._briefFreshLabel(fc);
+    const daybreak = `${import.meta.env.BASE_URL}assets/pebblepath-daybreak-empty.jpg`;
     return html`
       <section class="family-brief">
-        <glass-panel padding="sm" variant="strong">
-          <div class="fb-card">
-            <svg
-              class="fb-watermark"
-              viewBox=${wm.vb}
-              preserveAspectRatio="none"
-              aria-hidden="true"
-            >
-              <path d=${wm.d} fill="#3d9b8f"></path>
-            </svg>
-            <div class="fb-content">
-              <div class="fb-head">
-                <div class="fb-tag">
-                  <pebble-icon size="20"></pebble-icon>
-                  <span>Family brief</span>
-                </div>
+        <div class="fb-card">
+          <div class="fb-bg" aria-hidden="true">
+            <div class="fb-bg-photo" style="background-image:url('${daybreak}');"></div>
+            <div class="fb-bg-frost"></div>
+            <div class="fb-bg-wash"></div>
+          </div>
+          <div class="fb-content">
+            <div class="fb-head">
+              <div class="fb-tag">
+                <pebble-icon size="16"></pebble-icon>
+                <span>FAMILY BRIEF</span>
+              </div>
+              <div class="fb-fresh">
+                ${fresh ? html`<span class="fb-fresh-time">${fresh}</span>` : ''}
                 <button
                   class="fb-refresh ${spinning}"
                   title="Refresh brief"
@@ -5900,25 +5922,56 @@ export class HomeScreen extends LitElement {
                   ?disabled=${this._refreshingFamilyBrief}
                   @click=${() => this._onRefreshFamilyBrief()}
                 >
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
-                    stroke="currentColor" stroke-width="2"
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none"
+                    stroke="currentColor" stroke-width="2.2"
                     stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 12a9 9 0 1 1-2.64-6.36"></path>
                     <path d="M21 4v5h-5"></path>
                   </svg>
                 </button>
               </div>
-              <h3 class="fb-title">${fc.title}</h3>
-              ${bullets.length
-                ? html`<ul class="fb-bullets">
-                    ${bullets.map((b) => this._renderBriefBullet(b))}
-                  </ul>`
-                : html`<p class="fb-body">${fc.body}</p>`}
             </div>
+            <h3 class="fb-title">${fc.title}</h3>
+            ${bullets.length
+              ? html`<ul class="fb-bullets">
+                  ${bullets.map((b) => this._renderBriefBullet(b))}
+                </ul>`
+              : html`<p class="fb-body">${fc.body}</p>`}
           </div>
-        </glass-panel>
+        </div>
       </section>
     `;
+  }
+
+  /** Last-generated timestamp, e.g. "6:14 am" — mirrors the iOS
+   *  freshLabel. Reads the card's `generatedAt` (Firestore Timestamp). */
+  _briefFreshLabel(fc) {
+    const ms =
+      fc?.generatedAt?.toMillis?.() ??
+      (fc?.generatedAt ? new Date(fc.generatedAt).getTime() : 0);
+    if (!ms) return '';
+    return new Date(ms)
+      .toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
+      .toLowerCase();
+  }
+
+  /** Splits a bullet into a bold lead + lighter remainder for the
+   *  2-tone render. Tries the first sentence period, then a colon, then
+   *  an em/en dash within the first 32 chars (the three shapes the CF's
+   *  brief bullets take). Returns { lead:null } when no sensible lead
+   *  boundary exists. Mirrors iOS FamilyBriefHeroCard.splitLead. */
+  _splitBulletLead(text) {
+    const seps = ['. ', ': ', ' — ', ' – '];
+    for (const sep of seps) {
+      const i = text.indexOf(sep);
+      if (i >= 0 && i <= 32) {
+        const lead = sep === '. ' ? text.slice(0, i + 1) : text.slice(0, i);
+        const rest = text.slice(i + sep.length);
+        if (!rest.trim()) return { lead: null };
+        return { lead, rest };
+      }
+    }
+    return { lead: null };
   }
 
   _renderBriefBullet(b) {
@@ -5927,24 +5980,23 @@ export class HomeScreen extends LitElement {
     const text = b && typeof b.text === 'string' ? b.text : '';
     const tint = this._briefTint(kind);
     const peb = this._pebblePath(kind);
-    // Icon = a faint-tint pebble silhouette (the "pebble design") with
-    // the saturated-tint category glyph on top — mirrors the iOS
-    // tile-at-0.16 + saturated-glyph contrast, in the brand pebble shape.
+    const { lead, rest } = this._splitBulletLead(text);
+    // Marker = a small SOLID colored pebble silhouette (no glyph, no
+    // tile) — the brand "pebble design" bullet, like iOS.
     return html`<li class="fb-bullet">
-      <span class="fb-ico">
-        <svg
-          class="fb-ico-peb"
-          viewBox=${peb.vb}
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <path d=${peb.d} fill=${tint} fill-opacity="0.2"></path>
-        </svg>
-        <span class="fb-ico-glyph" style="color:${tint};"
-          >${this._briefGlyph(kind)}</span
-        >
+      <svg
+        class="fb-peb-marker"
+        viewBox=${peb.vb}
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path d=${peb.d} fill=${tint}></path>
+      </svg>
+      <span class="fb-text">
+        ${lead
+          ? html`<span class="fb-lead">${lead}</span> ${rest}`
+          : text}
       </span>
-      <span class="fb-text">${text}</span>
     </li>`;
   }
 
