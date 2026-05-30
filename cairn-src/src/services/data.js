@@ -601,9 +601,17 @@ class FamilyDataStore extends EventTarget {
           // without this, a stale card (e.g. Tuesday's) shows on Friday with
           // a wrong day-of-week in its title. If today's card hasn't been
           // generated yet, show nothing rather than a stale brief.
+          // Show only a card generated TODAY (browser-local). Use
+          // generatedAt (a precise instant), NOT the doc-id string — the
+          // CF writes the id in the family's tz (UTC fallback), which can
+          // differ from the browser's local date and would otherwise hide
+          // a freshly-refreshed card. Stale older-day cards stay hidden.
           const latest = cards[0] ?? null;
-          const today = formatLocalDate(new Date());
-          this.state.familyDailyCard = latest && latest.id === today ? latest : null;
+          const genMs = latest?.generatedAt?.toMillis?.() ?? 0;
+          const freshToday =
+            genMs > 0 &&
+            formatLocalDate(new Date(genMs)) === formatLocalDate(new Date());
+          this.state.familyDailyCard = freshToday ? latest : null;
           this._emit();
         },
         (err) =>
@@ -772,9 +780,14 @@ class FamilyDataStore extends EventTarget {
           // hasn't been generated yet, show nothing rather than stale.
           const cards = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
           cards.sort((a, b) => String(b.id).localeCompare(String(a.id)));
+          // Today-only via generatedAt (see familyDailyCards above for why
+          // not the doc-id string — tz mismatch hides fresh cards).
           const latest = cards[0] ?? null;
-          const today = formatLocalDate(new Date());
-          this.state.childDailyCard = latest && latest.id === today ? latest : null;
+          const genMs = latest?.generatedAt?.toMillis?.() ?? 0;
+          const freshToday =
+            genMs > 0 &&
+            formatLocalDate(new Date(genMs)) === formatLocalDate(new Date());
+          this.state.childDailyCard = freshToday ? latest : null;
           this._emit();
         },
         (err) => console.warn('[Portal] dailyCards error:', err.code, err.message),
