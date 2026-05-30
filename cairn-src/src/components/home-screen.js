@@ -2886,7 +2886,7 @@ export class HomeScreen extends LitElement {
       font-weight: 700;
       line-height: 1.05;
       letter-spacing: -0.01em;
-      color: #2c3e40; /* static ink */
+      color: #1f5c54; /* brand green — matches iOS FamilyBriefHeroCard headerColor */
     }
     .fb-bullets {
       list-style: none;
@@ -2956,7 +2956,7 @@ export class HomeScreen extends LitElement {
       color: rgba(246, 244, 239, 0.55);
     }
     .fb-dark .fb-title {
-      color: #f6f4ef;
+      color: #5cbfb0; /* brand green (dark) — matches iOS headerColor dark */
     }
     .fb-dark .fb-text {
       color: rgba(246, 244, 239, 0.9);
@@ -2976,13 +2976,10 @@ export class HomeScreen extends LitElement {
       padding-top: 13px;
       border-top: 1px solid rgba(44, 62, 64, 0.12);
     }
-    .fb-coord-line {
+    .fb-coord-row {
       display: flex;
       align-items: center;
       gap: 11px;
-      margin-bottom: 13px;
-      padding-bottom: 13px;
-      border-bottom: 1px solid rgba(44, 62, 64, 0.12);
     }
     .fb-coord-faces {
       display: inline-flex;
@@ -2992,6 +2989,8 @@ export class HomeScreen extends LitElement {
       margin-left: -9px;
     }
     .fb-coord-text {
+      flex: 1;
+      min-width: 0;
       font-size: 14px;
       line-height: 1.4;
       color: rgba(44, 62, 64, 0.66);
@@ -3000,11 +2999,9 @@ export class HomeScreen extends LitElement {
       font-weight: 600;
       color: #2c3e40;
     }
-    .fb-coord-foot {
-      display: flex;
-      justify-content: flex-end;
-    }
     .fb-roles-link {
+      margin-left: auto;
+      flex-shrink: 0;
       display: inline-flex;
       align-items: center;
       gap: 4px;
@@ -3023,9 +3020,6 @@ export class HomeScreen extends LitElement {
     }
     .fb-dark .fb-coord {
       border-top-color: rgba(255, 255, 255, 0.16);
-    }
-    .fb-dark .fb-coord-line {
-      border-bottom-color: rgba(255, 255, 255, 0.16);
     }
     .fb-dark .fb-coord-text {
       color: rgba(246, 244, 239, 0.9);
@@ -6330,24 +6324,22 @@ export class HomeScreen extends LitElement {
     const line = this._briefCoordLine();
     return html`
       <div class="fb-coord">
-        ${line
-          ? html`<div class="fb-coord-line">
-              <div class="fb-coord-faces">
-                ${line.faceUids.map(
-                  (u) => html`<member-chip
-                    .name=${this._memberName(u)}
-                    .photo=${this.ppFamily?.memberProfiles?.[u]?.photoURL ?? ''}
-                    .hue=${this._hueForUid(u)}
-                    size="26"
-                  ></member-chip>`,
-                )}
-              </div>
-              <div class="fb-coord-text">
-                <span class="fb-coord-lead">${line.lead}</span>${line.rest}
-              </div>
-            </div>`
-          : ''}
-        <div class="fb-coord-foot">
+        <div class="fb-coord-row">
+          ${line
+            ? html`<div class="fb-coord-faces">
+                  ${line.faceUids.map(
+                    (u) => html`<member-chip
+                      .name=${this._memberName(u)}
+                      .photo=${this.ppFamily?.memberProfiles?.[u]?.profilePhotoURL ?? ''}
+                      .hue=${this._hueForUid(u)}
+                      size="26"
+                    ></member-chip>`,
+                  )}
+                </div>
+                <div class="fb-coord-text">
+                  <span class="fb-coord-lead">${line.lead}</span>${line.rest}
+                </div>`
+            : ''}
           <button class="fb-roles-link" @click=${() => this._openRolesInWpk()}>
             Daily roles &amp; routines
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none"
@@ -6417,7 +6409,7 @@ export class HomeScreen extends LitElement {
           ? faceUids.map(
               (u) => html`<member-chip
                 .name=${this._memberName(u)}
-                .photo=${this.ppFamily?.memberProfiles?.[u]?.photoURL ?? ''}
+                .photo=${this.ppFamily?.memberProfiles?.[u]?.profilePhotoURL ?? ''}
                 .hue=${this._hueForUid(u)}
                 size="30"
               ></member-chip>`,

@@ -597,7 +597,13 @@ class FamilyDataStore extends EventTarget {
         (snap) => {
           const cards = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
           cards.sort((a, b) => String(b.id).localeCompare(String(a.id)));
-          this.state.familyDailyCard = cards[0] ?? null;
+          // Only surface TODAY's card. The doc id is a local-tz YYYY-MM-DD;
+          // without this, a stale card (e.g. Tuesday's) shows on Friday with
+          // a wrong day-of-week in its title. If today's card hasn't been
+          // generated yet, show nothing rather than a stale brief.
+          const latest = cards[0] ?? null;
+          const today = formatLocalDate(new Date());
+          this.state.familyDailyCard = latest && latest.id === today ? latest : null;
           this._emit();
         },
         (err) =>
@@ -760,12 +766,15 @@ class FamilyDataStore extends EventTarget {
       this._unsubChildDaily = onSnapshot(
         collection(db, ...base, 'dailyCards'),
         (snap) => {
-          // Doc id is a YYYY-MM-DD string (device-local tz). Latest =
-          // lexicographically-max id (sorts chronologically). Avoids a
-          // tz-sensitive "today's key" computation in the browser.
+          // Doc id is a YYYY-MM-DD string (device-local tz). Only surface
+          // TODAY's card — otherwise a stale card (e.g. Tuesday's) shows on
+          // Friday with the wrong day-of-week in its title. If today's
+          // hasn't been generated yet, show nothing rather than stale.
           const cards = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
           cards.sort((a, b) => String(b.id).localeCompare(String(a.id)));
-          this.state.childDailyCard = cards[0] ?? null;
+          const latest = cards[0] ?? null;
+          const today = formatLocalDate(new Date());
+          this.state.childDailyCard = latest && latest.id === today ? latest : null;
           this._emit();
         },
         (err) => console.warn('[Portal] dailyCards error:', err.code, err.message),
