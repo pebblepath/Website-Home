@@ -13,10 +13,21 @@ import './pebble-icon.js';
 // Candidates persist to localStorage keyed by the weekend window, so
 // reopening the planner restores the last generation (auto-discarded
 // once the weekend rolls over, since the key changes).
+
+// Staged loading captions (mirror iOS FamilyPlanGeneratorView). Cycle ~2s
+// each while the CF round-trip completes, holding on the last.
+const PLAN_LOADING_CAPTIONS = [
+  'Checking the weekend weather…',
+  'Finding nearby spots…',
+  'Scoring ideas for your family…',
+  'Building your plan…',
+];
+
 export class WeekendPlanner extends LitElement {
   static properties = {
     open: { type: Boolean, reflect: true },
     _state: { state: true }, // 'empty' | 'loading' | 'loaded' | 'error'
+    _loadingStep: { state: true }, // staged-caption index while loading
     _candidates: { state: true },
     _rec: { state: true }, // index of the recommended candidate
     _error: { state: true },
@@ -27,15 +38,50 @@ export class WeekendPlanner extends LitElement {
     super();
     this.open = false;
     this._state = 'empty';
+    this._loadingStep = 0;
     this._candidates = [];
     this._rec = 0;
     this._error = '';
     this._accepted = null;
+    this._captionTimer = null;
   }
 
   willUpdate(changed) {
     if (changed.has('open') && this.open) {
       this._restoreCache();
+    }
+  }
+
+  // Drive the staged-caption cycle off the reactive _state, so it starts/stops
+  // correctly on every transition (incl. reopening mid-flight).
+  updated(changed) {
+    if (changed.has('_state')) {
+      if (this._state === 'loading') this._startLoadingCaptions();
+      else this._stopLoadingCaptions();
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this._stopLoadingCaptions();
+  }
+
+  _startLoadingCaptions() {
+    this._stopLoadingCaptions();
+    this._loadingStep = 0;
+    this._captionTimer = setInterval(() => {
+      if (this._loadingStep >= PLAN_LOADING_CAPTIONS.length - 1) {
+        this._stopLoadingCaptions(); // hold on the last caption
+        return;
+      }
+      this._loadingStep += 1;
+    }, 2000);
+  }
+
+  _stopLoadingCaptions() {
+    if (this._captionTimer) {
+      clearInterval(this._captionTimer);
+      this._captionTimer = null;
     }
   }
 
@@ -232,11 +278,13 @@ export class WeekendPlanner extends LitElement {
 
   _renderState() {
     if (this._state === 'loading') {
-      return html`<div class="status">
-        <div class="spin"><pebble-icon size="34"></pebble-icon></div>
-        <div class="status-t">Pebble is planning your weekend…</div>
-        <div class="status-s">Checking the forecast, your family, and what's already on.</div>
-      </div>`;
+      return html`
+        <div class="plan-cap">${PLAN_LOADING_CAPTIONS[this._loadingStep]}</div>
+        ${this._skeletonRec()}
+        <div class="alts-head"><span class="sk" style="width:90px;height:11px"></span></div>
+        ${this._skeletonAlt()}
+        ${this._skeletonAlt()}
+      `;
     }
     if (this._state === 'error') {
       return html`<div class="status">
@@ -266,6 +314,41 @@ export class WeekendPlanner extends LitElement {
       <button class="big-cta" @click=${() => this._generate()}>
         <pebble-icon size="16" color="#fff"></pebble-icon> Plan our weekend
       </button>
+    </div>`;
+  }
+
+  // Skeleton ghosts mirroring the loaded .rec / .alt card shapes.
+  _skeletonRec() {
+    return html`<div class="rec sk-card">
+      <span class="sk" style="width:96px;height:18px;border-radius:999px;margin-bottom:12px"></span>
+      <span class="sk" style="width:72%;height:22px;margin-bottom:10px"></span>
+      <span class="sk" style="width:94%;height:13px;margin-bottom:6px"></span>
+      <span class="sk" style="width:58%;height:13px;margin-bottom:14px"></span>
+      <div class="rec-meta">
+        <span class="sk" style="width:62px;height:22px;border-radius:999px"></span>
+        <span class="sk" style="width:84px;height:22px;border-radius:999px"></span>
+        <span class="sk" style="width:54px;height:22px;border-radius:999px"></span>
+      </div>
+      <div class="fit">
+        <div class="fit-row">
+          <span class="sk" style="width:40%;height:12px;margin-bottom:5px"></span>
+          <span class="sk" style="width:82%;height:11px"></span>
+        </div>
+        <div class="fit-row">
+          <span class="sk" style="width:34%;height:12px;margin-bottom:5px"></span>
+          <span class="sk" style="width:70%;height:11px"></span>
+        </div>
+      </div>
+      <span class="sk" style="width:100%;height:44px;border-radius:12px"></span>
+    </div>`;
+  }
+
+  _skeletonAlt() {
+    return html`<div class="alt sk-card">
+      <div class="alt-body">
+        <span class="sk" style="width:55%;height:14px;margin-bottom:6px"></span>
+        <span class="sk" style="width:38%;height:11px"></span>
+      </div>
     </div>`;
   }
 
@@ -394,8 +477,36 @@ export class WeekendPlanner extends LitElement {
     }
     .status-t { font-family: var(--font-display); font-size: 19px; color: var(--text-primary); }
     .status-s { font-size: 13.5px; color: var(--text-secondary); max-width: 360px; line-height: 1.5; }
-    .spin { animation: wp-pulse 1.4s ease-in-out infinite; color: var(--ink-teal); }
-    @keyframes wp-pulse { 0%,100% { opacity: 0.5; transform: scale(0.96); } 50% { opacity: 1; transform: scale(1.06); } }
+    /* staged loading caption + skeleton ghosts (mirror the loaded cards) */
+    .plan-cap {
+      text-align: center;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      min-height: 18px;
+      margin-bottom: 16px;
+      transition: opacity 0.25s ease;
+    }
+    .sk {
+      display: block;
+      border-radius: 6px;
+      background: linear-gradient(
+        100deg,
+        rgba(127, 127, 127, 0.12) 30%,
+        rgba(127, 127, 127, 0.22) 50%,
+        rgba(127, 127, 127, 0.12) 70%
+      );
+      background-size: 200% 100%;
+      animation: sk-shimmer 1.4s ease-in-out infinite;
+    }
+    @keyframes sk-shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .sk-card { pointer-events: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .plan-cap { transition: none; }
+      .sk { animation: none; background: rgba(127, 127, 127, 0.16); }
+    }
     .big-cta {
       margin-top: 8px;
       display: inline-flex;
