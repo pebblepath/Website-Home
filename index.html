@@ -2273,6 +2273,52 @@
     font-size: 14px; line-height: 1.55; color: var(--warm-gray);
   }
 
+  /* EXPLORE LINKS SECTION */
+  .explore-section {
+    background: var(--sand); border-top: 1px solid rgba(0,0,0,0.07);
+    padding: 52px 48px 56px;
+  }
+  .explore-label {
+    text-align: center; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: rgba(26,46,43,0.45); margin-bottom: 28px;
+  }
+  .explore-grid {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 18px; max-width: 900px; margin: 0 auto;
+  }
+  .explore-card {
+    background: white; border-radius: 18px;
+    border: 1px solid rgba(0,0,0,0.07);
+    padding: 28px 26px 24px;
+    text-decoration: none; color: inherit;
+    display: flex; flex-direction: column; gap: 0;
+    transition: transform 0.20s ease, box-shadow 0.20s ease;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  }
+  .explore-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+  }
+  .explore-icon {
+    width: 42px; height: 42px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 14px; font-size: 20px;
+  }
+  .explore-card h3 {
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 17px; color: var(--charcoal); margin-bottom: 6px;
+  }
+  .explore-card p {
+    font-size: 13px; line-height: 1.55; color: var(--warm-gray); flex: 1;
+    margin-bottom: 16px;
+  }
+  .explore-link-row {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 13px; font-weight: 600; color: var(--teal);
+  }
+  .explore-link-row svg { flex-shrink: 0; }
+
   /* FOOTER */
   footer {
     padding: 16px 48px; text-align: center;
@@ -2534,6 +2580,8 @@
     .cta-final-tagline { font-size: 13px; margin-bottom: 14px; }
     .cta-final-content p { font-size: 13px; line-height: 1.55; margin-bottom: 20px; }
     footer { padding: 12px 20px; }
+    .explore-section { padding: 36px 20px 40px; }
+    .explore-grid { grid-template-columns: 1fr; gap: 14px; }
   }
 
   /* Scroll reveal */
@@ -3466,6 +3514,44 @@
         </a>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- EXPLORE LINKS -->
+<section class="explore-section">
+  <div class="explore-label">More from PebblePath</div>
+  <div class="explore-grid">
+
+    <a class="explore-card" href="/brief/">
+      <div class="explore-icon" style="background:rgba(198,123,92,0.12);">📄</div>
+      <h3>One-page brief</h3>
+      <p>Everything PebblePath is — on a single page. Share it with a partner, a grandparent, or anyone who wants to understand what this is.</p>
+      <div class="explore-link-row">
+        View brief
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h8M9 5l3 3-3 3"/></svg>
+      </div>
+    </a>
+
+    <a class="explore-card" href="/memory-privacy/">
+      <div class="explore-icon" style="background:rgba(61,155,143,0.12);">🔒</div>
+      <h3>Memory &amp; Privacy</h3>
+      <p>How Pebble builds a picture of your family — and the layers of hardware-grade security we've built to protect every detail of it.</p>
+      <div class="explore-link-row">
+        How it works
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h8M9 5l3 3-3 3"/></svg>
+      </div>
+    </a>
+
+    <a class="explore-card" href="/wallpapers/">
+      <div class="explore-icon" style="background:rgba(61,155,143,0.08);">🖼️</div>
+      <h3>Wallpapers</h3>
+      <p>Six original desktop wallpapers — Daybreak, Undertow, Understory, Sandbar, Shallows, and Stillwater. Free to download.</p>
+      <div class="explore-link-row">
+        Browse &amp; download
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h8M9 5l3 3-3 3"/></svg>
+      </div>
+    </a>
+
   </div>
 </section>
 

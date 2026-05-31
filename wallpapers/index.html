@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wallpapers — PebblePath</title>
+<meta name="description" content="Free desktop wallpapers from PebblePath — six original scenes inspired by nature, calm, and the pebble on the path.">
+<link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pebblepath.ai/wallpapers/">
+<meta property="og:title" content="Wallpapers — PebblePath">
+<meta property="og:description" content="Six original desktop wallpapers from PebblePath. Free to download.">
+<meta property="og:image" content="https://pebblepath.ai/assets/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal:      #3D9B8F;
+    --teal-dark: #2D7A70;
+    --teal-deep: #1F5C54;
+    --sand:      #E8DCC8;
+    --terra:     #C67B5C;
+    --bg:        #FAF8F5;
+    --ink:       #1a2e2b;
+    --ink-mid:   rgba(26,46,43,0.55);
+    --ink-faint: rgba(26,46,43,0.38);
+    --radius:    16px;
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 48px;
+    background: white; border-bottom: 1px solid rgba(0,0,0,0.06);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--ink);
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 18px;
+  }
+  .nav-logo img { width: 28px; height: 28px; border-radius: 7px; }
+  .nav-back {
+    font-size: 14px; color: var(--teal); text-decoration: none; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .nav-back:hover { color: var(--teal-dark); }
+  .nav-back svg { flex-shrink: 0; }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 72px 24px 48px;
+    background: linear-gradient(180deg, #fff 0%, var(--bg) 100%);
+  }
+  .hero-tag {
+    display: inline-block;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    color: var(--teal); text-transform: uppercase;
+    background: rgba(61,155,143,0.10); border-radius: 20px;
+    padding: 4px 12px; margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: clamp(32px, 5vw, 52px); line-height: 1.1;
+    color: var(--teal-deep); margin-bottom: 14px;
+  }
+  .hero p {
+    font-size: 17px; color: var(--ink-mid); max-width: 500px;
+    margin: 0 auto; line-height: 1.6;
+  }
+
+  /* ── GALLERY ── */
+  .gallery {
+    max-width: 1200px; margin: 0 auto;
+    padding: 24px 32px 80px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 28px;
+  }
+
+  .wp-card {
+    background: white; border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.05);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    display: flex; flex-direction: column;
+  }
+  .wp-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.11), 0 2px 6px rgba(0,0,0,0.07);
+  }
+
+  .wp-thumb {
+    width: 100%; aspect-ratio: 16 / 9;
+    object-fit: cover; display: block;
+    background: var(--sand);
+  }
+
+  .wp-body {
+    padding: 18px 20px 20px;
+    display: flex; flex-direction: column; flex: 1;
+  }
+  .wp-name {
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 18px; color: var(--ink); margin-bottom: 5px;
+  }
+  .wp-desc {
+    font-size: 13px; color: var(--ink-mid); line-height: 1.5;
+    flex: 1; margin-bottom: 16px;
+  }
+  .wp-meta {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px; color: var(--ink-faint);
+  }
+  .wp-res { letter-spacing: 0.02em; }
+
+  .btn-download {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--teal); color: white;
+    font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: 14px; padding: 9px 18px; border-radius: 50px;
+    text-decoration: none; transition: background 0.18s ease;
+    white-space: nowrap;
+  }
+  .btn-download:hover { background: var(--teal-dark); }
+  .btn-download svg { flex-shrink: 0; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 20px 48px; text-align: center;
+    background: var(--teal-deep); color: rgba(255,255,255,0.6); font-size: 12px;
+  }
+  footer a { color: rgba(255,255,255,0.8); text-decoration: none; }
+  footer a:hover { color: white; }
+  footer p { margin-bottom: 4px; }
+
+  @media (max-width: 640px) {
+    nav { padding: 14px 20px; }
+    .gallery { padding: 16px 16px 64px; gap: 20px; grid-template-columns: 1fr; }
+    .hero { padding: 48px 20px 32px; }
+    footer { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="/assets/app-icon.png" alt="PebblePath">
+    PebblePath
+  </a>
+  <a href="/" class="nav-back">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 12L6 8l4-4"/>
+    </svg>
+    Back to home
+  </a>
+</nav>
+
+<section class="hero">
+  <div class="hero-tag">Free to download</div>
+  <h1>PebblePath Wallpapers</h1>
+  <p>Six original scenes for your desktop — quiet, natural, and easy on the eyes.</p>
+</section>
+
+<div class="gallery">
+
+  <div class="wp-card">
+    <img class="wp-thumb" src="assets/daybreak-thumb.jpg" alt="Daybreak wallpaper — golden morning light on pebbled water" loading="lazy">
+    <div class="wp-body">
+      <div class="wp-name">Daybreak</div>
+      <div class="wp-desc">Golden morning light breaking over still water. The start of something calm.</div>
+      <div class="wp-meta">
+        <span class="wp-res">3840 × 2160 &middot; PNG</span>
+        <a class="btn-download" href="assets/Daybreak.png" download="PebblePath-Daybreak.png">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/>
+          </svg>
+          Download
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wp-card">
+    <img class="wp-thumb" src="assets/undertow-thumb.jpg" alt="Undertow wallpaper — deep ocean, slow pull" loading="lazy">
+    <div class="wp-body">
+      <div class="wp-name">Undertow</div>
+      <div class="wp-desc">The deep, slow pull beneath the surface. Blues that feel like breathing out.</div>
+      <div class="wp-meta">
+        <span class="wp-res">3840 × 2160 &middot; PNG</span>
+        <a class="btn-download" href="assets/Undertow.png" download="PebblePath-Undertow.png">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/>
+          </svg>
+          Download
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wp-card">
+    <img class="wp-thumb" src="assets/understory-thumb.jpg" alt="Understory wallpaper — forest floor, dappled green" loading="lazy">
+    <div class="wp-body">
+      <div class="wp-name">Understory</div>
+      <div class="wp-desc">The quiet world beneath the canopy. Soft greens, dappled light, unhurried.</div>
+      <div class="wp-meta">
+        <span class="wp-res">3840 × 2160 &middot; PNG</span>
+        <a class="btn-download" href="assets/Understory.png" download="PebblePath-Understory.png">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/>
+          </svg>
+          Download
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wp-card">
+    <img class="wp-thumb" src="assets/sandbar-thumb.jpg" alt="Sandbar wallpaper — warm sand and shallow water" loading="lazy">
+    <div class="wp-body">
+      <div class="wp-name">Sandbar</div>
+      <div class="wp-desc">Warm sand catching afternoon light. The kind of spot you want to stay a little longer.</div>
+      <div class="wp-meta">
+        <span class="wp-res">3840 × 2160 &middot; PNG</span>
+        <a class="btn-download" href="assets/Sandbar.png" download="PebblePath-Sandbar.png">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/>
+          </svg>
+          Download
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wp-card">
+    <img class="wp-thumb" src="assets/shallows-thumb.jpg" alt="Shallows wallpaper — clear aqua water over pebbles" loading="lazy">
+    <div class="wp-body">
+      <div class="wp-name">Shallows</div>
+      <div class="wp-desc">Crystal-clear water just above the stones. Light refracting, nothing hidden.</div>
+      <div class="wp-meta">
+        <span class="wp-res">3840 × 2160 &middot; PNG</span>
+        <a class="btn-download" href="assets/Shallows.png" download="PebblePath-Shallows.png">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/>
+          </svg>
+          Download
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wp-card">
+    <img class="wp-thumb" src="assets/stillwater-thumb.jpg" alt="Stillwater wallpaper — deep teal water at dusk" loading="lazy">
+    <div class="wp-body">
+      <div class="wp-name">Stillwater</div>
+      <div class="wp-desc">Deep teal at the last light of day. Still, settled, held.</div>
+      <div class="wp-meta">
+        <span class="wp-res">3840 × 2160 &middot; PNG</span>
+        <a class="btn-download" href="assets/Stillwater.png" download="PebblePath-Stillwater.png">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/>
+          </svg>
+          Download
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>
+    <a href="/privacy">Privacy</a> &nbsp;&middot;&nbsp;
+    <a href="/terms">Terms</a> &nbsp;&middot;&nbsp;
+    <a href="mailto:thomas@pebblepath.ai">thomas@pebblepath.ai</a>
+  </p>
+  <p>&copy; 2026 PebblePath &middot; for every little milestone</p>
+</footer>
+
+</body>
+</html>

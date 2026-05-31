@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Memory &amp; Privacy — PebblePath</title>
+<meta name="description" content="How PebblePath remembers what matters for your family — and how we protect every detail with hardware-grade security.">
+<link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pebblepath.ai/memory-privacy/">
+<meta property="og:title" content="Memory &amp; Privacy — PebblePath">
+<meta property="og:description" content="How PebblePath remembers what matters for your family, and how we protect every detail with hardware-grade security.">
+<meta property="og:image" content="https://pebblepath.ai/assets/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal:       #3D9B8F;
+    --teal-dark:  #2D7A70;
+    --teal-deep:  #1F5C54;
+    --teal-light: #5CBFB0;
+    --sand:       #E8DCC8;
+    --terra:      #C67B5C;
+    --bg:         #FAF8F5;
+    --surface:    #FFFFFF;
+    --ink:        #1a2e2b;
+    --ink-mid:    rgba(26,46,43,0.55);
+    --ink-faint:  rgba(26,46,43,0.35);
+    --border:     rgba(26,46,43,0.10);
+    --radius:     16px;
+    --radius-lg:  24px;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 48px;
+    background: white; border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--ink);
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 18px;
+  }
+  .nav-logo img { width: 28px; height: 28px; border-radius: 7px; }
+  .nav-back {
+    font-size: 14px; color: var(--teal); text-decoration: none; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .nav-back:hover { color: var(--teal-dark); }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(160deg, var(--teal-deep) 0%, #2D7A70 60%, #3D9B8F 100%);
+    color: white;
+    padding: 80px 48px 72px;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 60% 40%, rgba(92,191,176,0.22) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    background: rgba(255,255,255,0.15); border-radius: 20px;
+    padding: 4px 14px; margin-bottom: 18px;
+    color: rgba(255,255,255,0.9);
+  }
+  .hero h1 {
+    font-family: 'Nunito', sans-serif; font-weight: 900;
+    font-size: clamp(30px, 5vw, 52px); line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    font-size: 18px; color: rgba(255,255,255,0.82); max-width: 560px;
+    margin: 0 auto; line-height: 1.65;
+  }
+
+  /* ── CONTENT WRAPPER ── */
+  .content {
+    max-width: 820px; margin: 0 auto; padding: 0 32px;
+  }
+
+  /* ── CHAPTER HEADERS ── */
+  .chapter {
+    padding: 64px 0 0;
+    display: flex; align-items: center; gap: 14px;
+    border-top: 1px solid var(--border); margin-top: 64px;
+  }
+  .chapter:first-child { border-top: none; padding-top: 60px; }
+  .chapter-icon {
+    width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .chapter-icon.teal { background: rgba(61,155,143,0.12); }
+  .chapter-icon.terra { background: rgba(198,123,92,0.12); }
+  .chapter-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.10em; text-transform: uppercase;
+    color: var(--ink-faint); margin-bottom: 3px;
+  }
+  .chapter h2 {
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 26px; color: var(--ink);
+  }
+
+  .intro-text {
+    margin-top: 20px; font-size: 17px; color: var(--ink-mid); line-height: 1.7;
+  }
+
+  /* ── MEMORY LAYER CARDS ── */
+  .layers-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; margin-top: 28px;
+  }
+  .layer-card {
+    background: white; border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 22px 22px 20px;
+  }
+  .layer-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px; font-size: 18px;
+  }
+  .layer-card h3 {
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 16px;
+    color: var(--ink); margin-bottom: 6px;
+  }
+  .layer-card p { font-size: 14px; color: var(--ink-mid); line-height: 1.55; }
+  .layer-examples {
+    margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .ex-pill {
+    font-size: 12px; padding: 3px 10px; border-radius: 20px;
+    background: var(--bg); border: 1px solid var(--border);
+    color: var(--ink-mid);
+  }
+
+  /* ── INGESTION CHANNELS ── */
+  .channels { margin-top: 28px; display: flex; flex-direction: column; gap: 14px; }
+  .channel-row {
+    display: flex; align-items: flex-start; gap: 16px;
+    background: white; border-radius: var(--radius); border: 1px solid var(--border);
+    padding: 18px 20px;
+  }
+  .channel-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 5px;
+  }
+  .channel-row h3 {
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 15px; color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .channel-row p { font-size: 14px; color: var(--ink-mid); line-height: 1.5; }
+
+  /* ── THE LOOP ── */
+  .loop-wrap {
+    margin-top: 28px; background: white; border-radius: var(--radius-lg);
+    border: 1px solid var(--border); padding: 32px;
+  }
+  .loop-steps {
+    display: flex; align-items: center; gap: 0; flex-wrap: wrap;
+    justify-content: center; row-gap: 10px;
+  }
+  .loop-step {
+    text-align: center; padding: 10px 16px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .loop-step .step-dot {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: rgba(61,155,143,0.10);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; margin-bottom: 7px;
+  }
+  .loop-step .step-label {
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 13px; color: var(--teal-deep);
+  }
+  .loop-arrow {
+    font-size: 18px; color: var(--ink-faint); padding: 0 4px;
+    align-self: flex-start; padding-top: 18px;
+  }
+  .loop-caption {
+    margin-top: 20px; text-align: center;
+    font-size: 14px; color: var(--ink-mid); line-height: 1.5;
+  }
+
+  /* ── SECURITY SECTION ── */
+  .security-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; margin-top: 28px;
+  }
+  .sec-card {
+    background: white; border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 22px;
+  }
+  .sec-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--teal-dark); background: rgba(61,155,143,0.10);
+    border-radius: 20px; padding: 3px 10px; margin-bottom: 12px;
+  }
+  .sec-card h3 {
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 16px;
+    color: var(--ink); margin-bottom: 7px;
+  }
+  .sec-card p { font-size: 14px; color: var(--ink-mid); line-height: 1.55; }
+
+  /* ── PRINCIPLES BAND ── */
+  .principles {
+    background: var(--teal-deep); color: white; border-radius: var(--radius-lg);
+    padding: 40px 40px 36px; margin-top: 28px;
+  }
+  .principles h3 {
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 20px;
+    margin-bottom: 20px; color: white;
+  }
+  .principle-list {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px; list-style: none;
+  }
+  .principle-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 15px; color: rgba(255,255,255,0.88); line-height: 1.5;
+  }
+  .pcheck {
+    width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; margin-top: 1px;
+    background: rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── PRIVACY LINKS ── */
+  .privacy-links {
+    margin-top: 24px; padding: 22px 24px;
+    background: white; border-radius: var(--radius); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .privacy-links p { font-size: 14px; color: var(--ink-mid); }
+  .privacy-links a {
+    font-size: 14px; color: var(--teal); font-weight: 600; text-decoration: none;
+    white-space: nowrap;
+  }
+  .privacy-links a:hover { color: var(--teal-dark); }
+
+  /* ── SPACER ── */
+  .page-bottom { padding-bottom: 80px; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 20px 48px; text-align: center;
+    background: var(--teal-deep); color: rgba(255,255,255,0.6); font-size: 12px;
+    margin-top: 0;
+  }
+  footer a { color: rgba(255,255,255,0.8); text-decoration: none; }
+  footer a:hover { color: white; }
+  footer p { margin-bottom: 4px; }
+
+  @media (max-width: 700px) {
+    nav { padding: 14px 20px; }
+    .hero { padding: 52px 24px 48px; }
+    .content { padding: 0 20px; }
+    .layers-grid { grid-template-columns: 1fr; }
+    .security-grid { grid-template-columns: 1fr; }
+    .principle-list { grid-template-columns: 1fr; }
+    .loop-arrow { display: none; }
+    .privacy-links { flex-direction: column; align-items: flex-start; }
+    footer { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="/assets/app-icon.png" alt="PebblePath">
+    PebblePath
+  </a>
+  <a href="/" class="nav-back">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12L6 8l4-4"/></svg>
+    Back to home
+  </a>
+</nav>
+
+<section class="hero">
+  <div class="hero-tag">Pebble Memory &amp; Privacy</div>
+  <h1>Built to remember.<br>Built to protect.</h1>
+  <p>How PebblePath learns what matters to your family — and the layers of security we've put in place to keep every detail safe.</p>
+</section>
+
+<div class="content">
+
+  <!-- CHAPTER 1: MEMORY -->
+  <div class="chapter">
+    <div class="chapter-icon teal">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3D9B8F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>
+      </svg>
+    </div>
+    <div>
+      <div class="chapter-label">Part 1</div>
+      <h2>How Pebble remembers</h2>
+    </div>
+  </div>
+
+  <p class="intro-text">Most apps remember what you tell them. Pebble goes further — it quietly learns your family's rhythms, picks up context from your calendar and the weather, and builds a living picture that gets sharper the longer you use it.</p>
+
+  <div class="layers-grid">
+    <div class="layer-card">
+      <div class="layer-icon" style="background:rgba(61,155,143,0.10);">⚓</div>
+      <h3>Anchors</h3>
+      <p>Facts that rarely change. Stored once, used everywhere Pebble speaks about your family.</p>
+      <div class="layer-examples">
+        <span class="ex-pill">Allergies &amp; dietary</span>
+        <span class="ex-pill">School &amp; childcare</span>
+        <span class="ex-pill">Sizes &amp; gear</span>
+        <span class="ex-pill">Pediatrician</span>
+      </div>
+    </div>
+    <div class="layer-card">
+      <div class="layer-icon" style="background:rgba(198,123,92,0.10);">🔄</div>
+      <h3>Rhythms</h3>
+      <p>The recurring patterns of your week — routines Pebble learns so it can anticipate, not just react.</p>
+      <div class="layer-examples">
+        <span class="ex-pill">Drop-off times</span>
+        <span class="ex-pill">Bath nights</span>
+        <span class="ex-pill">Weekly classes</span>
+        <span class="ex-pill">Meal rhythms</span>
+      </div>
+    </div>
+    <div class="layer-card">
+      <div class="layer-icon" style="background:rgba(61,155,143,0.10);">📈</div>
+      <h3>Patterns</h3>
+      <p>Signals Pebble notices over time — connections across your family's behaviour that no checklist would catch.</p>
+      <div class="layer-examples">
+        <span class="ex-pill">Sleep after swim days</span>
+        <span class="ex-pill">Language surges</span>
+        <span class="ex-pill">Mood cycles</span>
+      </div>
+    </div>
+    <div class="layer-card">
+      <div class="layer-icon" style="background:rgba(198,123,92,0.10);">📍</div>
+      <h3>Live context</h3>
+      <p>The rolling now-to-two-weeks view. Today's weather, tomorrow's events, active trips — what's real right now.</p>
+      <div class="layer-examples">
+        <span class="ex-pill">Calendar events</span>
+        <span class="ex-pill">Weather</span>
+        <span class="ex-pill">Trips &amp; handoffs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW CONTEXT COMES IN -->
+  <p class="intro-text" style="margin-top:36px;">Context reaches Pebble through five channels — roughly ordered from lowest effort to highest.</p>
+
+  <div class="channels">
+    <div class="channel-row">
+      <div class="channel-dot" style="background:#3D9B8F;"></div>
+      <div>
+        <h3>Passive sync</h3>
+        <p>Calendar events, weather, and location context flow in automatically — no input needed from you.</p>
+      </div>
+    </div>
+    <div class="channel-row">
+      <div class="channel-dot" style="background:#5CBFB0;"></div>
+      <div>
+        <h3>Forward &amp; snap</h3>
+        <p>Forward a school newsletter, snap a permission slip — Pebble pulls out the key details and files them.</p>
+      </div>
+    </div>
+    <div class="channel-row">
+      <div class="channel-dot" style="background:#C67B5C;"></div>
+      <div>
+        <h3>Conversation</h3>
+        <p>Ask Pebble anything in chat or by voice. Answers build on everything it already knows about your family.</p>
+      </div>
+    </div>
+    <div class="channel-row">
+      <div class="channel-dot" style="background:#E8DCC8; border: 1px solid rgba(26,46,43,0.15);"></div>
+      <div>
+        <h3>Profile &amp; circle</h3>
+        <p>One-time setup: family members, children, anchors. Done once; referenced everywhere.</p>
+      </div>
+    </div>
+    <div class="channel-row">
+      <div class="channel-dot" style="background:#2D7A70;"></div>
+      <div>
+        <h3>Derived signals</h3>
+        <p>Patterns Pebble surfaces itself — things you'd never think to log, but that matter across weeks and months.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE LOOP -->
+  <div class="loop-wrap">
+    <div style="text-align:center; margin-bottom:24px;">
+      <div style="font-size:11px; font-weight:700; letter-spacing:0.10em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:6px;">The memory loop</div>
+      <div style="font-family:'Nunito',sans-serif; font-weight:800; font-size:18px; color:var(--ink);">Memory compounds. Pebble gets smarter the longer you use it.</div>
+    </div>
+    <div class="loop-steps">
+      <div class="loop-step"><div class="step-dot">📥</div><div class="step-label">Capture</div></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step"><div class="step-dot">🧠</div><div class="step-label">Understand</div></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step"><div class="step-dot">💾</div><div class="step-label">Remember</div></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step"><div class="step-dot">🔮</div><div class="step-label">Anticipate</div></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step"><div class="step-dot">✅</div><div class="step-label">Act</div></div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-step"><div class="step-dot">📚</div><div class="step-label">Learn</div></div>
+    </div>
+    <div class="loop-caption">Every interaction teaches Pebble a little more. The daily brief gets sharper. The suggestions get better. The family feels more prepared.</div>
+  </div>
+
+
+  <!-- CHAPTER 2: SECURITY -->
+  <div class="chapter">
+    <div class="chapter-icon terra">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C67B5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    </div>
+    <div>
+      <div class="chapter-label">Part 2</div>
+      <h2>How we protect it</h2>
+    </div>
+  </div>
+
+  <p class="intro-text">Family memory is sensitive. We've built security in layers — from how data moves between your phone and our servers, to what AI models ever see about your children.</p>
+
+  <div class="security-grid">
+
+    <div class="sec-card">
+      <div class="sec-badge">
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="5"/></svg>
+        Device-verified requests
+      </div>
+      <h3>Hardware attestation</h3>
+      <p>On iOS, every request is signed by Apple's App Attest — a hardware-level proof that the request genuinely came from the PebblePath app on a real, unmodified device. No third-party script or automated scraper can call our servers.</p>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-badge">
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="5"/></svg>
+        Key never on device
+      </div>
+      <h3>AI calls go through our servers</h3>
+      <p>The Anthropic API key that powers Pebble is not stored in the app. Every AI request routes through a Cloud Function — your phone never holds the key, so it can't be extracted from an install.</p>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-badge">
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="5"/></svg>
+        Names never exposed
+      </div>
+      <h3>PII tokenisation</h3>
+      <p>Before your children's names reach an AI model, they are replaced with anonymous tokens like <code style="font-size:12px; background:var(--bg); padding:1px 5px; border-radius:4px;">{{CHILD_NAME}}</code>. The model never sees real names — they're restored only after the response comes back, inside our own servers.</p>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-badge">
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="5"/></svg>
+        Private messages stay private
+      </div>
+      <h3>Server-enforced private mode</h3>
+      <p>When you send a private message in Pebble, a <code style="font-size:12px; background:var(--bg); padding:1px 5px; border-radius:4px;">visibility</code> rule on our Firestore database prevents the other parent from reading it — even on a modified client.</p>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-badge">
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="5"/></svg>
+        Optional on iOS
+      </div>
+      <h3>Biometric lock</h3>
+      <p>You can enable Face ID or Touch ID to gate the app on open — so a borrowed phone can't surface your family's data. Default off; one tap to turn on in Settings → Security.</p>
+    </div>
+
+    <div class="sec-card">
+      <div class="sec-badge">
+        <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="5"/></svg>
+        Website protection
+      </div>
+      <h3>Security headers on pebblepath.ai</h3>
+      <p>Every page you load from pebblepath.ai carries Content Security Policy, HTTP Strict Transport Security, and Permissions Policy headers — enforced at the Cloudflare edge before the page reaches your browser.</p>
+    </div>
+
+  </div>
+
+  <!-- PRINCIPLES -->
+  <div class="principles">
+    <h3>Our commitments to your family</h3>
+    <ul class="principle-list">
+      <li>
+        <div class="pcheck">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg>
+        </div>
+        Your family data is never sold, and we run no advertising.
+      </li>
+      <li>
+        <div class="pcheck">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg>
+        </div>
+        You can delete your account and all data at any time, from within the app.
+      </li>
+      <li>
+        <div class="pcheck">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg>
+        </div>
+        Only the people you invite can see your family's data.
+      </li>
+      <li>
+        <div class="pcheck">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg>
+        </div>
+        AI models see anonymised context — never raw names or identifiers.
+      </li>
+      <li>
+        <div class="pcheck">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg>
+        </div>
+        What Pebble knows is visible and editable — in Settings → What Pebble knows.
+      </li>
+      <li>
+        <div class="pcheck">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg>
+        </div>
+        We collect only what's useful within the next two weeks. Nothing more.
+      </li>
+    </ul>
+  </div>
+
+  <div class="privacy-links">
+    <p>For the full legal detail — what we collect, how long we keep it, and your rights — read our Privacy Policy.</p>
+    <a href="/privacy">Read Privacy Policy →</a>
+  </div>
+
+  <div class="page-bottom"></div>
+
+</div><!-- /content -->
+
+<footer>
+  <p>
+    <a href="/privacy">Privacy</a> &nbsp;&middot;&nbsp;
+    <a href="/terms">Terms</a> &nbsp;&middot;&nbsp;
+    <a href="mailto:thomas@pebblepath.ai">thomas@pebblepath.ai</a>
+  </p>
+  <p>&copy; 2026 PebblePath &middot; for every little milestone</p>
+</footer>
+
+</body>
+</html>
