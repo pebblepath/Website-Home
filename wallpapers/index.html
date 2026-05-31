@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Wallpapers — PebblePath</title>
-<meta name="description" content="Free desktop wallpapers from PebblePath — six original scenes inspired by nature, calm, and the quiet pebble on the path.">
+<meta name="description" content="Free desktop and iPhone wallpapers from PebblePath — seven original scenes inspired by nature, calm, and the quiet pebble on the path.">
 <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
@@ -12,200 +12,215 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://pebblepath.ai/wallpapers/">
 <meta property="og:title" content="Wallpapers — PebblePath">
-<meta property="og:description" content="Six original desktop wallpapers from PebblePath. Free to download at 4K.">
+<meta property="og:description" content="Seven original wallpapers from PebblePath. Desktop 4K and iPhone versions. Free to download.">
 <meta property="og:image" content="https://pebblepath.ai/assets/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600&family=Fredoka:wght@600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --teal:       #3D9B8F;
-    --teal-dark:  #2D7A70;
-    --teal-deep:  #1F5C54;
-    --teal-light: #5CBFB0;
-    --terra:      #C67B5C;
-    --sand:       #E8DCC8;
-    --cream:      #FAF8F4;
-    --paper:      #FFFFFF;
-    --ink:        #2C2723;
-    --ink-soft:   #6E665C;
-    --ink-faint:  #9A9082;
-    --line:       #ECE3D4;
-    --charcoal:   #1a2e2b;
-  }
+:root {
+  --teal:       #3D9B8F;
+  --teal-dark:  #2D7A70;
+  --teal-deep:  #1F5C54;
+  --teal-light: #5CBFB0;
+  --terra:      #C67B5C;
+  --cream:      #FAF8F4;
+  --paper:      #FFFFFF;
+  --ink:        #2C2723;
+  --ink-soft:   #6E665C;
+  --ink-faint:  #9A9082;
+  --line:       #ECE3D4;
+}
 
-  html { font-size: 16px; }
-  body { font-family: 'Inter', system-ui, sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+html { font-size: 16px; }
+body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
 
-  /* ── FONTS ── */
-  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600&family=Fredoka:wght@600&display=swap');
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; width: 100%; z-index: 100;
+  background: linear-gradient(180deg, rgba(31,92,84,0.82) 0%, rgba(31,92,84,0) 100%);
+  padding: 0 48px; height: 68px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: background 0.3s ease;
+}
+nav.scrolled { background: rgba(31,92,84,0.96); }
+.nav-logo { display: flex; align-items: center; text-decoration: none; }
+.nav-logo img { width: 38px; height: 38px; border-radius: 9px; box-shadow: 0 2px 10px rgba(0,0,0,0.20); }
+.nav-links { display: flex; gap: 10px; align-items: center; }
+.nav-back {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 18px; border-radius: 50px;
+  background: rgba(255,255,255,0.12); color: white;
+  font-size: 13px; font-weight: 600; letter-spacing: 0.2px;
+  text-decoration: none; border: 1px solid rgba(255,255,255,0.28);
+  transition: background 0.2s;
+}
+.nav-back:hover { background: rgba(255,255,255,0.22); }
+.nav-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--terra); color: white;
+  padding: 9px 16px 9px 14px; border-radius: 50px;
+  font-weight: 600; font-size: 13px; text-decoration: none;
+  transition: background 0.2s; box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+.nav-cta svg { width: 16px; height: 16px; flex-shrink: 0; }
+.nav-cta:hover { background: #B5673C; }
+.hamburger {
+  display: none; background: none; border: none; cursor: pointer;
+  width: 44px; height: 44px; padding: 0; z-index: 102;
+  align-items: center; justify-content: center; flex-direction: column; gap: 5px;
+  -webkit-tap-highlight-color: transparent;
+}
+.hamburger span {
+  display: block; width: 22px; height: 2px; background: white;
+  border-radius: 2px; transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.mobile-menu {
+  display: none; position: fixed; inset: 0;
+  background: rgba(31,92,84,0.98); backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  padding: 100px 32px 48px; flex-direction: column; gap: 8px;
+  align-items: center; justify-content: center; z-index: 99;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a { color: white; text-decoration: none; font-size: 22px; font-weight: 600; padding: 14px 0; width: 100%; text-align: center; }
+.mobile-menu .mm-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--terra); margin-top: 18px; padding: 14px 32px; border-radius: 50px;
+  font-size: 16px; font-weight: 700; width: auto; min-width: 200px; justify-content: center;
+}
+body.menu-open { overflow: hidden; }
 
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; width: 100%; z-index: 100;
-    background: linear-gradient(180deg, rgba(31,92,84,0.82) 0%, rgba(31,92,84,0) 100%);
-    padding: 0 48px; height: 68px;
-    display: flex; align-items: center; justify-content: space-between;
-    transition: background 0.3s ease;
-  }
-  nav.scrolled { background: rgba(31,92,84,0.96); }
-  .nav-logo { display: flex; align-items: center; text-decoration: none; }
-  .nav-logo img { width: 38px; height: 38px; border-radius: 9px; box-shadow: 0 2px 10px rgba(0,0,0,0.20); }
-  .nav-links { display: flex; gap: 10px; align-items: center; }
-  .nav-back-pill {
-    display: inline-flex; align-items: center; gap: 7px;
-    padding: 9px 18px; border-radius: 50px;
-    background: rgba(255,255,255,0.12); color: white;
-    font-size: 13px; font-weight: 600; letter-spacing: 0.2px;
-    text-decoration: none; border: 1px solid rgba(255,255,255,0.28);
-    transition: background 0.2s;
-  }
-  .nav-back-pill:hover { background: rgba(255,255,255,0.22); }
-  .nav-back-pill svg { flex-shrink: 0; }
-  .nav-cta {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--terra); color: white;
-    padding: 9px 16px 9px 14px; border-radius: 50px;
-    font-weight: 600; font-size: 13px;
-    text-decoration: none;
-    transition: background 0.2s;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-  }
-  .nav-cta svg { width: 16px; height: 16px; flex-shrink: 0; }
-  .nav-cta:hover { background: #B5673C; }
+/* ── HERO ── */
+.hero {
+  padding: 130px 48px 64px;
+  background: linear-gradient(118deg, #235F57 0%, #1F5C54 55%, #184A44 100%);
+  color: white; text-align: center; position: relative; overflow: hidden;
+}
+.mh-peb {
+  position: absolute; border-radius: 58% 42% 55% 45% / 55% 48% 52% 45%;
+  background: rgba(255,255,255,0.05); pointer-events: none;
+}
+.hero-inner { position: relative; z-index: 2; }
+.hero-tag {
+  display: inline-block;
+  font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 11.5px;
+  letter-spacing: 1.6px; text-transform: uppercase; color: var(--teal-light);
+  background: rgba(255,255,255,0.10); border-radius: 20px;
+  padding: 5px 14px; margin-bottom: 18px;
+}
+.hero h1 {
+  font-family: 'Nunito', sans-serif; font-weight: 900;
+  font-size: clamp(28px, 5vw, 50px); line-height: 1.08;
+  letter-spacing: -1px; margin-bottom: 16px;
+}
+.hero p { font-size: 16px; color: #CFE3DE; max-width: 480px; margin: 0 auto; line-height: 1.7; }
 
-  /* Hamburger */
-  .hamburger {
-    display: none; background: none; border: none; cursor: pointer;
-    width: 44px; height: 44px; padding: 0; position: relative; z-index: 102;
-    align-items: center; justify-content: center; flex-direction: column; gap: 5px;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .hamburger span {
-    display: block; width: 22px; height: 2px; background: white;
-    border-radius: 2px; transition: transform 0.25s ease, opacity 0.2s ease;
-  }
-  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-  .hamburger.open span:nth-child(2) { opacity: 0; }
-  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+/* ── FORMAT TOGGLE ── */
+.format-bar {
+  max-width: 1180px; margin: 0 auto;
+  padding: 28px 32px 0;
+  display: flex; align-items: center; gap: 8px;
+}
+.fmt-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 18px; border-radius: 50px; border: 1px solid var(--line);
+  background: white; color: var(--ink-soft); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.18s ease;
+  font-family: 'Nunito', sans-serif;
+}
+.fmt-btn.active { background: var(--teal-deep); color: white; border-color: var(--teal-deep); }
+.fmt-btn:not(.active):hover { border-color: var(--teal); color: var(--teal-dark); }
+.fmt-label { font-size: 12px; color: var(--ink-faint); margin-left: 4px; }
 
-  /* Mobile menu */
-  .mobile-menu {
-    display: none; position: fixed; inset: 0;
-    background: rgba(31,92,84,0.98); backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    padding: 100px 32px 48px; flex-direction: column; gap: 8px;
-    align-items: center; justify-content: center; z-index: 99;
-  }
-  .mobile-menu.open { display: flex; }
-  .mobile-menu a {
-    color: white; text-decoration: none; font-size: 22px; font-weight: 600;
-    padding: 14px 0; width: 100%; text-align: center;
-  }
-  .mobile-menu .mm-cta {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--terra); color: white; margin-top: 18px;
-    padding: 14px 32px; border-radius: 50px; font-size: 16px; font-weight: 700;
-    width: auto; min-width: 200px; justify-content: center;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.18);
-  }
-  body.menu-open { overflow: hidden; }
+/* ── GALLERY ── */
+.gallery {
+  max-width: 1180px; margin: 0 auto;
+  padding: 24px 32px 80px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+.gallery.iphone-mode { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 
-  /* ── HERO ── */
-  .hero {
-    padding: 130px 48px 64px;
-    background: linear-gradient(118deg, #235F57 0%, #1F5C54 55%, #184A44 100%);
-    color: white; text-align: center; position: relative; overflow: hidden;
-  }
-  .mh-peb {
-    position: absolute; border-radius: 58% 42% 55% 45% / 55% 48% 52% 45%;
-    background: rgba(255,255,255,0.05);
-  }
-  .hero-tag {
-    display: inline-block;
-    font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 11.5px;
-    letter-spacing: 1.6px; text-transform: uppercase; color: var(--teal-light);
-    background: rgba(255,255,255,0.10); border-radius: 20px;
-    padding: 5px 14px; margin-bottom: 18px;
-  }
-  .hero h1 {
-    font-family: 'Nunito', sans-serif; font-weight: 900;
-    font-size: clamp(28px, 5vw, 50px); line-height: 1.08;
-    letter-spacing: -1px; margin-bottom: 16px;
-  }
-  .hero p { font-size: 16px; color: #CFE3DE; max-width: 480px; margin: 0 auto; line-height: 1.7; }
+.wp-card {
+  background: var(--paper); border-radius: 16px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(60,50,38,0.07);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  display: flex; flex-direction: column;
+}
+.wp-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(60,50,38,0.12);
+}
 
-  /* ── GALLERY ── */
-  .gallery {
-    max-width: 1180px; margin: 0 auto;
-    padding: 48px 32px 80px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 24px;
-  }
+/* Desktop thumbnail — 16:9 */
+.wp-img-wrap {
+  width: 100%; position: relative; overflow: hidden; background: #2a3630;
+}
+.wp-img-wrap::before { content: ''; display: block; padding-top: 56.25%; }
 
-  .wp-card {
-    background: var(--paper); border-radius: 16px;
-    border: 1px solid var(--line);
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(60,50,38,0.07);
-    transition: transform 0.22s ease, box-shadow 0.22s ease;
-    display: flex; flex-direction: column;
-  }
-  .wp-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px rgba(60,50,38,0.12);
-  }
+/* iPhone thumbnail — 9:19.5 portrait */
+.wp-img-wrap.portrait::before { padding-top: 216%; }
 
-  .wp-img-wrap {
-    width: 100%; position: relative; overflow: hidden;
-    background: var(--sand);
-  }
-  .wp-img-wrap::before {
-    content: ''; display: block; padding-top: 56.25%; /* 16:9 */
-  }
-  .wp-thumb {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover; display: block;
-  }
+.wp-thumb {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
 
-  .wp-body { padding: 18px 20px 20px; display: flex; flex-direction: column; flex: 1; }
-  .wp-name {
-    font-family: 'Nunito', sans-serif; font-weight: 800;
-    font-size: 18px; color: var(--ink); margin-bottom: 5px;
-  }
-  .wp-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.55; flex: 1; margin-bottom: 16px; }
-  .wp-footer { display: flex; align-items: center; justify-content: space-between; }
-  .wp-res { font-size: 11.5px; color: var(--ink-faint); letter-spacing: 0.03em; }
+.wp-body { padding: 16px 18px 18px; display: flex; flex-direction: column; flex: 1; }
+.wp-name {
+  font-family: 'Nunito', sans-serif; font-weight: 800;
+  font-size: 17px; color: var(--ink); margin-bottom: 4px;
+}
+.wp-desc { font-size: 12.5px; color: var(--ink-soft); line-height: 1.55; flex: 1; margin-bottom: 14px; }
 
-  .btn-dl {
-    display: inline-flex; align-items: center; gap: 7px;
-    background: var(--teal); color: white;
-    font-family: 'Nunito', sans-serif; font-weight: 700;
-    font-size: 13px; padding: 8px 16px; border-radius: 50px;
-    text-decoration: none; transition: background 0.18s ease;
-  }
-  .btn-dl:hover { background: var(--teal-dark); }
-  .btn-dl svg { flex-shrink: 0; }
+/* Download buttons row */
+.wp-dl-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-dl {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'Nunito', sans-serif; font-weight: 700;
+  font-size: 12.5px; padding: 7px 14px; border-radius: 50px;
+  text-decoration: none; transition: background 0.18s ease; white-space: nowrap;
+}
+.btn-dl.desktop { background: var(--teal); color: white; }
+.btn-dl.desktop:hover { background: var(--teal-dark); }
+.btn-dl.iphone { background: rgba(61,155,143,0.10); color: var(--teal-dark); border: 1px solid rgba(61,155,143,0.28); }
+.btn-dl.iphone:hover { background: rgba(61,155,143,0.18); }
+.btn-dl svg { flex-shrink: 0; }
+.btn-dl .res { font-size: 10px; font-weight: 600; opacity: 0.75; margin-left: 2px; }
 
-  /* ── FOOTER ── */
-  footer {
-    padding: 16px 48px; text-align: center;
-    background: var(--teal-deep); color: rgba(255,255,255,0.6); font-size: 12px;
-    font-family: 'Inter', system-ui, sans-serif;
-  }
-  footer p { margin-bottom: 4px; }
-  footer a { color: rgba(255,255,255,0.8); text-decoration: none; }
-  footer a:hover { color: white; }
+/* ── FOOTER ── */
+footer {
+  padding: 16px 48px; text-align: center;
+  background: var(--teal-deep); color: rgba(255,255,255,0.6); font-size: 12px;
+}
+footer p { margin-bottom: 4px; }
+footer a { color: rgba(255,255,255,0.8); text-decoration: none; }
+footer a:hover { color: white; }
 
-  @media (max-width: 768px) {
-    nav { padding: 0 20px; }
-    .nav-links { display: none; }
-    .hamburger { display: flex; }
-    .hero { padding: 100px 24px 48px; }
-    .gallery { padding: 28px 16px 56px; gap: 18px; grid-template-columns: 1fr; }
-    footer { padding: 14px 20px; }
-  }
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .hero { padding: 100px 24px 48px; }
+  .gallery { padding: 20px 16px 56px; gap: 16px; grid-template-columns: 1fr 1fr; }
+  .gallery.iphone-mode { grid-template-columns: repeat(3, 1fr); }
+  .format-bar { padding: 20px 16px 0; }
+  footer { padding: 14px 20px; }
+}
+@media (max-width: 480px) {
+  .gallery { grid-template-columns: 1fr; }
+  .gallery.iphone-mode { grid-template-columns: 1fr 1fr; }
+}
 </style>
 </head>
 <body>
@@ -215,12 +230,12 @@
     <img src="/assets/app-icon.png" alt="PebblePath">
   </a>
   <div class="nav-links">
-    <a href="/" class="nav-back-pill">
+    <a href="/" class="nav-back">
       <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12L6 8l4-4"/></svg>
       Back to home
     </a>
     <a href="https://apps.apple.com/app/pebblepath-ai/" class="nav-cta" target="_blank" rel="noopener">
-      <svg viewBox="0 0 384 512" fill="currentColor" width="14" height="14" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM248.6 84.7c33.5-39.8 30.4-76 29.4-89-29.6 1.7-63.8 20.1-83.3 42.7-21.5 24.2-34.1 54.1-31.4 87.6 32 2.5 61.1-13.9 85.3-41.3z"/></svg>
+      <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM248.6 84.7c33.5-39.8 30.4-76 29.4-89-29.6 1.7-63.8 20.1-83.3 42.7-21.5 24.2-34.1 54.1-31.4 87.6 32 2.5 61.1-13.9 85.3-41.3z"/></svg>
       Download
     </a>
   </div>
@@ -243,118 +258,176 @@
   <div class="mh-peb" style="width:340px;height:260px;top:-70px;right:80px;"></div>
   <div class="mh-peb" style="width:200px;height:155px;bottom:10px;left:-30px;transform:rotate(30deg);"></div>
   <div class="mh-peb" style="width:130px;height:100px;bottom:30px;right:300px;transform:rotate(-20deg);"></div>
-  <div style="position:relative;z-index:2;">
+  <div class="hero-inner">
     <div class="hero-tag">Free to download</div>
     <h1>PebblePath Wallpapers</h1>
-    <p>Six original scenes for your desktop &mdash; quiet, natural, and easy on the eyes.</p>
+    <p>Seven original scenes for your desktop and iPhone &mdash; quiet, natural, and easy on the eyes.</p>
   </div>
 </section>
 
-<div class="gallery">
+<!-- Format toggle -->
+<div class="format-bar">
+  <button class="fmt-btn active" id="btn-desktop" onclick="setMode('desktop')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    Desktop
+  </button>
+  <button class="fmt-btn" id="btn-iphone" onclick="setMode('iphone')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
+    iPhone
+  </button>
+  <span class="fmt-label" id="fmt-hint">3840 &times; 2160 &middot; PNG</span>
+</div>
 
+<div class="gallery" id="gallery">
+
+  <!-- DAYBREAK -->
   <div class="wp-card">
-    <div class="wp-img-wrap">
-      <img class="wp-thumb" src="assets/daybreak-thumb.jpg" alt="Daybreak — golden morning light on water" loading="eager">
+    <div class="wp-img-wrap" id="img-daybreak">
+      <img class="wp-thumb" id="thumb-daybreak" src="assets/daybreak-thumb.jpg" alt="Daybreak wallpaper" loading="eager">
     </div>
     <div class="wp-body">
       <div class="wp-name">Daybreak</div>
       <div class="wp-desc">Golden morning light breaking over still water. The start of something calm.</div>
-      <div class="wp-footer">
-        <span class="wp-res">3840 &times; 2160 &middot; PNG</span>
-        <a class="btn-dl" href="assets/Daybreak.png" download="PebblePath-Daybreak.png">
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
-          Download
+      <div class="wp-dl-row">
+        <a class="btn-dl desktop" id="dl-desktop-daybreak" href="assets/Daybreak.png" download="PebblePath-Daybreak.png">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
+          Desktop
+        </a>
+        <a class="btn-dl iphone" id="dl-iphone-daybreak" href="assets/iphone/Daybreak.png" download="PebblePath-Daybreak-iPhone.png">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
+          iPhone
         </a>
       </div>
     </div>
   </div>
 
+  <!-- NIGHTBLOOM -->
   <div class="wp-card">
-    <div class="wp-img-wrap">
-      <img class="wp-thumb" src="assets/undertow-thumb.jpg" alt="Undertow — deep ocean blues" loading="lazy">
+    <div class="wp-img-wrap" id="img-nightbloom">
+      <img class="wp-thumb" id="thumb-nightbloom" src="assets/nightbloom-thumb.jpg" alt="Nightbloom wallpaper" loading="lazy">
+    </div>
+    <div class="wp-body">
+      <div class="wp-name">Nightbloom</div>
+      <div class="wp-desc">Deep night colours where something is always about to open. Still and alive at once.</div>
+      <div class="wp-dl-row">
+        <a class="btn-dl desktop" id="dl-desktop-nightbloom" href="assets/Nightbloom.png" download="PebblePath-Nightbloom.png">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
+          Desktop
+        </a>
+        <a class="btn-dl iphone" id="dl-iphone-nightbloom" href="assets/iphone/Nightbloom.png" download="PebblePath-Nightbloom-iPhone.png">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
+          iPhone
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNDERTOW -->
+  <div class="wp-card">
+    <div class="wp-img-wrap" id="img-undertow">
+      <img class="wp-thumb" id="thumb-undertow" src="assets/undertow-thumb.jpg" alt="Undertow wallpaper" loading="lazy">
     </div>
     <div class="wp-body">
       <div class="wp-name">Undertow</div>
       <div class="wp-desc">The deep, slow pull beneath the surface. Blues that feel like breathing out.</div>
-      <div class="wp-footer">
-        <span class="wp-res">3840 &times; 2160 &middot; PNG</span>
-        <a class="btn-dl" href="assets/Undertow.png" download="PebblePath-Undertow.png">
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
-          Download
+      <div class="wp-dl-row">
+        <a class="btn-dl desktop" id="dl-desktop-undertow" href="assets/Undertow.png" download="PebblePath-Undertow.png">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
+          Desktop
+        </a>
+        <a class="btn-dl iphone" id="dl-iphone-undertow" href="assets/iphone/Undertow.png" download="PebblePath-Undertow-iPhone.png">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
+          iPhone
         </a>
       </div>
     </div>
   </div>
 
+  <!-- UNDERSTORY -->
   <div class="wp-card">
-    <div class="wp-img-wrap">
-      <img class="wp-thumb" src="assets/understory-thumb.jpg" alt="Understory — forest floor, dappled green" loading="lazy">
+    <div class="wp-img-wrap" id="img-understory">
+      <img class="wp-thumb" id="thumb-understory" src="assets/understory-thumb.jpg" alt="Understory wallpaper" loading="lazy">
     </div>
     <div class="wp-body">
       <div class="wp-name">Understory</div>
       <div class="wp-desc">The quiet world beneath the canopy. Soft greens, dappled light, unhurried.</div>
-      <div class="wp-footer">
-        <span class="wp-res">3840 &times; 2160 &middot; PNG</span>
-        <a class="btn-dl" href="assets/Understory.png" download="PebblePath-Understory.png">
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
-          Download
+      <div class="wp-dl-row">
+        <a class="btn-dl desktop" id="dl-desktop-understory" href="assets/Understory.png" download="PebblePath-Understory.png">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
+          Desktop
+        </a>
+        <a class="btn-dl iphone" id="dl-iphone-understory" href="assets/iphone/Understory.png" download="PebblePath-Understory-iPhone.png">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
+          iPhone
         </a>
       </div>
     </div>
   </div>
 
+  <!-- SANDBAR -->
   <div class="wp-card">
-    <div class="wp-img-wrap">
-      <img class="wp-thumb" src="assets/sandbar-thumb.jpg" alt="Sandbar — warm sand and shallow water" loading="lazy">
+    <div class="wp-img-wrap" id="img-sandbar">
+      <img class="wp-thumb" id="thumb-sandbar" src="assets/sandbar-thumb.jpg" alt="Sandbar wallpaper" loading="lazy">
     </div>
     <div class="wp-body">
       <div class="wp-name">Sandbar</div>
       <div class="wp-desc">Warm sand catching afternoon light. The kind of spot you want to stay a little longer.</div>
-      <div class="wp-footer">
-        <span class="wp-res">3840 &times; 2160 &middot; PNG</span>
-        <a class="btn-dl" href="assets/Sandbar.png" download="PebblePath-Sandbar.png">
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
-          Download
+      <div class="wp-dl-row">
+        <a class="btn-dl desktop" id="dl-desktop-sandbar" href="assets/Sandbar.png" download="PebblePath-Sandbar.png">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
+          Desktop
+        </a>
+        <a class="btn-dl iphone" id="dl-iphone-sandbar" href="assets/iphone/Sandbar.png" download="PebblePath-Sandbar-iPhone.png">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
+          iPhone
         </a>
       </div>
     </div>
   </div>
 
+  <!-- SHALLOWS -->
   <div class="wp-card">
-    <div class="wp-img-wrap">
-      <img class="wp-thumb" src="assets/shallows-thumb.jpg" alt="Shallows — clear aqua water over pebbles" loading="lazy">
+    <div class="wp-img-wrap" id="img-shallows">
+      <img class="wp-thumb" id="thumb-shallows" src="assets/shallows-thumb.jpg" alt="Shallows wallpaper" loading="lazy">
     </div>
     <div class="wp-body">
       <div class="wp-name">Shallows</div>
       <div class="wp-desc">Crystal-clear water just above the stones. Light refracting, nothing hidden.</div>
-      <div class="wp-footer">
-        <span class="wp-res">3840 &times; 2160 &middot; PNG</span>
-        <a class="btn-dl" href="assets/Shallows.png" download="PebblePath-Shallows.png">
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
-          Download
+      <div class="wp-dl-row">
+        <a class="btn-dl desktop" id="dl-desktop-shallows" href="assets/Shallows.png" download="PebblePath-Shallows.png">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
+          Desktop
+        </a>
+        <a class="btn-dl iphone" id="dl-iphone-shallows" href="assets/iphone/Shallows.png" download="PebblePath-Shallows-iPhone.png">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
+          iPhone
         </a>
       </div>
     </div>
   </div>
 
+  <!-- STILLWATER -->
   <div class="wp-card">
-    <div class="wp-img-wrap">
-      <img class="wp-thumb" src="assets/stillwater-thumb.jpg" alt="Stillwater — deep teal at dusk" loading="lazy">
+    <div class="wp-img-wrap" id="img-stillwater">
+      <img class="wp-thumb" id="thumb-stillwater" src="assets/stillwater-thumb.jpg" alt="Stillwater wallpaper" loading="lazy">
     </div>
     <div class="wp-body">
       <div class="wp-name">Stillwater</div>
       <div class="wp-desc">Deep teal at the last light of day. Still, settled, held.</div>
-      <div class="wp-footer">
-        <span class="wp-res">3840 &times; 2160 &middot; PNG</span>
-        <a class="btn-dl" href="assets/Stillwater.png" download="PebblePath-Stillwater.png">
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
-          Download
+      <div class="wp-dl-row">
+        <a class="btn-dl desktop" id="dl-desktop-stillwater" href="assets/Stillwater.png" download="PebblePath-Stillwater.png">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
+          Desktop
+        </a>
+        <a class="btn-dl iphone" id="dl-iphone-stillwater" href="assets/iphone/Stillwater.png" download="PebblePath-Stillwater-iPhone.png">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
+          iPhone
         </a>
       </div>
     </div>
   </div>
 
-</div>
+</div><!-- /gallery -->
 
 <footer>
   <p>
@@ -367,14 +440,14 @@
 
 <script>
 (function(){
+  // Nav scroll
   var nav = document.getElementById('main-nav');
   var btn = document.getElementById('hamburger');
   var menu = document.getElementById('mobile-menu');
   window.addEventListener('scroll', function(){ nav.classList.toggle('scrolled', window.scrollY > 20); });
   btn.addEventListener('click', function(){
     var open = menu.classList.toggle('open');
-    btn.classList.toggle('open', open);
-    btn.setAttribute('aria-expanded', open);
+    btn.classList.toggle('open', open); btn.setAttribute('aria-expanded', open);
     document.body.classList.toggle('menu-open', open);
   });
   menu.querySelectorAll('a').forEach(function(a){
@@ -383,6 +456,40 @@
       btn.setAttribute('aria-expanded','false'); document.body.classList.remove('menu-open');
     });
   });
+
+  // Format toggle
+  var names = ['daybreak','nightbloom','undertow','understory','sandbar','shallows','stillwater'];
+  var currentMode = 'desktop';
+
+  window.setMode = function(mode) {
+    currentMode = mode;
+    var gallery = document.getElementById('gallery');
+    var hint = document.getElementById('fmt-hint');
+    document.getElementById('btn-desktop').classList.toggle('active', mode === 'desktop');
+    document.getElementById('btn-iphone').classList.toggle('active', mode === 'iphone');
+
+    if (mode === 'iphone') {
+      gallery.classList.add('iphone-mode');
+      hint.textContent = '1320 × 2868 · PNG';
+    } else {
+      gallery.classList.remove('iphone-mode');
+      hint.textContent = '3840 × 2160 · PNG';
+    }
+
+    names.forEach(function(n) {
+      var wrap = document.getElementById('img-' + n);
+      var thumb = document.getElementById('thumb-' + n);
+      if (mode === 'iphone') {
+        wrap.classList.add('portrait');
+        thumb.src = 'assets/iphone/' + n + '-thumb.jpg';
+        thumb.alt = n.charAt(0).toUpperCase() + n.slice(1) + ' iPhone wallpaper';
+      } else {
+        wrap.classList.remove('portrait');
+        thumb.src = 'assets/' + n + '-thumb.jpg';
+        thumb.alt = n.charAt(0).toUpperCase() + n.slice(1) + ' desktop wallpaper';
+      }
+    });
+  };
 })();
 </script>
 </body>
