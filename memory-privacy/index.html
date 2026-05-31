@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Memory &amp; Privacy — PebblePath</title>
-<meta name="description" content="How PebblePath builds a living memory for your family, and the layers of security we have put in place to protect every detail.">
+<meta name="description" content="How PebblePath builds a living memory for your family, and the layers of security protecting every detail.">
 <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
@@ -16,7 +16,7 @@
 <meta property="og:image" content="https://pebblepath.ai/assets/og-image.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600&family=Fredoka:wght@600&display=swap" rel="stylesheet">
 <style>
 *{ margin:0; padding:0; box-sizing:border-box; }
 
@@ -108,11 +108,14 @@ body.menu-open{ overflow:hidden; }
   background:linear-gradient(118deg,#235F57 0%,#1F5C54 55%,#184A44 100%);
   color:#fff; position:relative; overflow:hidden; padding-top:68px;
 }
-.mh-orb{ position:absolute; border-radius:58% 42% 55% 45% / 55% 48% 52% 45%;
-         background:rgba(255,255,255,.05); }
-.mh-orb1{ width:380px; height:280px; top:-80px; right:60px; }
-.mh-orb2{ width:240px; height:180px; bottom:20px; left:-40px; transform:rotate(30deg); }
-.mh-inner{ position:relative; z-index:2; padding:44px 0 70px; }
+.mh-peb{
+  position:absolute; border-radius:58% 42% 55% 45% / 55% 48% 52% 45%;
+  background:rgba(255,255,255,.05);
+}
+.mh-peb1{ width:380px; height:280px; top:-80px; right:60px; }
+.mh-peb2{ width:240px; height:180px; bottom:20px; left:-40px; transform:rotate(30deg); }
+.mh-peb3{ width:160px; height:130px; bottom:40px; right:260px; transform:rotate(-15deg); }
+.mh-inner{ position:relative; z-index:2; padding:44px 0 64px; }
 .mh-tag{
   display:inline-block; font-family:'Nunito',sans-serif; font-weight:700; font-size:11.5px;
   letter-spacing:1.6px; text-transform:uppercase; color:var(--teal-light);
@@ -124,179 +127,35 @@ body.menu-open{ overflow:hidden; }
          line-height:1.08; letter-spacing:-1px; margin-top:14px; color:#fff; max-width:860px; }
 .mh-h1 em{ font-style:normal; color:var(--teal-light); }
 .mh-sub{ font-size:16px; color:#CFE3DE; max-width:680px; margin-top:18px; line-height:1.7; }
-.mh-covers{ display:flex; gap:12px; margin-top:30px; flex-wrap:wrap; }
-.cover-chip{
-  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16);
-  border-radius:11px; padding:11px 16px; display:flex; align-items:center; gap:10px;
-}
-.cover-chip .cic{
-  width:22px; height:22px; border-radius:6px; background:rgba(255,255,255,.18);
-  font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
-}
-.cover-chip span{ font-size:13px; color:#EAF3F1; font-weight:500; }
 
-/* ── SECTION DIVIDERS ── */
-.bg-cream{ background:var(--cream); }
-.bg-paper{ background:var(--paper); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
-.bg-teal{ background:linear-gradient(135deg,var(--teal-deep) 0%,#2D7A70 100%); color:#fff; }
-.bg-sand{ background:linear-gradient(120deg,#FBF4E9,#F3E7D1); }
+/* Scroll-to buttons */
+.mh-nav{ display:flex; flex-wrap:wrap; gap:10px; margin-top:28px; }
+.mh-navbtn{
+  display:inline-flex; align-items:center; gap:7px;
+  background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.20);
+  color:rgba(255,255,255,.90); border-radius:50px; padding:9px 18px;
+  font-size:13px; font-weight:600; text-decoration:none; cursor:pointer;
+  transition:background .2s, border-color .2s;
+  font-family:'Inter',sans-serif;
+}
+.mh-navbtn:hover{ background:rgba(255,255,255,.20); border-color:rgba(255,255,255,.40); color:#fff; }
+.mh-navbtn svg{ flex-shrink:0; }
 
-/* ── THE LOOP ── */
-.loopwrap{ position:relative; }
-.loopwrap svg{ width:100%; height:auto; }
-
-/* ── LOOP NODES (fallback non-svg) ── */
-.loop-row{ display:flex; align-items:center; gap:0; flex-wrap:wrap; justify-content:center; row-gap:8px; margin-top:36px; }
-.loopnode{
-  background:var(--paper); border:1px solid var(--line); border-radius:15px;
-  box-shadow:0 7px 20px rgba(60,50,38,.10); padding:18px 20px; text-align:center;
-  min-width:130px;
+/* ── VISION GRID ── */
+.vision-grid{ display:grid; grid-template-columns:1fr 380px; gap:40px; align-items:start; }
+.reframe{
+  margin-top:26px; background:var(--paper); border:1px solid var(--line);
+  border-left:4px solid var(--terra); border-radius:14px; padding:18px 22px;
 }
-.loopnode .ln-ic{ width:38px; height:38px; border-radius:10px; margin:0 auto 8px;
-                  display:flex; align-items:center; justify-content:center; }
-.loopnode .ln-t{ font-family:'Nunito',sans-serif; font-weight:800; font-size:14.5px; color:var(--ink); }
-.loopnode .ln-d{ font-size:10px; color:var(--ink-soft); margin-top:2px; line-height:1.4; }
-.loop-arrow{ font-size:22px; color:var(--teal); padding:0 6px; align-self:center; }
-
-/* ── CHANNELS ── */
-.channels{ display:grid; grid-template-columns:repeat(5,1fr); gap:16px; }
-.chan{ padding:22px 18px; display:flex; flex-direction:column; }
-.chan .ch-ic{ width:44px; height:44px; border-radius:12px; display:flex;
-             align-items:center; justify-content:center; margin-bottom:12px; }
-.chan .ch-fr{
-  font-family:'Nunito',sans-serif; font-weight:800; font-size:9px;
-  letter-spacing:.8px; text-transform:uppercase;
-  padding:3px 8px; border-radius:20px; align-self:flex-start; margin-bottom:8px;
-}
-.fr-none{ background:rgba(134,169,142,.18); color:#5C7C64; }
-.fr-low{ background:rgba(61,155,143,.14); color:var(--teal-dark); }
-.fr-once{ background:rgba(110,148,188,.16); color:#4F73A0; }
-.fr-auto{ background:rgba(197,129,152,.16); color:#9B5570; }
-.chan .ch-n{ font-family:'Nunito',sans-serif; font-weight:800; font-size:15px; color:var(--ink); margin-bottom:4px; }
-.chan .ch-src{ font-size:11.5px; color:var(--ink-soft); margin-top:6px; line-height:1.55; flex:1; }
-.chan .ch-feeds{
-  font-size:10.5px; color:var(--teal-dark); font-weight:600;
-  margin-top:12px; padding-top:10px; border-top:1px solid var(--line);
-}
-.chan-note{
-  margin-top:20px; background:var(--teal-deep); color:#fff; border-radius:13px;
-  padding:15px 22px; font-family:'Nunito',sans-serif; font-weight:700; font-size:14px;
-  display:flex; align-items:center; gap:12px;
-}
-.chan-note .star{ font-size:18px; }
-
-/* ── MEMORY LAYERS ── */
-.layers{ display:flex; flex-direction:column; gap:14px; }
-.layer{
-  display:grid; grid-template-columns:220px 1fr 180px; gap:24px; align-items:center;
-  padding:20px 24px; border-radius:16px; border:1px solid var(--line); background:var(--paper);
-}
-.lstripe{ width:5px; height:100%; border-radius:10px; align-self:stretch; min-height:52px; }
-.layer > div:first-child{ display:flex; align-items:center; gap:12px; }
-.layer .l-name{ font-family:'Nunito',sans-serif; font-weight:800; font-size:19px; color:var(--ink); }
-.layer .l-cad{
-  font-family:'Nunito',sans-serif; font-weight:800; font-size:9.5px;
-  letter-spacing:.7px; text-transform:uppercase;
-  display:inline-block; padding:3px 9px; border-radius:20px;
-}
-.layer .l-ex{ font-size:13.5px; color:var(--ink-soft); line-height:1.6; }
-.layer .l-cap{ font-size:11.5px; color:var(--ink-faint); line-height:1.5; }
-.layer .l-cap b{ color:var(--ink-soft); }
-
-/* ── FAMILY CIRCLE ── */
-.scopes{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:30px; }
-.scope{ padding:22px; border:1px solid var(--line); border-radius:16px; background:var(--paper); }
-.scope .sc-h{ display:flex; align-items:center; gap:10px; margin-bottom:10px; }
-.scope .sc-dot{ width:14px; height:14px; border-radius:4px; flex-shrink:0; }
-.scope .sc-name{ font-family:'Nunito',sans-serif; font-weight:800; font-size:16px; color:var(--ink); }
-.scope .sc-who{ font-size:11px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.7px; margin-bottom:8px; }
-.scope .sc-desc{ font-size:13px; color:var(--ink-soft); line-height:1.55; }
-.scope .sc-ex{ margin-top:12px; display:flex; flex-wrap:wrap; gap:6px; }
-.ex-tag{
-  font-size:11px; padding:3px 9px; border-radius:20px;
-  background:var(--cream); border:1px solid var(--line); color:var(--ink-soft);
+.reframe .rf-t{ font-family:'Nunito',sans-serif; font-weight:800; font-size:15px; color:var(--ink); }
+.reframe .rf-t b{ color:var(--terra-dark); }
+.rf-pays{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.pay{
+  font-family:'Nunito',sans-serif; font-weight:700; font-size:11.5px; color:var(--teal-dark);
+  background:rgba(61,155,143,.10); border-radius:7px; padding:5px 11px;
 }
 
-/* ── CAPTURE GATE ── */
-.gate-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-top:28px; }
-.gate-card{
-  padding:22px 22px 20px; border-radius:16px;
-  border:1px solid var(--line); background:var(--paper);
-  position:relative;
-}
-.gate-num{
-  position:absolute; top:18px; right:18px;
-  width:26px; height:26px; border-radius:8px;
-  background:rgba(61,155,143,.12); color:var(--teal-dark);
-  font-family:'Nunito',sans-serif; font-weight:800; font-size:13px;
-  display:flex; align-items:center; justify-content:center;
-}
-.gate-ic{ width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:12px; }
-.gate-card h3{ font-family:'Nunito',sans-serif; font-weight:800; font-size:16px; color:var(--ink); margin-bottom:6px; }
-.gate-card p{ font-size:13px; color:var(--ink-soft); line-height:1.55; }
-.gate-note{
-  margin-top:20px; padding:16px 20px; border-radius:13px;
-  background:linear-gradient(120deg,#FBF4E9,#F3E7D1);
-  border-left:4px solid var(--terra); font-size:13.5px; color:var(--ink); line-height:1.6;
-}
-.gate-note b{ color:var(--terra-dark); }
-
-/* ── SECURITY ── */
-.sec-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; margin-top:32px; }
-.sec-card{
-  padding:26px 24px; border-radius:16px; border:1px solid var(--line); background:var(--paper);
-  position:relative;
-}
-.sec-badge{
-  display:inline-flex; align-items:center; gap:6px; margin-bottom:14px;
-  font-size:10px; font-weight:700; letter-spacing:.9px; text-transform:uppercase;
-  color:var(--teal-dark); background:rgba(61,155,143,.10);
-  border-radius:20px; padding:3px 11px;
-}
-.sec-badge.terra{ color:var(--terra-dark); background:rgba(198,123,92,.12); }
-.sec-badge.blue{ color:#4F73A0; background:rgba(110,148,188,.14); }
-.sec-badge.amber{ color:#A8801F; background:rgba(212,162,74,.14); }
-.sec-card h3{ font-family:'Nunito',sans-serif; font-weight:800; font-size:17px; color:var(--ink); margin-bottom:8px; }
-.sec-card .lead-s{ font-size:13.5px; color:var(--ink-soft); line-height:1.6; margin-bottom:14px; }
-.sec-detail{ margin-top:12px; padding-top:12px; border-top:1px solid var(--line); }
-.sec-detail-row{ display:flex; align-items:flex-start; gap:9px; margin-bottom:8px; font-size:12.5px; color:var(--ink-soft); line-height:1.5; }
-.sec-detail-row:last-child{ margin-bottom:0; }
-.sec-detail-row .dot{ width:6px; height:6px; border-radius:50%; background:var(--teal); flex-shrink:0; margin-top:5px; }
-.sec-detail-row .dot.terra{ background:var(--terra); }
-.sec-detail-row .dot.blue{ background:var(--blue); }
-.sec-detail-row .dot.amber{ background:var(--amber); }
-
-/* Full-width security card */
-.sec-card-full{
-  padding:26px 28px; border-radius:16px; border:1px solid var(--line); background:var(--paper);
-  margin-bottom:20px;
-  display:grid; grid-template-columns:280px 1fr; gap:28px; align-items:start;
-}
-.sec-card-full .cf-left h3{ font-family:'Nunito',sans-serif; font-weight:800; font-size:17px; color:var(--ink); margin-bottom:8px; }
-.sec-card-full .cf-left p{ font-size:13px; color:var(--ink-soft); line-height:1.6; }
-.cf-headers{ display:flex; flex-wrap:wrap; gap:8px; }
-.cf-header{
-  font-size:11px; font-weight:600; padding:5px 12px; border-radius:8px;
-  background:var(--cream); border:1px solid var(--line); color:var(--ink-soft);
-  font-family:'Nunito',sans-serif;
-}
-.cf-header.live{ background:rgba(61,155,143,.10); border-color:rgba(61,155,143,.25); color:var(--teal-dark); }
-
-/* ── PRINCIPLES BAND ── */
-.principles{
-  background:linear-gradient(120deg,var(--teal-deep) 0%,#2D7A70 100%);
-  color:#fff; border-radius:18px;
-  padding:44px 44px 40px; margin-top:32px;
-}
-.principles h3{ font-family:'Nunito',sans-serif; font-weight:900; font-size:22px; margin-bottom:24px; }
-.plist{ display:grid; grid-template-columns:1fr 1fr; gap:14px 28px; list-style:none; }
-.plist li{ display:flex; align-items:flex-start; gap:10px; font-size:15px; color:rgba(255,255,255,.90); line-height:1.5; }
-.pcheck{
-  width:22px; height:22px; border-radius:50%; flex-shrink:0; margin-top:1px;
-  background:rgba(255,255,255,.20); display:flex; align-items:center; justify-content:center;
-}
-
-/* ── BRIEF CARD (hero inset) ── */
+/* ── BRIEF CARD ── */
 .brief{ background:var(--paper); border:1px solid var(--line); border-radius:20px; overflow:hidden; }
 .brief-top{
   background:linear-gradient(120deg,var(--teal) 0%,var(--teal-dark) 100%);
@@ -319,35 +178,253 @@ body.menu-open{ overflow:hidden; }
 .brief-row.warn .tx{ color:var(--terra-dark); font-weight:600; }
 .brief-cap{ text-align:center; font-size:11px; color:var(--ink-faint); margin-top:14px; letter-spacing:.3px; }
 
-/* ── PRIVACY LINKS ── */
-.pp-link-row{
-  margin-top:24px; padding:20px 24px; border-radius:14px;
-  background:var(--paper); border:1px solid var(--line);
-  display:flex; align-items:center; justify-content:space-between; gap:16px;
+/* ── LOOP (exact brain page) ── */
+.loopwrap{ position:relative; width:980px; height:540px; margin:14px auto 0; }
+.loopwrap > svg{ position:absolute; inset:0; }
+.loopnode{
+  position:absolute; width:166px; transform:translate(-50%,-50%);
+  background:var(--paper); border:1px solid var(--line); border-radius:15px;
+  box-shadow:0 7px 20px rgba(60,50,38,.10); padding:13px 15px; text-align:center;
 }
-.pp-link-row p{ font-size:14px; color:var(--ink-soft); }
-.pp-link-row a{ font-size:14px; color:var(--teal); font-weight:600; text-decoration:none; white-space:nowrap; }
-.pp-link-row a:hover{ color:var(--teal-dark); }
+.loopnode .ln-ic{ width:34px; height:34px; border-radius:10px; margin:0 auto 7px;
+                  display:flex; align-items:center; justify-content:center; }
+.loopnode .ln-t{ font-family:'Nunito',sans-serif; font-weight:800; font-size:14.5px; color:var(--ink); }
+.loopnode .ln-d{ font-size:10px; color:var(--ink-soft); margin-top:3px; line-height:1.42; }
+.loophub{
+  position:absolute; left:490px; top:270px; width:158px; height:158px;
+  transform:translate(-50%,-50%); border-radius:50%;
+  background:radial-gradient(circle at 38% 32%,var(--teal) 0%,var(--teal-dark) 70%,var(--teal-deep) 100%);
+  box-shadow:0 16px 36px rgba(31,92,84,.40); color:#fff;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+}
+.loophub .lh-t{ font-family:'Fredoka',sans-serif; font-weight:600; font-size:21px; }
+.loophub .lh-s{ font-size:10px; color:#CFE7E2; margin-top:3px; letter-spacing:.6px;
+                text-transform:uppercase; font-weight:600; }
+.loop-overflow{ overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:8px; }
 
-/* ── VISION GRID ── */
-.vision-grid{ display:grid; grid-template-columns:1fr 380px; gap:40px; align-items:start; }
-.reframe{
-  margin-top:26px; background:var(--paper); border:1px solid var(--line);
-  border-left:4px solid var(--terra); border-radius:14px; padding:18px 22px;
+/* ── CHANNELS ── */
+.channels{ display:grid; grid-template-columns:repeat(5,1fr); gap:16px; }
+.chan{ padding:20px 18px; display:flex; flex-direction:column; }
+.chan .ch-ic{ width:42px; height:42px; border-radius:12px; display:flex;
+             align-items:center; justify-content:center; margin-bottom:13px; }
+.chan .ch-n{ font-family:'Nunito',sans-serif; font-weight:800; font-size:14.5px; color:var(--ink); }
+.chan .ch-fr{
+  font-family:'Nunito',sans-serif; font-weight:800; font-size:9px;
+  letter-spacing:.8px; text-transform:uppercase; margin-top:6px;
+  padding:3px 8px; border-radius:20px; align-self:flex-start;
 }
-.reframe .rf-t{ font-family:'Nunito',sans-serif; font-weight:800; font-size:15px; color:var(--ink); }
-.reframe .rf-t b{ color:var(--terra-dark); }
-.rf-pays{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
-.pay{
-  font-family:'Nunito',sans-serif; font-weight:700; font-size:11.5px; color:var(--teal-dark);
-  background:rgba(61,155,143,.10); border-radius:7px; padding:5px 11px;
+.fr-none{ background:rgba(134,169,142,.18); color:#5C7C64; }
+.fr-low{ background:rgba(61,155,143,.14); color:var(--teal-dark); }
+.fr-once{ background:rgba(110,148,188,.16); color:#4F73A0; }
+.fr-auto{ background:rgba(197,129,152,.16); color:#9B5570; }
+.chan .ch-src{ font-size:11.5px; color:var(--ink-soft); margin-top:11px; line-height:1.55; flex:1; }
+.chan .ch-feeds{
+  font-size:10.5px; color:var(--teal-dark); font-weight:600;
+  margin-top:12px; padding-top:11px; border-top:1px solid var(--line);
 }
+.chan-note{
+  margin-top:20px; background:var(--teal-deep); color:#fff; border-radius:13px;
+  padding:15px 22px; font-family:'Nunito',sans-serif; font-weight:700; font-size:14px;
+  display:flex; align-items:center; gap:12px;
+}
+.chan-note .star{ font-size:18px; }
+
+/* ── MEMORY LAYERS ── */
+.layers{ display:flex; flex-direction:column; gap:14px; }
+.layer{
+  display:grid; grid-template-columns:210px 1fr 168px; gap:24px; align-items:center;
+  padding:20px 24px; border-radius:16px; border:1px solid var(--line); background:var(--paper);
+  position:relative; overflow:hidden;
+}
+.layer .lstripe{ position:absolute; left:0; top:0; bottom:0; width:6px; }
+.layer .l-name{ font-family:'Nunito',sans-serif; font-weight:800; font-size:19px; color:var(--ink); }
+.layer .l-cad{
+  font-family:'Nunito',sans-serif; font-weight:800; font-size:9.5px;
+  letter-spacing:1px; text-transform:uppercase; margin-top:5px;
+  display:inline-block; padding:3px 9px; border-radius:20px;
+}
+.layer .l-ex{ font-size:12.5px; color:var(--ink-soft); line-height:1.6; }
+.layer .l-cap{
+  font-size:11px; color:var(--ink-faint); line-height:1.5;
+  border-left:1px solid var(--line); padding-left:18px;
+}
+.layer .l-cap b{
+  color:var(--ink-soft); font-weight:600; display:block; margin-bottom:2px;
+  font-family:'Nunito',sans-serif; font-size:10px; letter-spacing:.6px;
+  text-transform:uppercase;
+}
+
+/* ── FAMILY GRAPH (exact brain page) ── */
+.graph-overflow{ overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:8px; }
+.graphwrap{ position:relative; width:1060px; height:520px; margin:8px auto 0; }
+.graphwrap > svg{ position:absolute; inset:0; }
+.gnode{
+  position:absolute; transform:translate(-50%,-50%); border-radius:13px;
+  padding:9px 14px; text-align:center; background:var(--paper);
+  box-shadow:0 6px 16px rgba(60,50,38,.12); border:1.5px solid;
+}
+.gnode .g-t{ font-family:'Nunito',sans-serif; font-weight:800; font-size:13px; color:var(--ink); }
+.gnode .g-s{ font-size:9.5px; color:var(--ink-soft); margin-top:1px; }
+.gnode.g-fam{ border-color:var(--teal); padding:13px 20px; }
+.gnode.g-fam .g-t{ font-size:15px; color:var(--teal-dark); }
+.gnode.g-mem{ border-color:var(--blue); }
+.gnode.g-child{ border-color:var(--terra); padding:12px 18px; }
+.gnode.g-child .g-t{ font-size:15px; color:var(--terra-dark); }
+.gnode.g-event{ border-color:var(--amber); }
+.gnode.g-place{ border-color:var(--sage); }
+.gchip{
+  position:absolute; transform:translate(-50%,-50%);
+  background:var(--sand-soft); border:1px dashed var(--sand-deep); border-radius:20px;
+  padding:5px 12px; font-size:10.5px; color:#6E6149; font-weight:600;
+  display:flex; align-items:center; gap:6px; white-space:nowrap;
+}
+.gchip .fdot{ width:7px; height:7px; border-radius:50%; background:var(--amber); flex-shrink:0; }
+.glegend{ display:flex; flex-wrap:wrap; gap:18px; margin-top:14px; justify-content:center; }
+.glegend .li{ display:flex; align-items:center; gap:7px; font-size:11.5px; color:var(--ink-soft); }
+.glegend .sw{ width:13px; height:13px; border-radius:4px; border:1.5px solid; }
+.glegend .ln{ width:22px; height:0; border-top:2px solid; }
+
+/* scope cards */
+.scopes-g{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:30px; }
+.scope-g{ padding:20px; }
+.scope-g .sc-h{ display:flex; align-items:center; gap:9px; }
+.scope-g .sc-dot{ width:13px; height:13px; border-radius:4px; }
+.scope-g .sc-n{ font-family:'Nunito',sans-serif; font-weight:800; font-size:14.5px; color:var(--ink); }
+.scope-g .sc-d{ font-size:11.8px; color:var(--ink-soft); margin-top:9px; line-height:1.55; }
+.scope-g .sc-who{ font-size:10.5px; color:var(--teal-dark); font-weight:700; margin-top:11px;
+                  padding-top:10px; border-top:1px solid var(--line); }
+
+/* Handoff band */
+.handoff{
+  margin-top:28px; background:linear-gradient(120deg,#FBF4E9,#F3E7D1);
+  border:1px solid var(--sand-deep); border-radius:18px; padding:24px 28px;
+  display:grid; grid-template-columns:300px 1fr; gap:28px; align-items:center;
+}
+.handoff .ho-t{ font-family:'Nunito',sans-serif; font-weight:800; font-size:18px; color:var(--ink); }
+.handoff .ho-d{ font-size:12.5px; color:var(--ink-soft); margin-top:8px; line-height:1.6; }
+.handoff .ho-chips{ display:flex; flex-wrap:wrap; gap:9px; }
+.ho-chip{
+  background:var(--paper); border:1px solid var(--sand-deep); border-radius:9px;
+  padding:9px 13px; font-size:11.5px; color:var(--ink); font-weight:500;
+  display:flex; align-items:center; gap:8px;
+}
+.ho-chip .tick{
+  width:16px; height:16px; border-radius:50%; background:var(--teal);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+
+/* ── GATE ── */
+.gate-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-top:28px; }
+.gate-card{
+  padding:22px 22px 20px; border-radius:16px;
+  border:1px solid var(--line); background:var(--paper); position:relative;
+}
+.gate-num{
+  position:absolute; top:18px; right:18px; width:26px; height:26px; border-radius:8px;
+  background:rgba(61,155,143,.12); color:var(--teal-dark);
+  font-family:'Nunito',sans-serif; font-weight:800; font-size:13px;
+  display:flex; align-items:center; justify-content:center;
+}
+.gate-ic{ width:40px; height:40px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:12px; }
+.gate-card h3{ font-family:'Nunito',sans-serif; font-weight:800; font-size:16px; color:var(--ink); margin-bottom:6px; }
+.gate-card p{ font-size:13px; color:var(--ink-soft); line-height:1.55; }
+.gate-note{
+  margin-top:20px; padding:16px 20px; border-radius:13px;
+  background:linear-gradient(120deg,#FBF4E9,#F3E7D1);
+  border-left:4px solid var(--terra); font-size:13.5px; color:var(--ink); line-height:1.6;
+}
+.gate-note b{ color:var(--terra-dark); }
+
+/* ── SECURITY ── */
+.sec-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; margin-top:24px; }
+.sec-card{
+  padding:24px; border-radius:16px; border:1px solid var(--line); background:var(--paper);
+  display:flex; flex-direction:column;
+}
+.sec-badge{
+  display:inline-flex; align-items:center; gap:5px; margin-bottom:12px;
+  font-size:10px; font-weight:700; letter-spacing:.9px; text-transform:uppercase;
+  color:var(--teal-dark); background:rgba(61,155,143,.10);
+  border-radius:20px; padding:3px 10px; align-self:flex-start;
+}
+.sec-badge.terra{ color:var(--terra-dark); background:rgba(198,123,92,.12); }
+.sec-badge.blue{ color:#4F73A0; background:rgba(110,148,188,.14); }
+.sec-badge.amber{ color:#A8801F; background:rgba(212,162,74,.14); }
+.sec-card h3{ font-family:'Nunito',sans-serif; font-weight:800; font-size:17px; color:var(--ink); margin-bottom:8px; }
+.sec-card .body-text{ font-size:13px; color:var(--ink-soft); line-height:1.6; }
+.sec-bullets{ margin-top:12px; padding-top:12px; border-top:1px solid var(--line); display:flex; flex-direction:column; gap:7px; }
+.sec-bullet{ display:flex; align-items:flex-start; gap:9px; font-size:12px; color:var(--ink-soft); line-height:1.5; }
+.sec-bullet .bd{ width:5px; height:5px; border-radius:50%; background:var(--teal); flex-shrink:0; margin-top:5px; }
+.sec-bullet .bd.t{ background:var(--terra); }
+.sec-bullet .bd.b{ background:var(--blue); }
+.sec-bullet .bd.a{ background:var(--amber); }
+.mono{
+  font-family:'Menlo','Courier New',monospace; font-size:11px;
+  background:var(--cream); padding:1px 5px; border-radius:4px;
+  border:1px solid var(--line); white-space:nowrap;
+}
+
+/* Cloudflare full-width */
+.sec-card-full{
+  border-radius:16px; border:1px solid var(--line); background:var(--paper);
+  overflow:hidden; margin-bottom:20px;
+}
+.scf-top{ padding:22px 26px 18px; display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start; }
+.scf-left h3{ font-family:'Nunito',sans-serif; font-weight:800; font-size:17px; color:var(--ink); margin-bottom:8px; }
+.scf-left p{ font-size:13px; color:var(--ink-soft); line-height:1.6; }
+.scf-badges{ padding:16px 26px; background:var(--cream); border-top:1px solid var(--line);
+             display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.scf-badge-label{ font-size:11px; font-weight:700; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.7px; margin-right:4px; }
+.cf-header{
+  font-size:11.5px; font-weight:600; padding:5px 12px; border-radius:8px;
+  background:rgba(61,155,143,.10); border:1px solid rgba(61,155,143,.22);
+  color:var(--teal-dark); font-family:'Nunito',sans-serif;
+}
+
+/* ── PRINCIPLES ── */
+.principles-band{
+  background:linear-gradient(120deg,var(--teal-deep) 0%,#2D7A70 100%);
+  color:#fff; border-radius:20px; padding:48px 52px 44px; margin-top:32px;
+}
+.principles-band h3{
+  font-family:'Nunito',sans-serif; font-weight:900; font-size:24px;
+  margin-bottom:28px; color:#fff;
+}
+.plist{ list-style:none; display:flex; flex-direction:column; gap:12px; }
+.plist li{
+  display:flex; align-items:center; gap:12px;
+  font-size:15px; color:rgba(255,255,255,.92); line-height:1.5;
+  padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,.10);
+}
+.plist li:last-child{ border-bottom:none; padding-bottom:0; }
+.pcheck{
+  width:22px; height:22px; border-radius:50%; flex-shrink:0;
+  background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center;
+}
+
+/* ── PRIVACY CALLOUT ── */
+.privacy-callout{
+  margin-top:0; background:linear-gradient(120deg,#FBF4E9 0%,#F3E7D1 100%);
+  border:1px solid var(--sand-deep); border-radius:20px;
+  padding:40px 44px; display:grid; grid-template-columns:1fr auto; gap:28px; align-items:center;
+}
+.privacy-callout h3{ font-family:'Nunito',sans-serif; font-weight:800; font-size:22px; color:var(--ink); margin-bottom:8px; }
+.privacy-callout p{ font-size:14px; color:var(--ink-soft); line-height:1.6; max-width:520px; }
+.privacy-callout .pc-links{ display:flex; flex-direction:column; gap:10px; align-items:flex-end; }
+.privacy-callout a.btn-primary{
+  display:inline-flex; align-items:center; gap:7px;
+  background:var(--teal-deep); color:#fff; text-decoration:none;
+  padding:12px 22px; border-radius:50px; font-weight:600; font-size:14px;
+  transition:background .2s; white-space:nowrap;
+}
+.privacy-callout a.btn-primary:hover{ background:var(--teal-dark); }
+.privacy-callout a.btn-secondary{
+  font-size:13px; color:var(--teal-dark); text-decoration:none; font-weight:600;
+}
+.privacy-callout a.btn-secondary:hover{ color:var(--teal); }
 
 /* ── FOOTER ── */
-footer{
-  padding:16px 48px; text-align:center;
-  background:var(--teal-deep); color:rgba(255,255,255,.6); font-size:12px;
-}
+footer{ padding:16px 48px; text-align:center; background:var(--teal-deep); color:rgba(255,255,255,.6); font-size:12px; }
 footer p{ margin-bottom:4px; }
 footer a{ color:rgba(255,255,255,.8); text-decoration:none; }
 footer a:hover{ color:white; }
@@ -356,12 +433,14 @@ footer a:hover{ color:white; }
 @media(max-width:900px){
   .vision-grid{ grid-template-columns:1fr; }
   .channels{ grid-template-columns:repeat(2,1fr); }
-  .layer{ grid-template-columns:1fr; gap:10px; }
-  .lstripe{ display:none; }
+  .layer{ grid-template-columns:1fr; }
+  .layer .lstripe{ width:100%; height:5px; top:0; left:0; bottom:auto; position:relative; }
+  .layer .l-cap{ border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:10px; }
   .sec-grid{ grid-template-columns:1fr; }
-  .scopes{ grid-template-columns:1fr 1fr; }
-  .sec-card-full{ grid-template-columns:1fr; }
-  .plist{ grid-template-columns:1fr; }
+  .scf-top{ grid-template-columns:1fr; }
+  .privacy-callout{ grid-template-columns:1fr; }
+  .privacy-callout .pc-links{ align-items:flex-start; }
+  .handoff{ grid-template-columns:1fr; }
   .mh-h1{ font-size:36px; }
 }
 @media(max-width:600px){
@@ -371,9 +450,10 @@ footer a:hover{ color:white; }
   .wrap{ padding:0 24px; }
   .sec{ padding:44px 0; }
   .channels{ grid-template-columns:1fr; }
-  .scopes{ grid-template-columns:1fr; }
   .gate-grid{ grid-template-columns:1fr; }
-  .principles{ padding:28px 24px; }
+  .scopes-g{ grid-template-columns:1fr; }
+  .principles-band{ padding:28px 24px; }
+  .privacy-callout{ padding:24px; }
   footer{ padding:14px 20px; }
 }
 </style>
@@ -412,46 +492,43 @@ footer a:hover{ color:white; }
 
 <!-- ===== HERO ===== -->
 <div class="mh">
-  <div class="mh-orb mh-orb1"></div>
-  <div class="mh-orb mh-orb2"></div>
+  <div class="mh-peb mh-peb1"></div>
+  <div class="mh-peb mh-peb2"></div>
+  <div class="mh-peb mh-peb3"></div>
   <div class="wrap">
     <div class="mh-inner">
       <div class="mh-tag">Pebble Memory &amp; Privacy</div>
       <div class="mh-kicker">Built to remember &mdash; built to protect</div>
       <h1 class="mh-h1">How Pebble learns your family.<br><em>And how we keep it safe.</em></h1>
-      <p class="mh-sub">Pebble is not a chatbot that forgets between sessions. It builds a living memory of your family &mdash; one that gets richer every week. This page explains exactly how that memory works, what feeds it, and the security measures we have put in place to make sure only your family can access it.</p>
-      <div class="mh-covers">
-        <div class="cover-chip">
-          <div class="cic">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          </div>
-          <span>Hardware-attested requests</span>
-        </div>
-        <div class="cover-chip">
-          <div class="cic">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <span>API key never on device</span>
-        </div>
-        <div class="cover-chip">
-          <div class="cic">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5 19 19M5 19l1.5-1.5M17.5 6.5 19 5"/></svg>
-          </div>
-          <span>Names never reach AI servers</span>
-        </div>
-        <div class="cover-chip">
-          <div class="cic">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6l11 7 11-7M1 18V6l11 7 11-7v12"/></svg>
-          </div>
-          <span>Cloudflare edge security</span>
-        </div>
+      <p class="mh-sub">Pebble is not a chatbot that forgets between sessions. It builds a living memory of your family &mdash; one that gets richer every week. This page explains exactly how that memory works, what feeds it, and the security we have put in place so that only your family can access it.</p>
+      <div class="mh-nav">
+        <a class="mh-navbtn" href="#memory">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+          How memory works
+        </a>
+        <a class="mh-navbtn" href="#channels">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-3-6.7M21 4v5h-5"/></svg>
+          Ingestion channels
+        </a>
+        <a class="mh-navbtn" href="#circle">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3"/><path d="M5.5 19c0-3.5 2.9-6 6.5-6s6.5 2.5 6.5 6"/></svg>
+          Family circle
+        </a>
+        <a class="mh-navbtn" href="#security">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Security
+        </a>
+        <a class="mh-navbtn" href="#commitments">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>
+          Our commitments
+        </a>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ===== THE OPPORTUNITY ===== -->
-<div class="sec bg-cream">
+<div class="sec" style="background:var(--cream);">
   <div class="wrap">
     <div class="vision-grid">
       <div>
@@ -460,13 +537,13 @@ footer a:hover{ color:white; }
         <p class="lead">Notes apps, group texts, camera rolls, Google Calendar, the daycare app, the school portal &mdash; and whatever a parent is holding in their head at any given moment. Nothing talks to anything. Pebble&rsquo;s job is to become the one place it all lives, and the intelligence that connects it: <b style="color:var(--teal-dark)">the contextual brain of the family.</b></p>
         <div class="reframe">
           <div class="rf-t">Not <b>AI parenting advice</b>. <b>AI operational relief.</b></div>
-          <div style="font-size:12.5px;color:var(--ink-soft);margin-top:7px;line-height:1.6;">Parents don&rsquo;t want another expert telling them what to do. They want a family chief of staff &mdash; something that quietly carries the coordination load.</div>
+          <div style="font-size:12.5px;color:var(--ink-soft);margin-top:7px;line-height:1.6;">Parents don&rsquo;t want another expert. They want a family chief of staff &mdash; something that quietly carries the coordination load so fewer things fall through the cracks.</div>
           <div class="rf-pays">
             <span class="pay">Fewer forgotten things</span>
             <span class="pay">Smoother mornings</span>
             <span class="pay">Calmer evenings</span>
             <span class="pay">Less coordination overhead</span>
-            <span class="pay">Fewer last-minute decisions</span>
+            <span class="pay">Fewer decisions</span>
           </div>
         </div>
       </div>
@@ -519,75 +596,102 @@ footer a:hover{ color:white; }
 </div>
 
 <!-- ===== THE LOOP ===== -->
-<div class="sec bg-paper">
+<div id="memory" class="sec" style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">How everything speaks together</div>
       <h2>One memory, one loop.</h2>
-      <p class="lead">Every input &mdash; a forwarded email, a spoken note, a tapped handoff &mdash; runs through the same six-stage loop with Pebble at the center. Each pass leaves the memory richer, which is why PebblePath gets noticeably smarter the longer a family uses it.</p>
+      <p class="lead">Every input &mdash; a forwarded email, a spoken note, a tapped handoff &mdash;
+        runs through the same six-stage loop with Pebble at the center. Each pass leaves the memory
+        richer, which is why PebblePath gets noticeably smarter the longer a family uses it.</p>
     </div>
+    <div class="loop-overflow">
+      <div class="loopwrap">
+        <svg viewBox="0 0 980 540">
+          <defs>
+            <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0L10 5L0 10z" fill="#3D9B8F"/>
+            </marker>
+          </defs>
+          <g stroke="#D8E7E3" stroke-width="1.6" stroke-dasharray="2 5">
+            <line x1="490" y1="270" x2="490" y2="80"/>
+            <line x1="490" y1="270" x2="654.5" y2="175"/>
+            <line x1="490" y1="270" x2="654.5" y2="365"/>
+            <line x1="490" y1="270" x2="490" y2="460"/>
+            <line x1="490" y1="270" x2="325.5" y2="365"/>
+            <line x1="490" y1="270" x2="325.5" y2="175"/>
+          </g>
+          <circle cx="490" cy="270" r="190" fill="none" stroke="#E4EFEC" stroke-width="2"/>
+          <g fill="none" stroke="#3D9B8F" stroke-width="2.4" marker-end="url(#ah)">
+            <path d="M542.4 87.4 A190 190 0 0 1 622 133.3"/>
+            <path d="M674.4 224 A190 190 0 0 1 674.4 316"/>
+            <path d="M622 406.7 A190 190 0 0 1 542.4 452.6"/>
+            <path d="M437.6 452.6 A190 190 0 0 1 358 406.7"/>
+            <path d="M305.6 316 A190 190 0 0 1 305.6 224"/>
+            <path d="M358 133.3 A190 190 0 0 1 437.6 87.4"/>
+          </g>
+        </svg>
 
-    <div class="loop-row">
-      <div class="loopnode">
-        <div class="ln-ic" style="background:rgba(61,155,143,.12);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3D9B8F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+        <div class="loophub">
+          <div class="lh-t">Pebble</div>
+          <div class="lh-s">The family brain</div>
         </div>
-        <div class="ln-t">Capture</div>
-        <div class="ln-d">From calendar, chat, photos, forms</div>
-      </div>
-      <div class="loop-arrow">&rarr;</div>
-      <div class="loopnode">
-        <div class="ln-ic" style="background:rgba(110,148,188,.14);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6E94BC" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 8v4l3 3"/></svg>
+
+        <div class="loopnode" style="left:490px;top:80px;">
+          <div class="ln-ic" style="background:rgba(110,148,188,.16);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6E94BC" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg>
+          </div>
+          <div class="ln-t">1 &middot; Capture</div>
+          <div class="ln-d">Inputs arrive &mdash; synced, forwarded, spoken, observed</div>
         </div>
-        <div class="ln-t">Understand</div>
-        <div class="ln-d">Extract structure, intent, entities</div>
-      </div>
-      <div class="loop-arrow">&rarr;</div>
-      <div class="loopnode">
-        <div class="ln-ic" style="background:rgba(212,162,74,.14);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4A24A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <div class="loopnode" style="left:654.5px;top:175px;">
+          <div class="ln-ic" style="background:rgba(212,162,74,.18);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C9962F" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M16 16l5 5"/></svg>
+          </div>
+          <div class="ln-t">2 &middot; Understand</div>
+          <div class="ln-d">Pebble extracts entities, dates and intent</div>
         </div>
-        <div class="ln-t">Remember</div>
-        <div class="ln-d">Stored in the right memory layer</div>
-      </div>
-      <div class="loop-arrow">&rarr;</div>
-      <div class="loopnode">
-        <div class="ln-ic" style="background:rgba(134,169,142,.16);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#86A98E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M21 12v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>
+        <div class="loopnode" style="left:654.5px;top:365px;">
+          <div class="ln-ic" style="background:rgba(61,155,143,.15);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3D9B8F" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 100 18 9 9 0 000-18z"/><path d="M9 12l2 2 4-4.5"/></svg>
+          </div>
+          <div class="ln-t">3 &middot; Remember</div>
+          <div class="ln-d">Facts written into the family memory graph</div>
         </div>
-        <div class="ln-t">Anticipate</div>
-        <div class="ln-d">Cross-reference to predict needs</div>
-      </div>
-      <div class="loop-arrow">&rarr;</div>
-      <div class="loopnode">
-        <div class="ln-ic" style="background:rgba(197,129,152,.14);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C58198" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4z"/></svg>
+        <div class="loopnode" style="left:490px;top:460px;">
+          <div class="ln-ic" style="background:rgba(197,129,152,.18);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B96E89" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2"/><circle cx="12" cy="12" r="3.4"/></svg>
+          </div>
+          <div class="ln-t">4 &middot; Anticipate</div>
+          <div class="ln-d">Pebble reasons over what&rsquo;s coming next</div>
         </div>
-        <div class="ln-t">Act</div>
-        <div class="ln-d">Brief, nudge, suggest, remind</div>
-      </div>
-      <div class="loop-arrow">&rarr;</div>
-      <div class="loopnode">
-        <div class="ln-ic" style="background:rgba(31,92,84,.12);">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2D7A70" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-9"/><path d="M21 7v5h-5"/></svg>
+        <div class="loopnode" style="left:325.5px;top:365px;">
+          <div class="ln-ic" style="background:rgba(198,123,92,.16);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C67B5C" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-11"/><path d="M13 6l-2 2"/></svg>
+          </div>
+          <div class="ln-t">5 &middot; Act</div>
+          <div class="ln-d">A calm brief, reminders, prep lists, handoffs</div>
         </div>
-        <div class="ln-t">Learn</div>
-        <div class="ln-d">Memory compounds from every pass</div>
+        <div class="loopnode" style="left:325.5px;top:175px;">
+          <div class="ln-ic" style="background:rgba(134,169,142,.2);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6E9577" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-3-6.7M21 4v5h-5"/></svg>
+          </div>
+          <div class="ln-t">6 &middot; Learn</div>
+          <div class="ln-d">Reactions &amp; outcomes return as fresh signal</div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ===== FIVE CHANNELS ===== -->
-<div class="sec bg-cream">
+<!-- ===== CHANNELS ===== -->
+<div id="channels" class="sec" style="background:var(--cream);">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">What feeds the memory</div>
       <h2>Five channels into the brain.</h2>
       <p class="lead">Most of the memory should cost the family nothing. These five channels are ordered by friction &mdash; PebblePath leans hardest on the lightest, and treats typing into a form as the last resort.</p>
     </div>
-
     <div class="channels">
       <div class="card chan">
         <div class="ch-ic" style="background:rgba(134,169,142,.2);">
@@ -595,185 +699,207 @@ footer a:hover{ color:white; }
         </div>
         <div class="ch-n">Passive sync</div>
         <div class="ch-fr fr-none">No friction</div>
-        <div class="ch-src">Google &amp; Apple Calendar, daily weather, and location context &mdash; always-on, always current. Over time: school portals and daycare apps.</div>
+        <div class="ch-src">Google &amp; Apple Calendar, weather, location &mdash; and over time daycare apps and school portals. Always-on, always current.</div>
         <div class="ch-feeds">&rarr; Live context, rhythms</div>
       </div>
-
       <div class="card chan">
         <div class="ch-ic" style="background:rgba(212,162,74,.2);">
           <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#C9962F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 8l9 6 9-6"/></svg>
         </div>
         <div class="ch-n">Forward &amp; snap</div>
         <div class="ch-fr fr-low">Very low</div>
-        <div class="ch-src">School emails, PDFs, flyers, newsletters, appointment summaries &mdash; forwarded or photographed. Pebble extracts the structure so you don&rsquo;t have to.</div>
+        <div class="ch-src">School emails, PDFs, flyers, newsletters and appointment summaries &mdash; forwarded or photographed. Pebble extracts the structure.</div>
         <div class="ch-feeds">&rarr; Events, deadlines, prep</div>
       </div>
-
       <div class="card chan">
         <div class="ch-ic" style="background:rgba(61,155,143,.15);">
           <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#3D9B8F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-11.3 7.3L4 21l1.7-5.7A8 8 0 1121 12z"/></svg>
         </div>
         <div class="ch-n">Conversational</div>
         <div class="ch-fr fr-low">Low</div>
-        <div class="ch-src">Chat and voice with Pebble &mdash; quick logs and questions in passing. Whatever a parent would have texted the other parent, Pebble can hold instead.</div>
+        <div class="ch-src">Chat and voice with Pebble; quick logs and questions in passing. Whatever a parent would have texted the other parent.</div>
         <div class="ch-feeds">&rarr; Preferences, ad-hoc facts</div>
       </div>
-
       <div class="card chan">
         <div class="ch-ic" style="background:rgba(110,148,188,.18);">
           <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#6E94BC" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M5 20c0-3.9 3.1-6.5 7-6.5s7 2.6 7 6.5"/></svg>
         </div>
         <div class="ch-n">Profile &amp; circle</div>
         <div class="ch-fr fr-once">One-time</div>
-        <div class="ch-src">Child profiles, milestones, allergies, sizes &mdash; and who belongs to the family circle. The anchors, set once at the start. Never re-asked.</div>
+        <div class="ch-src">Child profiles, milestones, allergies and sizes; who belongs to the family circle. The anchors, set once at the start.</div>
         <div class="ch-feeds">&rarr; Anchors, identity</div>
       </div>
-
       <div class="card chan">
         <div class="ch-ic" style="background:rgba(197,129,152,.18);">
           <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#B96E89" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-9"/><path d="M21 7v5h-5"/></svg>
         </div>
         <div class="ch-n">Derived signals</div>
         <div class="ch-fr fr-auto">Automatic</div>
-        <div class="ch-src">Patterns Pebble notices over time &mdash; reactions to suggestions, recurring behaviors, and trip debriefs. The family never lifts a finger.</div>
+        <div class="ch-src">Patterns Pebble notices, reactions to its suggestions, and trip or day debriefs. The family never lifts a finger.</div>
         <div class="ch-feeds">&rarr; Patterns, lessons</div>
       </div>
     </div>
-
     <div class="chan-note">
       <span class="star">&#10022;</span>
-      <span>Rule of thumb &mdash; if a system already knows it, PebblePath never asks a human for it.</span>
+      <span>Rule of thumb &mdash; if a system already knows it, never ask a human for it.</span>
     </div>
   </div>
 </div>
 
-<!-- ===== FOUR LAYERS ===== -->
-<div class="sec bg-paper">
+<!-- ===== MEMORY LAYERS ===== -->
+<div class="sec" style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">How memory is organised</div>
       <h2>Four layers of memory.</h2>
       <p class="lead">Not all memory is equal. PebblePath holds it in four layers &mdash; from bedrock facts that rarely change to live context refreshed by the hour. Each layer is captured differently, and trusted differently.</p>
     </div>
-
     <div class="layers">
       <div class="layer">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div class="lstripe" style="background:var(--teal-deep);"></div>
-          <div>
-            <div class="l-name">Anchors</div>
-            <span class="l-cad" style="background:rgba(31,92,84,.12);color:var(--teal-deep);">Rarely changes</span>
-          </div>
+        <div class="lstripe" style="background:var(--teal-deep);"></div>
+        <div>
+          <div class="l-name">Anchors</div>
+          <span class="l-cad" style="background:rgba(31,92,84,.12);color:var(--teal-deep);">Rarely changes</span>
         </div>
-        <div class="l-ex">Identity and birthdays, allergies and medical notes, clothing &amp; shoe sizes, the key people and places, the pediatrician. The bedrock everything else hangs on. Set once at setup and confirmed, never re-asked.</div>
-        <div class="l-cap"><b>Examples:</b> Felix &middot; born Oct 2023 &middot; peanut allergy &middot; size 5T &middot; Dr. Morrison at Lakeview Pediatrics</div>
+        <div class="l-ex">Identity and birthdays, allergies and medical notes, clothing &amp; shoe sizes, the key people and places, the pediatrician. The bedrock everything else hangs on.</div>
+        <div class="l-cap"><b>Captured</b> Once at setup &mdash; confirmed, not re-asked.</div>
       </div>
-
       <div class="layer">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div class="lstripe" style="background:var(--blue);"></div>
-          <div>
-            <div class="l-name">Rhythms</div>
-            <span class="l-cad" style="background:rgba(110,148,188,.16);color:#4F73A0;">Recurring</span>
-          </div>
+        <div class="lstripe" style="background:var(--blue);"></div>
+        <div>
+          <div class="l-name">Rhythms</div>
+          <span class="l-cad" style="background:rgba(110,148,188,.16);color:#4F73A0;">Recurring</span>
         </div>
-        <div class="l-ex">Daily and weekly routines, schedules, recurring events &mdash; daycare drop-off at 8:15, swim on Tuesdays, bath on alternating nights, bedtime at 7:30. The shape of a normal week. Synced from calendars and confirmed from repetition.</div>
-        <div class="l-cap"><b>Examples:</b> Monday gym &middot; Tuesday swim class &middot; Wednesday library storytime &middot; Friday Grandma pickup</div>
+        <div class="l-ex">Daily and weekly routines, schedules, recurring events &mdash; daycare drop-off, swim on Tuesdays, bedtime. The shape of a normal week.</div>
+        <div class="l-cap"><b>Captured</b> Synced from calendars; confirmed from repetition.</div>
       </div>
-
       <div class="layer">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div class="lstripe" style="background:var(--amber);"></div>
-          <div>
-            <div class="l-name">Patterns</div>
-            <span class="l-cad" style="background:rgba(212,162,74,.2);color:#A8801F;">Earned over time</span>
-          </div>
+        <div class="lstripe" style="background:var(--amber);"></div>
+        <div>
+          <div class="l-name">Patterns</div>
+          <span class="l-cad" style="background:rgba(212,162,74,.2);color:#A8801F;">Earned over time</span>
         </div>
-        <div class="l-ex">Preferences, lessons and tendencies &mdash; &ldquo;Felix skips nap after swimming,&rdquo; &ldquo;morning flights travel better,&rdquo; &ldquo;Sundays tend to get overbooked.&rdquo; The memory that feels like magic. Derived from behaviour, almost never asked.</div>
-        <div class="l-cap"><b>Source:</b> Synthesised nightly by Pebble from behavioral signals &middot; never manually entered</div>
+        <div class="l-ex">Preferences, lessons and tendencies &mdash; &ldquo;Felix skips nap after swimming,&rdquo; &ldquo;mornings flights travel better,&rdquo; &ldquo;Sundays get overbooked.&rdquo; The memory that feels like magic.</div>
+        <div class="l-cap"><b>Captured</b> Derived from behaviour &mdash; almost never asked.</div>
       </div>
-
       <div class="layer">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div class="lstripe" style="background:var(--terra);"></div>
-          <div>
-            <div class="l-name">Live context</div>
-            <span class="l-cad" style="background:rgba(198,123,92,.16);color:var(--terra-dark);">Now &rarr; 2 weeks</span>
-          </div>
+        <div class="lstripe" style="background:var(--terra);"></div>
+        <div>
+          <div class="l-name">Live context</div>
+          <span class="l-cad" style="background:rgba(198,123,92,.16);color:var(--terra-dark);">Now &rarr; 2 weeks</span>
         </div>
-        <div class="l-ex">This week&rsquo;s calendar, tomorrow&rsquo;s weather, what&rsquo;s running low, today&rsquo;s handoffs between parents, upcoming events and deadlines. The fast-moving surface Pebble builds the daily brief from. Streamed continuously and expires on its own.</div>
-        <div class="l-cap"><b>Examples:</b> Weather forecast &middot; calendar imports &middot; parent handoffs &middot; active trips &middot; unsigned forms</div>
+        <div class="l-ex">This week&rsquo;s calendar, the weather, what&rsquo;s running low, today&rsquo;s handoffs, the events just ahead. The fast-moving surface Pebble briefs from.</div>
+        <div class="l-cap"><b>Captured</b> Streamed continuously; expires on its own.</div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ===== FAMILY CIRCLE ===== -->
-<div class="sec bg-cream">
+<div id="circle" class="sec" style="background:var(--cream);">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">The family circle</div>
       <h2>Members, children, events &mdash; one connected graph.</h2>
-      <p class="lead">Memory isn&rsquo;t one blob. It&rsquo;s a graph: members, children, and the events and places of family life, linked by real relationships. A fact attached to one node instantly informs every node it touches &mdash; that is what &ldquo;speaks together&rdquo; means in practice.</p>
+      <p class="lead">Memory isn&rsquo;t one blob. It&rsquo;s a graph: members, children, and the events and places of family life, linked by real relationships. A fact attached to one node instantly informs every node it touches &mdash; that is what &ldquo;speaks together&rdquo; means.</p>
     </div>
 
-    <div class="scopes">
-      <div class="scope">
-        <div class="sc-h">
-          <div class="sc-dot" style="background:var(--teal);"></div>
-          <div class="sc-name">Family-shared</div>
-        </div>
-        <div class="sc-who">Visible to all members</div>
-        <div class="sc-desc">Events, trips, handoffs, the daily brief, and any information that both parents &mdash; and trusted family members &mdash; need to operate together. The shared coordination layer.</div>
-        <div class="sc-ex">
-          <span class="ex-tag">Upcoming trips</span>
-          <span class="ex-tag">Shared calendar</span>
-          <span class="ex-tag">Family brief</span>
-          <span class="ex-tag">Handoffs</span>
-        </div>
+    <div class="graph-overflow">
+      <div class="graphwrap">
+        <svg viewBox="0 0 1060 520">
+          <g stroke="#6E94BC" stroke-width="2" fill="none">
+            <path d="M150 135 Q260 175 390 235"/>
+            <path d="M150 320 Q260 285 390 235"/>
+            <path d="M330 450 Q360 360 390 235"/>
+          </g>
+          <g stroke="#C67B5C" stroke-width="2" fill="none">
+            <path d="M150 135 Q400 120 620 175"/>
+            <path d="M150 320 Q380 280 620 175"/>
+          </g>
+          <path d="M330 450 Q480 340 620 175" stroke="#A89B85" stroke-width="1.8" stroke-dasharray="3 5" fill="none"/>
+          <g stroke="#D4A24A" stroke-width="2" fill="none">
+            <path d="M620 175 Q760 130 880 110"/>
+            <path d="M620 175 Q780 200 905 260"/>
+            <path d="M620 175 Q770 280 880 410"/>
+          </g>
+          <path d="M620 175 Q600 270 610 390" stroke="#86A98E" stroke-width="2" fill="none"/>
+          <path d="M905 260 Q760 320 610 390" stroke="#86A98E" stroke-width="1.6" stroke-dasharray="2 4" fill="none"/>
+          <path d="M150 135 Q500 40 905 260" stroke="#3D9B8F" stroke-width="1.8" stroke-dasharray="3 5" fill="none"/>
+          <g stroke="#D9C9A6" stroke-width="1.4" stroke-dasharray="2 3" fill="none">
+            <line x1="620" y1="118" x2="620" y2="150"/>
+            <line x1="150" y1="397" x2="150" y2="346"/>
+            <line x1="390" y1="138" x2="390" y2="210"/>
+          </g>
+        </svg>
+        <div class="gchip" style="left:620px;top:104px;"><span class="fdot" style="background:var(--terra);"></span>Peanut allergy</div>
+        <div class="gchip" style="left:150px;top:425px;"><span class="fdot" style="background:var(--amber);"></span>Prefers morning flights</div>
+        <div class="gchip" style="left:390px;top:124px;"><span class="fdot" style="background:var(--amber);"></span>Don&rsquo;t overbook Sundays</div>
+        <div class="gnode g-mem" style="left:150px;top:135px;"><div class="g-t">Thomas</div><div class="g-s">Parent &middot; member</div></div>
+        <div class="gnode g-mem" style="left:150px;top:320px;"><div class="g-t">Ellie</div><div class="g-s">Parent &middot; member</div></div>
+        <div class="gnode g-mem" style="left:330px;top:450px;"><div class="g-t">Nana</div><div class="g-s">Caregiver &middot; member</div></div>
+        <div class="gnode g-fam" style="left:390px;top:235px;"><div class="g-t">The Paris Family</div><div class="g-s">the circle</div></div>
+        <div class="gnode g-child" style="left:620px;top:175px;"><div class="g-t">Felix</div><div class="g-s">child &middot; age 3</div></div>
+        <div class="gnode g-place" style="left:610px;top:390px;"><div class="g-t">Daycare</div><div class="g-s">place</div></div>
+        <div class="gnode g-event" style="left:880px;top:110px;"><div class="g-t">Swim class</div><div class="g-s">Tue 4:00pm</div></div>
+        <div class="gnode g-event" style="left:905px;top:260px;"><div class="g-t">Splash day</div><div class="g-s">Thu &middot; at daycare</div></div>
+        <div class="gnode g-event" style="left:880px;top:410px;"><div class="g-t">Pediatrician</div><div class="g-s">Jun 3</div></div>
       </div>
+    </div>
 
-      <div class="scope">
-        <div class="sc-h">
-          <div class="sc-dot" style="background:var(--blue);"></div>
-          <div class="sc-name">Child-scoped</div>
-        </div>
-        <div class="sc-who">Visible to that child&rsquo;s parents only</div>
-        <div class="sc-desc">Milestone tracking, growth insights, the per-child Pebble brief, pediatrician exports, and observations about a specific child. Only their listed parents can access or edit this data.</div>
-        <div class="sc-ex">
-          <span class="ex-tag">Milestones</span>
-          <span class="ex-tag">Growth insights</span>
-          <span class="ex-tag">Pebble chat</span>
-          <span class="ex-tag">Pediatrician PDF</span>
-        </div>
+    <div class="glegend">
+      <div class="li"><span class="sw" style="border-color:var(--blue);"></span>Member</div>
+      <div class="li"><span class="sw" style="border-color:var(--teal);"></span>Family</div>
+      <div class="li"><span class="sw" style="border-color:var(--terra);"></span>Child</div>
+      <div class="li"><span class="sw" style="border-color:var(--amber);"></span>Event</div>
+      <div class="li"><span class="sw" style="border-color:var(--sage);"></span>Place</div>
+      <div class="li"><span class="ln" style="border-color:var(--terra);"></span>Parent of</div>
+      <div class="li"><span class="ln" style="border-color:#A89B85;border-top-style:dashed;"></span>Granted access</div>
+      <div class="li"><span class="fdot" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--amber);"></span>Remembered fact</div>
+    </div>
+
+    <h3 style="font-size:18px;color:var(--ink);margin-top:42px;">Who sees what &mdash; memory is scoped, not shared blindly.</h3>
+    <div class="scopes-g">
+      <div class="card scope-g">
+        <div class="sc-h"><span class="sc-dot" style="background:var(--teal);"></span><span class="sc-n">Family-shared</span></div>
+        <div class="sc-d">Trips, events, household logistics, plans and the daily brief &mdash; the operational layer the whole circle runs on.</div>
+        <div class="sc-who">Visible to every member of the circle</div>
       </div>
+      <div class="card scope-g">
+        <div class="sc-h"><span class="sc-dot" style="background:var(--terra);"></span><span class="sc-n">Child-scoped</span></div>
+        <div class="sc-d">Milestones, doctor notes, developmental memory and anything sensitive to a specific child.</div>
+        <div class="sc-who">Visible to that child&rsquo;s parents &amp; invited viewers</div>
+      </div>
+      <div class="card scope-g">
+        <div class="sc-h"><span class="sc-dot" style="background:var(--blue);"></span><span class="sc-n">Member-private</span></div>
+        <div class="sc-d">Each member&rsquo;s own notes, questions and preferences with Pebble &mdash; private unless they choose to share.</div>
+        <div class="sc-who">Visible only to that member &mdash; enforced at database level</div>
+      </div>
+    </div>
 
-      <div class="scope">
-        <div class="sc-h">
-          <div class="sc-dot" style="background:var(--terra);"></div>
-          <div class="sc-name">Member-private</div>
-        </div>
-        <div class="sc-who">Visible to you alone</div>
-        <div class="sc-desc">Private Pebble messages, personal notes, and anything you explicitly mark as private &mdash; enforced at the database rule level, not just the UI. Your co-parent cannot read it even on a modified client.</div>
-        <div class="sc-ex">
-          <span class="ex-tag">Private chat</span>
-          <span class="ex-tag">Personal notes</span>
-          <span class="ex-tag">Your preferences</span>
-        </div>
+    <div class="handoff">
+      <div>
+        <div class="ho-t">The Shared Parent Coordination Layer</div>
+        <div class="ho-d">The highest-value, lowest-friction memory of all. One tap, attributed and synced &mdash; so both parents always hold the exact same picture, with no nagging.</div>
+      </div>
+      <div class="ho-chips">
+        <div class="ho-chip"><span class="tick"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span>Thomas packed lunch</div>
+        <div class="ho-chip"><span class="tick"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span>Felix had Tylenol at 2pm</div>
+        <div class="ho-chip"><span class="tick"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span>Bath done</div>
+        <div class="ho-chip"><span class="tick"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span>Rough nap today</div>
+        <div class="ho-chip"><span class="tick"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span>Daycare asked for extra clothes</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ===== WHEN CAPTURE HAPPENS ===== -->
-<div class="sec bg-paper">
+<!-- ===== CAPTURE GATE (warm sand bg) ===== -->
+<div class="sec" style="background:linear-gradient(135deg,#FBF4E9 0%,#F0E7D5 100%);border-top:1px solid var(--sand-deep);border-bottom:1px solid var(--sand-deep);">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">Rich memory, no overload</div>
       <h2>When Pebble asks &mdash; and when it doesn&rsquo;t.</h2>
-      <p class="lead">Data collection without overload. Every prompt Pebble considers generating passes through four filters. If any filter fails, Pebble stays quiet and infers instead of asking.</p>
+      <p class="lead">Every prompt Pebble considers generating passes through four filters. If any filter fails, Pebble stays quiet and infers instead. The goal is one useful prompt per day &mdash; often none.</p>
     </div>
-
     <div class="gate-grid">
       <div class="gate-card">
         <div class="gate-num">1</div>
@@ -781,45 +907,38 @@ footer a:hover{ color:white; }
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3D9B8F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
         </div>
         <h3>Can I infer this instead?</h3>
-        <p>If the answer is already in an anchor, rhythm, or can be derived from calendar or weather data, Pebble uses that instead of interrupting the parent. Asking is always the last resort.</p>
+        <p>If the answer is already in an anchor, rhythm, or can be derived from calendar or weather data, Pebble uses that. Asking is the last resort.</p>
       </div>
-
       <div class="gate-card">
         <div class="gate-num">2</div>
         <div class="gate-ic" style="background:rgba(212,162,74,.14);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A24A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
         </div>
         <h3>Will I use this within 7 days?</h3>
-        <p>Capturing a fact that has no near-term relevance just adds noise. Pebble only asks when there is a concrete, identifiable reason the information will be useful in the next week.</p>
+        <p>Capturing a fact with no near-term relevance adds noise. Pebble only asks when there is a concrete, identifiable use in the next week.</p>
       </div>
-
       <div class="gate-card">
         <div class="gate-num">3</div>
         <div class="gate-ic" style="background:rgba(110,148,188,.15);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E94BC" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
         </div>
         <h3>Can this be answered in 10 seconds?</h3>
-        <p>If answering requires more than a brief tap or short reply, the question is too heavy. Pebble keeps prompts bite-sized: a single tap, a number, a yes or no. Long forms are never Pebble&rsquo;s style.</p>
+        <p>If answering requires more than a brief tap or short reply, the question is too heavy. Pebble keeps prompts bite-sized &mdash; a tap, a number, a yes or no.</p>
       </div>
-
       <div class="gate-card">
         <div class="gate-num">4</div>
         <div class="gate-ic" style="background:rgba(197,129,152,.15);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C58198" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
         </div>
         <h3>Have I already asked something today?</h3>
-        <p>No more than one proactive capture prompt per family per day &mdash; regardless of how many things Pebble could ask. This rate limit is hard-coded, not a guideline. Quiet days are the default.</p>
+        <p>No more than one capture prompt per family per day &mdash; hard-coded, not a guideline. Quiet days are the default. Memory compounds from passive sources, not interrogation.</p>
       </div>
-    </div>
-
-    <div class="gate-note">
-      <b>The result:</b> families using PebblePath typically receive roughly one capture prompt per day &mdash; often none. The memory compounds from passive sources, not from interrogation.
     </div>
   </div>
 </div>
 
-<!-- ===== SECURITY ===== -->
-<div class="sec bg-cream">
+<!-- ===== SECURITY (dark bg) ===== -->
+<div id="security" class="sec" style="background:var(--paper);border-top:1px solid var(--line);">
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">How we protect it</div>
@@ -827,119 +946,112 @@ footer a:hover{ color:white; }
       <p class="lead">Family memory is sensitive. We have built security measures at every layer &mdash; from how data moves between your phone and our servers, to what AI models are ever allowed to see, to what happens when you close the app on a shared device.</p>
     </div>
 
-    <!-- Row 1: Full-width Cloudflare -->
+    <!-- Cloudflare full-width -->
     <div class="sec-card-full">
-      <div class="cf-left">
-        <div class="sec-badge live">Live &mdash; enforced</div>
-        <h3>Cloudflare edge security</h3>
-        <p>Every request to pebblepath.ai passes through Cloudflare before it reaches our servers. Six Transform Rules enforce a set of HTTP security headers on every response. These cannot be bypassed by pointing directly at the origin &mdash; the origin is not publicly reachable.</p>
-      </div>
-      <div>
-        <div style="font-size:11.5px;font-weight:600;color:var(--ink-soft);margin-bottom:10px;text-transform:uppercase;letter-spacing:.7px;">Active headers on every response</div>
-        <div class="cf-headers">
-          <span class="cf-header live">Content-Security-Policy</span>
-          <span class="cf-header live">HTTP Strict Transport Security</span>
-          <span class="cf-header live">X-Frame-Options: DENY</span>
-          <span class="cf-header live">X-Content-Type-Options: nosniff</span>
-          <span class="cf-header live">Referrer-Policy</span>
-          <span class="cf-header live">Permissions-Policy</span>
+      <div class="scf-top">
+        <div class="scf-left">
+          <div class="sec-badge" style="margin-bottom:12px;">Live &mdash; enforced</div>
+          <h3>Cloudflare edge security</h3>
+          <p>Every request to pebblepath.ai passes through Cloudflare before reaching our servers. Six Transform Rules enforce HTTP security headers on every response. The origin is not publicly reachable &mdash; these rules cannot be bypassed by pointing directly at it.</p>
         </div>
-        <div style="margin-top:14px;font-size:12.5px;color:var(--ink-soft);line-height:1.6;">
-          CSP prevents script injection. HSTS forces HTTPS for all future visits. X-Frame-Options stops the site from being embedded in an iframe on a third-party page. Permissions-Policy disables access to camera, microphone, geolocation, and payment APIs from the marketing pages (the app uses iOS system APIs, not browser APIs).
+        <div>
+          <div style="font-size:11.5px;font-weight:600;color:var(--ink-faint);margin-bottom:10px;text-transform:uppercase;letter-spacing:.7px;">Active on every response</div>
+          <div style="display:flex;flex-direction:column;gap:7px;">
+            <span class="cf-header">Content-Security-Policy &mdash; prevents script injection</span>
+            <span class="cf-header">HTTP Strict Transport Security &mdash; forces HTTPS forever</span>
+            <span class="cf-header">X-Frame-Options: DENY &mdash; no iFrame embedding</span>
+            <span class="cf-header">X-Content-Type-Options: nosniff</span>
+            <span class="cf-header">Referrer-Policy &mdash; limits referrer leakage</span>
+            <span class="cf-header">Permissions-Policy &mdash; disables camera, mic, geolocation</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Row 2: Security grid -->
+    <!-- Security grid -->
     <div class="sec-grid">
 
       <div class="sec-card">
         <div class="sec-badge">Live &mdash; enforced</div>
         <h3>Hardware attestation &mdash; App Attest</h3>
-        <p class="lead-s">On iOS, every request to our Cloud Functions is signed by Apple&rsquo;s App Attest framework &mdash; a hardware-level cryptographic proof that the request genuinely came from the PebblePath app running on a real, unmodified Apple device.</p>
-        <div class="sec-detail">
-          <div class="sec-detail-row"><div class="dot"></div>No third-party script, automation tool, or API client can produce a valid App Attest token without a physical Apple device running the real app binary.</div>
-          <div class="sec-detail-row"><div class="dot"></div>On the Portal (web), Firebase App Check with reCAPTCHA Enterprise performs the equivalent role &mdash; scoring browser sessions for bot signals before allowing Cloud Function calls.</div>
-          <div class="sec-detail-row"><div class="dot"></div>Requests without a valid attestation token are rejected at the Cloud Function layer before any data is read or written.</div>
+        <p class="body-text">On iOS, every request is signed by Apple&rsquo;s App Attest framework &mdash; a hardware-level proof that the request genuinely came from PebblePath on a real, unmodified Apple device. On the Portal, Firebase App Check with reCAPTCHA Enterprise performs the same role for browser sessions.</p>
+        <div class="sec-bullets">
+          <div class="sec-bullet"><div class="bd"></div>No automation tool or API client can produce a valid App Attest token without a physical Apple device running the real app binary.</div>
+          <div class="sec-bullet"><div class="bd"></div>Requests without a valid attestation token are rejected at the Cloud Function layer before any data is read or written.</div>
         </div>
       </div>
 
       <div class="sec-card">
         <div class="sec-badge">Live &mdash; enforced</div>
         <h3>API key never stored on device</h3>
-        <p class="lead-s">The Anthropic API key that powers all Pebble features is not stored in the iOS app binary or anywhere on-device. Every AI request routes through a Firebase Cloud Function running on Google&rsquo;s servers.</p>
-        <div class="sec-detail">
-          <div class="sec-detail-row"><div class="dot"></div>Extracting the .ipa from the App Store and reverse-engineering it will not yield any API key.</div>
-          <div class="sec-detail-row"><div class="dot"></div>The iOS app is a thin delegator &mdash; it sends family context to the Cloud Function, which handles the Anthropic call and returns the result.</div>
-          <div class="sec-detail-row"><div class="dot"></div>The key is stored as a Cloud Functions secret, encrypted at rest in Google Secret Manager and injected at runtime only.</div>
+        <p class="body-text">The Anthropic API key that powers Pebble is not stored in the iOS app binary or anywhere on-device. Every AI request routes through a Firebase Cloud Function running on Google&rsquo;s servers. Extracting and reverse-engineering the .ipa will not yield any API key.</p>
+        <div class="sec-bullets">
+          <div class="sec-bullet"><div class="bd"></div>The key is stored as a Cloud Functions secret, encrypted at rest in Google Secret Manager, and injected only at runtime.</div>
+          <div class="sec-bullet"><div class="bd"></div>The iOS app is a thin delegator &mdash; it sends context to the function, which handles the Anthropic call and returns the result.</div>
         </div>
       </div>
 
       <div class="sec-card">
         <div class="sec-badge">Live &mdash; enforced</div>
-        <h3>PII tokenisation &mdash; names never reach Anthropic</h3>
-        <p class="lead-s">Before any family context reaches an AI model, all child and parent names are replaced with anonymous tokens. The model reasons about <code style="font-size:11.5px;background:var(--cream);padding:1px 5px;border-radius:4px;">{{CHILD_NAME}}</code> &mdash; never &ldquo;Felix&rdquo; or &ldquo;Thomas.&rdquo;</p>
-        <div class="sec-detail">
-          <div class="sec-detail-row"><div class="dot"></div>Tokenisation happens inside the Cloud Function before the Anthropic API call is made. Detokenisation happens on the response, inside the same function, before the result is returned to the app.</div>
-          <div class="sec-detail-row"><div class="dot"></div>Applied to all five Pebble generators: tips, insights, the daily brief, the pediatrician summary, and the Pebble chat path.</div>
-          <div class="sec-detail-row"><div class="dot"></div>Anthropic&rsquo;s servers therefore never process or store any real name associated with your family.</div>
+        <h3>PII tokenisation &mdash; names never reach AI servers</h3>
+        <p class="body-text">Before any family context reaches an AI model, all child and parent names are replaced with anonymous tokens. The model reasons about <span class="mono">&#123;&#123;CHILD_NAME&#125;&#125;</span> &mdash; never &ldquo;Felix&rdquo; or &ldquo;Thomas.&rdquo; Detokenisation happens on the response, inside the same Cloud Function, before the result returns to the app.</p>
+        <div class="sec-bullets">
+          <div class="sec-bullet"><div class="bd"></div>Applied to all five Pebble generators: tips, insights, the daily brief, the pediatrician summary, and Pebble chat.</div>
+          <div class="sec-bullet"><div class="bd"></div>Anthropic&rsquo;s servers never process or store any real name associated with your family.</div>
         </div>
       </div>
 
       <div class="sec-card">
         <div class="sec-badge">Live &mdash; enforced</div>
-        <h3>Private mode &mdash; server-side enforcement</h3>
-        <p class="lead-s">When you send a private message in Pebble, a <code style="font-size:11.5px;background:var(--cream);padding:1px 5px;border-radius:4px;">visibility</code> array on the Firestore document controls who can read it. This is a database rule &mdash; not a UI feature.</p>
-        <div class="sec-detail">
-          <div class="sec-detail-row"><div class="dot"></div>The Firestore security rule requires the requesting user&rsquo;s uid to appear in the message&rsquo;s <code style="font-size:11.5px;">visibility</code> array before allowing a read.</div>
-          <div class="sec-detail-row"><div class="dot"></div>Even a co-parent on a modified or patched client cannot bypass this &mdash; the enforcement happens at Google&rsquo;s infrastructure, not in the app.</div>
-          <div class="sec-detail-row"><div class="dot"></div>Private messages are also excluded from the nightly Pebble memory synthesis pass, so they never enter the shared context layer.</div>
+        <h3>Private mode &mdash; server-side rule</h3>
+        <p class="body-text">When you send a private message in Pebble, a <span class="mono">visibility</span> array on the Firestore document controls who can read it. This is enforced at the database rule level &mdash; not in the app UI. Even a co-parent on a modified client cannot bypass it.</p>
+        <div class="sec-bullets">
+          <div class="sec-bullet"><div class="bd"></div>The rule requires the requesting user&rsquo;s uid to appear in the message&rsquo;s visibility array before allowing any read. Enforcement happens at Google&rsquo;s infrastructure.</div>
+          <div class="sec-bullet"><div class="bd"></div>Private messages are also excluded from the nightly memory synthesis pass so they never enter the shared context layer.</div>
         </div>
       </div>
 
       <div class="sec-card">
         <div class="sec-badge terra">Optional &mdash; on iOS</div>
         <h3>Biometric lock &mdash; Face ID &amp; Touch ID</h3>
-        <p class="lead-s">You can require Face ID or Touch ID every time the app opens &mdash; so handing your phone to a child, leaving it on a table, or sharing a device with a partner doesn&rsquo;t expose your family&rsquo;s data.</p>
-        <div class="sec-detail">
-          <div class="sec-detail-row"><div class="dot dot-terra" style="background:var(--terra);"></div>Default off. Opt in via Settings &rarr; Security &rarr; Require Face ID / Touch ID.</div>
-          <div class="sec-detail-row"><div class="dot" style="background:var(--terra);"></div>Uses Apple&rsquo;s LocalAuthentication framework &mdash; no biometric data is ever stored by PebblePath. The device handles the check entirely.</div>
-          <div class="sec-detail-row"><div class="dot" style="background:var(--terra);"></div>Locks immediately on background. No grace period unless you choose to add one in Settings.</div>
+        <p class="body-text">Require Face ID or Touch ID every time the app opens &mdash; so handing your phone to a child, leaving it on a table, or sharing a device doesn&rsquo;t expose your family&rsquo;s data. Default off; one tap to enable in Settings &rarr; Security.</p>
+        <div class="sec-bullets">
+          <div class="sec-bullet"><div class="bd t"></div>Uses Apple&rsquo;s LocalAuthentication framework &mdash; no biometric data is ever stored by PebblePath. The device handles the check entirely.</div>
+          <div class="sec-bullet"><div class="bd t"></div>Locks immediately on background. No grace period unless you configure one in Settings.</div>
         </div>
       </div>
 
       <div class="sec-card">
         <div class="sec-badge amber">Live &mdash; monitoring</div>
-        <h3>Firestore security rules &amp; audit log</h3>
-        <p class="lead-s">Every Firestore collection is protected by explicit security rules. Only authenticated family members can read documents they belong to. An audit log records sensitive admin actions &mdash; quota changes, member removals, data deletions.</p>
-        <div class="sec-detail">
-          <div class="sec-detail-row"><div class="dot" style="background:var(--amber);"></div>The flat-family model (Phase 5, 2026-05-19) removed all staged fallback rules. Every read and write is now strictly gated on membership, with no legacy bypass paths.</div>
-          <div class="sec-detail-row"><div class="dot" style="background:var(--amber);"></div>Child data access is gated on <code style="font-size:11.5px;">Child.parentIds</code> &mdash; being in the family group alone does not grant access to a child&rsquo;s milestones, insights, or Pebble chat.</div>
-          <div class="sec-detail-row"><div class="dot" style="background:var(--amber);"></div>Audit log writes are server-only (Cloud Function), preventing client-side tampering.</div>
+        <h3>Firestore rules &amp; audit log</h3>
+        <p class="body-text">Every Firestore collection is protected by explicit security rules deployed after a full audit. No staged fallback paths remain. Child data access is gated on <span class="mono">Child.parentIds</span> &mdash; family membership alone does not grant access to a child&rsquo;s milestones, insights, or Pebble chat.</p>
+        <div class="sec-bullets">
+          <div class="sec-bullet"><div class="bd a"></div>Sensitive admin actions (quota changes, member removals, data deletions) are recorded in a tamper-resistant audit log written only by Cloud Functions.</div>
+          <div class="sec-bullet"><div class="bd a"></div>The P5 cutover (2026-05-19) made all rules strictly per-membership, with zero legacy bypass paths remaining.</div>
         </div>
       </div>
 
     </div>
+  </div>
+</div>
 
-    <!-- Principles -->
-    <div class="principles">
+<!-- ===== COMMITMENTS (teal dark bg) ===== -->
+<div id="commitments" class="sec" style="background:linear-gradient(135deg,#1F5C54 0%,#2D7A70 100%);color:#fff;">
+  <div class="wrap">
+    <div class="principles-band" style="background:none;padding:0;margin-top:0;">
       <h3>Our commitments to your family</h3>
       <ul class="plist">
         <li>
           <div class="pcheck"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg></div>
-          Your family&rsquo;s data is never sold. We run no advertising, ever.
+          Your family&rsquo;s data is never sold. We run no advertising.
         </li>
         <li>
           <div class="pcheck"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg></div>
-          You can delete your account and all associated data, instantly, from within the app.
+          Only the people you explicitly invite can access your family&rsquo;s data &mdash; enforced at database level.
         </li>
         <li>
           <div class="pcheck"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg></div>
-          Only the people you explicitly invite can see your family&rsquo;s data &mdash; enforced at database level.
-        </li>
-        <li>
-          <div class="pcheck"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg></div>
-          AI models receive anonymous tokens, not your children&rsquo;s real names or identifiers.
+          AI models receive anonymous tokens &mdash; never your children&rsquo;s real names or identifiers.
         </li>
         <li>
           <div class="pcheck"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg></div>
@@ -947,28 +1059,35 @@ footer a:hover{ color:white; }
         </li>
         <li>
           <div class="pcheck"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg></div>
-          PebblePath collects only what is useful in the next two weeks. Live context expires automatically.
+          You can delete your account and all data at any time, from within the app.
         </li>
         <li>
           <div class="pcheck"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg></div>
-          No proactive capture prompt fires more than once per day per family. Quiet is the default.
-        </li>
-        <li>
-          <div class="pcheck"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg></div>
-          We notify you when significant privacy or security changes happen &mdash; not buried in a ToS update.
+          Live context expires automatically. We keep only what is useful in the next two weeks.
         </li>
       </ul>
     </div>
-
-    <div class="pp-link-row">
-      <p>For the full legal detail &mdash; what we collect, how long we keep it, and your rights under GDPR, CCPA, and CAADCA &mdash; read our Privacy Policy.</p>
-      <a href="/privacy">Read Privacy Policy &rarr;</a>
-    </div>
-
   </div>
 </div>
 
-<div style="padding-bottom:72px; background:var(--cream);"></div>
+<!-- ===== PRIVACY CALLOUT ===== -->
+<div class="sec" style="background:var(--cream);padding:56px 0;">
+  <div class="wrap">
+    <div class="privacy-callout">
+      <div>
+        <h3>Read the full Privacy Policy</h3>
+        <p>Detailed coverage of what we collect, how long we retain it, how you can request export or deletion, and your rights under GDPR, CCPA, and CAADCA. Reviewed for every roadmap feature before it shipped.</p>
+      </div>
+      <div class="pc-links">
+        <a href="/privacy" class="btn-primary">
+          Privacy Policy
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h8M9 5l3 3-3 3"/></svg>
+        </a>
+        <a href="/terms" class="btn-secondary">Terms of Service &rarr;</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <footer>
   <p>
@@ -994,6 +1113,14 @@ footer a:hover{ color:white; }
     a.addEventListener('click', function(){
       menu.classList.remove('open'); btn.classList.remove('open');
       btn.setAttribute('aria-expanded','false'); document.body.classList.remove('menu-open');
+    });
+  });
+  // Smooth scroll for mh-navbtn anchors
+  document.querySelectorAll('.mh-navbtn[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var target = document.querySelector(a.getAttribute('href'));
+      if(target){ target.scrollIntoView({ behavior:'smooth', block:'start' }); }
     });
   });
 })();

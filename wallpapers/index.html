@@ -37,7 +37,7 @@
   body { font-family: 'Inter', system-ui, sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
 
   /* ── FONTS ── */
-  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600&family=Fredoka:wght@600&display=swap');
 
   /* ── NAV ── */
   nav {
@@ -113,25 +113,26 @@
   /* ── HERO ── */
   .hero {
     padding: 130px 48px 64px;
-    background: linear-gradient(160deg, var(--teal-deep) 0%, #2D7A70 55%, #3D9B8F 100%);
+    background: linear-gradient(118deg, #235F57 0%, #1F5C54 55%, #184A44 100%);
     color: white; text-align: center; position: relative; overflow: hidden;
   }
-  .hero::before {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse 60% 50% at 55% 40%, rgba(92,191,176,0.20) 0%, transparent 70%);
-    pointer-events: none;
+  .mh-peb {
+    position: absolute; border-radius: 58% 42% 55% 45% / 55% 48% 52% 45%;
+    background: rgba(255,255,255,0.05);
   }
   .hero-tag {
-    display: inline-block; font-size: 11px; font-weight: 700;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    background: rgba(255,255,255,0.14); border-radius: 20px;
-    padding: 4px 14px; margin-bottom: 18px; color: rgba(255,255,255,0.9);
+    display: inline-block;
+    font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 11.5px;
+    letter-spacing: 1.6px; text-transform: uppercase; color: var(--teal-light);
+    background: rgba(255,255,255,0.10); border-radius: 20px;
+    padding: 5px 14px; margin-bottom: 18px;
   }
   .hero h1 {
     font-family: 'Nunito', sans-serif; font-weight: 900;
-    font-size: clamp(28px, 5vw, 48px); line-height: 1.1; margin-bottom: 14px;
+    font-size: clamp(28px, 5vw, 50px); line-height: 1.08;
+    letter-spacing: -1px; margin-bottom: 16px;
   }
-  .hero p { font-size: 17px; color: rgba(255,255,255,0.80); max-width: 480px; margin: 0 auto; line-height: 1.65; }
+  .hero p { font-size: 16px; color: #CFE3DE; max-width: 480px; margin: 0 auto; line-height: 1.7; }
 
   /* ── GALLERY ── */
   .gallery {
@@ -239,9 +240,14 @@
 </div>
 
 <section class="hero">
-  <div class="hero-tag">Free to download</div>
-  <h1>PebblePath Wallpapers</h1>
-  <p>Six original scenes for your desktop — quiet, natural, and easy on the eyes.</p>
+  <div class="mh-peb" style="width:340px;height:260px;top:-70px;right:80px;"></div>
+  <div class="mh-peb" style="width:200px;height:155px;bottom:10px;left:-30px;transform:rotate(30deg);"></div>
+  <div class="mh-peb" style="width:130px;height:100px;bottom:30px;right:300px;transform:rotate(-20deg);"></div>
+  <div style="position:relative;z-index:2;">
+    <div class="hero-tag">Free to download</div>
+    <h1>PebblePath Wallpapers</h1>
+    <p>Six original scenes for your desktop &mdash; quiet, natural, and easy on the eyes.</p>
+  </div>
 </section>
 
 <div class="gallery">
