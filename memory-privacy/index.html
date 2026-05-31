@@ -402,6 +402,27 @@ body.menu-open{ overflow:hidden; }
   background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center;
 }
 
+/* ── COMMITMENTS (visual cards, under hero) ── */
+.commitments-sec{ background:var(--sand-soft); border-bottom:1px solid var(--line); }
+.commit-head{ text-align:center; max-width:660px; margin:0 auto 36px; }
+.commit-head h2{ margin-top:9px; }
+.commit-head .lead{ margin:12px auto 0; }
+.commit-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.commit-card{
+  background:var(--paper); border:1px solid var(--line); border-radius:16px;
+  padding:24px 22px; box-shadow:0 2px 10px rgba(60,50,38,.05);
+  display:flex; flex-direction:column; gap:13px;
+}
+.commit-ic{
+  width:46px; height:46px; border-radius:13px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(61,155,143,.12); color:var(--teal-dark);
+}
+.commit-card b{ font-family:'Nunito',sans-serif; font-weight:800; font-size:16.5px; color:var(--ink); line-height:1.32; }
+.commit-card span{ font-size:12.8px; color:var(--ink-soft); line-height:1.55; }
+@media(max-width:900px){ .commit-grid{ grid-template-columns:repeat(2,1fr); } }
+@media(max-width:600px){ .commit-grid{ grid-template-columns:1fr; } }
+
 /* ── PRIVACY CALLOUT ── */
 .privacy-callout{
   margin-top:0; background:linear-gradient(120deg,#FBF4E9 0%,#F3E7D1 100%);
@@ -500,28 +521,63 @@ footer a:hover{ color:white; }
       <div class="mh-tag">Pebble Memory &amp; Privacy</div>
       <div class="mh-kicker">Built to remember &mdash; built to protect</div>
       <h1 class="mh-h1">How Pebble learns your family.<br><em>And how we keep it safe.</em></h1>
-      <p class="mh-sub">Pebble is not a chatbot that forgets between sessions. It builds a living memory of your family &mdash; one that gets richer every week. This page explains exactly how that memory works, what feeds it, and the security we have put in place so that only your family can access it.</p>
+      <p class="mh-sub">Pebble remembers the details of family life so you don&rsquo;t have to. Here&rsquo;s how that memory works &mdash; and how we keep it private.</p>
       <div class="mh-nav">
         <a class="mh-navbtn" href="#memory">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
-          How memory works
-        </a>
-        <a class="mh-navbtn" href="#channels">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-3-6.7M21 4v5h-5"/></svg>
-          Ingestion channels
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 100 18 9 9 0 000-18z"/><path d="M9 12l2 2 4-4.5"/></svg>
+          Pebble Memory
         </a>
         <a class="mh-navbtn" href="#circle">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3"/><path d="M5.5 19c0-3.5 2.9-6 6.5-6s6.5 2.5 6.5 6"/></svg>
-          Family circle
+          Family Circle
         </a>
         <a class="mh-navbtn" href="#security">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Security
+          Data Security
         </a>
-        <a class="mh-navbtn" href="#commitments">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg>
-          Our commitments
-        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== COMMITMENTS (visual, right under hero) ===== -->
+<div class="sec commitments-sec">
+  <div class="wrap">
+    <div class="commit-head">
+      <div class="eyebrow">Where we stand</div>
+      <h2>Six promises to your family.</h2>
+      <p class="lead">Before the how, here are the lines we hold &mdash; the things we will and won&rsquo;t do with your family&rsquo;s information.</p>
+    </div>
+    <div class="commit-grid">
+      <div class="commit-card">
+        <div class="commit-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <b>Never sold. No ads. Ever.</b>
+        <span>Your family is the customer &mdash; never the product.</span>
+      </div>
+      <div class="commit-card">
+        <div class="commit-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+        <b>Only people you invite can see it.</b>
+        <span>Access is locked in the database itself, not just hidden in the app.</span>
+      </div>
+      <div class="commit-card">
+        <div class="commit-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M3 3l18 18"/></svg></div>
+        <b>The AI never sees real names.</b>
+        <span>Your children&rsquo;s names are swapped for anonymous tags before anything is sent.</span>
+      </div>
+      <div class="commit-card">
+        <div class="commit-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></div>
+        <b>Everything Pebble knows is yours.</b>
+        <span>See it, edit it, or clear it anytime &mdash; nothing is hidden from you.</span>
+      </div>
+      <div class="commit-card">
+        <div class="commit-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M6 6l1 14h10l1-14"/></svg></div>
+        <b>Delete it all, anytime.</b>
+        <span>One tap in the app removes your account and every record we hold.</span>
+      </div>
+      <div class="commit-card">
+        <div class="commit-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+        <b>We keep only what&rsquo;s useful now.</b>
+        <span>Day-to-day context expires on its own &mdash; we don&rsquo;t hoard the past.</span>
       </div>
     </div>
   </div>
@@ -898,7 +954,7 @@ footer a:hover{ color:white; }
     <div class="sec-head">
       <div class="eyebrow">Rich memory, no overload</div>
       <h2>When Pebble asks &mdash; and when it doesn&rsquo;t.</h2>
-      <p class="lead">Every prompt Pebble considers generating passes through four filters. If any filter fails, Pebble stays quiet and infers instead. The goal is one useful prompt per day &mdash; often none.</p>
+      <p class="lead">Good memory shouldn&rsquo;t mean constant questions. Before Pebble ever asks you anything, it runs four quick checks &mdash; and usually decides to stay quiet and work it out itself.</p>
     </div>
     <div class="gate-grid">
       <div class="gate-card">
@@ -906,32 +962,32 @@ footer a:hover{ color:white; }
         <div class="gate-ic" style="background:rgba(61,155,143,.12);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3D9B8F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
         </div>
-        <h3>Can I infer this instead?</h3>
-        <p>If the answer is already in an anchor, rhythm, or can be derived from calendar or weather data, Pebble uses that. Asking is the last resort.</p>
+        <h3>Can I work this out myself?</h3>
+        <p>If it&rsquo;s already in your calendar, the weather, or something Pebble knows, it won&rsquo;t ask.</p>
       </div>
       <div class="gate-card">
         <div class="gate-num">2</div>
         <div class="gate-ic" style="background:rgba(212,162,74,.14);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A24A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
         </div>
-        <h3>Will I use this within 7 days?</h3>
-        <p>Capturing a fact with no near-term relevance adds noise. Pebble only asks when there is a concrete, identifiable use in the next week.</p>
+        <h3>Will it matter this week?</h3>
+        <p>Pebble only asks about things that are actually coming up soon.</p>
       </div>
       <div class="gate-card">
         <div class="gate-num">3</div>
         <div class="gate-ic" style="background:rgba(110,148,188,.15);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E94BC" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
         </div>
-        <h3>Can this be answered in 10 seconds?</h3>
-        <p>If answering requires more than a brief tap or short reply, the question is too heavy. Pebble keeps prompts bite-sized &mdash; a tap, a number, a yes or no.</p>
+        <h3>Is it a 10-second answer?</h3>
+        <p>A tap, a number, a yes or no &mdash; never homework.</p>
       </div>
       <div class="gate-card">
         <div class="gate-num">4</div>
         <div class="gate-ic" style="background:rgba(197,129,152,.15);">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C58198" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
         </div>
-        <h3>Have I already asked something today?</h3>
-        <p>No more than one capture prompt per family per day &mdash; hard-coded, not a guideline. Quiet days are the default. Memory compounds from passive sources, not interrogation.</p>
+        <h3>Have I already asked today?</h3>
+        <p>At most one small question a day. Quiet days are the normal kind.</p>
       </div>
     </div>
   </div>
@@ -942,131 +998,39 @@ footer a:hover{ color:white; }
   <div class="wrap">
     <div class="sec-head">
       <div class="eyebrow">How we protect it</div>
-      <h2>Security built in layers, not bolted on.</h2>
-      <p class="lead">Family memory is sensitive. We have built security measures at every layer &mdash; from how data moves between your phone and our servers, to what AI models are ever allowed to see, to what happens when you close the app on a shared device.</p>
-    </div>
-
-    <!-- Cloudflare full-width -->
-    <div class="sec-card-full">
-      <div class="scf-top">
-        <div class="scf-left">
-          <div class="sec-badge" style="margin-bottom:12px;">Live &mdash; enforced</div>
-          <h3>Cloudflare edge security</h3>
-          <p>Every request to pebblepath.ai passes through Cloudflare before reaching our servers. Six Transform Rules enforce HTTP security headers on every response. The origin is not publicly reachable &mdash; these rules cannot be bypassed by pointing directly at it.</p>
-        </div>
-        <div>
-          <div style="font-size:11.5px;font-weight:600;color:var(--ink-faint);margin-bottom:10px;text-transform:uppercase;letter-spacing:.7px;">Active on every response</div>
-          <div style="display:flex;flex-direction:column;gap:7px;">
-            <span class="cf-header">Content-Security-Policy &mdash; prevents script injection</span>
-            <span class="cf-header">HTTP Strict Transport Security &mdash; forces HTTPS forever</span>
-            <span class="cf-header">X-Frame-Options: DENY &mdash; no iFrame embedding</span>
-            <span class="cf-header">X-Content-Type-Options: nosniff</span>
-            <span class="cf-header">Referrer-Policy &mdash; limits referrer leakage</span>
-            <span class="cf-header">Permissions-Policy &mdash; disables camera, mic, geolocation</span>
-          </div>
-        </div>
-      </div>
+      <h2>Built to protect your family.</h2>
+      <p class="lead">Family memory is personal, so we guard it at every layer. Here&rsquo;s what that means for you &mdash; in plain terms.</p>
     </div>
 
     <!-- Security grid -->
     <div class="sec-grid">
 
       <div class="sec-card">
-        <div class="sec-badge">Live &mdash; enforced</div>
-        <h3>Hardware attestation &mdash; App Attest</h3>
-        <p class="body-text">On iOS, every request is signed by Apple&rsquo;s App Attest framework &mdash; a hardware-level proof that the request genuinely came from PebblePath on a real, unmodified Apple device. On the Portal, Firebase App Check with reCAPTCHA Enterprise performs the same role for browser sessions.</p>
-        <div class="sec-bullets">
-          <div class="sec-bullet"><div class="bd"></div>No automation tool or API client can produce a valid App Attest token without a physical Apple device running the real app binary.</div>
-          <div class="sec-bullet"><div class="bd"></div>Requests without a valid attestation token are rejected at the Cloud Function layer before any data is read or written.</div>
-        </div>
+        <div class="sec-badge">Live</div>
+        <h3>Locked to your family</h3>
+        <p class="body-text">Only the people you invite can open your family&rsquo;s information. That lock lives in the database itself &mdash; not just the app &mdash; so there&rsquo;s no way around it from a phone or a browser.</p>
       </div>
 
       <div class="sec-card">
-        <div class="sec-badge">Live &mdash; enforced</div>
-        <h3>API key never stored on device</h3>
-        <p class="body-text">The Anthropic API key that powers Pebble is not stored in the iOS app binary or anywhere on-device. Every AI request routes through a Firebase Cloud Function running on Google&rsquo;s servers. Extracting and reverse-engineering the .ipa will not yield any API key.</p>
-        <div class="sec-bullets">
-          <div class="sec-bullet"><div class="bd"></div>The key is stored as a Cloud Functions secret, encrypted at rest in Google Secret Manager, and injected only at runtime.</div>
-          <div class="sec-bullet"><div class="bd"></div>The iOS app is a thin delegator &mdash; it sends context to the function, which handles the Anthropic call and returns the result.</div>
-        </div>
+        <div class="sec-badge">Live</div>
+        <h3>The AI never learns who you are</h3>
+        <p class="body-text">Your children&rsquo;s names and details are swapped for anonymous tags before anything reaches the AI. It helps your family without ever knowing who they are.</p>
       </div>
 
       <div class="sec-card">
-        <div class="sec-badge">Live &mdash; enforced</div>
-        <h3>PII tokenisation &mdash; names never reach AI servers</h3>
-        <p class="body-text">Before any family context reaches an AI model, all child and parent names are replaced with anonymous tokens. The model reasons about <span class="mono">&#123;&#123;CHILD_NAME&#125;&#125;</span> &mdash; never &ldquo;Felix&rdquo; or &ldquo;Thomas.&rdquo; Detokenisation happens on the response, inside the same Cloud Function, before the result returns to the app.</p>
-        <div class="sec-bullets">
-          <div class="sec-bullet"><div class="bd"></div>Applied to all five Pebble generators: tips, insights, the daily brief, the pediatrician summary, and Pebble chat.</div>
-          <div class="sec-bullet"><div class="bd"></div>Anthropic&rsquo;s servers never process or store any real name associated with your family.</div>
-        </div>
+        <div class="sec-badge">Live</div>
+        <h3>Private stays private</h3>
+        <p class="body-text">Anything you mark private in Pebble is readable only by you &mdash; even a co-parent in the same family can&rsquo;t see it, and it never feeds the shared family memory.</p>
       </div>
 
       <div class="sec-card">
-        <div class="sec-badge">Live &mdash; enforced</div>
-        <h3>Private mode &mdash; server-side rule</h3>
-        <p class="body-text">When you send a private message in Pebble, a <span class="mono">visibility</span> array on the Firestore document controls who can read it. This is enforced at the database rule level &mdash; not in the app UI. Even a co-parent on a modified client cannot bypass it.</p>
-        <div class="sec-bullets">
-          <div class="sec-bullet"><div class="bd"></div>The rule requires the requesting user&rsquo;s uid to appear in the message&rsquo;s visibility array before allowing any read. Enforcement happens at Google&rsquo;s infrastructure.</div>
-          <div class="sec-bullet"><div class="bd"></div>Private messages are also excluded from the nightly memory synthesis pass so they never enter the shared context layer.</div>
-        </div>
-      </div>
-
-      <div class="sec-card">
-        <div class="sec-badge terra">Optional &mdash; on iOS</div>
-        <h3>Biometric lock &mdash; Face ID &amp; Touch ID</h3>
-        <p class="body-text">Require Face ID or Touch ID every time the app opens &mdash; so handing your phone to a child, leaving it on a table, or sharing a device doesn&rsquo;t expose your family&rsquo;s data. Default off; one tap to enable in Settings &rarr; Security.</p>
-        <div class="sec-bullets">
-          <div class="sec-bullet"><div class="bd t"></div>Uses Apple&rsquo;s LocalAuthentication framework &mdash; no biometric data is ever stored by PebblePath. The device handles the check entirely.</div>
-          <div class="sec-bullet"><div class="bd t"></div>Locks immediately on background. No grace period unless you configure one in Settings.</div>
-        </div>
-      </div>
-
-      <div class="sec-card">
-        <div class="sec-badge amber">Live &mdash; monitoring</div>
-        <h3>Firestore rules &amp; audit log</h3>
-        <p class="body-text">Every Firestore collection is protected by explicit security rules deployed after a full audit. No staged fallback paths remain. Child data access is gated on <span class="mono">Child.parentIds</span> &mdash; family membership alone does not grant access to a child&rsquo;s milestones, insights, or Pebble chat.</p>
-        <div class="sec-bullets">
-          <div class="sec-bullet"><div class="bd a"></div>Sensitive admin actions (quota changes, member removals, data deletions) are recorded in a tamper-resistant audit log written only by Cloud Functions.</div>
-          <div class="sec-bullet"><div class="bd a"></div>The P5 cutover (2026-05-19) made all rules strictly per-membership, with zero legacy bypass paths remaining.</div>
-        </div>
+        <div class="sec-badge terra">Optional &middot; iOS</div>
+        <h3>Lock the app with Face ID</h3>
+        <p class="body-text">Switch on Face ID or Touch ID so a phone left on the table &mdash; or handed to a little one &mdash; never opens your family&rsquo;s data. Off by default; one tap in Settings.</p>
       </div>
 
     </div>
-  </div>
-</div>
-
-<!-- ===== COMMITMENTS (teal dark bg) ===== -->
-<div id="commitments" class="sec" style="background:linear-gradient(135deg,#1F5C54 0%,#2D7A70 100%);color:#fff;">
-  <div class="wrap">
-    <div class="principles-band" style="background:none;padding:0;margin-top:0;">
-      <h3>Our commitments to your family</h3>
-      <ul class="plist">
-        <li>
-          <div class="pcheck"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg></div>
-          Your family&rsquo;s data is never sold. We run no advertising.
-        </li>
-        <li>
-          <div class="pcheck"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg></div>
-          Only the people you explicitly invite can access your family&rsquo;s data &mdash; enforced at database level.
-        </li>
-        <li>
-          <div class="pcheck"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg></div>
-          AI models receive anonymous tokens &mdash; never your children&rsquo;s real names or identifiers.
-        </li>
-        <li>
-          <div class="pcheck"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg></div>
-          What Pebble knows is visible and editable in Settings &rarr; What Pebble knows. Nothing is hidden.
-        </li>
-        <li>
-          <div class="pcheck"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg></div>
-          You can delete your account and all data at any time, from within the app.
-        </li>
-        <li>
-          <div class="pcheck"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6l3 3 5-5"/></svg></div>
-          Live context expires automatically. We keep only what is useful in the next two weeks.
-        </li>
-      </ul>
-    </div>
+    <p style="font-size:12px;color:var(--ink-faint);line-height:1.6;margin-top:18px;max-width:780px;">Behind all of this: encrypted connections, every request verified to come from the real app on a real device, and strict database rules confirmed by a full security audit.</p>
   </div>
 </div>
 
