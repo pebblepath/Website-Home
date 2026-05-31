@@ -179,7 +179,7 @@ body.menu-open{ overflow:hidden; }
 .brief-cap{ text-align:center; font-size:11px; color:var(--ink-faint); margin-top:14px; letter-spacing:.3px; }
 
 /* ── LOOP (exact brain page) ── */
-.loopwrap{ position:relative; width:980px; height:540px; margin:14px auto 0; }
+.loopwrap{ position:relative; width:980px; height:540px; margin:0 auto; }
 .loopwrap > svg{ position:absolute; inset:0; }
 .loopnode{
   position:absolute; width:166px; transform:translate(-50%,-50%);
@@ -477,6 +477,22 @@ footer a:hover{ color:white; }
   .privacy-callout{ padding:24px; }
   footer{ padding:14px 20px; }
 }
+
+/* ── MOBILE: fit the two diagrams without sideways scrolling ── */
+@media(max-width:760px){
+  /* Loop: unfold the circular diagram into a readable vertical stack */
+  .loop-overflow{ overflow-x:hidden; }
+  .loopwrap{ position:static; width:auto; height:auto; margin:0; }
+  .loopwrap > svg{ display:none; }
+  .loophub{ position:static; transform:none; width:auto; height:auto;
+            border-radius:14px; margin:0 0 14px; padding:15px 18px; }
+  .loophub .lh-t{ font-size:18px; }
+  .loopnode{ position:static; transform:none; width:auto; margin:0 0 10px; text-align:left; }
+  .loopnode .ln-ic{ margin:0 0 8px; }
+  /* Family graph: scale to fit the viewport */
+  .graph-overflow{ overflow-x:hidden; }
+  .graphwrap{ zoom:0.30; }
+}
 </style>
 </head>
 <body>
@@ -519,7 +535,6 @@ footer a:hover{ color:white; }
   <div class="wrap">
     <div class="mh-inner">
       <div class="mh-tag">Pebble Memory &amp; Privacy</div>
-      <div class="mh-kicker">Built to remember &mdash; built to protect</div>
       <h1 class="mh-h1">How Pebble learns your family.<br><em>And how we keep it safe.</em></h1>
       <p class="mh-sub">Pebble remembers the details of family life so you don&rsquo;t have to. Here&rsquo;s how that memory works &mdash; and how we keep it private.</p>
       <div class="mh-nav">
@@ -596,7 +611,6 @@ footer a:hover{ color:white; }
           <div style="font-size:12.5px;color:var(--ink-soft);margin-top:7px;line-height:1.6;">Parents don&rsquo;t want another expert. They want a family chief of staff &mdash; something that quietly carries the coordination load so fewer things fall through the cracks.</div>
           <div class="rf-pays">
             <span class="pay">Fewer forgotten things</span>
-            <span class="pay">Smoother mornings</span>
             <span class="pay">Calmer evenings</span>
             <span class="pay">Less coordination overhead</span>
             <span class="pay">Fewer decisions</span>
@@ -652,9 +666,9 @@ footer a:hover{ color:white; }
 </div>
 
 <!-- ===== THE LOOP ===== -->
-<div id="memory" class="sec" style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+<div id="memory" class="sec" style="background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-top:44px;padding-bottom:26px;">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head" style="margin-bottom:18px;">
       <div class="eyebrow">How everything speaks together</div>
       <h2>One memory, one loop.</h2>
       <p class="lead">Every input &mdash; a forwarded email, a spoken note, a tapped handoff &mdash;
@@ -795,10 +809,6 @@ footer a:hover{ color:white; }
         <div class="ch-feeds">&rarr; Patterns, lessons</div>
       </div>
     </div>
-    <div class="chan-note">
-      <span class="star">&#10022;</span>
-      <span>Rule of thumb &mdash; if a system already knows it, never ask a human for it.</span>
-    </div>
   </div>
 </div>
 
@@ -808,7 +818,7 @@ footer a:hover{ color:white; }
     <div class="sec-head">
       <div class="eyebrow">How memory is organised</div>
       <h2>Four layers of memory.</h2>
-      <p class="lead">Not all memory is equal. PebblePath holds it in four layers &mdash; from bedrock facts that rarely change to live context refreshed by the hour. Each layer is captured differently, and trusted differently.</p>
+      <p class="lead">Not all memory is the same. Pebble keeps it in four layers &mdash; from facts that rarely change to context that refreshes by the hour.</p>
     </div>
     <div class="layers">
       <div class="layer">
@@ -817,7 +827,7 @@ footer a:hover{ color:white; }
           <div class="l-name">Anchors</div>
           <span class="l-cad" style="background:rgba(31,92,84,.12);color:var(--teal-deep);">Rarely changes</span>
         </div>
-        <div class="l-ex">Identity and birthdays, allergies and medical notes, clothing &amp; shoe sizes, the key people and places, the pediatrician. The bedrock everything else hangs on.</div>
+        <div class="l-ex">Allergies, medical notes, sizes, the key people and places &mdash; the facts that rarely change.</div>
         <div class="l-cap"><b>Captured</b> Once at setup &mdash; confirmed, not re-asked.</div>
       </div>
       <div class="layer">
@@ -826,7 +836,7 @@ footer a:hover{ color:white; }
           <div class="l-name">Rhythms</div>
           <span class="l-cad" style="background:rgba(110,148,188,.16);color:#4F73A0;">Recurring</span>
         </div>
-        <div class="l-ex">Daily and weekly routines, schedules, recurring events &mdash; daycare drop-off, swim on Tuesdays, bedtime. The shape of a normal week.</div>
+        <div class="l-ex">The shape of a normal week &mdash; drop-off, swim on Tuesdays, bedtime.</div>
         <div class="l-cap"><b>Captured</b> Synced from calendars; confirmed from repetition.</div>
       </div>
       <div class="layer">
@@ -835,7 +845,7 @@ footer a:hover{ color:white; }
           <div class="l-name">Patterns</div>
           <span class="l-cad" style="background:rgba(212,162,74,.2);color:#A8801F;">Earned over time</span>
         </div>
-        <div class="l-ex">Preferences, lessons and tendencies &mdash; &ldquo;Felix skips nap after swimming,&rdquo; &ldquo;mornings flights travel better,&rdquo; &ldquo;Sundays get overbooked.&rdquo; The memory that feels like magic.</div>
+        <div class="l-ex">What Pebble learns over time &mdash; like &ldquo;Felix skips his nap after swimming.&rdquo;</div>
         <div class="l-cap"><b>Captured</b> Derived from behaviour &mdash; almost never asked.</div>
       </div>
       <div class="layer">
@@ -844,7 +854,7 @@ footer a:hover{ color:white; }
           <div class="l-name">Live context</div>
           <span class="l-cad" style="background:rgba(198,123,92,.16);color:var(--terra-dark);">Now &rarr; 2 weeks</span>
         </div>
-        <div class="l-ex">This week&rsquo;s calendar, the weather, what&rsquo;s running low, today&rsquo;s handoffs, the events just ahead. The fast-moving surface Pebble briefs from.</div>
+        <div class="l-ex">This week&rsquo;s plans, the weather, what&rsquo;s coming up &mdash; the fast-moving surface Pebble briefs from.</div>
         <div class="l-cap"><b>Captured</b> Streamed continuously; expires on its own.</div>
       </div>
     </div>
@@ -854,7 +864,7 @@ footer a:hover{ color:white; }
 <!-- ===== FAMILY CIRCLE ===== -->
 <div id="circle" class="sec" style="background:var(--cream);">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head" style="margin-bottom:18px;">
       <div class="eyebrow">The family circle</div>
       <h2>Members, children, events &mdash; one connected graph.</h2>
       <p class="lead">Memory isn&rsquo;t one blob. It&rsquo;s a graph: members, children, and the events and places of family life, linked by real relationships. A fact attached to one node instantly informs every node it touches &mdash; that is what &ldquo;speaks together&rdquo; means.</p>
@@ -929,65 +939,6 @@ footer a:hover{ color:white; }
         <div class="sc-h"><span class="sc-dot" style="background:var(--blue);"></span><span class="sc-n">Member-private</span></div>
         <div class="sc-d">Each member&rsquo;s own notes, questions and preferences with Pebble &mdash; private unless they choose to share.</div>
         <div class="sc-who">Visible only to that member &mdash; enforced at database level</div>
-      </div>
-    </div>
-
-    <div class="handoff">
-      <div>
-        <div class="ho-t">The Shared Parent Coordination Layer</div>
-        <div class="ho-d">The highest-value, lowest-friction memory of all. One tap, attributed and synced &mdash; so both parents always hold the exact same picture, with no nagging.</div>
-      </div>
-      <div class="ho-chips">
-        <div class="ho-chip"><span class="tick"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span>Thomas packed lunch</div>
-        <div class="ho-chip"><span class="tick"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span>Felix had Tylenol at 2pm</div>
-        <div class="ho-chip"><span class="tick"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span>Bath done</div>
-        <div class="ho-chip"><span class="tick"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span>Rough nap today</div>
-        <div class="ho-chip"><span class="tick"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg></span>Daycare asked for extra clothes</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== CAPTURE GATE (warm sand bg) ===== -->
-<div class="sec" style="background:linear-gradient(135deg,#FBF4E9 0%,#F0E7D5 100%);border-top:1px solid var(--sand-deep);border-bottom:1px solid var(--sand-deep);">
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow">Rich memory, no overload</div>
-      <h2>When Pebble asks &mdash; and when it doesn&rsquo;t.</h2>
-      <p class="lead">Good memory shouldn&rsquo;t mean constant questions. Before Pebble ever asks you anything, it runs four quick checks &mdash; and usually decides to stay quiet and work it out itself.</p>
-    </div>
-    <div class="gate-grid">
-      <div class="gate-card">
-        <div class="gate-num">1</div>
-        <div class="gate-ic" style="background:rgba(61,155,143,.12);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3D9B8F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-        </div>
-        <h3>Can I work this out myself?</h3>
-        <p>If it&rsquo;s already in your calendar, the weather, or something Pebble knows, it won&rsquo;t ask.</p>
-      </div>
-      <div class="gate-card">
-        <div class="gate-num">2</div>
-        <div class="gate-ic" style="background:rgba(212,162,74,.14);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D4A24A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-        </div>
-        <h3>Will it matter this week?</h3>
-        <p>Pebble only asks about things that are actually coming up soon.</p>
-      </div>
-      <div class="gate-card">
-        <div class="gate-num">3</div>
-        <div class="gate-ic" style="background:rgba(110,148,188,.15);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6E94BC" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-        </div>
-        <h3>Is it a 10-second answer?</h3>
-        <p>A tap, a number, a yes or no &mdash; never homework.</p>
-      </div>
-      <div class="gate-card">
-        <div class="gate-num">4</div>
-        <div class="gate-ic" style="background:rgba(197,129,152,.15);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C58198" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-        </div>
-        <h3>Have I already asked today?</h3>
-        <p>At most one small question a day. Quiet days are the normal kind.</p>
       </div>
     </div>
   </div>
