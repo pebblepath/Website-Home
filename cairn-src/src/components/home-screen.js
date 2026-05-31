@@ -6197,19 +6197,26 @@ export class HomeScreen extends LitElement {
   // dark mode), small colored pebble bullet markers, and 2-tone bullet
   // text (semibold lead + regular softer remainder).
   _renderFamilyBrief(cd) {
-    const fc = cd.familyDailyCard;
+    // 2026-05-30 bugfix — fall back to the per-child daily card when there's
+    // no family-scope card. familyDailyCards are only generated for N>=2
+    // families, so a SINGLE-CHILD family had no Portal brief at all (the
+    // per-child card exists + iOS shows it via `familyDailyCard ?? dailyCard`,
+    // but the Portal only read familyDailyCard). Mirrors the iOS fallback.
+    const fc = cd.familyDailyCard ?? cd.dailyCard;
     if (!fc) return '';
     const bullets = Array.isArray(fc.bullets) ? fc.bullets : [];
     const spinning = this._refreshingFamilyBrief ? 'spinning' : '';
     const fresh = this._briefFreshLabel(fc);
-    const daybreak = `${import.meta.env.BASE_URL}assets/pebblepath-daybreak-empty.jpg`;
+    // 2026-05-30 — LIGHT mode uses "Shallows" (was daybreak), mirroring the
+    // iOS FamilyBriefHeroCard. To revert LIGHT, point this back at
+    // pebblepath-daybreak-empty.jpg (that asset is kept in public/assets).
+    const shallows = `${import.meta.env.BASE_URL}assets/pebblepath-shallows-empty.jpg`;
     const stillwater = `${import.meta.env.BASE_URL}assets/pebblepath-stillwater-empty.jpg`;
-    // 2026-05-28 — DARK mode (Portal default; no html.theme-light) swaps
-    // the daybreak photo for the moodier Stillwater + a dark treatment
-    // (scrim + light text via the fb-dark class), mirroring the iOS
-    // FamilyBriefHeroCard. _themeLight is reactive, so the Settings theme
-    // toggle reskins this live.
-    const fbPhoto = this._themeLight ? daybreak : stillwater;
+    // 2026-05-28 — DARK mode (no html.theme-light) uses the moodier
+    // Stillwater + a dark treatment (scrim + light text via the fb-dark
+    // class). _themeLight is reactive, so the Settings theme toggle
+    // reskins this live.
+    const fbPhoto = this._themeLight ? shallows : stillwater;
     return html`
       <section class="family-brief ${this._themeLight ? '' : 'fb-dark'}">
         <div class="fb-card">
