@@ -592,6 +592,10 @@ class FamilyDataStore extends EventTarget {
     // get PERMISSION_DENIED churn (rule is isFamilyMember). Latest =
     // lexicographically-max doc id (sorts chronologically, tz-free).
     if (!this._ppReadOnly) {
+      // SWR: paint the last-cached family brief (today only) before the
+      // snapshot resolves; the listener below reconciles it instantly.
+      const cachedFam = this._readBriefCache('family', ppFid);
+      if (cachedFam) this.state.familyDailyCard = cachedFam;
       this._unsubFamilyDaily = onSnapshot(
         collection(db, 'families', ppFid, 'familyDailyCards'),
         (snap) => {
@@ -612,6 +616,7 @@ class FamilyDataStore extends EventTarget {
             genMs > 0 &&
             formatLocalDate(new Date(genMs)) === formatLocalDate(new Date());
           this.state.familyDailyCard = freshToday ? latest : null;
+          if (freshToday) this._writeBriefCache('family', ppFid, latest);
           this._emit();
         },
         (err) =>
@@ -686,6 +691,59 @@ class FamilyDataStore extends EventTarget {
       },
       (err) => console.warn('[Portal] liveContext error:', err.code, err.message),
     );
+  }
+
+  // ── Brief SWR cache (localStorage) ─────────────────────────────────
+  // Paint the last-seen daily/family brief instantly on a cold load or
+  // offline, BEFORE the Firestore snapshot resolves, then reconcile.
+  // Keyed by family/child id; the value carries the local dateKey so a
+  // stale (pre-today) card is never painted, mirroring the snapshot's
+  // today-only filter (and iOS SWR). Cleared on sign-out.
+  _briefCacheKey(kind, id) {
+    return `pp_brief_${kind}_${id}`;
+  }
+
+  _writeBriefCache(kind, id, card) {
+    if (!id || !card) return;
+    try {
+      localStorage.setItem(
+        this._briefCacheKey(kind, id),
+        JSON.stringify({ dateKey: formatLocalDate(new Date()), card }),
+      );
+    } catch {
+      /* private mode / storage full — non-fatal */
+    }
+  }
+
+  _readBriefCache(kind, id) {
+    if (!id) return null;
+    try {
+      const raw = localStorage.getItem(this._briefCacheKey(kind, id));
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      // Only surface a card cached TODAY (browser-local), never flash
+      // yesterday's brief. Matches the snapshot freshToday gate.
+      if (parsed?.dateKey === formatLocalDate(new Date()) && parsed.card) {
+        return parsed.card;
+      }
+    } catch {
+      /* corrupt cache — ignore */
+    }
+    return null;
+  }
+
+  /** Drop every cached brief. Called on genuine sign-out (app-shell). */
+  clearBriefCaches() {
+    try {
+      const keys = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('pp_brief_')) keys.push(k);
+      }
+      keys.forEach((k) => localStorage.removeItem(k));
+    } catch {
+      /* private mode — non-fatal */
+    }
   }
 
   /**
@@ -771,6 +829,11 @@ class FamilyDataStore extends EventTarget {
     // card too, widen the dailyCards rule to `|| isChildViewer` AND
     // drop this guard.)
     if (!this._ppReadOnly) {
+      // SWR: seed this child's cached brief (today only) so it paints on
+      // switch/cold-load before the snapshot resolves. Also clears any
+      // previous child's card to null when there is no fresh cache.
+      this.state.childDailyCard = this._readBriefCache('child', childId) || null;
+      this._emit();
       this._unsubChildDaily = onSnapshot(
         collection(db, ...base, 'dailyCards'),
         (snap) => {
@@ -788,10 +851,13 @@ class FamilyDataStore extends EventTarget {
             genMs > 0 &&
             formatLocalDate(new Date(genMs)) === formatLocalDate(new Date());
           this.state.childDailyCard = freshToday ? latest : null;
+          if (freshToday) this._writeBriefCache('child', childId, latest);
           this._emit();
         },
         (err) => console.warn('[Portal] dailyCards error:', err.code, err.message),
       );
+    } else {
+      this.state.childDailyCard = null;
     }
 
     // Pebble chat + sessions — parents AND parent-approved

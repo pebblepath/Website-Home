@@ -190,6 +190,7 @@ export class AppShell extends LitElement {
         // route us into the dashboard.
         this._consumePendingCreate();
       } else {
+        dataStore.clearBriefCaches();
         dataStore.stop();
         this.userDocResolved = false;
       }
