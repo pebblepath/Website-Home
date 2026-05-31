@@ -12,7 +12,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://pebblepath.ai/wallpapers/">
 <meta property="og:title" content="Wallpapers — PebblePath">
-<meta property="og:description" content="Seven original wallpapers from PebblePath. Desktop 4K and iPhone versions. Free to download.">
+<meta property="og:description" content="Seven original wallpapers from PebblePath. Desktop 4K and iPhone versions, side by side. Free to download.">
 <meta property="og:image" content="https://pebblepath.ai/assets/og-image.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -98,7 +98,7 @@ body.menu-open { overflow: hidden; }
 
 /* ── HERO ── */
 .hero {
-  padding: 130px 48px 64px;
+  padding: 130px 48px 56px;
   background: linear-gradient(118deg, #235F57 0%, #1F5C54 55%, #184A44 100%);
   color: white; text-align: center; position: relative; overflow: hidden;
 }
@@ -119,84 +119,88 @@ body.menu-open { overflow: hidden; }
   font-size: clamp(28px, 5vw, 50px); line-height: 1.08;
   letter-spacing: -1px; margin-bottom: 16px;
 }
-.hero p { font-size: 16px; color: #CFE3DE; max-width: 480px; margin: 0 auto; line-height: 1.7; }
-
-/* ── FORMAT TOGGLE ── */
-.format-bar {
-  max-width: 1180px; margin: 0 auto;
-  padding: 28px 32px 0;
-  display: flex; align-items: center; gap: 8px;
-}
-.fmt-btn {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 8px 18px; border-radius: 50px; border: 1px solid var(--line);
-  background: white; color: var(--ink-soft); font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: all 0.18s ease;
-  font-family: 'Nunito', sans-serif;
-}
-.fmt-btn.active { background: var(--teal-deep); color: white; border-color: var(--teal-deep); }
-.fmt-btn:not(.active):hover { border-color: var(--teal); color: var(--teal-dark); }
-.fmt-label { font-size: 12px; color: var(--ink-faint); margin-left: 4px; }
+.hero p { font-size: 16px; color: #CFE3DE; max-width: 500px; margin: 0 auto; line-height: 1.7; }
 
 /* ── GALLERY ── */
 .gallery {
   max-width: 1180px; margin: 0 auto;
-  padding: 24px 32px 80px;
+  padding: 40px 32px 84px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(min(440px, 100%), 1fr));
+  gap: 22px;
 }
-.gallery.iphone-mode { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 
 .wp-card {
-  background: var(--paper); border-radius: 16px;
+  background: var(--paper); border-radius: 20px;
   border: 1px solid var(--line);
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(60,50,38,0.07);
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
-  display: flex; flex-direction: column;
-}
-.wp-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(60,50,38,0.12);
+  box-shadow: 0 2px 12px rgba(60,50,38,0.06);
+  padding: 20px 20px 22px;
+  display: flex; flex-direction: column; gap: 16px;
 }
 
-/* Desktop thumbnail — 16:9 */
-.wp-img-wrap {
-  width: 100%; position: relative; overflow: hidden; background: #2a3630;
-}
-.wp-img-wrap::before { content: ''; display: block; padding-top: 56.25%; }
-
-/* iPhone thumbnail — 9:19.5 portrait */
-.wp-img-wrap.portrait::before { padding-top: 216%; }
-
-.wp-thumb {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover; display: block;
-}
-
-.wp-body { padding: 16px 18px 18px; display: flex; flex-direction: column; flex: 1; }
+.wp-head { }
 .wp-name {
   font-family: 'Nunito', sans-serif; font-weight: 800;
-  font-size: 17px; color: var(--ink); margin-bottom: 4px;
+  font-size: 18px; color: var(--ink); margin-bottom: 3px;
 }
-.wp-desc { font-size: 12.5px; color: var(--ink-soft); line-height: 1.55; flex: 1; margin-bottom: 14px; }
+.wp-desc { font-size: 12.5px; color: var(--ink-soft); line-height: 1.55; }
 
-/* Download buttons row */
-.wp-dl-row { display: flex; gap: 8px; flex-wrap: wrap; }
-.btn-dl {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: 'Nunito', sans-serif; font-weight: 700;
-  font-size: 12.5px; padding: 7px 14px; border-radius: 50px;
-  text-decoration: none; transition: background 0.18s ease; white-space: nowrap;
+/* Side-by-side preview pair */
+.duo {
+  display: flex; gap: 16px;
+  justify-content: center; align-items: flex-start;
 }
-.btn-dl.desktop { background: var(--teal); color: white; }
-.btn-dl.desktop:hover { background: var(--teal-dark); }
-.btn-dl.iphone { background: rgba(61,155,143,0.10); color: var(--teal-dark); border: 1px solid rgba(61,155,143,0.28); }
-.btn-dl.iphone:hover { background: rgba(61,155,143,0.18); }
-.btn-dl svg { flex-shrink: 0; }
-.btn-dl .res { font-size: 10px; font-weight: 600; opacity: 0.75; margin-left: 2px; }
+.fmt { display: flex; flex-direction: column; align-items: center; gap: 9px; }
+
+.tile {
+  position: relative; display: block;
+  border-radius: 16px; overflow: hidden;
+  background: #2a3630;
+  box-shadow: 0 2px 10px rgba(60,50,38,0.10);
+  height: 132px; /* fallback when container queries unsupported */
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+@media (min-width: 560px) { .tile { height: 196px; } }
+@supports (container-type: inline-size) {
+  .wp-card { container-type: inline-size; }
+  .tile { height: 41cqw; }
+}
+.tile-desktop { aspect-ratio: 3840 / 2160; }
+.tile-phone   { aspect-ratio: 1320 / 2868; }
+.tile img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.45s ease;
+}
+.tile:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(60,50,38,0.18); }
+.tile:hover img { transform: scale(1.05); }
+.tile:focus-visible { outline: 3px solid var(--teal-light); outline-offset: 2px; }
+
+/* Download badge on each preview */
+.dl-badge {
+  position: absolute; right: 8px; bottom: 8px;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(31,92,84,0.88); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.28);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.tile:hover .dl-badge { background: var(--terra); transform: scale(1.08); }
+.tile-phone .dl-badge { width: 26px; height: 26px; right: 6px; bottom: 6px; }
+.dl-badge svg { width: 14px; height: 14px; }
+.tile-phone .dl-badge svg { width: 12px; height: 12px; }
+
+/* Caption under each preview */
+.cap { text-align: center; line-height: 1.3; }
+.cap b {
+  font-family: 'Nunito', sans-serif; font-weight: 800;
+  font-size: 13.5px; color: var(--ink); display: block;
+}
+.cap small {
+  font-family: 'Inter', sans-serif; font-weight: 600;
+  font-size: 10px; color: var(--ink-faint); letter-spacing: 0.2px;
+}
 
 /* ── FOOTER ── */
 footer {
@@ -211,15 +215,19 @@ footer a:hover { color: white; }
   nav { padding: 0 20px; }
   .nav-links { display: none; }
   .hamburger { display: flex; }
-  .hero { padding: 100px 24px 48px; }
-  .gallery { padding: 20px 16px 56px; gap: 16px; grid-template-columns: 1fr 1fr; }
-  .gallery.iphone-mode { grid-template-columns: repeat(3, 1fr); }
-  .format-bar { padding: 20px 16px 0; }
+  .hero { padding: 100px 22px 44px; }
+  .gallery { padding: 26px 16px 56px; gap: 16px; }
+  .wp-card { padding: 16px 16px 18px; border-radius: 18px; }
   footer { padding: 14px 20px; }
 }
-@media (max-width: 480px) {
-  .gallery { grid-template-columns: 1fr; }
-  .gallery.iphone-mode { grid-template-columns: 1fr 1fr; }
+@media (max-width: 400px) {
+  .duo { gap: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile, .tile img, .dl-badge { transition: none; }
+  .tile:hover { transform: none; }
+  .tile:hover img { transform: none; }
 }
 </style>
 </head>
@@ -261,171 +269,179 @@ footer a:hover { color: white; }
   <div class="hero-inner">
     <div class="hero-tag">Free to download</div>
     <h1>PebblePath Wallpapers</h1>
-    <p>Seven original scenes for your desktop and iPhone &mdash; quiet, natural, and easy on the eyes.</p>
+    <p>Seven original scenes &mdash; desktop and iPhone, side by side. Tap either size to save it.</p>
   </div>
 </section>
-
-<!-- Format toggle -->
-<div class="format-bar">
-  <button class="fmt-btn active" id="btn-desktop" onclick="setMode('desktop')">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-    Desktop
-  </button>
-  <button class="fmt-btn" id="btn-iphone" onclick="setMode('iphone')">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
-    iPhone
-  </button>
-  <span class="fmt-label" id="fmt-hint">3840 &times; 2160 &middot; PNG</span>
-</div>
 
 <div class="gallery" id="gallery">
 
   <!-- DAYBREAK -->
-  <div class="wp-card">
-    <div class="wp-img-wrap" id="img-daybreak">
-      <img class="wp-thumb" id="thumb-daybreak" src="assets/daybreak-thumb.jpg" alt="Daybreak wallpaper" loading="eager">
+  <article class="wp-card">
+    <div class="wp-head">
+      <h2 class="wp-name">Daybreak</h2>
+      <p class="wp-desc">Golden morning light breaking over still water. The start of something calm.</p>
     </div>
-    <div class="wp-body">
-      <div class="wp-name">Daybreak</div>
-      <div class="wp-desc">Golden morning light breaking over still water. The start of something calm.</div>
-      <div class="wp-dl-row">
-        <a class="btn-dl desktop" id="dl-desktop-daybreak" href="assets/Daybreak.png" download="PebblePath-Daybreak.png">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
-          Desktop
+    <div class="duo">
+      <div class="fmt">
+        <a class="tile tile-desktop" href="assets/Daybreak.png" download="PebblePath-Daybreak.png" aria-label="Download Daybreak desktop wallpaper, 3840 by 2160" title="Download desktop wallpaper · 3840 × 2160">
+          <img src="assets/daybreak-thumb.jpg" alt="Daybreak desktop wallpaper" loading="eager">
+          <span class="dl-badge" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg></span>
         </a>
-        <a class="btn-dl iphone" id="dl-iphone-daybreak" href="assets/iphone/Daybreak.png" download="PebblePath-Daybreak-iPhone.png">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
-          iPhone
+        <span class="cap"><b>Desktop</b><small>3840 × 2160</small></span>
+      </div>
+      <div class="fmt">
+        <a class="tile tile-phone" href="assets/iphone/Daybreak.png" download="PebblePath-Daybreak-iPhone.png" aria-label="Download Daybreak iPhone wallpaper, 1320 by 2868" title="Download iPhone wallpaper · 1320 × 2868">
+          <img src="assets/iphone/daybreak-thumb.jpg" alt="Daybreak iPhone wallpaper" loading="eager">
+          <span class="dl-badge" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg></span>
         </a>
+        <span class="cap"><b>iPhone</b><small>1320 × 2868</small></span>
       </div>
     </div>
-  </div>
+  </article>
 
   <!-- NIGHTBLOOM -->
-  <div class="wp-card">
-    <div class="wp-img-wrap" id="img-nightbloom">
-      <img class="wp-thumb" id="thumb-nightbloom" src="assets/nightbloom-thumb.jpg" alt="Nightbloom wallpaper" loading="lazy">
+  <article class="wp-card">
+    <div class="wp-head">
+      <h2 class="wp-name">Nightbloom</h2>
+      <p class="wp-desc">Deep night colours where something is always about to open. Still and alive at once.</p>
     </div>
-    <div class="wp-body">
-      <div class="wp-name">Nightbloom</div>
-      <div class="wp-desc">Deep night colours where something is always about to open. Still and alive at once.</div>
-      <div class="wp-dl-row">
-        <a class="btn-dl desktop" id="dl-desktop-nightbloom" href="assets/Nightbloom.png" download="PebblePath-Nightbloom.png">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
-          Desktop
+    <div class="duo">
+      <div class="fmt">
+        <a class="tile tile-desktop" href="assets/Nightbloom.png" download="PebblePath-Nightbloom.png" aria-label="Download Nightbloom desktop wallpaper, 3840 by 2160" title="Download desktop wallpaper · 3840 × 2160">
+          <img src="assets/nightbloom-thumb.jpg" alt="Nightbloom desktop wallpaper" loading="lazy">
+          <span class="dl-badge" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg></span>
         </a>
-        <a class="btn-dl iphone" id="dl-iphone-nightbloom" href="assets/iphone/Nightbloom.png" download="PebblePath-Nightbloom-iPhone.png">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
-          iPhone
+        <span class="cap"><b>Desktop</b><small>3840 × 2160</small></span>
+      </div>
+      <div class="fmt">
+        <a class="tile tile-phone" href="assets/iphone/Nightbloom.png" download="PebblePath-Nightbloom-iPhone.png" aria-label="Download Nightbloom iPhone wallpaper, 1320 by 2868" title="Download iPhone wallpaper · 1320 × 2868">
+          <img src="assets/iphone/nightbloom-thumb.jpg" alt="Nightbloom iPhone wallpaper" loading="lazy">
+          <span class="dl-badge" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg></span>
         </a>
+        <span class="cap"><b>iPhone</b><small>1320 × 2868</small></span>
       </div>
     </div>
-  </div>
+  </article>
 
   <!-- UNDERTOW -->
-  <div class="wp-card">
-    <div class="wp-img-wrap" id="img-undertow">
-      <img class="wp-thumb" id="thumb-undertow" src="assets/undertow-thumb.jpg" alt="Undertow wallpaper" loading="lazy">
+  <article class="wp-card">
+    <div class="wp-head">
+      <h2 class="wp-name">Undertow</h2>
+      <p class="wp-desc">The deep, slow pull beneath the surface. Blues that feel like breathing out.</p>
     </div>
-    <div class="wp-body">
-      <div class="wp-name">Undertow</div>
-      <div class="wp-desc">The deep, slow pull beneath the surface. Blues that feel like breathing out.</div>
-      <div class="wp-dl-row">
-        <a class="btn-dl desktop" id="dl-desktop-undertow" href="assets/Undertow.png" download="PebblePath-Undertow.png">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
-          Desktop
+    <div class="duo">
+      <div class="fmt">
+        <a class="tile tile-desktop" href="assets/Undertow.png" download="PebblePath-Undertow.png" aria-label="Download Undertow desktop wallpaper, 3840 by 2160" title="Download desktop wallpaper · 3840 × 2160">
+          <img src="assets/undertow-thumb.jpg" alt="Undertow desktop wallpaper" loading="lazy">
+          <span class="dl-badge" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg></span>
         </a>
-        <a class="btn-dl iphone" id="dl-iphone-undertow" href="assets/iphone/Undertow.png" download="PebblePath-Undertow-iPhone.png">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
-          iPhone
+        <span class="cap"><b>Desktop</b><small>3840 × 2160</small></span>
+      </div>
+      <div class="fmt">
+        <a class="tile tile-phone" href="assets/iphone/Undertow.png" download="PebblePath-Undertow-iPhone.png" aria-label="Download Undertow iPhone wallpaper, 1320 by 2868" title="Download iPhone wallpaper · 1320 × 2868">
+          <img src="assets/iphone/undertow-thumb.jpg" alt="Undertow iPhone wallpaper" loading="lazy">
+          <span class="dl-badge" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg></span>
         </a>
+        <span class="cap"><b>iPhone</b><small>1320 × 2868</small></span>
       </div>
     </div>
-  </div>
+  </article>
 
   <!-- UNDERSTORY -->
-  <div class="wp-card">
-    <div class="wp-img-wrap" id="img-understory">
-      <img class="wp-thumb" id="thumb-understory" src="assets/understory-thumb.jpg" alt="Understory wallpaper" loading="lazy">
+  <article class="wp-card">
+    <div class="wp-head">
+      <h2 class="wp-name">Understory</h2>
+      <p class="wp-desc">The quiet world beneath the canopy. Soft greens, dappled light, unhurried.</p>
     </div>
-    <div class="wp-body">
-      <div class="wp-name">Understory</div>
-      <div class="wp-desc">The quiet world beneath the canopy. Soft greens, dappled light, unhurried.</div>
-      <div class="wp-dl-row">
-        <a class="btn-dl desktop" id="dl-desktop-understory" href="assets/Understory.png" download="PebblePath-Understory.png">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
-          Desktop
+    <div class="duo">
+      <div class="fmt">
+        <a class="tile tile-desktop" href="assets/Understory.png" download="PebblePath-Understory.png" aria-label="Download Understory desktop wallpaper, 3840 by 2160" title="Download desktop wallpaper · 3840 × 2160">
+          <img src="assets/understory-thumb.jpg" alt="Understory desktop wallpaper" loading="lazy">
+          <span class="dl-badge" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg></span>
         </a>
-        <a class="btn-dl iphone" id="dl-iphone-understory" href="assets/iphone/Understory.png" download="PebblePath-Understory-iPhone.png">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
-          iPhone
+        <span class="cap"><b>Desktop</b><small>3840 × 2160</small></span>
+      </div>
+      <div class="fmt">
+        <a class="tile tile-phone" href="assets/iphone/Understory.png" download="PebblePath-Understory-iPhone.png" aria-label="Download Understory iPhone wallpaper, 1320 by 2868" title="Download iPhone wallpaper · 1320 × 2868">
+          <img src="assets/iphone/understory-thumb.jpg" alt="Understory iPhone wallpaper" loading="lazy">
+          <span class="dl-badge" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg></span>
         </a>
+        <span class="cap"><b>iPhone</b><small>1320 × 2868</small></span>
       </div>
     </div>
-  </div>
+  </article>
 
   <!-- SANDBAR -->
-  <div class="wp-card">
-    <div class="wp-img-wrap" id="img-sandbar">
-      <img class="wp-thumb" id="thumb-sandbar" src="assets/sandbar-thumb.jpg" alt="Sandbar wallpaper" loading="lazy">
+  <article class="wp-card">
+    <div class="wp-head">
+      <h2 class="wp-name">Sandbar</h2>
+      <p class="wp-desc">Warm sand catching afternoon light. The kind of spot you want to stay a little longer.</p>
     </div>
-    <div class="wp-body">
-      <div class="wp-name">Sandbar</div>
-      <div class="wp-desc">Warm sand catching afternoon light. The kind of spot you want to stay a little longer.</div>
-      <div class="wp-dl-row">
-        <a class="btn-dl desktop" id="dl-desktop-sandbar" href="assets/Sandbar.png" download="PebblePath-Sandbar.png">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
-          Desktop
+    <div class="duo">
+      <div class="fmt">
+        <a class="tile tile-desktop" href="assets/Sandbar.png" download="PebblePath-Sandbar.png" aria-label="Download Sandbar desktop wallpaper, 3840 by 2160" title="Download desktop wallpaper · 3840 × 2160">
+          <img src="assets/sandbar-thumb.jpg" alt="Sandbar desktop wallpaper" loading="lazy">
+          <span class="dl-badge" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg></span>
         </a>
-        <a class="btn-dl iphone" id="dl-iphone-sandbar" href="assets/iphone/Sandbar.png" download="PebblePath-Sandbar-iPhone.png">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
-          iPhone
+        <span class="cap"><b>Desktop</b><small>3840 × 2160</small></span>
+      </div>
+      <div class="fmt">
+        <a class="tile tile-phone" href="assets/iphone/Sandbar.png" download="PebblePath-Sandbar-iPhone.png" aria-label="Download Sandbar iPhone wallpaper, 1320 by 2868" title="Download iPhone wallpaper · 1320 × 2868">
+          <img src="assets/iphone/sandbar-thumb.jpg" alt="Sandbar iPhone wallpaper" loading="lazy">
+          <span class="dl-badge" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg></span>
         </a>
+        <span class="cap"><b>iPhone</b><small>1320 × 2868</small></span>
       </div>
     </div>
-  </div>
+  </article>
 
   <!-- SHALLOWS -->
-  <div class="wp-card">
-    <div class="wp-img-wrap" id="img-shallows">
-      <img class="wp-thumb" id="thumb-shallows" src="assets/shallows-thumb.jpg" alt="Shallows wallpaper" loading="lazy">
+  <article class="wp-card">
+    <div class="wp-head">
+      <h2 class="wp-name">Shallows</h2>
+      <p class="wp-desc">Crystal-clear water just above the stones. Light refracting, nothing hidden.</p>
     </div>
-    <div class="wp-body">
-      <div class="wp-name">Shallows</div>
-      <div class="wp-desc">Crystal-clear water just above the stones. Light refracting, nothing hidden.</div>
-      <div class="wp-dl-row">
-        <a class="btn-dl desktop" id="dl-desktop-shallows" href="assets/Shallows.png" download="PebblePath-Shallows.png">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
-          Desktop
+    <div class="duo">
+      <div class="fmt">
+        <a class="tile tile-desktop" href="assets/Shallows.png" download="PebblePath-Shallows.png" aria-label="Download Shallows desktop wallpaper, 3840 by 2160" title="Download desktop wallpaper · 3840 × 2160">
+          <img src="assets/shallows-thumb.jpg" alt="Shallows desktop wallpaper" loading="lazy">
+          <span class="dl-badge" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg></span>
         </a>
-        <a class="btn-dl iphone" id="dl-iphone-shallows" href="assets/iphone/Shallows.png" download="PebblePath-Shallows-iPhone.png">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
-          iPhone
+        <span class="cap"><b>Desktop</b><small>3840 × 2160</small></span>
+      </div>
+      <div class="fmt">
+        <a class="tile tile-phone" href="assets/iphone/Shallows.png" download="PebblePath-Shallows-iPhone.png" aria-label="Download Shallows iPhone wallpaper, 1320 by 2868" title="Download iPhone wallpaper · 1320 × 2868">
+          <img src="assets/iphone/shallows-thumb.jpg" alt="Shallows iPhone wallpaper" loading="lazy">
+          <span class="dl-badge" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg></span>
         </a>
+        <span class="cap"><b>iPhone</b><small>1320 × 2868</small></span>
       </div>
     </div>
-  </div>
+  </article>
 
   <!-- STILLWATER -->
-  <div class="wp-card">
-    <div class="wp-img-wrap" id="img-stillwater">
-      <img class="wp-thumb" id="thumb-stillwater" src="assets/stillwater-thumb.jpg" alt="Stillwater wallpaper" loading="lazy">
+  <article class="wp-card">
+    <div class="wp-head">
+      <h2 class="wp-name">Stillwater</h2>
+      <p class="wp-desc">Deep teal at the last light of day. Still, settled, held.</p>
     </div>
-    <div class="wp-body">
-      <div class="wp-name">Stillwater</div>
-      <div class="wp-desc">Deep teal at the last light of day. Still, settled, held.</div>
-      <div class="wp-dl-row">
-        <a class="btn-dl desktop" id="dl-desktop-stillwater" href="assets/Stillwater.png" download="PebblePath-Stillwater.png">
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg>
-          Desktop
+    <div class="duo">
+      <div class="fmt">
+        <a class="tile tile-desktop" href="assets/Stillwater.png" download="PebblePath-Stillwater.png" aria-label="Download Stillwater desktop wallpaper, 3840 by 2160" title="Download desktop wallpaper · 3840 × 2160">
+          <img src="assets/stillwater-thumb.jpg" alt="Stillwater desktop wallpaper" loading="lazy">
+          <span class="dl-badge" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg></span>
         </a>
-        <a class="btn-dl iphone" id="dl-iphone-stillwater" href="assets/iphone/Stillwater.png" download="PebblePath-Stillwater-iPhone.png">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
-          iPhone
+        <span class="cap"><b>Desktop</b><small>3840 × 2160</small></span>
+      </div>
+      <div class="fmt">
+        <a class="tile tile-phone" href="assets/iphone/Stillwater.png" download="PebblePath-Stillwater-iPhone.png" aria-label="Download Stillwater iPhone wallpaper, 1320 by 2868" title="Download iPhone wallpaper · 1320 × 2868">
+          <img src="assets/iphone/stillwater-thumb.jpg" alt="Stillwater iPhone wallpaper" loading="lazy">
+          <span class="dl-badge" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v9M4 8l4 4 4-4"/><path d="M2 14h12"/></svg></span>
         </a>
+        <span class="cap"><b>iPhone</b><small>1320 × 2868</small></span>
       </div>
     </div>
-  </div>
+  </article>
 
 </div><!-- /gallery -->
 
@@ -440,7 +456,6 @@ footer a:hover { color: white; }
 
 <script>
 (function(){
-  // Nav scroll
   var nav = document.getElementById('main-nav');
   var btn = document.getElementById('hamburger');
   var menu = document.getElementById('mobile-menu');
@@ -456,40 +471,6 @@ footer a:hover { color: white; }
       btn.setAttribute('aria-expanded','false'); document.body.classList.remove('menu-open');
     });
   });
-
-  // Format toggle
-  var names = ['daybreak','nightbloom','undertow','understory','sandbar','shallows','stillwater'];
-  var currentMode = 'desktop';
-
-  window.setMode = function(mode) {
-    currentMode = mode;
-    var gallery = document.getElementById('gallery');
-    var hint = document.getElementById('fmt-hint');
-    document.getElementById('btn-desktop').classList.toggle('active', mode === 'desktop');
-    document.getElementById('btn-iphone').classList.toggle('active', mode === 'iphone');
-
-    if (mode === 'iphone') {
-      gallery.classList.add('iphone-mode');
-      hint.textContent = '1320 × 2868 · PNG';
-    } else {
-      gallery.classList.remove('iphone-mode');
-      hint.textContent = '3840 × 2160 · PNG';
-    }
-
-    names.forEach(function(n) {
-      var wrap = document.getElementById('img-' + n);
-      var thumb = document.getElementById('thumb-' + n);
-      if (mode === 'iphone') {
-        wrap.classList.add('portrait');
-        thumb.src = 'assets/iphone/' + n + '-thumb.jpg';
-        thumb.alt = n.charAt(0).toUpperCase() + n.slice(1) + ' iPhone wallpaper';
-      } else {
-        wrap.classList.remove('portrait');
-        thumb.src = 'assets/' + n + '-thumb.jpg';
-        thumb.alt = n.charAt(0).toUpperCase() + n.slice(1) + ' desktop wallpaper';
-      }
-    });
-  };
 })();
 </script>
 </body>
