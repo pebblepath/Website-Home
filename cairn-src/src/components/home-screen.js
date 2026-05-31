@@ -6207,16 +6207,16 @@ export class HomeScreen extends LitElement {
     const bullets = Array.isArray(fc.bullets) ? fc.bullets : [];
     const spinning = this._refreshingFamilyBrief ? 'spinning' : '';
     const fresh = this._briefFreshLabel(fc);
-    // 2026-05-30 — LIGHT mode uses "Shallows" (was daybreak), mirroring the
-    // iOS FamilyBriefHeroCard. To revert LIGHT, point this back at
-    // pebblepath-daybreak-empty.jpg (that asset is kept in public/assets).
-    const shallows = `${import.meta.env.BASE_URL}assets/pebblepath-shallows-empty.jpg`;
+    // 2026-05-31 — LIGHT mode uses "Sandbar" (was daybreak, briefly
+    // Shallows). To revert LIGHT, point this back at
+    // pebblepath-daybreak-empty.jpg (kept in public/assets).
+    const sandbar = `${import.meta.env.BASE_URL}assets/pebblepath-sandbar-empty.jpg`;
     const stillwater = `${import.meta.env.BASE_URL}assets/pebblepath-stillwater-empty.jpg`;
     // 2026-05-28 — DARK mode (no html.theme-light) uses the moodier
     // Stillwater + a dark treatment (scrim + light text via the fb-dark
     // class). _themeLight is reactive, so the Settings theme toggle
     // reskins this live.
-    const fbPhoto = this._themeLight ? shallows : stillwater;
+    const fbPhoto = this._themeLight ? sandbar : stillwater;
     return html`
       <section class="family-brief ${this._themeLight ? '' : 'fb-dark'}">
         <div class="fb-card">

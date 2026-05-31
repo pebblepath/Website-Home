@@ -10155,7 +10155,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         .pebbleUser=${this.pebbleUser}
         @cancel=${()=>this._profileOpen=!1}
       ></profile-sheet>
-    `}_renderFamilyBrief(e){const t=e.familyDailyCard??e.dailyCard;if(!t)return"";const i=Array.isArray(t.bullets)?t.bullets:[],r=this._refreshingFamilyBrief?"spinning":"",a=this._briefFreshLabel(t),l=this._themeLight?"/portal/assets/pebblepath-shallows-empty.jpg":"/portal/assets/pebblepath-stillwater-empty.jpg";return o`
+    `}_renderFamilyBrief(e){const t=e.familyDailyCard??e.dailyCard;if(!t)return"";const i=Array.isArray(t.bullets)?t.bullets:[],r=this._refreshingFamilyBrief?"spinning":"",a=this._briefFreshLabel(t),l=this._themeLight?"/portal/assets/pebblepath-sandbar-empty.jpg":"/portal/assets/pebblepath-stillwater-empty.jpg";return o`
       <section class="family-brief ${this._themeLight?"":"fb-dark"}">
         <div class="fb-card">
           <div class="fb-bg" aria-hidden="true">
@@ -14095,4 +14095,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(Pt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},familyDailyCard:{state:!0},pebbleAnchors:{state:!0},pebbleRhythms:{state:!0},pebblePatterns:{state:!0},pebbleLiveContext:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",Pt);
-//# sourceMappingURL=index-vt00M1Lr.js.map
+//# sourceMappingURL=index-DyW_cfv5.js.map
