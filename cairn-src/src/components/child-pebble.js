@@ -18,6 +18,22 @@ import './member-chip.js';
  *               (already isPrivate-filtered by data.js)
  *   prefill   — optional seed question (from "Ask Pebble about this")
  */
+
+// Warm waiting captions shown on the live streaming bubble before the
+// answer text arrives (mirror the iOS PebbleWaitingBubble). Rotated
+// every ~2.4s; the phase (thinking vs searching the web) picks the set.
+const STREAM_THINK_CAPTIONS = [
+  "Reading your family's context",
+  'Thinking it through',
+  'Gathering a few ideas',
+  'Pulling the pieces together',
+];
+const STREAM_SEARCH_CAPTIONS = [
+  'Looking up fresh ideas',
+  'Finding current options',
+  'Checking the latest',
+];
+
 export class ChildPebble extends LitElement {
   static properties = {
     child: { type: Object },
@@ -29,6 +45,8 @@ export class ChildPebble extends LitElement {
     _session: { state: true },
     _input: { state: true },
     _loading: { state: true },
+    _streaming: { state: true }, // live trailing bubble: { phase, text } | null
+    _streamTick: { state: true }, // rotates the waiting caption
     _error: { state: true },
     _seededKey: { state: true },
     _activeSessionId: { state: true },
@@ -53,6 +71,9 @@ export class ChildPebble extends LitElement {
     this._session = [];
     this._input = '';
     this._loading = false;
+    this._streaming = null;
+    this._streamTick = 0;
+    this._streamTimer = null;
     this._error = '';
     // Re-seed key = "childId|activeSessionId"; when it changes the
     // thread re-derives from that session's persisted messages.
@@ -73,6 +94,7 @@ export class ChildPebble extends LitElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    this._stopStreamCaptions();
     try {
       this._recognition?.abort();
     } catch {
@@ -138,6 +160,8 @@ export class ChildPebble extends LitElement {
       this._error = '';
       this._activeSessionId = null;
       this._seededKey = '';
+      this._stopStreamCaptions();
+      this._streaming = null;
     }
     // Pick a default active session once data arrives: newest real
     // session, else the legacy "Earlier chats" bucket if there are
@@ -393,42 +417,115 @@ export class ChildPebble extends LitElement {
       },
     ];
     this._loading = true;
+    this._streaming = { phase: 'thinking', text: '' };
+    this._startStreamCaptions();
+    const appendAssistant = (content) => {
+      this._session = [
+        ...this._session,
+        {
+          role: 'assistant',
+          content: content ?? '…',
+          isPrivate: priv,
+          senderUid: priv ? this.myUid : undefined,
+        },
+      ];
+    };
+    // Non-streaming fallback (still persists server-side) for when the
+    // stream yields nothing usable or errors before any text arrives.
+    const doFallback = async () => {
+      try {
+        const result = await dataStore.askPebbleAboutChild(
+          this.child.id,
+          question,
+          history,
+          priv,
+          sid,
+        );
+        appendAssistant(result?.answer ?? '…');
+      } catch (e2) {
+        console.error(e2);
+        this._error = this._sendErrorMessage(e2);
+      }
+    };
     try {
-      const result = await dataStore.askPebbleAboutChild(
+      // Streaming path — fills the bubble live. The CF persists both
+      // turns; the pebbleMessages listener delivers them, and the
+      // _seededKey lock keeps the optimistic thread from double-rendering
+      // (same mechanism the non-streaming path relies on).
+      const result = await dataStore.streamPebbleChat(
         this.child.id,
         question,
         history,
         priv,
         sid,
-      );
-      this._session = [
-        ...this._session,
         {
-          role: 'assistant',
-          content: result?.answer ?? '…',
-          isPrivate: priv,
-          senderUid: priv ? this.myUid : undefined,
+          onStatus: (status) => {
+            if (
+              status === 'searching_web' &&
+              this._streaming &&
+              !this._streaming.text
+            ) {
+              this._streaming = { ...this._streaming, phase: 'searching' };
+            }
+          },
+          onDelta: (cumulative) => {
+            this._stopStreamCaptions();
+            this._streaming = { phase: 'streaming', text: cumulative || '' };
+          },
         },
-      ];
+      );
+      const finalText = (result?.answer ?? this._streaming?.text ?? '').trim();
+      if (finalText) appendAssistant(finalText);
+      else await doFallback(); // stream succeeded but returned nothing
     } catch (e) {
       console.error(e);
-      if (e?.code === 'functions/unauthenticated') {
-        this._error = 'Pebble needs you to be signed in.';
-      } else if (e?.code === 'functions/permission-denied') {
-        this._error =
-          "Pebble's child advisor is for parents on this household.";
-      } else if (
-        e?.code === 'functions/not-found' ||
-        e?.code === 'functions/internal'
-      ) {
-        this._error =
-          "Pebble isn't available right now — try again in a moment.";
-      } else {
-        this._error = e?.message ?? 'Pebble could not answer right now.';
-      }
+      // Keep a substantial partial if the stream broke mid-answer;
+      // otherwise fall back to the non-streaming path.
+      const partial = (this._streaming?.text ?? '').trim();
+      if (partial.length >= 20) appendAssistant(partial);
+      else await doFallback();
     } finally {
+      this._stopStreamCaptions();
+      this._streaming = null;
       this._loading = false;
     }
+  }
+
+  _sendErrorMessage(e) {
+    if (e?.code === 'functions/unauthenticated') {
+      return 'Pebble needs you to be signed in.';
+    }
+    if (e?.code === 'functions/permission-denied') {
+      return "Pebble's child advisor is for parents on this household.";
+    }
+    if (e?.code === 'functions/not-found' || e?.code === 'functions/internal') {
+      return "Pebble isn't available right now, try again in a moment.";
+    }
+    return e?.message ?? 'Pebble could not answer right now.';
+  }
+
+  // Rotate the warm waiting caption while the live bubble has no text yet.
+  _startStreamCaptions() {
+    this._stopStreamCaptions();
+    this._streamTick = 0;
+    this._streamTimer = setInterval(() => {
+      this._streamTick += 1;
+    }, 2400);
+  }
+
+  _stopStreamCaptions() {
+    if (this._streamTimer) {
+      clearInterval(this._streamTimer);
+      this._streamTimer = null;
+    }
+  }
+
+  _streamCaption() {
+    const set =
+      this._streaming?.phase === 'searching'
+        ? STREAM_SEARCH_CAPTIONS
+        : STREAM_THINK_CAPTIONS;
+    return set[this._streamTick % set.length];
   }
 
   static styles = css`
@@ -798,6 +895,31 @@ export class ChildPebble extends LitElement {
       0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
       40% { transform: translateY(-4px); opacity: 1; }
     }
+    /* live streaming bubble — warm caption + dots before text arrives */
+    .bubble.waiting {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .wcap {
+      color: var(--text-secondary);
+      font-size: 14px;
+      transition: opacity 0.2s ease;
+    }
+    .wdots {
+      display: inline-flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .wdots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--text-secondary);
+      animation: b 1s infinite ease-in-out;
+    }
+    .wdots span:nth-child(2) { animation-delay: 0.15s; }
+    .wdots span:nth-child(3) { animation-delay: 0.3s; }
     .empty {
       padding: 20px 4px 8px;
     }
@@ -1128,9 +1250,18 @@ export class ChildPebble extends LitElement {
                           </div>
                         </div>`,
                   )}
-                  ${this._loading
-                    ? html`<div class="typing">
-                        <span></span><span></span><span></span>
+                  ${this._streaming
+                    ? html`<div class="msg pb" data-idx="streaming">
+                        <span class="pic">${this._pico()}</span>
+                        <div class="col">
+                          ${this._streaming.text
+                            ? html`<!-- prettier-ignore -->
+                                <div class="bubble">${this._fmt(this._streaming.text)}</div>`
+                            : html`<div class="bubble waiting">
+                                <span class="wcap">${this._streamCaption()}</span>
+                                <span class="wdots"><span></span><span></span><span></span></span>
+                              </div>`}
+                        </div>
                       </div>`
                     : ''}
                 `}

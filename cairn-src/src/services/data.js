@@ -986,6 +986,54 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
+   * STREAMING Pebble (Load-time port, 2026-05-31). Calls the new
+   * `streamPebbleChatPortal` Cloud Function — same server-side context
+   * build + membership gate + persistence as askPebbleAboutChild, but
+   * streams the answer token-by-token so the bubble fills in live. The
+   * CF persists both turns server-side; the pebbleMessages listener
+   * delivers them (the caller does NOT persist). `onStatus(status)`
+   * fires once when a web_search starts; `onDelta(cumulativeText)` fires
+   * with the CUMULATIVE detokenized answer so far (replace, don't append
+   * — sidesteps split-token edge cases). Resolves to { answer, followUps }.
+   * Throws if the stream fails so the caller can fall back to
+   * askPebbleAboutChild (the non-streaming path).
+   */
+  async streamPebbleChat(
+    childId,
+    question,
+    history = [],
+    isPrivate = false,
+    sessionId = '',
+    { onStatus, onDelta } = {},
+  ) {
+    if (!functions) throw new Error('Firebase functions not configured.');
+    if (!this._ppFamilyId) throw new Error('No PebblePath family.');
+    if (!childId) throw new Error('No child selected.');
+    const fn = httpsCallable(functions, 'streamPebbleChatPortal');
+    const { stream, data } = await fn.stream({
+      familyId: this._ppFamilyId,
+      childId,
+      question,
+      history,
+      isPrivate: isPrivate === true,
+      sessionId: sessionId || '',
+    });
+    for await (const chunk of stream) {
+      if (!chunk) continue;
+      if (chunk.kind === 'status' && typeof onStatus === 'function') {
+        onStatus(chunk.status);
+      } else if (
+        chunk.kind === 'delta' &&
+        typeof chunk.text === 'string' &&
+        typeof onDelta === 'function'
+      ) {
+        onDelta(chunk.text);
+      }
+    }
+    return await data; // { answer, followUps }
+  }
+
+  /**
    * Close-the-loop Slice 3 (2026-05-28) — force-regenerate today's
    * family-scope brief SERVER-SIDE via the `refreshFamilyBrief`
    * callable. The CF rebuilds context from the full memory bank,
