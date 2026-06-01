@@ -5957,6 +5957,7 @@ export class HomeScreen extends LitElement {
           .prefill=${this._pebblePrefill}
           .memberProfiles=${this.family?.memberProfiles ?? {}}
           .myUid=${this.user?.uid ?? ''}
+          @smart-upload=${() => (this._schoolImportOpen = true)}
         ></child-pebble>
       `;
     }
@@ -6025,6 +6026,7 @@ export class HomeScreen extends LitElement {
                 .prefill=${this._pebblePrefill}
                 .memberProfiles=${this.family?.memberProfiles ?? {}}
                 .myUid=${this.user?.uid ?? ''}
+                @smart-upload=${() => (this._schoolImportOpen = true)}
               ></child-pebble>
             </div>
           </div>`

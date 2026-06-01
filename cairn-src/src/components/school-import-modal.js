@@ -351,7 +351,7 @@ export class SchoolImportModal extends LitElement {
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
           <div class="header">
-            <h2>Import school calendar</h2>
+            <h2>Import dates from a file</h2>
             <button class="close" @click=${this._cancel} aria-label="Close">
               ×
             </button>
@@ -359,11 +359,12 @@ export class SchoolImportModal extends LitElement {
           ${this._phase === 'pick'
             ? html`
                 <p class="lede">
-                  Upload the calendar your school sent —
+                  Upload a flier, schedule, school calendar, or daycare
+                  note, as a
                   <strong>PDF, a screenshot, or a Word doc</strong>. Pebble
-                  reads it and pulls out the dates (closures, holidays,
-                  INSET days, activities). You'll review and pick which to
-                  add before anything lands on the family calendar.
+                  reads it and pulls out the dates and details. You'll
+                  review and pick which to add before anything lands on the
+                  family calendar.
                 </p>
                 <label class="pickbtn">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
@@ -384,7 +385,7 @@ export class SchoolImportModal extends LitElement {
           ${this._phase === 'working'
             ? html`<div class="working">
                 <div class="spin"></div>
-                <div>Reading the calendar…</div>
+                <div>Reading it…</div>
               </div>`
             : ''}
           ${this._phase === 'review'

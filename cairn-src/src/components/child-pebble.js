@@ -528,6 +528,37 @@ export class ChildPebble extends LitElement {
     return set[this._streamTick % set.length];
   }
 
+  // --- Landing (the warm front-door empty state) -------------------
+
+  // Portal's default theme is the dusk dark (no html.theme-light).
+  // The landing greeting-name flips brand-green hue with the theme,
+  // mirroring the FamilyBriefHeroCard. Read live in render() — it
+  // re-evaluates on each Lit update (tab switch / FAB open), same as
+  // home-screen's _themeLight detection.
+  _isDark() {
+    return typeof document !== 'undefined'
+      ? !document.documentElement.classList.contains('theme-light')
+      : true;
+  }
+
+  // First word of the signed-in member's display name (fallback
+  // "there") for "Hi {firstName},".
+  _firstName() {
+    const dn = this.memberProfiles?.[this.myUid]?.displayName;
+    const first = String(dn ?? '').trim().split(/\s+/)[0];
+    return first || 'there';
+  }
+
+  // Smart Upload card → bubble up to home-screen, which owns the
+  // shared <school-import-modal> (upload → extract → review → write
+  // familyEvents). composed:true so the event crosses the shadow
+  // boundary; bubbles:true so it reaches the host listener.
+  _smartUpload() {
+    this.dispatchEvent(
+      new CustomEvent('smart-upload', { bubbles: true, composed: true }),
+    );
+  }
+
   static styles = css`
     *, *::before, *::after { box-sizing: border-box; }
     :host { display: block; }
@@ -920,41 +951,244 @@ export class ChildPebble extends LitElement {
     }
     .wdots span:nth-child(2) { animation-delay: 0.15s; }
     .wdots span:nth-child(3) { animation-delay: 0.3s; }
-    .empty {
-      padding: 20px 4px 8px;
-    }
-    .empty .lede {
-      font-family: var(--font-display);
-      font-size: 17px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .empty .sub {
-      color: var(--text-secondary);
-      font-size: 13.5px;
-      line-height: 1.55;
-      margin-bottom: 16px;
-    }
-    .prompts {
+    /* ============================================================
+       Pebble landing — the warm front door (replaces the old cold
+       lede/sub/prompts empty state). A floating, softly glowing
+       glass Ripple Stone hero given room to breathe + a two-line
+       greeting (brand-green name) + a single row of three translucent
+       action cards (the family's lowest-friction ingestion channels).
+       Portal uses simple gradient-chip glyphs (the iOS card-tile motif
+       belongs there, where milestone cards are swiped). The whole
+       group is vertically centred. margin:auto (not justify-content)
+       does the centring so a tall group never clips in the scroll box.
+       ============================================================ */
+    .landing {
+      flex: 1;
+      min-height: 100%;
       display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 16px;
+      flex-direction: column;
+      padding: 14px 4px;
     }
-    .prompts button {
-      padding: 8px 14px;
-      border-radius: var(--radius-pill);
-      font-size: 12.5px;
-      background: var(--glass-fill);
+    .landing-inner {
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 26px;
+      width: 100%;
+    }
+
+    /* floating glowing glass Ripple Stone — the hero; extra air around
+       it so it reads as the centrepiece, not just another tile. */
+    .stone-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 6px 0 8px;
+    }
+    .stone {
+      position: relative;
+      width: 128px;
+      height: 107px;
+      border-radius: 50%;
+      backdrop-filter: blur(3px) saturate(1.5);
+      -webkit-backdrop-filter: blur(3px) saturate(1.5);
+      background:
+        radial-gradient(120% 110% at 32% 22%, rgba(255, 255, 255, 0.52), transparent 30%),
+        radial-gradient(85% 78% at 50% 60%, rgba(124, 212, 200, 0.85), transparent 60%),
+        radial-gradient(95% 85% at 76% 86%, rgba(198, 123, 92, 0.34), transparent 54%),
+        radial-gradient(125% 120% at 50% 52%, rgba(92, 191, 176, 0.66), rgba(45, 122, 112, 0.66) 55%, rgba(31, 92, 84, 0.8) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      box-shadow:
+        inset 0 6px 18px rgba(255, 255, 255, 0.7),
+        inset 0 -20px 38px rgba(18, 58, 52, 0.4),
+        0 0 16px rgba(124, 212, 200, 0.65),
+        0 0 34px rgba(61, 155, 143, 0.45),
+        0 22px 46px rgba(31, 92, 84, 0.32);
+      animation: stoneFloat 2.8s ease-in-out infinite;
+    }
+    .stone .glow {
+      position: absolute;
+      inset: -30%;
+      border-radius: 50%;
+      z-index: -1;
+      background: radial-gradient(circle at 50% 50%, rgba(124, 212, 200, 0.55), rgba(61, 155, 143, 0.18) 45%, transparent 70%);
+      filter: blur(9px);
+      animation: stoneGlow 2.8s ease-in-out infinite;
+    }
+    .stone .dome {
+      position: absolute;
+      left: 21%;
+      top: 11%;
+      width: 50%;
+      height: 30%;
+      border-radius: 50%;
+      background: radial-gradient(130% 130% at 42% 30%, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.1) 62%, transparent 80%);
+      filter: blur(0.8px);
+    }
+    .stone .glint {
+      position: absolute;
+      top: 17%;
+      left: 25%;
+      width: 24%;
+      height: 10%;
+      border-radius: 50%;
+      background: linear-gradient(120deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+      transform: rotate(-20deg);
+      filter: blur(0.5px);
+    }
+    .stone .spark {
+      position: absolute;
+      right: 21%;
+      bottom: 20%;
+      width: 13%;
+      height: 10%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.75), transparent 72%);
+      filter: blur(1px);
+    }
+    .rings {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 7px;
+      animation: ringsFloat 2.8s ease-in-out infinite;
+    }
+    .rings span {
+      display: block;
+      border-radius: 50%;
+      border: 1px solid rgba(45, 122, 112, 0.32);
+    }
+    .rings .r1 { width: 73px; height: 13px; }
+    .rings .r2 { width: 49px; height: 8px; margin-top: -3px; opacity: 0.7; }
+    @keyframes stoneFloat {
+      0%, 100% { transform: translateY(5px) scale(0.99); }
+      50% { transform: translateY(-6px) scale(1.02); }
+    }
+    @keyframes ringsFloat {
+      0%, 100% { transform: translateY(3px) scale(0.96); opacity: 0.72; }
+      50% { transform: translateY(-2px) scale(1.04); opacity: 0.95; }
+    }
+    @keyframes stoneGlow {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.95; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .stone, .rings, .stone .glow { animation: none; }
+      .stone .glow { opacity: 0.6; }
+    }
+
+    /* greeting — two lines: brand-green name, primary-ink question */
+    .greet {
+      text-align: center;
+      margin-top: 4px;
+    }
+    .greet .g-line {
+      /* Nunito (the PebblePath brand face, like iOS) at 700 — softer
+         and lighter than the heavier Bricolage display, per Thomas. */
+      font-family: var(--font-nunito);
+      font-weight: 700;
+      font-size: 23px;
+      line-height: 1.2;
+      letter-spacing: -0.005em;
+    }
+    /* default CSS = light theme (brand green #1f5c54); .landing.dark
+       overrides for Portal's default dusk theme. Same pairing as the
+       FamilyBriefHeroCard headerColor (1f5c54 light / 5cbfb0 dark). */
+    .greet .name { color: #1f5c54; }
+    .landing.dark .greet .name { color: #5cbfb0; }
+    .greet .ask { color: var(--text-primary); }
+
+    /* action-cards — a single centred row (like iOS). Flex (not grid)
+       so it stays balanced whether 3 cards show or 2 (the Talk card
+       drops when the browser has no speech support). */
+    .cardgrid {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 600px;
+    }
+    .lcard {
+      flex: 1 1 0;
+      min-width: 0;
+      max-width: 200px;
+      position: relative;
+      text-align: center;
+      padding: 16px 14px 15px;
+      border-radius: 20px;
+      background: var(--glass-fill-strong);
       border: 1px solid var(--glass-border);
-      color: var(--text-secondary);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: var(--glass-shadow);
       cursor: pointer;
       font-family: var(--font-body);
-    }
-    .prompts button:hover {
       color: var(--text-primary);
+      transition: transform 0.18s ease, box-shadow 0.18s ease,
+        border-color 0.18s ease;
+    }
+    .lcard:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--glass-shadow-lifted);
       border-color: var(--glass-border-strong);
     }
+    .lcard h3 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+      margin: 0 0 3px;
+    }
+    .lcard p {
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    /* simple gradient-chip glyph — a rounded square in the card's
+       accent gradient with a white line icon. No card-tile motif on
+       Portal (that motif belongs on iOS, where the milestone cards are
+       actually swiped). */
+    .lico {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      margin: 0 auto 12px;
+      border-radius: 14px;
+      color: #fff;
+      box-shadow: 0 6px 14px rgba(31, 92, 84, 0.18);
+    }
+    .lico svg { width: 22px; height: 22px; display: block; }
+    .lico.teal { background: linear-gradient(135deg, #3d9b8f, #1f5c54); }
+    .lico.terra { background: linear-gradient(135deg, #d18a6c, #a8624a); }
+    .lico.glow { background: linear-gradient(135deg, #5cbfb0, #2d7a70); }
+
+    /* compact (FAB) — shrink the stone + greeting, tighten the grid */
+    .pebble-wrap.compact .landing { padding: 6px 2px; }
+    .pebble-wrap.compact .landing-inner { gap: 16px; }
+    .pebble-wrap.compact .stone-wrap { margin: 2px 0 4px; }
+    .pebble-wrap.compact .stone { width: 86px; height: 72px; }
+    .pebble-wrap.compact .rings .r1 { width: 50px; height: 9px; }
+    .pebble-wrap.compact .rings .r2 { width: 33px; height: 6px; }
+    .pebble-wrap.compact .greet .g-line { font-size: 18px; }
+    .pebble-wrap.compact .cardgrid { gap: 8px; }
+    .pebble-wrap.compact .lcard {
+      padding: 12px 8px;
+      border-radius: 16px;
+    }
+    .pebble-wrap.compact .lcard h3 { font-size: 12.5px; }
+    .pebble-wrap.compact .lcard p { font-size: 10.5px; }
+    .pebble-wrap.compact .lico {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+    .pebble-wrap.compact .lico svg { width: 18px; height: 18px; }
     /* Composer — the concept's rounded pill: a transparent textarea
        inside a glass-fill pill, vertically centred, with a 38px send
        circle (fixes "input not rounded / wrong colour / not centred"). */
@@ -1206,19 +1440,60 @@ export class ChildPebble extends LitElement {
         </div>
         <div class="thread">
             ${!hasThread
-              ? html`<div class="empty">
-                  <div class="lede">Hi — what's on your mind?</div>
-                  <div class="sub">
-                    I know ${name}'s milestones, recent observations and
-                    Pebble's running notes. Ask about development,
-                    activities, sleep, behaviour — anything ${name}-shaped.
-                  </div>
-                  <div class="prompts">
-                    ${this._suggestions().map(
-                      (s) => html`<button @click=${() => this._send(s)}>
-                        ${s}
-                      </button>`,
-                    )}
+              ? html`<div class="landing ${this._isDark() ? 'dark' : ''}">
+                  <div class="landing-inner">
+                    <div class="stone-wrap" aria-hidden="true">
+                      <div class="stone">
+                        <span class="glow"></span>
+                        <span class="dome"></span>
+                        <span class="glint"></span>
+                        <span class="spark"></span>
+                      </div>
+                      <div class="rings">
+                        <span class="r1"></span><span class="r2"></span>
+                      </div>
+                    </div>
+                    <div class="greet">
+                      <div class="g-line name">Hi ${this._firstName()},</div>
+                      <div class="g-line ask">what can I help with?</div>
+                    </div>
+                    <div class="cardgrid">
+                      <button
+                        class="lcard"
+                        @click=${() => this._smartUpload()}
+                      >
+                        <span class="lico teal">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M8 8l4-4 4 4"/><path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
+                        </span>
+                        <h3>Smart Upload</h3>
+                        <p>Drop a flier, schedule or note. I'll pull out the dates.</p>
+                      </button>
+                      <button
+                        class="lcard"
+                        @click=${() =>
+                          this._send(
+                            'What activities and things to do should we plan for our upcoming trip?',
+                          )}
+                      >
+                        <span class="lico terra">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                        </span>
+                        <h3>Plan trip activities</h3>
+                        <p>Ideas for your upcoming trips, shaped around the family.</p>
+                      </button>
+                      ${this._voiceSupported
+                        ? html`<button
+                            class="lcard"
+                            @click=${() => this._toggleVoice()}
+                          >
+                            <span class="lico glow">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h2l2-7 4 14 3-9 2 4h5"/></svg>
+                            </span>
+                            <h3>Talk with Pebble</h3>
+                            <p>Hands full? Just talk, I'm listening.</p>
+                          </button>`
+                        : ''}
+                    </div>
                   </div>
                 </div>`
               : html`
