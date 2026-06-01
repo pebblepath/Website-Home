@@ -1516,6 +1516,13 @@ export class HomeScreen extends LitElement {
       --cat-bg: rgba(201, 138, 138, 0.18);
       --cat-ink: var(--text-primary);
     }
+    /* Custom calendar tags (e.g. "Daycare 2026 schedule") — one
+       terracotta-toned filter chip per distinct tag. */
+    .cat-tag {
+      --cat: var(--terracotta);
+      --cat-bg: rgba(198, 123, 92, 0.16);
+      --cat-ink: var(--text-primary);
+    }
 
     /* ── WEEK view ────────────────────────────────────────── */
     .cal-week .wk-head {
@@ -4574,6 +4581,44 @@ export class HomeScreen extends LitElement {
     }
   }
 
+  /** Calendar category for a familyEvent — honours the explicit
+   *  `category` set at import (plan / activity / celebration) and falls
+   *  back to the legacy type-based split for docs that predate it.
+   *  Maps to the 5-category calendar buckets: plan -> 'plan',
+   *  activity -> 'event', celebration -> 'celebrate'. */
+  _eventCalCat(ev) {
+    const c = ev?.category;
+    if (c === 'plan') return 'plan';
+    if (c === 'activity') return 'event';
+    if (c === 'celebration') return 'celebrate';
+    return ev?.type === 'birthday' || ev?.type === 'anniversary'
+      ? 'celebrate'
+      : 'event';
+  }
+
+  /** Only true celebrations belong in the Celebrations feed. */
+  _isCelebrationEvent(ev) {
+    return this._eventCalCat(ev) === 'celebrate';
+  }
+
+  /** Distinct custom calendar tags across the visible events — drives
+   *  the per-tag filter chips. */
+  _eventTags() {
+    const set = new Set();
+    for (const e of this._filteredEvents()) {
+      const t = String(e?.calTag ?? '').trim();
+      if (t) set.add(t);
+    }
+    return [...set].sort((a, b) => a.localeCompare(b));
+  }
+
+  /** A tagged event is hidden when its tag's filter chip is off. */
+  _tagVisible(ev) {
+    const t = String(ev?.calTag ?? '').trim();
+    if (!t) return true;
+    return this._calFilters['tag:' + t] !== false;
+  }
+
   /** Dominant category for a calendar day — first match wins. Order
    *  reflects mental model: trip is the headline, plans live inside.
    *  Used by the mini-month + year-card dots. Plan items excluded
@@ -4600,17 +4645,22 @@ export class HomeScreen extends LitElement {
         }
       }
     }
-    // Events split: birthday/anniversary → celebrate; custom → event.
+    // Events split by their calendar category (celebration / plan /
+    // activity→event), honouring per-tag filter visibility.
     let sawCeleb = false;
+    let sawPlan = false;
     let sawEvent = false;
     for (const ev of this._filteredEvents()) {
       const ed = parseLocalDate(ev.date);
       if (!ed || ed.getFullYear() !== y || ed.getMonth() !== m || ed.getDate() !== day) continue;
-      const cat = (ev.type === 'birthday' || ev.type === 'anniversary') ? 'celebrate' : 'event';
+      if (!this._tagVisible(ev)) continue;
+      const cat = this._eventCalCat(ev);
       if (cat === 'celebrate') sawCeleb = true;
+      else if (cat === 'plan') sawPlan = true;
       else sawEvent = true;
     }
     if (sawCeleb && this._calFilters.celebrate) return 'celebrate';
+    if (sawPlan && this._calFilters.plan) return 'plan';
     if (sawEvent && this._calFilters.event) return 'event';
     return null;
   }
@@ -4759,11 +4809,16 @@ export class HomeScreen extends LitElement {
   _renderCalFilters() {
     const trips = this._circleTrips();
     const events = this._filteredEvents();
-    const customEvents = events.filter((e) => e.type === 'custom');
-    const celebEvents = events.filter(
-      (e) => e.type === 'birthday' || e.type === 'anniversary',
+    // Counts now reflect the calendar category (which honours the
+    // explicit `category` set at import), not the raw event type.
+    const activityEvents = events.filter(
+      (e) => this._eventCalCat(e) === 'event',
     );
-    const planTotal = Array.from(this._weekPlanItems.values()).reduce(
+    const celebEvents = events.filter(
+      (e) => this._eventCalCat(e) === 'celebrate',
+    );
+    const planEvents = events.filter((e) => this._eventCalCat(e) === 'plan');
+    const tripPlanItems = Array.from(this._weekPlanItems.values()).reduce(
       (n, arr) => n + (Array.isArray(arr) ? arr.length : 0),
       0,
     );
@@ -4774,42 +4829,61 @@ export class HomeScreen extends LitElement {
     );
     const rows = [
       { id: 'trip', label: 'Trips', count: trips.length },
-      { id: 'plan', label: 'Plans', count: planTotal },
+      { id: 'plan', label: 'Plans', count: tripPlanItems + planEvents.length },
       { id: 'holiday', label: 'Holidays', count: holidays.length },
-      { id: 'event', label: 'Events', count: customEvents.length },
+      { id: 'event', label: 'Activities', count: activityEvents.length },
       { id: 'celebrate', label: 'Celebrations', count: celebEvents.length },
     ];
+    // One filter chip per distinct custom calendar tag.
+    const tags = this._eventTags();
+    const chip = (cls, id, label, count) => {
+      const on = this._calFilters[id] !== false;
+      return html`
+        <div
+          class=${'cal-filt ' + cls + (on ? '' : ' off')}
+          @click=${() =>
+            (this._calFilters = { ...this._calFilters, [id]: !on })}
+          role="checkbox"
+          aria-checked=${on ? 'true' : 'false'}
+          tabindex="0"
+          @keydown=${(e) => {
+            if (e.key === ' ' || e.key === 'Enter') {
+              e.preventDefault();
+              this._calFilters = { ...this._calFilters, [id]: !on };
+            }
+          }}
+        >
+          <span class="sw">
+            ${on
+              ? html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
+              : ''}
+          </span>
+          <span class="nm">${label}</span>
+          <span class="ct">${count}</span>
+        </div>
+      `;
+    };
     return html`
       <div class="cal-side-h">Calendars</div>
       <div class="cal-filt-list">
-        ${rows.map((r) => {
-          const on = this._calFilters[r.id] !== false;
-          return html`
-            <div
-              class=${'cal-filt cat-' + r.id + (on ? '' : ' off')}
-              @click=${() =>
-                (this._calFilters = { ...this._calFilters, [r.id]: !on })}
-              role="checkbox"
-              aria-checked=${on ? 'true' : 'false'}
-              tabindex="0"
-              @keydown=${(e) => {
-                if (e.key === ' ' || e.key === 'Enter') {
-                  e.preventDefault();
-                  this._calFilters = { ...this._calFilters, [r.id]: !on };
-                }
-              }}
-            >
-              <span class="sw">
-                ${on
-                  ? html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`
-                  : ''}
-              </span>
-              <span class="nm">${r.label}</span>
-              <span class="ct">${r.count}</span>
-            </div>
-          `;
-        })}
+        ${rows.map((r) => chip('cat-' + r.id, r.id, r.label, r.count))}
       </div>
+      ${tags.length
+        ? html`
+            <div class="cal-side-h">Tags</div>
+            <div class="cal-filt-list">
+              ${tags.map((t) =>
+                chip(
+                  'cat-tag',
+                  'tag:' + t,
+                  t,
+                  events.filter((e) => String(e?.calTag ?? '').trim() === t)
+                    .length,
+                ),
+              )}
+            </div>
+          `
+        : ''}
     `;
   }
 
@@ -4885,12 +4959,14 @@ export class HomeScreen extends LitElement {
       const d = parseLocalDate(ev.date);
       if (!d) continue;
       if (d < sunday || d > sat) continue;
-      const cat = (ev.type === 'birthday' || ev.type === 'anniversary')
-        ? 'celebrate' : 'event';
+      if (!this._tagVisible(ev)) continue;
+      const cat = this._eventCalCat(ev);
       if (!this._calFilters[cat]) continue;
       allDay.push({
         cat,
-        title: ev.title || (cat === 'celebrate' ? 'Celebration' : 'Event'),
+        title:
+          ev.title ||
+          (cat === 'celebrate' ? 'Celebration' : cat === 'plan' ? 'Plan' : 'Event'),
         colStart: d.getDay() + 2,
         span: 1,
         ref: ev,
@@ -5125,12 +5201,18 @@ export class HomeScreen extends LitElement {
               const d = parseLocalDate(ev.date);
               if (!d) continue;
               if (d < wkStart || d > wkEnd) continue;
-              const cat = (ev.type === 'birthday' || ev.type === 'anniversary')
-                ? 'celebrate' : 'event';
+              if (!this._tagVisible(ev)) continue;
+              const cat = this._eventCalCat(ev);
               if (!this._calFilters[cat]) continue;
               items.push({
                 cat,
-                title: ev.title || (cat === 'celebrate' ? 'Celebration' : 'Event'),
+                title:
+                  ev.title ||
+                  (cat === 'celebrate'
+                    ? 'Celebration'
+                    : cat === 'plan'
+                      ? 'Plan'
+                      : 'Event'),
                 colStart: dayDiff(d, wkStart) + 1,
                 span: 1,
                 ref: ev,
@@ -5291,7 +5373,7 @@ export class HomeScreen extends LitElement {
             // chronological-by-soonest. Type is conveyed per row by
             // <event-row> itself.
             const sorted = filteredEvents
-              .slice()
+              .filter((e) => this._isCelebrationEvent(e) && this._tagVisible(e))
               .sort((a, b) => String(a.date).localeCompare(String(b.date)));
             return html`
               <glass-panel padding="md" variant="strong">

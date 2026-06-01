@@ -20,6 +20,8 @@ export class SchoolImportModal extends LitElement {
     _events: { state: true },
     _err: { state: true },
     _count: { state: true },
+    _category: { state: true }, // plan | activity | celebration
+    _tag: { state: true }, // optional custom calendar tag
   };
 
   constructor() {
@@ -33,6 +35,8 @@ export class SchoolImportModal extends LitElement {
     this._events = [];
     this._err = '';
     this._count = 0;
+    this._category = 'plan'; // default: imported dates land as Plans
+    this._tag = '';
   }
 
   willUpdate(changed) {
@@ -113,6 +117,7 @@ export class SchoolImportModal extends LitElement {
     try {
       const n = await dataStore.importSchoolEvents(
         sel.map((e) => ({ date: e.date, title: e.title.trim(), type: e.type })),
+        { category: this._category, tag: this._tag },
       );
       this._count = n;
       this._phase = 'done';
@@ -233,6 +238,55 @@ export class SchoolImportModal extends LitElement {
     @keyframes sp {
       to { transform: rotate(360deg); }
     }
+    .catbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 14px;
+    }
+    .catseg {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .catlbl {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-right: 2px;
+    }
+    .catopt {
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--glass-border);
+      background: var(--glass-fill);
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+    .catopt.on {
+      background: rgba(61, 155, 143, 0.28);
+      color: var(--bubble-link-pb);
+      border-color: rgba(61, 155, 143, 0.55);
+    }
+    .tagin {
+      flex: 1;
+      min-width: 170px;
+      background: rgba(255, 248, 235, 0.06);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      border-radius: var(--radius-input);
+      padding: 8px 12px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      outline: none;
+    }
+    .tagin::placeholder { color: var(--text-tertiary); }
+    .tagin:focus { border-color: rgba(61, 155, 143, 0.5); }
     .list {
       max-height: 52vh;
       overflow-y: auto;
@@ -425,6 +479,32 @@ export class SchoolImportModal extends LitElement {
                   any you don't want, fix a date or title if Pebble got it
                   slightly wrong, then add them.
                 </p>
+                <div class="catbar">
+                  <div class="catseg" role="group" aria-label="Add these as">
+                    <span class="catlbl">Add as</span>
+                    ${[
+                      ['plan', 'Plans'],
+                      ['activity', 'Activities'],
+                      ['celebration', 'Celebrations'],
+                    ].map(
+                      ([id, label]) => html`<button
+                        type="button"
+                        class="catopt ${this._category === id ? 'on' : ''}"
+                        @click=${() => (this._category = id)}
+                      >
+                        ${label}
+                      </button>`,
+                    )}
+                  </div>
+                  <input
+                    class="tagin"
+                    type="text"
+                    .value=${this._tag}
+                    maxlength="60"
+                    placeholder="Tag (optional), e.g. Daycare 2026"
+                    @input=${(e) => (this._tag = e.target.value)}
+                  />
+                </div>
                 <div class="list">
                   ${this._events.map(
                     (ev, i) => html`<div class="row ${ev._sel ? '' : 'off'}">

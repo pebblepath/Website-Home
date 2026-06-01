@@ -1917,8 +1917,14 @@ class FamilyDataStore extends EventTarget {
   /** Write the parent-confirmed subset as familyEvents tagged
    *  source:'school-import'. They're family-wide (personIds = the
    *  whole ring) and ring-visible ('extended') so everyone sees
-   *  school closures/holidays. */
-  async importSchoolEvents(list) {
+   *  school closures/holidays.
+   *
+   *  `opts.category` ('plan' | 'activity' | 'celebration', default
+   *  'plan') drives the calendar bucket + keeps them OUT of the
+   *  Celebrations feed unless the user explicitly chose celebration.
+   *  `opts.tag` is an optional custom calendar tag (e.g. "Daycare 2026
+   *  schedule") stamped on every imported row as `calTag`. */
+  async importSchoolEvents(list, opts = {}) {
     if (!db || !this._currentFamilyId) throw new Error('No family yet.');
     const uid = auth?.currentUser?.uid;
     if (!uid) throw new Error('Not signed in.');
@@ -1929,6 +1935,9 @@ class FamilyDataStore extends EventTarget {
       : [];
     const personIds = [...new Set([...memberIds, ...cairnIds, uid])];
     const visibleTo = computeVisibleTo('extended', fam, uid);
+    const allowed = ['plan', 'activity', 'celebration'];
+    const category = allowed.includes(opts.category) ? opts.category : 'plan';
+    const calTag = String(opts.tag ?? '').trim().slice(0, 60);
     const col = collection(
       db,
       'families',
@@ -1950,6 +1959,8 @@ class FamilyDataStore extends EventTarget {
           title: String(e.title).trim().slice(0, 120),
           date: e.date,
           type: e.type || 'other',
+          category,
+          ...(calTag ? { calTag } : {}),
           source: 'school-import',
           personIds,
           visibility: 'extended',

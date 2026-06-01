@@ -110,6 +110,17 @@ export class EventRow extends LitElement {
       color: var(--text-secondary);
       margin-top: 2px;
     }
+    /* custom calendar tag (e.g. "Daycare 2026 schedule") */
+    .tagpill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(198, 123, 92, 0.16);
+      color: var(--ink-terracotta);
+      font-size: 11px;
+      font-weight: 600;
+      margin-right: 6px;
+    }
     .date {
       font-size: 13px;
       font-weight: 600;
@@ -201,7 +212,13 @@ export class EventRow extends LitElement {
                 </span>`
               : ''}
           </div>
-          ${e.subtitle ? html`<div class="meta">${e.subtitle}</div>` : ''}
+          ${e.calTag || e.subtitle
+            ? html`<div class="meta">
+                ${e.calTag
+                  ? html`<span class="tagpill">${e.calTag}</span>`
+                  : ''}${e.subtitle ?? ''}
+              </div>`
+            : ''}
         </div>
         <div class="date">
           ${dt.day}
