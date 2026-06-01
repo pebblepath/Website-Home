@@ -95,6 +95,17 @@ export class SchoolImportModal extends LitElement {
     );
   }
 
+  get _allSelected() {
+    return this._events.length > 0 && this._events.every((e) => e._sel);
+  }
+
+  // Select-all / unselect-all toggle for the review list — flips every
+  // row to the opposite of the current all-selected state.
+  _toggleAll() {
+    const next = !this._allSelected;
+    this._events = this._events.map((e) => ({ ...e, _sel: next }));
+  }
+
   async _confirm() {
     const sel = this._selected;
     if (!sel.length) return;
@@ -292,7 +303,25 @@ export class SchoolImportModal extends LitElement {
       margin-top: 18px;
       flex-wrap: wrap;
     }
+    .foot-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
     .selinfo { font-size: 12.5px; color: var(--text-secondary); }
+    .selall {
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-teal);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .selall:hover { color: var(--bubble-link-pb); }
     .actions { display: flex; gap: 10px; }
     .btn-primary {
       padding: 10px 18px;
@@ -421,9 +450,14 @@ export class SchoolImportModal extends LitElement {
                   )}
                 </div>
                 <div class="foot">
-                  <span class="selinfo"
-                    >${this._selected.length} selected</span
-                  >
+                  <div class="foot-left">
+                    <span class="selinfo"
+                      >${this._selected.length} selected</span
+                    >
+                    <button class="selall" @click=${() => this._toggleAll()}>
+                      ${this._allSelected ? 'Unselect all' : 'Select all'}
+                    </button>
+                  </div>
                   <div class="actions">
                     <button class="btn-ghost" @click=${this._cancel}>
                       Cancel
