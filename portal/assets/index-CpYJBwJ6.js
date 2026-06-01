@@ -5818,7 +5818,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       text-transform: uppercase;
       letter-spacing: 0.06em;
     }
-  `);customElements.define("event-row",Ye);class He extends z{constructor(){super();_(this,"_accept","application/pdf,image/*,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword");this.open=!1,this._reset()}_reset(){this._phase="pick",this._events=[],this._err="",this._count=0}willUpdate(t){t.has("open")&&this.open&&this._reset()}_cancel(){this.dispatchEvent(new Event("cancel"))}async _onFile(t){var r;const i=(r=t.target.files)==null?void 0:r[0];if(t.target.value="",!!i){this._phase="working",this._err="";try{const{storagePath:a,fileType:s}=await m.uploadSchoolCalendar(i),o=await m.extractSchoolCalendarEvents(a,s);if(!o.length){this._phase="error",this._err="Couldn't find any dated events in that file. Try a clearer PDF or a screenshot of the calendar.";return}this._events=o.map(d=>({...d,_sel:!0})).sort((d,l)=>String(d.date).localeCompare(String(l.date))),this._phase="review"}catch(a){console.error("school import failed:",a),this._phase="error",this._err=(a==null?void 0:a.code)==="functions/permission-denied"?"You're not a member of this family.":(a==null?void 0:a.code)==="storage/unauthorized"?"The upload rule needs publishing — ask the team to deploy storage.rules.":(a==null?void 0:a.code)==="functions/not-found"||(a==null?void 0:a.code)==="functions/internal"?"The importer isn't available right now — try again in a moment.":(a==null?void 0:a.message)??"Something went wrong — try again."}}}_patch(t,i,r){const a=this._events.slice();a[t]={...a[t],[i]:r},this._events=a}get _selected(){return this._events.filter(t=>t._sel&&/^\d{4}-\d{2}-\d{2}$/.test(t.date)&&t.title.trim())}async _confirm(){const t=this._selected;if(t.length){this._phase="working";try{const i=await m.importSchoolEvents(t.map(r=>({date:r.date,title:r.title.trim(),type:r.type})));this._count=i,this._phase="done",y(`Added ${i} event${i===1?"":"s"} to the calendar.`),this.dispatchEvent(new CustomEvent("added",{detail:i}))}catch(i){console.error("importSchoolEvents failed:",i),this._phase="error",this._err=(i==null?void 0:i.code)==="permission-denied"?"Couldn't save — you may not have permission.":(i==null?void 0:i.message)??"Couldn't save the events — try again."}}}render(){return this.open?n`
+  `);customElements.define("event-row",Ye);class He extends z{constructor(){super();_(this,"_accept","application/pdf,image/*,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword");this.open=!1,this._reset()}_reset(){this._phase="pick",this._events=[],this._err="",this._count=0}willUpdate(t){t.has("open")&&this.open&&this._reset()}_cancel(){this.dispatchEvent(new Event("cancel"))}async _onFile(t){var r;const i=(r=t.target.files)==null?void 0:r[0];if(t.target.value="",!!i){this._phase="working",this._err="";try{const{storagePath:a,fileType:s}=await m.uploadSchoolCalendar(i),o=await m.extractSchoolCalendarEvents(a,s);if(!o.length){this._phase="error",this._err="Couldn't find any dated events in that file. Try a clearer PDF or a screenshot of the calendar.";return}this._events=o.map(d=>({...d,_sel:!0})).sort((d,l)=>String(d.date).localeCompare(String(l.date))),this._phase="review"}catch(a){console.error("school import failed:",a),this._phase="error",this._err=(a==null?void 0:a.code)==="functions/permission-denied"?"You're not a member of this family.":(a==null?void 0:a.code)==="storage/unauthorized"?"The upload rule needs publishing — ask the team to deploy storage.rules.":(a==null?void 0:a.code)==="functions/not-found"||(a==null?void 0:a.code)==="functions/internal"?"The importer isn't available right now — try again in a moment.":(a==null?void 0:a.message)??"Something went wrong — try again."}}}_patch(t,i,r){const a=this._events.slice();a[t]={...a[t],[i]:r},this._events=a}get _selected(){return this._events.filter(t=>t._sel&&/^\d{4}-\d{2}-\d{2}$/.test(t.date)&&t.title.trim())}get _allSelected(){return this._events.length>0&&this._events.every(t=>t._sel)}_toggleAll(){const t=!this._allSelected;this._events=this._events.map(i=>({...i,_sel:t}))}async _confirm(){const t=this._selected;if(t.length){this._phase="working";try{const i=await m.importSchoolEvents(t.map(r=>({date:r.date,title:r.title.trim(),type:r.type})));this._count=i,this._phase="done",y(`Added ${i} event${i===1?"":"s"} to the calendar.`),this.dispatchEvent(new CustomEvent("added",{detail:i}))}catch(i){console.error("importSchoolEvents failed:",i),this._phase="error",this._err=(i==null?void 0:i.code)==="permission-denied"?"Couldn't save — you may not have permission.":(i==null?void 0:i.message)??"Couldn't save the events — try again."}}}render(){return this.open?n`
       <div class="backdrop" @click=${this._cancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -5886,9 +5886,14 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     </div>`)}
                 </div>
                 <div class="foot">
-                  <span class="selinfo"
-                    >${this._selected.length} selected</span
-                  >
+                  <div class="foot-left">
+                    <span class="selinfo"
+                      >${this._selected.length} selected</span
+                    >
+                    <button class="selall" @click=${()=>this._toggleAll()}>
+                      ${this._allSelected?"Unselect all":"Select all"}
+                    </button>
+                  </div>
                   <div class="actions">
                     <button class="btn-ghost" @click=${this._cancel}>
                       Cancel
@@ -6098,7 +6103,25 @@ They'll lose access to shared trips, celebrations and any read-only child access
       margin-top: 18px;
       flex-wrap: wrap;
     }
+    .foot-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
     .selinfo { font-size: 12.5px; color: var(--text-secondary); }
+    .selall {
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-family: var(--font-body);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-teal);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .selall:hover { color: var(--bubble-link-pb); }
     .actions { display: flex; gap: 10px; }
     .btn-primary {
       padding: 10px 18px;
@@ -7225,13 +7248,13 @@ They'll lose access to shared trips, celebrations and any read-only child access
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
                         </span>
                         <h3>Plan trip activities</h3>
-                        <p>Ideas for your upcoming trips, shaped around the family.</p>
+                        <p>Ideas for your upcoming trips.</p>
                       </button>
                       ${this._voiceSupported?n`<button
                             class="lcard"
                             @click=${()=>this._toggleVoice()}
                           >
-                            <span class="lico glow">
+                            <span class="lico teal">
                               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h2l2-7 4 14 3-9 2 4h5"/></svg>
                             </span>
                             <h3>Talk with Pebble</h3>
@@ -7249,7 +7272,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             @submit=${o=>{o.preventDefault(),this._send()}}
           >
             <textarea
-              placeholder="Ask Pebble about ${e}…"
+              placeholder="Ask Pebble anything…"
               .value=${this._input}
               @input=${o=>this._input=o.target.value}
               @keydown=${o=>{o.key==="Enter"&&!o.shiftKey&&(o.preventDefault(),this._send())}}
@@ -7840,7 +7863,10 @@ They'll lose access to shared trips, celebrations and any read-only child access
       text-align: center;
       padding: 16px 14px 15px;
       border-radius: 20px;
-      background: var(--glass-fill-strong);
+      /* ~50% more transparent than the usual glass-fill-strong (light
+         0.7 / dark 0.12), so the mesh reads through more. Per-theme so
+         the halving is exact in both. */
+      background: rgba(255, 255, 255, 0.34);
       border: 1px solid var(--glass-border);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
@@ -7851,6 +7877,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       transition: transform 0.18s ease, box-shadow 0.18s ease,
         border-color 0.18s ease;
     }
+    .landing.dark .lcard { background: rgba(255, 248, 235, 0.06); }
     .lcard:hover {
       transform: translateY(-2px);
       box-shadow: var(--glass-shadow-lifted);
@@ -7870,10 +7897,10 @@ They'll lose access to shared trips, celebrations and any read-only child access
       margin: 0;
     }
 
-    /* simple gradient-chip glyph — a rounded square in the card's
-       accent gradient with a white line icon. No card-tile motif on
-       Portal (that motif belongs on iOS, where the milestone cards are
-       actually swiped). */
+    /* glyph that belongs to the card — an accent-tinted REGION of the
+       card surface (low-opacity, no shadow, no border) holding an
+       accent-coloured line icon. Reads as carved from the card, not a
+       solid chip superimposed on top. Theme-aware ink colours. */
     .lico {
       display: flex;
       align-items: center;
@@ -7882,13 +7909,10 @@ They'll lose access to shared trips, celebrations and any read-only child access
       height: 46px;
       margin: 0 auto 12px;
       border-radius: 14px;
-      color: #fff;
-      box-shadow: 0 6px 14px rgba(31, 92, 84, 0.18);
     }
-    .lico svg { width: 22px; height: 22px; display: block; }
-    .lico.teal { background: linear-gradient(135deg, #3d9b8f, #1f5c54); }
-    .lico.terra { background: linear-gradient(135deg, #d18a6c, #a8624a); }
-    .lico.glow { background: linear-gradient(135deg, #5cbfb0, #2d7a70); }
+    .lico svg { width: 24px; height: 24px; display: block; }
+    .lico.teal { background: rgba(61, 155, 143, 0.13); color: var(--ink-teal); }
+    .lico.terra { background: rgba(198, 123, 92, 0.15); color: var(--ink-terracotta); }
 
     /* compact (FAB) — shrink the stone + greeting, tighten the grid */
     .pebble-wrap.compact .landing { padding: 6px 2px; }
@@ -14427,4 +14451,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}_(At,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},familyDailyCard:{state:!0},pebbleAnchors:{state:!0},pebbleRhythms:{state:!0},pebblePatterns:{state:!0},pebbleLiveContext:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",At);
-//# sourceMappingURL=index-DVX3LoWe.js.map
+//# sourceMappingURL=index-CpYJBwJ6.js.map
