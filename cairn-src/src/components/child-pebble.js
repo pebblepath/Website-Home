@@ -574,7 +574,7 @@ export class ChildPebble extends LitElement {
       display: flex;
       flex-direction: column;
       gap: 4px;
-      height: min(800px, calc(100vh - 84px));
+      height: calc(100vh - 84px);
       padding: 18px 14px 18px 24px;
       border-right: 1px solid var(--glass-border);
       overflow-y: auto;
@@ -778,22 +778,22 @@ export class ChildPebble extends LitElement {
     /* Portal v4 — Pebble is the whole tab: no card, no page header,
        edge-to-edge up to the nav bar; the "Private to parents" pill
        is integrated into the top of the chat surface.
-       Height is CAPPED at ~800px below the nav bar (not endless) —
-       the thread scrolls internally inside that box; the composer
-       stays pinned at the bottom. min() so short viewports shrink to
-       fit instead of pushing the page into its own scroll. */
+       Fills the viewport below the nav bar so the composer sits at the
+       bottom of the screen (was capped at 800px, which left a gap below
+       the composer on tall displays). The thread scrolls internally;
+       the composer stays pinned at the bottom. */
     .chatpane {
       display: flex;
       flex-direction: column;
       flex: 1;
       min-width: 0;
-      height: min(800px, calc(100vh - 84px));
+      height: calc(100vh - 84px);
       padding: 14px 24px 0;
     }
     @media (max-width: 720px) {
       .chatpane {
         padding: 10px 16px 0;
-        height: min(800px, calc(100vh - 150px));
+        height: calc(100vh - 150px);
       }
     }
     .toprow {
@@ -1351,7 +1351,11 @@ export class ChildPebble extends LitElement {
     const hasThread = this._session.length > 0;
     const sessions = this._sessionList();
     const active = this._activeSession();
-    const canTogglePrivacy = !!(active && active._real);
+    // Toggleable on the landing / a brand-new chat too (no active
+    // session yet) so privacy can be set BEFORE the first question —
+    // the choice rides into createPebbleSession on send. Only the
+    // read-only "Earlier chats" legacy bucket disables it.
+    const canTogglePrivacy = !active || !!active._real;
     return html`
       <div class="pebble-wrap ${this.compact ? 'compact' : ''}">
         <aside class="rail ${this._railOpen ? 'open' : ''}">
@@ -1422,7 +1426,7 @@ export class ChildPebble extends LitElement {
               @click=${() => this._togglePrivacy(false)}
               title="Both parents see this chat"
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-3-3.87M9 21v-2a4 4 0 0 1 3-3.87"/><circle cx="9" cy="7" r="3"/><circle cx="17" cy="8" r="2.4"/></svg>
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
               Family
             </button>
             <button
