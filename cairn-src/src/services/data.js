@@ -1915,9 +1915,10 @@ class FamilyDataStore extends EventTarget {
   }
 
   /** Write the parent-confirmed subset as familyEvents tagged
-   *  source:'school-import'. They're family-wide (personIds = the
-   *  whole ring) and ring-visible ('extended') so everyone sees
-   *  school closures/holidays.
+   *  source:'school-import'. Defaults (2026-05-31, Thomas): type
+   *  'custom' (shows as "Other" in the editor), visibility 'family'
+   *  (parents/household only, NOT the extended ring), and recurring
+   *  false (a dated schedule, not an annual event).
    *
    *  `opts.category` ('plan' | 'activity' | 'celebration', default
    *  'plan') drives the calendar bucket + keeps them OUT of the
@@ -1934,7 +1935,8 @@ class FamilyDataStore extends EventTarget {
       ? fam.cairnMemberIds
       : [];
     const personIds = [...new Set([...memberIds, ...cairnIds, uid])];
-    const visibleTo = computeVisibleTo('extended', fam, uid);
+    // Parents/household only by default (not the extended ring).
+    const visibleTo = computeVisibleTo('family', fam, uid);
     const allowed = ['plan', 'activity', 'celebration'];
     const category = allowed.includes(opts.category) ? opts.category : 'plan';
     const calTag = String(opts.tag ?? '').trim().slice(0, 60);
@@ -1958,12 +1960,13 @@ class FamilyDataStore extends EventTarget {
         await addDoc(col, {
           title: String(e.title).trim().slice(0, 120),
           date: e.date,
-          type: e.type || 'other',
+          type: 'custom', // shows as "Other" in the event editor
+          recurring: false, // a dated schedule, not an annual event
           category,
           ...(calTag ? { calTag } : {}),
           source: 'school-import',
           personIds,
-          visibility: 'extended',
+          visibility: 'family', // parents/household only
           visibleTo,
           createdBy: uid,
           createdAt: serverTimestamp(),

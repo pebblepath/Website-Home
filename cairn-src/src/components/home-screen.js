@@ -241,6 +241,9 @@ export class HomeScreen extends LitElement {
     // ring stack; Children + Pebble are the app-companion surfaces.
     this._activeTab = 'today';
     this._refreshingFamilyBrief = false;
+    // Self-heal guard: generate today's brief once if it's missing
+    // (e.g. the nightly CF didn't run). Plain field, not reactive.
+    this._autoBriefAttempted = false;
     this._weekendOpen = false;
     this._wpkOpen = false;
     this._packingTemplates = [];
@@ -2786,6 +2789,29 @@ export class HomeScreen extends LitElement {
        even in Portal dark mode), pebble bullet markers + 2-tone text. */
     .family-brief {
       margin-bottom: 18px;
+    }
+    /* Transient "self-heal" state while today's brief is generated. */
+    .fb-prep-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      justify-content: center;
+      min-height: 120px;
+      padding: 22px 24px;
+      border-radius: var(--radius-card);
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border);
+    }
+    .fb-tag-lite {
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--ink-teal);
+    }
+    .fb-prep-text {
+      font-size: 14px;
+      color: var(--text-secondary);
     }
     .fb-card {
       position: relative;
@@ -6297,7 +6323,16 @@ export class HomeScreen extends LitElement {
     // per-child card exists + iOS shows it via `familyDailyCard ?? dailyCard`,
     // but the Portal only read familyDailyCard). Mirrors the iOS fallback.
     const fc = cd.familyDailyCard ?? cd.dailyCard;
-    if (!fc) return '';
+    if (!fc) {
+      // Self-heal: today's brief is missing (e.g. the nightly generation
+      // CF didn't run). Generate it on-demand, once, mirroring how iOS
+      // generates on a cache-miss. Show a brief "preparing" state while
+      // it runs; if it can't produce one, fall back to hiding the card.
+      if (!this.preview) {
+        this.updateComplete.then(() => this._ensureBriefForToday());
+      }
+      return this._refreshingFamilyBrief ? this._renderBriefPreparing() : '';
+    }
     const bullets = Array.isArray(fc.bullets) ? fc.bullets : [];
     const spinning = this._refreshingFamilyBrief ? 'spinning' : '';
     const fresh = this._briefFreshLabel(fc);
@@ -6702,6 +6737,41 @@ export class HomeScreen extends LitElement {
     } finally {
       this._refreshingFamilyBrief = false;
     }
+  }
+
+  /** Self-heal — generate today's brief on-demand when it's missing
+   *  (the nightly CF didn't run / hasn't yet). Fires at most once per
+   *  session. Waits ~1.5s first so a slow Firestore snapshot delivering
+   *  an EXISTING card wins before we generate a duplicate. */
+  _ensureBriefForToday() {
+    if (this.preview || this._autoBriefAttempted || this._refreshingFamilyBrief) {
+      return;
+    }
+    this._autoBriefAttempted = true;
+    setTimeout(async () => {
+      const cd = this._childData();
+      if (cd.familyDailyCard || cd.dailyCard) return; // a card arrived
+      this._refreshingFamilyBrief = true;
+      try {
+        await dataStore.refreshFamilyBrief();
+        // The live listener picks up the new card → re-render shows it.
+      } catch (err) {
+        console.warn('[Portal] auto-generate brief failed:', err?.message ?? err);
+      } finally {
+        this._refreshingFamilyBrief = false;
+      }
+    }, 1500);
+  }
+
+  _renderBriefPreparing() {
+    return html`
+      <section class="family-brief">
+        <div class="fb-prep-card">
+          <span class="fb-tag-lite">FAMILY BRIEF</span>
+          <span class="fb-prep-text">Pebble is preparing today's brief…</span>
+        </div>
+      </section>
+    `;
   }
 
   // ── 2026-05-28 — Next-trip card (replaces the per-child Pebble

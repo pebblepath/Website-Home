@@ -56,7 +56,6 @@ export class EventForm extends LitElement {
       date: today,
       personIds: [],
       recurring: true,
-      subtitle: '',
       notes: '',
       visibility: 'family',
     };
@@ -71,7 +70,6 @@ export class EventForm extends LitElement {
       date: event.date ?? new Date().toISOString().slice(0, 10),
       personIds: Array.isArray(event.personIds) ? [...event.personIds] : [],
       recurring: event.recurring ?? true,
-      subtitle: event.subtitle ?? '',
       notes: event.notes ?? '',
       visibility: event.visibility ?? 'family',
     };
@@ -151,18 +149,19 @@ export class EventForm extends LitElement {
     textarea {
       width: 100%;
       min-width: 0;
-      background: rgba(255, 248, 235, 0.06);
-      border: 1px solid rgba(255, 248, 235, 0.16);
+      background: var(--field-bg);
+      border: 1px solid var(--glass-border-strong);
       border-radius: var(--radius-input);
       padding: 11px 14px;
       color: var(--text-primary);
       font-family: var(--font-body);
       font-size: 16px;
+      transition: border-color 200ms ease, background 200ms ease;
     }
     input:focus, textarea:focus {
       outline: none;
       border-color: var(--terracotta);
-      background: rgba(255, 248, 235, 0.1);
+      background: var(--glass-fill-strong);
     }
     textarea { min-height: 60px; resize: vertical; }
     .row-2 {
@@ -177,9 +176,9 @@ export class EventForm extends LitElement {
       display: inline-flex;
       padding: 3px;
       gap: 2px;
-      background: rgba(255, 248, 235, 0.06);
-      border: 1px solid rgba(255, 248, 235, 0.14);
-      border-radius: var(--radius-pill);
+      background: var(--field-bg);
+      border: 1px solid var(--glass-border-strong);
+      border-radius: var(--radius-input);
     }
     .seg button {
       background: transparent;
@@ -189,7 +188,7 @@ export class EventForm extends LitElement {
       font: inherit;
       font-size: 13px;
       font-weight: 500;
-      border-radius: var(--radius-pill);
+      border-radius: calc(var(--radius-input) - 4px);
       cursor: pointer;
     }
     .seg button.active {
@@ -207,8 +206,8 @@ export class EventForm extends LitElement {
       align-items: center;
       gap: 8px;
       padding: 5px 12px 5px 5px;
-      background: rgba(255, 248, 235, 0.05);
-      border: 1px solid rgba(255, 248, 235, 0.12);
+      background: var(--field-bg);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius-pill);
       cursor: pointer;
       font-size: 13px;
@@ -218,9 +217,10 @@ export class EventForm extends LitElement {
       border-color: var(--glass-border-strong);
       color: var(--text-primary);
     }
+    /* Selected = teal, matching the Activity editor's attendee chips. */
     .person-chip.on {
-      background: rgba(212, 168, 67, 0.16);
-      border-color: rgba(212, 168, 67, 0.45);
+      background: rgba(61, 155, 143, 0.18);
+      border-color: rgba(61, 155, 143, 0.5);
       color: var(--text-primary);
     }
     .toggle-row {
@@ -228,8 +228,8 @@ export class EventForm extends LitElement {
       align-items: center;
       gap: 10px;
       padding: 12px 14px;
-      background: rgba(255, 248, 235, 0.04);
-      border: 1px solid rgba(255, 248, 235, 0.1);
+      background: var(--field-bg);
+      border: 1px solid var(--glass-border);
       border-radius: var(--radius-input);
       cursor: pointer;
       user-select: none;
@@ -348,7 +348,6 @@ export class EventForm extends LitElement {
         detail: {
           ...d,
           title: d.title.trim(),
-          subtitle: d.subtitle.trim(),
           notes: d.notes.trim(),
         },
       }),
@@ -465,30 +464,23 @@ export class EventForm extends LitElement {
               `
             : ''}
 
-          <div class="row-2">
-            <div class="field">
-              <label>Visibility</label>
-              <div class="seg">
-                ${['personal', 'family', 'extended'].map(
-                  (v) => html`
-                    <button
-                      class=${d.visibility === v ? 'active' : ''}
-                      @click=${() => this._set('visibility', v)}
-                    >
-                      ${v === 'personal' ? 'Just me' : v === 'family' ? 'Family' : 'Extended'}
-                    </button>
-                  `,
-                )}
-              </div>
-            </div>
-            <div class="field">
-              <label>Subtitle (optional)</label>
-              <input
-                type="text"
-                placeholder=${d.type === 'anniversary' ? 'e.g. 30 years' : 'e.g. surprise party'}
-                .value=${d.subtitle}
-                @input=${(e) => this._set('subtitle', e.target.value)}
-              />
+          <div class="field">
+            <label>Visibility</label>
+            <div class="seg">
+              ${['personal', 'family', 'extended'].map(
+                (v) => html`
+                  <button
+                    class=${d.visibility === v ? 'active' : ''}
+                    @click=${() => this._set('visibility', v)}
+                  >
+                    ${v === 'personal'
+                      ? 'Just Me'
+                      : v === 'family'
+                      ? 'Participants'
+                      : 'Everyone'}
+                  </button>
+                `,
+              )}
             </div>
           </div>
 
