@@ -118,7 +118,12 @@ export class SchoolImportModal extends LitElement {
     this._phase = 'working';
     try {
       const n = await dataStore.importSchoolEvents(
-        sel.map((e) => ({ date: e.date, title: e.title.trim(), type: e.type })),
+        sel.map((e) => ({
+          date: e.date,
+          title: e.title.trim(),
+          type: e.type,
+          description: e.description,
+        })),
         { category: this._category, tag: this._tag },
       );
       this._count = n;

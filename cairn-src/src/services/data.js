@@ -1957,6 +1957,9 @@ class FamilyDataStore extends EventTarget {
     let n = 0;
     await Promise.all(
       clean.map(async (e) => {
+        // 4-5 sentence description the extractor pulled from the doc
+        // → the event's notes (shown in the iOS quick-view + editor).
+        const notes = String(e.description ?? '').trim().slice(0, 1000);
         await addDoc(col, {
           title: String(e.title).trim().slice(0, 120),
           date: e.date,
@@ -1964,6 +1967,7 @@ class FamilyDataStore extends EventTarget {
           recurring: false, // a dated schedule, not an annual event
           category,
           ...(calTag ? { calTag } : {}),
+          ...(notes ? { notes } : {}),
           source: 'school-import',
           personIds,
           visibility: 'family', // parents/household only
