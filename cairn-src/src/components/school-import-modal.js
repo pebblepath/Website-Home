@@ -16,6 +16,7 @@ import { toast } from '../services/toast.js';
 export class SchoolImportModal extends LitElement {
   static properties = {
     open: { type: Boolean, reflect: true },
+    knownTags: { type: Array }, // existing calendar tags, for quick reuse
     _phase: { state: true }, // pick | working | review | done | error
     _events: { state: true },
     _err: { state: true },
@@ -27,6 +28,7 @@ export class SchoolImportModal extends LitElement {
   constructor() {
     super();
     this.open = false;
+    this.knownTags = [];
     this._reset();
   }
 
@@ -287,6 +289,29 @@ export class SchoolImportModal extends LitElement {
     }
     .tagin::placeholder { color: var(--text-tertiary); }
     .tagin:focus { border-color: rgba(61, 155, 143, 0.5); }
+    .tagsuggest {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin: -4px 0 14px;
+    }
+    .tslbl { font-size: 12px; color: var(--text-tertiary); }
+    .tschip {
+      padding: 5px 11px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(198, 123, 92, 0.4);
+      background: rgba(198, 123, 92, 0.12);
+      color: var(--ink-terracotta);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .tschip.on {
+      background: rgba(198, 123, 92, 0.3);
+      border-color: rgba(198, 123, 92, 0.6);
+    }
     .list {
       max-height: 52vh;
       overflow-y: auto;
@@ -505,6 +530,21 @@ export class SchoolImportModal extends LitElement {
                     @input=${(e) => (this._tag = e.target.value)}
                   />
                 </div>
+                ${(this.knownTags ?? []).length
+                  ? html`<div class="tagsuggest">
+                      <span class="tslbl">Reuse a tag</span>
+                      ${this.knownTags.map(
+                        (t) => html`<button
+                          type="button"
+                          class="tschip ${this._tag === t ? 'on' : ''}"
+                          @click=${() =>
+                            (this._tag = this._tag === t ? '' : t)}
+                        >
+                          ${t}
+                        </button>`,
+                      )}
+                    </div>`
+                  : ''}
                 <div class="list">
                   ${this._events.map(
                     (ev, i) => html`<div class="row ${ev._sel ? '' : 'off'}">

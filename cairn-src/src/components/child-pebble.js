@@ -1361,10 +1361,7 @@ export class ChildPebble extends LitElement {
             New chat
           </button>
           ${sessions.length === 0
-            ? html`<div class="rail-empty">
-                No chats yet — start one and ask Pebble anything about
-                ${name}.
-              </div>`
+            ? ''
             : sessions.map(
                 (s) => html`<div
                   class="rail-item ${s.id === this._activeSessionId

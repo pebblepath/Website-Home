@@ -4575,9 +4575,18 @@ export class HomeScreen extends LitElement {
     if (!item || !item.ref) return;
     if (item.cat === 'trip') {
       this._openPlanner(item.ref);
-    } else if (item.cat === 'event' || item.cat === 'celebrate') {
-      this._eventFormEvent = item.ref;
-      this._eventFormOpen = true;
+      return;
+    }
+    // familyEvent-backed items — event, celebration, OR a plan/activity
+    // imported as a familyEvent — open the edit form so the full title
+    // is readable + deletable. Trip-bound plan items (ref.tripId) are
+    // NOT familyEvents; they stay managed in the trip planner (noop here).
+    const isFamilyEvent =
+      item.cat === 'event' ||
+      item.cat === 'celebrate' ||
+      (item.cat === 'plan' && !item.ref.tripId);
+    if (isFamilyEvent) {
+      this._openEditEvent(item.ref);
     }
   }
 
@@ -6253,6 +6262,7 @@ export class HomeScreen extends LitElement {
 
       <school-import-modal
         ?open=${this._schoolImportOpen}
+        .knownTags=${this._eventTags()}
         @cancel=${() => (this._schoolImportOpen = false)}
         @added=${() => (this._schoolImportOpen = false)}
       ></school-import-modal>
