@@ -83,6 +83,11 @@ class FamilyDataStore extends EventTarget {
       children: [],
       trips: [],
       events: [],
+      // Activity Unification U3 (2026-06-02) — the unified single-day
+      // items. Holds ALL visible activities (standalone + trip-attached);
+      // the calendar reads the standalone slice (tripId nil), the planner
+      // (later) reads tripId == trip. visibleTo-filtered server-side.
+      activities: [],
       // Public-holiday overlay (Nager.Date, by family.homeLocation
       // .country). NOT persisted — deterministic from country+year,
       // so it's a read-only display layer, never written to the
@@ -127,6 +132,7 @@ class FamilyDataStore extends EventTarget {
     this._unsubChildren = null;
     this._unsubTrips = null;
     this._unsubEvents = null;
+    this._unsubActivities = null;
     this._currentFamilyId = null;
     this._inviteCodeMigratedFamilyId = null;
     this._holidayKey = null;
@@ -197,14 +203,17 @@ class FamilyDataStore extends EventTarget {
         this._unsubChildren?.();
         this._unsubTrips?.();
         this._unsubEvents?.();
+        this._unsubActivities?.();
         this._unsubFamily = null;
         this._unsubChildren = null;
         this._unsubTrips = null;
         this._unsubEvents = null;
+        this._unsubActivities = null;
         this.state.family = null;
         this.state.children = [];
         this.state.trips = [];
         this.state.events = [];
+        this.state.activities = [];
         if (fid) this._subscribeFamily(fid);
       }
       // PP-household resolver — the deliberate INVERSE of the Cairn
@@ -466,6 +475,40 @@ class FamilyDataStore extends EventTarget {
       },
       (err) => {
         console.warn('[Cairn] familyEvents subscription error:', err.code, err.message);
+      },
+    );
+    // Activity Unification U3 — unified activities. Same visibleTo
+    // array-contains filter as trips/events (strict rule). Client-sorts
+    // by day → time → createdAt (mirrors iOS FamilyActivity.order; no
+    // server orderBy → only the automatic single-field index needed).
+    this._unsubActivities = onSnapshot(
+      query(
+        collection(db, 'families', familyId, 'activities'),
+        where('visibleTo', 'array-contains', this._uid),
+      ),
+      (snap) => {
+        this.state.activities = snap.docs
+          .map((d) => {
+            const data = d.data();
+            return {
+              id: d.id,
+              ...data,
+              day: data.day ?? '',
+              createdAt: data.createdAt?.toDate?.() ?? null,
+              updatedAt: data.updatedAt?.toDate?.() ?? null,
+            };
+          })
+          .sort((a, b) => {
+            const dk = String(a.day ?? '').localeCompare(String(b.day ?? ''));
+            if (dk !== 0) return dk;
+            const tk = String(a.time ?? '').localeCompare(String(b.time ?? ''));
+            if (tk !== 0) return tk;
+            return (a.createdAt?.getTime?.() ?? 0) - (b.createdAt?.getTime?.() ?? 0);
+          });
+        this._emit();
+      },
+      (err) => {
+        console.warn('[Cairn] activities subscription error:', err.code, err.message);
       },
     );
   }
@@ -1849,6 +1892,97 @@ class FamilyDataStore extends EventTarget {
     await deleteDoc(doc(db, 'families', this._currentFamilyId, 'familyEvents', eventId));
   }
 
+  // ── Activity Unification — U1 (2026-06-02) ─────────────────────────
+  // THE unified single-day item. Merges the old plan/activity
+  // familyEvents + trip planItems into one collection:
+  //   /families/{fid}/activities/{id}
+  // tripId nil → standalone (family calendar); tripId set → trip planner.
+  //
+  // DORMANT until U2 (calendar reads) + U3 (authoring) wire the UI.
+  // Shipped in U1 so the data layer mirrors iOS FamilyActivity 1-to-1.
+  // Read/write gated by firestore.rules `/activities` (own visibleTo;
+  // author-only update/delete on the trip-attached path).
+
+  /**
+   * Family-wide activities listener. Filters `visibleTo array-contains
+   * uid` (REQUIRED — the strict read rule is query-satisfiable only with
+   * this filter). Returns ALL visible activities (standalone +
+   * trip-attached); consumers partition by `tripId` (calendar = nil,
+   * planner = a specific trip). Sorts CLIENT-SIDE by day → time →
+   * createdAt (mirrors iOS FamilyActivity.order + the planItems
+   * listener), so no server orderBy + no composite index drift (P6-4
+   * lesson). Component/AppShell-managed (subscribe on mount, unsub on
+   * teardown), same as the trips listener.
+   */
+  activitiesListener(onChange) {
+    if (!db || !this._currentFamilyId || !this._uid) return () => {};
+    const q = query(
+      collection(db, 'families', this._currentFamilyId, 'activities'),
+      where('visibleTo', 'array-contains', this._uid),
+    );
+    return onSnapshot(
+      q,
+      (snap) => {
+        const items = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => {
+            const dk = String(a.day ?? '').localeCompare(String(b.day ?? ''));
+            if (dk !== 0) return dk;
+            const tk = String(a.time ?? '').localeCompare(String(b.time ?? ''));
+            if (tk !== 0) return tk;
+            return (
+              (a.createdAt?.toMillis?.() ?? 0) -
+              (b.createdAt?.toMillis?.() ?? 0)
+            );
+          });
+        onChange(items);
+      },
+      (err) => {
+        console.warn('[Portal] activities subscription error:', err.code, err.message);
+        onChange([]);
+      },
+    );
+  }
+
+  /**
+   * Create or update an activity. Pass an `id` to update, omit to create.
+   * Stamps `visibleTo` from the activity's own `visibility` via
+   * `_visibleToFor` (lockstep with saveTrip/saveEvent). For TRIP-ATTACHED
+   * activities the caller is responsible for setting `visibility` =
+   * the parent trip's audience (the authoring layer in U3/U4 does this +
+   * re-syncs on trip audience change); saveActivity is a generic writer.
+   * Stamps an honest `addedBy == uid` on create (rule-enforced); never
+   * mutates it on update (so trip-attached author-only edits hold).
+   */
+  async saveActivity(activity) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    const uid = auth?.currentUser?.uid;
+    if (!uid) throw new Error('Not signed in.');
+    const { id, createdAt, updatedAt, ...rest } = activity;
+    const payload = { ...rest, updatedAt: serverTimestamp() };
+    payload.visibleTo = await this._visibleToFor(
+      rest,
+      this.state.family,
+      rest.addedBy ?? uid, // existing author on update; this user on create
+    );
+    if (id) {
+      await updateDoc(doc(db, 'families', this._currentFamilyId, 'activities', id), payload);
+      return id;
+    }
+    payload.addedBy = uid; // honest author tag (rule-enforced on create)
+    payload.createdAt = serverTimestamp();
+    const ref = await addDoc(
+      collection(db, 'families', this._currentFamilyId, 'activities'),
+      payload,
+    );
+    return ref.id;
+  }
+
+  async deleteActivity(activityId) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    await deleteDoc(doc(db, 'families', this._currentFamilyId, 'activities', activityId));
+  }
+
   // ── School-calendar import (Ellie ①) ──────────────────────────────
   // 3 steps: upload the file → CF extracts candidate events → after
   // the PARENT REVIEW screen, the confirmed subset is written. The CF
@@ -2948,11 +3082,13 @@ class FamilyDataStore extends EventTarget {
     this._unsubChildren?.();
     this._unsubTrips?.();
     this._unsubEvents?.();
+    this._unsubActivities?.();
     this._unsubUser =
       this._unsubFamily =
       this._unsubChildren =
       this._unsubTrips =
       this._unsubEvents =
+      this._unsubActivities =
         null;
     this._teardownPpFamily();
     this._uid = null;

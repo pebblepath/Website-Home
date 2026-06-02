@@ -69,6 +69,7 @@ export class HomeScreen extends LitElement {
     children: { type: Array },
     trips: { type: Array },
     events: { type: Array },
+    activities: { type: Array },
     holidays: { type: Array },
     preview: { type: Boolean },
     // ── PP-household child surface (Children / Today / Pebble) ──
@@ -196,6 +197,7 @@ export class HomeScreen extends LitElement {
     this.children = [];
     this.trips = [];
     this.events = [];
+    this.activities = [];
     this.holidays = [];
     this._connectionMembers = [];
     /** Non-reactive dedup key so `updated()` only re-fetches when the
@@ -286,10 +288,10 @@ export class HomeScreen extends LitElement {
     _t.setHours(0, 0, 0, 0);
     this._displayWeekStart = new Date(_t);
     this._displayWeekStart.setDate(_t.getDate() - _t.getDay());
-    // 2026-05-24 — design 28. All five filters on by default.
+    // 2026-05-24 — design 28; 2026-06-02 Activity Unification U2 — the
+    // `plan` bucket merged INTO `event` (Activities). Four filters now.
     this._calFilters = {
       trip: true,
-      plan: true,
       holiday: true,
       event: true,
       celebrate: true,
@@ -3860,6 +3862,16 @@ export class HomeScreen extends LitElement {
     });
   }
 
+  /** Activity Unification U3 — standalone activities (tripId nil) for
+   *  the calendar's Activities bucket. `state.activities` is already
+   *  visibleTo-filtered server-side; here we drop trip-attached ones
+   *  (they belong to the planner) + honour the per-tag filter. NO
+   *  member-filter (unlike `_filteredEvents`): an activity with nobody
+   *  tagged must still appear. */
+  _standaloneActivities() {
+    return (this.activities ?? []).filter((a) => !a?.tripId && this._tagVisible(a));
+  }
+
   /**
    * Smart hero greeting — returns a relative-time callout for the next
    * notable event (ongoing trip, upcoming trip, upcoming celebration).
@@ -4670,27 +4682,36 @@ export class HomeScreen extends LitElement {
       this._openPlanner(item.ref);
       return;
     }
-    // familyEvent-backed items — event, celebration, OR a plan/activity
-    // imported as a familyEvent — open the edit form so the full title
-    // is readable + deletable. Trip-bound plan items (ref.tripId) are
-    // NOT familyEvents; they stay managed in the trip planner (noop here).
+    // U3 — standalone activities render on the calendar but their editor
+    // lands in U3-b (the Portal activity form). For now tapping is a noop
+    // so they DON'T fall into the familyEvent branch below (which would
+    // wrongly open the event editor on an activity doc).
+    if (item.src === 'activity') {
+      return;
+    }
+    // familyEvent-backed items open the edit form so the full title is
+    // readable + deletable. U2: plan + activity events both bucket as
+    // 'event' now, AND trip-bound plan items also carry cat:'event'
+    // (recoloured into Activities) — so the `!ref.tripId` guard is what
+    // distinguishes a standalone familyEvent (editable here) from a
+    // trip-bound plan item (managed in the trip planner; noop here).
     const isFamilyEvent =
-      item.cat === 'event' ||
-      item.cat === 'celebrate' ||
-      (item.cat === 'plan' && !item.ref.tripId);
+      (item.cat === 'event' && !item.ref.tripId) ||
+      item.cat === 'celebrate';
     if (isFamilyEvent) {
       this._openEditEvent(item.ref);
     }
   }
 
   /** Calendar category for a familyEvent — honours the explicit
-   *  `category` set at import (plan / activity / celebration) and falls
-   *  back to the legacy type-based split for docs that predate it.
-   *  Maps to the 5-category calendar buckets: plan -> 'plan',
-   *  activity -> 'event', celebration -> 'celebrate'. */
+   *  `category` set at import and falls back to the legacy type-based
+   *  split for docs that predate it. Activity Unification U2
+   *  (2026-06-02): the old `plan` bucket is GONE — legacy plan-tagged
+   *  events now fold into the merged Activities bucket ('event'), so the
+   *  4 buckets are trip / holiday / event(=Activities) / celebrate. */
   _eventCalCat(ev) {
     const c = ev?.category;
-    if (c === 'plan') return 'plan';
+    if (c === 'plan') return 'event';
     if (c === 'activity') return 'event';
     if (c === 'celebration') return 'celebrate';
     return ev?.type === 'birthday' || ev?.type === 'anniversary'
@@ -4709,6 +4730,11 @@ export class HomeScreen extends LitElement {
     const set = new Set();
     for (const e of this._filteredEvents()) {
       const t = String(e?.calTag ?? '').trim();
+      if (t) set.add(t);
+    }
+    // U3 — activity tags also drive the per-tag filter chips.
+    for (const a of this._standaloneActivities()) {
+      const t = String(a?.calTag ?? '').trim();
       if (t) set.add(t);
     }
     return [...set].sort((a, b) => a.localeCompare(b));
@@ -4747,10 +4773,10 @@ export class HomeScreen extends LitElement {
         }
       }
     }
-    // Events split by their calendar category (celebration / plan /
-    // activity→event), honouring per-tag filter visibility.
+    // Events split by their calendar category (celebration / Activities),
+    // honouring per-tag filter visibility. U2: `plan` folded into
+    // `event` (Activities), so there's no separate plan dot anymore.
     let sawCeleb = false;
-    let sawPlan = false;
     let sawEvent = false;
     for (const ev of this._filteredEvents()) {
       const ed = parseLocalDate(ev.date);
@@ -4758,11 +4784,17 @@ export class HomeScreen extends LitElement {
       if (!this._tagVisible(ev)) continue;
       const cat = this._eventCalCat(ev);
       if (cat === 'celebrate') sawCeleb = true;
-      else if (cat === 'plan') sawPlan = true;
       else sawEvent = true;
     }
+    // U3 — standalone activities also count toward the Activities dot.
+    for (const a of this._standaloneActivities()) {
+      const ad = parseLocalDate(a.day);
+      if (ad && ad.getFullYear() === y && ad.getMonth() === m && ad.getDate() === day) {
+        sawEvent = true;
+        break;
+      }
+    }
     if (sawCeleb && this._calFilters.celebrate) return 'celebrate';
-    if (sawPlan && this._calFilters.plan) return 'plan';
     if (sawEvent && this._calFilters.event) return 'event';
     return null;
   }
@@ -4919,7 +4951,8 @@ export class HomeScreen extends LitElement {
     const celebEvents = events.filter(
       (e) => this._eventCalCat(e) === 'celebrate',
     );
-    const planEvents = events.filter((e) => this._eventCalCat(e) === 'plan');
+    // U2: trip plan-items now render under Activities (the retired Plans
+    // bucket merged into Activities), so their count folds into Activities.
     const tripPlanItems = Array.from(this._weekPlanItems.values()).reduce(
       (n, arr) => n + (Array.isArray(arr) ? arr.length : 0),
       0,
@@ -4931,9 +4964,8 @@ export class HomeScreen extends LitElement {
     );
     const rows = [
       { id: 'trip', label: 'Trips', count: trips.length },
-      { id: 'plan', label: 'Plans', count: tripPlanItems + planEvents.length },
       { id: 'holiday', label: 'Holidays', count: holidays.length },
-      { id: 'event', label: 'Activities', count: activityEvents.length },
+      { id: 'event', label: 'Activities', count: activityEvents.length + tripPlanItems + this._standaloneActivities().length },
       { id: 'celebrate', label: 'Celebrations', count: celebEvents.length },
     ];
     // One filter chip per distinct custom calendar tag.
@@ -5205,11 +5237,29 @@ export class HomeScreen extends LitElement {
         cat,
         title:
           ev.title ||
-          (cat === 'celebrate' ? 'Celebration' : cat === 'plan' ? 'Plan' : 'Event'),
+          (cat === 'celebrate' ? 'Celebration' : 'Event'),
         colStart: d.getDay() + 2,
         span: 1,
         ref: ev,
       });
+    }
+    // U3 — standalone activities as all-day chips under Activities.
+    // (Timed hour-grid positioning lands in U6; for now they read as
+    // all-day chips, same lane as events.) `src:'activity'` lets
+    // `_openItem` route them away from the event editor.
+    if (this._calFilters.event) {
+      for (const a of this._standaloneActivities()) {
+        const d = parseLocalDate(a.day);
+        if (!d || d < sunday || d > sat) continue;
+        allDay.push({
+          cat: 'event',
+          title: a.title || 'Activity',
+          colStart: d.getDay() + 2,
+          span: 1,
+          ref: a,
+          src: 'activity',
+        });
+      }
     }
     if (this._calFilters.holiday) {
       for (const h of this.holidays ?? []) {
@@ -5225,8 +5275,11 @@ export class HomeScreen extends LitElement {
         });
       }
     }
-    // All-day plan items (time === '') join the lane too.
-    if (this._calFilters.plan) {
+    // All-day trip plan items (time === '') join the lane too. U2: these
+    // render under Activities (cat:'event', gated on _calFilters.event) —
+    // the Plans bucket is retired. They keep ref.tripId so _openItem
+    // routes them to the planner, not the event editor.
+    if (this._calFilters.event) {
       for (const [tripId, items] of this._weekPlanItems.entries()) {
         for (const it of items ?? []) {
           if (!it || !it.day) continue;
@@ -5234,8 +5287,8 @@ export class HomeScreen extends LitElement {
           if (!d || d < sunday || d > sat) continue;
           if (it.time && String(it.time).trim() !== '') continue; // timed → grid
           allDay.push({
-            cat: 'plan',
-            title: it.title || 'Plan',
+            cat: 'event',
+            title: it.title || 'Activity',
             colStart: d.getDay() + 2,
             span: 1,
             ref: { ...it, tripId },
@@ -5254,7 +5307,7 @@ export class HomeScreen extends LitElement {
       return `${hh}:${String(m).padStart(2, '0')} ${ampm}`;
     };
     const timedByDay = Array.from({ length: 7 }, () => []);
-    if (this._calFilters.plan) {
+    if (this._calFilters.event) {
       for (const [tripId, items] of this._weekPlanItems.entries()) {
         for (const it of items ?? []) {
           if (!it || !it.day) continue;
@@ -5275,8 +5328,8 @@ export class HomeScreen extends LitElement {
           const endM = endMin % 60;
           const timeLabel = `${fmtTime(hr, mn)} – ${fmtTime(endH, endM)}`;
           timedByDay[d.getDay()].push({
-            cat: 'plan',
-            title: it.title || 'Plan',
+            cat: 'event',
+            title: it.title || 'Activity',
             top, height, timeLabel,
             ref: { ...it, tripId },
           });
@@ -5447,15 +5500,26 @@ export class HomeScreen extends LitElement {
                 cat,
                 title:
                   ev.title ||
-                  (cat === 'celebrate'
-                    ? 'Celebration'
-                    : cat === 'plan'
-                      ? 'Plan'
-                      : 'Event'),
+                  (cat === 'celebrate' ? 'Celebration' : 'Event'),
                 colStart: dayDiff(d, wkStart) + 1,
                 span: 1,
                 ref: ev,
               });
+            }
+            // U3 — standalone activities (all-day) in the month grid.
+            if (this._calFilters.event) {
+              for (const a of this._standaloneActivities()) {
+                const d = parseLocalDate(a.day);
+                if (!d || d < wkStart || d > wkEnd) continue;
+                items.push({
+                  cat: 'event',
+                  title: a.title || 'Activity',
+                  colStart: dayDiff(d, wkStart) + 1,
+                  span: 1,
+                  ref: a,
+                  src: 'activity',
+                });
+              }
             }
             if (this._calFilters.holiday) {
               for (const h of allHolidays) {

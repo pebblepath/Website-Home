@@ -21,6 +21,7 @@ export class AppShell extends LitElement {
     children: { state: true },
     trips: { state: true },
     events: { state: true },
+    activities: { state: true },
     holidays: { state: true },
     userDocResolved: { state: true },
     ppFamily: { state: true },
@@ -86,6 +87,7 @@ export class AppShell extends LitElement {
     this.children = [];
     this.trips = [];
     this.events = [];
+    this.activities = [];
     this.holidays = [];
     this.ppFamily = null;
     this.ppIsMember = false;
@@ -111,6 +113,7 @@ export class AppShell extends LitElement {
       this.children = dataStore.state.children;
       this.trips = dataStore.state.trips;
       this.events = dataStore.state.events;
+      this.activities = dataStore.state.activities;
       this.holidays = dataStore.state.holidays;
       this.ppFamily = dataStore.state.ppFamily;
       this.ppIsMember = dataStore.state.ppIsMember;
@@ -341,6 +344,7 @@ export class AppShell extends LitElement {
         .children=${this.children}
         .trips=${this.trips}
         .events=${this.events}
+        .activities=${this.activities}
         .holidays=${this.holidays}
         .ppFamily=${this.ppFamily}
         .ppIsMember=${this.ppIsMember}
