@@ -9,12 +9,20 @@ import { toast } from '../services/toast.js';
  * parity). Lives below the trips row on the Activities tab; a trip
  * card opens it. Google-Calendar day grid + Google-Sheets attribution:
  * anyone in the trip's audience adds items (visit/meal/travel/note),
- * each tagged with who added it. Live via dataStore.planItemsListener;
- * read/write enforced server-side by the trip's visibleTo.
+ * each tagged with who added it.
+ *
+ * Activity Unification U4 (2026-06-02): the planner no longer reads a
+ * per-trip `planItems` subcollection. It now renders the slice of the
+ * family-wide `activities` (passed in as a prop) where `tripId === trip.id`
+ * — the SAME unified `FamilyActivity` docs the calendar shows standalone.
+ * Adds write to `/activities` (tripId stamped → audience inherited from
+ * the trip); read/write still enforced server-side by the trip's
+ * `visibleTo`. Mirrors iOS TripPlannerView's client-filtered load.
  *
  * Props:
  *   open       — Boolean (collapsed when false)
  *   trip       — { id, title, location, start, end }
+ *   activities — [FamilyActivity] family-wide; filtered to this trip
  *   members    — [{ uid, displayName, photoURL, hue }]
  *   currentUid — viewer uid (delete-own affordance)
  */
@@ -67,6 +75,7 @@ export class TripPlanner extends LitElement {
   static properties = {
     open: { type: Boolean, reflect: true },
     trip: { type: Object },
+    activities: { type: Array },
     members: { type: Array },
     currentUid: { type: String },
     _items: { state: true },
@@ -88,6 +97,7 @@ export class TripPlanner extends LitElement {
     super();
     this.open = false;
     this.trip = null;
+    this.activities = [];
     this.members = [];
     this.currentUid = '';
     this._items = [];
@@ -214,14 +224,29 @@ export class TripPlanner extends LitElement {
           // grid, so it stays on Day. User can still flip manually
           // via the segmented control.
           this._view = this._days().length > 1 ? 'week' : 'day';
-          this._unsub = dataStore.planItemsListener(id, (items) => {
-            this._items = items;
-          });
         }
+        // U4 — items are the family-wide activities filtered to this
+        // trip (no per-trip subscription). Recompute on open/trip change
+        // AND on every activities prop update (live via the parent's
+        // activitiesListener).
+        this._recomputeItems();
       } else if (!this.open) {
         this._teardown();
       }
     }
+    if (changed.has('activities')) {
+      this._recomputeItems();
+    }
+  }
+
+  /** U4 — the planner's items = the family-wide activities slice for THIS
+   *  trip (tripId match). Already day→time→createdAt sorted upstream
+   *  (data.js activitiesListener), so filtering preserves order. */
+  _recomputeItems() {
+    const id = this.trip?.id ?? null;
+    this._items = id
+      ? (this.activities ?? []).filter((a) => a && a.tripId === id)
+      : [];
   }
 
   disconnectedCallback() {
@@ -229,8 +254,6 @@ export class TripPlanner extends LitElement {
     this._teardown();
   }
   _teardown() {
-    this._unsub?.();
-    this._unsub = null;
     this._subId = null;
     this._items = [];
     window.removeEventListener('pointermove', this._onGridMove);
@@ -287,25 +310,31 @@ export class TripPlanner extends LitElement {
     this._busy = true;
     const file = this._file;
     try {
-      const id = await dataStore.addPlanItem(this.trip.id, {
+      // U4 — write a trip-attached FamilyActivity (tripId stamped →
+      // saveActivity inherits the trip's audience). Untimed items pass
+      // time:null so they bucket as all-day, matching the unified model.
+      const url = this._url.trim();
+      const id = await dataStore.saveActivity({
         title,
         type: this._type,
         day: this._dayKey ?? '',
-        time: this._time || '',
+        time: this._time || null,
         durationMins: this._dur,
-        url: this._url.trim(),
+        url: /^https?:\/\//i.test(url) ? url : null,
+        tripId: this.trip.id,
       });
-      // Attachment is uploaded AFTER the item exists (its id is the
+      // Attachment is uploaded AFTER the activity exists (its id is the
       // Storage key). A failed upload doesn't lose the item — the
-      // user is told the file didn't attach and can retry.
+      // user is told the file didn't attach and can retry. updateActivity
+      // is a raw patch (does NOT recompute visibleTo) so the inherited
+      // trip audience is preserved.
       if (file && id) {
         try {
-          const attachmentURL = await dataStore.uploadPlanAttachment(
-            this.trip.id,
+          const attachmentURL = await dataStore.uploadActivityAttachment(
             id,
             file,
           );
-          await dataStore.updatePlanItem(this.trip.id, id, {
+          await dataStore.updateActivity(id, {
             attachmentURL,
             attachmentName: file.name || 'attachment',
           });
@@ -338,7 +367,7 @@ export class TripPlanner extends LitElement {
   }
   async _remove(it) {
     try {
-      await dataStore.deletePlanItem(this.trip.id, it.id);
+      await dataStore.deleteActivity(it.id);
     } catch (err) {
       toast(`Couldn't remove: ${err?.code ?? err?.message}`, { duration: 4000 });
     }

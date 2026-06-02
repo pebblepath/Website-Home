@@ -6,8 +6,15 @@ import './glass-panel.js';
  * kind of thing they're adding so the form can hide irrelevant fields
  * (no lodging on a weekend outing, no flight on a birthday).
  *
+ * Activity Unification U5 (2026-06-02): the two old trip cards (Group
+ * activity + Family trip) collapse into ONE "Trip", and a NEW "Activity"
+ * card opens the unified <activity-form> (a single standalone calendar
+ * item). Tones echo each card's destination calendar category: Trip =
+ * tide (teal), Activity = amber (the Activities bucket), Birthday =
+ * celebration (Celebrations).
+ *
  * Events:
- *   pick   — { detail: { type } } where type is 'activity' | 'trip' | 'event'
+ *   pick   — { detail: { type } } where type is 'trip' | 'activity' | 'event' | 'import'
  *   cancel
  */
 export class ActivityTypePicker extends LitElement {
@@ -32,27 +39,27 @@ export class ActivityTypePicker extends LitElement {
       // imports those files into its asset catalog so both surfaces
       // render byte-identical art. Do NOT hand-tweak one side only.
       {
-        type: 'activity',
-        tone: 'sage',
-        icon: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M15.8 7.4 21.8 19.5a1.1 1.1 0 0 1-.98 1.6H10.2z"/>
-          <path d="M9 4.6 16.5 19.5a1.1 1.1 0 0 1-.98 1.6H3.46a1.1 1.1 0 0 1-.98-1.6z"/>
-        </svg>`,
-        label: 'Group activity',
-        desc: 'Weekend plans, outings, day trips — no lodging or flights needed.',
-      },
-      {
         type: 'trip',
         tone: 'tide',
         icon: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M21.62 3.05a1 1 0 0 0-1.12-.18L3.7 10.3c-.86.38-.83 1.62.05 1.95l6.06 2.27 2.27 6.06c.33.88 1.57.9 1.95.05L21.8 4.17a1 1 0 0 0-.18-1.12zM10.5 12.7l6.4-5.7-4.9 6.6-.1.1z"/>
         </svg>`,
-        label: 'Family trip',
-        desc: 'Multi-day travel with lodging, flight info, attendees.',
+        label: 'Trip',
+        desc: 'Day trips or multi-day travel, with optional lodging, flights, attendees.',
+      },
+      {
+        type: 'activity',
+        tone: 'amber',
+        icon: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M15.8 7.4 21.8 19.5a1.1 1.1 0 0 1-.98 1.6H10.2z"/>
+          <path d="M9 4.6 16.5 19.5a1.1 1.1 0 0 1-.98 1.6H3.46a1.1 1.1 0 0 1-.98-1.6z"/>
+        </svg>`,
+        label: 'Activity',
+        desc: 'A single outing, plan, or to-do for the family calendar.',
       },
       {
         type: 'event',
-        tone: 'amber',
+        tone: 'celebration',
         icon: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M11.1 6.7C10.4 5 9.2 3.7 7.8 3.3c-1-.3-1.9.1-2.2.9-.4 1 .2 2.1 1 2.7 1 .75 2.5 1.05 4.5 1.05z"/>
           <path d="M12.9 6.7c.7-1.7 1.9-3 3.3-3.4 1-.3 1.9.1 2.2.9.4 1-.2 2.1-1 2.7-1 .75-2.5 1.05-4.5 1.05z"/>
@@ -193,6 +200,7 @@ export class ActivityTypePicker extends LitElement {
     .icon-cell.sage { background: var(--gradient-sage); }
     .icon-cell.tide { background: var(--gradient-tide); }
     .icon-cell.amber { background: var(--gradient-amber); }
+    .icon-cell.celebration { background: var(--gradient-celebration); }
     /* Mobile-only options (e.g. Import from Calendar) — hidden on
        desktop where the equivalent affordance lives in the section
        header. */

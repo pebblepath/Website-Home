@@ -8,6 +8,7 @@ import './trip-card.js';
 import './event-row.js';
 import './trip-form.js';
 import './event-form.js';
+import './activity-form.js';
 import './manage-members-modal.js';
 import './all-trips-modal.js';
 import './import-calendar-modal.js';
@@ -120,6 +121,10 @@ export class HomeScreen extends LitElement {
     _eventFormOpen: { state: true },
     _eventFormEvent: { state: true },
     _eventFormBusy: { state: true },
+    // Activity Unification U3-b — the unified activity editor.
+    _activityFormOpen: { state: true },
+    _activityFormActivity: { state: true },
+    _activityFormBusy: { state: true },
     _displayMonth: { state: true },
     /** 2026-05-22 — single-card calendar with view-toggle replaced
      *  the stacked monthly + yearly panels. 'week' | 'month' | 'year'.
@@ -263,6 +268,9 @@ export class HomeScreen extends LitElement {
     this._eventFormOpen = false;
     this._eventFormEvent = null;
     this._eventFormBusy = false;
+    this._activityFormOpen = false;
+    this._activityFormActivity = null;
+    this._activityFormBusy = false;
     this._allTripsOpen = false;
     this._editingFamilyName = false;
     this._importOpen = false;
@@ -4017,8 +4025,14 @@ export class HomeScreen extends LitElement {
       this._importOpen = true;
       return;
     }
-    // 'trip' or 'activity' both open trip-form, with different field sets.
-    this._formMode = type;
+    // Activity Unification U5 — 'activity' now opens the unified activity
+    // form (a standalone calendar item), NOT a lighter trip. 'trip' is the
+    // one merged trip card → trip-form (lodging/flight optional).
+    if (type === 'activity') {
+      this._openNewActivity();
+      return;
+    }
+    this._formMode = 'trip';
     this._formTrip = null;
     this._formOpen = true;
   }
@@ -4186,6 +4200,65 @@ export class HomeScreen extends LitElement {
       toast(`Couldn't delete: ${err.code ?? err.message}`, { duration: 5000 });
     } finally {
       this._eventFormBusy = false;
+    }
+  }
+
+  // ── Activity Unification U3-b — unified activity editor ─────────────
+
+  /** Open the activity form to create a new standalone activity. */
+  _openNewActivity() {
+    if (this.preview) {
+      toast('Sign in to create real activities.');
+      return;
+    }
+    if (!dataStore.familyId) {
+      toast('You need a family first.');
+      return;
+    }
+    this._activityFormActivity = null;
+    this._activityFormOpen = true;
+  }
+
+  /** Open the activity form to edit an existing activity (from a calendar
+   *  tap). Standalone activities are editable by any audience member;
+   *  trip-attached ones are author-only (the rule enforces it; the form's
+   *  Delete button reflects it). */
+  _openEditActivity(activity) {
+    if (this.preview) {
+      toast('Sign in to edit real activities.');
+      return;
+    }
+    this._activityFormActivity = { ...activity };
+    this._activityFormOpen = true;
+  }
+
+  async _onSaveActivity(e) {
+    this._activityFormBusy = true;
+    try {
+      await dataStore.saveActivity(e.detail);
+      this._activityFormOpen = false;
+      this._activityFormActivity = null;
+      toast(e.detail.id ? 'Activity updated.' : 'Activity added.');
+    } catch (err) {
+      console.error('Save activity failed:', err);
+      toast(`Couldn't save: ${err.code ?? err.message}`, { duration: 5000 });
+    } finally {
+      this._activityFormBusy = false;
+    }
+  }
+
+  async _onDeleteActivity(e) {
+    this._activityFormBusy = true;
+    try {
+      await dataStore.deleteActivity(e.detail.id);
+      this._activityFormOpen = false;
+      this._activityFormActivity = null;
+      toast('Activity deleted.');
+    } catch (err) {
+      console.error('Delete activity failed:', err);
+      toast(`Couldn't delete: ${err.code ?? err.message}`, { duration: 5000 });
+    } finally {
+      this._activityFormBusy = false;
     }
   }
 
@@ -4682,11 +4755,12 @@ export class HomeScreen extends LitElement {
       this._openPlanner(item.ref);
       return;
     }
-    // U3 — standalone activities render on the calendar but their editor
-    // lands in U3-b (the Portal activity form). For now tapping is a noop
-    // so they DON'T fall into the familyEvent branch below (which would
-    // wrongly open the event editor on an activity doc).
+    // U3-b — standalone activities open the unified activity editor (NOT
+    // the familyEvent editor below, which would mis-decode an activity
+    // doc). Trip-attached activities never reach here (they're managed in
+    // the planner); these are all `tripId == nil`.
     if (item.src === 'activity') {
+      this._openEditActivity(item.ref);
       return;
     }
     // familyEvent-backed items open the edit form so the full title is
@@ -5817,6 +5891,7 @@ export class HomeScreen extends LitElement {
       <trip-planner
         ?open=${this._plannerOpen}
         .trip=${this._plannerTrip}
+        .activities=${this.activities ?? []}
         .members=${allMembers}
         .currentUid=${this.user?.uid ?? ''}
         @cancel=${() => {
@@ -6532,6 +6607,21 @@ export class HomeScreen extends LitElement {
           this._eventFormEvent = null;
         }}
       ></event-form>
+
+      <activity-form
+        ?open=${this._activityFormOpen}
+        .activity=${this._activityFormActivity}
+        .members=${allMembers}
+        .children=${this.ppChildren ?? []}
+        .familyId=${this.family?.id ?? ''}
+        .busy=${this._activityFormBusy}
+        @save=${this._onSaveActivity}
+        @remove=${this._onDeleteActivity}
+        @cancel=${() => {
+          this._activityFormOpen = false;
+          this._activityFormActivity = null;
+        }}
+      ></activity-form>
 
       <all-trips-modal
         ?open=${this._allTripsOpen}

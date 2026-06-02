@@ -1960,11 +1960,30 @@ class FamilyDataStore extends EventTarget {
     if (!uid) throw new Error('Not signed in.');
     const { id, createdAt, updatedAt, ...rest } = activity;
     const payload = { ...rest, updatedAt: serverTimestamp() };
-    payload.visibleTo = await this._visibleToFor(
-      rest,
-      this.state.family,
-      rest.addedBy ?? uid, // existing author on update; this user on create
-    );
+    const ownerUid = rest.addedBy ?? uid; // existing author on update; this user on create
+    if (rest.tripId) {
+      // TRIP-ATTACHED — inherit the parent trip's materialized audience
+      // (locked rule, mirrors iOS AppState.activityVisibleTo). Falls back
+      // to a self-compute if the trip isn't loaded yet.
+      const trip = (this.state.trips ?? []).find((t) => t.id === rest.tripId);
+      payload.visibleTo =
+        Array.isArray(trip?.visibleTo) && trip.visibleTo.length
+          ? trip.visibleTo
+          : await this._visibleToFor(rest, this.state.family, ownerUid);
+    } else {
+      // STANDALONE — visibility-seg-driven. Activities fold their
+      // "who's going" `personIds` INTO attendees for the audience compute,
+      // so "Participants" shows the activity to the tagged people (+
+      // household). This DIVERGES from FamilyEvent (where personIds is
+      // descriptive). The doc does NOT persist `attendees` (matches iOS
+      // FamilyActivity, which has no attendees field).
+      const personIds = Array.isArray(rest.personIds) ? rest.personIds : [];
+      payload.visibleTo = await this._visibleToFor(
+        { ...rest, attendees: personIds },
+        this.state.family,
+        ownerUid,
+      );
+    }
     if (id) {
       await updateDoc(doc(db, 'families', this._currentFamilyId, 'activities', id), payload);
       return id;
@@ -1981,6 +2000,37 @@ class FamilyDataStore extends EventTarget {
   async deleteActivity(activityId) {
     if (!db || !this._currentFamilyId) throw new Error('No family yet.');
     await deleteDoc(doc(db, 'families', this._currentFamilyId, 'activities', activityId));
+  }
+
+  /** Raw field patch on an activity — does NOT recompute `visibleTo`
+   *  (unlike saveActivity, which materializes the audience from
+   *  visibility/personIds/trip). Used by the trip planner to stamp an
+   *  attachment URL onto a just-created trip-attached activity WITHOUT
+   *  clobbering its inherited trip audience. Mirrors updatePlanItem. */
+  async updateActivity(activityId, patch) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    await updateDoc(
+      doc(db, 'families', this._currentFamilyId, 'activities', activityId),
+      patch,
+    );
+  }
+
+  /** Upload an activity attachment (PDF / screenshot) to Storage and
+   *  return its download URL. REUSES the member-gated `planAttachments`
+   *  Storage path with an `activity__` segment (matching iOS
+   *  StorageService.uploadActivityAttachment) — so NO new Storage rule.
+   *  Path has NO extension (the wildcard rule); contentType drives
+   *  serving. */
+  async uploadActivityAttachment(activityId, file) {
+    if (!storage || !this._currentFamilyId) {
+      throw new Error('Storage unavailable.');
+    }
+    const path = `families/${this._currentFamilyId}/planAttachments/activity__${activityId}`;
+    const r = storageRef(storage, path);
+    await uploadBytes(r, file, {
+      contentType: file.type || 'application/octet-stream',
+    });
+    return getDownloadURL(r);
   }
 
   // ── School-calendar import (Ellie ①) ──────────────────────────────
