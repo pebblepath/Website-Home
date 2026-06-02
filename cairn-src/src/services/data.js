@@ -1982,6 +1982,57 @@ class FamilyDataStore extends EventTarget {
     return n;
   }
 
+  /** Rename a custom calendar tag across every visible event that
+   *  carries it. Operates on the already-loaded `state.events` (the
+   *  listener filtered them to visibleTo) + updateDoc by id, so there's
+   *  no Firestore query (the content-conditional read rule would reject
+   *  a bare calTag query) and no composite index. Any cairn member may
+   *  write familyEvents (rules), so this works regardless of who
+   *  created each event. Returns the number of events updated. */
+  async renameCalTag(oldTag, newTag) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    const from = String(oldTag ?? '').trim();
+    const to = String(newTag ?? '').trim().slice(0, 60);
+    if (!from || !to || from === to) return 0;
+    const ids = (this.state.events ?? [])
+      .filter((e) => String(e?.calTag ?? '').trim() === from)
+      .map((e) => e.id)
+      .filter(Boolean);
+    await Promise.all(
+      ids.map((id) =>
+        updateDoc(
+          doc(db, 'families', this._currentFamilyId, 'familyEvents', id),
+          { calTag: to, updatedAt: serverTimestamp() },
+        ),
+      ),
+    );
+    return ids.length;
+  }
+
+  /** Remove a custom calendar tag: the events STAY on the calendar,
+   *  they just lose this tag. `calTag` is set to null (untagged on iOS
+   *  + Portal — both treat null/absent as no tag). Same loaded-events +
+   *  updateDoc-by-id approach as renameCalTag (no query, no index).
+   *  Returns the number of events untagged. */
+  async deleteCalTag(tag) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    const t = String(tag ?? '').trim();
+    if (!t) return 0;
+    const ids = (this.state.events ?? [])
+      .filter((e) => String(e?.calTag ?? '').trim() === t)
+      .map((e) => e.id)
+      .filter(Boolean);
+    await Promise.all(
+      ids.map((id) =>
+        updateDoc(
+          doc(db, 'families', this._currentFamilyId, 'familyEvents', id),
+          { calTag: null, updatedAt: serverTimestamp() },
+        ),
+      ),
+    );
+    return ids.length;
+  }
+
 
   /**
    * Phase 3C: server-side URL preview (OG image + title scrape). Calls the

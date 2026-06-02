@@ -129,6 +129,13 @@ export class HomeScreen extends LitElement {
      *  legend. Session-only (a page refresh resets to all-on). Keys are
      *  the 5 category ids: trip, plan, holiday, event, celebrate. */
     _calFilters: { state: true },
+    /** Tag management (2026-06-01) — "Manage" mode on the Tags filter
+     *  section. `_tagRenaming` holds the tag being inline-renamed,
+     *  `_tagDeleting` the tag pending an inline delete-confirm. */
+    _managingTags: { state: true },
+    _tagRenaming: { state: true },
+    _tagRenameDraft: { state: true },
+    _tagDeleting: { state: true },
     /** 2026-05-24 — design 28. Anchor (Sunday) for the visible week in
      *  Week view. Independent of _displayMonth so flipping Week prev/
      *  next doesn't drag the Month-view focus along (and vice-versa).
@@ -287,6 +294,11 @@ export class HomeScreen extends LitElement {
       event: true,
       celebrate: true,
     };
+    // Tag management mode (2026-06-01).
+    this._managingTags = false;
+    this._tagRenaming = null;
+    this._tagRenameDraft = '';
+    this._tagDeleting = null;
     // 2026-05-24 — design 28. Plan items for visible-week trips. Map
     // keyed by tripId. Populated by _syncWeekPlanSubs (see below).
     this._weekPlanItems = new Map();
@@ -1488,6 +1500,61 @@ export class HomeScreen extends LitElement {
       box-shadow: inset 0 0 0 1.5px var(--text-tertiary);
     }
     .cal-filt.off .nm, .cal-filt.off .ct { color: var(--text-tertiary); }
+
+    /* Tags "Manage" mode (2026-06-01) */
+    .cal-side-h--tags {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .tag-manage-btn {
+      background: transparent; border: none; padding: 2px 4px;
+      font-family: inherit; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: none;
+      color: var(--teal-pebble); cursor: pointer;
+    }
+    .tag-manage-btn:hover { color: var(--bubble-link-pb); }
+    .tag-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 8px; border-radius: 9px;
+    }
+    .tag-row:hover { background: var(--glass-fill-strong); }
+    .tag-name {
+      font-size: 13px; font-weight: 600; color: var(--text-primary);
+      flex: 1; min-width: 0;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .tag-count {
+      font-size: 11.5px; font-weight: 600; color: var(--text-tertiary);
+    }
+    .tag-mini {
+      flex-shrink: 0; display: inline-flex; align-items: center;
+      justify-content: center; width: 26px; height: 26px;
+      border-radius: 7px; border: 1px solid var(--glass-border);
+      background: var(--glass-fill); color: var(--text-secondary);
+      cursor: pointer; padding: 0; font-family: inherit;
+      font-size: 12px; font-weight: 600;
+      transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+    }
+    .tag-mini:hover { background: var(--glass-fill-strong); color: var(--text-primary); }
+    .tag-mini svg { width: 14px; height: 14px; }
+    .tag-mini--ok { color: var(--teal-pebble); border-color: rgba(61, 155, 143, 0.4); }
+    .tag-mini--del { color: var(--ink-terracotta); border-color: rgba(198, 123, 92, 0.4); }
+    .tag-mini--del:hover { background: rgba(198, 123, 92, 0.14); }
+    /* Delete-confirm row stacks so the "events stay" reassurance reads
+       in full in the narrow sidebar (it doesn't fit on one line). */
+    .tag-row--confirm { flex-direction: column; align-items: stretch; gap: 7px; }
+    .tag-confirm-actions { display: flex; gap: 8px; justify-content: flex-end; }
+    /* Text buttons (Cancel / Remove) in the delete-confirm row. */
+    .tag-row--confirm .tag-mini { width: auto; padding: 0 11px; }
+    .tag-rename-in {
+      flex: 1; min-width: 0;
+      background: var(--glass-fill); border: 1px solid var(--glass-border);
+      color: var(--text-primary); border-radius: 7px;
+      padding: 5px 9px; font-family: inherit; font-size: 13px; outline: none;
+    }
+    .tag-rename-in:focus { border-color: rgba(61, 155, 143, 0.5); }
+    .tag-confirm-txt {
+      font-size: 12px; line-height: 1.4; color: var(--text-secondary);
+    }
 
     /* ── category color carriers ──────────────────────────── */
     /* Each row writes --cat (solid for swatches + chip accent bars),
@@ -4905,21 +4972,158 @@ export class HomeScreen extends LitElement {
       </div>
       ${tags.length
         ? html`
-            <div class="cal-side-h">Tags</div>
+            <div class="cal-side-h cal-side-h--tags">
+              <span>Tags</span>
+              <button
+                class="tag-manage-btn"
+                @click=${() => {
+                  this._managingTags = !this._managingTags;
+                  this._tagRenaming = null;
+                  this._tagDeleting = null;
+                }}
+              >
+                ${this._managingTags ? 'Done' : 'Manage'}
+              </button>
+            </div>
             <div class="cal-filt-list">
-              ${tags.map((t) =>
-                chip(
-                  'cat-tag',
-                  'tag:' + t,
-                  t,
-                  events.filter((e) => String(e?.calTag ?? '').trim() === t)
-                    .length,
-                ),
-              )}
+              ${this._managingTags
+                ? tags.map((t) =>
+                    this._renderTagManageRow(
+                      t,
+                      events.filter((e) => String(e?.calTag ?? '').trim() === t)
+                        .length,
+                    ),
+                  )
+                : tags.map((t) =>
+                    chip(
+                      'cat-tag',
+                      'tag:' + t,
+                      t,
+                      events.filter((e) => String(e?.calTag ?? '').trim() === t)
+                        .length,
+                    ),
+                  )}
             </div>
           `
         : ''}
     `;
+  }
+
+  /** One row in the Tags "Manage" list — three states: inline rename
+   *  input, inline delete-confirm, or the default name + count + edit/
+   *  remove buttons. Delete never removes the events, only their tag. */
+  _renderTagManageRow(t, count) {
+    if (this._tagRenaming === t) {
+      return html`
+        <div class="tag-row tag-row--edit">
+          <input
+            class="tag-rename-in"
+            .value=${this._tagRenameDraft}
+            maxlength="60"
+            placeholder="Tag name"
+            @input=${(e) => (this._tagRenameDraft = e.target.value)}
+            @keydown=${(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                this._commitTagRename(t);
+              } else if (e.key === 'Escape') {
+                this._tagRenaming = null;
+              }
+            }}
+          />
+          <button
+            class="tag-mini tag-mini--ok"
+            title="Save"
+            aria-label="Save tag name"
+            @click=${() => this._commitTagRename(t)}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </button>
+          <button
+            class="tag-mini"
+            title="Cancel"
+            aria-label="Cancel rename"
+            @click=${() => (this._tagRenaming = null)}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      `;
+    }
+    if (this._tagDeleting === t) {
+      return html`
+        <div class="tag-row tag-row--confirm">
+          <span class="tag-confirm-txt">Remove "${t}"? Events stay, they just lose this tag.</span>
+          <div class="tag-confirm-actions">
+            <button class="tag-mini" @click=${() => (this._tagDeleting = null)}>
+              Cancel
+            </button>
+            <button
+              class="tag-mini tag-mini--del"
+              @click=${() => this._doDeleteTag(t)}
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      `;
+    }
+    return html`
+      <div class="tag-row">
+        <span class="tag-name" title=${t}>${t}</span>
+        <span class="tag-count">${count}</span>
+        <button
+          class="tag-mini"
+          title="Rename tag"
+          aria-label="Rename tag"
+          @click=${() => this._startTagRename(t)}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        </button>
+        <button
+          class="tag-mini tag-mini--del"
+          title="Remove tag"
+          aria-label="Remove tag"
+          @click=${() => {
+            this._tagDeleting = t;
+            this._tagRenaming = null;
+          }}
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+      </div>
+    `;
+  }
+
+  _startTagRename(t) {
+    this._tagDeleting = null;
+    this._tagRenameDraft = t;
+    this._tagRenaming = t;
+  }
+
+  async _commitTagRename(oldTag) {
+    const next = String(this._tagRenameDraft ?? '').trim().slice(0, 60);
+    this._tagRenaming = null;
+    if (!next || next === oldTag) return;
+    try {
+      const n = await dataStore.renameCalTag(oldTag, next);
+      toast(`Renamed tag to "${next}" on ${n} event${n === 1 ? '' : 's'}.`);
+    } catch (err) {
+      console.error('renameCalTag failed:', err);
+      toast("Couldn't rename the tag, try again.");
+    }
+  }
+
+  async _doDeleteTag(t) {
+    this._tagDeleting = null;
+    try {
+      const n = await dataStore.deleteCalTag(t);
+      toast(`Removed the "${t}" tag from ${n} event${n === 1 ? '' : 's'}.`);
+      if (this._eventTags().length === 0) this._managingTags = false;
+    } catch (err) {
+      console.error('deleteCalTag failed:', err);
+      toast("Couldn't remove the tag, try again.");
+    }
   }
 
   /** Greedy lane assignment — items get the lowest lane index whose
