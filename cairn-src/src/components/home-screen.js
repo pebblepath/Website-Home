@@ -7739,6 +7739,22 @@ export class HomeScreen extends LitElement {
         chip: d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
       });
     }
+    // Standalone activities (Activity Unification) — upcoming-or-today.
+    // tripId nil + tag-visible (handled by _standaloneActivities). Bucketed
+    // as 'event' so they share the Activities glyph/colour. Trip-attached
+    // activities live in the planner, not in this glance.
+    for (const a of this._standaloneActivities()) {
+      if (!a.day || a.day < todayKey) continue;
+      const d = parseLocalDate(a.day);
+      if (!d) continue;
+      out.push({
+        kind: 'event',
+        title: a.title || 'Activity',
+        sub: a.calTag || '',
+        date: a.day,
+        chip: d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }),
+      });
+    }
     return out
       .sort((a, b) => String(a.date).localeCompare(String(b.date)))
       // 2026-05-28 — trimmed to 5 per Thomas (was 8).
