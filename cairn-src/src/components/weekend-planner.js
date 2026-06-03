@@ -233,13 +233,14 @@ export class WeekendPlanner extends LitElement {
     const noteLines = fit.map((f) => `${f.childName}: ${f.reason}`);
     if (logistics.length) noteLines.push('', ...logistics);
     try {
-      await dataStore.saveEvent({
-        type: 'custom',
+      // U7 7-A — accepted weekend plans write the unified /activities
+      // collection (were plan/activity familyEvents), freezing the legacy
+      // source for migration. Standalone, all-day; household audience
+      // (no personIds, so the attendee-fold doesn't widen it).
+      await dataStore.saveActivity({
+        type: 'note',
         title: cand.title,
-        date: cand.date,
-        personIds: (dataStore.state.ppChildren ?? []).map((c) => c.id).filter(Boolean),
-        recurring: false,
-        subtitle: cand.subtitle ?? '',
+        day: cand.date,
         notes: noteLines.join('\n'),
         visibility: 'family',
         source: 'pebble-weekend-plan',

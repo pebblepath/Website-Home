@@ -37,7 +37,7 @@ export class SchoolImportModal extends LitElement {
     this._events = [];
     this._err = '';
     this._count = 0;
-    this._category = 'plan'; // default: imported dates land as Plans
+    this._category = 'activity'; // U7 7-A — default: imported dates land as Activities
     this._tag = '';
   }
 
@@ -513,7 +513,8 @@ export class SchoolImportModal extends LitElement {
                   <div class="catseg" role="group" aria-label="Add these as">
                     <span class="catlbl">Add as</span>
                     ${[
-                      ['plan', 'Plans'],
+                      // U7 7-A — Plans/Activities collapsed into Activities
+                      // (both bucketed into Activities since U2).
                       ['activity', 'Activities'],
                       ['celebration', 'Celebrations'],
                     ].map(

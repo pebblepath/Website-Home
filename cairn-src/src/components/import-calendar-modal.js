@@ -175,12 +175,25 @@ export class ImportCalendarModal extends LitElement {
           skipped++;
           continue;
         }
-        const planItem = this._calendarEventToPlanItem(event, startDay);
+        // U7 7-A — add-to-trip writes a trip-attached /activities doc
+        // (was a planItem, which U4's planner + U6's calendar no longer
+        // read). saveActivity inherits the trip's audience via tripId.
+        // Omit time/durationMins when absent (Firestore rejects undefined).
+        const base = this._calendarEventToPlanItem(event, startDay);
+        const activity = {
+          title: base.title,
+          type: base.type,
+          day: base.day,
+          tripId: trip.id,
+          source: 'google-calendar',
+        };
+        if (base.time) activity.time = base.time;
+        if (Number.isFinite(base.durationMins)) activity.durationMins = base.durationMins;
         try {
-          await dataStore.addPlanItem(trip.id, planItem);
+          await dataStore.saveActivity(activity);
           okCount++;
         } catch (err) {
-          console.error('addPlanItem failed for event', event.id, err);
+          console.error('add-to-trip activity failed for event', event.id, err);
           failCount++;
         }
       }

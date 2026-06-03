@@ -2121,15 +2121,13 @@ class FamilyDataStore extends EventTarget {
     const personIds = [...new Set([...memberIds, ...cairnIds, uid])];
     // Parents/household only by default (not the extended ring).
     const visibleTo = computeVisibleTo('family', fam, uid);
-    const allowed = ['plan', 'activity', 'celebration'];
-    const category = allowed.includes(opts.category) ? opts.category : 'plan';
+    // U7 7-A — only 'celebration' still writes a familyEvent; everything
+    // else writes the unified /activities collection (standalone, all-day),
+    // freezing the legacy plan/activity event source for the migration.
+    const isCelebration = opts.category === 'celebration';
     const calTag = String(opts.tag ?? '').trim().slice(0, 60);
-    const col = collection(
-      db,
-      'families',
-      this._currentFamilyId,
-      'familyEvents',
-    );
+    const eventsCol = collection(db, 'families', this._currentFamilyId, 'familyEvents');
+    const activitiesCol = collection(db, 'families', this._currentFamilyId, 'activities');
     const clean = (list ?? [])
       .filter(
         (e) =>
@@ -2142,24 +2140,43 @@ class FamilyDataStore extends EventTarget {
     await Promise.all(
       clean.map(async (e) => {
         // 4-5 sentence description the extractor pulled from the doc
-        // → the event's notes (shown in the iOS quick-view + editor).
+        // → the notes (shown in the iOS quick-view + editor).
         const notes = String(e.description ?? '').trim().slice(0, 1000);
-        await addDoc(col, {
-          title: String(e.title).trim().slice(0, 120),
-          date: e.date,
-          type: 'custom', // shows as "Other" in the event editor
-          recurring: false, // a dated schedule, not an annual event
-          category,
-          ...(calTag ? { calTag } : {}),
-          ...(notes ? { notes } : {}),
-          source: 'school-import',
-          personIds,
-          visibility: 'family', // parents/household only
-          visibleTo,
-          createdBy: uid,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-        });
+        if (isCelebration) {
+          await addDoc(eventsCol, {
+            title: String(e.title).trim().slice(0, 120),
+            date: e.date,
+            type: 'custom', // shows as "Other" in the event editor
+            recurring: false, // a dated schedule, not an annual event
+            category: 'celebration',
+            ...(calTag ? { calTag } : {}),
+            ...(notes ? { notes } : {}),
+            source: 'school-import',
+            personIds,
+            visibility: 'family', // parents/household only
+            visibleTo,
+            createdBy: uid,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          });
+        } else {
+          // Standalone, all-day activity. NO personIds (household audience
+          // via the directly-set `visibleTo`; the attendee-fold would
+          // widen it). No tripId key → standalone.
+          await addDoc(activitiesCol, {
+            title: String(e.title).trim().slice(0, 120),
+            type: 'note',
+            day: e.date,
+            ...(notes ? { notes } : {}),
+            ...(calTag ? { calTag } : {}),
+            source: 'school-import',
+            visibility: 'family',
+            visibleTo,
+            addedBy: uid, // honest author tag (rule-enforced on create)
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          });
+        }
         n += 1;
       }),
     );
