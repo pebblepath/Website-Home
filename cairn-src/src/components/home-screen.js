@@ -147,10 +147,6 @@ export class HomeScreen extends LitElement {
      *  next doesn't drag the Month-view focus along (and vice-versa).
      *  Reset to today's Sunday by the toolbar Today button. */
     _displayWeekStart: { state: true },
-    /** 2026-05-24 — design 28. Plan items overlapping the visible week.
-     *  Map<tripId, PlanItem[]>. Subscribed when Week view is active +
-     *  the visible-week trip set changes; torn down otherwise. */
-    _weekPlanItems: { state: true },
     _allTripsOpen: { state: true },
     _editingFamilyName: { state: true },
     _importOpen: { state: true },
@@ -309,20 +305,6 @@ export class HomeScreen extends LitElement {
     this._tagRenaming = null;
     this._tagRenameDraft = '';
     this._tagDeleting = null;
-    // 2026-05-24 — design 28. Plan items for visible-week trips. Map
-    // keyed by tripId. Populated by _syncWeekPlanSubs (see below).
-    this._weekPlanItems = new Map();
-    // Internal lifecycle handle — not a Lit prop. Array of
-    // { tripId, unsub } so we can tear down per-trip listeners
-    // selectively as the visible-week trip set changes.
-    this._weekPlanUnsubs = [];
-  }
-
-  // 2026-05-24 — design 28. Helper used by the plan-item sync to scope
-  // the visible week. Wrapped so we can swap the anchor logic later
-  // without touching the listener code.
-  _visibleWeekStart() {
-    return new Date(this._displayWeekStart);
   }
 
   // P9 — Settings → Join another family. Input formatter that keeps the
@@ -3713,24 +3695,11 @@ export class HomeScreen extends LitElement {
         this._wpkOpen = false;
       }
     }
-    // 2026-05-24 — design 28. Manage plan-item subscriptions for the
-    // visible-week trip set. Week-only subscription set so non-week
-    // views don't carry the subscription cost. Re-evaluates whenever
-    // the view changes, the visible-week start advances, or the trips
-    // snapshot listener pushes a new set.
-    if (
-      changed.has('_calendarView') ||
-      changed.has('_displayWeekStart') ||
-      changed.has('trips')
-    ) {
-      if (this._calendarView === 'week') {
-        this._syncWeekPlanSubs();
-      } else if (changed.has('_calendarView')) {
-        // Only tear down on a view-transition AWAY from week — not
-        // every render while we're not in week mode.
-        this._dropAllWeekPlanSubs();
-      }
-    }
+    // Activity Unification U6 — the per-trip planItems subscription that
+    // fed the week hour grid is retired. Trip day-plan items now live in
+    // /activities (U4) and arrive via the family-wide activities listener
+    // (state.activities), so the calendar reads them directly with no
+    // per-week subscription bookkeeping.
   }
 
   _liveTrips() {
@@ -3878,6 +3847,20 @@ export class HomeScreen extends LitElement {
    *  tagged must still appear. */
   _standaloneActivities() {
     return (this.activities ?? []).filter((a) => !a?.tripId && this._tagVisible(a));
+  }
+
+  /** Activity Unification U6 — activities for the CALENDAR (week + month):
+   *  BOTH standalone (tripId nil) AND trip-attached (tripId set, i.e. a
+   *  trip's day-plan items). Per Thomas's spec the calendar surfaces trip
+   *  day-plans alongside standalone activities. tag-visible only. Distinct
+   *  from `_standaloneActivities()` (the "Coming up" GLANCE uses that — a
+   *  trip-attached item belongs to the trip's own glance row, not a
+   *  separate one). Sourced entirely from `state.activities` (already
+   *  loaded family-wide via the activities listener), so the old per-trip
+   *  `_weekPlanItems` planItems subscription is no longer needed (U4 moved
+   *  trip day-plans into /activities). */
+  _calendarActivities() {
+    return (this.activities ?? []).filter((a) => a && this._tagVisible(a));
   }
 
   /**
@@ -4421,9 +4404,6 @@ export class HomeScreen extends LitElement {
     this._tabsRO = null;
     this._pkgTplUnsub?.();
     this._pkgTplUnsub = null;
-    // 2026-05-24 — design 28. Tear down any active plan-item
-    // listeners so they don't leak past component lifetime.
-    this._dropAllWeekPlanSubs();
     super.disconnectedCallback();
   }
 
@@ -4644,10 +4624,9 @@ export class HomeScreen extends LitElement {
   // --cat-bg / --cat-ink tokens via a cat-<id> class (rules at the
   // end of static styles).
   //
-  // Plan items aren't snapshot-listened by home-screen normally — only
-  // <trip-planner> subscribes per-trip. For the Week time-grid to show
-  // timed plan items, we subscribe per visible-week trip while Week is
-  // active and tear down on view-change / disconnect. See _syncWeekPlanSubs.
+  // U6 (2026-06-02) — the Week time-grid reads timed activities (standalone
+  // + trip day-plan items) straight from `state.activities` via
+  // `_calendarActivities()`; no per-trip planItems subscription.
   // ════════════════════════════════════════════════════════════════
 
   /** Toolbar Today button — branches by view: Week resets to today's
@@ -4694,58 +4673,10 @@ export class HomeScreen extends LitElement {
     }
   }
 
-  /** Trips whose [start, end] intersects the visible week — used to
-   *  scope the plan-item subscription set (§5 of design 28 brief). */
-  _visibleWeekTrips() {
-    const sunday = this._visibleWeekStart();
-    const sat = new Date(sunday);
-    sat.setDate(sunday.getDate() + 6);
-    sat.setHours(23, 59, 59, 999);
-    return this._circleTrips().filter((t) => {
-      if (!t.start || !t.end) return false;
-      const s = parseLocalDate(t.start);
-      const e = parseLocalDate(t.end);
-      return s && e && e >= sunday && s <= sat;
-    });
-  }
-
-  /** Attach planItem listeners for every visible-week trip; detach the
-   *  rest. Idempotent — safe to call on every render. */
-  _syncWeekPlanSubs() {
-    const wanted = new Set(this._visibleWeekTrips().map((t) => t.id));
-    // Detach trips no longer needed.
-    this._weekPlanUnsubs = (this._weekPlanUnsubs ?? []).filter(
-      ({ tripId, unsub }) => {
-        if (!wanted.has(tripId)) {
-          try { unsub(); } catch (err) { /* noop */ }
-          this._weekPlanItems.delete(tripId);
-          return false;
-        }
-        return true;
-      },
-    );
-    const have = new Set(this._weekPlanUnsubs.map((x) => x.tripId));
-    for (const tripId of wanted) {
-      if (have.has(tripId)) continue;
-      const unsub = dataStore.planItemsListener(tripId, (items) => {
-        // Copy the Map immutably so Lit notices the state change.
-        const next = new Map(this._weekPlanItems);
-        next.set(tripId, items ?? []);
-        this._weekPlanItems = next;
-      });
-      this._weekPlanUnsubs.push({ tripId, unsub });
-    }
-  }
-
-  /** Detach all plan listeners — called when Week deactivates + on
-   *  disconnectedCallback. */
-  _dropAllWeekPlanSubs() {
-    for (const { unsub } of this._weekPlanUnsubs ?? []) {
-      try { unsub(); } catch (err) { /* noop */ }
-    }
-    this._weekPlanUnsubs = [];
-    if (this._weekPlanItems.size) this._weekPlanItems = new Map();
-  }
+  // Activity Unification U6 (2026-06-02) — removed `_visibleWeekTrips`,
+  // `_syncWeekPlanSubs`, `_dropAllWeekPlanSubs`. The week hour grid no
+  // longer subscribes per-trip to planItems; trip day-plan items live in
+  // /activities (U4) and arrive via the family-wide activities listener.
 
   /** Single dispatch for chip taps across Week + Month. Holiday +
    *  unattached plan items are noops in v1. */
@@ -5027,10 +4958,6 @@ export class HomeScreen extends LitElement {
     );
     // U2: trip plan-items now render under Activities (the retired Plans
     // bucket merged into Activities), so their count folds into Activities.
-    const tripPlanItems = Array.from(this._weekPlanItems.values()).reduce(
-      (n, arr) => n + (Array.isArray(arr) ? arr.length : 0),
-      0,
-    );
     const yearForHolidays =
       this._displayMonth?.getFullYear() ?? new Date().getFullYear();
     const holidays = (this.holidays ?? []).filter(
@@ -5039,7 +4966,7 @@ export class HomeScreen extends LitElement {
     const rows = [
       { id: 'trip', label: 'Trips', count: trips.length },
       { id: 'holiday', label: 'Holidays', count: holidays.length },
-      { id: 'event', label: 'Activities', count: activityEvents.length + tripPlanItems + this._standaloneActivities().length },
+      { id: 'event', label: 'Activities', count: activityEvents.length + this._calendarActivities().length },
       { id: 'celebrate', label: 'Celebrations', count: celebEvents.length },
     ];
     // One filter chip per distinct custom calendar tag.
@@ -5317,14 +5244,17 @@ export class HomeScreen extends LitElement {
         ref: ev,
       });
     }
-    // U3 — standalone activities as all-day chips under Activities.
-    // (Timed hour-grid positioning lands in U6; for now they read as
-    // all-day chips, same lane as events.) `src:'activity'` lets
-    // `_openItem` route them away from the event editor.
+    // U6 — calendar activities (standalone + trip day-plan items) under
+    // Activities. UNTIMED activities go in the all-day lane here; TIMED
+    // ones are positioned on the hour grid below. `src:'activity'` lets
+    // `_openItem` route taps to the activity editor (trip-attached ones
+    // open in the form's trip-attached mode). Replaces the old
+    // standalone-only all-day loop AND the _weekPlanItems planItems loop.
     if (this._calFilters.event) {
-      for (const a of this._standaloneActivities()) {
+      for (const a of this._calendarActivities()) {
         const d = parseLocalDate(a.day);
         if (!d || d < sunday || d > sat) continue;
+        if (a.time && String(a.time).trim() !== '') continue; // timed → grid
         allDay.push({
           cat: 'event',
           title: a.title || 'Activity',
@@ -5349,27 +5279,6 @@ export class HomeScreen extends LitElement {
         });
       }
     }
-    // All-day trip plan items (time === '') join the lane too. U2: these
-    // render under Activities (cat:'event', gated on _calFilters.event) —
-    // the Plans bucket is retired. They keep ref.tripId so _openItem
-    // routes them to the planner, not the event editor.
-    if (this._calFilters.event) {
-      for (const [tripId, items] of this._weekPlanItems.entries()) {
-        for (const it of items ?? []) {
-          if (!it || !it.day) continue;
-          const d = parseLocalDate(it.day);
-          if (!d || d < sunday || d > sat) continue;
-          if (it.time && String(it.time).trim() !== '') continue; // timed → grid
-          allDay.push({
-            cat: 'event',
-            title: it.title || 'Activity',
-            colStart: d.getDay() + 2,
-            span: 1,
-            ref: { ...it, tripId },
-          });
-        }
-      }
-    }
     const lanedAllDay = this._assignLanes(allDay).slice(0, 60); // safety cap
 
     // ── Timed plan items ────────────────────────────────────
@@ -5381,33 +5290,35 @@ export class HomeScreen extends LitElement {
       return `${hh}:${String(m).padStart(2, '0')} ${ampm}`;
     };
     const timedByDay = Array.from({ length: 7 }, () => []);
+    // U6 — TIMED calendar activities (standalone + trip day-plan items)
+    // positioned on the hour grid. Same offset math the planner uses
+    // (P6-4). Sourced from /activities (no _weekPlanItems subscription).
     if (this._calFilters.event) {
-      for (const [tripId, items] of this._weekPlanItems.entries()) {
-        for (const it of items ?? []) {
-          if (!it || !it.day) continue;
-          const d = parseLocalDate(it.day);
-          if (!d || d < sunday || d > sat) continue;
-          const timeStr = String(it.time ?? '').trim();
-          if (!timeStr) continue;
-          const m = timeStr.match(/^(\d{1,2}):(\d{2})/);
-          if (!m) continue;
-          const hr = Number(m[1]);
-          const mn = Number(m[2]);
-          if (hr < 8 || hr >= 20) continue; // outside the visible window
-          const top = (hr - 8) * ROW + (mn / 60) * ROW;
-          const dur = Number.isFinite(it.durationMins) ? it.durationMins : 60;
-          const height = Math.max(24, (dur / 60) * ROW);
-          const endMin = hr * 60 + mn + dur;
-          const endH = Math.floor(endMin / 60);
-          const endM = endMin % 60;
-          const timeLabel = `${fmtTime(hr, mn)} – ${fmtTime(endH, endM)}`;
-          timedByDay[d.getDay()].push({
-            cat: 'event',
-            title: it.title || 'Activity',
-            top, height, timeLabel,
-            ref: { ...it, tripId },
-          });
-        }
+      for (const a of this._calendarActivities()) {
+        if (!a || !a.day) continue;
+        const d = parseLocalDate(a.day);
+        if (!d || d < sunday || d > sat) continue;
+        const timeStr = String(a.time ?? '').trim();
+        if (!timeStr) continue;
+        const m = timeStr.match(/^(\d{1,2}):(\d{2})/);
+        if (!m) continue;
+        const hr = Number(m[1]);
+        const mn = Number(m[2]);
+        if (hr < 8 || hr >= 20) continue; // outside the visible window
+        const top = (hr - 8) * ROW + (mn / 60) * ROW;
+        const dur = Number.isFinite(a.durationMins) ? a.durationMins : 60;
+        const height = Math.max(24, (dur / 60) * ROW);
+        const endMin = hr * 60 + mn + dur;
+        const endH = Math.floor(endMin / 60);
+        const endM = endMin % 60;
+        const timeLabel = `${fmtTime(hr, mn)} – ${fmtTime(endH, endM)}`;
+        timedByDay[d.getDay()].push({
+          cat: 'event',
+          title: a.title || 'Activity',
+          top, height, timeLabel,
+          ref: a,
+          src: 'activity',
+        });
       }
     }
 
@@ -5580,9 +5491,12 @@ export class HomeScreen extends LitElement {
                 ref: ev,
               });
             }
-            // U3 — standalone activities (all-day) in the month grid.
+            // U6 — calendar activities (standalone + trip day-plan items)
+            // as single-day chips in the month grid. The month grid is a
+            // density glance (no hour positioning), so timed + untimed
+            // both render as chips here.
             if (this._calFilters.event) {
-              for (const a of this._standaloneActivities()) {
+              for (const a of this._calendarActivities()) {
                 const d = parseLocalDate(a.day);
                 if (!d || d < wkStart || d > wkEnd) continue;
                 items.push({
