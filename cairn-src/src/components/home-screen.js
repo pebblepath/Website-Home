@@ -4948,16 +4948,11 @@ export class HomeScreen extends LitElement {
   _renderCalFilters() {
     const trips = this._circleTrips();
     const events = this._filteredEvents();
-    // Counts now reflect the calendar category (which honours the
-    // explicit `category` set at import), not the raw event type.
-    const activityEvents = events.filter(
-      (e) => this._eventCalCat(e) === 'event',
-    );
+    // U7 7-D — plan/activity events migrated to /activities; the Activities
+    // count comes from /activities only now (celebrations stay events).
     const celebEvents = events.filter(
       (e) => this._eventCalCat(e) === 'celebrate',
     );
-    // U2: trip plan-items now render under Activities (the retired Plans
-    // bucket merged into Activities), so their count folds into Activities.
     const yearForHolidays =
       this._displayMonth?.getFullYear() ?? new Date().getFullYear();
     const holidays = (this.holidays ?? []).filter(
@@ -4966,7 +4961,7 @@ export class HomeScreen extends LitElement {
     const rows = [
       { id: 'trip', label: 'Trips', count: trips.length },
       { id: 'holiday', label: 'Holidays', count: holidays.length },
-      { id: 'event', label: 'Activities', count: activityEvents.length + this._calendarActivities().length },
+      { id: 'event', label: 'Activities', count: this._calendarActivities().length },
       { id: 'celebrate', label: 'Celebrations', count: celebEvents.length },
     ];
     // One filter chip per distinct custom calendar tag.
@@ -5233,6 +5228,7 @@ export class HomeScreen extends LitElement {
       if (d < sunday || d > sat) continue;
       if (!this._tagVisible(ev)) continue;
       const cat = this._eventCalCat(ev);
+      if (cat === 'event') continue; // U7 7-D — plan/activity migrated to /activities
       if (!this._calFilters[cat]) continue;
       allDay.push({
         cat,
@@ -5480,6 +5476,7 @@ export class HomeScreen extends LitElement {
               if (d < wkStart || d > wkEnd) continue;
               if (!this._tagVisible(ev)) continue;
               const cat = this._eventCalCat(ev);
+              if (cat === 'event') continue; // U7 7-D — plan/activity migrated to /activities
               if (!this._calFilters[cat]) continue;
               items.push({
                 cat,
@@ -7627,6 +7624,9 @@ export class HomeScreen extends LitElement {
     }
     for (const e of this._filteredEvents()) {
       if (!e.date) continue;
+      // U7 7-D — plan/activity events migrated to /activities (surfaced via
+      // the activities loop below); only celebrations come from events here.
+      if (!this._isCelebrationEvent(e)) continue;
       const d = parseLocalDate(e.date);
       if (!d) continue;
       out.push({
