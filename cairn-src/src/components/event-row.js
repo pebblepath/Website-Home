@@ -121,21 +121,17 @@ export class EventRow extends LitElement {
       font-weight: 600;
       margin-right: 6px;
     }
+    /* Solid teal capsule date pill — iOS parity (EventRowView's
+       right-side pill). */
     .date {
       font-size: 13px;
-      font-weight: 600;
-      color: var(--text-primary);
-      text-align: right;
+      font-weight: 700;
+      color: #fff;
+      background: var(--teal-pebble);
+      border-radius: 999px;
+      padding: 6px 13px;
       flex-shrink: 0;
-    }
-    .date small {
-      display: block;
-      color: var(--text-tertiary);
-      font-weight: 500;
-      font-size: 11px;
-      margin-top: 2px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+      white-space: nowrap;
     }
   `;
 
@@ -177,14 +173,24 @@ export class EventRow extends LitElement {
   render() {
     const e = this.event;
     if (!e) return html``;
-    const dt = this._fmtDate(e.date);
-    // Resolve personIds → member objects so we can show real avatars
-    // beside the title (cake icon stays as type signifier). For a
-    // birthday this is one face; for an anniversary, two overlapping.
-    const memberMap = new Map((this.members ?? []).map((m) => [m.uid, m]));
-    const people = (e.personIds ?? [])
-      .map((id) => memberMap.get(id))
-      .filter(Boolean);
+    // iOS parity (EventRowView): solid teal date pill, "d MMM" for
+    // recurring celebrations, "d MMM yyyy" for one-offs. Person-avatar
+    // faces dropped to match the 2026-05-22 iOS compact row.
+    const parsed = parseLocalDate(e.date) ?? new Date(e.date);
+    const dateLabel = parsed.toLocaleDateString(
+      'en-GB',
+      (e.recurring ?? false)
+        ? { day: 'numeric', month: 'short' }
+        : { day: 'numeric', month: 'short', year: 'numeric' },
+    );
+    // Secondary line — subtitle wins; else a "Yearly" hint for
+    // recurring events (mirrors EventRowView.secondaryLine).
+    const secondary =
+      e.subtitle && e.subtitle.length
+        ? e.subtitle
+        : (e.recurring ?? false)
+          ? 'Yearly'
+          : '';
     return html`
       <div
         class="row"
@@ -197,33 +203,16 @@ export class EventRow extends LitElement {
         <div class="body">
           <div class="title-row">
             <div class="title">${e.title}</div>
-            ${people.length > 0
-              ? html`<span class="faces">
-                  ${people.slice(0, 3).map(
-                    (m) => html`
-                      <member-chip
-                        .name=${m.displayName}
-                        .photo=${m.photoURL ?? ''}
-                        .hue=${m.hue}
-                        size="22"
-                      ></member-chip>
-                    `,
-                  )}
-                </span>`
-              : ''}
           </div>
-          ${e.calTag || e.subtitle
+          ${e.calTag || secondary
             ? html`<div class="meta">
                 ${e.calTag
                   ? html`<span class="tagpill">${e.calTag}</span>`
-                  : ''}${e.subtitle ?? ''}
+                  : ''}${secondary}
               </div>`
             : ''}
         </div>
-        <div class="date">
-          ${dt.day}
-          <small>${dt.month}</small>
-        </div>
+        <div class="date">${dateLabel}</div>
       </div>
     `;
   }

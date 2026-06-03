@@ -994,6 +994,9 @@ export class HomeScreen extends LitElement {
       width: 13px;
       height: 13px;
     }
+    /* Icon-only "+" link (e.g. add a celebration) — square, no label. */
+    .link--icon { padding: 7px 9px; }
+    .link--icon svg { width: 16px; height: 16px; }
     /* Slice 7 — the "Plan our weekend" entry reads as the Pebble action. */
     .link.plan-weekend-link {
       color: var(--ink-teal);
@@ -1005,8 +1008,35 @@ export class HomeScreen extends LitElement {
       border-color: rgba(61, 155, 143, 0.5);
       color: var(--ink-teal);
     }
+    /* Substantial teal-wash action pill — mirrors the iOS Activities
+       header "My Weekend" pill (ppTealWash fill + teal stroke +
+       ink-teal text + 15px glyph, 36px tall). Used for "Plan our
+       weekend" + "Smart Upload" so they read as real buttons, not the
+       quieter glass .link chips beside them. */
+    .action-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      height: 36px;
+      padding: 0 14px;
+      border-radius: var(--radius-pill);
+      background: rgba(61, 155, 143, 0.12);
+      border: 1px solid rgba(61, 155, 143, 0.3);
+      color: var(--ink-teal);
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s ease, border-color 0.18s ease;
+    }
+    .action-pill:hover {
+      background: rgba(61, 155, 143, 0.2);
+      border-color: rgba(61, 155, 143, 0.5);
+    }
+    .action-pill svg { width: 15px; height: 15px; }
     @media (max-width: 768px) {
-      .link.hide-mobile {
+      .link.hide-mobile,
+      .action-pill.hide-mobile {
         display: none;
       }
     }
@@ -1389,6 +1419,10 @@ export class HomeScreen extends LitElement {
     }
     .cal-add:hover { background-image: var(--gradient-cta-hover); }
     .cal-add svg { width: 15px; height: 15px; display: block; }
+    /* Icon-only "+" variant — drops the "Add event" label (avoids the
+       ambiguous "event" term); square gradient button. */
+    .cal-add--icon { padding: 9px; gap: 0; }
+    .cal-add--icon svg { width: 18px; height: 18px; }
 
     /* ── body ────────────────────────────────────────────── */
     .cal-ws-body { display: grid; grid-template-columns: 248px 1fr; }
@@ -2636,6 +2670,64 @@ export class HomeScreen extends LitElement {
       color: var(--text-secondary);
       border: 1px solid var(--hairline);
     }
+    /* Upcoming-Activities row — iOS-parity date-rail layout (left date
+       chip + title/tag, no gift glyph, no right-side date pill). */
+    .ca-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 4px;
+      border-bottom: 1px solid rgba(255, 248, 235, 0.07);
+    }
+    .ca-row:last-child { border-bottom: none; }
+    .ca-row .t {
+      flex: 1;
+      min-width: 0;
+      font-family: var(--font-display);
+      font-size: 14.5px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .ca-row .t small {
+      display: block;
+      color: var(--text-tertiary);
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 2px;
+      font-family: var(--font-body);
+    }
+    .ca-rail {
+      width: 48px;
+      height: 46px;
+      flex-shrink: 0;
+      border-radius: 12px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(61, 155, 143, 0.12);
+    }
+    .ca-rail .rk {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--teal-pebble);
+    }
+    .ca-rail .rd {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 1;
+      margin-top: 1px;
+      color: var(--ink-teal);
+    }
+    .ca-rail.today {
+      background: var(--teal-pebble);
+      gap: 2px;
+    }
+    .ca-rail.today .rk { color: #fff; }
+    .ca-rail.today svg { width: 15px; height: 15px; color: #fff; }
     .insight {
       display: flex;
       gap: 14px;
@@ -4535,16 +4627,18 @@ export class HomeScreen extends LitElement {
             <h2>Coming up</h2>
             <div style="display:flex;gap:10px;align-items:center;">
               <button
-                class="link plan-weekend-link"
+                class="action-pill"
                 @click=${() => (this._weekendOpen = true)}
                 title="Plan our weekend with Pebble"
               >
-                <pebble-icon size="14"></pebble-icon> Plan our weekend
+                <pebble-icon size="15"></pebble-icon> Plan our weekend
               </button>
               <button
-                class="link hide-mobile"
+                class="action-pill hide-mobile"
                 @click=${() => (this._schoolImportOpen = true)}
+                title="Smart Upload"
               >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M8 8l4-4 4 4"/><path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
                 Smart Upload
               </button>
               ${this._circleTrips().length > 4
@@ -4864,9 +4958,8 @@ export class HomeScreen extends LitElement {
               `,
             )}
           </div>
-          <button class="cal-add" @click=${() => this._openCreate()}>
+          <button class="cal-add cal-add--icon" @click=${() => this._openCreate()} aria-label="Add to calendar" title="Add to calendar">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Add event
           </button>
         </div>
       </div>
@@ -5647,7 +5740,9 @@ export class HomeScreen extends LitElement {
         <section>
           <div class="section-head">
             <h2>Celebrations</h2>
-            <button class="link" @click=${() => this._openCreateEvent()}>+ Add event</button>
+            <button class="link link--icon" @click=${() => this._openCreateEvent()} aria-label="Add a celebration" title="Add a celebration">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
           </div>
           ${(() => {
             // 2026-05-16 — one chronological sequence, soonest →
@@ -5691,10 +5786,9 @@ export class HomeScreen extends LitElement {
         ${coming.length === 0
           ? html`<div class="ring-note" style="padding:8px 4px;">Nothing on the calendar yet — plan something from the Activities tab.</div>`
           : coming.map(
-              (c) => html`<div class="ms-row">
-                ${this._gicoFor(c)}
+              (c) => html`<div class="ca-row">
+                ${this._comingDateRail(c)}
                 <div class="t">${c.title}${c.sub ? html`<small>${c.sub}</small>` : ''}</div>
-                <span class="ms-stat up">${c.chip}</span>
               </div>`,
             )}
       </glass-panel>`;
@@ -7706,6 +7800,35 @@ export class HomeScreen extends LitElement {
     if (c.kind === 'holiday') return this._holidayGico();
     if (c.kind === 'external') return this._schoolGico();
     return this._eventGico();
+  }
+
+  /** Left date rail for an Upcoming-Activities row — iOS parity
+   *  (FamilyComingUpRow.dateRail). Today/ongoing → solid-teal tile
+   *  with a calendar glyph + "Today"/"Now"; any other day → teal-wash
+   *  chip with weekday (within the week) or month (further out) over
+   *  the day number. Replaces the old gift glyph + right-side date
+   *  pill so activities don't read as celebrations. */
+  _comingDateRail(c) {
+    const d = parseLocalDate(c.date);
+    if (!d) return html`<span class="ca-rail"></span>`;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const target = new Date(d);
+    target.setHours(0, 0, 0, 0);
+    const days = Math.round((target - today) / 86400000);
+    if (days <= 0) {
+      return html`<span class="ca-rail today">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>
+        <span class="rk">${days < 0 ? 'Now' : 'Today'}</span>
+      </span>`;
+    }
+    const top = d
+      .toLocaleDateString('en-GB', days <= 6 ? { weekday: 'short' } : { month: 'short' })
+      .toUpperCase();
+    return html`<span class="ca-rail">
+      <span class="rk">${top}</span>
+      <span class="rd">${d.getDate()}</span>
+    </span>`;
   }
 }
 
