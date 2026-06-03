@@ -177,10 +177,17 @@ export class WeekendPlanner extends LitElement {
     const weather = (Array.isArray(s.pebbleLiveContext) ? s.pebbleLiveContext : []).find(
       (i) => i.kind === 'weatherSnapshot',
     );
-    const occupiedEvents = (Array.isArray(s.events) ? s.events : [])
-      .filter((e) => e.date === satKey || e.date === sunKey)
-      .map((e) => e.title)
-      .filter(Boolean);
+    // U7/U8 — "already on the weekend" = celebration events PLUS standalone
+    // /activities (plan/activity items migrated there). Without the
+    // activities term the planner would re-suggest things already scheduled.
+    const occupiedEvents = [
+      ...(Array.isArray(s.events) ? s.events : [])
+        .filter((e) => e.date === satKey || e.date === sunKey)
+        .map((e) => e.title),
+      ...(Array.isArray(s.activities) ? s.activities : [])
+        .filter((a) => !a.tripId && (a.day === satKey || a.day === sunKey))
+        .map((a) => a.title),
+    ].filter(Boolean);
     const now = new Date();
     const cutoff = new Date(now.getTime() + 14 * 86400000);
     const upcomingTripTitles = (Array.isArray(s.trips) ? s.trips : [])
