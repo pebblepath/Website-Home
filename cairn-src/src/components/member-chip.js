@@ -67,7 +67,14 @@ export class MemberChip extends LitElement {
 
   render() {
     const grad = `linear-gradient(135deg, hsl(${this.hue}, 55%, 62%) 0%, hsl(${(this.hue + 40) % 360}, 50%, 42%) 100%)`;
-    const style = `width:${this.size}px;height:${this.size}px;background:${grad};font-size:${this.size * 0.38}px;`;
+    // When a photo is present, paint a neutral stone placeholder behind it
+    // rather than the saturated hue gradient. The image covers the circle
+    // once loaded, so the gradient is only ever visible for the pre-load
+    // frame — and for hues in the magenta range (e.g. a "grandpa"
+    // connection) that frame flashes pink on every Settings load. The hue
+    // gradient stays the no-photo initials background.
+    const bg = this.photo ? 'rgba(120, 120, 128, 0.22)' : grad;
+    const style = `width:${this.size}px;height:${this.size}px;background:${bg};font-size:${this.size * 0.38}px;`;
     return html`
       <div class="avatar" style=${style} title=${this.name}>
         ${this.photo

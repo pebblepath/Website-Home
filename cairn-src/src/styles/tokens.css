@@ -31,6 +31,10 @@
   --gradient-meadow: linear-gradient(135deg, #a8e670 0%, #4fc26b 50%, #2a8a4a 100%);
   --gradient-sage: linear-gradient(135deg, #3d9b8f 0%, #1f5c54 100%);
   --gradient-amber: linear-gradient(135deg, #d4a843 0%, #c67b5c 100%);
+  /* ppTerracotta → ppTerracottaDark — matches the iOS Birthday tile
+     (AddActivityPicker roseGradient) so the celebration picker card
+     reads identically across platforms. */
+  --gradient-terracotta: linear-gradient(135deg, #c67b5c 0%, #9a5638 100%);
   --gradient-rose: linear-gradient(135deg, #c98a8a 0%, #8b7bb5 100%);
   --gradient-stone: linear-gradient(180deg, #e8dcc8 0%, #c9b89a 45%, #8b5a3e 100%);
 

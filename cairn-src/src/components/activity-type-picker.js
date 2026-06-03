@@ -33,55 +33,52 @@ export class ActivityTypePicker extends LitElement {
   static get OPTIONS() {
     return [
       // Custom Cairn icon set — original, cohesive glyphs (rounded
-      // filled silhouettes in the pebble aesthetic). The exact same
-      // SVG source files live in public/assets/icons/{activity,trip,
-      // event}.svg and are the parity source-of-truth: the iOS app
-      // imports those files into its asset catalog so both surfaces
-      // render byte-identical art. Do NOT hand-tweak one side only.
+      // glyphs in the pebble aesthetic). These mirror the iOS picker
+      // (Components/AddActivityPicker.swift) one-for-one — iOS uses SF
+      // Symbols (suitcase.fill / star.fill / gift.fill / calendar.badge
+      // .plus) and these SVGs are the matching web art (briefcase, star,
+      // gift, calendar-with-plus). Tones echo the iOS tile colors so both
+      // surfaces read identically: Trip=sage (teal), Activity=amber,
+      // Birthday=terracotta, Import=tide (blue). Keep the two sides in
+      // lockstep — do NOT hand-tweak one platform only.
       {
         type: 'trip',
-        tone: 'tide',
+        tone: 'sage',
         icon: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M21.62 3.05a1 1 0 0 0-1.12-.18L3.7 10.3c-.86.38-.83 1.62.05 1.95l6.06 2.27 2.27 6.06c.33.88 1.57.9 1.95.05L21.8 4.17a1 1 0 0 0-.18-1.12zM10.5 12.7l6.4-5.7-4.9 6.6-.1.1z"/>
+          <path d="M9 3.5h6A2.5 2.5 0 0 1 17.5 6v1h2A2.5 2.5 0 0 1 22 9.5v9A2.5 2.5 0 0 1 19.5 21h-15A2.5 2.5 0 0 1 2 18.5v-9A2.5 2.5 0 0 1 4.5 7h2V6A2.5 2.5 0 0 1 9 3.5zm.5 3.5h5V6a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 0-.5.5v1z"/>
         </svg>`,
         label: 'Trip',
-        desc: 'Day trips or multi-day travel, with optional lodging, flights, attendees.',
+        desc: 'A getaway or a day out, with a day-by-day plan. Lodging and flights optional.',
       },
       {
         type: 'activity',
         tone: 'amber',
         icon: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M15.8 7.4 21.8 19.5a1.1 1.1 0 0 1-.98 1.6H10.2z"/>
-          <path d="M9 4.6 16.5 19.5a1.1 1.1 0 0 1-.98 1.6H3.46a1.1 1.1 0 0 1-.98-1.6z"/>
+          <path d="M12 2.6l2.82 5.72 6.31.92a.7.7 0 0 1 .39 1.2l-4.57 4.45 1.08 6.29a.7.7 0 0 1-1.02.74L12 18.94l-5.65 2.97a.7.7 0 0 1-1.02-.74l1.08-6.29-4.57-4.45a.7.7 0 0 1 .39-1.2l6.31-.92z"/>
         </svg>`,
         label: 'Activity',
-        desc: 'A single outing, plan, or to-do for the family calendar.',
+        desc: 'A single thing to do, on the family calendar. Add a time if it has one.',
       },
       {
         type: 'event',
-        tone: 'celebration',
+        tone: 'terracotta',
         icon: html`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M11.1 6.7C10.4 5 9.2 3.7 7.8 3.3c-1-.3-1.9.1-2.2.9-.4 1 .2 2.1 1 2.7 1 .75 2.5 1.05 4.5 1.05z"/>
-          <path d="M12.9 6.7c.7-1.7 1.9-3 3.3-3.4 1-.3 1.9.1 2.2.9.4 1-.2 2.1-1 2.7-1 .75-2.5 1.05-4.5 1.05z"/>
-          <rect x="3" y="8" width="8.1" height="3.5" rx="1"/>
-          <rect x="12.9" y="8" width="8.1" height="3.5" rx="1"/>
-          <rect x="4.1" y="11.7" width="7" height="9.1" rx="1.4"/>
-          <rect x="12.9" y="11.7" width="7" height="9.1" rx="1.4"/>
+          <path d="M11.25 9H4a1 1 0 0 0-1 1v1.5a1 1 0 0 0 1 1h7.25V9zm1.5 0v3.5H20a1 1 0 0 0 1-1V10a1 1 0 0 0-1-1h-7.25zM11.25 14H4.5v5.5A1.5 1.5 0 0 0 6 21h5.25v-7zm1.5 0v7H18a1.5 1.5 0 0 0 1.5-1.5V14h-6.75zM8.4 3a2.1 2.1 0 0 0-.5 4.15c.86.2 1.96.05 3.1-.4C10.3 5.05 9.5 3.2 8.4 3zm7.2 0c-1.1.2-1.9 2.05-2.6 3.75 1.14.45 2.24.6 3.1.4A2.1 2.1 0 0 0 15.6 3z"/>
         </svg>`,
         label: 'Birthday or anniversary',
         desc: 'Recurring celebration on a specific date.',
       },
       {
-        // Mobile-only option: on desktop this lives in the "Coming up"
-        // section header instead. Mobile hides that link to keep the
-        // section-head from getting cluttered, so we surface it here.
+        // Lives in the picker on BOTH platforms now (parity with the iOS
+        // AddActivityPicker, 2026-06-03) — was previously desktop-hidden
+        // because the affordance sat in the "Coming up" section header
+        // instead. That header link is gone; this is the single home.
         type: 'import',
         tone: 'tide',
-        mobileOnly: true,
         icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="3" y="5" width="18" height="16" rx="2" />
-          <path d="M3 9h18M8 3v4M16 3v4" />
-          <path d="M9 14l3 3 4-5" />
+          <path d="M21 11V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h7" />
+          <path d="M3 9h18M8 2.5v3M16 2.5v3" />
+          <path d="M18 15v6M15 18h6" />
         </svg>`,
         label: 'Import from Calendar',
         desc: 'Pull recent events from your Google Calendar.',
@@ -201,6 +198,7 @@ export class ActivityTypePicker extends LitElement {
     .icon-cell.tide { background: var(--gradient-tide); }
     .icon-cell.amber { background: var(--gradient-amber); }
     .icon-cell.celebration { background: var(--gradient-celebration); }
+    .icon-cell.terracotta { background: var(--gradient-terracotta); }
     /* Mobile-only options (e.g. Import from Calendar) — hidden on
        desktop where the equivalent affordance lives in the section
        header. */

@@ -4543,15 +4543,9 @@ export class HomeScreen extends LitElement {
               </button>
               <button
                 class="link hide-mobile"
-                @click=${() => (this._importOpen = true)}
-              >
-                Import from Calendar
-              </button>
-              <button
-                class="link hide-mobile"
                 @click=${() => (this._schoolImportOpen = true)}
               >
-                Import from PDF
+                Smart Upload
               </button>
               ${this._circleTrips().length > 4
                 ? html`<button class="link" @click=${() => (this._allTripsOpen = true)}>
@@ -4737,8 +4731,15 @@ export class HomeScreen extends LitElement {
       const t = String(e?.calTag ?? '').trim();
       if (t) set.add(t);
     }
-    // U3 — activity tags also drive the per-tag filter chips.
-    for (const a of this._standaloneActivities()) {
+    // U3 — activity tags also drive the per-tag filter chips. Enumerate
+    // from the tag-UNFILTERED activity set (NOT `_standaloneActivities()`,
+    // which applies `_tagVisible`). Otherwise toggling a tag off drops its
+    // activities from the source, the tag vanishes from this list, its
+    // chip disappears, and the user can never toggle it back on — every
+    // event stays hidden (the "clicked LPP and all my events vanished"
+    // trap, 2026-06-03).
+    for (const a of this.activities ?? []) {
+      if (a?.tripId) continue;
       const t = String(a?.calTag ?? '').trim();
       if (t) set.add(t);
     }
@@ -4966,6 +4967,14 @@ export class HomeScreen extends LitElement {
     ];
     // One filter chip per distinct custom calendar tag.
     const tags = this._eventTags();
+    // Count both /events AND /activities carrying the tag — post-U2 the
+    // tagged items mostly live in /activities, so an events-only count
+    // would read 0 for an activity-only tag.
+    const tagCount = (t) =>
+      events.filter((e) => String(e?.calTag ?? '').trim() === t).length +
+      (this.activities ?? []).filter(
+        (a) => !a?.tripId && String(a?.calTag ?? '').trim() === t,
+      ).length;
     const chip = (cls, id, label, count) => {
       const on = this._calFilters[id] !== false;
       return html`
@@ -5015,22 +5024,8 @@ export class HomeScreen extends LitElement {
             </div>
             <div class="cal-filt-list">
               ${this._managingTags
-                ? tags.map((t) =>
-                    this._renderTagManageRow(
-                      t,
-                      events.filter((e) => String(e?.calTag ?? '').trim() === t)
-                        .length,
-                    ),
-                  )
-                : tags.map((t) =>
-                    chip(
-                      'cat-tag',
-                      'tag:' + t,
-                      t,
-                      events.filter((e) => String(e?.calTag ?? '').trim() === t)
-                        .length,
-                    ),
-                  )}
+                ? tags.map((t) => this._renderTagManageRow(t, tagCount(t)))
+                : tags.map((t) => chip('cat-tag', 'tag:' + t, t, tagCount(t)))}
             </div>
           `
         : ''}
@@ -7389,7 +7384,10 @@ export class HomeScreen extends LitElement {
       case 'asNeeded': cadence = 'As needed'; break;
       default: cadence = r.cadence || '';
     }
-    return r.timeOfDay ? `${cadence} · ${r.timeOfDay}` : cadence;
+    // Term-time annotation (2026-06-03) — schooling rhythms pause over
+    // breaks. Mirrors the iOS rhythm display + brief context.
+    const base = r.timeOfDay ? `${cadence} · ${r.timeOfDay}` : cadence;
+    return r.termTimeOnly ? `${base} · term-time only` : base;
   }
 
   _weekdayShort(n) {
