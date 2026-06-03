@@ -354,7 +354,7 @@ export class TripPlanner extends LitElement {
       this._fileName = '';
       this._dur = 60;
     } catch (err) {
-      console.error('addPlanItem failed:', err);
+      console.error('saveActivity (planner add) failed:', err);
       toast(
         err?.code === 'permission-denied'
           ? "Couldn't add — the planner rule may need publishing."
