@@ -2076,43 +2076,48 @@ class FamilyDataStore extends EventTarget {
     const from = String(oldTag ?? '').trim();
     const to = String(newTag ?? '').trim().slice(0, 60);
     if (!from || !to || from === to) return 0;
-    const ids = (this.state.events ?? [])
-      .filter((e) => String(e?.calTag ?? '').trim() === from)
-      .map((e) => e.id)
-      .filter(Boolean);
-    await Promise.all(
-      ids.map((id) =>
-        updateDoc(
-          doc(db, 'families', this._currentFamilyId, 'familyEvents', id),
-          { calTag: to, updatedAt: serverTimestamp() },
-        ),
-      ),
-    );
-    return ids.length;
+    return this._applyTagWrite(from, { calTag: to, updatedAt: serverTimestamp() });
   }
 
-  /** Remove a custom calendar tag: the events STAY on the calendar,
+  /** Remove a custom calendar tag: the items STAY on the calendar,
    *  they just lose this tag. `calTag` is set to null (untagged on iOS
-   *  + Portal — both treat null/absent as no tag). Same loaded-events +
+   *  + Portal — both treat null/absent as no tag). Same loaded-state +
    *  updateDoc-by-id approach as renameCalTag (no query, no index).
-   *  Returns the number of events untagged. */
+   *  Returns the number of items untagged. */
   async deleteCalTag(tag) {
     if (!db || !this._currentFamilyId) throw new Error('No family yet.');
     const t = String(tag ?? '').trim();
     if (!t) return 0;
-    const ids = (this.state.events ?? [])
-      .filter((e) => String(e?.calTag ?? '').trim() === t)
-      .map((e) => e.id)
-      .filter(Boolean);
+    return this._applyTagWrite(t, { calTag: null, updatedAt: serverTimestamp() });
+  }
+
+  /** Apply a calTag patch across BOTH /familyEvents AND /activities for
+   *  every already-loaded doc carrying `from` as its tag. Post-U2 most
+   *  tagged items live in /activities, so the original events-only loop
+   *  matched 0 of them — the "Renamed tag ... on 0 events" no-op bug
+   *  (2026-06-04). Operates on already-loaded state + updateDoc-by-id
+   *  (the listener filtered to visibleTo; a bare calTag query would be
+   *  rejected by the content-conditional read rule + need a composite
+   *  index). Any cairn member may write both collections. Returns the
+   *  total number of docs written. */
+  async _applyTagWrite(from, patch) {
+    const targets = [];
+    for (const e of this.state.events ?? []) {
+      if (e?.id && String(e?.calTag ?? '').trim() === from) {
+        targets.push(['familyEvents', e.id]);
+      }
+    }
+    for (const a of this.state.activities ?? []) {
+      if (a?.id && String(a?.calTag ?? '').trim() === from) {
+        targets.push(['activities', a.id]);
+      }
+    }
     await Promise.all(
-      ids.map((id) =>
-        updateDoc(
-          doc(db, 'families', this._currentFamilyId, 'familyEvents', id),
-          { calTag: null, updatedAt: serverTimestamp() },
-        ),
+      targets.map(([col, id]) =>
+        updateDoc(doc(db, 'families', this._currentFamilyId, col, id), patch),
       ),
     );
-    return ids.length;
+    return targets.length;
   }
 
 

@@ -5223,7 +5223,7 @@ export class HomeScreen extends LitElement {
     if (!next || next === oldTag) return;
     try {
       const n = await dataStore.renameCalTag(oldTag, next);
-      toast(`Renamed tag to "${next}" on ${n} event${n === 1 ? '' : 's'}.`);
+      toast(`Renamed tag to "${next}" on ${n} item${n === 1 ? '' : 's'}.`);
     } catch (err) {
       console.error('renameCalTag failed:', err);
       toast("Couldn't rename the tag, try again.");
@@ -5234,7 +5234,7 @@ export class HomeScreen extends LitElement {
     this._tagDeleting = null;
     try {
       const n = await dataStore.deleteCalTag(t);
-      toast(`Removed the "${t}" tag from ${n} event${n === 1 ? '' : 's'}.`);
+      toast(`Removed the "${t}" tag from ${n} item${n === 1 ? '' : 's'}.`);
       if (this._eventTags().length === 0) this._managingTags = false;
     } catch (err) {
       console.error('deleteCalTag failed:', err);
