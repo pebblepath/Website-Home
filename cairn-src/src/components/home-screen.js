@@ -2680,6 +2680,9 @@ export class HomeScreen extends LitElement {
       border-bottom: 1px solid rgba(255, 248, 235, 0.07);
     }
     .ca-row:last-child { border-bottom: none; }
+    /* Tappable variant (Celebrations rows open the edit sheet). */
+    .ca-row--tap { cursor: pointer; border-radius: var(--radius-tile); }
+    .ca-row--tap:hover { background: rgba(255, 248, 235, 0.05); }
     .ca-row .t {
       flex: 1;
       min-width: 0;
@@ -5734,8 +5737,31 @@ export class HomeScreen extends LitElement {
 
 
   _renderCelebrationsSection() {
-    const filteredEvents = this._filteredEvents();
-    const allMembers = this._liveImmediate().concat(this._liveExtended());
+    // 2026-06-05 — rows now use the SAME date-rail layout as Home's
+    // "Upcoming Activities" (.ca-row + _comingDateRail), matching iOS,
+    // whose Celebrations section renders FamilyComingUpRow (no gift
+    // glyph, no right-side date pill). `resolveEventOccurrence` rolls
+    // recurring birthdays/anniversaries to their NEXT occurrence so the
+    // rail's "days from today" + soonest-first sort are correct.
+    const items = this._filteredEvents()
+      .filter((e) => this._isCelebrationEvent(e) && this._tagVisible(e))
+      .map((e) => {
+        const { date } = resolveEventOccurrence(e);
+        // Mirror iOS FamilyComingUpRow.subtitleLine: tag + subtitle,
+        // " · "-joined (no "Yearly" — iOS doesn't show it here).
+        const sub = [e.calTag, e.subtitle]
+          .map((s) => String(s ?? '').trim())
+          .filter(Boolean)
+          .join(' · ');
+        return {
+          e,
+          title: e.title || 'Celebration',
+          sub,
+          date: date ? formatLocalDate(date) : e.date || '',
+        };
+      })
+      .filter((it) => it.date)
+      .sort((a, b) => String(a.date).localeCompare(String(b.date)));
     return html`
         <section>
           <div class="section-head">
@@ -5744,29 +5770,27 @@ export class HomeScreen extends LitElement {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </button>
           </div>
-          ${(() => {
-            // 2026-05-16 — one chronological sequence, soonest →
-            // furthest. `e.date` is the next-occurrence date as
-            // zero-padded YYYY-MM-DD, so a lexical asc compare IS
-            // chronological-by-soonest. Type is conveyed per row by
-            // <event-row> itself.
-            const sorted = filteredEvents
-              .filter((e) => this._isCelebrationEvent(e) && this._tagVisible(e))
-              .sort((a, b) => String(a.date).localeCompare(String(b.date)));
-            return html`
-              <glass-panel padding="md" variant="strong">
-                ${sorted.length === 0
-                  ? html`<div class="cel-empty">No celebrations yet.</div>`
-                  : sorted.map(
-                      (e) => html`<event-row
-                        .event=${e}
-                        .members=${allMembers}
-                        @edit-event=${(ev) => this._openEditEvent(ev.detail)}
-                      ></event-row>`,
-                    )}
-              </glass-panel>
-            `;
-          })()}
+          <glass-panel padding="md" variant="strong">
+            ${items.length === 0
+              ? html`<div class="cel-empty">No celebrations yet.</div>`
+              : items.map(
+                  (it) => html`<div
+                    class="ca-row ca-row--tap"
+                    role="button"
+                    tabindex="0"
+                    @click=${() => this._openEditEvent(it.e)}
+                    @keydown=${(ev) => {
+                      if (ev.key === 'Enter' || ev.key === ' ') {
+                        ev.preventDefault();
+                        this._openEditEvent(it.e);
+                      }
+                    }}
+                  >
+                    ${this._comingDateRail(it)}
+                    <div class="t">${it.title}${it.sub ? html`<small>${it.sub}</small>` : ''}</div>
+                  </div>`,
+                )}
+          </glass-panel>
         </section>
     `;
   }
