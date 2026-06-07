@@ -321,7 +321,11 @@
     min-height: 78vh;
     display: flex; align-items: center; justify-content: center;
     text-align: center;
-    background: linear-gradient(160deg, var(--teal-deep) 0%, var(--teal-dark) 30%, var(--teal) 55%, var(--teal-light) 80%, var(--sand-light) 100%);
+    /* Header teal wash desaturated 25% (2026-06-07) so the pebble video
+       reads through more. HSL saturation x0.75 on each teal stop,
+       lightness preserved. Nav bar is unaffected. Revert = restore the
+       var(--teal-deep/dark/teal/light) stops below. */
+    background: linear-gradient(160deg, #27544E 0%, #377069 30%, #498F86 55%, #68B3A7 80%, var(--sand-light) 100%);
     position: relative; overflow: hidden;
   }
   /* .hero-inner wraps the text + (desktop) the mockup so they can flex
@@ -3340,10 +3344,6 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
           <span><b>Collaboration</b> &mdash; real-time sync across every member you invite.</span>
         </li>
-        <li>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          <span><b>Pediatrician-ready PDF exports</b> &mdash; one tap, ready for every visit.</span>
-        </li>
       </ul>
     </div>
     <div class="intelligence-visual">
@@ -3469,7 +3469,6 @@
   <div class="pricing-inner">
     <div class="pricing-header">
       <h2>Join the family.</h2>
-      <p class="pricing-lede">Premium unlocks unlimited Pebble AI for everyone in your family.</p>
     </div>
 
     <div class="pricing-grid">
