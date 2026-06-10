@@ -2173,58 +2173,91 @@ class FamilyDataStore extends EventTarget {
     });
   }
 
-  /**
-   * Phase 3A.2: look up a family by Cairn invite code (returns null when no
-   * match, throws on error). Used by the join-family preview screen.
-   */
-  async findFamilyByCairnCode(code) {
-    if (!db) throw new Error('Firebase not configured.');
-    const q = query(collection(db, 'families'), where('cairnInviteCode', '==', code));
-    const snap = await getDocs(q);
-    if (snap.empty) return null;
-    const d = snap.docs[0];
-    return { id: d.id, ...d.data() };
-  }
+  // Gate C (2026-06-09): the dead `findFamilyByCairnCode` (zero callers —
+  // superseded by `findFamilyByConnectCode` in 2C-4e) was DELETED here so
+  // it can't become a landmine once `/families` `list` closes at gate D.
 
   /**
-   * Phase 2C Slice 1 (2026-05-18). Dual-accept connect-code lookup —
-   * THE unified connect-code resolver. `cairnInviteCode` is the
-   * unified field (2C-2): for a post-2C-2 family it holds the new
-   * 6-char code; for a pre-2C-2 non-parent family it still holds an
-   * old `CAIRN-XXXX`; either way an exact-match query resolves it.
-   * Checked FIRST. Then the legacy PP `inviteCode` (6-char) as the
-   * back-compat fallback for pre-2C-2 PP families that only ever
-   * had `inviteCode`. A post-2C-2 family carries the SAME 6-char
-   * string in both fields — the cairn-first order makes that
-   * resolve as 'cairn' (30-day expiry), which is correct.
-   * No-collision note (2C-1's "prefix" reasoning is obsolete after
-   * 2C-2): the two fields can legitimately hold the same value now;
-   * cairn-first ordering is deliberate and unambiguous.
+   * THE unified connect-code resolver — web twin of iOS
+   * `FirestoreService.resolveConnectCode` (kept in LOCKSTEP).
    *
-   * Returns the family doc augmented with `_matchedCodeKind`
-   * ('cairn' | 'pp') so the redeem path validates the matching
-   * expiry field. Null on no match. Rides the existing open
-   * `/families` `list` rule (any signed-in user) — same as the PP
-   * and Cairn code lookups already do; NO rules change.
+   * Gate C (2026-06-09): mapping-first. Resolves `/inviteCodes/{CODE}`
+   * by exact doc id (a `get` — `list` on that collection is denied), and
+   * trusts its `familyId` because the mapping's CREATE rule proved the
+   * code belonged to that family. The mapping-built result carries ONLY
+   * {id, name, expiry} — a NON-member can't `get` `/families/{id}`
+   * pre-join (member-only rule), so consumers must treat member arrays /
+   * memberProfiles as absent (`_viaMapping: true` marks this shape;
+   * `_applyCairnJoin` probes a direct get, the preview hides counts).
    *
-   * WIRED in 2C-4e: `join-family-screen._lookup` calls this for the
-   * pre-join preview; `redeemConnectCode` calls it for the join.
+   * Falls back to the legacy open `/families` dual-accept list query
+   * (cairn field first, then legacy PP `inviteCode`) while that list is
+   * still open; after gate D flips it to members-only the fallback's
+   * rules-denial is swallowed to "not found" (the mapping is the only
+   * path by then — the gate-B backfill guarantees coverage).
+   *
+   * Returns the family-shaped object augmented with `_matchedCodeKind`
+   * ('cairn' | 'pp') so the redeem path validates the matching expiry
+   * field; the mapping shape stores its expiry under
+   * `cairnInviteCodeExpiresAt` + kind 'cairn' so that same validation
+   * path reads it unchanged. Null on no match.
+   *
+   * Callers: `join-family-screen._lookup` (pre-join preview),
+   * `home-screen` "Join another family" (P9), `redeemConnectCode`.
    */
   async findFamilyByConnectCode(code) {
     if (!db) throw new Error('Firebase not configured.');
-    const cairnSnap = await getDocs(
-      query(collection(db, 'families'), where('cairnInviteCode', '==', code)),
-    );
-    if (!cairnSnap.empty) {
-      const d = cairnSnap.docs[0];
-      return { id: d.id, ...d.data(), _matchedCodeKind: 'cairn' };
+
+    // 1. The /inviteCodes lookup — get-by-exact-id; you must already KNOW
+    //    the code (no enumeration surface). Codes are stored uppercase;
+    //    normalize so a lowercase-typed code still resolves (the legacy
+    //    query below was always case-sensitive-exact).
+    const norm = String(code ?? '').trim().toUpperCase();
+    if (norm) {
+      try {
+        const { getDoc } = await import('firebase/firestore');
+        const snap = await getDoc(doc(db, 'inviteCodes', norm));
+        if (snap.exists() && typeof snap.data()?.familyId === 'string') {
+          const m = snap.data();
+          console.debug('[ConnectCode] resolved via /inviteCodes mapping →', m.familyId);
+          return {
+            id: m.familyId,
+            name: m.familyName ?? '',
+            cairnInviteCodeExpiresAt: m.expiresAt ?? null,
+            _matchedCodeKind: 'cairn',
+            _viaMapping: true,
+          };
+        }
+      } catch (e) {
+        // Transient read error — fall through to the legacy query.
+        console.debug('[ConnectCode] mapping lookup errored, trying legacy:', e?.code);
+      }
     }
-    const ppSnap = await getDocs(
-      query(collection(db, 'families'), where('inviteCode', '==', code)),
-    );
-    if (!ppSnap.empty) {
-      const d = ppSnap.docs[0];
-      return { id: d.id, ...d.data(), _matchedCodeKind: 'pp' };
+
+    // 2. Legacy fallback — the open /families list query. Kept as the net
+    //    while gate C bakes; rules-denied after gate D (→ "not found").
+    try {
+      const cairnSnap = await getDocs(
+        query(collection(db, 'families'), where('cairnInviteCode', '==', code)),
+      );
+      if (!cairnSnap.empty) {
+        const d = cairnSnap.docs[0];
+        console.debug('[ConnectCode] resolved via LEGACY list query (cairn field)');
+        return { id: d.id, ...d.data(), _matchedCodeKind: 'cairn' };
+      }
+      const ppSnap = await getDocs(
+        query(collection(db, 'families'), where('inviteCode', '==', code)),
+      );
+      if (!ppSnap.empty) {
+        const d = ppSnap.docs[0];
+        console.debug('[ConnectCode] resolved via LEGACY list query (pp field)');
+        return { id: d.id, ...d.data(), _matchedCodeKind: 'pp' };
+      }
+    } catch (e) {
+      // Post-gate-D the list query is rules-denied — report as no-match
+      // rather than surfacing a raw permissions error.
+      console.debug('[ConnectCode] legacy fallback denied (expected post-gate-D):', e?.code);
+      return null;
     }
     return null;
   }
@@ -2256,9 +2289,28 @@ class FamilyDataStore extends EventTarget {
   async _applyCairnJoin(family) {
     const uid = auth?.currentUser?.uid;
     if (!uid) throw new Error('Not signed in.');
-    const beforeCairn = family.cairnMemberIds ?? [];
-    const memberIds = family.memberIds ?? [];
     const authUser = auth.currentUser;
+
+    // Gate C (2026-06-09): a mapping-resolved family (`_viaMapping`)
+    // carries NO member arrays — a non-member can't read `/families`
+    // pre-join. Probe a direct get: the family-doc `get` rule is
+    // member-only, so a SUCCESSFUL read proves "already a member" (and
+    // hands us live arrays for the checks below), while a denial means
+    // the normal join case — where the server rule, not the client, is
+    // the enforcer. Legacy (list-resolved) families arrive with real
+    // arrays and skip the probe.
+    let live = family;
+    if (family._viaMapping) {
+      try {
+        const { getDoc } = await import('firebase/firestore');
+        const snap = await getDoc(doc(db, 'families', family.id));
+        live = snap.exists() ? { id: snap.id, ...snap.data() } : null;
+      } catch {
+        live = null; // not a member yet — blind join below
+      }
+    }
+    const beforeCairn = live?.cairnMemberIds ?? [];
+    const memberIds = live?.memberIds ?? [];
 
     // Idempotent: already in cairnMemberIds (or memberIds for the PP
     // path) means the join completed previously. Just ensure the
@@ -2282,11 +2334,15 @@ class FamilyDataStore extends EventTarget {
       return family.id;
     }
 
-    const cap = family.cairnMaxMembers ?? 20;
-    if (beforeCairn.length >= cap) {
-      const err = new Error('This family\'s connection ring is full.');
-      err.code = 'full';
-      throw err;
+    // Friendly cap pre-check — only when we could read live data (the
+    // blind path defers to the rule, which enforces the cap regardless).
+    if (live) {
+      const cap = live.cairnMaxMembers ?? 20;
+      if (beforeCairn.length >= cap) {
+        const err = new Error('This family\'s connection ring is full.');
+        err.code = 'full';
+        throw err;
+      }
     }
 
     const now = new Date();
@@ -2300,11 +2356,31 @@ class FamilyDataStore extends EventTarget {
 
     // Atomic narrow update — matches isJoiningOwnUidAsCairn() exactly:
     // only cairnMemberIds, memberProfiles, updatedAt change.
-    await updateDoc(doc(db, 'families', family.id), {
-      cairnMemberIds: [...beforeCairn, uid],
-      [`memberProfiles.${uid}`]: profile,
-      updatedAt: serverTimestamp(),
-    });
+    // Gate C: `arrayUnion` (was a full-array write computed from a
+    // pre-join read) — blind-safe: needs no pre-read and can never
+    // clobber existing members, which a stale/empty `beforeCairn`
+    // would have done on the mapping path.
+    try {
+      const { arrayUnion } = await import('firebase/firestore');
+      await updateDoc(doc(db, 'families', family.id), {
+        cairnMemberIds: arrayUnion(uid),
+        [`memberProfiles.${uid}`]: profile,
+        updatedAt: serverTimestamp(),
+      });
+    } catch (e) {
+      // On the blind (mapping) path the server rule is the enforcer — a
+      // permission-denied means it rejected the join (ring at capacity,
+      // raced already-member, or a stale mapping for a rotated code).
+      // Translate to an honest, friendly message (iOS twin: joinRejected).
+      if (e?.code === 'permission-denied') {
+        const err = new Error(
+          "Couldn't join this family. The code may have been replaced, or the family's circle is full — ask them for a fresh invite.",
+        );
+        err.code = 'join-rejected';
+        throw err;
+      }
+      throw e;
+    }
 
     // Upsert user doc with a PP-compatible shape so future PP iOS reads
     // decode cleanly. `cairnFamilyId` is what Cairn uses to subscribe.
@@ -2595,6 +2671,23 @@ class FamilyDataStore extends EventTarget {
 
     const ref = await addDoc(collection(db, 'families'), familyDoc);
 
+    // Gate C (2026-06-09) — write the code → family lookup mapping so
+    // joining resolves via /inviteCodes once /families `list` closes
+    // (gate D). The family is server-committed by the awaited addDoc
+    // above, so the mapping's CREATE rule (code must equal the family's
+    // real code) passes. Best-effort: a miss is healed by the
+    // backfill-invite-codes.mjs script (re-run before gate D).
+    try {
+      await setDoc(doc(db, 'inviteCodes', code), {
+        familyId: ref.id,
+        familyName: name,
+        expiresAt,
+        createdAt: serverTimestamp(),
+      });
+    } catch (e) {
+      console.warn('[Cairn] invite-code mapping write failed (backfill heals):', e?.code);
+    }
+
     // Upsert user doc so the listener picks up cairnFamilyId.
     await setDoc(
       doc(db, 'users', uid),
@@ -2699,6 +2792,19 @@ class FamilyDataStore extends EventTarget {
     };
 
     const ref = await addDoc(collection(db, 'families'), familyDoc);
+
+    // Gate C (2026-06-09) — invite-code lookup mapping; see
+    // createCairnOnlyFamily for the full rationale. Best-effort.
+    try {
+      await setDoc(doc(db, 'inviteCodes', code), {
+        familyId: ref.id,
+        familyName: name,
+        expiresAt,
+        createdAt: serverTimestamp(),
+      });
+    } catch (e) {
+      console.warn('[Cairn] invite-code mapping write failed (backfill heals):', e?.code);
+    }
 
     // Upsert user doc — PP path: `familyId` (NOT `cairnFamilyId`)
     // + owner role, mirroring iOS createFamily's user-doc update.
@@ -2978,11 +3084,43 @@ class FamilyDataStore extends EventTarget {
     if (!db || !this._currentFamilyId) throw new Error('No family yet.');
     const code = newCairnInviteCode();
     const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
+    // Gate C (2026-06-09) — mapping bookkeeping, fail-closed order: retire
+    // the OLD cairn code's mapping BEFORE the family update, so a mid-way
+    // failure leaves an UNMAPPED code (joining fails until retry/backfill)
+    // — never a stale mapping that still resolves a retired code. The old
+    // mapping is KEPT when that same code still lives in the legacy PP
+    // `inviteCode` field (Portal regen rotates only `cairnInviteCode`),
+    // because the code remains genuinely redeemable through it.
+    const fam = this.state.family;
+    const oldCairn = String(fam?.cairnInviteCode ?? '').toUpperCase();
+    const ppCode = String(fam?.inviteCode ?? '').toUpperCase();
+    if (oldCairn && oldCairn !== ppCode && oldCairn !== code) {
+      try {
+        await deleteDoc(doc(db, 'inviteCodes', oldCairn));
+      } catch (e) {
+        console.warn('[Cairn] stale invite-code mapping delete failed:', e?.code);
+      }
+    }
+
     await updateDoc(doc(db, 'families', this._currentFamilyId), {
       cairnInviteCode: code,
       cairnInviteCodeExpiresAt: expiresAt,
       updatedAt: serverTimestamp(),
     });
+
+    // New code is committed above → its mapping CREATE rule passes.
+    try {
+      await setDoc(doc(db, 'inviteCodes', code), {
+        familyId: this._currentFamilyId,
+        familyName: fam?.name ?? '',
+        expiresAt,
+        createdAt: serverTimestamp(),
+      });
+    } catch (e) {
+      console.warn('[Cairn] invite-code mapping write failed (backfill heals):', e?.code);
+    }
+
     return { code, expiresAt };
   }
 

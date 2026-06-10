@@ -416,6 +416,13 @@ export class JoinFamilyScreen extends LitElement {
   render() {
     if (this._step === 'parent') return this._renderParentPrompt();
     const inviter = this._inviterFromFamily(this._family);
+    // Gate C (2026-06-09): a mapping-resolved family (`_viaMapping`)
+    // carries no member arrays — non-members can't read /families
+    // pre-join — so counts are unknowable; hide the meta line instead
+    // of rendering a bogus "0 people". (The inviter chip degrades the
+    // same way: memberProfiles absent → no chip.)
+    const hasCounts =
+      Array.isArray(this._family?.cairnMemberIds) || Array.isArray(this._family?.memberIds);
     const cairnCount = (this._family?.cairnMemberIds ?? this._family?.memberIds ?? []).length;
     const ppCount = (this._family?.memberIds ?? []).length;
     return html`
@@ -453,11 +460,13 @@ export class JoinFamilyScreen extends LitElement {
                       `
                     : ''}
                   <div class="family-name">${this._family.name ?? 'A family'}</div>
-                  <div class="meta">
-                    ${cairnCount} ${cairnCount === 1 ? 'person' : 'people'} on the Portal${
-                      ppCount && ppCount < cairnCount ? ` · ${ppCount} on PebblePath` : ''
-                    }
-                  </div>
+                  ${hasCounts
+                    ? html`<div class="meta">
+                        ${cairnCount} ${cairnCount === 1 ? 'person' : 'people'} on the Portal${
+                          ppCount && ppCount < cairnCount ? ` · ${ppCount} on PebblePath` : ''
+                        }
+                      </div>`
+                    : ''}
                 </div>
                 <div class="what-you-get">
                   <strong>You'll see</strong>
