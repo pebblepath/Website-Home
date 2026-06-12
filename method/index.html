@@ -184,6 +184,30 @@
   .conf.high{background:rgba(61,155,143,0.12); color:var(--teal-deep)} .conf.high .d{background:var(--teal)}
   .conf.med{background:rgba(212,168,67,0.15); color:#9a7a1e} .conf.med .d{background:var(--amber)}
 
+  /* ===== Arcs across domains ===== */
+  .arcs-block{margin-top:34px; padding-top:32px; border-top:1px solid var(--border)}
+  .arcs-block h3{font-size:22px; font-weight:800; margin-bottom:8px}
+  .arcs-intro{font-size:15px; color:var(--ink-soft); max-width:780px; margin:0 0 22px; line-height:1.55}
+  .arcs-intro b{color:var(--teal-deep)}
+  .dom-legend{display:flex; gap:16px; flex-wrap:wrap; margin-bottom:22px}
+  .dom-legend .dl{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; color:var(--ink)}
+  .dom-legend .dl .sw{width:13px; height:11px; border-radius:50%}
+  .arc-list{display:flex; flex-direction:column; gap:14px}
+  .arc{background:rgba(255,255,255,0.72); border:1px solid var(--border); border-radius:18px; padding:18px 20px; box-shadow:var(--shadow-sm)}
+  .arc-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:16px}
+  .arc-title{font-family:'Nunito'; font-weight:900; font-size:16px; color:var(--teal-deep)}
+  .arc-cross{font-size:10.5px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; border-radius:100px; padding:4px 11px}
+  .arc-cross.cross{background:rgba(198,123,92,0.14); color:var(--terra-dark)}
+  .arc-cross.within{background:rgba(31,92,84,0.06); color:var(--ink-faint)}
+  .arc-track{display:flex; align-items:flex-start; gap:0; flex-wrap:wrap}
+  .anode{display:flex; flex-direction:column; align-items:center; text-align:center; width:108px; flex-shrink:0}
+  .anode .adot{width:36px; height:29px; border-radius:50%; box-shadow:0 3px 8px rgba(31,92,84,0.14)}
+  .anode .alabel{font-size:11.5px; font-weight:700; color:var(--ink); margin-top:9px; line-height:1.2}
+  .anode .adom{font-size:9.5px; color:var(--ink-faint); margin-top:3px; font-weight:600; text-transform:uppercase; letter-spacing:.4px}
+  .aline{flex:1; min-width:14px; height:2px; background:var(--border); margin-top:14px; border-radius:2px}
+  @media(max-width:560px){.anode{width:78px}.anode .alabel{font-size:10.5px}}
+  .arcs-foot{font-size:12.5px; color:var(--ink-faint); margin-top:18px; font-style:italic}
+
   /* ===== Personalization ===== */
   .persona-wrap{display:flex; flex-direction:column; gap:16px}
   .persona{display:flex; align-items:center; gap:22px; background:rgba(255,255,255,0.72);
@@ -365,6 +389,7 @@
     <a href="#north">The north star</a>
     <a href="#wedge">Why not just ChatGPT?</a>
     <a href="#tenets">The four tenets</a>
+    <a href="#arcs">The arcs</a>
     <a href="#tuned">Read per child</a>
     <a href="#unique">What makes us unique</a>
     <a href="#packs">One deck, added-to</a>
@@ -481,6 +506,102 @@
         <span class="conf high"><span class="d"></span> High confidence</span>
       </div>
 
+    </div>
+
+    <!-- Arcs across the four domains (reference) -->
+    <div class="arcs-block" id="arcs">
+      <h3>The arcs — how through-lines cut across the four domains</h3>
+      <p class="arcs-intro">The four domains stay the backbone — every milestone is still <b>motor, language, social-emotional, or cognitive.</b> An <b>arc</b> is a second layer on top: a connected through-line over time. Some arcs deepen <i>within</i> one domain; others <b>cascade across</b> them — and those cross-domain arcs are exactly what a four-box checklist can never show.</p>
+
+      <div class="dom-legend">
+        <span class="dl"><span class="sw" style="background:var(--motor)"></span> Motor</span>
+        <span class="dl"><span class="sw" style="background:var(--language)"></span> Language</span>
+        <span class="dl"><span class="sw" style="background:var(--social)"></span> Social-emotional</span>
+        <span class="dl"><span class="sw" style="background:var(--cognitive)"></span> Cognitive</span>
+      </div>
+
+      <div class="arc-list">
+
+        <div class="arc">
+          <div class="arc-head"><span class="arc-title">Noticing to reading</span><span class="arc-cross cross">crosses 3 domains</span></div>
+          <div class="arc-track">
+            <div class="anode"><span class="adot" style="background:var(--social)"></span><span class="alabel">Shared attention</span><span class="adom">Social</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--language)"></span><span class="alabel">First words</span><span class="adom">Language</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--language)"></span><span class="alabel">Conversation</span><span class="adom">Language</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--cognitive)"></span><span class="alabel">Reading</span><span class="adom">Cognitive</span></div>
+          </div>
+        </div>
+
+        <div class="arc">
+          <div class="arc-head"><span class="arc-title">Grasp to writing</span><span class="arc-cross cross">crosses 2 domains</span></div>
+          <div class="arc-track">
+            <div class="anode"><span class="adot" style="background:var(--motor)"></span><span class="alabel">Grasps</span><span class="adom">Motor</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--motor)"></span><span class="alabel">Scribbles</span><span class="adom">Motor</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--motor)"></span><span class="alabel">Drawing</span><span class="adom">Motor</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--cognitive)"></span><span class="alabel">Writing</span><span class="adom">Cognitive</span></div>
+          </div>
+        </div>
+
+        <div class="arc">
+          <div class="arc-head"><span class="arc-title">Self-soothing to self-reliance</span><span class="arc-cross cross">crosses 3 domains</span></div>
+          <div class="arc-track">
+            <div class="anode"><span class="adot" style="background:var(--social)"></span><span class="alabel">Self-soothing</span><span class="adom">Social</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--social)"></span><span class="alabel">Big feelings</span><span class="adom">Social</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--motor)"></span><span class="alabel">Self-care</span><span class="adom">Motor</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--cognitive)"></span><span class="alabel">Planning</span><span class="adom">Cognitive</span></div>
+          </div>
+        </div>
+
+        <div class="arc">
+          <div class="arc-head"><span class="arc-title">First moves to confident motion</span><span class="arc-cross within">within Motor</span></div>
+          <div class="arc-track">
+            <div class="anode"><span class="adot" style="background:var(--motor)"></span><span class="alabel">Head control</span><span class="adom">Motor</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--motor)"></span><span class="alabel">Sitting</span><span class="adom">Motor</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--motor)"></span><span class="alabel">Walking</span><span class="adom">Motor</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--motor)"></span><span class="alabel">Running</span><span class="adom">Motor</span></div>
+          </div>
+        </div>
+
+        <div class="arc">
+          <div class="arc-head"><span class="arc-title">Curiosity to reasoning</span><span class="arc-cross within">within Cognitive</span></div>
+          <div class="arc-track">
+            <div class="anode"><span class="adot" style="background:var(--cognitive)"></span><span class="alabel">Object permanence</span><span class="adom">Cognitive</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--cognitive)"></span><span class="alabel">Cause &amp; effect</span><span class="adom">Cognitive</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--cognitive)"></span><span class="alabel">Problem-solving</span><span class="adom">Cognitive</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--cognitive)"></span><span class="alabel">Reasoning</span><span class="adom">Cognitive</span></div>
+          </div>
+        </div>
+
+        <div class="arc">
+          <div class="arc-head"><span class="arc-title">First smiles to friendship</span><span class="arc-cross within">within Social-emotional</span></div>
+          <div class="arc-track">
+            <div class="anode"><span class="adot" style="background:var(--social)"></span><span class="alabel">Social smile</span><span class="adom">Social</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--social)"></span><span class="alabel">Parallel play</span><span class="adom">Social</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--social)"></span><span class="alabel">Cooperative play</span><span class="adom">Social</span></div>
+            <div class="aline"></div>
+            <div class="anode"><span class="adot" style="background:var(--social)"></span><span class="alabel">Friendship</span><span class="adom">Social</span></div>
+          </div>
+        </div>
+
+      </div>
+      <p class="arcs-foot">Illustrative anchor points, not the full catalog. Three of the six arcs deepen within one domain; three cascade across — the cross-domain arcs are the heart of “through-lines, not checklists.”</p>
     </div>
   </section>
 
