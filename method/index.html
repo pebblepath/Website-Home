@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>PebblePath — The PebblePath Method</title>
+<meta name="description" content="The thinking behind PebblePath's Milestones — a connected, evidence-based method for seeing a child's whole development, remembered across years and read for who they are. The part a chatbot can't copy.">
+<link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pebblepath.ai/method/">
+<meta property="og:title" content="PebblePath — The PebblePath Method">
+<meta property="og:description" content="Not a checklist. A method. The connected, evidence-based way PebblePath sees a child's whole development — the part a chatbot can't copy.">
+<meta property="og:image" content="https://pebblepath.ai/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="PebblePath">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PebblePath — The PebblePath Method">
+<meta name="twitter:description" content="Not a checklist. A method. The connected, evidence-based way PebblePath sees a child's whole development — the part a chatbot can't copy.">
+<meta name="twitter:image" content="https://pebblepath.ai/assets/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal:#3D9B8F; --teal-deep:#1F5C54; --teal-mid:#2D7A70; --teal-light:#5CBFB0;
+    --sand:#E8DCC8; --sand-light:#F2EDE3; --canvas:#FAF8F5;
+    --terra:#C67B5C; --terra-dark:#A8624A; --amber:#D4A843;
+    --motor:#6E93C4; --language:#D9A33A; --social:#CF7E8E; --cognitive:#9A7BC0;
+    --ink:#2C3E40; --ink-soft:#5A6B6C; --ink-faint:#8A9899;
+    --border:rgba(31,92,84,0.13);
+    --shadow-sm:0 2px 10px rgba(31,92,84,0.06);
+    --shadow:0 14px 40px rgba(31,92,84,0.10), 0 3px 10px rgba(31,92,84,0.05);
+    --shadow-lg:0 24px 60px rgba(31,92,84,0.16), 0 6px 16px rgba(31,92,84,0.07);
+    --mono:ui-monospace,'SF Mono',Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',-apple-system,sans-serif; color:var(--ink);
+    background:var(--canvas); line-height:1.55; position:relative; min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:''; position:fixed; inset:0; z-index:-1;
+    background:
+      radial-gradient(ellipse 70% 55% at 10% 4%, rgba(232,220,200,0.6), transparent 60%),
+      radial-gradient(ellipse 65% 45% at 92% 14%, rgba(212,168,67,0.13), transparent 55%),
+      radial-gradient(ellipse 95% 70% at 78% 100%, rgba(92,191,176,0.22), transparent 62%),
+      linear-gradient(150deg, #FBF8F2 0%, #F3EEE4 48%, #E9F1EE 100%);
+  }
+  .wrap{max-width:1120px; margin:0 auto; padding:0 24px 110px}
+  h1,h2,h3,h4{font-family:'Nunito',sans-serif; color:var(--teal-deep); letter-spacing:-0.015em}
+
+  @media (prefers-reduced-motion: no-preference){
+    .rise{opacity:0; transform:translateY(18px); animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards}
+    @keyframes rise{to{opacity:1; transform:none}}
+    .d1{animation-delay:.05s}.d2{animation-delay:.12s}.d3{animation-delay:.19s}
+    .d4{animation-delay:.26s}.d5{animation-delay:.33s}.d6{animation-delay:.40s}
+    .breathe{animation:breathe 5s ease-in-out infinite}
+    @keyframes breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  }
+
+  /* hero */
+  .hero{padding:78px 0 6px; text-align:center}
+  .eyebrow{font-family:'Nunito'; font-weight:800; font-size:11.5px; letter-spacing:2.5px;
+    text-transform:uppercase; color:var(--teal); margin-bottom:22px; display:flex; gap:10px; justify-content:center; align-items:center}
+  .eyebrow .pip{width:6px;height:6px;border-radius:50%;background:var(--terra)}
+  .hero h1{font-size:clamp(44px,7.5vw,78px); font-weight:900; line-height:0.95; margin-bottom:18px; letter-spacing:-0.03em}
+  .hero h1 .lo{color:var(--ink-faint); display:block; font-size:0.62em; font-weight:800; letter-spacing:-0.01em}
+  .hero h1 .hi{background:linear-gradient(135deg,var(--teal-deep) 0%, var(--teal-mid) 55%, var(--teal) 100%);
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent}
+  .hero .sub-pills{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:24px}
+  .hero .brandlock{display:inline-flex; align-items:center; gap:7px; font-family:'Inter'; font-weight:700;
+    font-size:12px; color:var(--teal-deep); background:rgba(61,155,143,0.10);
+    border:1px solid rgba(61,155,143,0.26); border-radius:100px; padding:6px 14px}
+  .hero .scope{display:inline-flex; align-items:center; gap:7px; font-family:'Inter'; font-weight:600;
+    font-size:12px; color:var(--terra-dark); background:rgba(198,123,92,0.09);
+    border:1px solid rgba(198,123,92,0.24); border-radius:100px; padding:6px 14px}
+  .hero p.lede{max-width:680px; margin:0 auto; color:var(--ink-soft); font-size:19px; line-height:1.5}
+  .hero p.lede b{color:var(--teal-deep)}
+  .count-row{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:30px}
+  .count-pill{display:inline-flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600;
+    color:var(--teal-deep); background:rgba(255,255,255,0.7); border:1px solid var(--border);
+    border-radius:100px; padding:7px 15px; backdrop-filter:blur(8px)}
+  .count-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--teal)}
+  .count-pill.warm .dot{background:var(--terra)}
+  .count-pill.amber .dot{background:var(--amber)}
+
+  /* through-line motif */
+  .throughline{display:flex; align-items:flex-start; justify-content:center; gap:0; margin:46px auto 0; max-width:760px; flex-wrap:wrap}
+  .throughline .lnk{width:36px; height:2px; background:linear-gradient(90deg,var(--teal-light),var(--teal)); opacity:.5; margin:13px -2px 0}
+  .throughline .lbl{font-size:10.5px; color:var(--ink-faint); font-weight:600; text-align:center; margin-top:9px; width:66px; line-height:1.3}
+  .tl-node{display:flex; flex-direction:column; align-items:center}
+  .tl-node svg{filter:drop-shadow(0 5px 9px rgba(31,92,84,0.14))}
+  .hero .hint{font-size:12.5px;color:var(--ink-faint);margin-top:14px}
+
+  /* toc */
+  .toc{display:flex; flex-wrap:wrap; gap:9px; justify-content:center; margin:52px 0 66px}
+  .toc a{font-size:13px; font-weight:600; color:var(--teal-mid); text-decoration:none;
+    background:rgba(255,255,255,0.72); border:1px solid var(--border); border-radius:100px;
+    padding:8px 16px; transition:all .18s}
+  .toc a:hover{background:var(--teal); color:#fff; border-color:var(--teal); transform:translateY(-1px)}
+
+  section{margin-bottom:80px; scroll-margin-top:24px}
+  .sec-head{display:flex; align-items:center; gap:13px; margin-bottom:9px}
+  .sec-num{font-family:'Nunito'; font-weight:900; font-size:13px; color:#fff; background:var(--terra);
+    width:30px; height:30px; border-radius:9px; display:grid; place-items:center; flex-shrink:0}
+  section > h2{font-size:30px; font-weight:800}
+  .sec-sub{color:var(--ink-soft); margin:0 0 32px 43px; max-width:800px; font-size:15.5px}
+  @media(max-width:560px){.sec-sub{margin-left:0}}
+
+  .card{background:rgba(255,255,255,0.74); border:1px solid var(--border); border-radius:22px;
+    padding:28px; box-shadow:var(--shadow); backdrop-filter:blur(12px)}
+
+  /* ===== North Star ===== */
+  .northstar{background:linear-gradient(158deg,var(--teal-deep) 0%, #235e55 55%, var(--teal-mid) 100%);
+    border-radius:26px; padding:46px 44px; color:#fff; box-shadow:var(--shadow-lg); position:relative; overflow:hidden}
+  .northstar::after{content:''; position:absolute; right:-60px; top:-60px; width:260px; height:260px; border-radius:50%;
+    background:radial-gradient(circle, rgba(92,191,176,0.35), transparent 70%)}
+  .northstar .ns-eye{font-family:'Nunito'; font-weight:800; font-size:11.5px; letter-spacing:2.5px; text-transform:uppercase; color:var(--teal-light); margin-bottom:18px; position:relative}
+  .northstar .ns-claim{font-family:'Nunito'; font-weight:900; font-size:clamp(22px,3vw,30px); line-height:1.22; color:#fff; max-width:880px; position:relative; letter-spacing:-0.02em}
+  .northstar .ns-claim em{color:var(--teal-light); font-style:normal}
+  .ns-split{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:30px; position:relative}
+  @media(max-width:720px){.ns-split{grid-template-columns:1fr}}
+  .ns-col{background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.14); border-radius:16px; padding:20px 22px; backdrop-filter:blur(4px)}
+  .ns-col .h{font-family:'Nunito'; font-weight:800; font-size:14px; color:#fff; margin-bottom:10px; display:flex; align-items:center; gap:9px}
+  .ns-col .h .ic{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,0.14);font-size:14px}
+  .ns-col .vs{font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--teal-light); display:block; margin-bottom:3px}
+  .ns-col p{font-size:13.5px; color:rgba(255,255,255,0.9); line-height:1.5; margin:0}
+  .ns-col p b{color:#fff}
+  .ns-only{margin-top:24px; position:relative; display:flex; gap:14px; align-items:center; flex-wrap:wrap;
+    background:rgba(255,255,255,0.10); border:1px solid rgba(255,255,255,0.16); border-radius:14px; padding:16px 20px}
+  .ns-only .lab{font-family:'Nunito'; font-weight:900; font-size:13px; letter-spacing:1px; text-transform:uppercase; color:var(--teal-light); flex-shrink:0}
+  .ns-only .chips{display:flex; gap:8px; flex-wrap:wrap}
+  .ns-only .chip{font-size:12.5px; font-weight:700; color:#fff; background:rgba(92,191,176,0.22); border:1px solid rgba(92,191,176,0.4); border-radius:100px; padding:6px 13px}
+  .ns-foot{position:relative; font-size:13px; color:rgba(255,255,255,0.78); margin-top:18px; font-style:italic}
+
+  /* ===== Wedge ===== */
+  .wedge{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+  @media(max-width:760px){.wedge{grid-template-columns:1fr}}
+  .wedge-col{border-radius:22px; padding:28px; position:relative; overflow:hidden}
+  .wedge-col.generic{background:rgba(255,255,255,0.62); border:1px solid var(--border)}
+  .wedge-col.path{background:linear-gradient(155deg,var(--teal-deep),var(--teal-mid)); color:#fff; box-shadow:var(--shadow-lg)}
+  .wedge-col h3{font-size:21px; margin-bottom:4px}
+  .wedge-col.path h3{color:#fff}
+  .wedge-col .tag{font-size:11.5px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; margin-bottom:16px; display:block}
+  .wedge-col.generic .tag{color:var(--ink-faint)}
+  .wedge-col.path .tag{color:var(--teal-light)}
+  .wedge-col ul{list-style:none; display:flex; flex-direction:column; gap:13px; margin-top:18px}
+  .wedge-col li{font-size:14px; line-height:1.45; padding-left:28px; position:relative}
+  .wedge-col.generic li{color:var(--ink-soft)}
+  .wedge-col.path li{color:rgba(255,255,255,0.92)}
+  .wedge-col li .mk{position:absolute; left:0; top:1px; font-weight:800; font-size:15px}
+  .wedge-col.generic li .mk{color:var(--ink-faint)}
+  .wedge-col.path li .mk{color:var(--teal-light)}
+  .wedge-col .punch{margin-top:22px; padding-top:18px; border-top:1px solid rgba(255,255,255,0.16); font-family:'Nunito'; font-weight:800; font-size:15.5px}
+  .wedge-col.generic .punch{border-top:1px solid var(--border); color:var(--ink)}
+  .wedge-col.path .punch{color:#fff}
+  .wedge-watermark{position:absolute; right:-24px; bottom:-34px; opacity:.12}
+
+  /* ===== Tenets ===== */
+  .tenets{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+  @media(max-width:760px){.tenets{grid-template-columns:1fr}}
+  .tenet{background:rgba(255,255,255,0.78); border:1px solid var(--border); border-radius:20px;
+    padding:24px 24px 22px; box-shadow:var(--shadow-sm); position:relative; overflow:hidden; transition:transform .2s, box-shadow .2s}
+  .tenet:hover{transform:translateY(-3px); box-shadow:var(--shadow)}
+  .tenet .accent{position:absolute; left:0; top:0; bottom:0; width:5px}
+  .tenet .tnum{font-family:'Nunito'; font-weight:900; font-size:12px; color:#fff; width:26px;height:26px;
+    border-radius:8px; display:grid;place-items:center; margin-bottom:14px}
+  .tenet h3{font-size:19px; margin-bottom:7px}
+  .tenet .what{font-size:14px; color:var(--ink-soft); line-height:1.5; margin-bottom:16px}
+  .tenet .ev{font-size:12.5px; color:var(--ink); background:rgba(31,92,84,0.05);
+    border-radius:12px; padding:12px 14px; line-height:1.5; border:1px solid rgba(31,92,84,0.08)}
+  .tenet .ev b{font-family:'Nunito'; color:var(--teal-deep)}
+  .conf{display:inline-flex; align-items:center; gap:6px; font-size:10.5px; font-weight:700; letter-spacing:.5px;
+    text-transform:uppercase; border-radius:100px; padding:4px 10px; margin-top:14px}
+  .conf .d{width:6px;height:6px;border-radius:50%}
+  .conf.high{background:rgba(61,155,143,0.12); color:var(--teal-deep)} .conf.high .d{background:var(--teal)}
+  .conf.med{background:rgba(212,168,67,0.15); color:#9a7a1e} .conf.med .d{background:var(--amber)}
+
+  /* ===== Personalization ===== */
+  .persona-wrap{display:flex; flex-direction:column; gap:16px}
+  .persona{display:flex; align-items:center; gap:22px; background:rgba(255,255,255,0.72);
+    border:1px solid var(--border); border-radius:20px; padding:20px 26px; box-shadow:var(--shadow-sm)}
+  @media(max-width:680px){.persona{flex-direction:column; align-items:flex-start; gap:14px}}
+  .persona .who{flex-shrink:0; width:150px}
+  .persona .who .nm{font-family:'Nunito'; font-weight:900; font-size:18px; color:var(--teal-deep)}
+  .persona .who .rd{font-size:12.5px; color:var(--ink-soft); margin-top:3px; line-height:1.4}
+  .persona .track{flex:1; min-width:0}
+  .ahead-key{display:flex; gap:18px; flex-wrap:wrap; justify-content:center; margin-top:14px; font-size:11px; color:var(--ink-faint)}
+
+  /* ===== White-space matrix ===== */
+  .matrix{overflow-x:auto; border-radius:20px; border:1px solid var(--border); background:rgba(255,255,255,0.7); box-shadow:var(--shadow)}
+  table.mtx{width:100%; border-collapse:collapse; font-size:13.5px; min-width:680px}
+  table.mtx th, table.mtx td{padding:13px 14px; text-align:center; border-bottom:1px solid var(--border)}
+  table.mtx thead th{font-family:'Nunito'; font-weight:800; color:var(--teal-deep); font-size:12.5px; background:rgba(61,155,143,0.06); position:sticky; top:0}
+  table.mtx th.prod, table.mtx td.prod{text-align:left; font-weight:600; color:var(--ink); white-space:nowrap}
+  table.mtx td .yes{color:var(--teal); font-weight:800; font-size:16px}
+  table.mtx td .no{color:var(--ink-faint); font-weight:700; font-size:15px}
+  table.mtx td .part{color:var(--amber); font-weight:800; font-size:13px}
+  table.mtx tr.pp{background:linear-gradient(90deg,rgba(61,155,143,0.13),rgba(92,191,176,0.06))}
+  table.mtx tr.pp td.prod{color:var(--teal-deep); font-weight:800; font-family:'Nunito'}
+  table.mtx tr.pp td .yes{color:var(--teal-deep)}
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:16px; font-size:12px; color:var(--ink-soft)}
+  .legend span{display:inline-flex; align-items:center; gap:6px}
+  .legend b{font-size:14px}
+  .verdict-banner{margin-top:24px; display:flex; gap:16px; align-items:flex-start; background:linear-gradient(135deg,rgba(61,155,143,0.10),rgba(92,191,176,0.05));
+    border:1px solid rgba(61,155,143,0.22); border-radius:18px; padding:22px 24px}
+  .verdict-banner .ic{width:42px;height:42px;border-radius:13px;flex-shrink:0;display:grid;place-items:center;background:var(--teal);color:#fff;font-size:21px}
+  .verdict-banner h4{font-size:16px; margin-bottom:5px}
+  .verdict-banner p{font-size:14px; color:var(--ink-soft); margin:0}
+  .verdict-banner b{color:var(--teal-deep)}
+
+  /* ===== Deck + additive packs ===== */
+  .deck-grid{display:grid; grid-template-columns:0.92fr 1.08fr; gap:28px; align-items:center}
+  @media(max-width:860px){.deck-grid{grid-template-columns:1fr; gap:24px}}
+  .deck-visual{display:flex; align-items:center; gap:18px; justify-content:center; flex-wrap:wrap}
+  .deck-stack{position:relative; width:150px; height:178px; flex-shrink:0}
+  .deck-stack .dcard{position:absolute; width:128px; height:160px; border-radius:16px; border:1px solid var(--border);
+    background:rgba(255,255,255,0.94); box-shadow:var(--shadow-sm); padding:14px}
+  .deck-stack .dcard:nth-child(1){left:0; top:14px; transform:rotate(-5deg)}
+  .deck-stack .dcard:nth-child(2){left:9px; top:8px; transform:rotate(2deg)}
+  .deck-stack .dcard:nth-child(3){left:18px; top:0; transform:rotate(-1deg); box-shadow:var(--shadow)}
+  .dcard .dc-dom{font-size:9px; font-weight:800; letter-spacing:1px; text-transform:uppercase}
+  .dcard .dc-ttl{font-family:'Nunito'; font-weight:800; font-size:13px; color:var(--ink); margin-top:8px; line-height:1.25}
+  .dcard .dc-peb{position:absolute; right:12px; bottom:12px; opacity:.5}
+  .deck-label{text-align:center; font-size:12px; color:var(--ink-soft); margin-top:8px; font-weight:600}
+  .deck-plus{font-size:30px; color:var(--teal-light); font-weight:300}
+  .pack-card{width:150px; flex-shrink:0}
+  .pack-card .pc{border-radius:16px; border:1.5px dashed var(--teal); background:rgba(61,155,143,0.07);
+    padding:16px 16px 18px; box-shadow:var(--shadow-sm)}
+  .pack-card .pc .ph{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--teal-deep);margin-bottom:9px}
+  .pack-card .pc .pt{font-family:'Nunito';font-weight:900;font-size:16px;color:var(--teal-deep);line-height:1.1;margin-bottom:8px}
+  .pack-card .pc .pd{font-size:11.5px;color:var(--ink-soft);line-height:1.4}
+  .pack-card .pl{text-align:center; font-size:12px; color:var(--teal-mid); margin-top:8px; font-weight:700}
+  .additive-note{margin-top:22px; display:flex; gap:14px; align-items:flex-start; background:rgba(61,155,143,0.06);
+    border:1px solid rgba(61,155,143,0.18); border-radius:14px; padding:16px 18px}
+  .additive-note .ic{flex-shrink:0; font-size:18px; color:var(--teal)}
+  .additive-note p{font-size:13.5px; color:var(--ink-soft); margin:0; line-height:1.5}
+  .additive-note b{color:var(--teal-deep); font-family:'Nunito'}
+  .demo{display:flex;flex-direction:column;gap:12px; margin-top:26px}
+  .demo-head{font-family:'Nunito';font-weight:800;font-size:14px;color:var(--teal-deep);text-align:center;margin-bottom:2px}
+  .demo-row{display:grid; grid-template-columns:1fr auto 1fr; gap:16px; align-items:center}
+  @media(max-width:680px){.demo-row{grid-template-columns:1fr; gap:10px}}
+  .demo-card{border-radius:16px;padding:18px 20px;position:relative}
+  .demo-card.bad{background:rgba(198,123,92,0.08);border:1px solid rgba(198,123,92,0.22)}
+  .demo-card.good{background:rgba(61,155,143,0.08);border:1px solid rgba(61,155,143,0.28)}
+  .demo-card .dh{font-size:10.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+  .demo-card.bad .dh{color:var(--terra-dark)}
+  .demo-card.good .dh{color:var(--teal-deep)}
+  .demo-card .count{font-family:'Nunito';font-weight:900;font-size:15px;color:var(--ink);margin-bottom:8px}
+  .demo-card .count .num{font-size:24px}
+  .demo-card .flag{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;border-radius:100px;padding:5px 12px}
+  .demo-card.bad .flag{background:rgba(198,123,92,0.16);color:var(--terra-dark)}
+  .demo-card.good .flag{background:rgba(61,155,143,0.14);color:var(--teal-deep)}
+  .demo-mid{display:grid;place-items:center;color:var(--teal-light);font-size:20px;font-weight:800}
+  @media(max-width:680px){.demo-mid{transform:rotate(90deg)}}
+
+  /* ===== Pebble injection callout ===== */
+  .pebble-box{display:flex; gap:22px; align-items:center; background:linear-gradient(135deg,rgba(61,155,143,0.10),rgba(154,123,192,0.06));
+    border:1px solid rgba(61,155,143,0.2); border-radius:20px; padding:26px 28px; box-shadow:var(--shadow-sm)}
+  @media(max-width:680px){.pebble-box{flex-direction:column; align-items:flex-start; gap:16px}}
+  .pebble-box .orb{flex-shrink:0; width:64px;height:64px;border-radius:50%;display:grid;place-items:center;
+    background:radial-gradient(circle at 35% 30%, var(--teal-light), var(--teal-mid)); box-shadow:0 8px 22px rgba(45,122,112,0.3); font-size:28px; color:#fff}
+  .pebble-box h3{font-size:18px; margin-bottom:6px}
+  .pebble-box p{font-size:14px; color:var(--ink-soft); margin:0 0 10px; line-height:1.55}
+  .pebble-box p b{color:var(--teal-deep)}
+  .pebble-rules{display:flex; flex-wrap:wrap; gap:7px}
+  .pebble-rules .r{font-size:11.5px; font-weight:600; color:var(--teal-deep); background:rgba(255,255,255,0.7);
+    border:1px solid var(--border); border-radius:100px; padding:5px 11px}
+
+  /* ===== Decisions desk ===== */
+  .desk{display:flex; flex-direction:column; gap:16px}
+  .desk-item{display:flex; gap:18px; align-items:flex-start; background:rgba(255,255,255,0.72);
+    border:1px solid var(--border); border-radius:18px; padding:22px 24px; box-shadow:var(--shadow-sm)}
+  .desk-item .badge{flex-shrink:0; width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:22px}
+  .desk-item.resolved .badge{background:rgba(61,155,143,0.12);color:var(--teal-deep)}
+  .desk-item.guard .badge{background:rgba(212,168,67,0.16);color:#9a7a1e}
+  .desk-item.legal .badge{background:rgba(61,155,143,0.12);color:var(--teal-deep)}
+  .desk-item h4{font-size:16.5px; margin-bottom:6px}
+  .desk-item p{font-size:14px; color:var(--ink-soft); margin:0 0 6px}
+  .desk-item p:last-child{margin-bottom:0}
+  .desk-item b{color:var(--ink)}
+  .pillrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .pillrow .p{font-size:12.5px;font-weight:600;color:var(--teal-deep);background:rgba(61,155,143,0.10);border:1px solid rgba(61,155,143,0.22);border-radius:100px;padding:6px 13px}
+  .pillrow .p.star{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .tagchip{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;border-radius:100px;padding:4px 11px;margin-left:10px}
+  .tagchip.ok{background:rgba(61,155,143,0.14);color:var(--teal-deep)}
+  .tagchip.watch{background:rgba(212,168,67,0.16);color:#9a7a1e}
+
+  /* ===== Sequencing ===== */
+  .seq{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:680px){.seq{grid-template-columns:1fr}}
+  .seq-col{border-radius:20px;padding:24px;border:1px solid var(--border)}
+  .seq-col.now{background:rgba(61,155,143,0.07)}
+  .seq-col.soon{background:rgba(212,168,67,0.08)}
+  .seq-col .sh{font-family:'Nunito';font-weight:900;font-size:13px;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:9px}
+  .seq-col.now .sh{color:var(--teal-deep)}
+  .seq-col.soon .sh{color:#9a7a1e}
+  .seq-col .sh .chip{font-size:10px;border-radius:100px;padding:3px 9px}
+  .seq-col.now .sh .chip{background:var(--teal);color:#fff}
+  .seq-col.soon .sh .chip{background:var(--amber);color:#3a2f08}
+  .seq-col ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+  .seq-col li{font-size:13.5px;color:var(--ink);padding-left:24px;position:relative;line-height:1.45}
+  .seq-col li::before{content:'→';position:absolute;left:0;top:0;color:var(--teal-light);font-weight:800}
+  .seq-col.soon li::before{color:var(--amber)}
+
+  .foot{text-align:center;color:var(--ink-faint);font-size:13px;margin-top:44px;padding-top:30px;border-top:1px solid var(--border)}
+  .foot b{color:var(--teal-deep);font-family:'Nunito'}
+  .callout-q{font-family:'Nunito';font-weight:900;font-size:clamp(23px,3.6vw,34px);color:var(--teal-deep);text-align:center;max-width:780px;margin:0 auto 8px;line-height:1.16}
+  .callout-q i{color:var(--terra)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="eyebrow rise"><span class="pip"></span> Milestones Sprint · The PebblePath Method <span class="pip"></span></div>
+    <h1 class="rise d1"><span class="lo">Not a checklist.</span><span class="hi">A method.</span></h1>
+    <div class="sub-pills rise d2">
+      <span class="brandlock">◈ The PebblePath Method</span>
+      <span class="scope">Spans the journey · deep on 0–10 first</span>
+    </div>
+    <p class="lede rise d2">The thinking behind PebblePath’s <b>Milestones</b> — a connected, evidence-based way of seeing a child’s whole development, remembered across years and <b>read for who they are.</b> That’s the part a chatbot can’t copy.</p>
+    <div class="count-row rise d3">
+      <span class="count-pill"><span class="dot"></span> 4 evidence-backed tenets</span>
+      <span class="count-pill warm"><span class="dot"></span> Read per child</span>
+      <span class="count-pill"><span class="dot"></span> A lens on trusted science</span>
+      <span class="count-pill amber"><span class="dot"></span> Free language packs</span>
+    </div>
+
+    <div class="throughline rise d4">
+      <div class="tl-node">
+        <svg width="32" height="27" viewBox="0 0 32 27" class="breathe"><ellipse cx="16" cy="13.5" rx="14" ry="11" fill="#6E93C4" opacity="0.9"/></svg>
+        <div class="lbl">Shared attention · 9mo</div>
+      </div>
+      <div class="lnk"></div>
+      <div class="tl-node">
+        <svg width="32" height="27" viewBox="0 0 32 27"><ellipse cx="16" cy="13.5" rx="13" ry="12" fill="#D9A33A" opacity="0.9"/></svg>
+        <div class="lbl">First words · 14mo</div>
+      </div>
+      <div class="lnk"></div>
+      <div class="tl-node">
+        <svg width="34" height="27" viewBox="0 0 34 27"><ellipse cx="17" cy="13.5" rx="15" ry="11" fill="#CF7E8E" opacity="0.9"/></svg>
+        <div class="lbl">Conversation · 3yr</div>
+      </div>
+      <div class="lnk"></div>
+      <div class="tl-node">
+        <svg width="32" height="27" viewBox="0 0 32 27"><ellipse cx="16" cy="13.5" rx="14" ry="12" fill="#9A7BC0" opacity="0.9"/></svg>
+        <div class="lbl">Reading · 6yr</div>
+      </div>
+    </div>
+    <p class="hint rise d5">One connected path — not four isolated checkboxes. This is the signature.</p>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc rise d5">
+    <a href="#north">The north star</a>
+    <a href="#wedge">Why not just ChatGPT?</a>
+    <a href="#tenets">The four tenets</a>
+    <a href="#tuned">Read per child</a>
+    <a href="#unique">What makes us unique</a>
+    <a href="#packs">One deck, added-to</a>
+    <a href="#pebble">Pebble learns it</a>
+    <a href="#desk">What we decided</a>
+  </nav>
+
+  <!-- 0. NORTH STAR -->
+  <section id="north">
+    <div class="sec-head"><div class="sec-num">★</div><h2>The north star</h2></div>
+    <p class="sec-sub">One thesis, two comparisons. What only PebblePath does — versus every other app, and versus simply asking an LLM.</p>
+    <div class="northstar">
+      <div class="ns-eye">The only-at-PebblePath claim</div>
+      <div class="ns-claim">Every other product hands you a <em>checklist</em> or an <em>answer.</em> PebblePath gives you a <em>method</em> — a connected, evidence-based way of seeing your child’s whole development, remembered across years and read for who they are.</div>
+
+      <div class="ns-split">
+        <div class="ns-col">
+          <div class="h"><span class="ic">▦</span> Different from other apps</div>
+          <span class="vs">vs. milestone apps</span>
+          <p>They hand you a generic <b>checklist that expires at age 5.</b> We connect milestones into one through-line, keep going well past toddlerhood, and read them against <b>your</b> child — not the average one.</p>
+        </div>
+        <div class="ns-col">
+          <div class="h"><span class="ic">✦</span> Different from ChatGPT</div>
+          <span class="vs">vs. a generic LLM</span>
+          <p>It answers the question in front of it and <b>forgets your child the moment you close the tab.</b> Our method is remembered by Pebble, connects the dots across years, and follows a real pedagogy — not improvisation.</p>
+        </div>
+      </div>
+
+      <div class="ns-only">
+        <span class="lab">Only at PebblePath →</span>
+        <div class="chips">
+          <span class="chip">The Method (a real pedagogy)</span>
+          <span class="chip">Pebble’s memory</span>
+          <span class="chip">The whole-journey arc</span>
+          <span class="chip">Read for your child</span>
+        </div>
+      </div>
+      <p class="ns-foot">No checklist app has the method. No chatbot has the memory. Only PebblePath has both — and that’s the moat.</p>
+    </div>
+  </section>
+
+  <!-- 1. THE WEDGE -->
+  <section id="wedge">
+    <div class="sec-head"><div class="sec-num">1</div><h2>Why not just ask ChatGPT?</h2></div>
+    <p class="sec-sub">The question every AI-skeptical parent and investor will ask. Our answer is the whole reason this sprint exists: a generic chatbot has no <i>method</i> and no memory of <i>your</i> child. The PebblePath Method has both — and Milestones make it visible.</p>
+    <div class="wedge">
+      <div class="wedge-col generic">
+        <span class="tag">Ask any chatbot</span>
+        <h3>Answers in isolation</h3>
+        <ul>
+          <li><span class="mk">✕</span> No memory of <i>your</i> child — every question starts from zero</li>
+          <li><span class="mk">✕</span> Treats each milestone as a standalone fact, never a connected path</li>
+          <li><span class="mk">✕</span> Recites generic norms — which often read as “is my child behind?”</li>
+          <li><span class="mk">✕</span> Can’t tailor: same answer for a verbal 3-year-old and an active one</li>
+          <li><span class="mk">✕</span> No language or family lens</li>
+        </ul>
+        <div class="punch">A search box. Helpful once, forgotten instantly.</div>
+      </div>
+      <div class="wedge-col path">
+        <svg class="wedge-watermark" width="190" height="170" viewBox="0 0 190 170"><ellipse cx="95" cy="85" rx="90" ry="72" fill="#fff"/></svg>
+        <span class="tag">The PebblePath Method</span>
+        <h3>A pedagogy + a parental harness</h3>
+        <ul>
+          <li><span class="mk">◆</span> Remembers your child and <b style="color:#fff">connects the dots across years</b></li>
+          <li><span class="mk">◆</span> A named, research-backed lens — not improvised answers</li>
+          <li><span class="mk">◆</span> Each child’s milestones are <b style="color:#fff">read for who they actually are</b></li>
+          <li><span class="mk">◆</span> Oriented to what a child <b style="color:#fff">can do &amp; what’s next</b>, not what’s missing</li>
+          <li><span class="mk">◆</span> Adapts to each family’s languages by default</li>
+        </ul>
+        <div class="punch">A companion with a point of view. It gets smarter the longer you use it.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. THE TENETS -->
+  <section id="tenets">
+    <div class="sec-head"><div class="sec-num">2</div><h2>The four tenets</h2></div>
+    <p class="sec-sub">The Method is a <b>lens on established evidence</b> (CDC, AAP, WHO, ASHA) — we don’t invent milestones, we organize and frame them. Each tenet stands on peer-reviewed ground; confidence levels are honest, straight from the research dive.</p>
+    <div class="tenets">
+
+      <div class="tenet">
+        <div class="accent" style="background:var(--teal)"></div>
+        <div class="tnum" style="background:var(--teal)">1</div>
+        <h3>Through-lines, not checklists</h3>
+        <p class="what">Milestones are <b>connected across time</b> — shared attention feeds first words, feeds conversation, feeds reading. Showing the path is our signature, and no competitor does it.</p>
+        <div class="ev"><b>The evidence:</b> this is literally the peer-reviewed <i>developmental-cascades</i> framework. Fine-motor skill at 42 months predicted reasoning at <b>16 years</b> in a 1,233-child study; motor→attention→language arcs are measured and replicated.</div>
+        <span class="conf high"><span class="d"></span> High confidence</span>
+      </div>
+
+      <div class="tenet">
+        <div class="accent" style="background:var(--terra)"></div>
+        <div class="tnum" style="background:var(--terra)">2</div>
+        <h3>Capability-focused, not deficit-flagging</h3>
+        <p class="what">Built on <b>positive reinforcement</b> — we notice and cultivate what a child <i>can</i> do and has reached, never “are you behind.” Framed “emerging → growing → flourishing.” It attacks the anxiety checklists create.</p>
+        <div class="ev"><b>The evidence:</b> a strengths-emphasis, positive-reinforcement parenting style is linked to wellbeing and protective against anxiety (the “positive filter”). <b>The guardrail:</b> we pair this with — never against — “talk to your pediatrician.” (See §8.)</div>
+        <span class="conf med"><span class="d"></span> Med-High · with guardrail</span>
+      </div>
+
+      <div class="tenet">
+        <div class="accent" style="background:var(--social)"></div>
+        <div class="tnum" style="background:var(--social)">3</div>
+        <h3>Whole-child + whole-family</h3>
+        <p class="what">Development isn’t four clinical domains in a vacuum. It extends into the <b>routines, transitions and relationships</b> the chief-of-staff app already tracks — the family is a developmental driver.</p>
+        <div class="ev"><b>The evidence:</b> specific everyday caregiver interactions — not generic “stimulation” — predict the <i>timing</i> of language milestones (Tamis-LeMonda responsiveness studies).</div>
+        <span class="conf med"><span class="d"></span> Medium · design principle</span>
+      </div>
+
+      <div class="tenet">
+        <div class="accent" style="background:var(--cognitive)"></div>
+        <div class="tnum" style="background:var(--cognitive)">4</div>
+        <h3>Adapts to each family</h3>
+        <p class="what">Norms <b>vary by language and household.</b> We adapt ranges and framing instead of flagging difference as delay. This tenet is the bridge to the free language packs — starting with bilingual homes.</p>
+        <div class="ev"><b>The evidence:</b> bilingual children hit milestones at the same ages as monolinguals when you count across both languages; “Milestones or Millstones” (2022) shows many norms are conventions, not universals.</div>
+        <span class="conf high"><span class="d"></span> High confidence</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3. READ PER CHILD -->
+  <section id="tuned">
+    <div class="sec-head"><div class="sec-num">3</div><h2>The same Milestones, read for each child</h2></div>
+    <p class="sec-sub">No two children walk the same path. The same core deck of milestones, read against <i>this</i> child’s real progress, surfaces a different next step, a different strength to lean into, a different thing to watch. The tailoring is the value-add a generic answer can’t touch — and it’s why Pebble’s memory matters.</p>
+    <div class="card">
+      <div class="persona-wrap">
+
+        <div class="persona">
+          <div class="who">
+            <div class="nm">Mia · 3 yrs</div>
+            <div class="rd">A verbal path — ahead on language, motor steadily emerging.</div>
+          </div>
+          <div class="track">
+            <svg width="100%" height="62" viewBox="0 0 360 62" preserveAspectRatio="xMidYMid meet">
+              <line x1="34" y1="26" x2="326" y2="26" stroke="#5CBFB0" stroke-width="2" opacity="0.4"/>
+              <ellipse cx="34" cy="26" rx="12" ry="10" fill="#6E93C4" opacity="0.85"/>
+              <ellipse cx="131" cy="26" rx="17" ry="14" fill="#D9A33A"/>
+              <ellipse cx="228" cy="26" rx="12" ry="10" fill="#CF7E8E" opacity="0.85"/>
+              <ellipse cx="326" cy="26" rx="9" ry="8" fill="none" stroke="#9A7BC0" stroke-width="2" stroke-dasharray="3 3"/>
+              <text x="34" y="52" text-anchor="middle" font-family="Inter" font-size="10" fill="#8A9899">Motor</text>
+              <text x="131" y="52" text-anchor="middle" font-family="Inter" font-size="10" font-weight="700" fill="#9a7a1e">Language ★</text>
+              <text x="228" y="52" text-anchor="middle" font-family="Inter" font-size="10" fill="#8A9899">Social</text>
+              <text x="326" y="52" text-anchor="middle" font-family="Inter" font-size="10" fill="#8A9899">Cognitive</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="persona">
+          <div class="who">
+            <div class="nm">Sam · 3 yrs</div>
+            <div class="rd">A mover’s path — ahead on motor, language just emerging.</div>
+          </div>
+          <div class="track">
+            <svg width="100%" height="62" viewBox="0 0 360 62" preserveAspectRatio="xMidYMid meet">
+              <line x1="34" y1="26" x2="326" y2="26" stroke="#5CBFB0" stroke-width="2" opacity="0.4"/>
+              <ellipse cx="34" cy="26" rx="17" ry="14" fill="#6E93C4"/>
+              <ellipse cx="131" cy="26" rx="9" ry="8" fill="none" stroke="#D9A33A" stroke-width="2" stroke-dasharray="3 3"/>
+              <ellipse cx="228" cy="26" rx="12" ry="10" fill="#CF7E8E" opacity="0.85"/>
+              <ellipse cx="326" cy="26" rx="13" ry="11" fill="#9A7BC0" opacity="0.9"/>
+              <text x="34" y="52" text-anchor="middle" font-family="Inter" font-size="10" font-weight="700" fill="#4a6a96">Motor ★</text>
+              <text x="131" y="52" text-anchor="middle" font-family="Inter" font-size="10" fill="#8A9899">Language</text>
+              <text x="228" y="52" text-anchor="middle" font-family="Inter" font-size="10" fill="#8A9899">Social</text>
+              <text x="326" y="52" text-anchor="middle" font-family="Inter" font-size="10" fill="#8A9899">Cognitive</text>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+      <div class="ahead-key">
+        <span>★ = where they’re ahead · large = flourishing · small dashed = just emerging</span>
+      </div>
+      <p style="text-align:center;font-family:'Nunito';font-weight:800;color:var(--teal-deep);font-size:15px;margin-top:18px">Same age. Same deck. A different read for the child in front of you.</p>
+    </div>
+  </section>
+
+  <!-- 4. WHAT MAKES US UNIQUE -->
+  <section id="unique">
+    <div class="sec-head"><div class="sec-num">4</div><h2>What makes PebblePath unique</h2></div>
+    <p class="sec-sub">On the <b>milestone-method axis</b> specifically (our competitive analysis covers the broader homescreen rivals by job). We hunted hard for anyone already doing this — including the most direct milestone apps, Kinedu and BabySparks. The honest finding: four attributes that <b>exist only in isolation today.</b> Nobody combines all four.</p>
+
+    <div class="matrix">
+      <table class="mtx">
+        <thead>
+          <tr>
+            <th class="prod">Product</th>
+            <th>Parent-<br>facing</th>
+            <th>Capability-<br>focused</th>
+            <th>Past<br>age 5</th>
+            <th>Language-<br>adaptive</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="prod">Lovevery</td><td><span class="yes">●</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td></tr>
+          <tr><td class="prod">Kinedu</td><td><span class="yes">●</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="part">part</span></td></tr>
+          <tr><td class="prod">BabySparks</td><td><span class="yes">●</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="part">part</span></td></tr>
+          <tr><td class="prod">CDC Milestone Tracker</td><td><span class="yes">●</span></td><td><span class="no">—</span></td><td><span class="no">—</span></td><td><span class="part">part</span></td></tr>
+          <tr><td class="prod">ASQ-3 (clinical screener)</td><td><span class="part">part</span></td><td><span class="yes">●</span></td><td><span class="no">—</span></td><td><span class="part">part</span></td></tr>
+          <tr><td class="prod">Developmental Assets® (research)</td><td><span class="part">part</span></td><td><span class="yes">●</span></td><td><span class="part">part</span></td><td><span class="no">—</span></td></tr>
+          <tr><td class="prod">Thrive by Five (0–5 activities)</td><td><span class="yes">●</span></td><td><span class="part">part</span></td><td><span class="no">—</span></td><td><span class="part">part</span></td></tr>
+          <tr class="pp"><td class="prod">★ PebblePath Milestones</td><td><span class="yes">●</span></td><td><span class="yes">●</span></td><td><span class="yes">●</span></td><td><span class="yes">●</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span><b class="yes" style="color:var(--teal)">●</b> owns it</span>
+      <span><b class="part" style="color:var(--amber)">part</b> partial</span>
+      <span><b class="no" style="color:var(--ink-faint)">—</b> doesn’t</span>
+      <span style="color:var(--ink-faint)">· every rival caps at age 5–6 — “past age 5” is the moat your competitive analysis already calls out</span>
+    </div>
+
+    <div class="verdict-banner">
+      <div class="ic">◇</div>
+      <div>
+        <h4>The defensible claim: “first to integrate,” not “first to invent.”</h4>
+        <p>Capability-focused framing exists (in clinical screeners). Language-aware assessment exists (in clinical bilingual tools). Reaching past age 5 exists (in research frameworks). <b>But no consumer product unifies all four into one parent-facing companion that’s read for each child.</b> That combination is the white space — and it’s honest. (We respect Minderoo’s 0–5 Thrive by Five; it owns cultural adaptation, which is why we hold culture for later and lead with language.)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ONE DECK, ADDED TO -->
+  <section id="packs">
+    <div class="sec-head"><div class="sec-num">5</div><h2>One deck for every child — packs add to it</h2></div>
+    <p class="sec-sub">The core Milestones deck is the <b>default for every child.</b> Packs are <i>additive</i> cards you add to the rolodex — they refine specific milestones, they never replace the deck and they never put a child on a “different” or “better” track. The first pack: bilingual homes.</p>
+    <div class="card">
+      <div class="deck-grid">
+        <div>
+          <div class="deck-visual">
+            <div>
+              <div class="deck-stack">
+                <div class="dcard"><span class="dc-dom" style="color:var(--motor)">Motor</span><div class="dc-ttl">Walks up stairs with rail</div><svg class="dc-peb" width="22" height="18" viewBox="0 0 22 18"><ellipse cx="11" cy="9" rx="10" ry="8" fill="#6E93C4"/></svg></div>
+                <div class="dcard"><span class="dc-dom" style="color:var(--social)">Social</span><div class="dc-ttl">Plays alongside other kids</div><svg class="dc-peb" width="22" height="18" viewBox="0 0 22 18"><ellipse cx="11" cy="9" rx="10" ry="8" fill="#CF7E8E"/></svg></div>
+                <div class="dcard"><span class="dc-dom" style="color:var(--language)">Language</span><div class="dc-ttl">Says 50+ words</div><svg class="dc-peb" width="22" height="18" viewBox="0 0 22 18"><ellipse cx="11" cy="9" rx="10" ry="8" fill="#D9A33A"/></svg></div>
+              </div>
+              <div class="deck-label">The core deck · every child</div>
+            </div>
+            <div class="deck-plus">+</div>
+            <div class="pack-card">
+              <div class="pc">
+                <div class="ph">◈ Additive pack</div>
+                <div class="pt">Bilingual homes</div>
+                <div class="pd">Teaches the <b>language</b> cards to count across both languages — and to treat code-switching as normal.</div>
+              </div>
+              <div class="pl">opt-in · free</div>
+            </div>
+          </div>
+          <div class="additive-note">
+            <div class="ic">◆</div>
+            <p><b>Additive, never a replacement.</b> The bilingual pack refines a handful of language cards — it doesn’t fork a child onto a separate deck. Every child stands on the same core method; the pack just makes the language cards fairer for a dual-language home.</p>
+          </div>
+        </div>
+
+        <div>
+          <div class="demo">
+            <div class="demo-head">What the pack fixes — a false alarm no generic app handles</div>
+            <div class="demo-row">
+              <div class="demo-card bad">
+                <div class="dh">✕ Language card · pack OFF</div>
+                <div class="count">Mateo, 24mo · <span class="num">28</span> English words</div>
+                <span class="flag">⚠ Looks like “possible delay”</span>
+              </div>
+              <div class="demo-mid">→</div>
+              <div class="demo-card good">
+                <div class="dh">◆ Same card · bilingual pack ON</div>
+                <div class="count"><span class="num">28</span> English <span style="color:var(--ink-faint)">+</span> <span class="num">31</span> Spanish</div>
+                <span class="flag">✓ Right on track — exactly where he should be</span>
+              </div>
+            </div>
+            <p style="font-size:12.5px;color:var(--ink-faint);text-align:center;margin-top:6px">The science: bilingual kids hit milestones at the same ages — you just have to count both languages (Cambridge, <i>Journal of Child Language</i>). Only flag a concern when there’s little progress in <i>both</i>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. PEBBLE LEARNS IT -->
+  <section id="pebble">
+    <div class="sec-head"><div class="sec-num">6</div><h2>Pebble learns the Method</h2></div>
+    <p class="sec-sub">The framework isn’t just a content reorg — it’s injected into Pebble’s memory core, so every answer, daily brief and insight speaks the same language and respects the same guardrails.</p>
+    <div class="pebble-box">
+      <div class="orb breathe">◈</div>
+      <div>
+        <h3>The Method becomes part of how Pebble thinks</h3>
+        <p>Pebble’s system prompt and memory layers get the tenets, the catalog’s through-line links, and the pack rules — so it connects milestones across time, frames everything around what a child <b>can</b> do, never says “behind,” counts both languages for bilingual homes, and always leaves the door open to “check with your pediatrician.”</p>
+        <div class="pebble-rules">
+          <span class="r">Connect milestones as arcs</span>
+          <span class="r">Capability-focused voice — never “behind”</span>
+          <span class="r">Count both languages</span>
+          <span class="r">Read for this child</span>
+          <span class="r">Coexist with screening</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. WHAT WE DECIDED -->
+  <section id="desk">
+    <div class="sec-head"><div class="sec-num">7</div><h2>What the research settled</h2></div>
+    <p class="sec-sub">An honest dive surfaces things to act on, not just things to celebrate. Three calls for the founders.</p>
+    <div class="desk">
+
+      <div class="desk-item resolved">
+        <div class="badge">◈</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+            <h4 style="margin:0">Keep “Milestones.” Name the philosophy “The PebblePath Method.”</h4>
+            <span class="tagchip ok">No rebrand · no trademark risk</span>
+          </div>
+          <p>We considered renaming to “Pathways” — but it muddies a UX that already says “Milestones,” and the research found “The Path” collides with a $14.3M-funded AI-parenting app (“The Path AI”) and even “Pathways” touches the Pathways.org milestone nonprofit. <b>The clean answer:</b> the feature stays <b>Milestones</b>; the proprietary lens is <b>The PebblePath Method</b> — a method-name doesn’t compete with a feature-noun, it’s the wedge vs ChatGPT, and it dissolves the trademark problem entirely.</p>
+          <div class="pillrow">
+            <span class="p star">Feature: Milestones</span>
+            <span class="p star">Method: The PebblePath Method</span>
+            <span class="p">“path” stays a metaphor, not a brand</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="desk-item guard">
+        <div class="badge">⚖</div>
+        <div>
+          <h4>Capability-focused — but it coexists with screening, never argues against it</h4>
+          <p>Our orientation is positive reinforcement — what a child can do and what’s next. But legitimate early screening (autism, hearing) genuinely catches things parents and even questionnaires miss, and the CDC’s own checklist revision was about catching delays <i>earlier</i>. So the Method reassures and encourages, with an unobtrusive, always-present route to “talk to your pediatrician.” Encouraging, never diagnosing.</p>
+        </div>
+      </div>
+
+      <div class="desk-item legal">
+        <div class="badge">✓</div>
+        <div>
+          <h4>Clean legal foundation — build on CDC public-domain content</h4>
+          <p>CDC “Learn the Signs. Act Early.” milestones are <b>public domain and commercially reusable</b> (attribute the source, keep the substance faithful, don’t use the CDC logo) — we write the prose in PebblePath’s own voice. <b>Don’t reproduce</b> AAP Bright Futures or WHO tables (copyrighted / non-commercial), though we can follow the AAP visit schedule and cite WHO ranges as facts. The “method-as-lens” model is clean by design: we own the lens, not the underlying science.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 8. SEQUENCING -->
+  <section id="seq">
+    <div class="sec-head"><div class="sec-num">8</div><h2>Day-1 framing, Coming-Soon content</h2></div>
+    <p class="sec-sub">The named Method is a <b>main differentiator</b>, so it appears in launch messaging from day one. The catalog reorganization and the packs ship after launch, advertised as “Coming Soon.” Positioning stays <b>birth → teen</b> (the longitudinal moat); the catalog goes <b>deep on 0–10 first.</b></p>
+    <div class="seq">
+      <div class="seq-col now">
+        <div class="sh"><span class="chip">At launch</span> The story ships now</div>
+        <ul>
+          <li>“The PebblePath Method” + the four tenets on the website (a “how we think about development” page) and on /brain</li>
+          <li>The App Store hook: the “a method tuned to your child, not a checklist” story</li>
+          <li>An in-app explainer / teaser introducing the lens — with the packs as “Coming Soon”</li>
+          <li>The north star + the “why not just ChatGPT” wedge as positioning copy</li>
+        </ul>
+      </div>
+      <div class="seq-col soon">
+        <div class="sh"><span class="chip">Coming soon</span> The content follows</div>
+        <ul>
+          <li>The 0–10 catalog re-organized under the Method (through-lines surfaced)</li>
+          <li>Pebble memory-core injection so Pebble speaks the framework</li>
+          <li>The bilingual / multilingual-home pack — the first additive pack</li>
+          <li>Then: more language packs · culture packs parked further out · ages 10+ later</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <p class="callout-q rise">A checklist tells you where your child <i>isn’t</i> yet.<br>A method shows you where they’re <i>going</i>.</p>
+
+  <div class="foot">
+    <p><b>The PebblePath Method</b> · Milestones sprint — research-backed concept · for review with Ellie</p>
+    <p style="margin-top:8px;font-size:12px">Full citations &amp; confidence levels: <b>docs/milestones-research-foundation.md</b> · Method writeup: <b>docs/milestones-method-writeup.md</b> · Concept page, not legal advice — naming &amp; licensing need an attorney’s clearance before launch.</p>
+  </div>
+
+</div>
+</body>
+</html>
