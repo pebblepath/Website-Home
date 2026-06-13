@@ -181,6 +181,31 @@ body.menu-open{ overflow:hidden; }
 .closing a.sec-link{ font-size:13px; color:var(--teal-dark); text-decoration:none; font-weight:600; }
 .closing a.sec-link:hover{ color:var(--teal); }
 
+/* ── GROWS WITH AGE ── */
+.grow-card{ background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:24px 26px; }
+.gc-label{ font-family:'Nunito',sans-serif; font-weight:800; font-size:13px; color:var(--ink); margin-bottom:20px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.gc-label span{ font-weight:700; font-size:12px; color:var(--teal-dark); background:rgba(61,155,143,.1); border-radius:20px; padding:4px 12px; }
+.ladder{ display:flex; align-items:flex-start; }
+.lnode{ display:flex; flex-direction:column; align-items:center; text-align:center; width:16.66%; flex-shrink:0; }
+.lnode .ldot{ width:30px; height:25px; border-radius:50%; box-shadow:0 4px 9px rgba(60,50,38,.16); }
+.lnode .lname{ font-size:11px; font-weight:700; color:var(--ink); margin-top:9px; line-height:1.2; }
+.lnode.soon .lname{ color:var(--ink-faint); }
+.lnode .lage{ font-size:10px; color:var(--ink-faint); margin-top:3px; font-weight:600; }
+.lnode .lsoon{ font-size:8.5px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:var(--terra-dark); background:rgba(198,123,92,.12); border-radius:20px; padding:2px 7px; margin-top:5px; }
+.lline{ flex:1; min-width:10px; height:3px; margin-top:11px; border-radius:3px; }
+.gc-note{ text-align:center; font-size:12.5px; color:var(--ink-soft); margin-top:18px; }
+.gc-divider{ height:1px; background:var(--line); margin:22px 0; }
+.cover{ display:grid; grid-template-columns:auto 1fr; gap:32px; align-items:center; }
+.cov-num{ text-align:center; }
+.cov-num .big{ font-family:'Nunito',sans-serif; font-weight:900; font-size:48px; color:var(--teal-deep); line-height:1; }
+.cov-num .lbl{ font-size:12px; color:var(--ink-soft); margin-top:5px; max-width:150px; line-height:1.4; }
+.cov-bands{ display:flex; align-items:flex-end; gap:10px; height:104px; }
+.cov-band{ flex:1; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; }
+.cov-bar{ width:100%; border-radius:7px 7px 0 0; background:linear-gradient(180deg,var(--teal-light),var(--teal)); }
+.cov-band.soon .cov-bar{ background:repeating-linear-gradient(135deg,rgba(198,123,92,.34) 0 5px,rgba(198,123,92,.12) 5px 10px); }
+.cov-band .cov-b{ font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-top:8px; }
+.cov-band .cov-s{ font-size:9px; color:var(--ink-faint); margin-top:2px; text-transform:uppercase; letter-spacing:.4px; font-weight:700; }
+
 /* ── FOOTER ── */
 footer{ padding:16px 48px; text-align:center; background:var(--teal-deep); color:rgba(255,255,255,.6); font-size:12px; }
 footer p{ margin-bottom:4px; }
@@ -195,6 +220,7 @@ footer a:hover{ color:white; }
   .closing{ grid-template-columns:1fr; text-align:center; }
   .closing .cl-cta{ flex-direction:row; justify-content:center; flex-wrap:wrap; }
   .closing .cl-sub{ margin-left:auto; margin-right:auto; }
+  .cover{ grid-template-columns:1fr; gap:18px; }
   .mh-h1{ font-size:40px; }
 }
 @media(max-width:600px){
@@ -210,6 +236,9 @@ footer a:hover{ color:white; }
   .demo-mid{ transform:rotate(90deg); }
   .mh-h1{ font-size:34px; }
   .closing{ padding:26px 22px; }
+  .ladder{ overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:6px; }
+  .lnode{ width:auto; min-width:84px; }
+  .lline{ min-width:22px; }
   h2{ font-size:27px; }
   footer{ padding:14px 20px; }
 }
@@ -437,6 +466,46 @@ footer a:hover{ color:white; }
       </div>
     </div>
     <p class="arcs-foot">Three paths deepen within one area; three cascade across, and those are the heart of "through-lines, not checklists."</p>
+  </div>
+</div>
+
+<!-- ===== IT GROWS WITH YOUR CHILD ===== -->
+<div id="grows" class="sec" style="background:var(--sand-soft);border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="sec-head center">
+      <div class="eyebrow">Built to last</div>
+      <h2>The paths don't expire at five.</h2>
+      <p class="lead">Each path is a through-line, not a list that runs out. As your child grows, it simply reveals its next stage, all the way to the teen years. That is why the method never needs a redo.</p>
+    </div>
+    <div class="grow-card">
+      <div class="gc-label">One path, stage by stage <span>From noticing to reading</span></div>
+      <div class="ladder">
+        <div class="lnode"><span class="ldot" style="background:var(--social)"></span><span class="lname">Shared attention</span><span class="lage">9 mo</span></div>
+        <div class="lline" style="background:linear-gradient(90deg,var(--social),var(--language))"></div>
+        <div class="lnode"><span class="ldot" style="background:var(--language)"></span><span class="lname">First words</span><span class="lage">14 mo</span></div>
+        <div class="lline" style="background:var(--language)"></div>
+        <div class="lnode"><span class="ldot" style="background:var(--language)"></span><span class="lname">Conversation</span><span class="lage">3 yr</span></div>
+        <div class="lline" style="background:linear-gradient(90deg,var(--language),var(--cognitive))"></div>
+        <div class="lnode"><span class="ldot" style="background:var(--cognitive)"></span><span class="lname">Letters &amp; sounds</span><span class="lage">5 yr</span></div>
+        <div class="lline" style="background:var(--cognitive);opacity:.4"></div>
+        <div class="lnode soon"><span class="ldot" style="background:#fff;border:2px dashed var(--cognitive)"></span><span class="lname">Reading</span><span class="lage">6 yr</span><span class="lsoon">coming</span></div>
+        <div class="lline" style="background:var(--cognitive);opacity:.25"></div>
+        <div class="lnode soon"><span class="ldot" style="background:#fff;border:2px dashed var(--cognitive)"></span><span class="lname">Reading to learn</span><span class="lage">8-10 yr</span><span class="lsoon">coming</span></div>
+      </div>
+      <div class="gc-note">Your child moves from one stage to the next. The path always has the next one ready.</div>
+      <div class="gc-divider"></div>
+      <div class="cover">
+        <div class="cov-num"><div class="big">160+</div><div class="lbl">milestones today, across all six paths</div></div>
+        <div class="cov-bands">
+          <div class="cov-band"><div class="cov-bar" style="height:96%"></div><div class="cov-b">0-2 yr</div><div class="cov-s">rich</div></div>
+          <div class="cov-band"><div class="cov-bar" style="height:80%"></div><div class="cov-b">2-5 yr</div><div class="cov-s">strong</div></div>
+          <div class="cov-band"><div class="cov-bar" style="height:58%"></div><div class="cov-b">5-8 yr</div><div class="cov-s">growing</div></div>
+          <div class="cov-band"><div class="cov-bar" style="height:36%"></div><div class="cov-b">8-10 yr</div><div class="cov-s">building</div></div>
+          <div class="cov-band soon"><div class="cov-bar" style="height:18%"></div><div class="cov-b">Teen</div><div class="cov-s">coming</div></div>
+        </div>
+      </div>
+      <div class="gc-note" style="margin-top:14px;">Deepest through the early years, where most families begin, and extending across every older age.</div>
+    </div>
   </div>
 </div>
 
