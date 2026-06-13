@@ -37,13 +37,11 @@ html,body{ background:var(--cream); }
 body{ font-family:'Inter',sans-serif; color:var(--ink); line-height:1.6; }
 .eyebrow{ font-family:'Nunito',sans-serif; font-weight:800; font-size:12px; letter-spacing:2.6px; text-transform:uppercase; color:var(--teal); }
 h2{ font-family:'Nunito',sans-serif; font-weight:800; font-size:33px; color:var(--ink); letter-spacing:-.4px; line-height:1.18; margin-top:11px; }
-.lead{ font-size:15.5px; color:var(--ink-soft); max-width:680px; margin-top:13px; line-height:1.65; }
+.lead{ font-size:15px; color:var(--ink-soft); max-width:760px; margin-top:14px; line-height:1.7; }
 .lead b{ color:var(--teal-dark); }
-.sec{ padding:64px 0; position:relative; }
-.sec-head{ margin-bottom:34px; }
-.sec-head.center{ text-align:center; }
-.sec-head.center .lead{ margin-left:auto; margin-right:auto; }
-.wrap{ max-width:1120px; margin:0 auto; padding:0 50px; }
+.sec{ padding:66px 0; position:relative; }
+.sec-head{ margin-bottom:38px; }
+.wrap{ max-width:1180px; margin:0 auto; padding:0 50px; }
 
 /* ── NAV ── */
 nav{ position:fixed; top:0; width:100%; z-index:100; background:linear-gradient(180deg,rgba(31,92,84,.82) 0%,rgba(31,92,84,0) 100%); padding:0 48px; height:68px; display:flex; align-items:center; justify-content:space-between; transition:background .3s ease; }
@@ -206,6 +204,22 @@ body.menu-open{ overflow:hidden; }
 .cov-band .cov-b{ font-size:10.5px; font-weight:700; color:var(--ink-soft); margin-top:8px; }
 .cov-band .cov-s{ font-size:9px; color:var(--ink-faint); margin-top:2px; text-transform:uppercase; letter-spacing:.4px; font-weight:700; }
 
+/* ── COMPARE LOGOS ── */
+.col-logos{ display:flex; flex-wrap:wrap; gap:7px; align-items:center; margin-bottom:15px; min-height:30px; }
+.col-logos .lg{ font-family:'Nunito',sans-serif; font-weight:800; font-size:11px; color:var(--ink-faint); background:rgba(44,39,35,.05); border:1px solid var(--line); border-radius:7px; padding:4px 9px; }
+.col-logos.answer-logos img{ width:30px; height:30px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.2); }
+.col-logos.answer-logos .pp{ font-family:'Nunito',sans-serif; font-weight:900; font-size:15px; color:#fff; }
+
+/* ── CREDENTIALS ── */
+.creds{ margin-top:30px; text-align:center; }
+.creds .clab{ font-size:12.5px; color:var(--ink-faint); margin-bottom:13px; }
+.creds .crow{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+.cred{ display:inline-flex; align-items:center; gap:8px; background:var(--paper); border:1px solid var(--line); border-radius:11px; padding:9px 15px; box-shadow:0 1px 5px rgba(60,50,38,.05); }
+.cred svg{ width:18px; height:18px; color:var(--teal); flex-shrink:0; }
+.cred .cn{ font-family:'Nunito',sans-serif; font-weight:900; font-size:14.5px; color:var(--ink); }
+.cred .cf{ font-size:10.5px; color:var(--ink-faint); }
+@media(max-width:600px){ .cred .cf{ display:none; } }
+
 /* ── FOOTER ── */
 footer{ padding:16px 48px; text-align:center; background:var(--teal-deep); color:rgba(255,255,255,.6); font-size:12px; }
 footer p{ margin-bottom:4px; }
@@ -309,7 +323,7 @@ footer a:hover{ color:white; }
     </div>
     <div class="compare">
       <div class="col foil">
-        <span class="ctag">A checklist app</span><h3>Boxes to tick</h3>
+        <div class="col-logos"><span class="lg">BabyCenter</span><span class="lg">Tinybeans</span><span class="lg">Huckleberry</span></div><span class="ctag">A checklist app</span><h3>Boxes to tick</h3>
         <ul>
           <li><span class="mk">✕</span> Stops being useful around age 5</li>
           <li><span class="mk">✕</span> Isolated boxes, never a connected path</li>
@@ -319,7 +333,7 @@ footer a:hover{ color:white; }
         <div class="punch">Helpful for a while. Then it expires.</div>
       </div>
       <div class="col foil">
-        <span class="ctag">A chatbot</span><h3>Answers in a vacuum</h3>
+        <div class="col-logos"><span class="lg">ChatGPT</span><span class="lg">Gemini</span><span class="lg">Claude</span></div><span class="ctag">A chatbot</span><h3>Answers in a vacuum</h3>
         <ul>
           <li><span class="mk">✕</span> Forgets your child the moment you close it</li>
           <li><span class="mk">✕</span> Improvises, with no real method underneath</li>
@@ -329,7 +343,7 @@ footer a:hover{ color:white; }
         <div class="punch">A search box. Forgotten instantly.</div>
       </div>
       <div class="col answer">
-        <span class="ctag">The PebblePath Method</span><h3>A companion with a point of view</h3>
+        <div class="col-logos answer-logos"><img src="/assets/app-icon.png" alt="PebblePath"><span class="pp">PebblePath</span></div><span class="ctag">The PebblePath Method</span><h3>A companion with a point of view</h3>
         <ul>
           <li><span class="mk">◆</span> Keeps going well past toddlerhood</li>
           <li><span class="mk">◆</span> Connects milestones into one path across years</li>
@@ -373,7 +387,15 @@ footer a:hover{ color:white; }
         <p>Norms <b>vary by language and home.</b> We adapt the read, starting with free packs for bilingual homes.</p>
       </div>
     </div>
-    <div class="trust"><span class="pb"></span> Rooted in <b>CDC, AAP, WHO &amp; ASHA</b> developmental research</div>
+    <div class="creds">
+      <div class="clab">Grounded in trusted developmental research</div>
+      <div class="crow">
+        <div class="cred"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg><span class="cn">CDC</span><span class="cf">Learn the Signs</span></div>
+        <div class="cred"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg><span class="cn">AAP</span><span class="cf">Bright Futures</span></div>
+        <div class="cred"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg><span class="cn">WHO</span><span class="cf">Growth norms</span></div>
+        <div class="cred"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg><span class="cn">ASHA</span><span class="cf">Speech &amp; language</span></div>
+      </div>
+    </div>
   </div>
 </div>
 
