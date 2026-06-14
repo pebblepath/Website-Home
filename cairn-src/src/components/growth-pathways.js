@@ -322,7 +322,7 @@ export class GrowthPathways extends LitElement {
         <polygon points=${shape} fill="#3d9b8f" fill-opacity="0.18" stroke="#3d9b8f" stroke-opacity="0.72" stroke-width="2.4" stroke-linejoin="round"></polygon>
         ${r.verts.map((v) => svg`<circle cx=${v.x} cy=${v.y} r="5" fill=${v.color} stroke="#fff" stroke-width="1.8"></circle>`)}
         <circle cx=${r.ring.x} cy=${r.ring.y} r="9" fill="none" stroke="#1f5c54" stroke-width="2"></circle>
-        ${r.verts.map((v) => svg`<text x=${v.lx} y=${v.ly} text-anchor=${v.anchor} font-size="11.5" font-weight="800" fill=${this._lbl(v)}>${v.short}</text>`)}
+        ${r.verts.map((v) => svg`<text x=${v.lx} y=${v.ly} text-anchor=${v.anchor} font-size="11.5" font-weight="600" fill=${this._lbl(v)}>${v.short}</text>`)}
       </svg>
     `;
   }
@@ -339,7 +339,7 @@ export class GrowthPathways extends LitElement {
 
         ${tl.lanes.map((ln) => svg`
           <line x1=${X0} y1=${ln.y} x2=${X1} y2=${ln.y} stroke=${ln.color} stroke-opacity="0.18" stroke-width="2.5" stroke-linecap="round"></line>
-          <text x=${X0 - 12} y=${ln.y + 4} text-anchor="end" font-size="11" font-weight="800" fill=${this._lbl(ln)}>${ln.name}</text>
+          <text x=${X0 - 12} y=${ln.y + 4} text-anchor="end" font-size="11" font-weight="600" fill=${this._lbl(ln)}>${ln.name}</text>
         `)}
 
         ${tl.axis.map((a) => svg`
@@ -401,7 +401,7 @@ export class GrowthPathways extends LitElement {
     /* radar — vertically centered + filling the available card height */
     .radar { padding: 16px 14px 12px; display: flex; flex-direction: column; }
     .radar .cap { text-align: center; font-family: var(--font-display); font-weight: 700; font-size: 13px; color: var(--text-primary); }
-    .radar .sub { text-align: center; font-size: 11px; color: var(--text-tertiary); margin-bottom: 4px; }
+    .radar .sub { text-align: center; font-size: 11px; color: var(--text-tertiary); margin-top: 4px; margin-bottom: 4px; }
     .radar-wrap { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; padding: 4px 0; }
     .radar-svg { width: 100%; height: 100%; display: block; }
     .radar .foot { text-align: center; font-size: 11px; color: var(--text-secondary); padding: 10px 12px 2px; line-height: 1.45; }

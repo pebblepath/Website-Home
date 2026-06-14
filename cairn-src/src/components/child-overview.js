@@ -876,7 +876,8 @@ export class ChildOverview extends LitElement {
       .filter((m) => m.status !== 'achieved')
       .slice(0, 4);
     const theme = child.themeColorHex || 'var(--teal-pebble)';
-    const insights = this.insights ?? [];
+    // Cap at 4 on the web (2026-06-14, Thomas) — keeps the Children page tight.
+    const insights = (this.insights ?? []).slice(0, 4);
     const statusClass = (s) =>
       s === 'achieved' ? 'done' : s === 'emerging' ? 'emerging' : 'up';
     const statusLabel = (s) =>
@@ -937,25 +938,10 @@ export class ChildOverview extends LitElement {
         </div>
       </section>
 
-      <section>
-        <div class="section-head">
-          <h2>Milestone areas</h2>
-        </div>
-        <div class="domains">
-          ${DOMAINS.map((d) => {
-            const s = this._domainStats(d.key);
-            return html`<div
-              class="dtile"
-              style="--c:${d.color};--tint:${d.color}26;"
-            >
-              <div class="dico">${d.svg}</div>
-              <div class="dname">${d.label}</div>
-              <div class="dcount">${s.achieved} of ${s.total} achieved</div>
-              <div class="bar"><i style="width:${s.pct}%"></i></div>
-            </div>`;
-          })}
-        </div>
-      </section>
+      <!-- "Milestone areas" (4 domain tiles) hidden 2026-06-14 (Thomas) —
+           Growth Pathways now leads the page; the tiles made it too busy.
+           The four areas still read as the timeline lanes below. Restore
+           the <section> from git history if ever needed. -->
 
       <growth-pathways
         .child=${child}
