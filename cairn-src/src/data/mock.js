@@ -91,21 +91,28 @@ export const mockChild = {
 export const mockChildren = [mockChild];
 
 // category ∈ motor|language|socialEmotional|cognitive
+// arc / arcOrder mirror the iOS Method reseed (MilestoneArc) so the Growth
+// Pathways radar + woven timeline render in the ?preview mock route.
 export const mockMilestones = [
-  { id: 'm1', category: 'motor', title: 'Kicks a ball forward', status: 'achieved', ageRangeStartMonths: 18, ageRangeEndMonths: 24 },
-  { id: 'm2', category: 'motor', title: 'Walks up stairs holding on', status: 'achieved', ageRangeStartMonths: 18, ageRangeEndMonths: 24 },
-  { id: 'm3', category: 'motor', title: 'Jumps with both feet off the ground', status: 'emerging', ageRangeStartMonths: 24, ageRangeEndMonths: 30 },
-  { id: 'm4', category: 'motor', title: 'Pedals a tricycle', status: 'notStarted', ageRangeStartMonths: 30, ageRangeEndMonths: 36 },
-  { id: 'm5', category: 'language', title: 'Uses two-word phrases', status: 'achieved', ageRangeStartMonths: 18, ageRangeEndMonths: 24 },
-  { id: 'm6', category: 'language', title: 'Says first name when asked', status: 'emerging', ageRangeStartMonths: 24, ageRangeEndMonths: 30 },
-  { id: 'm7', category: 'language', title: 'Names six body parts', status: 'notStarted', ageRangeStartMonths: 24, ageRangeEndMonths: 30 },
-  { id: 'm8', category: 'language', title: 'Uses three-word sentences', status: 'notStarted', ageRangeStartMonths: 30, ageRangeEndMonths: 36 },
-  { id: 'm9', category: 'socialEmotional', title: 'Shows affection unprompted', status: 'achieved', ageRangeStartMonths: 18, ageRangeEndMonths: 24 },
-  { id: 'm10', category: 'socialEmotional', title: 'Plays alongside other children', status: 'emerging', ageRangeStartMonths: 24, ageRangeEndMonths: 36 },
-  { id: 'm11', category: 'socialEmotional', title: 'Takes turns in simple games', status: 'notStarted', ageRangeStartMonths: 30, ageRangeEndMonths: 42 },
-  { id: 'm12', category: 'cognitive', title: 'Follows a two-step instruction', status: 'achieved', ageRangeStartMonths: 18, ageRangeEndMonths: 24 },
-  { id: 'm13', category: 'cognitive', title: 'Sorts objects by shape or colour', status: 'emerging', ageRangeStartMonths: 30, ageRangeEndMonths: 36 },
-  { id: 'm14', category: 'cognitive', title: 'Completes a 4-piece puzzle', status: 'notStarted', ageRangeStartMonths: 30, ageRangeEndMonths: 36 },
+  { id: 'm15', category: 'socialEmotional', title: 'Social smile', status: 'achieved', ageRangeStartMonths: 1, ageRangeEndMonths: 3, arc: 'attentionToLiteracy', arcOrder: 1 },
+  { id: 'm16', category: 'language', title: "Babbles ('ba-ba', 'da-da')", status: 'achieved', ageRangeStartMonths: 4, ageRangeEndMonths: 7, arc: 'attentionToLiteracy', arcOrder: 2 },
+  { id: 'm17', category: 'motor', title: 'Sits without support', status: 'achieved', ageRangeStartMonths: 6, ageRangeEndMonths: 9, arc: 'movementToCoordination', arcOrder: 3 },
+  { id: 'm18', category: 'cognitive', title: 'Explores cause and effect', status: 'achieved', ageRangeStartMonths: 8, ageRangeEndMonths: 12, arc: 'curiosityToReasoning', arcOrder: 2 },
+  { id: 'm1', category: 'motor', title: 'Kicks a ball forward', status: 'achieved', ageRangeStartMonths: 18, ageRangeEndMonths: 24, arc: 'movementToCoordination', arcOrder: 6 },
+  { id: 'm2', category: 'motor', title: 'Walks up stairs holding on', status: 'achieved', ageRangeStartMonths: 18, ageRangeEndMonths: 24, arc: 'movementToCoordination', arcOrder: 7 },
+  { id: 'm3', category: 'motor', title: 'Jumps with both feet off the ground', status: 'emerging', ageRangeStartMonths: 24, ageRangeEndMonths: 30, arc: 'movementToCoordination', arcOrder: 8 },
+  { id: 'm4', category: 'motor', title: 'Pedals a tricycle', status: 'notStarted', ageRangeStartMonths: 30, ageRangeEndMonths: 36, arc: 'movementToCoordination', arcOrder: 9 },
+  { id: 'm5', category: 'language', title: 'Uses two-word phrases', status: 'achieved', ageRangeStartMonths: 18, ageRangeEndMonths: 24, arc: 'attentionToLiteracy', arcOrder: 5 },
+  { id: 'm6', category: 'language', title: 'Says first name when asked', status: 'emerging', ageRangeStartMonths: 24, ageRangeEndMonths: 30, arc: 'attentionToLiteracy', arcOrder: 6 },
+  { id: 'm7', category: 'language', title: 'Names six body parts', status: 'notStarted', ageRangeStartMonths: 24, ageRangeEndMonths: 30, arc: 'attentionToLiteracy', arcOrder: 7 },
+  { id: 'm8', category: 'language', title: 'Uses three-word sentences', status: 'notStarted', ageRangeStartMonths: 30, ageRangeEndMonths: 36, arc: 'attentionToLiteracy', arcOrder: 8 },
+  { id: 'm19', category: 'cognitive', title: 'Recognizes familiar logos and print', status: 'notStarted', ageRangeStartMonths: 36, ageRangeEndMonths: 48, arc: 'attentionToLiteracy', arcOrder: 9 },
+  { id: 'm9', category: 'socialEmotional', title: 'Shows affection unprompted', status: 'achieved', ageRangeStartMonths: 18, ageRangeEndMonths: 24, arc: 'connectionToFriendship', arcOrder: 3 },
+  { id: 'm10', category: 'socialEmotional', title: 'Plays alongside other children', status: 'emerging', ageRangeStartMonths: 24, ageRangeEndMonths: 36, arc: 'connectionToFriendship', arcOrder: 4 },
+  { id: 'm11', category: 'socialEmotional', title: 'Takes turns in simple games', status: 'notStarted', ageRangeStartMonths: 30, ageRangeEndMonths: 42, arc: 'connectionToFriendship', arcOrder: 5 },
+  { id: 'm12', category: 'cognitive', title: 'Follows a two-step instruction', status: 'achieved', ageRangeStartMonths: 18, ageRangeEndMonths: 24, arc: 'curiosityToReasoning', arcOrder: 4 },
+  { id: 'm13', category: 'cognitive', title: 'Sorts objects by shape or colour', status: 'emerging', ageRangeStartMonths: 30, ageRangeEndMonths: 36, arc: 'curiosityToReasoning', arcOrder: 5 },
+  { id: 'm14', category: 'cognitive', title: 'Completes a 4-piece puzzle', status: 'notStarted', ageRangeStartMonths: 30, ageRangeEndMonths: 36, arc: 'curiosityToReasoning', arcOrder: 6 },
 ];
 
 // type ∈ strength|watching|connection|nudge ; domain incl. cross

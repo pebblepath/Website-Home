@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import './member-chip.js';
 import './insight-card.js';
+import './growth-pathways.js';
 
 /**
  * Children tab body — surfaces the PebblePath app's child-development
@@ -876,7 +877,6 @@ export class ChildOverview extends LitElement {
       .slice(0, 4);
     const theme = child.themeColorHex || 'var(--teal-pebble)';
     const insights = this.insights ?? [];
-    const tl = this._timelineModel();
     const statusClass = (s) =>
       s === 'achieved' ? 'done' : s === 'emerging' ? 'emerging' : 'up';
     const statusLabel = (s) =>
@@ -957,75 +957,10 @@ export class ChildOverview extends LitElement {
         </div>
       </section>
 
-      <section>
-        <div class="section-head">
-          <h2>Timeline</h2>
-        </div>
-        <div class="panel">
-          <div class="timeline">
-            <div
-              class="tl-now"
-              style="left:calc(var(--tl-pad, 118px) + (100% - var(--tl-pad, 118px)) * ${tl.nowFrac});"
-            >
-              <span>Today</span>
-            </div>
-            ${tl.lanes.map(
-              (ln) => html`<div class="tl-lane ${ln.cls}">
-                <div class="tl-name">${ln.name}</div>
-                <div class="tl-track">
-                  ${ln.dots.map((dt, idx) => {
-                    const focused =
-                      this._focusedDot?.lane === ln.key &&
-                      this._focusedDot?.idx === idx;
-                    const statusWord =
-                      dt.status === 'achieved'
-                        ? 'Achieved'
-                        : dt.status === 'emerging'
-                          ? 'Emerging'
-                          : 'Upcoming';
-                    const titleAttr = dt.title
-                      ? `${dt.title} · ${dt.ageLabel} · ${statusWord}`
-                      : `${dt.ageLabel} · ${statusWord}`;
-                    return html`
-                      <button
-                        type="button"
-                        class=${'tl-dot' + (dt.future ? ' future' : '') + (focused ? ' on' : '')}
-                        style="left:${dt.left}%"
-                        title=${titleAttr}
-                        aria-label=${titleAttr}
-                        @click=${(e) => {
-                          e.stopPropagation();
-                          this._focusedDot = focused
-                            ? null
-                            : { lane: ln.key, idx };
-                        }}
-                      ></button>
-                      ${focused
-                        ? html`<div
-                            class="tl-popover"
-                            style="left:${dt.left}%"
-                          >
-                            ${dt.title
-                              ? html`<div class="tl-popover-title">
-                                  ${dt.title}
-                                </div>`
-                              : ''}
-                            <div class="tl-popover-meta">
-                              ${dt.ageLabel} · ${statusWord}
-                            </div>
-                          </div>`
-                        : ''}
-                    `;
-                  })}
-                </div>
-              </div>`,
-            )}
-            <div class="tl-axis">
-              ${tl.axis.map((a) => html`<span>${a}</span>`)}
-            </div>
-          </div>
-        </div>
-      </section>
+      <growth-pathways
+        .child=${child}
+        .milestones=${ms}
+      ></growth-pathways>
 
       <section>
         <div class="two-col">
