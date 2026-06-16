@@ -349,7 +349,7 @@ export class FamilyPebble extends LitElement {
     if (q.bypassed) return 'Unlimited · beta tester';
     if (q.premium) return 'Unlimited · Premium';
     const n = q.remaining;
-    return n + (n === 1 ? ' question' : ' questions') + ' left this week';
+    return n + (n === 1 ? ' question' : ' questions') + ' left this week · Free';
   }
   _rolloverLabel() {
     const d = this.quota?.rollover;
@@ -436,9 +436,9 @@ export class FamilyPebble extends LitElement {
     }
     .toprow {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       margin-bottom: 10px;
     }
     .qstrip {

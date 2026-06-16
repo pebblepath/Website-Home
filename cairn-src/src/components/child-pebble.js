@@ -571,7 +571,7 @@ export class ChildPebble extends LitElement {
     if (q.bypassed) return 'Unlimited · beta tester';
     if (q.premium) return 'Unlimited · Premium';
     const n = q.remaining;
-    return n + (n === 1 ? ' question' : ' questions') + ' left this week';
+    return n + (n === 1 ? ' question' : ' questions') + ' left this week · Free';
   }
   _rolloverLabel() {
     const d = this.quota?.rollover;
@@ -857,6 +857,11 @@ export class ChildPebble extends LitElement {
       display: flex;
       align-items: center;
       gap: 10px;
+    }
+    .toprow-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
     .qstrip {
       font-size: 12px;
@@ -1494,8 +1499,9 @@ export class ChildPebble extends LitElement {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
               Chats
             </button>
-            <span class="qstrip ${this._atLimit ? 'lim' : ''}">${this._quotaLabel()}</span>
           </div>
+          <div class="toprow-right">
+            <span class="qstrip ${this._atLimit ? 'lim' : ''}">${this._quotaLabel()}</span>
           <div
             class="privtoggle ${canTogglePrivacy ? '' : 'disabled'}"
             role="group"
@@ -1519,6 +1525,7 @@ export class ChildPebble extends LitElement {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round"/></svg>
               Private
             </button>
+          </div>
           </div>
         </div>
         <div class="thread">
