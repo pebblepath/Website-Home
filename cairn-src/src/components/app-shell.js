@@ -38,6 +38,7 @@ export class AppShell extends LitElement {
     pebbleLiveContext: { state: true },
     childPebbleMessages: { state: true },
     childPebbleSessions: { state: true },
+    planningMessages: { state: true },
     ppIsChildViewer: { state: true },
     incomingChildRequests: { state: true },
     myChildAccessRequest: { state: true },
@@ -103,6 +104,7 @@ export class AppShell extends LitElement {
     this.pebbleLiveContext = [];
     this.childPebbleMessages = [];
     this.childPebbleSessions = [];
+    this.planningMessages = [];
     this.ppIsChildViewer = false;
     this.incomingChildRequests = [];
     this.myChildAccessRequest = null;
@@ -129,6 +131,7 @@ export class AppShell extends LitElement {
       this.pebbleLiveContext = dataStore.state.pebbleLiveContext;
       this.childPebbleMessages = dataStore.state.childPebbleMessages;
       this.childPebbleSessions = dataStore.state.childPebbleSessions;
+      this.planningMessages = dataStore.state.planningMessages;
       this.ppIsChildViewer = dataStore.state.ppIsChildViewer;
       this.incomingChildRequests = dataStore.state.incomingChildRequests;
       this.myChildAccessRequest = dataStore.state.myChildAccessRequest;
@@ -360,9 +363,11 @@ export class AppShell extends LitElement {
         .pebbleLiveContext=${this.pebbleLiveContext}
         .childPebbleMessages=${this.childPebbleMessages}
         .childPebbleSessions=${this.childPebbleSessions}
+        .planningMessages=${this.planningMessages}
         .ppIsChildViewer=${this.ppIsChildViewer}
         .incomingChildRequests=${this.incomingChildRequests}
         .myChildAccessRequest=${this.myChildAccessRequest}
+        .pebbleQuota=${dataStore.pebbleQuota()}
       ></home-screen>
     `;
   }

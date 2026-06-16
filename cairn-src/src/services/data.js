@@ -8,6 +8,8 @@ import {
   updateDoc,
   deleteDoc,
   serverTimestamp,
+  Timestamp,
+  increment,
   query,
   where,
   getDocs,
@@ -125,6 +127,10 @@ class FamilyDataStore extends EventTarget {
       pebbleLiveContext: [],
       childPebbleMessages: [],
       childPebbleSessions: [],
+      // Pebble-for-all (2026-06) — the non-parent family PLANNING thread,
+      // family-shared at /families/{fid}/pebblePlanningMessages, separate
+      // from childPebbleMessages (the parent child-advisor thread).
+      planningMessages: [],
     };
     this._uid = null;
     this._unsubUser = null;
@@ -133,6 +139,9 @@ class FamilyDataStore extends EventTarget {
     this._unsubTrips = null;
     this._unsubEvents = null;
     this._unsubActivities = null;
+    // Pebble-for-all — the non-parent family PLANNING thread listener,
+    // attached on the Cairn-resolved family (mirrors _unsubTrips/etc).
+    this._unsubPlanning = null;
     this._currentFamilyId = null;
     this._inviteCodeMigratedFamilyId = null;
     this._holidayKey = null;
@@ -204,16 +213,19 @@ class FamilyDataStore extends EventTarget {
         this._unsubTrips?.();
         this._unsubEvents?.();
         this._unsubActivities?.();
+        this._unsubPlanning?.();
         this._unsubFamily = null;
         this._unsubChildren = null;
         this._unsubTrips = null;
         this._unsubEvents = null;
         this._unsubActivities = null;
+        this._unsubPlanning = null;
         this.state.family = null;
         this.state.children = [];
         this.state.trips = [];
         this.state.events = [];
         this.state.activities = [];
+        this.state.planningMessages = [];
         if (fid) this._subscribeFamily(fid);
       }
       // PP-household resolver — the deliberate INVERSE of the Cairn
@@ -510,6 +522,43 @@ class FamilyDataStore extends EventTarget {
       (err) => {
         console.warn('[Cairn] activities subscription error:', err.code, err.message);
       },
+    );
+    // Pebble-for-all (2026-06) — the family PLANNING thread feeding the
+    // Pebble tab's non-parent surface (<family-pebble>). Family-shared,
+    // single thread, no sessions / no private mode. The
+    // /pebblePlanningMessages rule is plain isCairnMember (no content
+    // predicate), so the whole-collection query is admitted; we sort
+    // client-side by timestamp so no composite index is needed (same
+    // pattern as trips / events / activities above).
+    this._unsubPlanning?.();
+    this._unsubPlanning = onSnapshot(
+      collection(db, 'families', familyId, 'pebblePlanningMessages'),
+      (snap) => {
+        this.state.planningMessages = snap.docs
+          .map((d) => {
+            const data = d.data();
+            return {
+              id: d.id,
+              role: data.role,
+              content: data.content,
+              senderUid: data.senderUid,
+              timestamp:
+                data.timestamp?.toDate?.() ??
+                (data.timestamp ? new Date(data.timestamp) : null),
+            };
+          })
+          .sort(
+            (a, b) =>
+              (a.timestamp?.getTime?.() ?? 0) - (b.timestamp?.getTime?.() ?? 0),
+          );
+        this._emit();
+      },
+      (err) =>
+        console.warn(
+          '[Cairn] pebblePlanningMessages subscription error:',
+          err.code,
+          err.message,
+        ),
     );
   }
 
@@ -1074,6 +1123,249 @@ class FamilyDataStore extends EventTarget {
       }
     }
     return await data; // { answer, followUps }
+  }
+
+  /**
+   * Pebble-for-all (2026-06) — family PLANNING advisor for non-parent
+   * members (and childless members). Mirrors the iOS planning fork
+   * (AppState+Pebble). Calls the DEPLOYED askPebblePlanning /
+   * streamPebblePlanning CFs, which admit cairnMemberIds and read NO
+   * child data (the guardrail is server-side regardless of UI). Two ways
+   * the planning path diverges from the child path:
+   *   1. the CFs are ANSWER-ONLY (zero Firestore writes), so the Portal
+   *      persists BOTH turns itself via appendPlanningMessage;
+   *   2. the CFs REQUIRE a non-empty clientContext (they 400 otherwise) —
+   *      there is no server-side family-context builder for planning — so
+   *      the Portal assembles its own via buildPlanningContext.
+   * familyId is the Cairn-resolved family (_currentFamilyId); non-parents
+   * have no _ppFamilyId.
+   */
+  buildPlanningContext() {
+    const lines = [];
+    const fam = this.state.family;
+    const loc = fam?.homeLocation;
+    if (loc && (loc.city || loc.region || loc.country)) {
+      const parts = [loc.city, loc.region, loc.country].filter(Boolean);
+      if (parts.length) lines.push('Family home: ' + parts.join(', ') + '.');
+    }
+    const today = new Date().toISOString().slice(0, 10);
+    const fmtRange = (s, e) => (e && e !== s ? s + ' to ' + e : s);
+
+    // Trips — upcoming or ongoing, soonest first (state.trips already
+    // visibleTo-filtered + start-sorted by the subscription).
+    const trips = (Array.isArray(this.state.trips) ? this.state.trips : [])
+      .filter((t) => t && t.title && (!t.end || String(t.end) >= today))
+      .slice(0, 12);
+    if (trips.length) {
+      lines.push('');
+      lines.push('Trips:');
+      trips.forEach((t) => {
+        const range = fmtRange(String(t.start ?? ''), String(t.end ?? ''));
+        const ongoing =
+          t.start &&
+          String(t.start) <= today &&
+          (!t.end || String(t.end) >= today);
+        const where = t.location ? ' at ' + t.location : '';
+        lines.push(
+          '- ' +
+            t.title +
+            (range ? ' (' + range + ')' : '') +
+            where +
+            (ongoing ? ' [ACTIVE NOW]' : ''),
+        );
+      });
+    }
+
+    // Upcoming family events.
+    const events = (Array.isArray(this.state.events) ? this.state.events : [])
+      .filter((ev) => ev && ev.title && (!ev.date || String(ev.date) >= today))
+      .sort((a, b) => String(a.date ?? '').localeCompare(String(b.date ?? '')))
+      .slice(0, 15);
+    if (events.length) {
+      lines.push('');
+      lines.push('Upcoming family events:');
+      events.forEach((ev) => {
+        lines.push('- ' + ev.title + (ev.date ? ' (' + ev.date + ')' : ''));
+      });
+    }
+
+    // Planned standalone activities (calendar items, tripId nil).
+    const acts = (Array.isArray(this.state.activities)
+      ? this.state.activities
+      : []
+    )
+      .filter((a) => a && a.title && !a.tripId && (!a.day || String(a.day) >= today))
+      .sort((a, b) => String(a.day ?? '').localeCompare(String(b.day ?? '')))
+      .slice(0, 15);
+    if (acts.length) {
+      lines.push('');
+      lines.push('Planned activities:');
+      acts.forEach((a) => {
+        const when = [a.day, a.time].filter(Boolean).join(' ');
+        lines.push('- ' + a.title + (when ? ' (' + when + ')' : ''));
+      });
+    }
+
+    const ctx = lines.join('\n').trim();
+    // The CFs 400 on an empty clientContext — always return something.
+    return (
+      ctx ||
+      'This is a family-planning conversation. Help with activities, ' +
+        'plans, and logistics. No child information is available.'
+    );
+  }
+
+  async askPebblePlanning(question, history = []) {
+    if (!functions) throw new Error('Firebase functions not configured.');
+    if (!this._currentFamilyId) throw new Error('No family.');
+    const fn = httpsCallable(functions, 'askPebblePlanning');
+    const result = await fn({
+      familyId: this._currentFamilyId,
+      question,
+      history,
+      clientContext: this.buildPlanningContext(),
+    });
+    return result.data; // { answer, followUps }
+  }
+
+  async streamPebblePlanning(question, history = [], { onStatus, onDelta } = {}) {
+    if (!functions) throw new Error('Firebase functions not configured.');
+    if (!this._currentFamilyId) throw new Error('No family.');
+    const fn = httpsCallable(functions, 'streamPebblePlanning');
+    const { stream, data } = await fn.stream({
+      familyId: this._currentFamilyId,
+      question,
+      history,
+      clientContext: this.buildPlanningContext(),
+    });
+    for await (const chunk of stream) {
+      if (!chunk) continue;
+      if (chunk.kind === 'status' && typeof onStatus === 'function') {
+        onStatus(chunk.status);
+      } else if (
+        chunk.kind === 'delta' &&
+        typeof chunk.text === 'string' &&
+        typeof onDelta === 'function'
+      ) {
+        onDelta(chunk.text);
+      }
+    }
+    return await data; // { answer, followUps }
+  }
+
+  // Persist ONE planning turn. The CFs write nothing, so the Portal owns
+  // persistence. CONCRETE Timestamp.now(), never serverTimestamp(): a
+  // pending serverTimestamp reads back null and crashes the iOS
+  // non-optional Date decode (feedback_firestore_servertimestamp_pending_null).
+  // No sessionId / isPrivate fields (planning is a single family thread).
+  async appendPlanningMessage(message) {
+    if (!this._currentFamilyId) throw new Error('No family.');
+    if (!this._uid) throw new Error('Not signed in.');
+    // Match the iOS doc shape: the user turn carries senderUid (for
+    // cross-member "X asked" attribution); the assistant turn omits it
+    // (iOS leaves ChatMessage.senderUid nil for Pebble's own replies).
+    const payload = {
+      role: message.role,
+      content: message.content,
+      timestamp: Timestamp.now(),
+    };
+    if (message.role === 'user') payload.senderUid = this._uid;
+    await addDoc(
+      collection(db, 'families', this._currentFamilyId, 'pebblePlanningMessages'),
+      payload,
+    );
+  }
+
+  async deleteAllPlanningMessages() {
+    if (!this._currentFamilyId) return;
+    const snap = await getDocs(
+      collection(db, 'families', this._currentFamilyId, 'pebblePlanningMessages'),
+    );
+    await Promise.all(snap.docs.map((d) => deleteDoc(d.ref)));
+  }
+
+  // ── Pebble quota (shared family pool) ──────────────────────────────
+  // ONE 5/week pool per family, shared across iOS + Portal (both read +
+  // increment the SAME family-doc counter, so a question asked on either
+  // surface draws the family down on both). Mirrors iOS Family.swift
+  // (pebbleQuotaShouldReset / pebbleQuestionsRemaining / pebbleWeekRollover)
+  // + AppState+Pebble (the !isPremium && !bypass gate). Unlimited when the
+  // signed-in user is Premium (User.isPremium, written by the iOS app on
+  // entitlement change) OR a flagged beta tester (User.bypassPebbleQuota).
+  // Enforcement is client-side on BOTH surfaces today (no server backstop) —
+  // matching the iOS posture; server-side enforcement is a future hardening.
+
+  _toMillis(v) {
+    return v?.toDate?.()?.getTime?.() ?? (v ? new Date(v).getTime() : null);
+  }
+
+  get _pebbleUnlimited() {
+    const u = this.state.user;
+    return !!(u && (u.isPremium === true || u.bypassPebbleQuota === true));
+  }
+
+  _pebbleQuotaShouldReset(now = new Date()) {
+    const startedMs = this._toMillis(this.state.family?.pebbleWeekStartedAt);
+    if (startedMs == null) return true;
+    return now.getTime() - startedMs >= 7 * 24 * 60 * 60 * 1000;
+  }
+
+  pebbleQuestionsRemaining(now = new Date()) {
+    const fam = this.state.family;
+    const limit =
+      typeof fam?.pebbleQuestionsLimit === 'number' ? fam.pebbleQuestionsLimit : 5;
+    if (this._pebbleQuotaShouldReset(now)) return limit;
+    const used =
+      typeof fam?.pebbleQuestionsUsed === 'number' ? fam.pebbleQuestionsUsed : 0;
+    return Math.max(0, limit - used);
+  }
+
+  pebbleWeekRollover(now = new Date()) {
+    const startedMs = this._toMillis(this.state.family?.pebbleWeekStartedAt);
+    if (startedMs == null || this._pebbleQuotaShouldReset(now)) return null;
+    return new Date(startedMs + 7 * 24 * 60 * 60 * 1000);
+  }
+
+  // The single object the Pebble UIs read (passed down as a prop so the
+  // components re-render when the family counter or user flags change).
+  pebbleQuota() {
+    const u = this.state.user;
+    const unlimited = this._pebbleUnlimited;
+    const remaining = this.pebbleQuestionsRemaining();
+    return {
+      unlimited,
+      bypassed: u?.bypassPebbleQuota === true,
+      premium: u?.isPremium === true,
+      limit: this.state.family?.pebbleQuestionsLimit ?? 5,
+      remaining,
+      atLimit: !unlimited && remaining <= 0,
+      rollover: this.pebbleWeekRollover(), // Date | null
+    };
+  }
+
+  // Increment the SHARED family counter after a successfully-answered
+  // question. PARTIAL updateDoc (only the two quota fields) so the
+  // Cairn-only-member rule branch admits it (memberIds / childViewers /
+  // createdBy stay byte-identical). No-ops for Premium / bypass users
+  // (they never draw the pool down, matching iOS). Atomic increment()
+  // avoids a lost-update race between two co-members asking at once.
+  async incrementPebbleQuota() {
+    if (this._pebbleUnlimited) return;
+    if (!this._currentFamilyId) return;
+    const ref = doc(db, 'families', this._currentFamilyId);
+    try {
+      if (this._pebbleQuotaShouldReset()) {
+        await updateDoc(ref, {
+          pebbleQuestionsUsed: 1,
+          pebbleWeekStartedAt: Timestamp.now(),
+        });
+      } else {
+        await updateDoc(ref, { pebbleQuestionsUsed: increment(1) });
+      }
+    } catch (e) {
+      // Non-fatal: the user already got their answer. Log + move on.
+      console.warn('[Cairn] pebble quota increment failed:', e?.code, e?.message);
+    }
   }
 
   /**
@@ -3174,12 +3466,14 @@ class FamilyDataStore extends EventTarget {
     this._unsubTrips?.();
     this._unsubEvents?.();
     this._unsubActivities?.();
+    this._unsubPlanning?.();
     this._unsubUser =
       this._unsubFamily =
       this._unsubChildren =
       this._unsubTrips =
       this._unsubEvents =
       this._unsubActivities =
+      this._unsubPlanning =
         null;
     this._teardownPpFamily();
     this._uid = null;
@@ -3209,6 +3503,7 @@ class FamilyDataStore extends EventTarget {
       pebbleLiveContext: [],
       childPebbleMessages: [],
       childPebbleSessions: [],
+      planningMessages: [],
     };
   }
 

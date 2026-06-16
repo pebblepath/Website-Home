@@ -42,6 +42,7 @@ export class ChildPebble extends LitElement {
     prefill: { type: String },
     memberProfiles: { type: Object },
     myUid: { type: String },
+    quota: { type: Object },
     _session: { state: true },
     _input: { state: true },
     _loading: { state: true },
@@ -68,6 +69,7 @@ export class ChildPebble extends LitElement {
     this.prefill = '';
     this.memberProfiles = {};
     this.myUid = '';
+    this.quota = null;
     this._session = [];
     this._input = '';
     this._loading = false;
@@ -370,6 +372,7 @@ export class ChildPebble extends LitElement {
       this._error = 'No child selected.';
       return;
     }
+    if (this._atLimit) return; // composer disabled + limit banner already shown
     this._error = '';
     this._input = '';
     const history = this._session.slice(-20).map((m) => ({
@@ -419,7 +422,9 @@ export class ChildPebble extends LitElement {
     this._loading = true;
     this._streaming = { phase: 'thinking', text: '' };
     this._startStreamCaptions();
+    let answered = false;
     const appendAssistant = (content) => {
+      answered = true;
       this._session = [
         ...this._session,
         {
@@ -488,6 +493,10 @@ export class ChildPebble extends LitElement {
       this._stopStreamCaptions();
       this._streaming = null;
       this._loading = false;
+      // Shared family pool: a successfully-answered question draws the
+      // family's weekly quota down on BOTH platforms (no-ops for Premium /
+      // beta-bypass users; mirrors iOS incrementPebbleQuota).
+      if (answered) dataStore.incrementPebbleQuota();
     }
   }
 
@@ -547,6 +556,47 @@ export class ChildPebble extends LitElement {
     const dn = this.memberProfiles?.[this.myUid]?.displayName;
     const first = String(dn ?? '').trim().split(/\s+/)[0];
     return first || 'there';
+  }
+
+  // ── Shared family Pebble quota (passed in via .quota) ──────────────
+  // Parents draw from the SAME family 5/week pool as everyone else,
+  // unless Premium (User.isPremium) or a flagged beta tester
+  // (User.bypassPebbleQuota). Mirrors the iOS parent advisor.
+  get _atLimit() {
+    return this.quota?.atLimit === true;
+  }
+  _quotaLabel() {
+    const q = this.quota;
+    if (!q) return '';
+    if (q.bypassed) return 'Unlimited · beta tester';
+    if (q.premium) return 'Unlimited · Premium';
+    const n = q.remaining;
+    return n + (n === 1 ? ' question' : ' questions') + ' left this week';
+  }
+  _rolloverLabel() {
+    const d = this.quota?.rollover;
+    if (!d) return '';
+    try {
+      const date = d instanceof Date ? d : new Date(d);
+      return date.toLocaleDateString(undefined, {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+      });
+    } catch {
+      return '';
+    }
+  }
+  _limitMessage() {
+    const limit = this.quota?.limit ?? 5;
+    const when = this._rolloverLabel();
+    return (
+      'Your family has used its ' +
+      limit +
+      ' Pebble questions this week.' +
+      (when ? ' They reset ' + when + '.' : '') +
+      ' For unlimited, subscribe to Premium in the PebblePath app.'
+    );
   }
 
   // Smart Upload card → bubble up to home-screen, which owns the
@@ -798,8 +848,36 @@ export class ChildPebble extends LitElement {
     }
     .toprow {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
       margin-bottom: 10px;
+    }
+    .toprow-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .qstrip {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+    }
+    .qstrip.lim {
+      color: var(--ink-terracotta);
+    }
+    .limitbanner {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(198, 123, 92, 0.12);
+      border: 1px solid rgba(198, 123, 92, 0.4);
+      color: var(--ink-terracotta);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .composer.disabled {
+      opacity: 0.6;
     }
     .privtag {
       display: inline-flex;
@@ -1407,14 +1485,17 @@ export class ChildPebble extends LitElement {
         </aside>
       <div class="chatpane">
         <div class="toprow">
-          <button
-            class="rail-toggle"
-            @click=${() => (this._railOpen = !this._railOpen)}
-            aria-label="Chats"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
-            Chats
-          </button>
+          <div class="toprow-left">
+            <button
+              class="rail-toggle"
+              @click=${() => (this._railOpen = !this._railOpen)}
+              aria-label="Chats"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+              Chats
+            </button>
+            <span class="qstrip ${this._atLimit ? 'lim' : ''}">${this._quotaLabel()}</span>
+          </div>
           <div
             class="privtoggle ${canTogglePrivacy ? '' : 'disabled'}"
             role="group"
@@ -1547,16 +1628,21 @@ export class ChildPebble extends LitElement {
           ${this._error
             ? html`<div class="error">${this._error}</div>`
             : ''}
+          ${this._atLimit
+            ? html`<div class="limitbanner">${this._limitMessage()}</div>`
+            : ''}
 
           <form
-            class="composer"
+            class="composer ${this._atLimit ? 'disabled' : ''}"
             @submit=${(e) => {
               e.preventDefault();
               this._send();
             }}
           >
             <textarea
-              placeholder="Ask Pebble anything…"
+              placeholder=${this._atLimit
+                ? 'Out of questions this week'
+                : 'Ask Pebble anything…'}
               .value=${this._input}
               @input=${(e) => (this._input = e.target.value)}
               @keydown=${(e) => {
@@ -1565,14 +1651,14 @@ export class ChildPebble extends LitElement {
                   this._send();
                 }
               }}
-              ?disabled=${this._loading}
+              ?disabled=${this._loading || this._atLimit}
             ></textarea>
             ${this._voiceSupported
               ? html`<button
                   type="button"
                   class="mic ${this._listening ? 'on' : ''}"
                   @click=${() => this._toggleVoice()}
-                  ?disabled=${this._loading}
+                  ?disabled=${this._loading || this._atLimit}
                   aria-label=${this._listening
                     ? 'Stop listening'
                     : 'Ask by voice'}
@@ -1589,7 +1675,7 @@ export class ChildPebble extends LitElement {
             <button
               type="submit"
               class="send"
-              ?disabled=${this._loading || !this._input.trim()}
+              ?disabled=${this._loading || this._atLimit || !this._input.trim()}
               aria-label="Send"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">

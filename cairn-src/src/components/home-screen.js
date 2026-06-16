@@ -13,6 +13,7 @@ import './manage-members-modal.js';
 import './all-trips-modal.js';
 import './import-calendar-modal.js';
 import './school-import-modal.js';
+import './family-pebble.js';
 import './profile-sheet.js';
 // `pebble-chat.js` (the family-ACTIVITIES advisor popup) is no longer
 // instantiated — the activities-Pebble fallback was removed
@@ -90,6 +91,10 @@ export class HomeScreen extends LitElement {
     pebbleLiveContext: { type: Array },
     childPebbleMessages: { type: Array },
     childPebbleSessions: { type: Array },
+    // Pebble-for-all — the non-parent family PLANNING thread.
+    planningMessages: { type: Array },
+    // Shared family Pebble quota snapshot (from dataStore.pebbleQuota()).
+    pebbleQuota: { type: Object },
     // Batch F — read-only child-viewer tier + access requests.
     ppIsChildViewer: { type: Boolean },
     incomingChildRequests: { type: Array },
@@ -219,6 +224,8 @@ export class HomeScreen extends LitElement {
     this._wpkExpanded = new Set();
     this.childPebbleMessages = [];
     this.childPebbleSessions = [];
+    this.planningMessages = [];
+    this.pebbleQuota = null;
     this.ppIsChildViewer = false;
     this.incomingChildRequests = [];
     this.myChildAccessRequest = null;
@@ -4343,16 +4350,22 @@ export class HomeScreen extends LitElement {
   /** The 5-tab nav that replaced the centre-column Pebble search.
    *  Pebble's tab icon reuses the EXACT live Pebble glyph; the four
    *  other tabs are new surfaces so they take new icons. */
-  /** Pebble (child-development advisor) is for parents AND
-   *  parent-APPROVED childViewers (Thomas, 2026-05-17 — an approved
-   *  viewer gets read-only child data AND full Pebble, same as
-   *  parents; the `askPebbleAboutChild` CF + Firestore rules admit
-   *  childViewers). Non-parent ring members with NO approval get NO
-   *  Pebble — the tab is removed from the nav entirely (replaces the
-   *  old activities-advisor fallback). Preview keeps it (mock=parent).
-   */
+  /** Pebble-for-all (2026-06) — EVERY family-circle member gets a Pebble
+   *  tab. A parent (or a parent-approved childViewer) keeps the
+   *  child-development advisor (child-pebble, member-only
+   *  askPebbleAboutChild CF); any other member (a non-parent connection,
+   *  or a childless member) gets the family PLANNING advisor
+   *  (family-pebble, the askPebblePlanning / streamPebblePlanning CFs,
+   *  which read NO child data). The tab shows whenever the user has
+   *  resolved a family. Preview keeps it (mock = parent).
+   *  _renderPebbleTab picks which surface. */
   get _pebbleAvailable() {
-    return this.preview || this.ppIsMember || this.ppIsChildViewer;
+    return (
+      this.preview ||
+      this.ppIsMember ||
+      this.ppIsChildViewer ||
+      !!this.family
+    );
   }
 
   _tabDefs() {
@@ -6426,13 +6439,16 @@ export class HomeScreen extends LitElement {
    *  lands here (stale state / deep link) — no activities-advisor
    *  fallback, no popup (removed 2026-05-17, Thomas's call). */
   _renderPebbleTab() {
+    if (!this._pebbleAvailable) return '';
     const cd = this._childData();
-    if (this._pebbleAvailable && cd.child) {
-      // Portal v4 — Pebble is the whole tab: no page header/subheader
-      // and no card. <child-pebble> runs full-bleed (the "Private to
-      // parents" pill is integrated into its own top strip). The
-      // `pebble-full` class on <main> drops the gutters so the chat
-      // surface reaches the nav bar.
+    const isParent = this.preview || this.ppIsMember || this.ppIsChildViewer;
+    // Portal v4 — Pebble is the whole tab: no page header/subheader and
+    // no card; the component runs full-bleed (the pebble-full class on
+    // <main> drops the gutters so the chat surface reaches the nav bar).
+    // Pebble-for-all: a parent (or approved childViewer) WITH a child
+    // gets the child-development advisor; everyone else (a non-parent
+    // connection, or a childless member) gets the family planning advisor.
+    if (isParent && cd.child) {
       return html`
         <child-pebble
           .child=${cd.child}
@@ -6441,39 +6457,54 @@ export class HomeScreen extends LitElement {
           .prefill=${this._pebblePrefill}
           .memberProfiles=${this.family?.memberProfiles ?? {}}
           .myUid=${this.user?.uid ?? ''}
+          .quota=${this.pebbleQuota}
           @smart-upload=${() => (this._schoolImportOpen = true)}
         ></child-pebble>
       `;
     }
     return html`
-      ${this._renderTabHeader('Pebble', 'Personalised guidance for parents')}
-      <section>
-        <glass-panel padding="lg" variant="strong">
-          <div class="empty-hero">
-            <div class="empty-icon" aria-hidden="true">
-              <pebble-icon size="42" color="#3d9b8f"></pebble-icon>
-            </div>
-            <div class="empty-title">Pebble is for parents</div>
-            <div class="empty-sub">
-              Pebble is the child-development advisor for parents on
-              this household. Ask a parent to add you to a child if you
-              need access.
-            </div>
-          </div>
-        </glass-panel>
-      </section>
+      <family-pebble
+        .messages=${this.planningMessages ?? []}
+        .prefill=${this._pebblePrefill}
+        .memberProfiles=${this.family?.memberProfiles ?? {}}
+        .myUid=${this.user?.uid ?? ''}
+        .quota=${this.pebbleQuota}
+        @smart-upload=${() => (this._schoolImportOpen = true)}
+      ></family-pebble>
     `;
   }
 
   /** Floating liquid-glass Pebble — on every tab EXCEPT Pebble itself.
-   *  PARENTS ONLY: reuses <child-pebble compact>. Accounts without
-   *  full child access get no floating Pebble at all (no activities
-   *  fallback — removed 2026-05-17). */
+   *  Pebble-for-all: a parent (with a child) gets the compact
+   *  child-development advisor; everyone else gets the compact family
+   *  planning advisor. Shown whenever the user has resolved a family. */
   _renderPebbleFab() {
     if (this._activeTab === 'pebble') return '';
     if (!this._pebbleAvailable) return '';
     const cd = this._childData();
-    if (!cd.child) return '';
+    const isParent = this.preview || this.ppIsMember || this.ppIsChildViewer;
+    const fabBody =
+      isParent && cd.child
+        ? html`<child-pebble
+            compact
+            .child=${cd.child}
+            .messages=${cd.pebbleMessages}
+            .sessions=${cd.pebbleSessions}
+            .prefill=${this._pebblePrefill}
+            .memberProfiles=${this.family?.memberProfiles ?? {}}
+            .myUid=${this.user?.uid ?? ''}
+            .quota=${this.pebbleQuota}
+            @smart-upload=${() => (this._schoolImportOpen = true)}
+          ></child-pebble>`
+        : html`<family-pebble
+            compact
+            .messages=${this.planningMessages ?? []}
+            .prefill=${this._pebblePrefill}
+            .memberProfiles=${this.family?.memberProfiles ?? {}}
+            .myUid=${this.user?.uid ?? ''}
+            .quota=${this.pebbleQuota}
+            @smart-upload=${() => (this._schoolImportOpen = true)}
+          ></family-pebble>`;
     // 2026-05-23 — Pebble Ripple Stone (was double-ring target).
     const pico = html`<pebble-icon></pebble-icon>`;
     return html`
@@ -6501,18 +6532,7 @@ export class HomeScreen extends LitElement {
                 ×
               </button>
             </div>
-            <div class="pebble-fab-body">
-              <child-pebble
-                compact
-                .child=${cd.child}
-                .messages=${cd.pebbleMessages}
-                .sessions=${cd.pebbleSessions}
-                .prefill=${this._pebblePrefill}
-                .memberProfiles=${this.family?.memberProfiles ?? {}}
-                .myUid=${this.user?.uid ?? ''}
-                @smart-upload=${() => (this._schoolImportOpen = true)}
-              ></child-pebble>
-            </div>
+            <div class="pebble-fab-body">${fabBody}</div>
           </div>`
         : ''}
     `;
