@@ -158,7 +158,12 @@ export class JoinFamilyScreen extends LitElement {
   }
 
   _notAParent() {
-    this._finishJoin();
+    this._goNotifications();
+  }
+
+  // Notifications is the final step for every persona (iOS parity).
+  _goNotifications() {
+    this._step = 'notifications';
   }
 
   // ─── C.5 — joiner own-photo step (best-effort, never blocks) ──────
@@ -204,13 +209,13 @@ export class JoinFamilyScreen extends LitElement {
   }
 
   // After the photo step: if the family has children, go to the 2A
-  // parent-claim prompt; otherwise finish into the app.
+  // parent-claim prompt; otherwise on to the notifications explainer.
   _afterPhoto() {
     if (this._pendingKids.length) {
       this._children = this._pendingKids;
       this._step = 'parent';
     } else {
-      this._finishJoin();
+      this._goNotifications();
     }
   }
 
@@ -373,6 +378,25 @@ export class JoinFamilyScreen extends LitElement {
       margin-bottom: 4px;
       font-weight: 600;
     }
+    .app-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 46px;
+      margin: 0 0 14px;
+      padding: 10px 16px;
+      border-radius: var(--radius-input, 12px);
+      background: rgba(61, 155, 143, 0.18);
+      border: 1px solid var(--teal-pebble);
+      color: var(--teal-pebble);
+      font-family: var(--font-nunito);
+      font-weight: 600;
+      font-size: 15px;
+      text-decoration: none;
+      transition: background 180ms ease;
+    }
+    .app-cta:hover { background: rgba(61, 155, 143, 0.28); }
     .actions {
       display: flex;
       flex-direction: column;
@@ -609,6 +633,56 @@ export class JoinFamilyScreen extends LitElement {
     `;
   }
 
+  // Notifications explainer — the final step for every joiner persona
+  // (iOS parity). The Portal has no web push, so this is informational:
+  // notifications live in the mobile app. Deliberately does NOT touch
+  // the iOS notificationsOnboardingComplete flag (that gates the iOS
+  // on-device prompt). "Finish" dispatches `joined` into the app.
+  _renderNotifications() {
+    return html`
+      <div class="wrap">
+        <div class="mark">
+          <img
+            class="brand-icon"
+            src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
+            srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
+            alt="Portal"
+            width="44"
+            height="44"
+            style="border-radius:11px;display:block;box-shadow:0 4px 16px rgba(0,0,0,0.25);"
+          />
+          <div class="mark-name">PebblePath</div>
+        </div>
+        <glass-panel padding="lg" variant="strong" lifted>
+          <h1>Stay in the loop</h1>
+          <p class="prompt-lede">
+            Reminders and your family's daily brief come from the
+            PebblePath mobile app. Turn them on there when you install it.
+          </p>
+          <div class="what-you-get">
+            <strong>Notifications are set up on your phone.</strong>
+            When you install the PebblePath app and sign in, it asks
+            permission right on your device. Your family and everything
+            here is already waiting for you.
+          </div>
+          <a
+            class="app-cta"
+            href="https://pebblepath.ai"
+            target="_blank"
+            rel="noopener"
+          >
+            Get the PebblePath app
+          </a>
+          <div class="actions">
+            <glass-button variant="primary" size="lg" full @click=${this._finishJoin}>
+              Finish
+            </glass-button>
+          </div>
+        </glass-panel>
+      </div>
+    `;
+  }
+
   // P3-5c — the post-join parent-prompt (parity with iOS
   // CairnConnectionView's 2C-4d parentPromptContent). Tapping a
   // child files a 2A claim that GRANTS NOTHING until an existing
@@ -643,7 +717,7 @@ export class JoinFamilyScreen extends LitElement {
                     variant="primary"
                     size="lg"
                     full
-                    @click=${this._finishJoin}
+                    @click=${this._goNotifications}
                   >
                     Continue
                   </glass-button>
@@ -694,6 +768,7 @@ export class JoinFamilyScreen extends LitElement {
   render() {
     if (this._step === 'photo') return this._renderPhoto();
     if (this._step === 'parent') return this._renderParentPrompt();
+    if (this._step === 'notifications') return this._renderNotifications();
     const inviter = this._inviterFromFamily(this._family);
     // Gate C (2026-06-09): a mapping-resolved family (`_viaMapping`)
     // carries no member arrays — non-members can't read /families

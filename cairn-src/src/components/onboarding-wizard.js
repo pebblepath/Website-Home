@@ -46,6 +46,19 @@ export class OnboardingWizard extends LitElement {
     // first-class family-coordinator member — "No" is NOT lesser).
     _childName: { state: true },
     _childDob: { state: true },
+    // Onboarding parity (mirrors iOS AddChild + LocationSetupView +
+    // NotificationPermissionView). _wantsChild routes the final create
+    // (Yes → PebblePath family + child; No → Cairn-only family). The
+    // family is created ONCE at the end (the notifications step) so the
+    // wizard stays mounted through Location + Notifications — app-shell
+    // exits onboarding the instant a family doc exists.
+    _wantsChild: { state: true },
+    _premature: { state: true },     // '' | 'yes' | 'no' | 'notsure'
+    _focusFlags: { state: true },    // selected areas-of-focus labels
+    _homeCity: { state: true },
+    _homeRegion: { state: true },
+    _homeCountry: { state: true },
+    _locating: { state: true },      // geolocate in flight
     // Optional avatars. *PhotoBlob = processed 512² JPEG (not
     // reactive); *PhotoPreview = object-URL for the on-screen circle
     // (reactive). Child → uploaded post-createChild; parent →
@@ -65,7 +78,7 @@ export class OnboardingWizard extends LitElement {
     // P3-5b — added 'children' (the "Do you have children?" branch)
     // + 'addchild' (the single-child add on the with-children path)
     // modes.
-    this._mode = 'choose'; // choose|join|create|children|addchild|download
+    this._mode = 'choose'; // choose|join|create|children|addchild|location|notifications
     this._code = '';
     this._familyName = '';
     this._busy = false;
@@ -77,6 +90,14 @@ export class OnboardingWizard extends LitElement {
     this._parentPhotoBlob = null;
     this._parentPhotoPreview = null;
     this._flavor = 'welcome';
+    // Onboarding parity state.
+    this._wantsChild = false;
+    this._premature = '';
+    this._focusFlags = [];
+    this._homeCity = '';
+    this._homeRegion = '';
+    this._homeCountry = 'United States';
+    this._locating = false;
     // Detect login-intent flag the register-screen stashed when the
     // user clicked the Sign-in card. Consumed-and-cleared here so a
     // page refresh doesn't keep us in recovery mode.
@@ -238,6 +259,119 @@ export class OnboardingWizard extends LitElement {
       margin-top: 8px;
     }
     .actions glass-button { flex: 1; }
+    /* Premature segmented control (AddChild). */
+    .seg {
+      display: flex;
+      gap: 8px;
+    }
+    .seg button {
+      flex: 1;
+      min-height: 40px;
+      background: rgba(255, 248, 235, 0.08);
+      border: 1px solid rgba(255, 248, 235, 0.22);
+      border-radius: var(--radius-input);
+      color: var(--teal-pebble);
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 180ms ease, border-color 180ms ease;
+    }
+    .seg button.active {
+      background: rgba(61, 155, 143, 0.22);
+      border-color: var(--teal-pebble);
+      font-weight: 600;
+    }
+    /* Areas-of-focus multi-select chips (AddChild). */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chip {
+      background: rgba(255, 248, 235, 0.08);
+      border: 1px solid rgba(255, 248, 235, 0.22);
+      border-radius: 999px;
+      padding: 8px 14px;
+      color: var(--teal-pebble);
+      font: inherit;
+      font-size: 13.5px;
+      cursor: pointer;
+      transition: background 180ms ease, border-color 180ms ease;
+    }
+    .chip.on {
+      background: rgba(61, 155, 143, 0.24);
+      border-color: var(--teal-pebble);
+      font-weight: 600;
+    }
+    .field-hint {
+      margin: 8px 0 0;
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--teal-pebble);
+      opacity: 0.6;
+    }
+    /* Reassurance / explainer card (AddChild + Notifications). */
+    .reassure {
+      padding: 12px 14px;
+      border-radius: var(--radius-tile);
+      background: rgba(61, 155, 143, 0.1);
+      border: 1px solid rgba(61, 155, 143, 0.28);
+    }
+    .reassure p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      /* LIGHT glass panel — dark teal text, NOT the dusk white vars
+         (see the .option .desc note above). */
+      color: var(--teal-pebble);
+      opacity: 0.82;
+    }
+    .reassure p + p { margin-top: 8px; }
+    .reassure strong {
+      color: var(--teal-pebble);
+      font-weight: 600;
+    }
+    .text-skip {
+      background: transparent;
+      border: none;
+      color: var(--teal-pebble);
+      opacity: 0.75;
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 10px;
+    }
+    /* Notifications explainer (final step). */
+    .notif-list {
+      margin: 0;
+      padding-left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .notif-list li {
+      font-size: 14px;
+      line-height: 1.45;
+      /* LIGHT glass panel — dark teal text (see .option .desc note). */
+      color: var(--teal-pebble);
+      opacity: 0.85;
+    }
+    .app-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 16px;
+      border-radius: var(--radius-input);
+      background: rgba(61, 155, 143, 0.18);
+      border: 1px solid var(--teal-pebble);
+      color: var(--teal-pebble);
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: background 180ms ease;
+    }
+    .app-cta:hover { background: rgba(61, 155, 143, 0.28); }
     .error {
       color: var(--rose-soft);
       font-size: 13px;
@@ -396,41 +530,29 @@ export class OnboardingWizard extends LitElement {
     this._go('addchild');
   }
 
-  // "No" outcome — byte-identical to the pre-P3-5b _submitCreate
-  // (the existing non-parent / family-coordinator path). "No" is a
-  // first-class member, never a dead-end or a lesser tier.
-  async _submitNoChildren() {
+  // ─── Onboarding parity: branch handlers ──────────────────────────
+  // The family is now created ONCE at the very end (_finishOnboarding),
+  // AFTER the Location + Notifications steps, so the wizard stays
+  // mounted through them (app-shell exits onboarding the instant a
+  // family doc exists). These handlers only validate + advance.
+
+  // "No" → a Cairn-only family (first-class family-coordinator member,
+  // never lesser). Advance to the Location step (creators set the
+  // family home location, parent or not).
+  _goNoChildren() {
     const name = (this._familyName ?? '').trim();
     if (!name) {
       this._error = 'Give your family a name.';
       return;
     }
-    this._busy = true;
     this._error = '';
-    try {
-      const fid = await dataStore.createCairnOnlyFamily(name);
-      await this._uploadParentPhotoIfAny(fid);
-      toast(`Welcome to ${name}.`);
-      // The user-doc listener fires with cairnFamilyId set; app-shell
-      // re-evaluates _needsOnboarding() (now false) and renders the
-      // dashboard. No need to dispatch anything.
-    } catch (e) {
-      console.error('Create family failed:', e);
-      this._error = e?.code === 'permission-denied'
-        ? "Couldn't create the family. Firestore rules may not be deployed yet."
-        : `Couldn't create the family: ${e?.message ?? 'try again'}`;
-    } finally {
-      this._busy = false;
-    }
+    this._wantsChild = false;
+    this._go('location');
   }
 
-  // "Yes" outcome — C-i: PP-style family (creator in memberIds) so
-  // the child can be authored (the deployed /children CREATE rule
-  // is isFamilyMember). Then createChild stamps parentIds :=
-  // memberIds (Phase-1) + needsServerSeed (the β safety-net CF
-  // seeds milestones). User-doc listener picks up `familyId` →
-  // app-shell drops to the dashboard (same pattern as the No path).
-  async _submitWithChild() {
+  // "Yes" → a PebblePath family + child. Validate the child fields
+  // here, then advance to Location (the actual create runs at the end).
+  _goLocationFromChild() {
     const name = (this._familyName ?? '').trim();
     const childName = (this._childName ?? '').trim();
     if (!name) {
@@ -450,38 +572,141 @@ export class OnboardingWizard extends LitElement {
       this._error = "That date of birth doesn't look right.";
       return;
     }
+    this._error = '';
+    this._wantsChild = true;
+    this._go('location');
+  }
+
+  _setPremature(v) {
+    this._premature = this._premature === v ? '' : v;
+  }
+
+  _toggleFocusFlag(label) {
+    const set = new Set(this._focusFlags);
+    if (set.has(label)) set.delete(label);
+    else set.add(label);
+    this._focusFlags = [...set];
+  }
+
+  // "Use my location" — browser geolocation reverse-geocoded to CITY
+  // level only (coords are never stored, mirroring iOS which drops the
+  // GPS fix after geocoding). Free, keyless, CORS-enabled endpoint;
+  // any failure degrades to manual entry with a toast.
+  async _useMyLocation() {
+    if (this._locating) return;
+    if (!navigator.geolocation) {
+      toast('Location is not available in this browser. Enter it manually.');
+      return;
+    }
+    this._locating = true;
+    try {
+      const pos = await new Promise((resolve, reject) =>
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          timeout: 10000,
+          maximumAge: 600000,
+        }),
+      );
+      const { latitude, longitude } = pos.coords;
+      const resp = await fetch(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`,
+      );
+      const j = await resp.json();
+      this._homeCity = j.city || j.locality || '';
+      this._homeRegion = j.principalSubdivision || '';
+      this._homeCountry = j.countryName || 'United States';
+      if (!this._homeCity) toast("Couldn't find your city. Enter it manually.");
+    } catch (err) {
+      console.warn('geolocate failed:', err);
+      toast("Couldn't get your location. Enter it manually.");
+    } finally {
+      this._locating = false;
+    }
+  }
+
+  _skipLocation() {
+    this._homeCity = '';
+    this._homeRegion = '';
+    this._error = '';
+    this._go('notifications');
+  }
+
+  _goNotificationsFromLocation() {
+    this._error = '';
+    this._go('notifications');
+  }
+
+  // Final step — create the family ONCE (Yes → PebblePath family +
+  // child + developmentalFlags; No → Cairn-only family), upload optional
+  // photos, write the optional home location, then let the user-doc
+  // listener drop app-shell to the dashboard. Notifications are an
+  // explainer only on the web (no web push), so nothing to persist here.
+  async _finishOnboarding() {
+    const name = (this._familyName ?? '').trim();
+    if (!name) {
+      this._error = 'Give your family a name.';
+      this._go('create');
+      return;
+    }
     this._busy = true;
     this._error = '';
     try {
-      const fid = await dataStore.createPebblePathFamily(name);
-      const childId = await dataStore.createChild(fid, {
-        name: childName,
-        dateOfBirth: dob,
-      });
-      // Optional avatar — best-effort, NEVER blocks onboarding. The
-      // family + child already exist; if the upload fails the photo
-      // can be set later in the app/Settings.
-      if (this._childPhotoBlob) {
-        try {
-          await dataStore.uploadChildAvatar(
-            fid,
-            childId,
-            this._childPhotoBlob,
-          );
-        } catch (photoErr) {
-          console.warn('child avatar upload failed (non-fatal):', photoErr);
-          toast("Family created. Couldn't save the photo, add it later.");
+      let fid;
+      if (this._wantsChild) {
+        const childName = (this._childName ?? '').trim();
+        const dob = new Date(`${this._childDob}T00:00:00`);
+        if (!childName || Number.isNaN(dob.getTime())) {
+          this._busy = false;
+          this._error = "Add your child's name and date of birth.";
+          this._go('addchild');
+          return;
         }
+        fid = await dataStore.createPebblePathFamily(name);
+        // Areas-of-focus + Premature → Child.developmentalFlags (drive
+        // Pebble context + milestone seeding, same as iOS AddChild).
+        const flags = [...this._focusFlags];
+        if (this._premature === 'yes') flags.push('Premature birth');
+        const childId = await dataStore.createChild(fid, {
+          name: childName,
+          dateOfBirth: dob,
+          developmentalFlags: flags,
+        });
+        if (this._childPhotoBlob) {
+          try {
+            await dataStore.uploadChildAvatar(fid, childId, this._childPhotoBlob);
+          } catch (photoErr) {
+            console.warn('child avatar upload failed (non-fatal):', photoErr);
+            toast("Family created. Couldn't save the photo, add it later.");
+          }
+        }
+      } else {
+        fid = await dataStore.createCairnOnlyFamily(name);
       }
       await this._uploadParentPhotoIfAny(fid);
+      // Optional home location (city-level; best-effort, never blocks).
+      if (this._homeCity.trim()) {
+        try {
+          await dataStore.setHomeLocation(
+            {
+              city: this._homeCity,
+              region: this._homeRegion,
+              country: this._homeCountry,
+            },
+            fid,
+          );
+        } catch (locErr) {
+          console.warn('home location save failed (non-fatal):', locErr);
+        }
+      }
       toast(`Welcome to ${name}.`);
-      // user-doc listener fires with familyId set; app-shell
-      // re-evaluates _needsOnboarding() (now false) → dashboard.
+      // The user-doc listener fires with familyId/cairnFamilyId set;
+      // app-shell re-evaluates _needsOnboarding() (now false) and drops
+      // to the dashboard. No dispatch needed.
     } catch (e) {
-      console.error('Create family + child failed:', e);
-      this._error = e?.code === 'permission-denied'
-        ? "Couldn't set up your family. Firestore rules may not be deployed yet."
-        : `Couldn't set up your family: ${e?.message ?? 'try again'}`;
+      console.error('Onboarding create failed:', e);
+      this._error =
+        e?.code === 'permission-denied'
+          ? "Couldn't set up your family. Firestore rules may not be deployed yet."
+          : `Couldn't set up your family: ${e?.message ?? 'try again'}`;
     } finally {
       this._busy = false;
     }
@@ -528,6 +753,8 @@ export class OnboardingWizard extends LitElement {
     if (this._mode === 'create') return this._renderCreate();
     if (this._mode === 'children') return this._renderChildren();
     if (this._mode === 'addchild') return this._renderAddChild();
+    if (this._mode === 'location') return this._renderLocation();
+    if (this._mode === 'notifications') return this._renderNotifications();
     return this._renderChoose();
   }
 
@@ -700,13 +927,11 @@ export class OnboardingWizard extends LitElement {
             <button
               class="option"
               ?disabled=${this._busy}
-              @click=${this._submitNoChildren}
+              @click=${this._goNoChildren}
             >
               <span class="icon-cell tide">${this._iconPerson()}</span>
               <span>
-                <div class="label">
-                  ${this._busy ? 'Setting up…' : 'No, this is not a parent account.'}
-                </div>
+                <div class="label">No, this is not a parent account.</div>
                 <div class="desc">
                   Collaborate on the family activity planner together.
                 </div>
@@ -858,6 +1083,21 @@ export class OnboardingWizard extends LitElement {
   // added later in the app. Submits createPebblePathFamily +
   // createChild together (C-i + β).
   _renderAddChild() {
+    const childName = (this._childName ?? '').trim() || 'Your child';
+    const focusOptions = [
+      'Speech / language',
+      'Motor skills',
+      'Social interactions',
+      'Eating / feeding',
+      'Sleep',
+      'Sensory',
+      'General concern',
+    ];
+    const prematureOptions = [
+      { v: 'yes', label: 'Yes' },
+      { v: 'no', label: 'No' },
+      { v: 'notsure', label: 'Not sure' },
+    ];
     return html`
       <div class="wrap">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -892,14 +1132,183 @@ export class OnboardingWizard extends LitElement {
                 @input=${(e) => (this._childDob = e.target.value)}
               />
             </div>
+            <div>
+              <label>Was your child born premature?</label>
+              <div class="seg">
+                ${prematureOptions.map(
+                  (o) => html`
+                    <button
+                      type="button"
+                      class=${this._premature === o.v ? 'active' : ''}
+                      @click=${() => this._setPremature(o.v)}
+                    >
+                      ${o.label}
+                    </button>
+                  `,
+                )}
+              </div>
+            </div>
+            <div>
+              <label>Anything you'd like to focus on? (optional)</label>
+              <div class="chips">
+                ${focusOptions.map(
+                  (label) => html`
+                    <button
+                      type="button"
+                      class="chip ${this._focusFlags.includes(label) ? 'on' : ''}"
+                      @click=${() => this._toggleFocusFlag(label)}
+                    >
+                      ${label}
+                    </button>
+                  `,
+                )}
+              </div>
+              <p class="field-hint">
+                Helps Pebble tailor milestones and tips. You can change
+                this anytime.
+              </p>
+            </div>
+            <div class="reassure">
+              <p>
+                <strong>${childName}'s milestones stay private to their parents.</strong>
+                Any family member can request access, you decide.
+              </p>
+              <p>
+                ${childName}'s other parent joins with the same family
+                code. You'll get a prompt to confirm them as a parent.
+              </p>
+            </div>
             ${this._error ? html`<div class="error">${this._error}</div>` : ''}
             <div class="actions">
               <glass-button
                 variant="primary"
                 ?disabled=${this._busy}
-                @click=${this._submitWithChild}
+                @click=${this._goLocationFromChild}
               >
-                ${this._busy ? 'Setting up…' : 'Create family'}
+                Continue
+              </glass-button>
+            </div>
+          </div>
+        </glass-panel>
+      </div>
+    `;
+  }
+
+  // Location step (creators only, mirrors iOS LocationSetupView). Manual
+  // city / region / country + an optional "Use my location" geolocate +
+  // Skip. Writes Family.homeLocation at the final create. City-level
+  // only — never stores coords.
+  _renderLocation() {
+    return html`
+      <div class="wrap">
+        <glass-panel padding="lg" variant="strong" lifted>
+          <button
+            class="back"
+            @click=${() => this._go(this._wantsChild ? 'addchild' : 'children')}
+          >
+            ‹ Back
+          </button>
+          <h1 style="margin-top:10px;">Where's home?</h1>
+          <p class="lede">
+            Pebble uses this for weather, local holidays, and weekend
+            ideas. City-level only, and you can change or skip it.
+          </p>
+          <div class="step">
+            <glass-button
+              variant="ghost"
+              ?disabled=${this._locating}
+              @click=${this._useMyLocation}
+            >
+              ${this._locating ? 'Locating…' : 'Use my location'}
+            </glass-button>
+            <div>
+              <label>City</label>
+              <input
+                type="text"
+                placeholder="Brooklyn"
+                .value=${this._homeCity}
+                @input=${(e) => (this._homeCity = e.target.value)}
+                maxlength="80"
+              />
+            </div>
+            <div>
+              <label>State / region (optional)</label>
+              <input
+                type="text"
+                placeholder="New York"
+                .value=${this._homeRegion}
+                @input=${(e) => (this._homeRegion = e.target.value)}
+                maxlength="80"
+              />
+            </div>
+            <div>
+              <label>Country</label>
+              <input
+                type="text"
+                placeholder="United States"
+                .value=${this._homeCountry}
+                @input=${(e) => (this._homeCountry = e.target.value)}
+                maxlength="80"
+              />
+            </div>
+            ${this._error ? html`<div class="error">${this._error}</div>` : ''}
+            <div class="actions">
+              <glass-button variant="primary" @click=${this._goNotificationsFromLocation}>
+                Continue
+              </glass-button>
+              <button class="text-skip" @click=${this._skipLocation}>
+                Skip for now
+              </button>
+            </div>
+          </div>
+        </glass-panel>
+      </div>
+    `;
+  }
+
+  // Notifications step (final, mirrors iOS NotificationPermissionView,
+  // shown to every persona). The Portal has NO web push, so this is an
+  // explainer that notifications live in the mobile app, with a link to
+  // the website to get it. Deliberately does NOT write the iOS
+  // notificationsOnboardingComplete flag (that gates the iOS on-device
+  // permission prompt — setting it here would silently suppress iOS
+  // push). "Finish" runs the family create.
+  _renderNotifications() {
+    return html`
+      <div class="wrap">
+        <glass-panel padding="lg" variant="strong" lifted>
+          <button class="back" @click=${() => this._go('location')}>‹ Back</button>
+          <h1 style="margin-top:10px;">Stay in the loop</h1>
+          <p class="lede">
+            Reminders, milestone nudges, and your daily family brief come
+            from the PebblePath mobile app. Turn them on there when you
+            install it.
+          </p>
+          <div class="step">
+            <ul class="notif-list">
+              <li>A gentle daily brief of what's coming up</li>
+              <li>Milestone and tip nudges, tailored to your family</li>
+              <li>A heads-up when a co-parent adds or changes plans</li>
+            </ul>
+            <div class="reassure">
+              <p>
+                <strong>Notifications are set up on your phone.</strong>
+                When you install the PebblePath app and sign in, it asks
+                permission right on your device. Your account, family, and
+                everything here is already waiting for you.
+              </p>
+            </div>
+            <a class="app-cta" href="https://pebblepath.ai" target="_blank" rel="noopener">
+              Get the PebblePath app
+            </a>
+            ${this._error ? html`<div class="error">${this._error}</div>` : ''}
+            <div class="actions">
+              <glass-button
+                variant="primary"
+                ?disabled=${this._busy}
+                @click=${this._finishOnboarding}
+              >
+                ${this._busy ? 'Setting up…' : 'Finish'}
               </glass-button>
             </div>
           </div>

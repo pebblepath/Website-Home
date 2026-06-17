@@ -1457,6 +1457,29 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
+   * Write the family-level home location (city / region? / country).
+   * Shape mirrors iOS HomeLocation exactly so both platforms write
+   * identically: {city, country} always, region only when non-empty
+   * (iOS region is optional). `fid` defaults to the resolved family but
+   * is passed explicitly during onboarding (the just-created family's
+   * id, before the user-doc listener has set _currentFamilyId).
+   * Deliberately does NOT write `updatedAt` — a pending serverTimestamp
+   * reads back null and would break a non-optional Date decode on the
+   * other platform (see feedback_firestore_servertimestamp_pending_null).
+   * Used by the onboarding Location step + (later) a Settings editor.
+   */
+  async setHomeLocation(loc, fid = this._currentFamilyId) {
+    if (!fid || !loc?.city) return;
+    const homeLocation = {
+      city: String(loc.city).trim(),
+      country: String(loc.country || 'United States').trim(),
+    };
+    const region = String(loc.region ?? '').trim();
+    if (region) homeLocation.region = region;
+    await updateDoc(doc(db, 'families', fid), { homeLocation });
+  }
+
+  /**
    * Close-the-loop Slice 3 (2026-05-28) — force-regenerate today's
    * family-scope brief SERVER-SIDE via the `refreshFamilyBrief`
    * callable. The CF rebuilds context from the full memory bank,
