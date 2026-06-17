@@ -32,6 +32,7 @@ export class AppShell extends LitElement {
     childInsights: { state: true },
     childDailyCard: { state: true },
     familyDailyCard: { state: true },
+    nonParentDailyCard: { state: true },
     pebbleAnchors: { state: true },
     pebbleRhythms: { state: true },
     pebblePatterns: { state: true },
@@ -98,6 +99,7 @@ export class AppShell extends LitElement {
     this.childInsights = [];
     this.childDailyCard = null;
     this.familyDailyCard = null;
+    this.nonParentDailyCard = null;
     this.pebbleAnchors = [];
     this.pebbleRhythms = [];
     this.pebblePatterns = [];
@@ -125,6 +127,7 @@ export class AppShell extends LitElement {
       this.childInsights = dataStore.state.childInsights;
       this.childDailyCard = dataStore.state.childDailyCard;
       this.familyDailyCard = dataStore.state.familyDailyCard;
+      this.nonParentDailyCard = dataStore.state.nonParentDailyCard;
       this.pebbleAnchors = dataStore.state.pebbleAnchors;
       this.pebbleRhythms = dataStore.state.pebbleRhythms;
       this.pebblePatterns = dataStore.state.pebblePatterns;
@@ -357,6 +360,7 @@ export class AppShell extends LitElement {
         .childInsights=${this.childInsights}
         .childDailyCard=${this.childDailyCard}
         .familyDailyCard=${this.familyDailyCard}
+        .nonParentDailyCard=${this.nonParentDailyCard}
         .pebbleAnchors=${this.pebbleAnchors}
         .pebbleRhythms=${this.pebbleRhythms}
         .pebblePatterns=${this.pebblePatterns}

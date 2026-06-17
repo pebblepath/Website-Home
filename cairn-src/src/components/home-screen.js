@@ -83,6 +83,9 @@ export class HomeScreen extends LitElement {
     childInsights: { type: Array },
     childDailyCard: { type: Object },
     familyDailyCard: { type: Object },
+    // Non-parent Family Brief (2026-06-17) — child-dev-free brief on a
+    // NON-PARENT member's Today tab.
+    nonParentDailyCard: { type: Object },
     // Close-the-loop Slice 4 (2026-05-28) — the four memory layers
     // ("What Pebble Knows"), read-only.
     pebbleAnchors: { type: Array },
@@ -111,6 +114,8 @@ export class HomeScreen extends LitElement {
     _activeTab: { state: true },
     // Close-the-loop Slice 3 (2026-05-28) — family-brief refresh spinner.
     _refreshingFamilyBrief: { state: true },
+    // Non-parent Family Brief (2026-06-17) — its own refresh spinner.
+    _refreshingNonParentBrief: { state: true },
     // Slice 7 — weekend planner modal.
     _weekendOpen: { state: true },
     // "What Pebble knows" drill-down (open = detail view, like the iOS
@@ -217,6 +222,7 @@ export class HomeScreen extends LitElement {
     this.childInsights = [];
     this.childDailyCard = null;
     this.familyDailyCard = null;
+    this.nonParentDailyCard = null;
     this.pebbleAnchors = [];
     this.pebbleRhythms = [];
     this.pebblePatterns = [];
@@ -258,9 +264,12 @@ export class HomeScreen extends LitElement {
     // ring stack; Children + Pebble are the app-companion surfaces.
     this._activeTab = 'today';
     this._refreshingFamilyBrief = false;
+    this._refreshingNonParentBrief = false;
     // Self-heal guard: generate today's brief once if it's missing
     // (e.g. the nightly CF didn't run). Plain field, not reactive.
     this._autoBriefAttempted = false;
+    // Non-parent brief self-heal guard (one-shot, same idea).
+    this._autoNonParentBriefAttempted = false;
     this._weekendOpen = false;
     this._wpkOpen = false;
     this._packingTemplates = [];
@@ -5838,9 +5847,14 @@ export class HomeScreen extends LitElement {
       </glass-panel>`;
 
     if (!cd.hasPP || !cd.child) {
-      // Non-parent viewer / no child to surface — greeting + activities glance only.
+      // Non-parent member / no child to surface. 2026-06-17 — now leads
+      // with the child-dev-free Family Brief (weather + shared activities
+      // + celebrations), mirroring the iOS non-parent Home. Then the
+      // activities glance + celebrations. The brief's coordination footer
+      // is omitted (parent-to-parent only).
       return html`
         ${this._renderTodayHeader(scope)}
+        ${this._renderNonParentBrief()}
         <section>${comingPanel}</section>
         ${this._renderCelebrationsSection()}
       `;
@@ -6743,18 +6757,30 @@ export class HomeScreen extends LitElement {
       }
       return this._refreshingFamilyBrief ? this._renderBriefPreparing() : '';
     }
+    return this._briefCardTemplate(fc, {
+      spinning: this._refreshingFamilyBrief ? 'spinning' : '',
+      fresh: this._briefFreshLabel(fc),
+      onRefresh: () => this._onRefreshFamilyBrief(),
+      ariaLabel: 'Refresh family brief',
+      coordination: this._renderBriefCoordination(),
+    });
+  }
+
+  // ── Shared brief card markup (2026-06-17) ──
+  //
+  // The photo card itself (daybreak/Stillwater bg + eyebrow + refresh +
+  // title + bullets). BOTH the parent Family Brief (_renderFamilyBrief)
+  // and the non-parent brief (_renderNonParentBrief) render through this;
+  // they differ only in the refresh handler + whether the coordination
+  // footer is appended. `opts` = { spinning, fresh, onRefresh, ariaLabel,
+  // coordination } where `coordination` is an html template (or '').
+  _briefCardTemplate(fc, { spinning, fresh, onRefresh, ariaLabel, coordination }) {
     const bullets = Array.isArray(fc.bullets) ? fc.bullets : [];
-    const spinning = this._refreshingFamilyBrief ? 'spinning' : '';
-    const fresh = this._briefFreshLabel(fc);
-    // 2026-05-31 — LIGHT mode uses "Sandbar" (was daybreak, briefly
-    // Shallows). To revert LIGHT, point this back at
-    // pebblepath-daybreak-empty.jpg (kept in public/assets).
+    // 2026-05-31 — LIGHT mode uses "Sandbar"; DARK uses the moodier
+    // "Stillwater" + the fb-dark treatment. _themeLight is reactive, so
+    // the Settings theme toggle reskins this live.
     const sandbar = `${import.meta.env.BASE_URL}assets/pebblepath-sandbar-empty.jpg`;
     const stillwater = `${import.meta.env.BASE_URL}assets/pebblepath-stillwater-empty.jpg`;
-    // 2026-05-28 — DARK mode (no html.theme-light) uses the moodier
-    // Stillwater + a dark treatment (scrim + light text via the fb-dark
-    // class). _themeLight is reactive, so the Settings theme toggle
-    // reskins this live.
     const fbPhoto = this._themeLight ? sandbar : stillwater;
     return html`
       <section class="family-brief ${this._themeLight ? '' : 'fb-dark'}">
@@ -6774,9 +6800,9 @@ export class HomeScreen extends LitElement {
                 <button
                   class="fb-refresh ${spinning}"
                   title="Refresh brief"
-                  aria-label="Refresh family brief"
-                  ?disabled=${this._refreshingFamilyBrief}
-                  @click=${() => this._onRefreshFamilyBrief()}
+                  aria-label="${ariaLabel}"
+                  ?disabled=${!!spinning}
+                  @click=${onRefresh}
                 >
                   <svg viewBox="0 0 24 24" width="15" height="15" fill="none"
                     stroke="currentColor" stroke-width="2.2"
@@ -6793,11 +6819,89 @@ export class HomeScreen extends LitElement {
                   ${bullets.map((b) => this._renderBriefBullet(b))}
                 </ul>`
               : html`<p class="fb-body">${fc.body}</p>`}
-            ${this._renderBriefCoordination()}
+            ${coordination}
           </div>
         </div>
       </section>
     `;
+  }
+
+  // ── Non-parent Family Brief (2026-06-17) ──
+  //
+  // The child-dev-free brief shown at the top of a NON-PARENT member's
+  // Today tab (weather + shared activities/trips + celebrations). Reuses
+  // _briefCardTemplate WITHOUT the coordination footer (parent-to-parent
+  // handoffs are not surfaced to non-parents). Always shows the hero (per
+  // Thomas): the card when present, a "preparing" state while generating,
+  // else a calm placeholder.
+  _renderNonParentBrief() {
+    const fc = this.nonParentDailyCard;
+    if (!fc) {
+      // Self-heal — generate today's non-parent brief on-demand once.
+      if (!this.preview) {
+        this.updateComplete.then(() => this._ensureNonParentBriefForToday());
+      }
+      return this._refreshingNonParentBrief
+        ? this._renderBriefPreparing()
+        : this._renderNonParentBriefPlaceholder();
+    }
+    return this._briefCardTemplate(fc, {
+      spinning: this._refreshingNonParentBrief ? 'spinning' : '',
+      fresh: this._briefFreshLabel(fc),
+      onRefresh: () => this._onRefreshNonParentBrief(),
+      ariaLabel: 'Refresh family brief',
+      coordination: '', // non-parent: no coordination footer
+    });
+  }
+
+  /** Calm placeholder when there's genuinely nothing scheduled to brief
+   *  (the CF reports nothing). Reuses the lightweight "preparing" card
+   *  styling so the hero is always present (no new CSS). */
+  _renderNonParentBriefPlaceholder() {
+    return html`
+      <section class="family-brief">
+        <div class="fb-prep-card">
+          <span class="fb-tag-lite">FAMILY BRIEF</span>
+          <span class="fb-prep-text">Your family brief will appear here each morning.</span>
+        </div>
+      </section>
+    `;
+  }
+
+  async _onRefreshNonParentBrief() {
+    if (this.preview || this._refreshingNonParentBrief) return;
+    this._refreshingNonParentBrief = true;
+    try {
+      await dataStore.refreshNonParentBrief();
+      // The live _unsubNonParentDaily listener picks up the overwrite.
+    } catch (err) {
+      console.warn('[Portal] refreshNonParentBrief failed:', err?.message ?? err);
+    } finally {
+      this._refreshingNonParentBrief = false;
+    }
+  }
+
+  /** Self-heal — generate today's non-parent brief on-demand when it's
+   *  missing (the nightly CF didn't run / hasn't yet). Fires at most once
+   *  per session; waits ~1.5s so a slow snapshot delivering an EXISTING
+   *  card wins before we generate. */
+  _ensureNonParentBriefForToday() {
+    if (this.preview || this._autoNonParentBriefAttempted || this._refreshingNonParentBrief) {
+      return;
+    }
+    this._autoNonParentBriefAttempted = true;
+    setTimeout(async () => {
+      if (this.nonParentDailyCard) return; // a card arrived
+      this._refreshingNonParentBrief = true;
+      try {
+        await dataStore.refreshNonParentBrief();
+        // The live listener picks up the new card → re-render shows it.
+      } catch (err) {
+        console.warn('[Portal] auto-generate non-parent brief failed:', err?.message ?? err);
+      } finally {
+        this._refreshingNonParentBrief = false;
+      }
+    }, 1500);
   }
 
   // ── Coordination roles (2026-05-29) — display-only Portal mirror of the
