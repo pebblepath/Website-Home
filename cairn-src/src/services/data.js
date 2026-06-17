@@ -155,10 +155,18 @@ class FamilyDataStore extends EventTarget {
     this._unsubFamilyDaily = null;
     // Close-the-loop Slice 4 (2026-05-28) — the four memory layers
     // ("What Pebble Knows"). Read-only on the web (editing stays iOS).
-    this._unsubAnchors = null;
-    this._unsubRhythms = null;
-    this._unsubPatterns = null;
-    this._unsubLiveContext = null;
+    // Security #2 (2026-06-13) made the read rules scope-conditional, so
+    // each layer fans out into family / own-member / parented-child
+    // sub-queries (mirrors iOS makeScopeSegmentedListener), merged
+    // client-side. _memUnsubs = the family+member subs (stable for the
+    // family); _memChildUnsubs = the child subs (re-attached once
+    // ppChildren resolves). _memSlices buffers each layer's 3 slices.
+    this._memFid = null;
+    this._memLayers = null;
+    this._memSlices = {};
+    this._memUnsubs = [];
+    this._memChildUnsubs = [];
+    this._memChildKey = '';
     this._unsubChildPebble = null;
     this._unsubChildSessions = null;
     // Batch F — read-only when the PP-household is resolved via the
@@ -654,6 +662,12 @@ class FamilyDataStore extends EventTarget {
               (a.createdAt?.toMillis?.() ?? 0) - (b.createdAt?.toMillis?.() ?? 0),
           );
         this.state.ppChildren = kids;
+        // The memory-engine child sub-queries depend on the children
+        // this user parents; (re)attach them now that ppChildren has
+        // resolved (they load async, after the family + member memory
+        // subs attach). No-ops on the read-only path. See
+        // _subscribePebbleMemory / _attachMemoryChildSubs.
+        this._attachMemoryChildSubs();
         // iOS may store a local file:// profilePhotoURL (pre-Storage
         // builds) which a browser can't load. Resolve the canonical
         // Firebase Storage avatar (Build 14 path, no extension) so the
@@ -734,55 +748,129 @@ class FamilyDataStore extends EventTarget {
    * iOS-only — this is purely a read surface.
    */
   _subscribePebbleMemory(ppFid) {
-    const mineOnly = (d) => d.scope !== 'member' || d.memberUid === this._uid;
     const ms = (t) => t?.toMillis?.() ?? 0;
-    this._unsubAnchors = onSnapshot(
-      collection(db, 'families', ppFid, 'anchors'),
-      (snap) => {
-        this.state.pebbleAnchors = snap.docs
-          .map((d) => ({ id: d.id, ...d.data() }))
-          .filter(mineOnly)
-          .sort((a, b) => ms(b.updatedAt) - ms(a.updatedAt));
-        this._emit();
-      },
-      (err) => console.warn('[Portal] anchors error:', err.code, err.message),
-    );
-    this._unsubRhythms = onSnapshot(
-      collection(db, 'families', ppFid, 'rhythms'),
-      (snap) => {
-        this.state.pebbleRhythms = snap.docs
-          .map((d) => ({ id: d.id, ...d.data() }))
-          .filter(mineOnly)
-          .sort((a, b) => ms(b.updatedAt) - ms(a.updatedAt));
-        this._emit();
-      },
-      (err) => console.warn('[Portal] rhythms error:', err.code, err.message),
-    );
-    this._unsubPatterns = onSnapshot(
-      collection(db, 'families', ppFid, 'patterns'),
-      (snap) => {
-        this.state.pebblePatterns = snap.docs
-          .map((d) => ({ id: d.id, ...d.data() }))
-          .filter(mineOnly)
-          .filter((p) => !p.dismissedAt)
-          .sort((a, b) => ms(b.derivedAt) - ms(a.derivedAt));
-        this._emit();
-      },
-      (err) => console.warn('[Portal] patterns error:', err.code, err.message),
-    );
-    this._unsubLiveContext = onSnapshot(
-      collection(db, 'families', ppFid, 'liveContext'),
-      (snap) => {
-        const cutoff = Date.now() - 14 * 24 * 3600 * 1000;
-        this.state.pebbleLiveContext = snap.docs
-          .map((d) => ({ id: d.id, ...d.data() }))
-          .filter(mineOnly)
-          .filter((i) => !i.dismissedAt && ms(i.validFrom) >= cutoff)
-          .sort((a, b) => ms(b.validFrom) - ms(a.validFrom));
-        this._emit();
-      },
-      (err) => console.warn('[Portal] liveContext error:', err.code, err.message),
-    );
+    // Defensive: tear down any prior subs so a re-subscribe (re-resolved
+    // family) never leaks listeners.
+    this._memUnsubs.forEach((u) => u?.());
+    this._memChildUnsubs.forEach((u) => u?.());
+    this._memFid = ppFid;
+    // Per-layer config: collection, state key, an optional post-merge
+    // filter, the sort, and an optional cap. The member sub-query itself
+    // scopes member-private docs to this._uid, so no client-side owner
+    // filter is needed (the OLD bare listener used a `mineOnly` filter).
+    this._memLayers = [
+      { col: 'anchors', key: 'pebbleAnchors', extra: null,
+        sort: (a, b) => ms(b.updatedAt) - ms(a.updatedAt) },
+      { col: 'rhythms', key: 'pebbleRhythms', extra: null,
+        sort: (a, b) => ms(b.updatedAt) - ms(a.updatedAt) },
+      { col: 'patterns', key: 'pebblePatterns', extra: (p) => !p.dismissedAt,
+        sort: (a, b) => ms(b.derivedAt) - ms(a.derivedAt) },
+      { col: 'liveContext', key: 'pebbleLiveContext',
+        extra: (i) =>
+          !i.dismissedAt && ms(i.validFrom) >= Date.now() - 14 * 24 * 3600 * 1000,
+        sort: (a, b) => ms(b.validFrom) - ms(a.validFrom), cap: 90 },
+    ];
+    this._memSlices = {};
+    this._memUnsubs = [];
+    this._memChildUnsubs = [];
+    this._memChildKey = '';
+    // Family + own-member sub-queries don't depend on children, so
+    // attach them now. The child sub-query is wired by
+    // _attachMemoryChildSubs (called here AND when ppChildren resolves),
+    // scoped to the children this user actually parents.
+    for (const layer of this._memLayers) {
+      this._memSlices[layer.key] = { family: [], member: [], child: [] };
+      const base = collection(db, 'families', ppFid, layer.col);
+      this._memUnsubs.push(
+        onSnapshot(
+          query(base, where('scope', '==', 'family')),
+          (snap) => {
+            this._memSlices[layer.key].family = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+            this._recomputeMemLayer(layer);
+          },
+          (err) => console.warn(`[Portal] ${layer.col}/family error:`, err.code, err.message),
+        ),
+      );
+      if (this._uid) {
+        this._memUnsubs.push(
+          onSnapshot(
+            query(base, where('scope', '==', 'member'), where('memberUid', '==', this._uid)),
+            (snap) => {
+              this._memSlices[layer.key].member = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+              this._recomputeMemLayer(layer);
+            },
+            (err) => console.warn(`[Portal] ${layer.col}/member error:`, err.code, err.message),
+          ),
+        );
+      }
+    }
+    this._attachMemoryChildSubs();
+  }
+
+  // Merge a layer's three scope slices (family / own-member / parented-
+  // child) into its state key: dedupe by id, apply the optional extra
+  // filter + sort, optionally cap. Every memory sub-listener calls this.
+  _recomputeMemLayer(layer) {
+    const slices = this._memSlices[layer.key];
+    if (!slices) return;
+    const seen = new Set();
+    let merged = [];
+    for (const arr of [slices.family, slices.member, slices.child]) {
+      for (const it of arr) {
+        if (!seen.has(it.id)) {
+          seen.add(it.id);
+          merged.push(it);
+        }
+      }
+    }
+    if (layer.extra) merged = merged.filter(layer.extra);
+    merged.sort(layer.sort);
+    if (layer.cap && merged.length > layer.cap) merged = merged.slice(0, layer.cap);
+    this.state[layer.key] = merged;
+    this._emit();
+  }
+
+  // (Re)attach the child-scope sub-query for every memory layer. The
+  // child read rule is isChildParent(familyId, childId), so the query is
+  // limited to children THIS user parents (uid in child.parentIds) — a
+  // broader query would permission-deny. Called once from
+  // _subscribePebbleMemory and again whenever ppChildren resolves (the
+  // children load async, after the family + member subs attach). A key
+  // guard skips a needless re-attach when the parented set is unchanged.
+  _attachMemoryChildSubs() {
+    if (!this._memFid || !this._memLayers) return; // own-household path only
+    const childIds = (this.state.ppChildren || [])
+      .filter((k) => k?.id && Array.isArray(k.parentIds) && k.parentIds.includes(this._uid))
+      .map((k) => k.id)
+      .slice(0, 30);
+    const key = childIds.join(',');
+    if (key === this._memChildKey) return; // unchanged — keep current subs
+    this._memChildKey = key;
+    this._memChildUnsubs.forEach((u) => u?.());
+    this._memChildUnsubs = [];
+    if (childIds.length === 0) {
+      // No parented children: clear any stale child slice + recompute.
+      for (const layer of this._memLayers) {
+        if (this._memSlices[layer.key]) {
+          this._memSlices[layer.key].child = [];
+          this._recomputeMemLayer(layer);
+        }
+      }
+      return;
+    }
+    for (const layer of this._memLayers) {
+      const base = collection(db, 'families', this._memFid, layer.col);
+      this._memChildUnsubs.push(
+        onSnapshot(
+          query(base, where('scope', '==', 'child'), where('childId', 'in', childIds)),
+          (snap) => {
+            this._memSlices[layer.key].child = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+            this._recomputeMemLayer(layer);
+          },
+          (err) => console.warn(`[Portal] ${layer.col}/child error:`, err.code, err.message),
+        ),
+      );
+    }
   }
 
   // ── Brief SWR cache (localStorage) ─────────────────────────────────
@@ -1469,18 +1557,18 @@ class FamilyDataStore extends EventTarget {
     this._unsubPpFamily?.();
     this._unsubPpChildren?.();
     this._unsubFamilyDaily?.();
-    this._unsubAnchors?.();
-    this._unsubRhythms?.();
-    this._unsubPatterns?.();
-    this._unsubLiveContext?.();
+    this._memUnsubs.forEach((u) => u?.());
+    this._memChildUnsubs.forEach((u) => u?.());
     this._unsubIncomingReq?.();
     this._unsubPpFamily = null;
     this._unsubPpChildren = null;
     this._unsubFamilyDaily = null;
-    this._unsubAnchors = null;
-    this._unsubRhythms = null;
-    this._unsubPatterns = null;
-    this._unsubLiveContext = null;
+    this._memUnsubs = [];
+    this._memChildUnsubs = [];
+    this._memSlices = {};
+    this._memFid = null;
+    this._memLayers = null;
+    this._memChildKey = '';
     this._unsubIncomingReq = null;
     this._selectedChildId = null;
     this.state.ppFamily = null;
