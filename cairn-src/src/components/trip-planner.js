@@ -342,8 +342,8 @@ export class TripPlanner extends LitElement {
           console.error('plan attachment upload failed:', upErr);
           toast(
             upErr?.code === 'storage/unauthorized'
-              ? 'Item added — but the attachment needs the Storage rule published.'
-              : "Item added — couldn't attach the file, try again.",
+              ? 'Item added, but the attachment needs the Storage rule published.'
+              : "Item added. Couldn't attach the file, try again.",
             { duration: 5000 },
           );
         }
@@ -357,7 +357,7 @@ export class TripPlanner extends LitElement {
       console.error('saveActivity (planner add) failed:', err);
       toast(
         err?.code === 'permission-denied'
-          ? "Couldn't add — the planner rule may need publishing."
+          ? "Couldn't add. The planner rule may need publishing."
           : `Couldn't add: ${err?.message ?? 'try again'}`,
         { duration: 5000 },
       );
@@ -1123,7 +1123,7 @@ export class TripPlanner extends LitElement {
             <div>
               <h3>${this.trip.title || 'Trip'}</h3>
               <div class="pl-sub">
-                Shared day plan${this.trip.location ? ` · ${this.trip.location}` : ''} — everyone on the trip can add
+                Shared day plan${this.trip.location ? ` · ${this.trip.location}` : ''}. Everyone on the trip can add
                 <span class="who-adds">
                   ${(this.members ?? []).slice(0, 4).map(
                     (m) => html`<member-chip
@@ -1232,7 +1232,7 @@ export class TripPlanner extends LitElement {
                       ${blocks.length
                         ? blocks
                         : html`<div class="sched-empty">
-                            Drag to block out a time — or add an item below.
+                            Drag to block out a time, or add an item below.
                           </div>`}
                       ${this._selGhost(dayKey, lo)}
                     </div>
@@ -1258,7 +1258,7 @@ export class TripPlanner extends LitElement {
               class="t"
               type="text"
               .value=${this._title}
-              placeholder="Add an item — lunch, a visit, a note…"
+              placeholder="Add an item: lunch, a visit, a note…"
               aria-label="Item"
               @input=${(e) => (this._title = e.target.value)}
             />
@@ -1289,7 +1289,7 @@ export class TripPlanner extends LitElement {
               class="url"
               type="url"
               .value=${this._url}
-              placeholder="Link (optional) — e.g. booking URL"
+              placeholder="Link (optional), e.g. booking URL"
               aria-label="Link"
               @input=${(e) => (this._url = e.target.value)}
             />
@@ -1311,7 +1311,7 @@ export class TripPlanner extends LitElement {
             </button>
           </form>
           <div class="add-hint">
-            Anyone on the trip can add to this plan — every item is tagged
+            Anyone on the trip can add to this plan. Every item is tagged
             with who added it (like a shared sheet, on a day grid).
           </div>
           `}

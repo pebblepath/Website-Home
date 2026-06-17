@@ -955,7 +955,7 @@ export class ChildOverview extends LitElement {
             <div class="panel">
               ${comingUp.length === 0
                 ? html`<div class="empty">
-                    Nothing flagged as next right now — ${child.name} is on
+                    Nothing flagged as next right now. ${child.name} is on
                     track across the board.
                   </div>`
                 : comingUp.map((m) => {
@@ -1020,7 +1020,7 @@ export class ChildOverview extends LitElement {
                     <path d="M18 14l.9 2.2L21 17l-2.1.8L18 20l-.9-2.2L15 17l2.1-.8L18 14z" />
                   </svg>
                   <p>
-                    Pebble is still learning about ${child.name} — growth
+                    Pebble is still learning about ${child.name}. Growth
                     insights appear here as more milestones are logged in
                     the app.
                   </p>
@@ -1045,7 +1045,7 @@ export class ChildOverview extends LitElement {
               You're seeing ${child.name}'s milestones &amp; growth
               insights <b>read-only</b>, shared by the parents. Pebble,
               the pediatrician summary and any editing stay with the
-              parents — a parent can revoke this access any time.
+              parents. A parent can revoke this access any time.
             </div>`
           : html`<div class="panel">
                 <div class="cta-card">
@@ -1065,7 +1065,7 @@ export class ChildOverview extends LitElement {
                     @click=${() =>
                       this.dispatchEvent(
                         new CustomEvent('ask-pebble', {
-                          detail: `Write a clinician-ready summary of ${child.name}'s developmental milestone history I can bring to our next pediatrician visit — strengths, anything to watch, and current progress by domain.`,
+                          detail: `Write a clinician-ready summary of ${child.name}'s developmental milestone history I can bring to our next pediatrician visit: strengths, anything to watch, and current progress by domain.`,
                           bubbles: true,
                           composed: true,
                         }),

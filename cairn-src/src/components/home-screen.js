@@ -354,7 +354,7 @@ export class HomeScreen extends LitElement {
       console.error('Join another family failed:', e);
       this._joinAnotherError =
         e?.message?.replace(/^Error:\s*/, '') ??
-        "Couldn't join — double-check the code with whoever invited you.";
+        "Couldn't join. Double-check the code with whoever invited you.";
     } finally {
       this._joinAnotherBusy = false;
     }
@@ -4024,8 +4024,8 @@ export class HomeScreen extends LitElement {
       return null;
     }
     // Event callouts: only louder when really close.
-    if (bestDays === 0) return `${best.item.title} — today.`;
-    if (bestDays === 1) return `${best.item.title} — tomorrow.`;
+    if (bestDays === 0) return `${best.item.title}, today.`;
+    if (bestDays === 1) return `${best.item.title}, tomorrow.`;
     if (bestDays <= 7) return `${best.item.title} in ${bestDays} days.`;
     return null;
   }
@@ -4313,6 +4313,13 @@ export class HomeScreen extends LitElement {
       toast('Sign in to edit real activities.');
       return;
     }
+    // Trip-attached activities are author-only on update/delete (the
+    // /activities Firestore rule). A non-author can still OPEN one to
+    // VIEW it: activity-form decides edit-vs-read-only itself from
+    // `addedBy` + `currentUid` and renders inert fields + Close (no
+    // Save/Delete) for non-authors. Mirrors iOS ActivityDetailSheet,
+    // which shows the detail with the Edit button hidden for
+    // non-authors, so the late permission-denied on Save is never hit.
     this._activityFormActivity = { ...activity };
     this._activityFormOpen = true;
   }
@@ -4682,7 +4689,7 @@ export class HomeScreen extends LitElement {
                     </div>
                     <div class="empty-title">Let's plan something fun.</div>
                     <div class="empty-sub">
-                      Plan a trip, weekend, or outing — or pull what's already
+                      Plan a trip, weekend, or outing. Or pull what's already
                       in your Google Calendar.
                     </div>
                     <div class="empty-actions">
@@ -5821,7 +5828,7 @@ export class HomeScreen extends LitElement {
         <div class="cal-head"><h3>Upcoming Activities</h3>
           <button class="link" @click=${() => (this._activeTab = 'activities')}>All activities</button></div>
         ${coming.length === 0
-          ? html`<div class="ring-note" style="padding:8px 4px;">Nothing on the calendar yet — plan something from the Activities tab.</div>`
+          ? html`<div class="ring-note" style="padding:8px 4px;">Nothing on the calendar yet. Plan something from the Activities tab.</div>`
           : coming.map(
               (c) => html`<div class="ca-row">
                 ${this._comingDateRail(c)}
@@ -5978,7 +5985,7 @@ export class HomeScreen extends LitElement {
         <div class="section-head">
           <h2>Child-view access</h2>
           <span class="note" style="margin:0;"
-            >Read-only — milestones &amp; insights, never Pebble or
+            >Read-only: milestones &amp; insights, never Pebble or
             editing</span
           >
         </div>
@@ -6028,7 +6035,7 @@ export class HomeScreen extends LitElement {
             ? ''
             : html`<div class="ring-note">
                 Granted viewers see milestones &amp; growth insights
-                only — never Pebble, the pediatrician summary, or any
+                only. Never Pebble, the pediatrician summary, or any
                 editing. Revoke any time.
               </div>`}
         </glass-panel>
@@ -6096,7 +6103,7 @@ export class HomeScreen extends LitElement {
                 <span class="si" style="color:var(--ink-green);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="7" rx="3" ry="1.4"/><ellipse cx="12" cy="12" rx="6" ry="2.4"/><ellipse cx="12" cy="17" rx="8" ry="3"/></svg>
                 </span>
-                <div class="sl"><b>Your family</b><span>Your co-parent and your children.</span></div>
+                <div class="sl"><b>Your family</b><span>Your household, including any children and their parents.</span></div>
                 <span class="set-pill" style="color:var(--ink-green);border-color:var(--ink-green);">Full access</span>
               </div>
               <div class="set-row">
@@ -6261,7 +6268,7 @@ export class HomeScreen extends LitElement {
         <div class="empty-title">This area is private to parents</div>
         <div class="empty-sub">
           Children's milestones, growth insights and Pebble are visible
-          only to parents on a PebblePath household — never to the
+          only to parents on a PebblePath household. Never to the
           extended Cairn. If you're a parent here and don't see your
           child, make sure you're signed in with your PebblePath
           account.
@@ -6294,7 +6301,7 @@ export class HomeScreen extends LitElement {
       return html`
         <div class="empty-title">Access approved</div>
         <div class="empty-sub">
-          A parent shared read-only access with you — loading ${who}
+          A parent shared read-only access with you. Loading ${who}
           view…
         </div>
         <div class="empty-actions">${backBtn}</div>
@@ -6307,7 +6314,7 @@ export class HomeScreen extends LitElement {
       <div class="empty-sub">
         Children's milestones &amp; growth insights are shared only
         with the parents by default. You can ask them to share a
-        <strong>read-only</strong> view with you — they'll approve or
+        <strong>read-only</strong> view with you. They'll approve or
         decline, and you'll never get Pebble or editing access.
         ${req?.status === 'declined'
           ? html`<br /><span style="color:var(--text-tertiary);"
@@ -6342,7 +6349,7 @@ export class HomeScreen extends LitElement {
       return html`
         <div class="claim-section">
           <div class="claim-sent">
-            ✓ Claim sent for ${this._claimedChildName} — an existing
+            ✓ Claim sent for ${this._claimedChildName}. An existing
             parent will confirm you.
           </div>
         </div>
@@ -6354,7 +6361,7 @@ export class HomeScreen extends LitElement {
           Are you a parent or caregiver of one of them?
         </div>
         <div class="claim-sub">
-          Claim the link — an existing parent confirms it. You'll get
+          Claim the link. An existing parent confirms it. You'll get
           the full child experience once approved.
         </div>
         <div class="claim-list">
@@ -6386,7 +6393,7 @@ export class HomeScreen extends LitElement {
     </span>`;
     if (cd.hasPP) {
       const subtitle = cd.readonly
-        ? 'Milestones & growth insights — read-only, shared by the parents'
+        ? 'Milestones & growth insights: read-only, shared by the parents'
         : 'Milestones and insights';
       const viewerScope = cd.readonly
         ? html`<span class="scope-chip">
@@ -6573,7 +6580,7 @@ export class HomeScreen extends LitElement {
           <button
             class="avatar-tap"
             @click=${() => (this._activeTab = 'cairn')}
-            title="${this.user?.displayName ?? 'Profile'} — open Settings"
+            title="${this.user?.displayName ?? 'Profile'}, open Settings"
             aria-label="Open Settings"
           >
             <member-chip
@@ -6588,7 +6595,7 @@ export class HomeScreen extends LitElement {
 
       ${this.preview
         ? html`<div class="preview-banner">
-            <strong>Preview mode</strong> — viewing the dashboard with placeholder
+            <strong>Preview mode</strong>: viewing the dashboard with placeholder
             data. <a href="?">Back to sign-in</a>.
           </div>`
         : ''}
@@ -6658,6 +6665,7 @@ export class HomeScreen extends LitElement {
         .members=${allMembers}
         .children=${this.ppChildren ?? []}
         .familyId=${this.family?.id ?? ''}
+        .currentUid=${this.user?.uid ?? ''}
         .busy=${this._activityFormBusy}
         @save=${this._onSaveActivity}
         @remove=${this._onDeleteActivity}
@@ -7251,7 +7259,7 @@ export class HomeScreen extends LitElement {
       class="next-trip ${displayImage ? 'has-image' : ''}"
       style=${cover}
       @click=${goActivities}
-      aria-label="${trip.title} — open in Activities"
+      aria-label="${trip.title}, open in Activities"
     >
       <div class="nt-scrim"></div>
       <div class="nt-overlay">
@@ -7317,7 +7325,7 @@ export class HomeScreen extends LitElement {
           })}
           ${this._wpkGroup({
             label: 'Daily roles & routines',
-            subtitle: 'Who usually does drop-off, bath, bedtime — set in the app.',
+            subtitle: 'Who usually does drop-off, bath, bedtime. Set in the app.',
             empty:
               'No roles yet. Set who usually does each routine in the PebblePath app.',
             items: roles,
@@ -7660,7 +7668,7 @@ export class HomeScreen extends LitElement {
     if (this.preview) return;
     try {
       await dataStore.requestChildAccess();
-      toast("Request sent — a parent will be notified.");
+      toast("Request sent. A parent will be notified.");
     } catch (err) {
       toast(`Couldn't send request: ${err.code ?? err.message}`, {
         duration: 5000,
@@ -7683,7 +7691,7 @@ export class HomeScreen extends LitElement {
   async _approveChildAccess(uid) {
     try {
       await dataStore.approveChildAccess(uid);
-      toast('Access granted — read-only Children view.');
+      toast('Access granted. Read-only Children view.');
     } catch (err) {
       toast(`Couldn't approve: ${err.code ?? err.message}`, {
         duration: 5000,

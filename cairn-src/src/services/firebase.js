@@ -163,7 +163,7 @@ export async function connectGoogleCalendar() {
   if (!isGoogleUser) {
     const err = new Error(
       "Calendar import needs a Google account. You're signed in another " +
-        "way, so Cairn can't read your Google Calendar here yet — add " +
+        "way, so Cairn can't read your Google Calendar here yet. Add " +
         'events manually for now.',
     );
     err.code = 'calendar/needs-google-account';
@@ -190,7 +190,7 @@ export async function connectGoogleCalendar() {
   }
   const credential = GoogleAuthProvider.credentialFromResult(result);
   const token = credential?.accessToken;
-  if (!token) throw new Error("Couldn't get a Calendar access token — try again.");
+  if (!token) throw new Error("Couldn't get a Calendar access token. Try again.");
   _calendarAccessToken = token;
   _calendarTokenExpiresAt = Date.now() + 60 * 60 * 1000;
   return token;
@@ -202,7 +202,7 @@ export function clearCalendarToken() {
 }
 
 export function signIn() {
-  if (!auth) throw new Error('Firebase not configured — fill in .env first.');
+  if (!auth) throw new Error('Firebase not configured. Fill in .env first.');
   return signInWithPopup(auth, googleProvider);
 }
 
@@ -221,7 +221,7 @@ if (appleProvider) {
 
 export function signInWithApple() {
   if (!auth || !appleProvider) {
-    throw new Error('Firebase not configured — fill in .env first.');
+    throw new Error('Firebase not configured. Fill in .env first.');
   }
   return signInWithPopup(auth, appleProvider);
 }

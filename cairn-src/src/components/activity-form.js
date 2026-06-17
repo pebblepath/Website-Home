@@ -52,6 +52,10 @@ export class ActivityForm extends LitElement {
     members: { type: Array },
     children: { type: Array },
     familyId: { type: String },
+    // The signed-in user's uid. A trip-attached activity is author-only
+    // (Firestore /activities update/delete rule), so a non-author gets a
+    // read-only sheet instead of a Save that would permission-deny.
+    currentUid: { type: String },
     busy: { type: Boolean },
     defaultDay: { type: String },
     defaultTripId: { type: String },
@@ -68,6 +72,7 @@ export class ActivityForm extends LitElement {
     this.members = [];
     this.children = [];
     this.familyId = '';
+    this.currentUid = '';
     this.busy = false;
     this.defaultDay = '';
     this.defaultTripId = null;
@@ -370,6 +375,23 @@ export class ActivityForm extends LitElement {
       font-size: 13px;
       margin-top: 10px;
     }
+    /* C.5 view-only — a non-author opens a trip-attached activity to
+       VIEW it; the field body is rendered inert (non-interactive) and
+       dimmed, with a note + a Close button (the actions row stays
+       outside the inert wrapper). Mirrors iOS ActivityDetailSheet. */
+    .ro-note {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      background: rgba(61, 155, 143, 0.1);
+      border: 1px solid rgba(61, 155, 143, 0.28);
+      border-radius: var(--radius-tile);
+      padding: 10px 14px;
+      margin-bottom: 16px;
+    }
+    .form-body[inert] {
+      opacity: 0.72;
+    }
     .hint {
       font-size: 12px;
       color: var(--text-tertiary);
@@ -465,6 +487,15 @@ export class ActivityForm extends LitElement {
     const d = this._draft;
     const isEdit = Boolean(d.id);
     const tripAttached = Boolean(d.tripId);
+    // Trip-attached activities are author-only on update/delete (the
+    // /activities Firestore rule). Creating is always allowed
+    // (saveActivity stamps addedBy = me); editing a standalone is open
+    // to any audience member; editing a trip-attached one requires
+    // authorship. When the viewer can't write, the sheet is read-only.
+    const canWrite =
+      !isEdit ||
+      !tripAttached ||
+      (this.activity?.addedBy ?? '') === (this.currentUid ?? '');
     const timed = Boolean(d.time);
     const durations = [
       { v: 30, label: '30m' },
@@ -478,10 +509,18 @@ export class ActivityForm extends LitElement {
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
           <div class="header">
-            <h2>${isEdit ? 'Edit activity' : 'New activity'}</h2>
+            <h2>${!canWrite ? 'Activity' : isEdit ? 'Edit activity' : 'New activity'}</h2>
             <button class="close" @click=${this._onCancel} aria-label="Close">×</button>
           </div>
 
+          ${!canWrite
+            ? html`<div class="ro-note">
+                You can view this activity. Only the person who added it can
+                edit it.
+              </div>`
+            : ''}
+
+          <div class="form-body" ?inert=${!canWrite}>
           <div class="field">
             <label>Type</label>
             <div class="seg">
@@ -629,22 +668,32 @@ export class ActivityForm extends LitElement {
               @input=${(e) => this._set('notes', e.target.value)}
             ></textarea>
           </div>
+          </div>
 
           ${this._error ? html`<div class="error">${this._error}</div>` : ''}
 
           <div class="actions">
-            ${isEdit
-              ? html`<button class="delete-btn" @click=${this._onDelete} ?disabled=${this.busy}>
-                  Delete
-                </button>`
-              : ''}
-            <div class="spacer"></div>
-            <glass-button variant="ghost" @click=${this._onCancel} ?disabled=${this.busy}>
-              Cancel
-            </glass-button>
-            <glass-button variant="primary" @click=${this._onSave} ?disabled=${this.busy}>
-              ${this.busy ? 'Saving…' : isEdit ? 'Save changes' : 'Add activity'}
-            </glass-button>
+            ${canWrite
+              ? html`
+                  ${isEdit
+                    ? html`<button class="delete-btn" @click=${this._onDelete} ?disabled=${this.busy}>
+                        Delete
+                      </button>`
+                    : ''}
+                  <div class="spacer"></div>
+                  <glass-button variant="ghost" @click=${this._onCancel} ?disabled=${this.busy}>
+                    Cancel
+                  </glass-button>
+                  <glass-button variant="primary" @click=${this._onSave} ?disabled=${this.busy}>
+                    ${this.busy ? 'Saving…' : isEdit ? 'Save changes' : 'Add activity'}
+                  </glass-button>
+                `
+              : html`
+                  <div class="spacer"></div>
+                  <glass-button variant="primary" @click=${this._onCancel}>
+                    Close
+                  </glass-button>
+                `}
           </div>
         </glass-panel>
       </div>

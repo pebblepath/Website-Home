@@ -34,10 +34,17 @@ export class JoinFamilyScreen extends LitElement {
     // `joined` event is deliberately delayed until the prompt is
     // answered (app-shell keeps rendering us while joinCode is
     // set — verified; no app-shell change needed).
-    _step: { state: true }, // 'join' | 'parent'
+    _step: { state: true }, // 'join' | 'photo' | 'parent'
     _children: { state: true },
     _claiming: { state: true },
     _claimedName: { state: true },
+    // C.5 (iOS parity, mirrors CairnConnectionView.photoStepContent) —
+    // a post-redeem own-photo step so a joiner sets their avatar during
+    // onboarding (was only reachable later via profile-sheet). Picker
+    // logic is intentionally self-contained here (NOT shared with
+    // onboarding-wizard); consolidate into one helper in the onboarding-
+    // parity session that reworks both flows.
+    _photoPreview: { state: true },
   };
 
   constructor() {
@@ -52,6 +59,13 @@ export class JoinFamilyScreen extends LitElement {
     this._claiming = false;
     this._claimedName = null;
     this._joinedFamilyId = null;
+    // C.5 — own-photo step. _photoBlob is the processed 512² JPEG (set
+    // on pick, uploaded best-effort on Continue); _pendingKids holds the
+    // family's children between redeem and the parent-claim step.
+    this._photoBlob = null;
+    this._photoPreview = '';
+    this._uploadingPhoto = false;
+    this._pendingKids = [];
   }
 
   willUpdate(changed) {
@@ -108,20 +122,15 @@ export class JoinFamilyScreen extends LitElement {
       this._joinedFamilyId = familyId;
       // P3-5c — the deferred web parent-prompt. The redeemer is now
       // a flat (cairnMemberIds) member; if the family has children,
-      // ask whether one is theirs BEFORE finishing (so they can
-      // file a 2A claim — an existing parent confirms it; the
-      // privilege-escalation guardrail is the product). No children
-      // → nothing to claim → finish straight through.
+      // ask whether one is theirs (a 2A claim an existing parent
+      // confirms; the privilege-escalation guardrail is the product).
+      // C.5 — first, offer an own-photo step (iOS parity). _afterPhoto
+      // then routes to the parent prompt (if children) or finishes.
+      // NB: deliberately do NOT dispatch `joined` yet — app-shell keeps
+      // rendering us while joinCode is set; _finishJoin dispatches it.
       const kids = await dataStore.fetchFamilyChildren(familyId);
-      if (Array.isArray(kids) && kids.length) {
-        this._children = kids;
-        this._step = 'parent';
-        // NB: deliberately do NOT dispatch `joined` yet — app-shell
-        // keeps rendering us while joinCode is set; _finishJoin
-        // dispatches it once the prompt is answered.
-      } else {
-        this.dispatchEvent(new CustomEvent('joined', { detail: { familyId } }));
-      }
+      this._pendingKids = Array.isArray(kids) ? kids : [];
+      this._step = 'photo';
     } catch (e) {
       console.error(e);
       this._error = e?.message ?? 'Could not join.';
@@ -150,6 +159,111 @@ export class JoinFamilyScreen extends LitElement {
 
   _notAParent() {
     this._finishJoin();
+  }
+
+  // ─── C.5 — joiner own-photo step (best-effort, never blocks) ──────
+
+  _pickPhoto() {
+    this.renderRoot.querySelector('#joiner-photo-file')?.click();
+  }
+
+  async _onPhotoChosen(e) {
+    const blob = await this._readPickedImage(e);
+    if (!blob) return;
+    this._photoBlob = blob;
+    if (this._photoPreview) URL.revokeObjectURL(this._photoPreview);
+    this._photoPreview = URL.createObjectURL(blob);
+  }
+
+  // Upload runs once the family exists (the user-avatar Storage rule
+  // requires membership — redeemConnectCode already added us). NEVER
+  // throws: a photo failure must not strand the joiner mid-onboarding.
+  async _uploadOwnPhotoIfAny() {
+    if (!this._photoBlob || !this._joinedFamilyId) return;
+    try {
+      await dataStore.uploadUserAvatar(this._joinedFamilyId, this._photoBlob);
+    } catch (err) {
+      console.warn('joiner avatar upload failed (non-fatal):', err);
+      toast("Couldn't save your photo, add it later in Settings.");
+    }
+  }
+
+  async _continueFromPhoto() {
+    if (this._uploadingPhoto) return;
+    this._uploadingPhoto = true;
+    try {
+      await this._uploadOwnPhotoIfAny();
+    } finally {
+      this._uploadingPhoto = false;
+    }
+    this._afterPhoto();
+  }
+
+  _skipPhoto() {
+    this._afterPhoto();
+  }
+
+  // After the photo step: if the family has children, go to the 2A
+  // parent-claim prompt; otherwise finish into the app.
+  _afterPhoto() {
+    if (this._pendingKids.length) {
+      this._children = this._pendingKids;
+      this._step = 'parent';
+    } else {
+      this._finishJoin();
+    }
+  }
+
+  // Validate + process a file <input> change into a 512² JPEG blob.
+  // (Mirrors onboarding-wizard._readPickedImage / _processAvatarImage —
+  // kept self-contained; consolidate in the onboarding-parity session.)
+  async _readPickedImage(e) {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // allow re-picking the same file
+    if (!file) return null;
+    if (!file.type.startsWith('image/')) {
+      toast('Pick an image file (JPG, PNG, etc.).');
+      return null;
+    }
+    if (file.size > 15 * 1024 * 1024) {
+      toast('That photo is very large. Pick one under 15 MB.');
+      return null;
+    }
+    try {
+      return await this._processAvatarImage(file);
+    } catch (err) {
+      console.warn('photo processing failed:', err);
+      toast("Couldn't read that image. Try another.");
+      return null;
+    }
+  }
+
+  // Center-square crop + downscale to a 512² JPEG before upload, so
+  // web + iOS avatars look consistent and the Storage object stays small.
+  async _processAvatarImage(file) {
+    let bmp;
+    try {
+      bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
+    } catch {
+      bmp = await createImageBitmap(file);
+    }
+    const side = Math.min(bmp.width, bmp.height);
+    const sx = (bmp.width - side) / 2;
+    const sy = (bmp.height - side) / 2;
+    const out = 512;
+    const canvas = document.createElement('canvas');
+    canvas.width = out;
+    canvas.height = out;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(bmp, sx, sy, side, side, 0, 0, out, out);
+    bmp.close?.();
+    return await new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (b) => (b ? resolve(b) : reject(new Error('toBlob returned null'))),
+        'image/jpeg',
+        0.85,
+      );
+    });
   }
 
   _finishJoin() {
@@ -329,7 +443,171 @@ export class JoinFamilyScreen extends LitElement {
       line-height: 1.5;
       margin: 8px 0 20px;
     }
+    /* C.5 — joiner own-photo step. Mirrors onboarding-wizard .av-pick:
+       a tappable circular ring (preview or placeholder) with a camera
+       badge, centered above a caption. */
+    .av-pick {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin: 6px 0 22px;
+    }
+    .av-pick button {
+      position: relative;
+      width: 84px;
+      height: 84px;
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      overflow: visible;
+      color: var(--teal-pebble);
+    }
+    .av-pick .ring {
+      width: 84px;
+      height: 84px;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 2px solid var(--teal-pebble);
+      background: rgba(61, 155, 143, 0.12);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      transition: border-color 180ms ease, box-shadow 180ms ease;
+    }
+    .av-pick button:hover .ring {
+      border-color: var(--sage-mid, #2d7567);
+      box-shadow: 0 0 0 4px rgba(61, 155, 143, 0.16);
+    }
+    .av-pick img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .av-pick .ph {
+      width: 34px;
+      height: 34px;
+      opacity: 0.6;
+    }
+    .av-pick .cam {
+      position: absolute;
+      right: -1px;
+      bottom: -1px;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: var(--teal-pebble);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--panel-solid, #fffcf7);
+      box-shadow: 0 1px 4px rgba(20, 12, 6, 0.3);
+    }
+    .av-pick .cam svg {
+      width: 14px;
+      height: 14px;
+    }
+    .av-pick .cap {
+      font-size: 12px;
+      color: var(--teal-pebble);
+      opacity: 0.75;
+    }
+    .av-pick input[type='file'] {
+      display: none;
+    }
   `;
+
+  // C.5 — the post-redeem own-photo step (parity with iOS
+  // CairnConnectionView.photoStepContent). Optional + best-effort:
+  // Continue uploads the picked photo then proceeds, Skip just
+  // proceeds. _afterPhoto routes to the parent prompt or finishes.
+  _renderPhoto() {
+    return html`
+      <div class="wrap">
+        <div class="mark">
+          <img
+            class="brand-icon"
+            src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
+            srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
+            alt="Portal"
+            width="44"
+            height="44"
+            style="border-radius:11px;display:block;box-shadow:0 4px 16px rgba(0,0,0,0.25);"
+          />
+          <div class="mark-name">PebblePath</div>
+        </div>
+        <glass-panel padding="lg" variant="strong" lifted>
+          <h1>Add your photo</h1>
+          <p class="prompt-lede">
+            So the rest of the family knows who's who. You can always
+            change it later in Settings.
+          </p>
+          <div class="av-pick">
+            <button
+              type="button"
+              @click=${this._pickPhoto}
+              aria-label="Add a profile photo"
+            >
+              <span class="ring">
+                ${this._photoPreview
+                  ? html`<img src=${this._photoPreview} alt="" />`
+                  : html`<svg
+                      class="ph"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                      />
+                    </svg>`}
+              </span>
+              <span class="cam">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path
+                    d="M9 3l-1.8 2H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3H9zm3 5a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 .001 6.001A3 3 0 0 0 12 10z"
+                  />
+                </svg>
+              </span>
+            </button>
+            <span class="cap"
+              >${this._photoPreview ? 'Tap to change' : 'Add a photo (optional)'}</span
+            >
+            <input
+              id="joiner-photo-file"
+              type="file"
+              accept="image/*"
+              @change=${this._onPhotoChosen}
+            />
+          </div>
+          <div class="actions">
+            <glass-button
+              variant="primary"
+              size="lg"
+              full
+              ?disabled=${this._uploadingPhoto}
+              @click=${this._continueFromPhoto}
+            >
+              ${this._uploadingPhoto ? 'Saving…' : 'Continue'}
+            </glass-button>
+            <glass-button
+              variant="ghost"
+              size="lg"
+              full
+              ?disabled=${this._uploadingPhoto}
+              @click=${this._skipPhoto}
+            >
+              Skip for now
+            </glass-button>
+          </div>
+        </glass-panel>
+      </div>
+    `;
+  }
 
   // P3-5c — the post-join parent-prompt (parity with iOS
   // CairnConnectionView's 2C-4d parentPromptContent). Tapping a
@@ -375,7 +653,7 @@ export class JoinFamilyScreen extends LitElement {
                 <h1>Are you a parent or caregiver in ${familyName}?</h1>
                 <p class="prompt-lede">
                   If you're a parent or active caregiver of one of
-                  these children, ask to be linked to them — an
+                  these children, ask to be linked to them. An
                   existing parent confirms it. You won't see a child's
                   information until they do.
                 </p>
@@ -414,6 +692,7 @@ export class JoinFamilyScreen extends LitElement {
   }
 
   render() {
+    if (this._step === 'photo') return this._renderPhoto();
     if (this._step === 'parent') return this._renderParentPrompt();
     const inviter = this._inviterFromFamily(this._family);
     // Gate C (2026-06-09): a mapping-resolved family (`_viaMapping`)
@@ -471,7 +750,7 @@ export class JoinFamilyScreen extends LitElement {
                 <div class="what-you-get">
                   <strong>You'll see</strong>
                   shared trips, family birthdays, and anniversaries.
-                  You won't see PebblePath's child-development data — that stays private to the parents.
+                  You won't see PebblePath's child-development data. That stays private to the parents.
                 </div>
                 <div class="actions">
                   <glass-button

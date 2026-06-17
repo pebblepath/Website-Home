@@ -725,7 +725,7 @@ export class ImportCalendarModal extends LitElement {
             <div class="mode-card-title">Add events to an existing Activity</div>
             <div class="mode-card-subtitle">
               ${canModeB
-                ? html`Pick a trip — events become items in its day planner.`
+                ? html`Pick a trip: events become items in its day planner.`
                 : html`You'll need a current or upcoming Activity first.`}
             </div>
           </div>
@@ -808,8 +808,8 @@ export class ImportCalendarModal extends LitElement {
       <p class="lede">
         Looking at your <strong>primary Google Calendar</strong> for the next 90 days.
         ${this._mode === 'addToTrip'
-          ? html`Tick the events you want as items in the trip's day planner — the rest stay where they are.`
-          : html`Tick the events you want as Portal activities — the rest stay where they are.`}
+          ? html`Tick the events you want as items in the trip's day planner. The rest stay where they are.`
+          : html`Tick the events you want as Portal activities. The rest stay where they are.`}
       </p>
 
       ${!this._started
@@ -818,13 +818,13 @@ export class ImportCalendarModal extends LitElement {
                   <p class="intro-lede">
                     We'll pull the next <strong>90 days</strong> from your
                     primary Google Calendar so you can pick which events
-                    become Portal activities. Read-only — Portal never edits
+                    become Portal activities. Read-only. Portal never edits
                     your calendar.
                   </p>
                   <div class="note">
                     <strong>During our beta:</strong> Google will show
                     <code>pebblepath-992b6.firebaseapp.com</code> and may
-                    warn the app "isn't verified." That's expected — it's
+                    warn the app "isn't verified." That's expected, it's
                     PebblePath. Pick your Google account, tap
                     <em>Advanced → continue</em> if prompted, then grant
                     calendar access.

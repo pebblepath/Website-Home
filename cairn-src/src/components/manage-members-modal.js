@@ -100,7 +100,7 @@ export class ManageMembersModal extends LitElement {
       const grantedNames = await dataStore.grantParentAccessForOwnChildren(uid);
       if (!grantedNames || grantedNames.length === 0) {
         toast(
-          "No children to grant access to — add a child first, then try again.",
+          "No children to grant access to. Add a child first, then try again.",
           { duration: 5000 },
         );
       } else if (grantedNames.length === 1) {
@@ -167,7 +167,7 @@ export class ManageMembersModal extends LitElement {
     }
     const fid = dataStore.familyId;
     if (!fid) {
-      toast("Can't add a child — no family yet.");
+      toast("Can't add a child. No family yet.");
       return;
     }
     this._savingChild = true;
@@ -719,7 +719,7 @@ export class ManageMembersModal extends LitElement {
       await navigator.clipboard.writeText(this._inviteLink(code));
       toast('Invite link copied to clipboard.');
     } catch {
-      toast('Could not copy — try long-press the link instead.');
+      toast('Could not copy. Try long-press the link instead.');
     }
   }
 
@@ -730,8 +730,8 @@ export class ManageMembersModal extends LitElement {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Join my family on PebblePath',
-          text: `Join ${this.family?.name ?? 'our family'} on PebblePath — our shared family calendar.`,
+          title: 'Join our family on PebblePath',
+          text: `Join our family on PebblePath. Invite code: ${code}. It's where we keep our family's milestones, plans, and everything we're coordinating, with a little help from Pebble, our family's AI assistant.`,
           url,
         });
       } catch {
@@ -790,6 +790,8 @@ export class ManageMembersModal extends LitElement {
                           ? 'Co-parent'
                           : m.role === 'child'
                           ? 'Child'
+                          : m.role === 'member'
+                          ? 'Member'
                           : 'Family'}
                       </div>
                     </div>
@@ -873,7 +875,7 @@ export class ManageMembersModal extends LitElement {
                         <div class="grant-picker-head">
                           <b>Pick a level for ${m.displayName}</b>
                           <span class="grant-picker-sub"
-                            >Tap one — it takes effect immediately. You can revoke read-only anytime in Settings.</span
+                            >Tap one. It takes effect immediately. You can revoke read-only anytime in Settings.</span
                           >
                         </div>
                         <button
@@ -996,7 +998,7 @@ export class ManageMembersModal extends LitElement {
                             })}
                           </div>`
                         : html`<div style="color:var(--text-tertiary);font-size:12.5px;margin-top:4px;">
-                            No members yet — tap ✎ to add.
+                            No members yet. Tap ✎ to add.
                           </div>`}
                     </div>
                   `,
@@ -1074,15 +1076,15 @@ export class ManageMembersModal extends LitElement {
                 </glass-button>
               `}
 
-          <h3>Connection invite code</h3>
+          <h3>Family invite code</h3>
           ${code && !codeExpired
             ? html`
                 <div class="invite-box">
                   <div class="invite-code">${code}</div>
-                  <div class="invite-meta">${this._expiryText(expiresAt)} · share this code with your connections</div>
+                  <div class="invite-meta">${this._expiryText(expiresAt)} · share this code with anyone in your family</div>
                   <div class="invite-actions">
                     <glass-button variant="primary" @click=${this._share} ?disabled=${this._busy}>
-                      Share invite
+                      Send a family invite
                     </glass-button>
                     <glass-button variant="ghost" @click=${this._copyLink} ?disabled=${this._busy}>
                       Copy link
@@ -1096,8 +1098,8 @@ export class ManageMembersModal extends LitElement {
             : html`
                 <div class="invite-empty">
                   ${codeExpired
-                    ? 'Your invite code has expired. Generate a new one to invite connections.'
-                    : 'No invite code yet. Generate one to invite people to connect with you.'}
+                    ? 'Your invite code has expired. Generate a new one to invite people to your family.'
+                    : 'No invite code yet. Generate one to invite people to your family.'}
                   <br />
                   <glass-button variant="primary" @click=${this._regenerate} ?disabled=${this._busy}>
                     ${this._busy ? 'Generating…' : 'Generate invite code'}

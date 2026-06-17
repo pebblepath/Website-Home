@@ -599,7 +599,7 @@ export class RegisterScreen extends LitElement {
       return 'That email and password don\'t match. Try again or reset your password.';
     }
     if (code === 'auth/user-not-found') return 'No account with that email yet.';
-    if (code === 'auth/email-already-in-use') return 'An account already exists for that email — try signing in instead.';
+    if (code === 'auth/email-already-in-use') return 'An account already exists for that email. Try signing in instead.';
     if (code === 'auth/invalid-email') return 'That email doesn\'t look right.';
     if (code === 'auth/weak-password') return 'Pick a password with at least 6 characters.';
     if (code === 'auth/popup-closed-by-user') return 'Sign-in cancelled. Try again when you\'re ready.';
@@ -651,7 +651,7 @@ export class RegisterScreen extends LitElement {
       <h1>Let's connect</h1>
       <p class="lede">
         ${this._invited
-          ? "You've been invited to a family — register or sign in to join."
+          ? "You've been invited to a family. Register or sign in to join."
           : 'One shared space for the whole family.'}
       </p>
       <div class="step">

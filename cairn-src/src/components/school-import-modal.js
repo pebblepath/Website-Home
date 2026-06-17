@@ -81,11 +81,11 @@ export class SchoolImportModal extends LitElement {
         err?.code === 'functions/permission-denied'
           ? "You're not a member of this family."
           : err?.code === 'storage/unauthorized'
-            ? 'The upload rule needs publishing — ask the team to deploy storage.rules.'
+            ? 'The upload rule needs publishing. Ask the team to deploy storage.rules.'
             : err?.code === 'functions/not-found' ||
                 err?.code === 'functions/internal'
-              ? "The importer isn't available right now — try again in a moment."
-              : (err?.message ?? 'Something went wrong — try again.');
+              ? "The importer isn't available right now. Try again in a moment."
+              : (err?.message ?? 'Something went wrong. Try again.');
     }
   }
 
@@ -135,8 +135,8 @@ export class SchoolImportModal extends LitElement {
       this._phase = 'error';
       this._err =
         err?.code === 'permission-denied'
-          ? "Couldn't save — you may not have permission."
-          : (err?.message ?? "Couldn't save the events — try again.");
+          ? "Couldn't save. You may not have permission."
+          : (err?.message ?? "Couldn't save the events. Try again.");
     }
   }
 

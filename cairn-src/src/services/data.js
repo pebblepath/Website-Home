@@ -2666,7 +2666,7 @@ class FamilyDataStore extends EventTarget {
       // Translate to an honest, friendly message (iOS twin: joinRejected).
       if (e?.code === 'permission-denied') {
         const err = new Error(
-          "Couldn't join this family. The code may have been replaced, or the family's circle is full — ask them for a fresh invite.",
+          "Couldn't join this family. The code may have been replaced, or the family's circle is full. Ask them for a fresh invite.",
         );
         err.code = 'join-rejected';
         throw err;
@@ -3552,10 +3552,27 @@ export function resolvePhoto(authUser, pebbleUser) {
  *     viewer never sees a child's name/photo through this derivation,
  *     regardless of what Firestore happens to return on the wire).
  *
- * `children` is accepted for signature stability but unused — only
- * parent viewers see children, via deriveImmediateMembers.
+ * `children` is threaded through so "co-parent" identity is keyed off
+ * real `Child.parentIds` (mirrors iOS SettingsFamilyView), with a
+ * `memberIds` fallback for a non-parent viewer who can't read the
+ * children docs (see `isCoParentInChildren`).
  */
-export function deriveExtendedMembers(uid, family, _children = []) {
+// C.1 (Portal parity, 2026) — someone is a "co-parent" only when their
+// uid sits in some `Child.parentIds`, mirroring iOS
+// SettingsFamilyView:224. A member who is in memberIds but parents no
+// child (childless household, or data drift) is a plain member, NOT a
+// co-parent. Children may be empty (non-parent viewer); callers fall
+// back to a memberIds check in that case.
+function isCoParentInChildren(uid, children) {
+  return (
+    Array.isArray(children) &&
+    children.some(
+      (c) => Array.isArray(c?.parentIds) && c.parentIds.includes(uid),
+    )
+  );
+}
+
+export function deriveExtendedMembers(uid, family, children = []) {
   if (!family) return [];
   const memberIds = family.memberIds ?? [];
   const cairnIds = family.cairnMemberIds ?? family.memberIds ?? [];
@@ -3578,7 +3595,15 @@ export function deriveExtendedMembers(uid, family, _children = []) {
     if (isParent && memberIds.includes(otherUid)) continue;
     const profile = profiles[otherUid];
     const url = profile?.profilePhotoURL;
-    const otherIsParent = memberIds.includes(otherUid);
+    // Co-parent identity keyed off real Child.parentIds (iOS parity).
+    // A non-parent viewer can't read the children docs, so when none
+    // are available fall back to memberIds — still surfaces co-parents
+    // to a grandparent / friend in their connections list, while a
+    // parent viewer (who DOES have children) labels by parentIds.
+    const otherIsCoParent =
+      Array.isArray(children) && children.length > 0
+        ? isCoParentInChildren(otherUid, children)
+        : memberIds.includes(otherUid);
     out.push({
       uid: otherUid,
       displayName: profile?.displayName ?? 'Family',
@@ -3586,7 +3611,7 @@ export function deriveExtendedMembers(uid, family, _children = []) {
       // Preserve co-parent identity for non-parent viewers so the modal
       // shows "Co-parent" instead of an editable Connection pencil for
       // someone who isn't actually their connection to label.
-      role: otherIsParent ? 'co-parent' : 'extended',
+      role: otherIsCoParent ? 'co-parent' : 'extended',
       circles: ['extended'],
       hue,
     });
@@ -3762,11 +3787,17 @@ export function deriveImmediateMembers(uid, authUser, pebbleUser, family, childr
     if (otherUid === uid) continue;
     if (!memberIds.has(otherUid)) continue;
     const url = profile.profilePhotoURL;
+    // C.1 (iOS parity) — only "Co-parent" if they actually parent one
+    // of this family's children (uid in some Child.parentIds). A member
+    // who parents no child (childless household / data drift) is a plain
+    // member; the family circle surfaces them in the connection ring
+    // instead of the inner household ring (see family-circle.js).
+    const coParents = isCoParentInChildren(otherUid, children);
     out.push({
       uid: otherUid,
-      displayName: profile.displayName ?? 'Co-parent',
+      displayName: profile.displayName ?? (coParents ? 'Co-parent' : 'Family'),
       photoURL: typeof url === 'string' && /^https?:\/\//i.test(url) ? url : null,
-      role: 'co-parent',
+      role: coParents ? 'co-parent' : 'member',
       circles: ['immediate'],
       hue: 8,
     });
@@ -3898,7 +3929,7 @@ export async function fetchUpcomingCalendarEvents(accessToken, daysAhead = 90, m
     // 2026-05-15 — make the common operational failures self-diagnose
     // instead of surfacing an opaque "Google Calendar: 403 {json}".
     if (res.status === 401) {
-      throw new Error('Your Google session expired — connect your calendar again.');
+      throw new Error('Your Google session expired. Connect your calendar again.');
     }
     if (
       res.status === 403 &&

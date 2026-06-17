@@ -417,7 +417,7 @@ export class OnboardingWizard extends LitElement {
     } catch (e) {
       console.error('Create family failed:', e);
       this._error = e?.code === 'permission-denied'
-        ? "Couldn't create the family — Firestore rules may not be deployed yet."
+        ? "Couldn't create the family. Firestore rules may not be deployed yet."
         : `Couldn't create the family: ${e?.message ?? 'try again'}`;
     } finally {
       this._busy = false;
@@ -470,7 +470,7 @@ export class OnboardingWizard extends LitElement {
           );
         } catch (photoErr) {
           console.warn('child avatar upload failed (non-fatal):', photoErr);
-          toast("Family created — couldn't save the photo, add it later.");
+          toast("Family created. Couldn't save the photo, add it later.");
         }
       }
       await this._uploadParentPhotoIfAny(fid);
@@ -480,7 +480,7 @@ export class OnboardingWizard extends LitElement {
     } catch (e) {
       console.error('Create family + child failed:', e);
       this._error = e?.code === 'permission-denied'
-        ? "Couldn't set up your family — Firestore rules may not be deployed yet."
+        ? "Couldn't set up your family. Firestore rules may not be deployed yet."
         : `Couldn't set up your family: ${e?.message ?? 'try again'}`;
     } finally {
       this._busy = false;
@@ -548,7 +548,7 @@ export class OnboardingWizard extends LitElement {
       : 'Set up your family';
     const lede = isRecovery
       ? 'Start a new family, or join one with an invite code.'
-      : 'Your family is one shared space — everyone you invite is a member.';
+      : 'Your family is one shared space. Everyone you invite is a member.';
     return html`
       <div class="wrap">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -625,7 +625,7 @@ export class OnboardingWizard extends LitElement {
           <button class="back" @click=${() => this._go('choose')}>‹ Back</button>
           <h1 style="margin-top:10px;">Start a new family</h1>
           <p class="lede">
-            Give your family a name — you can rename it later and invite
+            Give your family a name. You can rename it later and invite
             others as soon as you're in.
           </p>
           <div class="step">
@@ -772,7 +772,7 @@ export class OnboardingWizard extends LitElement {
       await dataStore.uploadUserAvatar(familyId, this._parentPhotoBlob);
     } catch (err) {
       console.warn('parent avatar upload failed (non-fatal):', err);
-      toast("Family created — couldn't save your photo, add it later.");
+      toast("Family created. Couldn't save your photo, add it later.");
     }
   }
 
@@ -810,14 +810,14 @@ export class OnboardingWizard extends LitElement {
       return null;
     }
     if (file.size > 15 * 1024 * 1024) {
-      toast('That photo is very large — pick one under 15 MB.');
+      toast('That photo is very large. Pick one under 15 MB.');
       return null;
     }
     try {
       return await this._processAvatarImage(file);
     } catch (err) {
       console.warn('photo processing failed:', err);
-      toast("Couldn't read that image — try another.");
+      toast("Couldn't read that image. Try another.");
       return null;
     }
   }

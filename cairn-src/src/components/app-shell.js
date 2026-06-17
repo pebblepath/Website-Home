@@ -220,7 +220,7 @@ export class AppShell extends LitElement {
       console.error('Pending family create failed:', e);
       toast(
         e?.code === 'permission-denied'
-          ? "Couldn't create the family — Firestore rules may need a redeploy."
+          ? "Couldn't create the family. Firestore rules may need a redeploy."
           : `Couldn't create the family: ${e?.message ?? 'try again'}`,
         { duration: 5000 },
       );

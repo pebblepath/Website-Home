@@ -193,7 +193,7 @@ export class TripForm extends LitElement {
       this._previewError =
         e?.code === 'functions/unauthenticated'
           ? 'Preview needs you to be signed in.'
-          : 'Preview unavailable — try the Refresh button.';
+          : 'Preview unavailable. Try the Refresh button.';
     } finally {
       this._previewing = false;
     }
@@ -942,11 +942,11 @@ export class TripForm extends LitElement {
       // Surface only auth/invalid errors — silently skip unavailable so
       // an unreachable booking site doesn't block trip creation.
       if (e?.code === 'functions/unauthenticated') {
-        this._previewError = 'Preview unavailable — sign in.';
+        this._previewError = 'Preview unavailable. Sign in.';
       } else if (e?.code === 'functions/invalid-argument') {
         this._previewError = 'That URL doesn’t look right.';
       } else {
-        this._previewError = 'Preview unavailable — paste it again or skip.';
+        this._previewError = 'Preview unavailable. Paste it again or skip.';
       }
     } finally {
       this._previewing = false;
@@ -1280,7 +1280,7 @@ export class TripForm extends LitElement {
           ${d.visibility === 'extended' && Object.keys(this.subGroups ?? {}).length > 0
             ? html`
                 <div class="field">
-                  <label>Limit to sub-groups <span style="text-transform:none;font-weight:400;color:var(--text-tertiary);letter-spacing:0.01em;">(optional — leave empty to show to all extended)</span></label>
+                  <label>Limit to sub-groups <span style="text-transform:none;font-weight:400;color:var(--text-tertiary);letter-spacing:0.01em;">(optional, leave empty to show to all extended)</span></label>
                   <div class="attendees">
                     ${Object.entries(this.subGroups).map(
                       ([gid, group]) => html`

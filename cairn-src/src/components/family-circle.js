@@ -165,7 +165,15 @@ export class FamilyCircle extends LitElement {
   }
 
   _connections() {
-    return this.extended ?? [];
+    // Non-co-parent household members (role 'member', set by
+    // deriveImmediateMembers when a memberIds person parents no child)
+    // belong in the connection ring, not the inner family ring (which
+    // is co-parents + children). Mirrors iOS: the ring = everyone who
+    // isn't a co-parent of your children. Without this they'd vanish
+    // (they live in `immediate` but _family()'s co-parent||child filter
+    // drops them).
+    const members = (this.immediate ?? []).filter((m) => m.role === 'member');
+    return [...(this.extended ?? []), ...members];
   }
 
   /** Even radial placement; phaseDeg sets the starting angle. */

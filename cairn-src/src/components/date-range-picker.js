@@ -109,7 +109,7 @@ export class DateRangePicker extends LitElement {
         ? d.toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
         : '';
     };
-    if (this.start && !this.end) return `From ${fmt(this.start)} — pick an end date`;
+    if (this.start && !this.end) return `From ${fmt(this.start)}, pick an end date`;
     if (this.start === this.end) return fmt(this.start);
     return `${fmt(this.start)} – ${fmt(this.end)}`;
   }

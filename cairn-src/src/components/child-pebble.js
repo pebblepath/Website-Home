@@ -138,7 +138,7 @@ export class ChildPebble extends LitElement {
       this._listening = false;
       if (e.error === 'not-allowed' || e.error === 'service-not-allowed') {
         this._error =
-          'Microphone access is blocked — allow it in your browser to ask by voice.';
+          'Microphone access is blocked. Allow it in your browser to ask by voice.';
       }
     };
     rec.onend = () => {

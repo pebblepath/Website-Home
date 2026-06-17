@@ -59,7 +59,7 @@ function formatTripForShare(t, memberMap) {
   }
   if (t.lodgingUrl || t.lodgingHost || t.lodgingTitle) {
     lines.push(
-      `Lodging: ${[lodgingSourceLabel(t), t.lodgingTitle].filter(Boolean).join(' — ')}`,
+      `Lodging: ${[lodgingSourceLabel(t), t.lodgingTitle].filter(Boolean).join(', ')}`,
     );
   }
   if (t.flightNumber || t.flightAirline || t.flightDepartAirport) {
@@ -376,7 +376,7 @@ export class TripCard extends LitElement {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `Portal — ${t.title ?? 'activity'}`,
+          title: `Portal: ${t.title ?? 'activity'}`,
           text,
         });
       } catch {
@@ -387,7 +387,7 @@ export class TripCard extends LitElement {
         await navigator.clipboard.writeText(text);
         toast('Itinerary copied to clipboard.');
       } catch {
-        toast('Could not copy — try again from a browser tab.');
+        toast('Could not copy. Try again from a browser tab.');
       }
     }
   }
@@ -418,7 +418,7 @@ export class TripCard extends LitElement {
     return html`
       <article
         tabindex="0"
-        aria-label="${t.title} — open day plan"
+        aria-label="${t.title}, open day plan"
         @click=${() => this.dispatchEvent(new CustomEvent('open-planner', { detail: t, bubbles: true, composed: true }))}
         @keydown=${(e) => {
           if (e.key === 'Enter' || e.key === ' ') {

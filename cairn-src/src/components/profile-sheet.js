@@ -118,13 +118,13 @@ export class ProfileSheet extends LitElement {
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      toast('Photo is too big — keep it under 5 MB.');
+      toast('Photo is too big. Keep it under 5 MB.');
       return;
     }
     const uid = auth?.currentUser?.uid;
     const familyId = dataStore.familyId;
     if (!uid || !familyId || !storage) {
-      toast("Can't upload yet — you need to be in a family first.");
+      toast("Can't upload yet. You need to be in a family first.");
       return;
     }
     this._uploadingPhoto = true;
