@@ -702,8 +702,10 @@
 </header>
 
 <main>
-  <div class="stageHead" id="stageHead"></div>
-  <div id="cap" class="caption"></div>
+  <!-- The stageHead breadcrumb ("Registration · Ellie · iPhone · Step N of M")
+       and caption explainer were removed (redundant with the toggles above +
+       the stepper below). setHead/setCap are now null-safe no-ops so every
+       render fn's calls keep working; re-add the two divs here to restore. -->
   <div id="stage"></div>
 </main>
 
@@ -1347,8 +1349,11 @@ function appPhone(P){
 }
 
 /* ───────────────────────── views ───────────────────────── */
-function setHead(txt, pill){const h=document.getElementById('stageHead'); h.innerHTML=''; h.appendChild(document.createTextNode(txt)); if(pill)h.appendChild(el('span','pill',pill));}
-function setCap(html){document.getElementById('cap').innerHTML=html||'';}
+// Null-safe no-ops: the stageHead + caption elements were removed from <main>;
+// every render fn still calls these, so they simply do nothing when the
+// targets are absent. Re-add the divs in <main> to bring the block back.
+function setHead(txt, pill){const h=document.getElementById('stageHead'); if(!h) return; h.innerHTML=''; h.appendChild(document.createTextNode(txt)); if(pill)h.appendChild(el('span','pill',pill));}
+function setCap(html){const c=document.getElementById('cap'); if(!c) return; c.innerHTML=html||'';}
 
 // Large single onboarding iPhone (the hero) — no step badge/label
 // (the stepper above carries the labels), no tab bar.
