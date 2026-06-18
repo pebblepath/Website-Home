@@ -11739,7 +11739,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             </div>`}
       </glass-panel>`;return n`
       ${this._renderTodayHeader(t)}
-      ${this._renderFamilyBrief(e)}
+      ${e.readonly?this._renderNonParentBrief():this._renderFamilyBrief(e)}
 
       <section class="today-grid">
         <div class="today-col">
@@ -16701,4 +16701,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}k(Ut,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},activities:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childDailyCard:{state:!0},familyDailyCard:{state:!0},nonParentDailyCard:{state:!0},pebbleAnchors:{state:!0},pebbleRhythms:{state:!0},pebblePatterns:{state:!0},pebbleLiveContext:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},planningMessages:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",Ut);
-//# sourceMappingURL=index-CtbWkOd5.js.map
+//# sourceMappingURL=index-DG3rbvlv.js.map
