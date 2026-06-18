@@ -5847,15 +5847,22 @@ export class HomeScreen extends LitElement {
       </glass-panel>`;
 
     if (!cd.hasPP || !cd.child) {
-      // Non-parent member / no child to surface. 2026-06-17 — now leads
-      // with the child-dev-free Family Brief (weather + shared activities
-      // + celebrations), mirroring the iOS non-parent Home. Then the
-      // activities glance + celebrations. The brief's coordination footer
-      // is omitted (parent-to-parent only).
+      // Non-parent member / no child to surface. 2026-06-17 — leads with
+      // the child-dev-free Family Brief (weather + shared activities +
+      // celebrations), mirroring the iOS non-parent Home. The brief's
+      // coordination footer is omitted (parent-to-parent only).
+      // 2026-06-18 — non-parents + solo members now also get the next-trip
+      // preview card (trips are family-shared + already visible to them via
+      // `_circleTrips()`); shows the "plan one" empty state when the circle
+      // has no upcoming trips. Grouped with Upcoming Activities in a
+      // today-col, mirroring the parent layout's left column.
       return html`
         ${this._renderTodayHeader(scope)}
         ${this._renderNonParentBrief()}
-        <section>${comingPanel}</section>
+        <section class="today-col">
+          ${this._renderNextTripCard()}
+          ${comingPanel}
+        </section>
         ${this._renderCelebrationsSection()}
       `;
     }
