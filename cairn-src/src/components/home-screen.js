@@ -5914,9 +5914,15 @@ export class HomeScreen extends LitElement {
             </div>`}
       </glass-panel>`;
 
+    // 2026-06-17 — a read-only viewer (cd.readonly) gets the child-dev-free
+    // non-parent brief (weather + shared activities + celebrations), NOT the
+    // parent brief: a viewer is entitled to the shared schedule but not the
+    // parent brief's routines / coordination / health. The child card +
+    // insights grid below stay (those ARE the read-only milestones/insights
+    // shared with the viewer). A parent keeps the full Family Brief.
     return html`
       ${this._renderTodayHeader(scope)}
-      ${this._renderFamilyBrief(cd)}
+      ${cd.readonly ? this._renderNonParentBrief() : this._renderFamilyBrief(cd)}
 
       <section class="today-grid">
         <div class="today-col">
