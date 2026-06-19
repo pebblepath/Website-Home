@@ -2439,9 +2439,11 @@ class FamilyDataStore extends EventTarget {
   }
 
   /**
-   * Upload a trip preview image. File is whatever the <input type=file>
-   * yielded (no client-side resize for simplicity — Storage caps at
-   * 5MB per the rule + browser image rendering is forgiving). Returns
+   * Upload a trip preview image. The picked file is DOWNSCALED first
+   * (long edge -> 1600px, JPEG ~0.82) so a raw phone/camera photo
+   * (routinely 4-10MB) lands well under the 5MB Storage-rule cap — an
+   * over-cap upload otherwise fails with a misleading
+   * `storage/unauthorized`. Also makes the cover load faster. Returns
    * the Storage download URL, which the caller stores on the trip's
    * `previewImage` field. UUID-named so successive uploads (image
    * replacement) don't collide with stale CDN cache entries.
@@ -2453,11 +2455,56 @@ class FamilyDataStore extends EventTarget {
     if (!/^image\//.test(file.type || '')) {
       throw new Error('Preview image must be an image file.');
     }
+    const blob = await this._downscaleImageForUpload(file);
     const previewId = (crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`);
     const path = `families/${this._currentFamilyId}/trip-previews/${previewId}`;
     const ref = storageRef(storage, path);
-    await uploadBytes(ref, file, { contentType: file.type });
+    await uploadBytes(ref, blob, { contentType: blob.type || 'image/jpeg' });
     return await getDownloadURL(ref);
+  }
+
+  /**
+   * Resize a picked image to <=`maxDim`px on the long edge and re-encode
+   * as JPEG (~`quality`) via an offscreen canvas, returning a Blob.
+   * Preserves aspect ratio, never upscales. Keeps trip-preview uploads
+   * comfortably under the 5MB Storage-rule cap (raw phone photos are
+   * 4-10MB -> a few hundred KB). Falls back to the original File if the
+   * browser can't decode/canvas it (no createImageBitmap, a non-raster
+   * image, etc.) — a rare path that may still hit the cap, but it never
+   * makes things worse than the pre-downscale behaviour.
+   */
+  async _downscaleImageForUpload(file, maxDim = 1600, quality = 0.82) {
+    try {
+      if (typeof createImageBitmap !== 'function' || typeof document === 'undefined') {
+        return file;
+      }
+      let bitmap;
+      try {
+        bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+      } catch {
+        // Older browsers may reject the options arg — honor EXIF when we
+        // can, fall back to the plain decode otherwise.
+        bitmap = await createImageBitmap(file);
+      }
+      const longEdge = Math.max(bitmap.width, bitmap.height);
+      const scale = longEdge > maxDim ? maxDim / longEdge : 1;
+      const w = Math.max(1, Math.round(bitmap.width * scale));
+      const h = Math.max(1, Math.round(bitmap.height * scale));
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return file;
+      ctx.drawImage(bitmap, 0, 0, w, h);
+      bitmap.close?.();
+      const blob = await new Promise((resolve) =>
+        canvas.toBlob(resolve, 'image/jpeg', quality),
+      );
+      return blob && blob.size > 0 ? blob : file;
+    } catch (e) {
+      console.warn('[uploadTripPreview] downscale failed, uploading original:', e);
+      return file;
+    }
   }
 
   /** Call the extractSchoolCalendar CF → candidate events for review.
