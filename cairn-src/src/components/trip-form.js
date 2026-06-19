@@ -882,13 +882,13 @@ export class TripForm extends LitElement {
     try {
       const url = await dataStore.uploadTripPreview(file);
       this._uploadedPreviewImageUrl = url;
-      // If the URL field is empty, mirror the uploaded URL into it
-      // so the field stays a single source of truth on save. (Save
-      // path reads trip.previewImage directly, so this also keeps
-      // the form's serialisation consistent.)
-      if (!(this._draft.previewImage || '').trim()) {
-        this._set('previewImage', url);
-      }
+      // An explicit upload REPLACES the cover: write the uploaded URL
+      // into the previewImage field (the single source of truth) so the
+      // thumbnail updates immediately AND Save serialises it. Previously
+      // this only mirrored when the field was empty, so uploading a
+      // replacement over an auto-generated Pexels/lodging cover did
+      // nothing (the field kept the old URL → thumbnail + save unchanged).
+      this._set('previewImage', url);
     } catch (err) {
       console.warn('Preview image upload failed:', err);
       this._previewImageError = err?.message || 'Upload failed.';
@@ -1027,7 +1027,15 @@ export class TripForm extends LitElement {
     this._error = '';
     this.dispatchEvent(
       new CustomEvent('save', {
-        detail: { ...d, end, title: d.title.trim(), location: d.location.trim() },
+        detail: {
+          ...d,
+          end,
+          title: d.title.trim(),
+          location: d.location.trim(),
+          // Use the resolved value (field, else uploaded URL) so the
+          // cover is always saved even if the two ever diverge.
+          previewImage: this._resolvedPreviewImage(),
+        },
       }),
     );
   }
