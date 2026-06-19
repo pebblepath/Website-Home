@@ -13,15 +13,16 @@
     />
     <link rel="canonical" href="https://pebblepath.ai/portal/" />
 
-    <!-- Favicon — the polished Cairn pebble-stack mark
-         (assets/cairn-icon.png) is the Portal's tab icon and keeps its
-         OWN identity (NOT the PebblePath app icon). The old
-         favicon.svg <link> was REMOVED 2026-05-16: browsers prefer an
-         SVG favicon over PNG, and favicon.svg is a cruder hand-drawn
-         stones rendition — it was overriding the correct polished PNG
-         in the tab. orphaned public/favicon.svg left in place, inert. -->
-    <link rel="icon" type="image/png" sizes="256x256" href="assets/cairn-icon.png" />
-    <link rel="apple-touch-icon" href="assets/cairn-icon-2x.png" />
+    <!-- Favicon — 2026-06-18: the Portal now shares the PebblePath app
+         icon for full parity with the main site (pebblepath.ai), instead
+         of the old Cairn pebble-stack mark. Same favicon set the main
+         site uses (assets/favicon.ico + 32/16 PNGs + apple-touch-icon).
+         The old cairn-icon.png / cairn-icon-2x.png are left in place,
+         inert. (Supersedes the 2026-05-16 "keep own identity" call.) -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="Portal" />
 
     <!-- Open Graph (Facebook, LinkedIn, Slack, Discord, iMessage). -->

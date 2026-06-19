@@ -113,6 +113,7 @@ class FamilyDataStore extends EventTarget {
       selectedChildId: null,
       childMilestones: [],
       childInsights: [],
+      childReports: [],
       childDailyCard: null,
       // Close-the-loop Slice 3 (2026-05-28) — family-scope daily brief
       // (the multi-child Family Brief). Generated server-side nightly
@@ -1018,6 +1019,7 @@ class FamilyDataStore extends EventTarget {
       this.state.childMilestones = [];
       this.state.childInsights = [];
       this.state.childDailyCard = null;
+      this.state.childReports = [];
       this.state.childPebbleMessages = [];
       this.state.childPebbleSessions = [];
       return;
@@ -1080,8 +1082,30 @@ class FamilyDataStore extends EventTarget {
         },
         (err) => console.warn('[Portal] dailyCards error:', err.code, err.message),
       );
+      // Slice P2 (Smart Upload v2) — development reports (report cards,
+      // daycare notes). PARENTS-ONLY (rule isChildParent), so inside the
+      // !_ppReadOnly guard (a read-only viewer would just get
+      // PERMISSION_DENIED churn). BARE query + client sort newest-first —
+      // `reportDate` is optional, so a server orderBy would drop docs
+      // missing it. childId is in the path.
+      this._unsubChildReports = onSnapshot(
+        collection(db, ...base, 'developmentReports'),
+        (snap) => {
+          const ms = (r) =>
+            r.reportDate && /^\d{4}-\d{2}-\d{2}$/.test(r.reportDate)
+              ? new Date(`${r.reportDate}T00:00:00`).getTime()
+              : (r.createdAt?.toMillis?.() ?? 0);
+          this.state.childReports = snap.docs
+            .map((d) => ({ id: d.id, ...d.data() }))
+            .sort((a, b) => ms(b) - ms(a));
+          this._emit();
+        },
+        (err) =>
+          console.warn('[Portal] developmentReports error:', err.code, err.message),
+      );
     } else {
       this.state.childDailyCard = null;
+      this.state.childReports = [];
     }
 
     // Pebble chat + sessions — parents AND parent-approved
@@ -1633,11 +1657,13 @@ class FamilyDataStore extends EventTarget {
     this._unsubChildMs?.();
     this._unsubChildIns?.();
     this._unsubChildDaily?.();
+    this._unsubChildReports?.();
     this._unsubChildPebble?.();
     this._unsubChildSessions?.();
     this._unsubChildMs =
       this._unsubChildIns =
       this._unsubChildDaily =
+      this._unsubChildReports =
       this._unsubChildPebble =
       this._unsubChildSessions =
         null;
@@ -2450,6 +2476,36 @@ class FamilyDataStore extends EventTarget {
     return Array.isArray(events) ? events : [];
   }
 
+  /** Smart Upload v2 — classify mode. Calls the SAME extractSchoolCalendar
+   *  CF with `classify:true` + a lightweight trips list, so ONE function
+   *  returns a `documentKind` ('calendar'|'booking'|'report'|'unknown')
+   *  plus the matching payload. The legacy `extractSchoolCalendarEvents`
+   *  above stays byte-identical for any calendar-only caller; the Smart
+   *  Upload modal uses THIS. The trips list lets the CF pre-rank a booking
+   *  → existing-trip match. Returns `res.data` (the discriminated object). */
+  async classifyUpload(storagePath, fileType) {
+    if (!functions || !this._currentFamilyId) throw new Error('No family yet.');
+    const trips = (this.state.trips ?? [])
+      .slice(0, 40)
+      .map((t) => ({
+        id: t.id,
+        title: t.title ?? '',
+        ...(t.location ? { location: t.location } : {}),
+        start: t.start ?? '',
+        end: t.end ?? '',
+      }))
+      .filter((t) => t.id && /^\d{4}-\d{2}-\d{2}$/.test(t.start));
+    const fn = httpsCallable(functions, 'extractSchoolCalendar');
+    const res = await fn({
+      familyId: this._currentFamilyId,
+      storagePath,
+      fileType,
+      classify: true,
+      trips,
+    });
+    return res?.data ?? { documentKind: 'unknown' };
+  }
+
   /** Write the parent-confirmed subset as familyEvents tagged
    *  source:'school-import'. Defaults (2026-05-31, Thomas): type
    *  'custom' (shows as "Other" in the editor), visibility 'family'
@@ -2535,6 +2591,279 @@ class FamilyDataStore extends EventTarget {
     return n;
   }
 
+  // ── Smart Upload v2 — development reports (Portal parity P2) ────────
+  // Per-child reports (report cards, daycare notes) at
+  // families/{ppFamilyId}/children/{childId}/developmentReports. PARENTS
+  // ONLY (rule isChildParent). These are the FIRST per-child writes on
+  // Portal — addDoc/updateDoc/deleteDoc mirror the packing-list pattern.
+  // Concrete `Date` timestamps (NOT serverTimestamp) to match iOS + dodge
+  // the pending-null read. childId is in the PATH (no computeVisibleTo).
+
+  /** Create (no id) or update (id set) a development report. Returns the
+   *  saved id. */
+  async upsertDevelopmentReport(childId, report) {
+    if (!db || !this._ppFamilyId || !childId) throw new Error('No child yet.');
+    const uid = auth?.currentUser?.uid;
+    if (!uid) throw new Error('Not signed in.');
+    const col = collection(
+      db, 'families', this._ppFamilyId, 'children', childId, 'developmentReports',
+    );
+    const now = new Date();
+    const { id, createdAt, ...rest } = report;
+    if (id) {
+      await updateDoc(doc(col, id), { ...rest, updatedAt: now });
+      return id;
+    }
+    const ref = await addDoc(col, {
+      ...rest,
+      addedBy: rest.addedBy ?? uid,
+      createdAt: now,
+      updatedAt: now,
+    });
+    return ref.id;
+  }
+
+  async deleteDevelopmentReport(childId, reportId) {
+    if (!db || !this._ppFamilyId || !childId || !reportId) return;
+    await deleteDoc(
+      doc(db, 'families', this._ppFamilyId, 'children', childId, 'developmentReports', reportId),
+    );
+  }
+
+  /** Keep the original report file in Storage — reuses the member-gated
+   *  planAttachments/{itemRef} rule with a `report__{id}` segment (mirrors
+   *  activity__{id}; no new rule). */
+  async uploadReportAttachment(reportId, file) {
+    if (!storage || !this._ppFamilyId) throw new Error('Storage unavailable.');
+    const path = `families/${this._ppFamilyId}/planAttachments/report__${reportId}`;
+    const r = storageRef(storage, path);
+    await uploadBytes(r, file, {
+      contentType: file.type || 'application/octet-stream',
+    });
+    return getDownloadURL(r);
+  }
+
+  /** Write a confirmed report + (optionally) keep the original file.
+   *  Two-step: create the doc → upload to report__{id} → patch the URL. A
+   *  failed upload doesn't roll back the report (summary is the point).
+   *  Returns the new report id. Mirrors iOS AppState.importReport. */
+  async importReport(childId, fields, file) {
+    const draft = {
+      title: String(fields.title ?? '').trim().slice(0, 200) || 'Report',
+      ...(fields.source ? { source: String(fields.source).slice(0, 160) } : {}),
+      ...(fields.periodLabel
+        ? { periodLabel: String(fields.periodLabel).trim().slice(0, 120) }
+        : {}),
+      ...(fields.reportDate ? { reportDate: fields.reportDate } : {}),
+      summary: String(fields.summary ?? '').trim().slice(0, 4000),
+      ...(Array.isArray(fields.highlights) && fields.highlights.length
+        ? { highlights: fields.highlights }
+        : {}),
+    };
+    const reportId = await this.upsertDevelopmentReport(childId, draft);
+    if (file && reportId) {
+      try {
+        const url = await this.uploadReportAttachment(reportId, file);
+        await this.upsertDevelopmentReport(childId, {
+          id: reportId,
+          ...draft,
+          attachmentURL: url,
+          attachmentName: (file.type || '').includes('pdf')
+            ? `${draft.title}.pdf`
+            : `${draft.title}.jpg`,
+        });
+      } catch (err) {
+        console.warn('[Portal] report attachment upload failed:', err?.code ?? err?.message);
+      }
+    }
+    return reportId;
+  }
+
+  // ── Smart Upload v2 — booking import (Portal parity P3) ────────────
+  // Mirrors iOS AppState.importBooking. Writes the timeline items as
+  // activities (trip-attached or standalone) + fills the target trip's
+  // EMPTY lodging/flight fields. Works with the CF's raw `booking` shape
+  // (nested lodging/flight). `target` = {type:'existing'|'newTrip'|
+  // 'calendarOnly', tripId?}.
+
+  /** Trips whose date range overlaps the booking — the picker's candidate
+   *  list. The CF's `suggestedTripId` drives the DEFAULT; this is the
+   *  authoritative (audience-filtered, locally-loaded) pick-list. */
+  matchingTrips(start, end) {
+    const bStart = start;
+    const bEnd = end || start;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(bStart))) return [];
+    return (this.state.trips ?? [])
+      .filter((t) => t.start && t.end && t.start <= bEnd && bStart <= t.end)
+      .sort((a, b) => String(a.start).localeCompare(String(b.start)));
+  }
+
+  async importBooking(booking, target, timeline) {
+    if (!db || !this._currentFamilyId) throw new Error('No family yet.');
+    const uid = auth?.currentUser?.uid;
+    if (!uid) throw new Error('Not signed in.');
+
+    // 1. Resolve the target trip id.
+    let tripId = null;
+    if (target?.type === 'existing') tripId = target.tripId ?? null;
+    else if (target?.type === 'newTrip') tripId = await this._createTripFromBooking(booking);
+    // calendarOnly → tripId stays null.
+
+    // 2. Fill the existing trip's empty fields (a new trip was filled at create).
+    if (target?.type === 'existing' && tripId) {
+      await this._fillTripFieldsFromBooking(tripId, booking);
+    }
+
+    // 3. Write the selected timeline items as activities. NO calTag (a
+    // confirmation number isn't a calendar tag); dedup on
+    // source+day+title+trip so a re-upload is a no-op.
+    const existing = this.state.activities ?? [];
+    const ACT_TYPES = ['visit', 'meal', 'travel', 'note'];
+    let count = 0;
+    for (const draft of timeline) {
+      if (!draft._sel) continue;
+      const title = String(draft.title ?? '').trim().slice(0, 120);
+      if (!title || !/^\d{4}-\d{2}-\d{2}$/.test(String(draft.day ?? ''))) continue;
+      const dup = existing.some(
+        (a) =>
+          a.source === 'booking-import' &&
+          a.day === draft.day &&
+          a.title === title &&
+          (a.tripId ?? null) === (tripId ?? null),
+      );
+      if (dup) continue;
+      const type = ACT_TYPES.includes(draft.type) ? draft.type : 'note';
+      const notes = String(draft.notes ?? '').trim().slice(0, 1000);
+      await this.saveActivity({
+        title,
+        type,
+        day: draft.day,
+        ...(draft.time ? { time: draft.time } : {}),
+        ...(Number.isFinite(draft.durationMins) ? { durationMins: draft.durationMins } : {}),
+        ...(notes ? { notes } : {}),
+        ...(tripId ? { tripId } : {}),
+        visibility: 'family',
+        source: 'booking-import',
+      });
+      count += 1;
+    }
+    return count;
+  }
+
+  async _createTripFromBooking(booking) {
+    const uid = auth?.currentUser?.uid;
+    const span = this._tripDateSpan(booking);
+    const location = booking.newTripProposal?.location ?? booking.location ?? null;
+    const title =
+      booking.newTripProposal?.title ?? (location ? `Trip to ${location}` : 'New trip');
+    let trip = {
+      title,
+      ...(location ? { location } : {}),
+      start: span.start,
+      end: span.end,
+      visibility: 'family',
+      createdBy: uid,
+    };
+    // A fresh trip is empty → fill (not merge) every booking field.
+    this._applyBookingFieldsToTrip(trip, booking, false);
+    // Best-effort destination cover into previewImage (the editable slot).
+    trip = await this.seedDestinationCover(trip);
+    const newId = await this.saveTrip(trip); // returns id; stamps + writes visibleTo
+    // Optimistic local insert so the immediately-following saveActivity
+    // inherits the trip's visibleTo (the listener round-trip would race;
+    // the self-compute fallback is equivalent for 'family' anyway).
+    const visibleTo = computeVisibleTo('family', this.state.family, uid);
+    if (!(this.state.trips ?? []).some((t) => t.id === newId)) {
+      this.state.trips = [...(this.state.trips ?? []), { ...trip, id: newId, visibleTo }];
+    }
+    return newId;
+  }
+
+  async _fillTripFieldsFromBooking(tripId, booking) {
+    const trip = (this.state.trips ?? []).find((t) => t.id === tripId);
+    if (!trip) return;
+    const patch = { ...trip };
+    let changed = this._applyBookingFieldsToTrip(patch, booking, true);
+    const hasPhoto = !!(patch.previewImage || patch.coverImage);
+    if (!hasPhoto) {
+      const seeded = await this.seedDestinationCover(patch);
+      if (seeded.previewImage && seeded.previewImage !== patch.previewImage) {
+        Object.assign(patch, seeded);
+        changed = true;
+      }
+    }
+    if (!changed) return; // nothing to fill
+    try {
+      await this.saveTrip(patch);
+    } catch (err) {
+      console.warn('[importBooking] fill trip fields failed:', err?.code ?? err?.message);
+    }
+  }
+
+  /** Map a booking's lodging + flight fields onto a trip object (mutates
+   *  it). `mergeOnly` never clobbers a non-empty field. Returns true if
+   *  anything changed. Lodging URL falls back to a Maps SEARCH link (not an
+   *  invented booking URL). */
+  _applyBookingFieldsToTrip(trip, booking, mergeOnly) {
+    let changed = false;
+    const set = (key, value) => {
+      if (!value) return;
+      if (mergeOnly && trip[key]) return;
+      if (trip[key] === value) return;
+      trip[key] = value;
+      changed = true;
+    };
+    // Destination city — fills the trip's Location AND feeds the Pexels
+    // cover-photo query (no location → no destination image). Merge-only
+    // never overwrites a location the user already set.
+    set('location', booking.newTripProposal?.location ?? booking.location);
+    // Lodging link: use the doc's URL ONLY if it's a real http(s) link;
+    // otherwise build a Google Maps SEARCH link from the property name (+
+    // city). NEVER write a raw address / confirmation code into the URL
+    // field (a hotel confirmation often has no booking URL at all).
+    const lodgingLink = (() => {
+      const u = booking.lodging?.url;
+      if (u && /^https?:\/\//i.test(u)) return u;
+      const name = booking.lodging?.title;
+      if (!name) return null;
+      const q = [name, booking.location].filter(Boolean).join(' ');
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+    })();
+    set('lodgingTitle', booking.lodging?.title);
+    set('lodgingUrl', lodgingLink);
+    const f = booking.flight ?? {};
+    set('flightAirline', f.airline);
+    set('flightNumber', f.number);
+    set('flightDepartAirport', f.departAirport);
+    set('flightArriveAirport', f.arriveAirport);
+    set('flightDepartTime', f.departTime);
+    set('flightArriveTime', f.arriveTime);
+    const rf = booking.returnFlight ?? {};
+    set('returnFlightAirline', rf.airline);
+    set('returnFlightNumber', rf.number);
+    set('returnFlightDepartAirport', rf.departAirport);
+    set('returnFlightArriveAirport', rf.arriveAirport);
+    set('returnFlightDepartTime', rf.departTime);
+    set('returnFlightArriveTime', rf.arriveTime);
+    return changed;
+  }
+
+  /** Trip start/end for a new trip: the CF's proposal, else the timeline
+   *  span, else today. */
+  _tripDateSpan(booking) {
+    if (booking.newTripProposal?.start && booking.newTripProposal?.end) {
+      return { start: booking.newTripProposal.start, end: booking.newTripProposal.end };
+    }
+    const days = (booking.timeline ?? [])
+      .map((t) => t.day)
+      .filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(String(d ?? '')))
+      .sort();
+    const today = new Date().toISOString().slice(0, 10);
+    const start = days[0] ?? today;
+    const end = days[days.length - 1] ?? start;
+    return { start, end };
+  }
+
   /** Rename a custom calendar tag across every visible event that
    *  carries it. Operates on the already-loaded `state.events` (the
    *  listener filtered them to visibleTo) + updateDoc by id, so there's
@@ -2605,6 +2934,50 @@ class FamilyDataStore extends EventTarget {
     const fn = httpsCallable(functions, 'previewUrl');
     const result = await fn({ url: url.trim() });
     return result.data;
+  }
+
+  /**
+   * Slice P1 (Smart Upload v2 Portal parity) — one landscape destination
+   * photo for a trip cover, via the Pexels `fetchDestinationImage` Cloud
+   * Function (cairn codebase, already deployed). Returns null on empty
+   * query / not-configured / any miss so the caller silently falls back to
+   * the gradient. Mirrors `previewUrl` + iOS `fetchDestinationImage`.
+   */
+  async fetchDestinationImage(query) {
+    const q = (query ?? '').trim();
+    if (!q || !functions) return null;
+    try {
+      const fn = httpsCallable(functions, 'fetchDestinationImage');
+      const result = await fn({ query: q });
+      return result.data ?? null; // { image, photographer, photographerUrl, sourceUrl }
+    } catch (err) {
+      console.warn('[Portal] fetchDestinationImage failed:', err?.code ?? err?.message);
+      return null;
+    }
+  }
+
+  /**
+   * Seed a destination cover photo into `previewImage` (the editable slot,
+   * so the parent can swap it) when a trip has NO photo yet — neither a
+   * user `previewImage` nor a lodging-derived `coverImage`. Best-effort +
+   * non-blocking: a miss returns the trip unchanged (gradient fallback).
+   * Mirrors iOS `seedDestinationCover` (AppState+Booking.swift). Reused by
+   * the manual trip-create path AND booking new-trip creation (P3).
+   */
+  async seedDestinationCover(trip) {
+    const hasPreview = !!(trip.previewImage && String(trip.previewImage).trim());
+    const hasCover = !!(trip.coverImage && String(trip.coverImage).trim());
+    if (hasPreview || hasCover) return trip;
+    const query = (trip.location ?? '').trim();
+    if (!query) return trip;
+    const img = await this.fetchDestinationImage(query);
+    if (img && img.image) {
+      const next = { ...trip, previewImage: img.image };
+      if (img.photographer) next.coverImagePhotographer = img.photographer;
+      if (img.sourceUrl) next.coverImageSourceUrl = img.sourceUrl;
+      return next;
+    }
+    return trip;
   }
 
   // `lookupFlight` (Phase 4) removed 2026-05-20 — aviationstack's
@@ -3676,6 +4049,7 @@ class FamilyDataStore extends EventTarget {
       selectedChildId: null,
       childMilestones: [],
       childInsights: [],
+      childReports: [],
       childDailyCard: null,
       familyDailyCard: null,
       nonParentDailyCard: null,

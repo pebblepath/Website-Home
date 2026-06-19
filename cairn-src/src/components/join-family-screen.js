@@ -555,8 +555,8 @@ export class JoinFamilyScreen extends LitElement {
         <div class="mark">
           <img
             class="brand-icon"
-            src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
-            srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
+            src=${`${import.meta.env.BASE_URL}assets/pebblepath-icon.png`}
+            srcset=${`${import.meta.env.BASE_URL}assets/pebblepath-icon.png 1x, ${import.meta.env.BASE_URL}assets/pebblepath-icon.png 2x`}
             alt="Portal"
             width="44"
             height="44"
@@ -644,8 +644,8 @@ export class JoinFamilyScreen extends LitElement {
         <div class="mark">
           <img
             class="brand-icon"
-            src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
-            srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
+            src=${`${import.meta.env.BASE_URL}assets/pebblepath-icon.png`}
+            srcset=${`${import.meta.env.BASE_URL}assets/pebblepath-icon.png 1x, ${import.meta.env.BASE_URL}assets/pebblepath-icon.png 2x`}
             alt="Portal"
             width="44"
             height="44"
@@ -694,8 +694,8 @@ export class JoinFamilyScreen extends LitElement {
         <div class="mark">
           <img
             class="brand-icon"
-            src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
-            srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
+            src=${`${import.meta.env.BASE_URL}assets/pebblepath-icon.png`}
+            srcset=${`${import.meta.env.BASE_URL}assets/pebblepath-icon.png 1x, ${import.meta.env.BASE_URL}assets/pebblepath-icon.png 2x`}
             alt="Portal"
             width="44"
             height="44"
@@ -784,8 +784,8 @@ export class JoinFamilyScreen extends LitElement {
         <div class="mark">
           <img
             class="brand-icon"
-            src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
-            srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
+            src=${`${import.meta.env.BASE_URL}assets/pebblepath-icon.png`}
+            srcset=${`${import.meta.env.BASE_URL}assets/pebblepath-icon.png 1x, ${import.meta.env.BASE_URL}assets/pebblepath-icon.png 2x`}
             alt="Portal"
             width="44"
             height="44"

@@ -81,6 +81,7 @@ export class HomeScreen extends LitElement {
     selectedChildId: { type: String },
     childMilestones: { type: Array },
     childInsights: { type: Array },
+    childReports: { type: Array },
     childDailyCard: { type: Object },
     familyDailyCard: { type: Object },
     // Non-parent Family Brief (2026-06-17) — child-dev-free brief on a
@@ -220,6 +221,7 @@ export class HomeScreen extends LitElement {
     this.selectedChildId = null;
     this.childMilestones = [];
     this.childInsights = [];
+    this.childReports = [];
     this.childDailyCard = null;
     this.familyDailyCard = null;
     this.nonParentDailyCard = null;
@@ -1334,6 +1336,24 @@ export class HomeScreen extends LitElement {
       background-color: currentColor;
       -webkit-mask: var(--mountain-src) center / contain no-repeat;
       mask: var(--mountain-src) center / contain no-repeat;
+      vertical-align: middle;
+    }
+    /* 2026-06-18 — Children tab "ABC blocks" icon. Same CSS-mask +
+       currentColor technique as .mountain-icon above so the icon TINTS
+       to the surrounding tab color (white on the dark-teal topbar /
+       light-teal when active on mobile) instead of rendering the PNG's
+       baked color. The PNG is the SAME asset iOS uses
+       (children-blocks.imageset, template-rendered) so both platforms
+       stay pixel-identical, exactly like the shared mountain.png.
+       Matched to .mountain-icon's 22px so the two custom tab icons
+       agree in size. prettier-ignore */
+    .children-icon {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      background-color: currentColor;
+      -webkit-mask: var(--children-src) center / contain no-repeat;
+      mask: var(--children-src) center / contain no-repeat;
       vertical-align: middle;
     }
     .cal-head {
@@ -4188,9 +4208,15 @@ export class HomeScreen extends LitElement {
   }
 
   async _onSaveTrip(e) {
-    const trip = e.detail;
+    let trip = e.detail;
     this._formBusy = true;
     try {
+      // Slice P1 — a brand-new trip with a destination but no photo gets a
+      // best-effort Pexels cover into previewImage (the editable slot).
+      // No-op when the user set a photo or a lodging URL yielded a cover.
+      if (!trip.id) {
+        trip = await dataStore.seedDestinationCover(trip);
+      }
       await dataStore.saveTrip(trip);
       this._formOpen = false;
       this._formTrip = null;
@@ -4406,7 +4432,16 @@ export class HomeScreen extends LitElement {
       {
         id: 'children',
         label: 'Children',
-        icon: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M5 21c0-4 3-6 7-6s7 2 7 6" /></svg>`,
+        // 2026-06-18 — "ABC blocks" icon (was a person glyph). Shared
+        // PNG asset with iOS (children-blocks), rendered via CSS mask +
+        // currentColor so it tints to the nav color — pixel-identical
+        // to the iOS template image. Same approach as Activities'
+        // mountain below.
+        icon: html`<span
+          class="children-icon"
+          style="--children-src:url(${import.meta.env.BASE_URL}children-blocks.png)"
+          aria-hidden="true"
+        ></span>`,
       },
       ...(this._pebbleAvailable ? [pebbleTab] : []),
       {
@@ -6436,10 +6471,13 @@ export class HomeScreen extends LitElement {
             .children=${cd.children}
             .milestones=${cd.milestones}
             .insights=${cd.insights}
+            .reports=${cd.reports}
             .dailyCard=${cd.dailyCard}
             ?readonly=${cd.readonly}
             @select-child=${this._onSelectChild}
             @ask-pebble=${this._onAskPebble}
+            @update-report=${this._onUpdateReport}
+            @delete-report=${this._onDeleteReport}
           ></child-overview>
         </section>
       `;
@@ -6585,8 +6623,8 @@ export class HomeScreen extends LitElement {
         <div class="brand">
           <img
             class="brand-icon"
-            src=${`${import.meta.env.BASE_URL}assets/cairn-icon.png`}
-            srcset=${`${import.meta.env.BASE_URL}assets/cairn-icon.png 1x, ${import.meta.env.BASE_URL}assets/cairn-icon-2x.png 2x`}
+            src=${`${import.meta.env.BASE_URL}assets/pebblepath-icon.png`}
+            srcset=${`${import.meta.env.BASE_URL}assets/pebblepath-icon.png 1x, ${import.meta.env.BASE_URL}assets/pebblepath-icon.png 2x`}
             alt="Portal"
             width="38"
             height="38"
@@ -6726,6 +6764,8 @@ export class HomeScreen extends LitElement {
       <school-import-modal
         ?open=${this._schoolImportOpen}
         .knownTags=${this._eventTags()}
+        .children=${this.ppChildren ?? []}
+        .canSaveReports=${Boolean(this.ppIsMember) && (this.ppChildren?.length ?? 0) > 0}
         @cancel=${() => (this._schoolImportOpen = false)}
         @added=${() => (this._schoolImportOpen = false)}
       ></school-import-modal>
@@ -7719,6 +7759,16 @@ export class HomeScreen extends LitElement {
         child: mockChild,
         milestones: mockMilestones,
         insights: mockInsights,
+        reports: [
+          {
+            id: 'mock-report-1',
+            title: 'Spring Term Progress Report',
+            source: 'Sunnydale Daycare',
+            periodLabel: 'Spring 2026',
+            summary:
+              'Felix has had a wonderful term. He is using longer sentences, takes turns well during group play, and shows strong fine-motor control with crayons and scissors. Staff note he sometimes needs a little extra reassurance at drop-off.',
+          },
+        ],
         dailyCard: mockDailyCard,
         familyDailyCard: mockFamilyDailyCard,
         pebbleMessages: mockChildPebbleMessages,
@@ -7741,6 +7791,7 @@ export class HomeScreen extends LitElement {
       child,
       milestones: this.childMilestones ?? [],
       insights: this.childInsights ?? [],
+      reports: this.childReports ?? [],
       dailyCard: this.childDailyCard ?? null,
       familyDailyCard: this.familyDailyCard ?? null,
       pebbleMessages: this.childPebbleMessages ?? [],
@@ -7756,6 +7807,37 @@ export class HomeScreen extends LitElement {
   _onAskPebble(e) {
     this._pebblePrefill = e.detail ?? '';
     this._activeTab = 'pebble';
+  }
+
+  // Slice P2 — development-report edit/delete from the child-overview card.
+  // child-overview emits events (it stays a display component, like
+  // select-child / ask-pebble); home-screen owns the dataStore write with
+  // the currently-displayed child's id.
+  async _onUpdateReport(e) {
+    if (this.preview) return;
+    const childId = this._childData()?.child?.id;
+    const r = e.detail;
+    if (!childId || !r?.id) return;
+    try {
+      await dataStore.upsertDevelopmentReport(childId, r);
+    } catch (err) {
+      console.error('update report failed:', err);
+      toast(`Couldn't save: ${err.code ?? err.message}`, { duration: 5000 });
+    }
+  }
+
+  async _onDeleteReport(e) {
+    if (this.preview) return;
+    const childId = this._childData()?.child?.id;
+    const id = e.detail?.id;
+    if (!childId || !id) return;
+    try {
+      await dataStore.deleteDevelopmentReport(childId, id);
+      toast('Report removed.');
+    } catch (err) {
+      console.error('delete report failed:', err);
+      toast(`Couldn't delete: ${err.code ?? err.message}`, { duration: 5000 });
+    }
   }
 
   // ── P7 Item 3 (2026-05-20) — per-child 2A claim handler ──

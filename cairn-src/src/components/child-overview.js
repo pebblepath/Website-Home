@@ -83,6 +83,16 @@ export class ChildOverview extends LitElement {
     milestones: { type: Array },
     insights: { type: Array },
     dailyCard: { type: Object },
+    // Slice P2 (Smart Upload v2) — per-child development reports (report
+    // cards, daycare notes). Parent-only card on the Children tab. Edits +
+    // deletes go UP via update-report / delete-report events (this stays a
+    // display component, like select-child / ask-pebble).
+    reports: { type: Array },
+    _editingReportId: { state: true },
+    _erTitle: { state: true },
+    _erPeriod: { state: true },
+    _erSummary: { state: true },
+    _confirmDeleteReportId: { state: true },
     // Batch F — true when shown to a read-only "child viewer"
     // (parent-approved extended-ring member): hide the Pediatrician
     // CTA (it dispatches a Pebble request — member-only) and reframe
@@ -103,6 +113,12 @@ export class ChildOverview extends LitElement {
     this.milestones = [];
     this.insights = [];
     this.dailyCard = null;
+    this.reports = [];
+    this._editingReportId = null;
+    this._erTitle = '';
+    this._erPeriod = '';
+    this._erSummary = '';
+    this._confirmDeleteReportId = null;
     this.readonly = false;
     this._focusedDot = null;
     // 2026-05-24 — dismiss the timeline-dot popover on any click that
@@ -745,6 +761,144 @@ export class ChildOverview extends LitElement {
       font-size: 13.5px;
       line-height: 1.55;
     }
+    /* Slice P2 — development reports (parent-only) */
+    .reports-empty p {
+      margin: 0;
+      max-width: 420px;
+      color: var(--text-secondary);
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+    .report-card {
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-tile);
+      padding: 14px 16px;
+    }
+    .report-card .r-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .report-card h4 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .r-tools { display: flex; gap: 4px; flex-shrink: 0; }
+    .r-icon {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--text-tertiary);
+      font-size: 14px;
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      line-height: 1;
+    }
+    .r-icon:hover { color: var(--text-primary); background: var(--glass-fill); }
+    .r-icon.r-del:hover { color: var(--rose-soft); }
+    .r-sub {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      margin-top: 2px;
+    }
+    .r-summary {
+      margin: 8px 0 0;
+      font-size: 13.5px;
+      line-height: 1.55;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+    }
+    .r-file {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink-teal);
+      text-decoration: none;
+    }
+    .r-file:hover { text-decoration: underline; }
+    .r-confirm {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+    }
+    .r-field {
+      width: 100%;
+      margin-bottom: 8px;
+      background: rgba(255, 248, 235, 0.06);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      border-radius: var(--radius-input);
+      padding: 8px 11px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      outline: none;
+    }
+    .r-field:focus { border-color: rgba(61, 155, 143, 0.5); }
+    .r-summary-edit {
+      width: 100%;
+      min-height: 120px;
+      resize: vertical;
+      background: rgba(255, 248, 235, 0.06);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      border-radius: var(--radius-input);
+      padding: 9px 11px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      line-height: 1.5;
+      outline: none;
+    }
+    .r-summary-edit:focus { border-color: rgba(61, 155, 143, 0.5); }
+    .r-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .r-btn-primary {
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      font-size: 12.5px;
+      background-image: var(--gradient-cta);
+      color: #fff;
+      border: 1px solid rgba(255, 248, 235, 0.22);
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
+    .r-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .r-btn-ghost {
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      font-size: 12.5px;
+      background: var(--glass-fill);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
+    .r-btn-del {
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      font-size: 12px;
+      background: rgba(198, 123, 92, 0.16);
+      border: 1px solid rgba(198, 123, 92, 0.4);
+      color: var(--ink-terracotta);
+      cursor: pointer;
+      font-family: var(--font-body);
+    }
   `;
 
   _domainStats(key) {
@@ -1076,7 +1230,158 @@ export class ChildOverview extends LitElement {
                 </div>
               </div>`}
       </section>
+
+      ${this.readonly ? '' : this._renderReports(child)}
     `;
+  }
+
+  // ── Slice P2 — development reports card (parent-only) ──────────────
+  _renderReports(child) {
+    const reports = this.reports ?? [];
+    return html`
+      <section>
+        <div class="section-head"><h2>Reports &amp; assessments</h2></div>
+        ${reports.length === 0
+          ? html`<div class="panel reports-empty">
+              <p>
+                Upload a report card or daycare note in Pebble's Smart
+                Upload and it'll live here, and inform what Pebble knows
+                about ${child?.name ?? 'your child'}.
+              </p>
+            </div>`
+          : html`<div class="insight-stack">
+              ${reports.map((r) => this._renderReportCard(r))}
+            </div>`}
+      </section>
+    `;
+  }
+
+  _renderReportCard(r) {
+    if (this._editingReportId === r.id) {
+      return html`<div class="report-card">
+        <input
+          class="r-field"
+          type="text"
+          maxlength="200"
+          .value=${this._erTitle}
+          placeholder="Title"
+          @input=${(e) => (this._erTitle = e.target.value)}
+        />
+        <input
+          class="r-field"
+          type="text"
+          maxlength="120"
+          .value=${this._erPeriod}
+          placeholder="Period (optional)"
+          @input=${(e) => (this._erPeriod = e.target.value)}
+        />
+        <textarea
+          class="r-summary-edit"
+          .value=${this._erSummary}
+          @input=${(e) => (this._erSummary = e.target.value)}
+        ></textarea>
+        <div class="r-actions">
+          <button
+            class="r-btn-ghost"
+            @click=${() => (this._editingReportId = null)}
+          >
+            Cancel
+          </button>
+          <button
+            class="r-btn-primary"
+            ?disabled=${!this._erTitle.trim() || !this._erSummary.trim()}
+            @click=${() => this._saveReportEdit(r)}
+          >
+            Save
+          </button>
+        </div>
+      </div>`;
+    }
+    const sub = [r.source, r.periodLabel || r.reportDate]
+      .filter(Boolean)
+      .join(' · ');
+    return html`<div class="report-card">
+      <div class="r-head">
+        <h4>${r.title}</h4>
+        <div class="r-tools">
+          <button
+            class="r-icon"
+            title="Edit"
+            aria-label="Edit report"
+            @click=${() => this._startReportEdit(r)}
+          >
+            ✎
+          </button>
+          <button
+            class="r-icon r-del"
+            title="Delete"
+            aria-label="Delete report"
+            @click=${() => (this._confirmDeleteReportId = r.id)}
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+      ${sub ? html`<div class="r-sub">${sub}</div>` : ''}
+      <p class="r-summary">${r.summary}</p>
+      ${r.attachmentURL
+        ? html`<a
+            class="r-file"
+            href=${r.attachmentURL}
+            target="_blank"
+            rel="noopener"
+            >${r.attachmentName || 'Open original file'}</a
+          >`
+        : ''}
+      ${this._confirmDeleteReportId === r.id
+        ? html`<div class="r-confirm">
+            <span>Delete this report?</span>
+            <button
+              class="r-btn-ghost"
+              @click=${() => (this._confirmDeleteReportId = null)}
+            >
+              Keep
+            </button>
+            <button class="r-btn-del" @click=${() => this._deleteReport(r)}>
+              Delete
+            </button>
+          </div>`
+        : ''}
+    </div>`;
+  }
+
+  _startReportEdit(r) {
+    this._editingReportId = r.id;
+    this._erTitle = r.title ?? '';
+    this._erPeriod = r.periodLabel ?? '';
+    this._erSummary = r.summary ?? '';
+    this._confirmDeleteReportId = null;
+  }
+
+  _saveReportEdit(r) {
+    const title = this._erTitle.trim();
+    const summary = this._erSummary.trim();
+    if (!title || !summary) return;
+    const period = this._erPeriod.trim();
+    this.dispatchEvent(
+      new CustomEvent('update-report', {
+        detail: { ...r, title, periodLabel: period || null, summary },
+        bubbles: true,
+        composed: true,
+      }),
+    );
+    this._editingReportId = null;
+  }
+
+  _deleteReport(r) {
+    this._confirmDeleteReportId = null;
+    this.dispatchEvent(
+      new CustomEvent('delete-report', {
+        detail: { id: r.id },
+        bubbles: true,
+        composed: true,
+      }),
+    );
   }
 }
 

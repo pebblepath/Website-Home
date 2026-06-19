@@ -30,6 +30,7 @@ export class AppShell extends LitElement {
     selectedChildId: { state: true },
     childMilestones: { state: true },
     childInsights: { state: true },
+    childReports: { state: true },
     childDailyCard: { state: true },
     familyDailyCard: { state: true },
     nonParentDailyCard: { state: true },
@@ -97,6 +98,7 @@ export class AppShell extends LitElement {
     this.selectedChildId = null;
     this.childMilestones = [];
     this.childInsights = [];
+    this.childReports = [];
     this.childDailyCard = null;
     this.familyDailyCard = null;
     this.nonParentDailyCard = null;
@@ -125,6 +127,7 @@ export class AppShell extends LitElement {
       this.selectedChildId = dataStore.state.selectedChildId;
       this.childMilestones = dataStore.state.childMilestones;
       this.childInsights = dataStore.state.childInsights;
+      this.childReports = dataStore.state.childReports;
       this.childDailyCard = dataStore.state.childDailyCard;
       this.familyDailyCard = dataStore.state.familyDailyCard;
       this.nonParentDailyCard = dataStore.state.nonParentDailyCard;
@@ -358,6 +361,7 @@ export class AppShell extends LitElement {
         .selectedChildId=${this.selectedChildId}
         .childMilestones=${this.childMilestones}
         .childInsights=${this.childInsights}
+        .childReports=${this.childReports}
         .childDailyCard=${this.childDailyCard}
         .familyDailyCard=${this.familyDailyCard}
         .nonParentDailyCard=${this.nonParentDailyCard}
