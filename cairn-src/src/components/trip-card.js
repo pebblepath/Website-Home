@@ -181,6 +181,7 @@ export class TripCard extends LitElement {
     .cover {
       aspect-ratio: 16 / 10;
       position: relative;
+      overflow: hidden;
       background-size: cover;
       background-position: center;
     }
@@ -190,10 +191,30 @@ export class TripCard extends LitElement {
     .cover.has-image {
       aspect-ratio: 3 / 2;
     }
+    /* 2026-06-20 (Thomas) — the photo now lives on a ::before layer (fed by
+       the --cover-img custom property) so the hover zoom is a transform on
+       JUST the image, leaving the date/visibility chips put. The old hover
+       used background-size 105 percent, which is WIDTH-relative with auto
+       height: on covers wider than the 3:2 frame it shrank the image (zoom
+       OUT) and exposed the card background as borders; on narrower covers it
+       zoomed in. Keeping background-size cover constant + scaling via
+       transform makes the photo always fill the frame and zoom consistently. */
+    .cover.has-image::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background-image: var(--cover-img);
+      background-size: cover;
+      background-position: center;
+      transform: scale(1);
+      transition: transform 360ms ease;
+    }
     .cover::after {
       content: '';
       position: absolute;
       inset: 0;
+      z-index: 1;
       background: linear-gradient(180deg, rgba(0, 0, 0, 0) 50%, rgba(20, 12, 6, 0.55) 100%);
     }
     .cover.has-image::after {
@@ -204,10 +225,9 @@ export class TripCard extends LitElement {
         rgba(20, 12, 6, 0.72) 100%
       );
     }
-    article:hover .cover.has-image {
+    article:hover .cover.has-image::before {
       /* Subtle zoom on hover gives the photo a polaroid-like presence */
-      background-size: 105%;
-      transition: background-size 360ms ease;
+      transform: scale(1.06);
     }
     .visibility {
       position: absolute;
@@ -408,7 +428,7 @@ export class TripCard extends LitElement {
     // a literal " (extremely rare in real-world image URLs). Same
     // pattern applied to trip-form's thumbnail preview.
     const cover = displayImage
-      ? `background-image: url("${displayImage}");`
+      ? `--cover-img: url("${displayImage}");`
       : `background: ${gradientForTrip(t)};`;
     const coverClass = displayImage ? 'cover has-image' : 'cover';
     const memberMap = new Map(this.members.map((m) => [m.uid, m]));

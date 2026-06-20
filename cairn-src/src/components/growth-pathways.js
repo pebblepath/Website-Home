@@ -172,11 +172,37 @@ export class GrowthPathways extends LitElement {
       return { ...ln, y: LANE_Y[li], dots };
     });
 
-    // Selected pathway → ribbon nodes (age-sorted, key-node reduced at lane
-    // transitions). Single-lane arc → a clean line; cross-domain → a weave.
-    const arcMs = ms
+    // Selected pathway → ribbon nodes. The Portal keeps the FULL birth->now
+    // history (unlike iOS, which windows to +/-2yr) per Thomas (2026-06-20),
+    // so it declutters via thinning instead of a window. Three passes tame a
+    // dense catalog (e.g. a Reading arc that alternates Language<->Cognitive
+    // on nearly every milestone) into a clean woven line:
+    //   1. per-lane age-gap thin    — collapse same-lane clusters (iOS minDotGap),
+    //   2. key-node reduction       — keep endpoints + lane-transition nodes,
+    //   3. global min-gap spacing   — no two nodes closer than NODE_GAP px, so
+    //                                 rapid cross-lane weaves stop spaghettiing.
+    // The px gaps are axis-relative (ageX maps months -> px over a fixed
+    // width), so denser/older timelines thin proportionally more.
+    const LANE_GAP = 22; // px between consecutive same-lane nodes
+    const NODE_GAP = 48; // px between consecutive ribbon nodes (any lane)
+
+    const arcAll = ms
       .filter((m) => m.arc === this._selected && (m.ageRangeStartMonths ?? 0) <= axisMax)
       .sort((a, b) => (a.ageRangeStartMonths ?? 0) - (b.ageRangeStartMonths ?? 0));
+
+    // 1. per-lane thin
+    const laneLastX = {};
+    const arcMs = arcAll.filter((m) => {
+      const lane = normCat(m.category);
+      const x = ageX(m.ageRangeStartMonths ?? 0);
+      if (laneLastX[lane] === undefined || x - laneLastX[lane] >= LANE_GAP) {
+        laneLastX[lane] = x;
+        return true;
+      }
+      return false;
+    });
+
+    // 2. key-node reduction (endpoints + lane transitions)
     let kept = arcMs;
     if (arcMs.length > 2) {
       kept = arcMs.filter((m, i) => {
@@ -186,7 +212,28 @@ export class GrowthPathways extends LitElement {
         return end || cb || ca;
       });
     }
-    const ribbon = kept.map((m) => ({ x: ageX(m.ageRangeStartMonths ?? 0), y: LANE_Y[laneIdx(m.category)] }));
+
+    // 3. global min-gap spacing — drop nodes that crowd the previous kept one,
+    //    but always honor the first AND last node so the ribbon still spans
+    //    the arc's full reached range.
+    let spaced = kept;
+    if (kept.length > 2) {
+      spaced = [];
+      let lastX = -Infinity;
+      kept.forEach((m, i) => {
+        const x = ageX(m.ageRangeStartMonths ?? 0);
+        const isLast = i === kept.length - 1;
+        if (spaced.length === 0 || x - lastX >= NODE_GAP) {
+          spaced.push(m);
+          lastX = x;
+        } else if (isLast) {
+          spaced[spaced.length - 1] = m; // keep the final endpoint
+          lastX = x;
+        }
+      });
+    }
+
+    const ribbon = spaced.map((m) => ({ x: ageX(m.ageRangeStartMonths ?? 0), y: LANE_Y[laneIdx(m.category)] }));
     const catColor = (c) => LANES.find((l) => l.key === normCat(c))?.color ?? '#6b9ac4';
 
     const fmt = (mm) => (mm <= 0 ? 'birth'
@@ -201,8 +248,8 @@ export class GrowthPathways extends LitElement {
     return {
       lanes, ribbon, axis,
       todayX: ageX(Math.min(ageM, axisMax)),
-      gradFrom: kept.length ? catColor(kept[0].category) : '#6b9ac4',
-      gradTo: kept.length ? catColor(kept[kept.length - 1].category) : '#6b9ac4',
+      gradFrom: spaced.length ? catColor(spaced[0].category) : '#6b9ac4',
+      gradTo: spaced.length ? catColor(spaced[spaced.length - 1].category) : '#6b9ac4',
     };
   }
 

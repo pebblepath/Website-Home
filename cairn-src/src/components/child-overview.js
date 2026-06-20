@@ -926,6 +926,22 @@ export class ChildOverview extends LitElement {
     return Math.max(0, m);
   }
 
+  /** iOS-parity "active window" progress: a milestone is ACTIVE when its age
+   *  band is open now (end >= age) AND it starts within the next 12 months
+   *  (start <= age + 12). Mirrors iOS ChildrenView.currentlyTrackingProgress
+   *  so web + app show the SAME child stat. Returns { done, total }. */
+  _activeProgress(milestones, dob) {
+    const ms = Array.isArray(milestones) ? milestones : [];
+    const ageM = this._ageMonths(dob);
+    const active = ms.filter((m) => {
+      const start = m.ageRangeStartMonths ?? 0;
+      const end = m.ageRangeEndMonths ?? start;
+      return end >= ageM && start <= ageM + 12;
+    });
+    const done = active.filter((m) => m.status === 'achieved').length;
+    return { done, total: active.length };
+  }
+
   /** "Timeline" model — per-domain dots on a 0→axisMax age
    *  axis. Solid dot = achieved milestone (by start age); one dashed
    *  "future" dot = the next not-yet-achieved one in that domain.
@@ -1017,9 +1033,12 @@ export class ChildOverview extends LitElement {
     }
     const ms = this.milestones ?? [];
     const achievedAll = ms.filter((m) => m.status === 'achieved');
-    const overallPct = ms.length
-      ? Math.round((achievedAll.length / ms.length) * 100)
-      : 0;
+    // 2026-06-20 (Thomas) — child stat harmonized with iOS: the ACTIVE
+    // window ("X of Y active milestones"), not lifetime achieved/total over
+    // the full 0-18 catalog (which read as a misleading number for older
+    // kids and disagreed with the iOS figure). achievedAll still feeds the
+    // "Recently achieved" list below. See _activeProgress.
+    const activeProg = this._activeProgress(ms, child.dateOfBirth);
     const recently = achievedAll
       .slice()
       .sort(
@@ -1080,14 +1099,10 @@ export class ChildOverview extends LitElement {
           <div class="meta">
             <h2>${child.name}</h2>
             <div class="sub">${ageLabel(child.dateOfBirth)}</div>
-            <span class="agepill"
-              >${achievedAll.length} of ${ms.length} milestones
-              achieved</span
-            >
           </div>
           <div class="progress">
-            <div class="big">${overallPct}%</div>
-            <div class="lbl">of tracked milestones</div>
+            <div class="big">${activeProg.done}/${activeProg.total}</div>
+            <div class="lbl">active milestones</div>
           </div>
         </div>
       </section>

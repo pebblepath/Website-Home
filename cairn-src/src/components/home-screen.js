@@ -264,7 +264,10 @@ export class HomeScreen extends LitElement {
     // what's coming up. Activities holds the full trips/calendars/
     // celebrations surface (the pre-tabs dashboard); My Cairn holds the
     // ring stack; Children + Pebble are the app-companion surfaces.
-    this._activeTab = 'today';
+    // 2026-06-20 (Thomas) — remember the last-viewed tab across reloads, so
+    // a refresh keeps you on the tab you were viewing (was: always reset to
+    // Today). Persisted in updated() when _activeTab changes.
+    this._activeTab = this._restoreActiveTab();
     this._refreshingFamilyBrief = false;
     this._refreshingNonParentBrief = false;
     // Self-heal guard: generate today's brief once if it's missing
@@ -301,10 +304,10 @@ export class HomeScreen extends LitElement {
     // user-controlled via prev/next or yearly month-tap.
     const t = new Date();
     this._displayMonth = new Date(t.getFullYear(), t.getMonth(), 1);
-    // 2026-05-24 — design 28: default flipped from 'month' to 'week'.
-    // The redesigned Week view IS the headline shape — "what is
-    // happening this week" is the most useful default for a family.
-    this._calendarView = 'week';
+    // 2026-06-20 (Thomas) — default calendar view is Month. (Was 'week' per
+    // design 28; Thomas prefers landing on the monthly grid.) Week + Year
+    // remain available from the view switch.
+    this._calendarView = 'month';
     // 2026-05-24 — design 28. Sunday-anchored week start.
     const _t = new Date(t);
     _t.setHours(0, 0, 0, 0);
@@ -3820,6 +3823,15 @@ export class HomeScreen extends LitElement {
     }
     if (changed.has('_activeTab')) {
       this._positionTabSlider({ animate: true });
+      // Persist the active tab so a page reload restores it (see
+      // _restoreActiveTab in the constructor). Skip in preview/mock mode.
+      if (!this.preview) {
+        try {
+          localStorage.setItem('cairn:activeTab', this._activeTab);
+        } catch {
+          /* private mode */
+        }
+      }
       // Pop the "What Pebble knows" drill-down when leaving Settings so
       // returning to the tab lands on the root (matches iOS pop-on-leave).
       if (this._activeTab !== 'cairn' && this._wpkOpen) {
@@ -4592,6 +4604,22 @@ export class HomeScreen extends LitElement {
     `;
   }
 
+  /** Restore the last-viewed tab from localStorage (set in updated()).
+   *  Validated against the known tab ids; anything else (or private-mode
+   *  read failure) falls back to Today. 'pebble' may resolve to an empty
+   *  main if the user has no Pebble access, but that's an unreachable state
+   *  in practice — you can't select a tab that isn't in _tabDefs(). */
+  _restoreActiveTab() {
+    const valid = ['today', 'children', 'pebble', 'activities', 'cairn'];
+    try {
+      const saved = localStorage.getItem('cairn:activeTab');
+      if (saved && valid.includes(saved)) return saved;
+    } catch {
+      /* private mode */
+    }
+    return 'today';
+  }
+
   _renderActiveTab() {
     switch (this._activeTab) {
       case 'children':
@@ -4693,13 +4721,10 @@ export class HomeScreen extends LitElement {
           <div class="section-head">
             <h2>Coming up</h2>
             <div style="display:flex;gap:10px;align-items:center;">
-              <button
-                class="action-pill"
-                @click=${() => (this._weekendOpen = true)}
-                title="Plan our weekend with Pebble"
-              >
-                <pebble-icon size="15"></pebble-icon> Plan our weekend
-              </button>
+              <!-- 2026-06-20 (Thomas) - "Plan our weekend" button hidden on
+                   the Activities tab. The weekend planner stays reachable via
+                   Pebble; re-add an .action-pill whose click sets
+                   this._weekendOpen = true to restore the entry point. -->
               <button
                 class="action-pill hide-mobile"
                 @click=${() => (this._schoolImportOpen = true)}
@@ -5775,7 +5800,7 @@ export class HomeScreen extends LitElement {
 
   _renderCalendarsSection() {
     const today = new Date();
-    const v = this._calendarView ?? 'week';
+    const v = this._calendarView ?? 'month';
     return html`
       <section class="cal-section">
         <glass-panel padding="none" variant="strong" stretch>
@@ -5862,10 +5887,11 @@ export class HomeScreen extends LitElement {
 
   _renderTodayTab() {
     const cd = this._childData();
-    const scope = html`<div class="scope shared">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 2.5-5 6-5s6 2 6 5M15 17c2 0 5 1 5 3" stroke-linecap="round"/></svg>
-      Your household
-    </div>`;
+    // 2026-06-20 (Thomas) — "Your household" scope chip hidden on the Today
+    // tab. Kept as an empty slot so the two _renderTodayHeader(scope) call
+    // sites below stay valid; restore the <div class="scope shared"> markup
+    // here to bring it back.
+    const scope = '';
     const coming = this._comingUp();
     const comingPanel = html`
       <glass-panel padding="md" variant="strong" stretch class="fb-bottom-card">
@@ -5903,8 +5929,12 @@ export class HomeScreen extends LitElement {
     }
 
     const ms = cd.milestones;
-    const achieved = ms.filter((x) => x.status === 'achieved');
-    const pct = ms.length ? Math.round((achieved.length / ms.length) * 100) : 0;
+    // 2026-06-20 (Thomas) — harmonize the child stat with iOS. iOS shows the
+    // ACTIVE window ("X of Y active milestones": age band open now → starting
+    // within the next 12 mo), not lifetime achieved/total. The old lifetime %
+    // over the full 0-18 catalog read as a misleading number for older kids
+    // and disagreed with the iOS figure. See _activeMilestoneProgress.
+    const activeProg = this._activeMilestoneProgress(ms, cd.child.dateOfBirth);
     // 2026-05-28 — Growth insights now show the top 2 (was 1).
     const insights = (cd.insights || []).slice(0, 2);
 
@@ -5933,8 +5963,8 @@ export class HomeScreen extends LitElement {
           <div class="sub">${this._ageLong(cd.child.dateOfBirth)}</div>
         </div>
         <div class="child-progress">
-          <div class="big">${pct}%</div>
-          <div class="lbl">of tracked milestones</div>
+          <div class="big">${activeProg.done}/${activeProg.total}</div>
+          <div class="lbl">active milestones</div>
         </div>
       </div>`;
 
@@ -7932,6 +7962,35 @@ export class HomeScreen extends LitElement {
     const mm = m % 12;
     if (y === 0) return `${mm} mo`;
     return `${y}y${mm ? ` ${mm}m` : ''}`;
+  }
+
+  /** Whole months since `dob` (a Date). 0 for a missing/invalid DOB. */
+  _ageMonthsFor(dob) {
+    if (!dob || Number.isNaN(dob.getTime?.() ?? NaN)) return 0;
+    const now = new Date();
+    let m =
+      (now.getFullYear() - dob.getFullYear()) * 12 +
+      (now.getMonth() - dob.getMonth());
+    if (now.getDate() < dob.getDate()) m -= 1;
+    return Math.max(0, m);
+  }
+
+  /** iOS-parity "active window" progress for the child stat. A milestone is
+   *  ACTIVE when its age band is open now (end >= age) AND it starts within
+   *  the next 12 months (start <= age + 12). Mirrors the iOS
+   *  ChildrenView.currentlyTrackingProgress so web + app show the SAME number
+   *  instead of the misleading lifetime achieved/total over the full 0-18
+   *  catalog. Returns { done, total }. */
+  _activeMilestoneProgress(milestones, dob) {
+    const ms = Array.isArray(milestones) ? milestones : [];
+    const ageM = this._ageMonthsFor(dob);
+    const active = ms.filter((m) => {
+      const start = m.ageRangeStartMonths ?? 0;
+      const end = m.ageRangeEndMonths ?? start;
+      return end >= ageM && start <= ageM + 12;
+    });
+    const done = active.filter((m) => m.status === 'achieved').length;
+    return { done, total: active.length };
   }
 
   /** TODAY — the landing glance: greeting + real upcoming activities +
