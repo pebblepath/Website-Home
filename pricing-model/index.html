@@ -260,6 +260,25 @@
   .mb-haiku{ background:rgba(61,155,143,.14); color:var(--teal-dark); }
   .mb-sonnet{ background:rgba(110,148,188,.20); color:#3F6189; }
   .mb-free{ background:rgba(134,169,142,.20); color:#5E7A62; }
+
+  /* family-circle members bar */
+  .memberbar{ display:flex; align-items:center; gap:26px; background:var(--paper);
+    border:1px solid var(--line); border-radius:14px; padding:16px 22px; margin-bottom:24px; }
+  .memberbar .mb-field{ flex:0 0 320px; }
+  .memberbar .mb-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:7px; }
+  .memberbar .mb-lab{ font-size:12px; font-weight:600; color:var(--ink); }
+  .memberbar .mb-val{ font-family:'Nunito',sans-serif; font-weight:800; font-size:13px; color:var(--teal-dark); }
+  .memberbar .mb-note{ flex:1; font-size:11.8px; color:var(--ink-soft); line-height:1.55; }
+  .memberbar .mb-note b{ color:var(--teal-dark); font-family:'Nunito',sans-serif; font-weight:800; }
+
+  /* revenue-at-scale headline stats */
+  .rev-head{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .rev-stat{ background:var(--teal-deep); color:#fff; border-radius:15px; padding:18px 18px 16px; }
+  .rev-stat.alt{ background:var(--paper); color:var(--ink); border:1.5px solid var(--line); }
+  .rev-stat.warn{ background:var(--terra-dark); }
+  .rev-stat .rs-n{ font-family:'Nunito',sans-serif; font-weight:800; font-size:27px; letter-spacing:-1px; line-height:1; }
+  .rev-stat.alt .rs-n{ color:var(--terra-dark); }
+  .rev-stat .rs-l{ font-size:10.5px; margin-top:7px; opacity:.9; line-height:1.4; }
 </style>
 </head>
 <body>
@@ -319,6 +338,15 @@
       a <b>normal</b> family is two children with a regular rhythm; a <b>heavy</b> family is three children
       who lean on Pebble every day.</p>
 
+    <div class="memberbar">
+      <div class="mb-field">
+        <div class="mb-top"><span class="mb-lab">People in the family circle</span>
+          <span class="mb-val" id="v_members">4</span></div>
+        <input type="range" id="members" min="1" max="12" step="1" value="4">
+      </div>
+      <div class="mb-note" id="memberNote">&mdash;</div>
+    </div>
+
     <div class="pcards">
       <div class="pcard">
         <div class="pc-name">Light family</div>
@@ -374,7 +402,7 @@
     <div class="eyebrow">The decision</div>
     <h2>What should one family pay?</h2>
     <p class="lead" style="margin-bottom:22px;">Set a monthly price and see the margin against each profile,
-      after the app-store fee. Price is the only real knob, the costs above are fixed by how Pebble is built.</p>
+      after the app-store fee. Price is the main knob, the costs above are set by how Pebble is built.</p>
 
     <div class="calc" style="grid-template-columns:360px 1fr;">
       <div class="calc-in">
@@ -391,13 +419,6 @@
           <div class="twobtn">
             <button id="apple15" class="on">15% &middot; Small Business</button>
             <button id="apple30">30% &middot; Standard</button>
-          </div>
-        </div>
-        <div class="field" style="margin-top:16px;">
-          <div class="field-lab" style="margin-bottom:6px;">Paying families (for scale)</div>
-          <div class="numrow">
-            <input type="number" id="families" value="1000" min="1" step="100">
-            <span style="font-size:11px;color:var(--ink-faint);">families</span>
           </div>
         </div>
         <div class="floorbox" style="margin-top:24px;">
@@ -419,6 +440,57 @@
         </table>
         <div class="scaleline" id="scaleLine" style="margin-top:14px;">&mdash;</div>
         <div class="bottomline" id="bottomLine" style="margin-top:14px;">&mdash;</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REVENUE AT SCALE -->
+<div class="sec" style="background:var(--sand-soft); padding-top:50px; padding-bottom:50px;">
+  <div class="wrap">
+    <div class="eyebrow">The business</div>
+    <h2>Revenue over one year.</h2>
+    <p class="lead" style="margin-bottom:22px;">How it adds up across a user base, using the
+      <b id="revPriceEcho">$14.99</b>/mo price and <b id="revFeeEcho">15%</b> store fee set above. Free
+      families cost a little to serve too: a few Pebble questions, no proactive brief.</p>
+
+    <div class="calc" style="grid-template-columns:360px 1fr;">
+      <div class="calc-in">
+        <div class="panel-h">User base</div>
+        <div class="panel-s">Over twelve months</div>
+
+        <div class="field" style="margin-top:6px;">
+          <div class="field-lab" style="margin-bottom:6px;">Total families</div>
+          <div class="numrow">
+            <input type="number" id="totalFamilies" value="10000" min="0" step="1000">
+            <span style="font-size:11px;color:var(--ink-faint);">families</span>
+          </div>
+        </div>
+        <div class="field" style="margin-top:18px;">
+          <div class="field-top"><span class="field-lab">Paying conversion</span>
+            <span class="field-val" id="v_conv">6%</span></div>
+          <input type="range" id="conv" min="0" max="30" step="1" value="6">
+        </div>
+        <div class="divide"></div>
+        <div class="pc-srow" style="font-size:12px;"><span>Paying families</span><b id="paidCount">0</b></div>
+        <div class="pc-srow" style="font-size:12px;"><span>Free families</span><b id="freeCount">0</b></div>
+      </div>
+
+      <div class="calc-out">
+        <div class="panel-h">Annual outlook</div>
+        <div class="rev-head" style="margin:6px 0 16px;">
+          <div class="rev-stat"><div class="rs-n" id="revNet">$0</div>
+            <div class="rs-l">Net subscription revenue / year (after store fee)</div></div>
+          <div class="rev-stat alt"><div class="rs-n" id="revAI">$0</div>
+            <div class="rs-l">Claude API cost / year (paid + free)</div></div>
+          <div class="rev-stat" id="revContribCard"><div class="rs-n" id="revContrib">$0</div>
+            <div class="rs-l">Net after AI / year (before infra + support)</div></div>
+        </div>
+        <table class="ftab">
+          <thead><tr><th style="width:54%;">Line</th><th class="num">Per month</th><th class="num">Per year</th></tr></thead>
+          <tbody id="revBody"></tbody>
+        </table>
+        <div class="scaleline" id="revLine" style="margin-top:14px;">&mdash;</div>
       </div>
     </div>
   </div>
@@ -559,33 +631,44 @@
   var appleCut=0.15;
 
   // Usage profiles, built from production schedules + engagement estimates.
+  // Chat baselines + context assume a ~4-person circle (the default slider).
   var PROFILES={
     light:  { kids:1, ctx:3000, chat:6,  chatSonnet:0.30, search:0.25, upload:1, weekend:0.5, packing:0.5, ped:0.1, manual:0 },
     normal: { kids:2, ctx:6000, chat:20, chatSonnet:0.40, search:0.30, upload:4, weekend:4,   packing:2,   ped:0.3, manual:2 },
     heavy:  { kids:3, ctx:8000, chat:40, chatSonnet:0.45, search:0.35, upload:8, weekend:8,   packing:4,   ped:0.5, manual:4 }
   };
   var BLEND={ light:0.30, normal:0.50, heavy:0.20 };   // mix of paying families
+  var BASE_MEMBERS=4;                                  // slider default; factor=1 here
 
   function $(id){ return document.getElementById(id); }
   function money(v){
-    if(v===0) return '$0';
-    if(v<10) return '$'+v.toFixed(2);
-    if(v<100) return '$'+v.toFixed(1);
-    return '$'+Math.round(v).toLocaleString();
+    var neg=v<0; v=Math.abs(v);
+    var s = v===0 ? '$0'
+          : v<10  ? '$'+v.toFixed(2)
+          : v<100 ? '$'+v.toFixed(1)
+          : '$'+Math.round(v).toLocaleString();
+    return neg ? '-'+s : s;
   }
   function call(model,inTok,outTok){ var r=RATES[model]; return (inTok*r.i+outTok*r.o)/1e6; }
 
-  // Build the itemised cost for one profile.
-  function compute(p){
+  // Members affect cost only gently: a touch more chat + a little more
+  // family-scope memory context. Per-child work (briefs, synthesis, tips,
+  // insights) does NOT scale with headcount, that is the whole-circle story.
+  function memberChatFactor(m){ return Math.max(0.7, Math.min(1.6, 1 + 0.04*(m-BASE_MEMBERS))); }
+  function memberCtxBonus(m){ return Math.max(0, m-BASE_MEMBERS)*120; }
+
+  // Build the itemised cost for one profile at a given circle size.
+  function compute(p, members){
+    var mf=memberChatFactor(members), fam=memberCtxBonus(members);
     var rows=[];
     function row(group,name,desc,model,runs,cost){
       rows.push({group:group,name:name,desc:desc,model:model,runs:runs,cost:cost});
     }
-    // ---- Runs automatically ----
+    // ---- Runs automatically (driven by children, not members) ----
     var db=30*p.kids;
     row('auto','Daily brief','Per child, every morning','haiku',db, db*call('haiku',p.ctx+500,600));
     var fb=p.kids>=2?30:0;
-    row('auto','Family brief','Whole-family brief (2+ children)','haiku',fb, fb*call('haiku',p.ctx+1000,300));
+    row('auto','Family brief','Whole-family brief (2+ children)','haiku',fb, fb*call('haiku',p.ctx+1000+fam,300));
     var syn=30*p.kids;
     row('auto','Nightly memory synthesis','Per child, every night','haiku',syn, syn*call('haiku',Math.round(p.ctx*0.8)+500,1500));
     var tips=Math.round(4.3*p.kids);
@@ -594,14 +677,14 @@
     row('auto','Growth insights refresh','Per child, every ~14 days','haiku',ins, ins*call('haiku',p.ctx+500,2048));
     row('auto','Weather','Every day, no AI','free',30, 0);
 
-    // ---- When the family engages ----
-    var hShare=1-p.chatSonnet;
-    var chat=p.chat*hShare*call('haiku',p.ctx+300,900)
-           + p.chat*p.chatSonnet*call('sonnet',p.ctx+300,1000)
-           + p.chat*p.search*3*WEB;
-    row('int','Pebble chat','Haiku + Sonnet, with web search','mix',p.chat, chat);
+    // ---- When the family engages (scales gently with circle size) ----
+    var chatN=p.chat*mf, hShare=1-p.chatSonnet;
+    var chat=chatN*hShare*call('haiku',p.ctx+300+fam,900)
+           + chatN*p.chatSonnet*call('sonnet',p.ctx+300+fam,1000)
+           + chatN*p.search*3*WEB;
+    row('int','Pebble chat','Haiku + Sonnet, with web search','mix',Math.round(chatN), chat);
     row('int','Smart Upload imports','Calendar / booking / report scans','haiku',p.upload, p.upload*call('haiku',3500,4500));
-    row('int','Weekend planner','Sonnet, plans the weekend','sonnet',p.weekend, p.weekend*call('sonnet',Math.round(p.ctx*0.7)+800,3000));
+    row('int','Weekend planner','Sonnet, plans the weekend','sonnet',p.weekend, p.weekend*call('sonnet',Math.round(p.ctx*0.7)+800+fam,3000));
     row('int','Packing &amp; trip prep','Packing-list review','haiku',p.packing, p.packing*call('haiku',4000,1500));
     row('int','Pediatrician report &amp; manual refresh','On demand','haiku',null,
         p.ped*call('haiku',p.ctx+500,800)+p.manual*call('haiku',p.ctx+500,2048));
@@ -611,7 +694,11 @@
     return { rows:rows, auto:auto, interactive:interactive, total:auto+interactive };
   }
 
-  var R={ light:compute(PROFILES.light), normal:compute(PROFILES.normal), heavy:compute(PROFILES.heavy) };
+  // Free tier: a few Pebble questions + 1 pediatrician summary, no proactive
+  // brief or nightly synthesis. Member-insensitive, and very cheap.
+  function freeMonthly(){ return 8*call('haiku',2500,700) + 1*call('haiku',3000,800); }
+
+  var R, blendedPaid;       // rebuilt whenever the circle size changes
 
   function mbadge(m){
     if(m==='haiku')  return '<span class="mbadge mb-haiku">Haiku</span>';
@@ -695,12 +782,8 @@
       'At <b>$'+price.toFixed(2)+'/mo</b> minus the '+Math.round(appleCut*100)+
       '% store fee &rarr; <b>$'+net.toFixed(2)+'</b> net revenue per family.';
 
-    var blended=R.light.total*BLEND.light + R.normal.total*BLEND.normal + R.heavy.total*BLEND.heavy;
-    var fam=Math.max(1,+$('families').value||0);
     $('scaleLine').innerHTML='Across a blended mix (30% light, 50% normal, 20% heavy) the average paying '+
-      'family costs <b style="color:var(--teal-dark)">'+money(blended)+'/mo</b> in Claude API. '+
-      'At <b>'+fam.toLocaleString()+'</b> families that is <b style="color:var(--teal-dark)">'+
-      money(blended*fam)+'/mo</b> total.';
+      'family costs <b style="color:var(--teal-dark)">'+money(blendedPaid)+'/mo</b> in Claude API.';
 
     var gap=net-R.normal.total, bl=$('bottomLine');
     if(net<=0){ bl.className='bottomline bl-warn';
@@ -716,16 +799,75 @@
         'workable, but thin once infrastructure and support are added.'; }
   }
 
-  $('price').addEventListener('input',renderMargin);
-  $('families').addEventListener('input',renderMargin);
+  function renderRevenue(){
+    var price=+$('price').value, fee=appleCut;
+    var total=Math.max(0,+$('totalFamilies').value||0);
+    var conv=(+$('conv').value)/100;
+    var paid=Math.round(total*conv), free=total-paid;
+    var freeAI=freeMonthly();
+
+    var gross=paid*price, fees=gross*fee, net=gross-fees;
+    var aiPaid=paid*blendedPaid, aiFree=free*freeAI, ai=aiPaid+aiFree;
+    var contrib=net-ai;
+
+    $('v_conv').textContent=$('conv').value+'%';
+    $('paidCount').textContent=paid.toLocaleString();
+    $('freeCount').textContent=free.toLocaleString();
+    $('revPriceEcho').textContent='$'+price.toFixed(2);
+    $('revFeeEcho').textContent=Math.round(fee*100)+'%';
+
+    $('revNet').textContent=money(net*12);
+    $('revAI').textContent=money(ai*12);
+    $('revContrib').textContent=money(contrib*12);
+    $('revContribCard').className='rev-stat'+(contrib<0?' warn':'');
+
+    var rows=[
+      ['Gross subscription revenue', gross, false],
+      ['App-store fee ('+Math.round(fee*100)+'%)', -fees, false],
+      ['Net subscription revenue', net, false],
+      ['Claude API cost &mdash; paying families', -aiPaid, false],
+      ['Claude API cost &mdash; free families', -aiFree, false],
+      ['Net after AI (before infra + support)', contrib, true]
+    ];
+    var body=$('revBody'); body.innerHTML='';
+    rows.forEach(function(r){
+      var tr=document.createElement('tr');
+      if(r[2]) tr.className='grand';
+      tr.innerHTML='<td'+(r[2]?'':' class="fname"')+'>'+r[0]+'</td>'+
+        '<td class="num">'+money(r[1])+'</td>'+
+        '<td class="num">'+money(r[1]*12)+'</td>';
+      body.appendChild(tr);
+    });
+
+    $('revLine').innerHTML = total<=0 ? 'Enter a user base to project revenue.' :
+      'At <b>'+total.toLocaleString()+'</b> families and <b>'+$('conv').value+
+      '% paying</b>, PebblePath nets <b style="color:var(--teal-dark)">'+money(contrib*12)+'/year</b> '+
+      'after the store fee and Claude API cost, before Firebase, support and other infrastructure.';
+  }
+
+  function recomputeAll(){
+    var members=+$('members').value;
+    $('v_members').textContent=members;
+    R={ light:compute(PROFILES.light,members), normal:compute(PROFILES.normal,members), heavy:compute(PROFILES.heavy,members) };
+    blendedPaid = R.light.total*BLEND.light + R.normal.total*BLEND.normal + R.heavy.total*BLEND.heavy;
+    $('memberNote').innerHTML='One subscription covers the whole circle. The bill is driven by your children '+
+      'and how much you use Pebble, not headcount, so the blended family is just <b>'+money(blendedPaid)+'/mo</b> '+
+      'at <b>'+members+(members===1?' person':' people')+'</b>, only pennies more than at two.';
+    fillCards(); fillTable(); renderMargin(); renderRevenue();
+  }
+
+  $('members').addEventListener('input',recomputeAll);
+  $('price').addEventListener('input',function(){ renderMargin(); renderRevenue(); });
+  $('totalFamilies').addEventListener('input',renderRevenue);
+  $('conv').addEventListener('input',renderRevenue);
   $('apple15').addEventListener('click',function(){
-    appleCut=0.15; this.classList.add('on'); $('apple30').classList.remove('on'); renderMargin();
+    appleCut=0.15; this.classList.add('on'); $('apple30').classList.remove('on'); renderMargin(); renderRevenue();
   });
   $('apple30').addEventListener('click',function(){
-    appleCut=0.30; this.classList.add('on'); $('apple15').classList.remove('on'); renderMargin();
+    appleCut=0.30; this.classList.add('on'); $('apple15').classList.remove('on'); renderMargin(); renderRevenue();
   });
 
-  fillCards(); fillTable(); renderMargin();
+  recomputeAll();
 })();
 </script>
 
