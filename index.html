@@ -782,6 +782,7 @@
      the head as a normal flowing block (no parallax on mobile by design). */
   @media (min-width: 769px) {
     .showcase-head {
+      display: none;      /* TEMP hidden 2026-06-22: "See it in action" bar off on desktop per request. Delete this line to restore. */
       position: sticky;
       top: 68px;          /* sits flush below the fixed nav (68px tall) */
       z-index: 6;          /* above .showcase-center which is z-index: 5 */
@@ -2113,8 +2114,8 @@
        carousel (with arrow gutters). At viewports between 769 and
        ~1000 px the track scrolls horizontally with snap. */
     .ms-slide {
-      flex: 0 0 150px;
-      max-width: 150px;
+      flex: 0 0 173px;    /* 2026-06-22: screenshots +15% (150 -> 173); progress dots + caption kept. */
+      max-width: 173px;
       scroll-snap-align: center;
       scroll-snap-stop: always;
       display: block;              /* phone is the only visible content */
@@ -3357,6 +3358,14 @@
     .pp-nobrainer { padding: 44px 18px !important; }
     .pp-nobrainer [style*="padding: 36px"] { padding: 22px !important; }
     .pp-nobrainer [style*="height: 88px"] { height: auto !important; min-height: 76px; padding-top: 12px !important; padding-bottom: 12px !important; }
+    /* Mobile font size-down: cards are full-size here (no zoom), so scale the
+       type down for a compact phone read (Thomas: originals looked glaring). */
+    .pp-nobrainer [style*="font-size: 25px"] { font-size: 20px !important; }  /* card headings */
+    .pp-nobrainer [style*="font-size: 17px"] { font-size: 15px !important; }  /* row titles */
+    .pp-nobrainer [style*="font-size: 14px"] { font-size: 13px !important; }  /* row descriptions */
+    .pp-nobrainer [style*="font-size: 12px"] { font-size: 11px !important; }  /* eyebrow labels */
+    .pp-nobrainer [style*="width: 52px"]  { width: 46px !important; }         /* icon tiles (keep proportion) */
+    .pp-nobrainer [style*="height: 52px"] { height: 46px !important; }
   }
   /* Film-grain texture for parity with the old "Growing With You" teal section. */
   .pp-nobrainer::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,248,235,0.05) 1px, transparent 1px); background-size: 3px 3px; pointer-events: none; opacity: 0.5; }
