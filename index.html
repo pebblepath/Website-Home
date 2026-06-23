@@ -3360,14 +3360,16 @@
   }
   /* Film-grain texture for parity with the old "Growing With You" teal section. */
   .pp-nobrainer::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,248,235,0.05) 1px, transparent 1px); background-size: 3px 3px; pointer-events: none; opacity: 0.5; }
-  /* Font harmonisation: nudge the card type scale up so it reads closer to the
-     rest of the site (scoped to this section; overrides the inline px). */
-  .pp-nobrainer [style*="font-size: 25px"] { font-size: 27px !important; }  /* card headings */
-  .pp-nobrainer [style*="font-size: 17px"] { font-size: 19px !important; }  /* row titles */
-  .pp-nobrainer [style*="font-size: 14px"] { font-size: 15px !important; }  /* row descriptions */
-  .pp-nobrainer [style*="font-size: 12px"] { font-size: 13px !important; }  /* eyebrow labels */
-  /* Cards rendered at ~79% on desktop (uniform scale, same ratio + crisp). Mobile is full size + tuned below. */
-  @media (min-width: 901px) { .pp-nobrainer .pp-inner { zoom: 0.79; } }
+  /* DESKTOP ONLY: cards are shrunk (zoom 0.79), so bump the type up to read at
+     the site scale. On mobile the cards are full size, so they keep the smaller
+     original inline sizes (no override) — otherwise the type reads oversized. */
+  @media (min-width: 901px) {
+    .pp-nobrainer .pp-inner { zoom: 0.79; }
+    .pp-nobrainer [style*="font-size: 25px"] { font-size: 27px !important; }  /* card headings */
+    .pp-nobrainer [style*="font-size: 17px"] { font-size: 19px !important; }  /* row titles */
+    .pp-nobrainer [style*="font-size: 14px"] { font-size: 15px !important; }  /* row descriptions */
+    .pp-nobrainer [style*="font-size: 12px"] { font-size: 13px !important; }  /* eyebrow labels */
+  }
 </style>
 <section class="pp-nobrainer reveal" style="background: radial-gradient(ellipse 50% 40% at 12% 22%, rgba(61,155,143,0.45), transparent 65%), radial-gradient(ellipse 45% 35% at 88% 30%, rgba(212,168,67,0.28), transparent 65%), radial-gradient(ellipse 60% 50% at 50% 100%, rgba(198,123,92,0.32), transparent 65%), linear-gradient(160deg, #1F5C54 0%, #2D7A70 50%, #3D9B8F 100%); font-family: var(--font-body); padding: 72px 32px; color: #fff; position: relative; overflow: hidden;">
   <div style="position: absolute; width: 360px; height: 270px; top: -80px; right: -50px; border-radius: 58% 42% 55% 45% / 55% 48% 52% 45%; background: rgba(61,155,143,0.05); pointer-events: none;"></div>
