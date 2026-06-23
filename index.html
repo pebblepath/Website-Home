@@ -3337,10 +3337,22 @@
     .nbv2 [style*="animation"] { animation: none !important; opacity: 1 !important; transform: none !important; }
     .nbv2 path[stroke-dasharray] { stroke-dashoffset: 0 !important; }
   }
-  /* <=1099px: the fixed 1080px seam surface no longer fits -> drop the seam + absolute layout, stack sand over teal. */
+  /* >=1100px: FULL-BLEED (border to border). Surface spans the viewport (no card
+     radius/shadow/gutter); the 1080 composition stays centered via calc, with sand
+     bleeding to the left edge and teal bleeding to the right edge. */
+  @media (min-width: 1100px) {
+    .nbv2 { padding: 0 !important; display: block !important; }
+    .nb-surface { width: 100% !important; max-width: none !important; border-radius: 0 !important; box-shadow: none !important; }
+    .nb-teal { top: 0 !important; bottom: 0 !important; left: calc(50% - 540px) !important; right: 0 !important; clip-path: path('M520 0 C 600 150, 430 300, 520 496 L 9999 496 L 9999 0 Z') !important; }
+    .nb-seam { left: calc(50% - 540px) !important; right: auto !important; }
+    .nb-left  { left: calc(50% - 486px) !important; }
+    .nb-right { left: calc(50% + 66px) !important; }
+    .nb-peb   { left: calc(50% - 82px) !important; }
+  }
+  /* <=1099px: the fixed 1080px seam surface no longer fits -> drop the seam + absolute layout, stack sand over teal (also full-bleed). */
   @media (max-width: 1099px) {
-    .nbv2 { padding: 44px 18px !important; }
-    .nb-surface { height: auto !important; max-width: 560px !important; display: flex !important; flex-direction: column !important; }
+    .nbv2 { padding: 0 !important; }
+    .nb-surface { height: auto !important; max-width: none !important; border-radius: 0 !important; box-shadow: none !important; display: flex !important; flex-direction: column !important; }
     .nb-sand, .nb-teal, .nb-seam { display: none !important; }
     .nb-left, .nb-right { position: static !important; left: auto !important; top: auto !important; width: auto !important; padding: 30px 24px !important; }
     .nb-left  { order: 1; background: linear-gradient(122deg, #F3ECDD 0%, #ECE2CF 58%, #E4D7BD 100%) !important; }
