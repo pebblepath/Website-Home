@@ -3352,12 +3352,16 @@
     .pp-nobrainer .pp-grid  { grid-template-columns: 1fr !important; }
     .pp-nobrainer .pp-arrow { transform: rotate(90deg) !important; margin: 4px 0 !important; }
   }
+  /* Film-grain texture for parity with the old "Growing With You" teal section. */
+  .pp-nobrainer::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,248,235,0.05) 1px, transparent 1px); background-size: 3px 3px; pointer-events: none; opacity: 0.5; }
+  /* Cards 40% smaller on desktop (uniform scale, same ratio + crisp). Mobile stays full size for readability. */
+  @media (min-width: 901px) { .pp-nobrainer .pp-inner { zoom: 0.6; } }
 </style>
-<section class="pp-nobrainer reveal" style="background: linear-gradient(180deg, var(--pp-sand-light) 0%, #F6F1E7 100%); border-top: 1px solid #ECE3D4; border-bottom: 1px solid #ECE3D4; font-family: var(--font-body); padding: 72px 32px; color: var(--pp-charcoal); position: relative; overflow: hidden;">
+<section class="pp-nobrainer reveal" style="background: radial-gradient(ellipse 50% 40% at 12% 22%, rgba(61,155,143,0.45), transparent 65%), radial-gradient(ellipse 45% 35% at 88% 30%, rgba(212,168,67,0.28), transparent 65%), radial-gradient(ellipse 60% 50% at 50% 100%, rgba(198,123,92,0.32), transparent 65%), linear-gradient(160deg, #1F5C54 0%, #2D7A70 50%, #3D9B8F 100%); font-family: var(--font-body); padding: 72px 32px; color: #fff; position: relative; overflow: hidden;">
   <div style="position: absolute; width: 360px; height: 270px; top: -80px; right: -50px; border-radius: 58% 42% 55% 45% / 55% 48% 52% 45%; background: rgba(61,155,143,0.05); pointer-events: none;"></div>
   <div style="position: absolute; width: 240px; height: 180px; bottom: -60px; left: -40px; border-radius: 58% 42% 55% 45% / 55% 48% 52% 45%; transform: rotate(22deg); background: rgba(198,123,92,0.045); pointer-events: none;"></div>
 
-  <div style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;">
+  <div class="pp-inner" style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;">
 
     <div class="pp-grid" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 28px; align-items: stretch;">
 
