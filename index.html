@@ -3360,8 +3360,14 @@
   }
   /* Film-grain texture for parity with the old "Growing With You" teal section. */
   .pp-nobrainer::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,248,235,0.05) 1px, transparent 1px); background-size: 3px 3px; pointer-events: none; opacity: 0.5; }
-  /* Cards rendered at 72% on desktop (uniform scale, same ratio + crisp). Mobile is full size + tuned below. */
-  @media (min-width: 901px) { .pp-nobrainer .pp-inner { zoom: 0.72; } }
+  /* Font harmonisation: nudge the card type scale up so it reads closer to the
+     rest of the site (scoped to this section; overrides the inline px). */
+  .pp-nobrainer [style*="font-size: 25px"] { font-size: 27px !important; }  /* card headings */
+  .pp-nobrainer [style*="font-size: 17px"] { font-size: 19px !important; }  /* row titles */
+  .pp-nobrainer [style*="font-size: 14px"] { font-size: 15px !important; }  /* row descriptions */
+  .pp-nobrainer [style*="font-size: 12px"] { font-size: 13px !important; }  /* eyebrow labels */
+  /* Cards rendered at ~79% on desktop (uniform scale, same ratio + crisp). Mobile is full size + tuned below. */
+  @media (min-width: 901px) { .pp-nobrainer .pp-inner { zoom: 0.79; } }
 </style>
 <section class="pp-nobrainer reveal" style="background: radial-gradient(ellipse 50% 40% at 12% 22%, rgba(61,155,143,0.45), transparent 65%), radial-gradient(ellipse 45% 35% at 88% 30%, rgba(212,168,67,0.28), transparent 65%), radial-gradient(ellipse 60% 50% at 50% 100%, rgba(198,123,92,0.32), transparent 65%), linear-gradient(160deg, #1F5C54 0%, #2D7A70 50%, #3D9B8F 100%); font-family: var(--font-body); padding: 72px 32px; color: #fff; position: relative; overflow: hidden;">
   <div style="position: absolute; width: 360px; height: 270px; top: -80px; right: -50px; border-radius: 58% 42% 55% 45% / 55% 48% 52% 45%; background: rgba(61,155,143,0.05); pointer-events: none;"></div>
@@ -3450,7 +3456,7 @@
 
       <!-- ============ WITH PEBBLEPATH (right) ============ -->
       <div style="position: relative; align-self: stretch; border-radius: 24px; padding: 1.5px; overflow: hidden; box-shadow: 0 20px 46px rgba(31,92,84,0.26), 0 0 34px rgba(125,212,200,0.16); display: flex;">
-        <div class="pp-shine" style="position: absolute; top: 50%; left: 50%; width: 200%; height: 200%; transform: translate(-50%, -50%); background: conic-gradient(rgba(255,255,255,0.2) 0deg, rgba(255,255,255,0.2) 42deg, rgba(255,255,255,1) 84deg, rgba(195,247,238,1) 96deg, rgba(255,255,255,0.2) 134deg, rgba(255,255,255,0.2) 222deg, rgba(255,255,255,0.8) 250deg, rgba(255,255,255,0.2) 280deg, rgba(255,255,255,0.2) 360deg); animation: pp-shineSpin 2.5s linear infinite; pointer-events: none;"></div>
+        <div class="pp-shine" style="position: absolute; top: 50%; left: 50%; width: 200%; height: 200%; transform: translate(-50%, -50%); background: conic-gradient(rgba(255,255,255,0.2) 0deg, rgba(255,255,255,0.2) 42deg, rgba(255,255,255,1) 84deg, rgba(195,247,238,1) 96deg, rgba(255,255,255,0.2) 134deg, rgba(255,255,255,0.2) 222deg, rgba(255,255,255,0.8) 250deg, rgba(255,255,255,0.2) 280deg, rgba(255,255,255,0.2) 360deg); animation: pp-shineSpin 5s linear infinite; pointer-events: none;"></div>
         <div style="position: relative; flex: 1; overflow: hidden; background: linear-gradient(158deg, #1F5C54 0%, #2D7A70 52%, #3D9B8F 100%); border-radius: 22.5px; padding: 36px; color: #fff; display: flex; flex-direction: column;">
           <img src="assets/sandbar.jpg" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 80%; opacity: 0.55; mix-blend-mode: soft-light; pointer-events: none;">
           <div style="position: absolute; top: -60px; right: -40px; width: 240px; height: 240px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.14), transparent 70%); pointer-events: none;"></div>
