@@ -3180,17 +3180,9 @@
        screenshots. Shown only on mobile (max-width: 768px). Native CSS
        scroll-snap-x for the swipe behavior; tiny JS for dot pagination. -->
   <div class="ms-carousel" aria-roledescription="carousel" aria-label="App screenshots">
-    <!-- Prev/next arrows removed 2026-05-21 — hover-to-select on desktop
-         is now the canonical interaction; dots + click are the fallback
-         and the mobile path. -->
-    <div class="ms-dots" id="msDots" aria-hidden="true">
-      <button type="button" class="ms-dot is-active" data-index="0"></button>
-      <button type="button" class="ms-dot" data-index="1"></button>
-      <button type="button" class="ms-dot" data-index="2"></button>
-      <button type="button" class="ms-dot" data-index="3"></button>
-      <button type="button" class="ms-dot" data-index="4"></button>
-      <button type="button" class="ms-dot" data-index="5"></button>
-    </div>
+    <!-- 2026-06-22: caption moved ABOVE the screenshots; progress dots moved
+         BELOW (end of .ms-carousel). JS still binds all three by id. -->
+    <div class="ms-caption" id="msCaption" aria-live="polite"></div>
     <div class="ms-track" id="msTrack">
       <!-- Welcome slide is hidden for now via display:none on .ms-slide-hidden;
            swap that class out (or remove this comment + class) to bring it back. -->
@@ -3268,12 +3260,16 @@
         <path d="M12 5l7 7-7 7"/>
       </svg>
     </div>
-    <!-- 2026-05-21: single caption mirror for the desktop thumbnail-strip
-         pattern. The carousel JS populates this from the active slide's
-         in-slide .ms-text on every selection. Display:none at mobile
-         (the in-slide captions stay visible there). aria-live so screen
-         readers announce the caption when selection changes. -->
-    <div class="ms-caption" id="msCaption" aria-live="polite"></div>
+    <!-- Progress dots — moved BELOW the screenshots 2026-06-22. Prev/next
+         arrows were removed 2026-05-21 (hover/click + dots are the controls). -->
+    <div class="ms-dots" id="msDots" aria-hidden="true">
+      <button type="button" class="ms-dot is-active" data-index="0"></button>
+      <button type="button" class="ms-dot" data-index="1"></button>
+      <button type="button" class="ms-dot" data-index="2"></button>
+      <button type="button" class="ms-dot" data-index="3"></button>
+      <button type="button" class="ms-dot" data-index="4"></button>
+      <button type="button" class="ms-dot" data-index="5"></button>
+    </div>
   </div>
 
   <!-- Mobile feature cards — shown only at <=768px, replacing the desktop
@@ -3395,7 +3391,7 @@
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#A99F8D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></svg>
           </span>
           <div>
-            <div style="font-size: 12px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--fg-2); margin-bottom: 4px;">Parenting today</div>
+            <div style="font-size: 12px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #C67B5C; margin-bottom: 4px;">Parenting today</div>
             <h3 style="font-family: var(--font-display); font-weight: 800; font-size: 25px; color: var(--pp-charcoal); margin: 0; line-height: 1.12;">Piecing it together yourself</h3>
           </div>
         </div>
