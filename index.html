@@ -3317,6 +3317,102 @@
   </div>
 </section>
 
+<style>
+  /* ============================================================
+     "No-brainer" seam comparison (Design handoff 2026-06-23).
+     Temporarily REPLACES the .pp-nobrainer 2-card section below
+     (hidden via display:none). Desktop = one 1080x496 surface split
+     by an S-curve seam (sand -> teal); <=1099px stacks sand-over-teal.
+     Source: design-sandbox/design_handoff_no_brainer_section.
+     ============================================================ */
+  .nbv2 { --pp-off-white:#FAF8F5; --pp-teal-glow:#7DD4C8; --font-body:'Inter',-apple-system,sans-serif; --font-display:'Nunito',sans-serif; }
+  @keyframes nbRise  { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes nbPop   { 0% { opacity:0; transform:scale(.5); } 60% { opacity:1; transform:scale(1.08); } 100% { opacity:1; transform:scale(1); } }
+  @keyframes nbDraw  { from { stroke-dashoffset:1300; } to { stroke-dashoffset:0; } }
+  @keyframes nbSlide { from { opacity:.12; transform:translateX(9%); } to { opacity:1; transform:translateX(0); } }
+  @keyframes nbPulse { 0%,100% { opacity:.55; transform:scale(1); } 50% { opacity:.15; transform:scale(1.25); } }
+  /* Hold entrance animations paused until the section scrolls into view (the site's .reveal observer adds .visible). */
+  .nbv2:not(.visible) [style*="animation:nb"] { animation-play-state: paused !important; }
+  @media (prefers-reduced-motion: reduce) {
+    .nbv2 [style*="animation"] { animation: none !important; opacity: 1 !important; transform: none !important; }
+    .nbv2 path[stroke-dasharray] { stroke-dashoffset: 0 !important; }
+  }
+  /* <=1099px: the fixed 1080px seam surface no longer fits -> drop the seam + absolute layout, stack sand over teal. */
+  @media (max-width: 1099px) {
+    .nbv2 { padding: 44px 18px !important; }
+    .nb-surface { height: auto !important; max-width: 560px !important; display: flex !important; flex-direction: column !important; }
+    .nb-sand, .nb-teal, .nb-seam { display: none !important; }
+    .nb-left, .nb-right { position: static !important; left: auto !important; top: auto !important; width: auto !important; padding: 30px 24px !important; }
+    .nb-left  { order: 1; background: linear-gradient(122deg, #F3ECDD 0%, #ECE2CF 58%, #E4D7BD 100%) !important; }
+    .nb-right { order: 3; background: linear-gradient(152deg, #1F5C54 0%, #2D7A70 55%, #3D9B8F 100%) !important; }
+    .nb-peb { position: relative !important; left: auto !important; top: auto !important; order: 2; align-self: center; margin: -42px 0 !important; z-index: 2; }
+  }
+</style>
+<section class="nbv2 reveal" style="background:var(--pp-off-white); font-family:var(--font-body); padding:64px 32px; display:flex; justify-content:center;">
+  <div class="nb-surface" style="position:relative; width:1080px; max-width:100%; height:496px; border-radius:24px; overflow:hidden; box-shadow:0 18px 50px rgba(31,92,84,0.16); background:#F1E9DA;">
+
+    <!-- LEFT: dry-sand surface — warm light + fine grain -->
+    <div class="nb-sand" style="position:absolute; inset:0; pointer-events:none;">
+      <div style="position:absolute; inset:0; background:radial-gradient(115% 85% at 16% 20%, rgba(255,251,241,0.6), transparent 56%), linear-gradient(122deg, #F3ECDD 0%, #ECE2CF 58%, #E4D7BD 100%);"></div>
+      <svg width="1080" height="496" preserveAspectRatio="none" style="position:absolute; inset:0; width:100%; height:100%; opacity:0.6; mix-blend-mode:soft-light;"><filter id="ppSandGrain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#ppSandGrain)"/></svg>
+    </div>
+
+    <!-- RIGHT: teal beach field, clipped to the seam -->
+    <div class="nb-teal" style="position:absolute; inset:0; clip-path:path('M520 0 C 600 150, 430 300, 520 496 L 1080 496 L 1080 0 Z'); overflow:hidden; animation:nbSlide .85s cubic-bezier(.16,1,.3,1) both; animation-delay:.15s;">
+      <div style="position:absolute; inset:0; background:linear-gradient(152deg, #1F5C54 0%, #2D7A70 55%, #3D9B8F 100%);"></div>
+      <img src="assets/sandbar.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 78%; opacity:0.5; mix-blend-mode:soft-light; pointer-events:none;">
+      <div style="position:absolute; top:-70px; right:-50px; width:260px; height:260px; border-radius:50%; background:radial-gradient(circle, rgba(255,255,255,0.13), transparent 70%); pointer-events:none;"></div>
+    </div>
+
+    <!-- white dividing seam -->
+    <svg class="nb-seam" width="1080" height="496" viewBox="0 0 1080 496" fill="none" style="position:absolute; inset:0; pointer-events:none;">
+      <path d="M520 0 C 600 150, 430 300, 520 496" stroke="#ffffff" stroke-opacity="0.7" stroke-width="2" stroke-dasharray="1300" style="animation:nbDraw 1s cubic-bezier(.16,1,.3,1) both; animation-delay:.5s;"/>
+    </svg>
+
+    <!-- LEFT — the old way (muted, on sand) -->
+    <div class="nb-left" style="position:absolute; left:54px; top:46px; width:360px;">
+      <div style="font-size:11.5px; font-weight:700; letter-spacing:2.4px; text-transform:uppercase; color:#A99F8D; margin-bottom:4px;">Parenting today</div>
+      <h3 style="font-family:var(--font-display); font-weight:800; font-size:22px; color:#7c7363; margin:0 0 18px; line-height:1.14;">Piecing it together yourself</h3>
+
+      <div style="opacity:.82;">
+        <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-top:1px solid rgba(124,115,99,0.16); animation:nbRise .5s ease-out both; animation-delay:.30s;"><span style="width:30px; height:30px; border-radius:8px; background:rgba(124,115,99,0.08); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 48 48" style="filter:grayscale(.55); opacity:.85;"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34A21.99 21.99 0 0 0 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg></span><div style="min-width:0;"><div style="font-family:var(--font-display); font-weight:700; font-size:14.5px; color:#6e665c; line-height:1.15;">Late-night Google searches</div><div style="font-size:12px; color:#9a9082; line-height:1.3; margin-top:1px;">Conflicting answers, none about your child.</div></div></div>
+
+        <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-top:1px solid rgba(124,115,99,0.16); animation:nbRise .5s ease-out both; animation-delay:.38s;"><span style="width:30px; height:30px; border-radius:8px; background:rgba(124,115,99,0.08); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="#8c857a"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/></svg></span><div style="min-width:0;"><div style="font-family:var(--font-display); font-weight:700; font-size:14.5px; color:#6e665c; line-height:1.15;">ChatGPT with no memory</div><div style="font-size:12px; color:#9a9082; line-height:1.3; margin-top:1px;">Smart now, forgets your child by morning.</div></div></div>
+
+        <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-top:1px solid rgba(124,115,99,0.16); animation:nbRise .5s ease-out both; animation-delay:.46s;"><span style="width:30px; height:30px; border-radius:8px; background:rgba(124,115,99,0.08); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" style="filter:grayscale(.5); opacity:.85;"><rect x="3" y="3" width="8" height="8" rx="2.4" fill="#E8705B"/><rect x="13" y="3" width="8" height="8" rx="2.4" fill="#4DB6AC"/><rect x="3" y="13" width="8" height="8" rx="2.4" fill="#E6B23E"/><rect x="13" y="13" width="8" height="8" rx="2.4" fill="#8B7BB5"/></svg></span><div style="min-width:0;"><div style="font-family:var(--font-display); font-weight:700; font-size:14.5px; color:#6e665c; line-height:1.15;">A patchwork of baby apps</div><div style="font-size:12px; color:#9a9082; line-height:1.3; margin-top:1px;">A different one for everything.</div></div></div>
+
+        <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-top:1px solid rgba(124,115,99,0.16); animation:nbRise .5s ease-out both; animation-delay:.54s;"><span style="width:30px; height:30px; border-radius:8px; background:rgba(124,115,99,0.08); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="17" height="17" viewBox="0 0 24 24" style="filter:grayscale(.5); opacity:.85;"><path d="M6 2.5h8L19.5 8v12.5a1 1 0 0 1-1 1h-12a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1z" fill="#0F9D58"/><path d="M14 2.5L19.5 8H15a1 1 0 0 1-1-1V2.5z" fill="#0B7C43"/><g fill="#fff"><rect x="8" y="11" width="8" height="1.4" rx="0.6"/><rect x="8" y="14" width="8" height="1.4" rx="0.6"/><rect x="8" y="17" width="8" height="1.4" rx="0.6"/></g></svg></span><div style="min-width:0;"><div style="font-family:var(--font-display); font-weight:700; font-size:14.5px; color:#6e665c; line-height:1.15;">DIY spreadsheets</div><div style="font-size:12px; color:#9a9082; line-height:1.3; margin-top:1px;">You build them, then forget to update them.</div></div></div>
+
+        <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-top:1px solid rgba(124,115,99,0.16); animation:nbRise .5s ease-out both; animation-delay:.62s;"><span style="width:30px; height:30px; border-radius:8px; background:rgba(124,115,99,0.08); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="18" height="18" viewBox="0 0 24 24" style="filter:grayscale(.5); opacity:.85;"><rect x="2.5" y="4" width="19" height="17" rx="3" fill="#fff" stroke="#DADCE0" stroke-width="0.8"/><rect x="2.5" y="4" width="19" height="4.4" rx="3" fill="#4285F4"/><rect x="2.5" y="6" width="19" height="2.4" fill="#4285F4"/><text x="12" y="17.4" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="800" fill="#4285F4">31</text></svg></span><div style="min-width:0;"><div style="font-family:var(--font-display); font-weight:700; font-size:14.5px; color:#6e665c; line-height:1.15;">Calendars for every activity</div><div style="font-size:12px; color:#9a9082; line-height:1.3; margin-top:1px;">Scattered across reminders.</div></div></div>
+      </div>
+    </div>
+
+    <!-- RIGHT — PebblePath (on teal) -->
+    <div class="nb-right" style="position:absolute; left:606px; top:46px; width:404px; color:#fff;">
+      <div style="font-size:11.5px; font-weight:800; letter-spacing:2.4px; text-transform:uppercase; color:var(--pp-teal-glow); margin-bottom:4px;">With PebblePath</div>
+      <h3 style="font-family:var(--font-display); font-weight:800; font-size:22px; color:#fff; margin:0 0 18px; line-height:1.14;">Calmly coordinated.</h3>
+
+      <div style="display:flex; align-items:center; gap:13px; padding:12px 0; border-top:1px solid rgba(255,255,255,0.16); animation:nbRise .5s ease-out both; animation-delay:.78s;"><span style="width:36px; height:36px; border-radius:11px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="20.5" rx="7" ry="1.4" fill="#fff" opacity=".25"/><path fill="#fff" d="M4.5 13C4.5 8.8 7.8 7 12 7C16.2 7 19.5 8.8 19.5 13C19.5 17.2 16.2 19.5 12 19.5C7.8 19.5 4.5 17.2 4.5 13Z"/><path fill="#fff" fill-opacity="0.33" d="M7.5 10.5C8 8.5 9.8 7.8 12 7.8C14.2 7.8 16 8.5 16 10.5C16 12 14.2 12.5 12 12.5C9.8 12.5 7.5 12 7.5 10.5Z"/></svg></span><div style="min-width:0;"><div style="font-family:var(--font-display); font-weight:800; font-size:15px; color:#fff; line-height:1.15;">Pebble &amp; daily briefs</div><div style="font-size:12.5px; color:rgba(255,255,255,0.9); line-height:1.3; margin-top:1px;">Calm, expert answers — plus a daily brief each morning.</div></div></div>
+
+      <div style="display:flex; align-items:center; gap:13px; padding:12px 0; border-top:1px solid rgba(255,255,255,0.16); animation:nbRise .5s ease-out both; animation-delay:.86s;"><span style="width:36px; height:36px; border-radius:11px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M3 19 Q10 19 14 11 Q18 5 21 3.5" stroke="#fff" stroke-width="1.7" stroke-linecap="round" opacity=".45" fill="none"/><circle cx="3" cy="19" r="2" fill="#fff" opacity=".55"/><circle cx="9.5" cy="17" r="2" fill="#fff" opacity=".72"/><circle cx="15" cy="9" r="2" fill="#fff" opacity=".88"/><circle cx="21" cy="3.5" r="2.3" fill="#fff"/></svg></span><div style="min-width:0;"><div style="font-family:var(--font-display); font-weight:800; font-size:15px; color:#fff; line-height:1.15;">Growth Pathways</div><div style="font-size:12.5px; color:rgba(255,255,255,0.9); line-height:1.3; margin-top:1px;">300 milestones connected across every domain.</div></div></div>
+
+      <div style="display:flex; align-items:center; gap:13px; padding:12px 0; border-top:1px solid rgba(255,255,255,0.16); animation:nbRise .5s ease-out both; animation-delay:.94s;"><span style="width:36px; height:36px; border-radius:11px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9.4 13.1a3 3 0 0 1 5-1.1l1 1"/><polyline points="15.5 10.6 15.5 13 13.1 13"/><path d="M14.6 15.4a3 3 0 0 1-5 1.1l-1-1"/><polyline points="8.5 17.9 8.5 15.5 10.9 15.5"/><circle cx="12" cy="12.5" r="8.2" opacity=".4"/></svg></span><div style="min-width:0;"><div style="font-family:var(--font-display); font-weight:800; font-size:15px; color:#fff; line-height:1.15;">Family Portal</div><div style="font-size:12.5px; color:rgba(255,255,255,0.9); line-height:1.3; margin-top:1px;">Parents, grandparents and caregivers, in sync.</div></div></div>
+
+      <div style="display:flex; align-items:center; gap:13px; padding:12px 0; border-top:1px solid rgba(255,255,255,0.16); animation:nbRise .5s ease-out both; animation-delay:1.02s;"><span style="width:36px; height:36px; border-radius:11px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h6l4.5 4.5V19.6a1.4 1.4 0 0 1-1.4 1.4H7a1.4 1.4 0 0 1-1.4-1.4V4.9A1.4 1.4 0 0 1 7 3.5z"/><path d="M13 3.6V8a1 1 0 0 0 1 1h4"/><line x1="9" y1="12.8" x2="15" y2="12.8"/><line x1="9" y1="15.6" x2="15" y2="15.6"/></svg></span><div style="min-width:0;"><div style="font-family:var(--font-display); font-weight:800; font-size:15px; color:#fff; line-height:1.15;">Pediatrician summaries</div><div style="font-size:12.5px; color:rgba(255,255,255,0.9); line-height:1.3; margin-top:1px;">Walk into every visit prepared.</div></div></div>
+
+      <div style="display:flex; align-items:center; gap:13px; padding:12px 0; border-top:1px solid rgba(255,255,255,0.16); animation:nbRise .5s ease-out both; animation-delay:1.10s;"><span style="width:36px; height:36px; border-radius:11px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="8" y1="3" x2="8" y2="6.5"/><line x1="16" y1="3" x2="16" y2="6.5"/></svg></span><div style="min-width:0;"><div style="font-family:var(--font-display); font-weight:800; font-size:15px; color:#fff; line-height:1.15;">Activities &amp; planning</div><div style="font-size:12.5px; color:rgba(255,255,255,0.9); line-height:1.3; margin-top:1px;">Trips, weekends and birthdays in one place.</div></div></div>
+    </div>
+
+    <!-- pebble marker on the seam -->
+    <div class="nb-peb" style="position:absolute; left:458px; top:206px; width:84px; height:84px; animation:nbPop .7s cubic-bezier(.16,1,.3,1) both; animation-delay:.95s;">
+      <span style="position:absolute; inset:-9px; border-radius:25px; background:radial-gradient(circle, rgba(125,212,200,0.6), transparent 70%); animation:nbPulse 3.2s ease-in-out infinite; animation-delay:1.7s;"></span>
+      <img src="assets/app-icon.png" alt="PebblePath" style="position:relative; width:84px; height:84px; border-radius:22px; box-shadow:0 12px 32px rgba(0,0,0,0.32);">
+    </div>
+
+  </div>
+</section>
+
+
 <!-- ============================================================
      'Calmly coordinated' comparison  (Design handover 2026-06-22)
      Temporarily REPLACES the 'Growing With You' (#intelligence)
@@ -3376,7 +3472,7 @@
     .pp-nobrainer [style*="font-size: 12px"] { font-size: 13px !important; }  /* eyebrow labels */
   }
 </style>
-<section class="pp-nobrainer reveal" style="background: radial-gradient(ellipse 50% 40% at 12% 22%, rgba(61,155,143,0.45), transparent 65%), radial-gradient(ellipse 45% 35% at 88% 30%, rgba(212,168,67,0.28), transparent 65%), radial-gradient(ellipse 60% 50% at 50% 100%, rgba(198,123,92,0.32), transparent 65%), linear-gradient(160deg, #1F5C54 0%, #2D7A70 50%, #3D9B8F 100%); font-family: var(--font-body); padding: 72px 32px; color: #fff; position: relative; overflow: hidden;">
+<section class="pp-nobrainer reveal" style="display: none; background: radial-gradient(ellipse 50% 40% at 12% 22%, rgba(61,155,143,0.45), transparent 65%), radial-gradient(ellipse 45% 35% at 88% 30%, rgba(212,168,67,0.28), transparent 65%), radial-gradient(ellipse 60% 50% at 50% 100%, rgba(198,123,92,0.32), transparent 65%), linear-gradient(160deg, #1F5C54 0%, #2D7A70 50%, #3D9B8F 100%); font-family: var(--font-body); padding: 72px 32px; color: #fff; position: relative; overflow: hidden;">
   <div style="position: absolute; width: 360px; height: 270px; top: -80px; right: -50px; border-radius: 58% 42% 55% 45% / 55% 48% 52% 45%; background: rgba(61,155,143,0.05); pointer-events: none;"></div>
   <div style="position: absolute; width: 240px; height: 180px; bottom: -60px; left: -40px; border-radius: 58% 42% 55% 45% / 55% 48% 52% 45%; transform: rotate(22deg); background: rgba(198,123,92,0.045); pointer-events: none;"></div>
 
