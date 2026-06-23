@@ -2080,14 +2080,14 @@
        the section's warm --off-white) so the phone screenshots sit on a
        clean, neutral surface with no warm cast. Mobile keeps --off-white
        (set on .showcase-section in the base rule). */
-    .showcase-section { background: #fff; }
+    .showcase-section { background: #fff; padding: 36px 0; }   /* 2026-06-22: real top/bottom padding (matches sibling sections) now the head bar is hidden; also closes the off-white body-bg gap ("grey bar") above the carousel. */
     .ms-carousel {
       /* 2026-05-21 — bumped max-width 1100 → 1240 so the 6 × 150-px
          thumbnail strip (≈ 990 px wide) floats inside the carousel
          with ~69 px of breathing room on each side instead of
          butting up against the prev/next arrows. */
       max-width: 1240px;
-      margin: 12px auto 0;
+      margin: 0 auto;            /* top spacing now lives on .showcase-section padding (no margin-collapse gap) */
       padding: 0 56px;            /* gutter for prev/next arrows */
       position: relative;
     }
@@ -2179,7 +2179,7 @@
          - min-height 112 → 96 (one-line captions take ~93 px content +
            a small buffer is enough);
          - vertical padding stays implicit (margin handles it). */
-      margin: 14px auto 0;
+      margin: 0 auto;            /* caption now leads the section; section padding handles the top gap */
       padding: 0 16px;
       text-align: center;
       min-height: 96px;
@@ -3382,7 +3382,7 @@
 
   <div class="pp-inner" style="max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;">
 
-    <div class="pp-grid" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 28px; align-items: stretch;">
+    <div class="pp-grid" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 40px; align-items: stretch;">
 
       <!-- ============ PARENTING TODAY (left) ============ -->
       <div style="position: relative; background: #fff; border: 1px solid var(--border); border-radius: 24px; padding: 36px; display: flex; flex-direction: column; box-shadow: var(--sh-card);">
@@ -3392,7 +3392,7 @@
           </span>
           <div>
             <div style="font-size: 12px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #C67B5C; margin-bottom: 4px;">Parenting today</div>
-            <h3 style="font-family: var(--font-display); font-weight: 800; font-size: 25px; color: var(--pp-charcoal); margin: 0; line-height: 1.12;">Piecing it together yourself</h3>
+            <h3 style="font-family: var(--font-display); font-weight: 800; font-size: 25px; color: var(--pp-charcoal); margin: 0; line-height: 1.12;">Held together by you.</h3>
           </div>
         </div>
 
