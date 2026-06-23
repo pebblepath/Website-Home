@@ -3351,11 +3351,17 @@
   @media (max-width: 900px) {
     .pp-nobrainer .pp-grid  { grid-template-columns: 1fr !important; }
     .pp-nobrainer .pp-arrow { transform: rotate(90deg) !important; margin: 4px 0 !important; }
+    /* Mobile optimisation: tighter outer + card padding for more text width, and
+       let rows grow so multi-line titles don't crowd the dividers (the fixed 88px
+       row alignment only matters for the desktop 2-column layout). */
+    .pp-nobrainer { padding: 44px 18px !important; }
+    .pp-nobrainer [style*="padding: 36px"] { padding: 22px !important; }
+    .pp-nobrainer [style*="height: 88px"] { height: auto !important; min-height: 76px; padding-top: 12px !important; padding-bottom: 12px !important; }
   }
   /* Film-grain texture for parity with the old "Growing With You" teal section. */
   .pp-nobrainer::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(rgba(255,248,235,0.05) 1px, transparent 1px); background-size: 3px 3px; pointer-events: none; opacity: 0.5; }
-  /* Cards 40% smaller on desktop (uniform scale, same ratio + crisp). Mobile stays full size for readability. */
-  @media (min-width: 901px) { .pp-nobrainer .pp-inner { zoom: 0.6; } }
+  /* Cards rendered at 72% on desktop (uniform scale, same ratio + crisp). Mobile is full size + tuned below. */
+  @media (min-width: 901px) { .pp-nobrainer .pp-inner { zoom: 0.72; } }
 </style>
 <section class="pp-nobrainer reveal" style="background: radial-gradient(ellipse 50% 40% at 12% 22%, rgba(61,155,143,0.45), transparent 65%), radial-gradient(ellipse 45% 35% at 88% 30%, rgba(212,168,67,0.28), transparent 65%), radial-gradient(ellipse 60% 50% at 50% 100%, rgba(198,123,92,0.32), transparent 65%), linear-gradient(160deg, #1F5C54 0%, #2D7A70 50%, #3D9B8F 100%); font-family: var(--font-body); padding: 72px 32px; color: #fff; position: relative; overflow: hidden;">
   <div style="position: absolute; width: 360px; height: 270px; top: -80px; right: -50px; border-radius: 58% 42% 55% 45% / 55% 48% 52% 45%; background: rgba(61,155,143,0.05); pointer-events: none;"></div>
