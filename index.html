@@ -2809,6 +2809,152 @@
   .brain-sec .brain-bg-line{ font-size:16px; }
 }
 
+  /* ============================================================
+     HERO V2 — "Curved split" header (design_handoff_website_header)
+     Added 2026-06-24. TEMPORARILY replaces the original .hero section
+     (that markup is preserved, inert, inside <template id="legacy-hero
+     -backup"> directly above <section class="hero-v2"> in the body).
+     REVERT = delete this CSS block + the <svg> clip def + <section
+     class="hero-v2"> in the body, then lift the original markup out of
+     the <template>. The existing fixed <nav> is UNTOUCHED and floats
+     over this hero exactly as it did over the original.
+     ============================================================ */
+  .hero-v2 {
+    position: relative;
+    width: 100%;
+    height: 82vh;                 /* fallback for browsers w/o svh */
+    height: min(100svh, 820px);
+    min-height: 600px;
+    overflow: hidden;
+    background: #0d2e29;          /* deep teal shows while video buffers */
+  }
+  /* z0 — full-bleed app-render video. The scale/translate is a tuned
+     crop so the phone reads larger and sits toward the right half. */
+  .hero-v2-video {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+    transform: scale(1.22) translateX(7%);
+    z-index: 0;
+  }
+  /* z1 — the curved teal panel + soft glow, both clipped to one curve.
+     ~30% translucent so the video scene bleeds through behind the copy. */
+  .hero-v2-panel,
+  .hero-v2-glow {
+    position: absolute; inset: 0; z-index: 1;
+    pointer-events: none;
+    -webkit-clip-path: url(#hero-curve);
+            clip-path: url(#hero-curve);
+  }
+  .hero-v2-panel {
+    background: linear-gradient(150deg,
+      rgba(21,64,58,.80) 0%,
+      rgba(31,92,84,.72) 56%,
+      rgba(45,122,112,.60) 100%);
+  }
+  .hero-v2-glow {
+    background: radial-gradient(48% 42% at 16% 30%,
+      rgba(125,212,200,.14), transparent 70%);
+  }
+  /* z3 — top scrim so the floating nav reads over the video's bright sky */
+  .hero-v2-scrim {
+    position: absolute; top: 0; left: 0; right: 0; height: 150px;
+    z-index: 3; pointer-events: none;
+    background: linear-gradient(180deg, rgba(13,46,41,.42), transparent);
+  }
+  /* z4 — left copy column (wordmark + subheader) */
+  .hero-v2-copy {
+    position: absolute; top: 0; bottom: 0; left: 0;
+    width: 40%;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 0 0 46px;
+    z-index: 4;
+  }
+  .hero-v2-wordmark {
+    font-size: 60px;
+    color: #fff;
+    margin: 0 0 24px;
+    text-shadow: 0 4px 30px rgba(0,0,0,.55);
+    animation: hv2FadeUp .85s cubic-bezier(.22,.61,.36,1) .12s both;
+  }
+  .hero-v2-copy p {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400; font-size: 21px; line-height: 1.55;
+    color: rgba(255,255,255,.94);
+    margin: 0; max-width: 392px;
+    text-shadow: 0 1px 12px rgba(0,0,0,.5);
+    animation: hv2FadeUp .85s cubic-bezier(.22,.61,.36,1) .22s both;
+  }
+  /* In-hero CTAs hidden on desktop (CTAs live in the nav); shown on mobile */
+  .hero-v2-buttons { display: none; }
+  /* z5 — scroll hint */
+  .hero-v2-scroll {
+    position: absolute; bottom: 26px; left: 72px;
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 11px; line-height: 1;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,.72);
+    text-decoration: none;
+    z-index: 5;
+    animation: hv2Fade 1s ease .8s both;
+  }
+  .hero-v2-scroll:hover { color: rgba(255,255,255,.95); }
+  .hero-v2-scroll svg { width: 16px; height: 16px; }
+
+  @keyframes hv2FadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes hv2Fade   { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-v2-wordmark, .hero-v2-copy p, .hero-v2-scroll { animation: none !important; }
+  }
+
+  /* ---- Tablet / mobile (<1024px): the side curve + 40% panel don't
+     translate. Swap to a full-bleed app video + vertical teal scrim,
+     copy centered up top, and surface the Download / Portal CTAs. ---- */
+  @media (max-width: 1023px) {
+    .hero-v2 { height: 88vh; height: min(100svh, 760px); min-height: 560px; }
+    /* re-center the crop (drop the desktop rightward nudge) so the phone
+       sits centered in the narrow viewport */
+    .hero-v2-video { transform: scale(1.3); object-position: center 40%; }
+    /* side curve -> full-width vertical teal scrim (dark up top behind the
+       copy, clearing toward the phone in the lower half) */
+    .hero-v2-panel {
+      -webkit-clip-path: none; clip-path: none;
+      background: linear-gradient(180deg,
+        rgba(13,46,41,.88) 0%,
+        rgba(21,64,58,.76) 24%,
+        rgba(31,92,84,.34) 50%,
+        rgba(31,92,84,.06) 70%,
+        transparent 100%);
+    }
+    .hero-v2-glow {
+      -webkit-clip-path: none; clip-path: none;
+      background: radial-gradient(75% 38% at 50% 6%, rgba(125,212,200,.12), transparent 72%);
+    }
+    .hero-v2-copy {
+      width: 100%;
+      justify-content: flex-start;
+      align-items: center;
+      text-align: center;
+      padding: 104px 26px 0;       /* clear the fixed nav */
+    }
+    .hero-v2-wordmark { font-size: 46px; margin-bottom: 16px; }
+    .hero-v2-copy p { font-size: 17px; line-height: 1.5; max-width: 440px; margin: 0 auto; }
+    /* surface the existing mobile CTA pills (reuse their visual styles) */
+    .hero-v2-buttons {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 12px; margin-top: 26px; width: 100%;
+    }
+    .hero-v2-buttons .hero-mobile-download,
+    .hero-v2-buttons .hero-mobile-portal {
+      display: inline-flex; width: 100%; max-width: 280px;
+    }
+    .hero-v2-scroll { left: 50%; transform: translateX(-50%); bottom: 22px; }
+  }
+  @media (max-width: 480px) {
+    .hero-v2-wordmark { font-size: 40px; }
+    .hero-v2-copy p { font-size: 16px; }
+  }
+
 </style>
 </head>
 <body>
@@ -2854,7 +3000,13 @@
   </a>
 </div>
 
-<!-- HERO -->
+<!-- HERO (temporarily replaced 2026-06-24 by the "curved split" HERO V2
+     below). The original hero is preserved INERT inside this <template>
+     for an easy revert: to restore, delete the <svg id-clip> + <section
+     class="hero-v2"> block that follows, then move this markup out of the
+     <template> back onto the page. A <template>'s contents don't render
+     and its <video> doesn't load, so there's no double hero/video. -->
+<template id="legacy-hero-backup">
 <section class="hero">
   <video class="hero-video" autoplay muted loop playsinline>
     <source src="assets/Pebble-header.mp4" type="video/mp4">
@@ -2884,6 +3036,50 @@
   <a href="#features" class="scroll-cue" aria-label="Scroll to features">
     <span>Scroll</span>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/></svg>
+  </a>
+</section>
+</template>
+<!-- /legacy-hero-backup -->
+
+<!-- ===== HERO V2 — "Curved split" (design_handoff_website_header, 2026-06-24)
+     Full-bleed app-render video on the right, translucent teal curved panel
+     holding the copy on the left. The existing fixed <nav> floats over it
+     unchanged. Mobile (<1024px) reflows to a full-bleed video + vertical
+     teal scrim with the copy centered up top (see CSS @media block). ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- Curve normalized to the section's bounding box so it scales fluidly.
+         Proportions preserved from the 1440x820 spec: right edge at 26.4% of
+         width (top/bottom), control point at 37.5% width / 28.7% & 71.3% height. -->
+    <clipPath id="hero-curve" clipPathUnits="objectBoundingBox">
+      <path d="M0,0 L0.2639,0 C0.375,0.2866 0.375,0.7134 0.2639,1 L0,1 Z"/>
+    </clipPath>
+  </defs>
+</svg>
+<section class="hero-v2">
+  <video class="hero-v2-video" autoplay muted loop playsinline preload="auto" poster="assets/ultramock-poster.png">
+    <source src="assets/ultramock.mp4" type="video/mp4">
+  </video>
+  <div class="hero-v2-panel"></div>
+  <div class="hero-v2-glow"></div>
+  <div class="hero-v2-scrim"></div>
+  <div class="hero-v2-copy">
+    <h1 class="pp-wordmark hero-v2-wordmark">PebblePath</h1>
+    <p>A calm shared space for growing together. Proactive guidance and a family hub for parents, siblings, and caregivers.</p>
+    <!-- In-hero CTAs surface on mobile only (the nav collapses to a hamburger
+         there). Reuse the existing mobile-CTA pill styles. -->
+    <div class="hero-v2-buttons">
+      <!-- TODO: Once App Store ID is assigned, swap href to https://apps.apple.com/app/pebblepath-ai/id<XXXXXXXXX> -->
+      <a href="https://apps.apple.com/app/pebblepath-ai/" class="hero-mobile-download" target="_blank" rel="noopener">
+        <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM248.6 84.7c33.5-39.8 30.4-76 29.4-89-29.6 1.7-63.8 20.1-83.3 42.7-21.5 24.2-34.1 54.1-31.4 87.6 32 2.5 61.1-13.9 85.3-41.3z"/></svg>
+        Download
+      </a>
+      <a href="/portal/" class="hero-mobile-portal">Family Portal</a>
+    </div>
+  </div>
+  <a href="#features" class="hero-v2-scroll" aria-label="Scroll to features">
+    <span>Scroll</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>
   </a>
 </section>
 
@@ -4079,6 +4275,25 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
       video.classList.remove('is-fading');
     });
   });
+})();
+
+// Hero V2 app-render video — guarantee autoplay + a continuous loop.
+// Some browsers ignore the muted *attribute* and block autoplay unless the
+// muted *property* is also set; we set both, play on the first ready event,
+// re-seek on 'ended' as a loop fallback, and poll briefly until it advances.
+(function () {
+  var v = document.querySelector('.hero-v2-video');
+  if (!v) return;
+  v.muted = true; v.defaultMuted = true; v.playsInline = true; v.loop = true;
+  var tryPlay = function () { try { var p = v.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} };
+  ['loadeddata', 'canplay', 'canplaythrough'].forEach(function (ev) { v.addEventListener(ev, tryPlay); });
+  v.addEventListener('ended', function () { try { v.currentTime = 0; tryPlay(); } catch (e) {} });
+  tryPlay();
+  var n = 0;
+  var id = setInterval(function () {
+    if ((!v.paused && v.currentTime > 0) || ++n > 30) { clearInterval(id); return; }
+    tryPlay();
+  }, 600);
 })();
 
 // Pebble Brain brief — continuous "live generation" pop-in loop.
