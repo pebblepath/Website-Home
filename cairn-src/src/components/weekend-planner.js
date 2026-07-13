@@ -14,13 +14,17 @@ import './pebble-icon.js';
 // reopening the planner restores the last generation (auto-discarded
 // once the weekend rolls over, since the key changes).
 
-// Staged loading captions (mirror iOS FamilyPlanGeneratorView). Cycle ~2s
-// each while the CF round-trip completes, holding on the last.
+// Staged loading captions (mirror iOS FamilyPlanGeneratorView). The status
+// line steps through the named stages, then gently cycles the last few so a
+// long web-search + scoring run (30s+) always reads as motion-toward-a-result,
+// never a spinner parked on one line (A6).
 const PLAN_LOADING_CAPTIONS = [
   'Checking the weekend weather…',
   'Finding nearby spots…',
   'Scoring ideas for your family…',
   'Building your plan…',
+  'Weighing the options…',
+  'Putting it together…',
 ];
 
 export class WeekendPlanner extends LitElement {
@@ -69,18 +73,32 @@ export class WeekendPlanner extends LitElement {
   _startLoadingCaptions() {
     this._stopLoadingCaptions();
     this._loadingStep = 0;
-    this._captionTimer = setInterval(() => {
-      if (this._loadingStep >= PLAN_LOADING_CAPTIONS.length - 1) {
-        this._stopLoadingCaptions(); // hold on the last caption
-        return;
+    const n = PLAN_LOADING_CAPTIONS.length;
+    const cycleFrom = Math.max(0, n - 3); // A6: cycle the last few, never park
+    let cycling = false;
+    // Self-rescheduling timeout so we can step (~2.5s) then cycle (~3.5s),
+    // mirroring iOS startLoadingStages().
+    const tick = () => {
+      if (!cycling) {
+        const next = this._loadingStep + 1;
+        if (next >= n - 1) {
+          this._loadingStep = n - 1; // reached the final named stage
+          cycling = true;
+        } else {
+          this._loadingStep = next;
+        }
+      } else {
+        const next = this._loadingStep + 1;
+        this._loadingStep = next >= n ? cycleFrom : next;
       }
-      this._loadingStep += 1;
-    }, 2000);
+      this._captionTimer = setTimeout(tick, cycling ? 3500 : 2500);
+    };
+    this._captionTimer = setTimeout(tick, 2500);
   }
 
   _stopLoadingCaptions() {
     if (this._captionTimer) {
-      clearInterval(this._captionTimer);
+      clearTimeout(this._captionTimer);
       this._captionTimer = null;
     }
   }

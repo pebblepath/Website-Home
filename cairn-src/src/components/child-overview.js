@@ -1260,7 +1260,7 @@ export class ChildOverview extends LitElement {
           ? html`<div class="panel reports-empty">
               <p>
                 Upload a report card or daycare note in Pebble's Smart
-                Upload and it'll live here, and inform what Pebble knows
+                Upload. It'll live here and inform what Pebble knows
                 about ${child?.name ?? 'your child'}.
               </p>
             </div>`
