@@ -211,7 +211,7 @@ footer a:hover { opacity: 1; }
 
 <div class="eyebrow">Privacy Policy</div>
 <h1>How we handle your information</h1>
-<p class="meta"><strong>Effective date:</strong> May 26, 2026 · <strong>Last updated:</strong> May 26, 2026</p>
+<p class="meta"><strong>Effective date:</strong> May 26, 2026 · <strong>Last updated:</strong> July 14, 2026</p>
 
 <p class="intro">This Privacy Policy describes how PebblePath ("PebblePath," "we," "us," or "our") collects, uses, and shares information when you use the PebblePath mobile application and the website at <a href="https://pebblepath.ai">pebblepath.ai</a> (together, the "Service").</p>
 
@@ -229,10 +229,12 @@ footer a:hover { opacity: 1; }
 
 <h3>2.1 Information you provide directly</h3>
 <ul>
-  <li><strong>Account information</strong> — name, email address, password (hashed by our authentication provider), and optionally a profile photo. If you sign in with Google or (in future) Apple, we receive your name, email, and a unique identifier from that provider.</li>
+  <li><strong>Account information</strong> — name, email address, password (hashed by our authentication provider), and optionally a profile photo. If you sign in with Google or Apple, we receive your name, email, and a unique identifier from that provider.</li>
   <li><strong>Family information</strong> — a family display name and an invite code we generate so you can add a co-parent.</li>
+  <li><strong>Family home location (optional)</strong> — if you choose to share it during setup or in Settings, we save your <strong>city, state/region, and country only</strong>. We use these labels to help our AI advisor ("Pebble") suggest activities and events realistic for your area and to show a local weather forecast in your family brief. We do <strong>not</strong> store precise GPS coordinates. If you allow iOS Location access, we use your coordinates <strong>once</strong> to identify the city via Apple's reverse-geocoding service, then drop the coordinates immediately. You can skip this step, enter the city manually, or change it at any time in Settings.</li>
   <li><strong>Child information you enter about your child</strong> — name, date of birth, region (e.g., state for school timeline localization), photo, developmental flags (e.g., "speech / language"), and any pediatrician or personal notes you choose to add.</li>
   <li><strong>Milestone records</strong> — which milestones you've marked as not started, emerging, or achieved, plus any notes or photos you attach.</li>
+  <li><strong>Calendar events (optional)</strong> — if you connect Google Calendar, we request <strong>read-only</strong> access and import only the events you select, so you can add them to your family plan.</li>
   <li><strong>Tip interactions</strong> — which tips you've read or marked actionable.</li>
   <li><strong>Conversations with the AI advisor ("Pebble")</strong> — the questions you send, the model's responses, and metadata such as the time and the child context that accompanied the question.</li>
   <li><strong>Payment information</strong> <em>(when subscriptions launch)</em> — Apple processes all in-app purchases. We never see your credit card number or full billing details. Apple shares with us only a subscription status, plan, and an anonymized transaction identifier.</li>
@@ -241,14 +243,14 @@ footer a:hover { opacity: 1; }
 
 <h3>2.2 Information collected automatically</h3>
 <ul>
-  <li><strong>Device and usage data</strong> — device model, operating system version, app version, language and region settings, crash logs, and basic interaction events (which screens you opened, button taps).</li>
-  <li><strong>Identifiers</strong> — Firebase installation ID and Apple's IDFV (Identifier for Vendor). We do <strong>not</strong> use IDFA for advertising.</li>
-  <li><strong>Diagnostic data</strong> — performance traces and stability data via Firebase Crashlytics <em>(when enabled)</em>.</li>
+  <li><strong>Basic technical data</strong> — as part of normal operation, our infrastructure providers (Firebase) receive standard request metadata such as app version, operating system version, device model, and a Firebase installation identifier. We use this to operate and secure the Service, not for advertising.</li>
+  <li><strong>Identifiers</strong> — a Firebase installation ID. We do <strong>not</strong> use Apple's advertising identifier (IDFA), and we do <strong>not</strong> run advertising or cross-app tracking.</li>
+  <li><strong>Analytics and crash reporting</strong> — we do <strong>not</strong> currently run a usage-analytics or crash-reporting SDK, so we do not collect screen-view or tap-level interaction events. If we add analytics or crash reporting in the future, we will update this Policy and our App Store privacy labels before doing so.</li>
 </ul>
 
 <h3>2.3 Information from third parties</h3>
 <ul>
-  <li><strong>Authentication providers</strong> (Google; Apple, when added) provide name, email, and a unique identifier when you sign in with them.</li>
+  <li><strong>Authentication providers</strong> (Google, Apple) provide name, email, and a unique identifier when you sign in with them.</li>
   <li><strong>Apple App Store</strong> (when subscriptions launch) provides subscription status and renewal events.</li>
 </ul>
 <p>We do <strong>not</strong> purchase or receive personal information from data brokers or advertising networks.</p>
@@ -268,11 +270,11 @@ footer a:hover { opacity: 1; }
 <p>We do <strong>not</strong> use your information for advertising, behavioral profiling for marketing, or sale to third parties.</p>
 
 <h2>4. The AI advisor ("Pebble") — third-party processing</h2>
-<p>When you ask Pebble a question or generate a batch of tips, we send the relevant child context (name, age, focus areas, achieved/emerging milestones) and your question to <strong>Anthropic, PBC</strong> ("Anthropic"), the maker of the Claude AI models we use. Anthropic processes the request and returns a response, which we display to you and store on our servers.</p>
+<p>When you ask Pebble a question or generate a batch of tips, we send the relevant child context (age, focus areas, achieved/emerging milestones, and any mood or observation summaries) and your question to <strong>Anthropic, PBC</strong> ("Anthropic"), the maker of the Claude AI models we use. <strong>Before the request leaves our servers, we replace your child's first name with a non-identifying placeholder</strong>, so Anthropic never receives the actual name (see Section 9). Anthropic processes the request and returns a response, which we display to you and store on our servers.</p>
 <ul>
   <li>Anthropic does <strong>not</strong> train its models on data sent through the API. (See <a href="https://www.anthropic.com/legal/privacy">Anthropic's Privacy Policy</a> and <a href="https://www.anthropic.com/legal/commercial-terms">Commercial Terms</a>.)</li>
   <li>Anthropic retains API request data for a limited operational period (typically 30 days for safety review) before deletion.</li>
-  <li>We do not send your name, email, or contact information to Anthropic — only the child profile context needed to produce a useful answer.</li>
+  <li>We do not send your name, email, or contact information to Anthropic, and your child's first name is replaced with a placeholder before sending. Only the child profile context (age, milestone titles, and any notes or observations you've logged) needed to produce a useful answer is transmitted.</li>
 </ul>
 
 <h3>4.1 Web search</h3>
@@ -291,11 +293,13 @@ footer a:hover { opacity: 1; }
 <h2>5. Who we share information with</h2>
 <p>We share data only with the categories of recipients below, and only as necessary to operate the Service.</p>
 <ul>
-  <li><strong>Hosting and database providers</strong> — Google LLC (Firebase Authentication, Cloud Firestore, Cloud Storage, Cloud Functions). Data is stored in the United States (us-central1).</li>
+  <li><strong>Hosting, database, and sign-in providers</strong> — Google LLC (Firebase Authentication, Cloud Firestore, Cloud Storage, Cloud Functions; Google Sign-In; and, if you connect it, read-only Google Calendar access). Data is stored in the United States (us-central1).</li>
   <li><strong>AI provider</strong> — Anthropic, PBC (see Section 4).</li>
+  <li><strong>Weather data provider</strong> — OpenWeather. When you set a home location, we send your <strong>city</strong> (never GPS coordinates) to retrieve a local forecast for your family brief.</li>
+  <li><strong>Destination image provider</strong> — Pexels. When you create a trip, we send the <strong>place name</strong> you enter to fetch a royalty-free cover photo. We do not send any personal or child information to Pexels.</li>
   <li><strong>App distribution and payment processor</strong> — Apple Inc. (App Store and StoreKit when subscriptions launch).</li>
   <li><strong>Push notification provider</strong> <em>(when launched)</em> — Apple Push Notification service (APNs) and Firebase Cloud Messaging (FCM).</li>
-  <li><strong>Analytics provider</strong> <em>(when enabled)</em> — Firebase Analytics for aggregated, non-advertising usage metrics.</li>
+  <li><strong>Analytics</strong> — we do <strong>not</strong> currently use a third-party analytics provider. If we enable aggregated, non-advertising usage analytics in the future, we will update this section and our App Store privacy labels first.</li>
   <li><strong>Legal and safety</strong> — government agencies, law enforcement, or other parties when required by law, subpoena, or to protect rights, safety, and property.</li>
   <li><strong>Successor entities</strong> — if PebblePath is acquired, merged, or transferred, your information may be transferred to the successor under the same terms in this Policy. We will notify you before any such transfer.</li>
 </ul>
