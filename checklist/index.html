@@ -128,13 +128,13 @@
 <div class="wrap">
   <header>
     <div>
-      <div class="eyebrow">Status · 14 Jul 2026 · tomorrow's roadmap</div>
+      <div class="eyebrow">Status · 14 Jul 2026</div>
       <h1>PebblePath — App Store launch readiness</h1>
-      <p class="lede">The <b>foundation is complete</b>, and <b>Premium gating (A/B/C) is now verified end-to-end</b> — a sandbox purchase stamped the flag via the webhook, and the server-only-write rule is live. Store metadata, App Review info, and the brief-generation fix are all in. What's left is a tight finish-and-ship path: verify the Pexels cover on a clean build, cut Build 102, clear the test-gate gauntlet, then screenshots and Submit. No hard blockers.</p>
+      <p class="lede">The <b>foundation is complete</b> and <b>Premium gating (A/B/C) is verified end-to-end</b>. This morning the Pexels trip-cover fix was confirmed on a clean build and the Privacy Manifest re-audit came back clean. What's left is a tight path: cut Build 102, clear the test-gate gauntlet, then screenshots and Submit. No hard blockers.</p>
     </div>
     <div class="gauge-box">
-      <div class="gauge" style="--pct:92">
-        <div class="gauge-num"><div class="n">92<span>%</span></div></div>
+      <div class="gauge" style="--pct:94">
+        <div class="gauge-num"><div class="n">94<span>%</span></div></div>
       </div>
       <div class="gauge-label">to submission</div>
     </div>
@@ -142,9 +142,9 @@
 
   <div class="stats">
     <div class="stat teal"><div class="v">✓</div><div class="k">Infrastructure, compliance &amp; features — done</div></div>
-    <div class="stat accent"><div class="v">6</div><div class="k">Steps to Submit</div></div>
+    <div class="stat accent"><div class="v">4</div><div class="k">Steps to Submit</div></div>
     <div class="stat"><div class="v">4</div><div class="k">Test gates left (A done)</div></div>
-    <div class="stat"><div class="v">~2–4 days</div><div class="k">Realistic to submission</div></div>
+    <div class="stat"><div class="v">~1–3 days</div><div class="k">Realistic to submission</div></div>
   </div>
 
   <div class="legend">
@@ -156,48 +156,30 @@
 
   <!-- CRITICAL PATH -->
   <section>
-    <div class="sec-head"><h2>Critical path to Submit</h2><span class="count">6 steps · tomorrow's path</span></div>
-    <p class="sec-note">Tomorrow's ship path, in order. Kick off the external items (lawyer review, Google OAuth) first thing so their lead time runs in parallel. Build 102 is the vehicle for the test gates; screenshots come last, on the final build. Nothing here is foundational — it's finish-and-ship work.</p>
+    <div class="sec-head"><h2>Critical path to Submit</h2><span class="count">4 steps left</span></div>
+    <p class="sec-note">The home stretch. Cut Build 102, run the test gates on it, kick off lawyer review in parallel, screenshots last, then Submit. Nothing here is foundational — it's finish-and-ship work.</p>
     <div class="list">
 
       <div class="item must">
         <div class="num">1</div>
         <div class="body">
-          <div class="t">Verify the Pexels trip cover <span style="color:var(--teal-deep);font-weight:700">· first thing</span></div>
-          <div class="d">Auto-cover didn't fire on Build 101 (the CF logged zero invocations, though the iOS code + the CF are both correct — most likely a stale incremental build). A logged <code>do/catch</code> is now committed in place of the silent <code>try?</code>. <b>Clean Build Folder (⇧⌘K) → run to device → make a trip with a location → watch the console for <code>[seedCover]</code>.</b> Green, or a precise error to chase. <i>Not a Submit blocker</i> — trips without a cover show a clean gradient.</div>
+          <div class="t">Cut Build 102 to TestFlight <span style="color:var(--teal-deep);font-weight:700">· the next move</span></div>
+          <div class="d">Archive the clean build (bump 101 → 102 in Xcode). It carries the <b>verified</b> <code>seedCover</code> fix on top of everything in Build 101 — Premium A/B/C, Smart Upload v2, the branded segmented controls, the Family Brief hero, and the non-parent brief. This is the submission candidate and the vehicle for the test gates below.</div>
         </div>
-        <div class="meta"><span class="pill p-todo">To verify</span><span class="who">Thomas (Xcode)</span></div>
+        <div class="meta"><span class="pill p-todo">Next up</span><span class="who">Thomas (Xcode)</span></div>
       </div>
 
       <div class="item must">
         <div class="num">2</div>
         <div class="body">
-          <div class="t">Cut Build 102 to TestFlight</div>
-          <div class="d">Archive that same clean build (bump 101 → 102 in Xcode). It carries the <code>seedCover</code> fix on top of everything already in Build 101 — Premium A/B/C, Smart Upload v2, the branded segmented controls, the Family Brief hero, and the non-parent brief. This becomes the submission candidate and the vehicle for the test gates below.</div>
-        </div>
-        <div class="meta"><span class="pill p-todo">To do</span><span class="who">Thomas (Xcode)</span></div>
-      </div>
-
-      <div class="item must">
-        <div class="num">3</div>
-        <div class="body">
-          <div class="t">Privacy Manifest re-audit</div>
-          <div class="d">Confirm no SPM dependency added since the last audit (esp. the GoogleSignIn scope bump for Calendar) lacks a <code>PrivacyInfo.xcprivacy</code>. App Review is stricter than the TestFlight bar you already cleared. ~30 min.</div>
-        </div>
-        <div class="meta"><span class="pill p-todo">To do</span></div>
-      </div>
-
-      <div class="item must">
-        <div class="num">4</div>
-        <div class="body">
-          <div class="t">Lawyer review — Privacy Policy &amp; Terms <span style="color:var(--ink-faint);font-weight:600">· start first</span></div>
-          <div class="d">External, so kick it off first thing to run in parallel. Drafts are live &amp; defensible for beta; a real review is the gate before charging the public. (COPPA self-assessment already done — parent-facing, not child-directed.)</div>
+          <div class="t">Lawyer review — Privacy Policy &amp; Terms <span style="color:var(--ink-faint);font-weight:600">· start in parallel</span></div>
+          <div class="d">External, so kick it off in parallel. Drafts are live &amp; defensible for beta; a real review is the gate before charging the public. (COPPA self-assessment already done — parent-facing, not child-directed.)</div>
         </div>
         <div class="meta"><span class="pill p-gate">External · start now</span></div>
       </div>
 
       <div class="item must">
-        <div class="num">5</div>
+        <div class="num">3</div>
         <div class="body">
           <div class="t">Retake App Store screenshots <span style="color:var(--ink-faint);font-weight:600">· do this last</span></div>
           <div class="d">Deliberately the last step, right before Submit, so they show the final shipped UI on Build 102. The current set (<code>1 May</code>) predates the dashboard redesign, flash-cards, per-child themes, Family Brief hero, Activities rebuild, Settings hub, and Growth Pathways.</div>
@@ -206,10 +188,10 @@
       </div>
 
       <div class="item must">
-        <div class="num">6</div>
+        <div class="num">4</div>
         <div class="body">
           <div class="t">Submit for Review</div>
-          <div class="d">Once 1–3 + the test gates are green and the screenshots are in: <b>attach Build 102 + the subscription to the version</b>, paste the "What's New" text, and submit. Apple turnaround is typically 24–48h.</div>
+          <div class="d">Once the test gates are green and the screenshots are in: <b>attach Build 102 + the subscription to the version</b>, paste the "What's New" text, and submit. Apple turnaround is typically 24–48h.</div>
         </div>
         <div class="meta"><span class="pill p-gate">Final gate</span></div>
       </div>
@@ -337,13 +319,15 @@
         <div class="ship"><span class="ck">✓</span><span class="ck-t">Full-app visual harmonization + P1–P7 persona audit <span>· branded segmented controls, teal accent, dark-mode &amp; em-dash fixes; flat-family privacy re-verified live</span></span></div>
         <div class="ship"><span class="ck">✓</span><span class="ck-t">Premium gating S1–S6 (A/B/C) <span>· sandbox-verified end-to-end; server-authoritative flag</span></span></div>
         <div class="ship"><span class="ck">✓</span><span class="ck-t">Milestones "PebblePath Method" foundation <span>· D4 shipping</span></span></div>
+        <div class="ship"><span class="ck">✓</span><span class="ck-t">Privacy Manifest re-audit <span>· 14 Jul — every required SDK ships a manifest; ads/analytics not linked</span></span></div>
+        <div class="ship"><span class="ck">✓</span><span class="ck-t">Pexels auto-cover on manual trips <span>· verified on a clean build</span></span></div>
       </div>
     </div>
   </section>
 
   <div class="next">
-    <div class="lbl">Tomorrow</div>
-    <div class="txt"><b>Verify the Pexels cover on a clean build, cut Build 102, then run the test gates.</b> Premium A/B/C is done and sandbox-verified, so the path is clear. Kick off the two external long-lead items (lawyer review, Google OAuth) first thing so they run in parallel. Screenshots + Submit come last, on the final build.</div>
+    <div class="lbl">Next move</div>
+    <div class="txt"><b>Cut Build 102, then run the test gates on it.</b> Pexels is verified and the Privacy Manifest is clean, so the path is short: archive the clean build, work the four test gates (B fresh-account is the big one), kick off lawyer review in parallel, then screenshots and Submit.</div>
   </div>
 
   <footer>
