@@ -128,13 +128,13 @@
 <div class="wrap">
   <header>
     <div>
-      <div class="eyebrow">Status · 23 Jun 2026</div>
+      <div class="eyebrow">Status · 13 Jul 2026</div>
       <h1>PebblePath — App Store launch readiness</h1>
-      <p class="lede">The <b>foundation is complete</b> — the app is feature-complete, in invited TestFlight beta, with every piece of store, compliance, and security infrastructure in place. What remains is the <b>final verification gauntlet plus store polish</b>, not building. No hard blockers stand in the way, but ~8 must-do items and 5 test gates sit on the path to <b>Submit for Review</b>.</p>
+      <p class="lede">The <b>foundation is complete</b> — the app is feature-complete, in invited TestFlight beta, with every piece of store, compliance, and security infrastructure in place. <b>Premium is now verified end-to-end</b> (a real sandbox purchase stamped the flag via the webhook), store metadata + App Review info are in, and the working tree is committed. What remains is the <b>archive, screenshots, and the test-gate gauntlet</b> — not building. No hard blockers stand in the way.</p>
     </div>
     <div class="gauge-box">
-      <div class="gauge" style="--pct:80">
-        <div class="gauge-num"><div class="n">80<span>%</span></div></div>
+      <div class="gauge" style="--pct:88">
+        <div class="gauge-num"><div class="n">88<span>%</span></div></div>
       </div>
       <div class="gauge-label">to submission</div>
     </div>
@@ -142,8 +142,8 @@
 
   <div class="stats">
     <div class="stat teal"><div class="v">✓</div><div class="k">Infrastructure, compliance &amp; features — done</div></div>
-    <div class="stat accent"><div class="v">8</div><div class="k">Must-do before Submit</div></div>
-    <div class="stat"><div class="v">5</div><div class="k">Test gates to pass</div></div>
+    <div class="stat accent"><div class="v">5</div><div class="k">Must-do left before Submit</div></div>
+    <div class="stat"><div class="v">4</div><div class="k">Test gates to pass</div></div>
     <div class="stat"><div class="v">~1–2 wk</div><div class="k">Realistic to submission</div></div>
   </div>
 
@@ -156,26 +156,26 @@
 
   <!-- CRITICAL PATH -->
   <section>
-    <div class="sec-head"><h2>Critical path to Submit</h2><span class="count">8 items · roughly ordered</span></div>
+    <div class="sec-head"><h2>Critical path to Submit</h2><span class="count">8 items · 3 done, 5 left</span></div>
     <p class="sec-note">These gate the submission itself. Several run in parallel (lawyer review can start today; the archive gates the tests, which gate the screenshots). Nothing here is foundational — it's finish-and-ship work.</p>
     <div class="list">
 
       <div class="item must">
         <div class="num">1</div>
         <div class="body">
-          <div class="t">Finish Premium gating — Sprint 6</div>
-          <div class="d">Part B (server-side receipt webhook) is deployed &amp; live-wired; needs a real sandbox purchase to verify it stamps the flag. Then Part C — tighten the Firestore rule to server-only Premium writes. <b>Part A (leak fix) ships on the archive being cut now; next: a sandbox purchase to verify Part B, then Part C.</b></div>
+          <div class="t">Premium gating — Sprint 6 <span style="color:var(--ink-faint);font-weight:600">· Part C deferred</span></div>
+          <div class="d">Part A (leak fix) and Part B (server-side receipt webhook) are <b>done &amp; verified</b> — a real sandbox purchase fired the webhook and the server stamped the flag (<code>processed · active:true</code> in the logs). Part C (tighten the Firestore rule to server-only Premium writes) is <b>mapped and deferred to a later session</b> — it's the lock-down finisher, not a Submit blocker now that B is proven.</div>
         </div>
-        <div class="meta"><span class="pill p-prog">In progress</span><span class="who">Claude + Thomas</span></div>
+        <div class="meta"><span class="pill p-done">Part B verified</span><span class="who">Claude + Thomas</span></div>
       </div>
 
       <div class="item must">
         <div class="num">2</div>
         <div class="body">
-          <div class="t">Clean TestFlight archive of all staged code</div>
-          <div class="d">Bundle the Premium leak-fix + <code>appAccountToken</code> linkage, plus persona &amp; Milestones-D4 iOS work that's staged but not yet on a build. Bump the build number first. This build is the vehicle for every test gate below.</div>
+          <div class="t">Clean TestFlight archive of all committed code <span style="color:var(--teal-deep);font-weight:700">· the next move</span></div>
+          <div class="d">The working tree is now committed but not yet on a build. Bundle it all: Premium A/B, the Pexels auto-cover on manually-created trips, the Family Brief hero fixes (skeleton shows on refresh, never truncates), the branded segmented controls + teal-accent visual harmonization, Smart Upload v2 (booking + report imports), and the non-parent Family Brief. <b>Bump <code>CURRENT_PROJECT_VERSION</code> first</b> (grep for drift). This build is the vehicle for every test gate below.</div>
         </div>
-        <div class="meta"><span class="pill p-todo">To do</span><span class="who">Thomas (Xcode)</span></div>
+        <div class="meta"><span class="pill p-todo">Next up</span><span class="who">Thomas (Xcode)</span></div>
       </div>
 
       <div class="item must">
@@ -191,18 +191,18 @@
         <div class="num">4</div>
         <div class="body">
           <div class="t">Refresh App Store metadata &amp; description</div>
-          <div class="d">Current copy still reads "child milestone tracker." Update to the whole-family platform story + the "a method, not a checklist" Milestones framing. Draft in <code>docs/marketing/app-store-listing.md</code> §4. The new $8.99 subscription must be submitted <b>with</b> this version (ASC requires the first sub to ride a build).</div>
+          <div class="d">Done — copy refreshed to the current "calm shared space for family life" positioning and pasted into ASC (Promotional Text, Keywords, Description with the required auto-renew subscription disclosure block). "Forward an email" removed (not shipped). Categories set: Productivity / Lifestyle. Draft: <code>docs/marketing/app-store-listing-2026-07.md</code>. <b>Subtitle "Calm home base for family life" recommended — Thomas to finalize.</b></div>
         </div>
-        <div class="meta"><span class="pill p-todo">To do</span></div>
+        <div class="meta"><span class="pill p-done">Done</span></div>
       </div>
 
       <div class="item must">
         <div class="num">5</div>
         <div class="body">
           <div class="t">App Review information</div>
-          <div class="d">A working demo account (email/password) for Apple's reviewer, a note that Premium is an auto-renewing subscription with a 7-day trial, and the "What's New" text. Reviewers must be able to reach the paid features.</div>
+          <div class="d">Done — demo account <code>demo@pebblepath.ai</code> created + populated (Demo Family, child, a trip; NOT premium, so reviewers reach the paywall), contact info filled, and the subscription + build attached to the version. Auto-renew + 7-day-trial note captured in the listing doc. <b>Only the "What's New" text is left to paste at Submit.</b></div>
         </div>
-        <div class="meta"><span class="pill p-todo">To do</span></div>
+        <div class="meta"><span class="pill p-done">Done</span></div>
       </div>
 
       <div class="item must">
@@ -245,9 +245,9 @@
         <div class="num">A</div>
         <div class="body">
           <div class="t">Premium end-to-end (sandbox)</div>
-          <div class="d">A real sandbox purchase stamps the family flag via the webhook (<code>processed · active:true</code> in the logs); a brand-new account is <b>not</b> Premium (the leak fix); the $8.99 + 7-day trial flow works.</div>
+          <div class="d">Verified 13 Jul — a real sandbox purchase fired the webhook and the server stamped the family flag (<code>SUBSCRIBED · INITIAL_BUY · active:true</code> in the logs). Demo Family's Premium was then cleared so Apple's reviewer reaches the paywall on a clean account (the leak fix). <b>Re-confirm both flag fields are unset right before Submit.</b></div>
         </div>
-        <div class="meta"><span class="pill p-todo">To run</span></div>
+        <div class="meta"><span class="pill p-done">Verified</span></div>
       </div>
 
       <div class="item test">
@@ -313,9 +313,9 @@
         <div class="num">◆</div>
         <div class="body">
           <div class="t">Commit the deployed-but-uncommitted tree · welcome email</div>
-          <div class="d">Housekeeping: the live CF + iOS state runs ahead of git — reconcile into commits. And pick an email vendor for a new-signup welcome (Cloudflare / SendGrid / Resend).</div>
+          <div class="d"><b>Tree committed ✓ (13 Jul)</b> — reconciled into 6 scoped commits (secret-guard gitignore, firebase functions + rules, cairn Pexels, iOS snapshot, docs, design-sandbox); a stray Firebase per-project <code>.env</code> was caught and ignored, no secrets committed. Still open: pick an email vendor for a new-signup welcome (Cloudflare / SendGrid / Resend).</div>
         </div>
-        <div class="meta"><span class="pill p-todo">Housekeeping</span></div>
+        <div class="meta"><span class="pill p-defer">Email pending</span></div>
       </div>
     </div>
   </section>
@@ -343,7 +343,7 @@
       <p class="s">The reason the number is 80, not 30. Everything structural is done.</p>
       <div class="ship-grid">
         <div class="ship"><span class="ck">✓</span><span class="ck-t">Apple Developer + App Store Connect record <span>· bundle <code style="background:#fff;border:1px solid #dbe7e2;border-radius:4px;padding:.5px 4px;font-size:12px">ai.pebblepath.app</code>, app ID 6764684381</span></span></div>
-        <div class="ship"><span class="ck">✓</span><span class="ck-t">$8.99/mo subscription + 7-day trial <span>· created; receipt webhook deployed</span></span></div>
+        <div class="ship"><span class="ck">✓</span><span class="ck-t">$8.99/mo subscription + 7-day trial <span>· created; receipt webhook verified end-to-end</span></span></div>
         <div class="ship"><span class="ck">✓</span><span class="ck-t">Privacy nutrition labels · age rating · app icon · launch screen</span></div>
         <div class="ship"><span class="ck">✓</span><span class="ck-t">Privacy Policy + Terms live · COPPA self-assessment</span></div>
         <div class="ship"><span class="ck">✓</span><span class="ck-t">In-app consent · 18+ affirmation · account deletion</span></div>
@@ -361,7 +361,7 @@
 
   <div class="next">
     <div class="lbl">Next move</div>
-    <div class="txt"><b>Finish Premium S6, then cut the TestFlight build.</b> That build unlocks all five test gates at once. Kick off the lawyer review in parallel today. Screenshots + metadata come after the visual-harmonization pass so they show the final look — then Submit.</div>
+    <div class="txt"><b>Cut the TestFlight archive (item #2).</b> Premium is verified, metadata + review info are in, and the tree is committed — so the archive is the one thing gating the four remaining test gates. Bump the build number, archive, distribute. Kick off the lawyer review + Google OAuth verification in parallel (both have external lead time). Retake screenshots on this build — then Submit.</div>
   </div>
 
   <footer>
