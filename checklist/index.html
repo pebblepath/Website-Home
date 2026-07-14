@@ -133,8 +133,8 @@
       <p class="lede">The <b>foundation is complete</b> — the app is feature-complete, in invited TestFlight beta, with every piece of store, compliance, and security infrastructure in place. <b>Premium is now verified end-to-end</b> (a real sandbox purchase stamped the flag via the webhook), store metadata + App Review info are in, and the working tree is committed. What remains is the <b>archive, screenshots, and the test-gate gauntlet</b> — not building. No hard blockers stand in the way.</p>
     </div>
     <div class="gauge-box">
-      <div class="gauge" style="--pct:88">
-        <div class="gauge-num"><div class="n">88<span>%</span></div></div>
+      <div class="gauge" style="--pct:90">
+        <div class="gauge-num"><div class="n">90<span>%</span></div></div>
       </div>
       <div class="gauge-label">to submission</div>
     </div>
@@ -156,57 +156,30 @@
 
   <!-- CRITICAL PATH -->
   <section>
-    <div class="sec-head"><h2>Critical path to Submit</h2><span class="count">8 items · 3 done, 5 left</span></div>
-    <p class="sec-note">These gate the submission itself. Several run in parallel (lawyer review can start today; the archive gates the tests, which gate the screenshots). Nothing here is foundational — it's finish-and-ship work.</p>
+    <div class="sec-head"><h2>Critical path to Submit</h2><span class="count">6 items · 1 done, 5 left</span></div>
+    <p class="sec-note">These gate the submission itself. Build 101 is archived, so the test gates can run now; lawyer review + the Privacy Manifest audit run in parallel. Screenshots come last, right before Submit. Nothing here is foundational — it's finish-and-ship work.</p>
     <div class="list">
 
       <div class="item must">
         <div class="num">1</div>
         <div class="body">
-          <div class="t">Premium gating — Sprint 6 <span style="color:var(--ink-faint);font-weight:600">· Part C deferred</span></div>
-          <div class="d">Part A (leak fix) and Part B (server-side receipt webhook) are <b>done &amp; verified</b> — a real sandbox purchase fired the webhook and the server stamped the flag (<code>processed · active:true</code> in the logs). Part C (tighten the Firestore rule to server-only Premium writes) is <b>mapped and deferred to a later session</b> — it's the lock-down finisher, not a Submit blocker now that B is proven.</div>
+          <div class="t">Premium gating — Sprint 6 <span style="color:var(--teal-deep);font-weight:700">· Part C</span></div>
+          <div class="d">Part A (leak fix) + Part B (server-side receipt webhook) are <b>done &amp; verified</b> (a real sandbox purchase stamped the flag). Part C (the Firestore rule that makes <code>premiumActiveUntil</code> server-only-writable) is now <b>written into <code>firestore.rules</code></b>. Left: <b>Console-publish it</b> (it rides with the other staged rules in that file), then re-verify one sandbox purchase still flips Premium via the webhook — that check batches with test gate A on Build 101.</div>
         </div>
-        <div class="meta"><span class="pill p-done">Part B verified</span><span class="who">Claude + Thomas</span></div>
+        <div class="meta"><span class="pill p-todo">Publish + verify</span><span class="who">Thomas (Console)</span></div>
       </div>
 
       <div class="item must">
         <div class="num">2</div>
         <div class="body">
-          <div class="t">Clean TestFlight archive of all committed code <span style="color:var(--teal-deep);font-weight:700">· the next move</span></div>
-          <div class="d">The working tree is now committed but not yet on a build. Bundle it all: Premium A/B, the Pexels auto-cover on manually-created trips, the Family Brief hero fixes (skeleton shows on refresh, never truncates), the branded segmented controls + teal-accent visual harmonization, Smart Upload v2 (booking + report imports), and the non-parent Family Brief. <b>Bump <code>CURRENT_PROJECT_VERSION</code> first</b> (grep for drift). This build is the vehicle for every test gate below.</div>
+          <div class="t">TestFlight build — Build 101</div>
+          <div class="d"><b>Archived + uploaded ✓.</b> It carries all the committed iOS code: Premium A/B, the Pexels auto-cover on manual trips, the Family Brief hero fixes, the branded segmented controls + teal accent, Smart Upload v2, and the non-parent Family Brief. This is the submission build; re-cut only if a test gate below surfaces an iOS fix. <i>(The brief-generation hardening is a Cloud Function, already deployed, so it needs no new build.)</i></div>
         </div>
-        <div class="meta"><span class="pill p-todo">Next up</span><span class="who">Thomas (Xcode)</span></div>
+        <div class="meta"><span class="pill p-done">Build 101 up</span><span class="who">Thomas (Xcode)</span></div>
       </div>
 
       <div class="item must">
         <div class="num">3</div>
-        <div class="body">
-          <div class="t">Retake App Store screenshots</div>
-          <div class="d">The current set (<code>1 May</code>) predates the dashboard redesign, flash-cards, per-child themes, Family Brief hero, Activities rebuild, Settings hub, and Growth Pathways. Must reflect the shipped UI. Take after the visual-harmonization pass so they show the final look.</div>
-        </div>
-        <div class="meta"><span class="pill p-todo">To do</span><span class="who">Thomas</span></div>
-      </div>
-
-      <div class="item must">
-        <div class="num">4</div>
-        <div class="body">
-          <div class="t">Refresh App Store metadata &amp; description</div>
-          <div class="d">Done — copy refreshed to the current "calm shared space for family life" positioning and pasted into ASC (Promotional Text, Keywords, Description with the required auto-renew subscription disclosure block). "Forward an email" removed (not shipped). Categories set: Productivity / Lifestyle. Draft: <code>docs/marketing/app-store-listing-2026-07.md</code>. <b>Subtitle "Calm home base for family life" recommended — Thomas to finalize.</b></div>
-        </div>
-        <div class="meta"><span class="pill p-done">Done</span></div>
-      </div>
-
-      <div class="item must">
-        <div class="num">5</div>
-        <div class="body">
-          <div class="t">App Review information</div>
-          <div class="d">Done — demo account <code>demo@pebblepath.ai</code> created + populated (Demo Family, child, a trip; NOT premium, so reviewers reach the paywall), contact info filled, and the subscription + build attached to the version. Auto-renew + 7-day-trial note captured in the listing doc. <b>Only the "What's New" text is left to paste at Submit.</b></div>
-        </div>
-        <div class="meta"><span class="pill p-done">Done</span></div>
-      </div>
-
-      <div class="item must">
-        <div class="num">6</div>
         <div class="body">
           <div class="t">Privacy Manifest re-audit</div>
           <div class="d">Confirm no SPM dependency added since the last audit (esp. the GoogleSignIn scope bump for Calendar) lacks a <code>PrivacyInfo.xcprivacy</code>. App Review is stricter than the TestFlight bar you already cleared. ~30 min.</div>
@@ -215,7 +188,7 @@
       </div>
 
       <div class="item must">
-        <div class="num">7</div>
+        <div class="num">4</div>
         <div class="body">
           <div class="t">Lawyer review — Privacy Policy &amp; Terms</div>
           <div class="d">External dependency, so start it now in parallel. Drafts are live &amp; defensible for beta; a real review is the gate before charging the public. (COPPA self-assessment already done — parent-facing, not child-directed.)</div>
@@ -224,10 +197,19 @@
       </div>
 
       <div class="item must">
-        <div class="num">8</div>
+        <div class="num">5</div>
+        <div class="body">
+          <div class="t">Retake App Store screenshots <span style="color:var(--ink-faint);font-weight:600">· do this last</span></div>
+          <div class="d">Deliberately the last step, right before Submit, so they show the final shipped UI. The current set (<code>1 May</code>) predates the dashboard redesign, flash-cards, per-child themes, Family Brief hero, Activities rebuild, Settings hub, and Growth Pathways. Capture on Build 101.</div>
+        </div>
+        <div class="meta"><span class="pill p-todo">At submit</span><span class="who">Thomas</span></div>
+      </div>
+
+      <div class="item must">
+        <div class="num">6</div>
         <div class="body">
           <div class="t">Submit for Review</div>
-          <div class="d">Once 1–7 + the test gates are green: attach the build + subscription to the version and submit. Apple turnaround is typically 24–48h.</div>
+          <div class="d">Once 1–4 + the test gates are green and the screenshots are in: <b>attach Build 101 + the subscription to the version</b>, paste the "What's New" text, and submit. Apple turnaround is typically 24–48h.</div>
         </div>
         <div class="meta"><span class="pill p-gate">Final gate</span></div>
       </div>
@@ -361,7 +343,7 @@
 
   <div class="next">
     <div class="lbl">Next move</div>
-    <div class="txt"><b>Cut the TestFlight archive (item #2).</b> Premium is verified, metadata + review info are in, and the tree is committed — so the archive is the one thing gating the four remaining test gates. Bump the build number, archive, distribute. Kick off the lawyer review + Google OAuth verification in parallel (both have external lead time). Retake screenshots on this build — then Submit.</div>
+    <div class="txt"><b>Publish Part C, then run the test gates on Build 101.</b> Premium A/B are verified and Build 101 is archived, so the path is clear: Console-publish the Part C rule (re-verify a sandbox buy still flips Premium), then work the four remaining test gates. Kick off lawyer review + Google OAuth verification in parallel (external lead time). Screenshots + Submit come last.</div>
   </div>
 
   <footer>
