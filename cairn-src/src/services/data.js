@@ -1882,6 +1882,25 @@ class FamilyDataStore extends EventTarget {
       });
       grantedNames.push(child.name ?? 'your child');
     }
+
+    // 2026-07-18 (Gate-B finding #6) — restore the "parentIds is a subset
+    // of memberIds" invariant: a promoted parent must ALSO join the
+    // household `memberIds`. Without it, every memberIds-keyed gate (the
+    // Pebble CFs' membership check, the parents-only Family Brief rule,
+    // /children create, audit-log read) rejects the genuine new parent —
+    // hit live in Gate B (promoted co-parent's Pebble never answered).
+    // Mirrors the iOS fix in FirestoreService+Family. Written by the
+    // acting parent (a memberIds member), so the PP full-update rules
+    // branch admits the change.
+    const curMembers = Array.isArray(this.state.ppFamily?.memberIds)
+      ? this.state.ppFamily.memberIds
+      : [];
+    if (!curMembers.includes(uid)) {
+      await updateDoc(doc(db, 'families', fid), {
+        memberIds: [...curMembers, uid],
+        updatedAt: serverTimestamp(),
+      });
+    }
     return grantedNames;
   }
 
