@@ -185,16 +185,16 @@
       <p class="lede">Everything structural is shipped and <b>Premium gating is verified end-to-end</b>. What's left is a short, sequenced run: work the timeline <b>top to bottom</b>. The one rule that sets the order — <b>anything that could force a new build goes before screenshots</b>, because the screenshots must match the exact binary you submit.</p>
     </div>
     <div class="gauge-box">
-      <div class="gauge" style="--pct:98"><div class="gauge-num"><div class="n">98<span>%</span></div></div></div>
+      <div class="gauge" style="--pct:99"><div class="gauge-num"><div class="n">99<span>%</span></div></div></div>
       <div class="gauge-label">to submission</div>
     </div>
   </header>
 
   <div class="stats">
     <div class="stat teal"><div class="v">✓ Done</div><div class="k">Foundation, compliance, features, Premium (Gate A)</div></div>
-    <div class="stat accent"><div class="v">▶ Step 1</div><div class="k">Do next: approval-hardening dry-run on Build 102</div></div>
-    <div class="stat"><div class="v">7&nbsp;+&nbsp;Submit</div><div class="k">Sequenced steps to the finish line</div></div>
-    <div class="stat"><div class="v">~1.5–2 d</div><div class="k">Focused work, then ~24–48h Apple review</div></div>
+    <div class="stat accent"><div class="v">▶ Rebuild</div><div class="k">Do next: cut the final build — 7 fixes from the gate run</div></div>
+    <div class="stat"><div class="v">4&nbsp;+&nbsp;Submit</div><div class="k">Rebuild · screenshots · labels · demo check</div></div>
+    <div class="stat"><div class="v">~½–1 d</div><div class="k">Focused work, then ~24–48h Apple review</div></div>
   </div>
 
   <!-- PARALLEL -->
@@ -222,44 +222,42 @@
       </div>
     </div>
 
+    <div class="node done">
+      <div class="dot">✓</div>
+      <div class="card">
+        <div class="top"><span class="t">Approval-hardening dry-run</span><span class="pill p-done">Done · 18 Jul</span></div>
+        <div class="d">IAP paywall completeness verified — <b>Restore Purchases</b> exercised for real (it surfaced the token-drift bug, now fixed + webhook hardened + deployed), Terms/Privacy links + auto-renew disclosure present. The leak fix confirmed closed in Gate B's probe.</div>
+      </div>
+    </div>
+
+    <div class="node done">
+      <div class="dot">✓</div>
+      <div class="card">
+        <div class="top"><span class="t">Test gates B · C · E</span><span class="pill p-done">All done · 18 Jul</span></div>
+        <div class="d"><b>B ✓</b> — full persona walkthrough with a live second account: privacy model held (the connection/non-parent invariants verified on real data), and the run flushed out <b>4 launch-critical bugs</b>, all fixed. <b>C ✓</b> — cross-device push both ways + deep-link. <b>E ✓</b> — writes reach the server after a clean reinstall.</div>
+        <div class="meta"><span class="chip who">Thomas + Ellie · devices</span><span class="chip">~½ day</span></div>
+      </div>
+    </div>
+
+    <div class="node done">
+      <div class="dot">✓</div>
+      <div class="card">
+        <div class="top"><span class="t">Gate D — private-mode verified</span><span class="pill p-done">Done · 18 Jul</span></div>
+        <div class="d">Private Pebble messages confirmed hidden from the co-parent on two devices. Bonus: the strict server-side rule was already live (published in June), so no Console publish was needed — the verify was the last open piece.</div>
+      </div>
+    </div>
+
     <div class="node now">
       <div class="dot">1</div>
       <div class="card">
-        <div class="top"><span class="t">Approval-hardening dry-run on the fresh build</span><span class="pill p-now">Do this next</span></div>
-        <div class="d">IAP paywall completeness — <b>Restore Purchases</b> button + <b>Terms/Privacy links</b> + <b>auto-renew disclosure</b> — plus the <b>permission-denied test</b> (the #1 App Review crash cause). First, because any failure here forces a code fix → rebuild. The build you test also carries the new <b>non-parent privacy fix</b> (liveContext leak), so Gate B confirms it's closed.</div>
-        <div class="meta"><span class="chip who">Thomas + Ellie · devices</span><span class="chip">~2–3 hrs</span></div>
+        <div class="top"><span class="t">Final rebuild — bundle the gate-run fixes</span><span class="pill p-now">Do this next</span></div>
+        <div class="d">The gates worked: <b>7 staged fixes</b> ride this build — non-parent privacy (liveContext) · Members-list labels · Pebble quota label · live-promotion listener re-attach · promoted-parent <code style="font-size:11px">memberIds</code> · flat-family deletion cascade · the new <b>inline re-auth Delete-account sheet</b>. Bump <code style="font-size:11px">CURRENT_PROJECT_VERSION</code> in the Xcode UI, Archive, upload. Then a quick verify: the Delete-account sheet (wrong + right password, and the Google one-tap) + the Members list on both accounts.</div>
+        <div class="meta"><span class="chip who">Thomas · Xcode</span><span class="chip">~1 hr + processing</span></div>
       </div>
     </div>
 
     <div class="node next">
       <div class="dot">2</div>
-      <div class="card">
-        <div class="top"><span class="t">Test gates B · C · E</span><span class="pill p-run">B · C to run</span><span class="pill p-done">E ✓ done</span></div>
-        <div class="d"><b>B</b> — fresh-account walkthrough: flat-family model + Activities + all 7 persona flows + the hard invariant that <b>a connection never sees another family's children</b> (the big one). <b>C</b> — cross-device push both ways + tap-to-deep-link. <b>E</b> — <b style="color:var(--green)">✓ verified 14 Jul</b>: a fresh Pebble message reached the server with a live timestamp after a clean reinstall.</div>
-        <div class="meta"><span class="chip who">Thomas + Ellie · devices</span><span class="chip">~½ day</span></div>
-      </div>
-    </div>
-
-    <div class="node next">
-      <div class="dot">3</div>
-      <div class="card">
-        <div class="top"><span class="t">Gate D → publish the strict rule</span><span class="pill p-run">To run</span></div>
-        <div class="d">Verify a <b>private</b> Pebble message stays hidden from the co-parent on two devices, <b>then</b> Console-publish the strict rule (which also ships the dead-rule cleanup). Verify before you publish — never tighten a rule you haven't confirmed.</div>
-        <div class="meta"><span class="chip who">Thomas · Firestore Console</span><span class="chip">~1 hr</span></div>
-      </div>
-    </div>
-
-    <div class="node decision">
-      <div class="dot"><b>?</b></div>
-      <div class="card">
-        <div class="top"><span class="t">Rebuild — only if steps 1–3 forced a fix</span><span class="pill p-cond">Only if needed</span></div>
-        <div class="d">If any test surfaced a code bug: bump <code style="font-size:11px">CURRENT_PROJECT_VERSION</code>, Archive, upload, wait for processing — the reviewed build must be the fixed one. If nothing broke, <b>skip entirely</b> and carry Build 102 forward. This is the one branch that can reset the clock.</div>
-        <div class="meta"><span class="chip who">Thomas · Xcode</span><span class="chip">skip if clean</span></div>
-      </div>
-    </div>
-
-    <div class="node next">
-      <div class="dot">4</div>
       <div class="card">
         <div class="top"><span class="t">Retake App Store screenshots</span><span class="pill p-run">To run</span></div>
         <div class="d">On the final confirmed build — device frames, real content, final UI. Kills the stale <code style="font-size:11px">1 May</code> set (predates the dashboard redesign, flash-cards, themes, Family Brief hero, Activities rebuild, Settings hub). No web / Android / "beta" surfaces.</div>
@@ -268,7 +266,7 @@
     </div>
 
     <div class="node next">
-      <div class="dot">5</div>
+      <div class="dot">3</div>
       <div class="card">
         <div class="top"><span class="t">Reconcile privacy nutrition labels</span><span class="pill p-quick">~15 min</span></div>
         <div class="d">Diff the App Store Connect privacy labels against the corrected Privacy §2 (don't claim analytics data we don't collect). Cheap insurance — label/policy mismatch is a live review check, and you're already in these screens for Submit.</div>
@@ -277,7 +275,7 @@
     </div>
 
     <div class="node next">
-      <div class="dot">6</div>
+      <div class="dot">4</div>
       <div class="card">
         <div class="top"><span class="t">Confirm demo account is not premium</span><span class="pill p-run">Pre-submit</span></div>
         <div class="d"><code style="font-size:11px">demo@pebblepath.ai</code> must have its premium flags <b>unset</b> so Apple's reviewer reaches the paywall. Re-check right before Submit — test-gate account churn can silently flip flags.</div>
@@ -301,7 +299,7 @@
     </div>
 
     <div class="node later">
-      <div class="dot">7</div>
+      <div class="dot">5</div>
       <div class="card">
         <div class="top"><span class="t">After approval — before public go-live</span><span class="pill p-later">Post-approval</span></div>
         <div class="d">Approval isn't forced public availability — gate the go-live on: <b>server-side IAP receipt validation</b> · <b>new-signup welcome email</b> (pick Cloudflare / SendGrid / Resend) · fix the <b>Portal reCAPTCHA 403</b> then <b>enforce App Check</b> per-service (iOS a few days after approval) · consider a <b>phased release</b>. Finish lawyer + OAuth + LLC if still running.</div>
