@@ -126,6 +126,7 @@
   .p-now { background:var(--terra); color:#fff; }
   .p-run { background:#E1EFEC; color:var(--teal-deep); }
   .p-cond{ background:#F7ECD4; color:#946316; }
+  .p-prog{ background:#F7ECD4; color:#946316; }
   .p-quick{ background:#E1F0E4; color:#2F7346; }
   .p-done{ background:#E1F0E4; color:#2F7346; }
   .p-later{ background:#ECEBE6; color:#6E736C; }
@@ -192,8 +193,8 @@
 
   <div class="stats">
     <div class="stat teal"><div class="v">✓ Done</div><div class="k">Foundation, compliance, features, Premium (Gate A)</div></div>
-    <div class="stat accent"><div class="v">▶ Rebuild</div><div class="k">Do next: cut the final build — 7 fixes from the gate run</div></div>
-    <div class="stat"><div class="v">4&nbsp;+&nbsp;Submit</div><div class="k">Rebuild · screenshots · labels · demo check</div></div>
+    <div class="stat accent"><div class="v">▶ Last mile</div><div class="k">Labels (now) + screenshots (in progress) → Submit</div></div>
+    <div class="stat"><div class="v">2&nbsp;+&nbsp;Submit</div><div class="k">Labels · screenshots — then attach the build</div></div>
     <div class="stat"><div class="v">~½–1 d</div><div class="k">Focused work, then ~24–48h Apple review</div></div>
   </div>
 
@@ -247,19 +248,18 @@
       </div>
     </div>
 
-    <div class="node now">
-      <div class="dot">1</div>
+    <div class="node done">
+      <div class="dot">✓</div>
       <div class="card">
-        <div class="top"><span class="t">Final rebuild — bundle the gate-run fixes</span><span class="pill p-now">Do this next</span></div>
-        <div class="d">The gates worked: <b>7 staged fixes</b> ride this build — non-parent privacy (liveContext) · Members-list labels · Pebble quota label · live-promotion listener re-attach · promoted-parent <code style="font-size:11px">memberIds</code> · flat-family deletion cascade · the new <b>inline re-auth Delete-account sheet</b>. Bump <code style="font-size:11px">CURRENT_PROJECT_VERSION</code> in the Xcode UI, Archive, upload. Then a quick verify: the Delete-account sheet (wrong + right password, and the Google one-tap) + the Members list on both accounts.</div>
-        <div class="meta"><span class="chip who">Thomas · Xcode</span><span class="chip">~1 hr + processing</span></div>
+        <div class="top"><span class="t">Final rebuild — the gate-run bundle</span><span class="pill p-done">Archived · 18 Jul</span></div>
+        <div class="d"><b>7 fixes</b> ride this build: non-parent privacy (liveContext) · Members-list labels · Pebble quota label · live-promotion listener re-attach · promoted-parent <code style="font-size:11px">memberIds</code> · flat-family deletion cascade · the inline re-auth <b>Delete-account sheet</b>. Quick verify once it's on TestFlight: the deletion sheet (wrong + right password, Google one-tap) + the Members list.</div>
       </div>
     </div>
 
     <div class="node next">
       <div class="dot">2</div>
       <div class="card">
-        <div class="top"><span class="t">Retake App Store screenshots</span><span class="pill p-run">To run</span></div>
+        <div class="top"><span class="t">Retake App Store screenshots</span><span class="pill p-prog">In progress · parallel session</span></div>
         <div class="d">On the final confirmed build — device frames, real content, final UI. Kills the stale <code style="font-size:11px">1 May</code> set (predates the dashboard redesign, flash-cards, themes, Family Brief hero, Activities rebuild, Settings hub). No web / Android / "beta" surfaces.</div>
         <div class="meta"><span class="chip who">Thomas</span><span class="chip">~2–3 hrs</span></div>
       </div>
@@ -268,8 +268,8 @@
     <div class="node next">
       <div class="dot">3</div>
       <div class="card">
-        <div class="top"><span class="t">Reconcile privacy nutrition labels</span><span class="pill p-quick">~15 min</span></div>
-        <div class="d">Diff the App Store Connect privacy labels against the corrected Privacy §2 (don't claim analytics data we don't collect). Cheap insurance — label/policy mismatch is a live review check, and you're already in these screens for Submit.</div>
+        <div class="top"><span class="t">Reconcile privacy nutrition labels</span><span class="pill p-now">Doing now</span></div>
+        <div class="d">Four changes vs the April labels: <b>add Coarse Location</b> (home-location feature; must match the Info.plist purpose string) · <b>remove Crash Data + Performance Data</b> (no such SDKs linked) · drop the <b>Analytics purpose</b> from Product Interaction and Device ID. Full target state: <code style="font-size:11px">docs/legal/app-store-privacy-nutrition.md</code> (reconciled 18 Jul).</div>
         <div class="meta"><span class="chip who">Thomas · App Store Connect</span></div>
       </div>
     </div>
@@ -277,9 +277,8 @@
     <div class="node next">
       <div class="dot">4</div>
       <div class="card">
-        <div class="top"><span class="t">Confirm demo account is not premium</span><span class="pill p-run">Pre-submit</span></div>
-        <div class="d"><code style="font-size:11px">demo@pebblepath.ai</code> must have its premium flags <b>unset</b> so Apple's reviewer reaches the paywall. Re-check right before Submit — test-gate account churn can silently flip flags.</div>
-        <div class="meta"><span class="chip who">Thomas</span><span class="chip">~10 min</span></div>
+        <div class="top"><span class="t">Confirm demo account is not premium</span><span class="pill p-done">Verified · 18 Jul</span></div>
+        <div class="d"><code style="font-size:11px">demo@pebblepath.ai</code> confirmed clean: all three premium fields unset, and <b>durably locked</b> — with no token or transaction-id on the doc, the hardened webhook can't match a stray sandbox renewal to it. Untouched until Submit.</div>
       </div>
     </div>
 
