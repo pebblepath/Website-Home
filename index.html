@@ -2957,6 +2957,63 @@
     .hero-v2-copy p { font-size: 16px; }
   }
 
+
+  /* ---- email capture (Kit form 9702391) ---- */
+  .signup-section {
+    background: var(--off-white);
+    border-top: 1px solid rgba(0,0,0,0.06);
+    padding: 66px 48px 70px;
+  }
+  .signup-card { max-width: 560px; margin: 0 auto; text-align: center; }
+  .signup-title {
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 30px; line-height: 1.15; letter-spacing: -0.02em;
+    color: var(--charcoal); margin: 0 0 10px;
+  }
+  .signup-sub {
+    font-size: 16px; line-height: 1.6; color: var(--warm-gray);
+    margin: 0 auto 26px; max-width: 44ch;
+  }
+  .signup-form { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .signup-input {
+    flex: 1 1 260px; min-width: 0; max-width: 320px;
+    font: inherit; font-size: 15px; color: var(--charcoal);
+    padding: 13px 18px; border-radius: 999px;
+    border: 1px solid var(--light-gray); background: #fff;
+    transition: border-color .18s ease, box-shadow .18s ease;
+  }
+  .signup-input::placeholder { color: #A9A9A9; }
+  .signup-input:focus {
+    outline: none; border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(61,155,143,0.16);
+  }
+  .signup-btn {
+    font: inherit; font-size: 15px; font-weight: 600; color: #fff;
+    padding: 13px 26px; border-radius: 999px; border: 0; cursor: pointer;
+    background: var(--teal); white-space: nowrap;
+    transition: background .18s ease, transform .12s ease;
+  }
+  .signup-btn:hover { background: var(--teal-dark); }
+  .signup-btn:active { transform: scale(0.98); }
+  .signup-btn[disabled] { opacity: .6; cursor: default; transform: none; }
+  .signup-msg {
+    min-height: 22px; margin: 14px 0 0; font-size: 14.5px; line-height: 1.5;
+    color: var(--teal-deep); opacity: 0; transition: opacity .25s ease;
+  }
+  .signup-msg.show { opacity: 1; }
+  .signup-msg.err { color: var(--terracotta-dark); }
+  .signup-fineprint { margin: 16px 0 0; font-size: 12.5px; color: #9A9A9A; }
+  .signup-sr {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  @media (max-width: 560px) {
+    .signup-section { padding: 46px 20px 50px; }
+    .signup-title { font-size: 25px; }
+    .signup-sub { font-size: 15px; }
+    .signup-form { flex-direction: column; align-items: stretch; }
+    .signup-input { max-width: none; }
+  }
 </style>
   <script src="/assets/analytics.js?v=3" defer></script>
 </head>
@@ -4070,6 +4127,22 @@
   </div>
 </section>
 
+<!-- EMAIL CAPTURE -->
+<section class="signup-section reveal">
+  <div class="signup-card">
+    <h2 class="signup-title">Want to follow along?</h2>
+    <p class="signup-sub">We send a short note when something worth knowing ships. No noise, and you can leave any time.</p>
+    <form class="signup-form" id="pp-signup" novalidate>
+      <label class="signup-sr" for="pp-signup-email">Email address</label>
+      <input class="signup-input" id="pp-signup-email" type="email" name="email_address"
+             placeholder="you@example.com" autocomplete="email" required>
+      <button class="signup-btn" type="submit" id="pp-signup-btn">Keep me posted</button>
+    </form>
+    <p class="signup-msg" id="pp-signup-msg" role="status" aria-live="polite"></p>
+    <p class="signup-fineprint">Your family data is never part of this. Just occasional product news.</p>
+  </div>
+</section>
+
 <!-- EXPLORE LINKS -->
 <section class="explore-section">
   <div class="explore-head">
@@ -4516,5 +4589,78 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
   }
 </script>
 
+
+<script>
+/* Email capture. Posts directly to Kit so the form can look like the rest of
+   the site instead of like an embedded widget. Kit is set to double opt-in,
+   so success sends people to their inbox rather than claiming they are done. */
+(function () {
+  var form = document.getElementById('pp-signup');
+  if (!form) return;
+
+  var input = document.getElementById('pp-signup-email');
+  var btn   = document.getElementById('pp-signup-btn');
+  var msg   = document.getElementById('pp-signup-msg');
+
+  function say(text, isError) {
+    msg.textContent = text;
+    msg.classList.toggle('err', !!isError);
+    msg.classList.add('show');
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var email = (input.value || '').trim();
+    if (!email || email.indexOf('@') < 1 || email.indexOf('.') < 0) {
+      say('That email does not look quite right.', true);
+      input.focus();
+      return;
+    }
+
+    btn.disabled = true;
+    var original = btn.textContent;
+    btn.textContent = 'Sending...';
+    msg.classList.remove('show');
+
+    var body = new FormData();
+    body.append('email_address', email);
+
+    fetch('https://app.kit.com/forms/9702391/subscriptions', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: body
+    })
+      .then(function (r) {
+        // Kit answers HTTP 200 even when it REJECTS the address, with
+        // {"status":"failed","errors":{...}} in the body. Checking r.ok alone
+        // would show "check your inbox" to someone who was never subscribed.
+        return r.json()
+          .catch(function () { return {}; })
+          .then(function (data) { return { ok: r.ok, data: data }; });
+      })
+      .then(function (res) {
+        if (!res.ok) throw new Error('http ' + res.ok);
+        if (res.data && res.data.status === 'failed') {
+          var m = res.data.errors && res.data.errors.messages && res.data.errors.messages[0];
+          throw new Error(m || 'rejected');
+        }
+        form.style.display = 'none';
+        say('Thanks. There is a confirmation email on its way to you.');
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'email_signup', { page_path: window.location.pathname });
+        }
+      })
+      .catch(function (err) {
+        btn.disabled = false;
+        btn.textContent = original;
+        // Prefer Kit's own wording when it explained itself.
+        var known = err && err.message && err.message.indexOf('http ') !== 0
+                    && err.message !== 'rejected';
+        say(known ? err.message + '.' : 'That did not go through. Try again in a moment?', true);
+      });
+  });
+})();
+</script>
 </body>
 </html>
