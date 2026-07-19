@@ -280,10 +280,10 @@
 
     <div class="node now">
       <div class="dot">1</div>
-      <div class="card" data-id="p0-weight">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">Compress the rest of the media</span><span class="pill p-now">Speed</span></div>
-        <div class="d">Beyond the video: <code>hero-dual-iphone.png</code> 1.9MB · <code>ellie-founder.png</code> 836KB and <code>thomas-founder.png</code> 300KB (both PNG, should be JPEG) · <code>screens/activities.jpg</code> 800KB and <code>screens/trips.jpg</code> 616KB, well over the documented 80 to 230KB recipe. Around <b>4MB recoverable</b> without visible quality loss.</div>
-        <div class="meta"><span class="chip who">Claude</span><span class="chip">~15 min</span></div>
+      <div class="card" data-id="p0-weight" data-done="1">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Compress the rest of the media</span><span class="pill p-ship">Shipped</span></div>
+        <div class="d"><b>~1.4MB off the critical path.</b> Three showcase screenshots were shipping at full App Store resolution (1320x2868) instead of the 700x1520 web recipe: activities 800K to 236K, trips 616K to 192K, pebble 256K to 100K. The founder portraits were 800px for a 240px slot, now 480px (2x retina): 836K to 312K and 300K to 200K. <b>They could not become JPEGs</b>, all three PNGs genuinely carry alpha, checked before touching them. <code>hero-dual-iphone.png</code> barely moved and is still 1.8MB; it is desktop-only yet still fetched on mobile, so moving it to a CSS background inside the existing <code>min-width:1024px</code> block would stop phones downloading 1.8MB they never render. Left alone as it touches hero layout.</div>
+        <div class="meta"><span class="chip">19 Jul</span><span class="chip">commit 62155bb</span></div>
       </div>
     </div>
 
