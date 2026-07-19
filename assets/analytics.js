@@ -7,14 +7,20 @@
  *   <script src="/assets/analytics.js" defer></script>
  *
  * Deliberately NOT loaded on /portal/ - that is the authenticated product,
- * not the marketing funnel, and Firebase Analytics already covers in-app
- * behaviour. Tracking signed-in family sessions here would sit badly against
- * the privacy position the site sells on.
+ * not the marketing funnel. Putting Google tracking on signed-in family
+ * sessions would sit badly against the privacy position the site sells on.
+ *
+ * Note (2026-07-19): there is currently NO analytics inside the iOS app.
+ * FirebaseAnalytics is not linked in the Xcode target and no events are
+ * logged anywhere. So this file is the ONLY measurement PebblePath has.
+ * Adding app-side analytics is a 1.0.1 job: it needs a new build, and it
+ * changes the data-collection profile already declared in the App Store
+ * privacy nutrition labels.
  */
 (function () {
   'use strict';
 
-  var GA_ID = 'G-PLACEHOLDER';
+  var GA_ID = 'G-9JQBCG8SVM';
 
   // Fail closed rather than firing junk into a live property.
   if (!GA_ID || GA_ID.indexOf('PLACEHOLDER') !== -1) return;
