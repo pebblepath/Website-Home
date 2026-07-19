@@ -4,7 +4,16 @@
  * One file owns the Measurement ID and all event tracking. Each page loads
  * this with a single tag in <head>:
  *
- *   <script src="/assets/analytics.js" defer></script>
+ *   <script src="/assets/analytics.js?v=2" defer></script>
+ *
+ * ⚠️ BUMP THE ?v= NUMBER ON EVERY CHANGE TO THIS FILE, in all 11 pages.
+ * Cloudflare caches assets under /assets/ for 4 hours (max-age=14400) but
+ * caches HTML for only 10 minutes (max-age=600). Without a version bump,
+ * visitors keep the OLD script for up to 4 hours after a deploy while the
+ * HTML looks updated. Verified the hard way on 2026-07-19: curl with a
+ * cache-buster showed the new file, real visitors were still being served
+ * the old one. Never verify an asset change without checking the
+ * un-busted URL.
  *
  * Deliberately NOT loaded on /portal/ - that is the authenticated product,
  * not the marketing funnel. Putting Google tracking on signed-in family
