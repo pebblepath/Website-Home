@@ -316,10 +316,10 @@
 
     <div class="node now">
       <div class="dot">3</div>
-      <div class="card" data-id="p0-email">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">Email capture + vendor pick</span><span class="pill p-now">Blocks the push</span></div>
-        <div class="d">No capture anywhere on the site. Without it, everyone the LinkedIn push sends who is not ready to install right now is lost for good. Needs a vendor that covers both the list and transactional send, so it also unblocks the welcome email. Wire the signup as a GA4 event so it lands in the funnel.</div>
-        <div class="meta"><span class="chip who">You pick vendor, Claude builds</span><span class="chip">~1h</span></div>
+      <div class="card" data-id="p0-email" data-done="1">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Email capture + vendor pick</span><span class="pill p-ship">Shipped</span></div>
+        <div class="d"><b>Kit</b>, form <code>9702391</code>. Sits between the App Store CTA and the explore links, because someone who scrolled past the download button without tapping is exactly who this catches. Posts <b>straight to Kit</b> rather than embedding their widget, so it looks like the site rather than a bolted-on newsletter box. Fires a GA4 <code>email_signup</code> event next to <code>app_store_click</code>. <b>Testing caught a real bug:</b> Kit answers HTTP 200 even when it REJECTS an address, so the first cut would have shown "check your inbox" to people who were never subscribed. The handler now reads the JSON status and surfaces Kit's own wording. Double opt-in is on, so success sends people to their inbox.</div>
+        <div class="meta"><span class="chip">19 Jul</span><span class="chip">commit 46e0fb5</span></div>
       </div>
     </div>
 
