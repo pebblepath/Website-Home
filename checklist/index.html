@@ -183,7 +183,7 @@
     <div>
       <div class="eyebrow">Launch timeline · 14 Jul 2026</div>
       <h1>The path to Submit, in order</h1>
-      <p class="lede">Everything structural is shipped and <b>Premium gating is verified end-to-end</b>. What's left is a short, sequenced run: work the timeline <b>top to bottom</b>. The one rule that sets the order — <b>anything that could force a new build goes before screenshots</b>, because the screenshots must match the exact binary you submit.</p>
+      <p class="lede">The critical path is <b>clear</b>. Every gate, the final build, the screenshots, the privacy labels and the demo account are all closed and verified. <b>Build 107 is the binary to submit.</b> One step remains: attach the build and the subscription in App Store Connect, then hit Submit.</p>
     </div>
     <div class="gauge-box">
       <div class="gauge" style="--pct:99"><div class="gauge-num"><div class="n">99<span>%</span></div></div></div>
@@ -193,9 +193,9 @@
 
   <div class="stats">
     <div class="stat teal"><div class="v">✓ Done</div><div class="k">Foundation, compliance, features, Premium (Gate A)</div></div>
-    <div class="stat accent"><div class="v">▶ Last mile</div><div class="k">Verify the final build → Submit</div></div>
-    <div class="stat"><div class="v">1&nbsp;+&nbsp;Submit</div><div class="k">Screenshots, labels and the demo account are all closed</div></div>
-    <div class="stat"><div class="v">~½–1 d</div><div class="k">Focused work, then ~24–48h Apple review</div></div>
+    <div class="stat accent"><div class="v">▶ Last mile</div><div class="k">Submit. Nothing else is outstanding</div></div>
+    <div class="stat"><div class="v">Build&nbsp;107</div><div class="k">Verified on TestFlight. This is the binary to attach</div></div>
+    <div class="stat"><div class="v">~30 min</div><div class="k">To submit, then ~24–48h Apple review</div></div>
   </div>
 
   <!-- PARALLEL -->
@@ -210,8 +210,8 @@
   </div>
 
   <!-- TIMELINE -->
-  <div class="tl-head"><h2>The critical path</h2><span class="count">do these in order</span></div>
-  <p class="tl-note">Each step depends on the one above it. Steps 1–4 are grouped first on purpose: any of them could surface a bug that forces a new build, so they must clear <b>before</b> screenshots and Submit.</p>
+  <div class="tl-head"><h2>The critical path</h2><span class="count">all clear · Submit is next</span></div>
+  <p class="tl-note">Every step below is closed and verified. The gates were sequenced ahead of the screenshots on purpose, so that anything capable of forcing a new build surfaced <b>before</b> the store imagery was captured.</p>
 
   <div class="tl">
 
@@ -219,7 +219,7 @@
       <div class="dot">✓</div>
       <div class="card">
         <div class="top"><span class="t">Foundation + Premium (Gate A)</span><span class="pill p-done">Done</span></div>
-        <div class="d">Everything structural — infra, compliance, features, security sprint, App Store record, subscription — is shipped. Premium gating A/B/C is sandbox-verified end-to-end (purchase → webhook → server flag). Build 102 is archived and on TestFlight.</div>
+        <div class="d">Everything structural — infra, compliance, features, security sprint, App Store record, subscription — is shipped. Premium gating A/B/C is sandbox-verified end-to-end (purchase → webhook → server flag). Build 102 was the archived build at this point; the submission candidate is now 107.</div>
       </div>
     </div>
 
@@ -251,8 +251,8 @@
     <div class="node done">
       <div class="dot">✓</div>
       <div class="card">
-        <div class="top"><span class="t">Final rebuild — the gate-run bundle</span><span class="pill p-prog">Build 106 · archiving</span></div>
-        <div class="d"><b>7 fixes + 2 polish</b> ride this build: non-parent privacy (liveContext) · Members-list labels · Pebble quota label · live-promotion listener re-attach · promoted-parent <code style="font-size:11px">memberIds</code> · flat-family deletion cascade · the inline re-auth <b>Delete-account sheet</b> · solo avatar for non-parents · the read-only <b>"covered by your family" Premium card</b>. Verify on TestFlight: deletion sheet (wrong + right password, Google one-tap) · Members list · Grandpa's solo avatar + covered card.</div>
+        <div class="top"><span class="t">Final rebuild — the gate-run bundle</span><span class="pill p-done">Build 107 · verified</span></div>
+        <div class="d"><b>7 fixes + 2 polish</b> rode build 106: non-parent privacy (liveContext) · Members-list labels · Pebble quota label · live-promotion listener re-attach · promoted-parent <code style="font-size:11px">memberIds</code> · flat-family deletion cascade · the inline re-auth <b>Delete-account sheet</b> · solo avatar for non-parents · the read-only <b>"covered by your family" Premium card</b>. <b>Build 107</b> adds the dismissible Home packing card. All verified on TestFlight: deletion sheet (wrong + right password, Google one-tap) · Members list · Grandpa's solo avatar + covered card. <b>107 is the binary to submit.</b></div>
       </div>
     </div>
 
