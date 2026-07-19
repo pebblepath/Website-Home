@@ -308,9 +308,9 @@
     <div class="node now">
       <div class="dot">2</div>
       <div class="card" data-id="p0-copy">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">Rewrite two lines in your own voice</span><span class="pill p-now">Only you can do this</span></div>
-        <div class="d"><b>Mechanical half shipped:</b> all <b>18</b> em-dashes removed from visible copy (the earlier count of 14 undercounted), and "AI" dropped from both pricing bullets and the Pebble alt text. <b>Two lines left deliberately</b>, words preserved verbatim: the hero subhead, and the heading "Pebble, your AI advisor" with its matching feature label. Suggested direction for the heading was <b>"thinking ahead for you"</b>, since the strategy positions this as operational relief rather than parenting advice, and "advisor" is the exact ground Huckleberry's Berry already occupies.</div>
-        <div class="meta"><span class="chip who">You</span><span class="chip">~10 min</span></div>
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Rewrite one line in your own voice</span><span class="pill p-now">Only you can do this</span></div>
+        <div class="d"><b>Mechanical half shipped:</b> all 18 em-dashes removed from visible copy, and "AI" dropped from both pricing bullets and the Pebble alt text. <b>Scope then shrank on inspection.</b> The hero subhead I flagged sits inside a <b>commented-out legacy hero</b> (disabled 24 Jun when HERO V2 shipped, kept as a revert path), so it never renders. The live hero already reads "A calm shared space for growing together. Proactive guidance and a family hub for parents, siblings, and caregivers." Already clean, nothing to do. <b>One thing left</b>, in two places that must match: the <code>h3</code> "Pebble, your AI advisor" and the showcase label "Pebble, your AI parenting advisor". The mobile variant is already clean. Suggested direction: <b>"thinking ahead for you"</b>, since the strategy positions this as operational relief rather than advice, and "advisor" is the ground Huckleberry's Berry already occupies.</div>
+        <div class="meta"><span class="chip who">You</span><span class="chip">~5 min</span></div>
       </div>
     </div>
 
@@ -325,10 +325,10 @@
 
     <div class="node now">
       <div class="dot">4</div>
-      <div class="card" data-id="p0-consent">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">Cookie consent banner</span><span class="pill p-cond">Obligation</span></div>
-        <div class="d">GA4 went live today and sets cookies, so EU visitors need consent. Low urgency at current traffic, real once the push starts. Wire it to Consent Mode v2 defaulting to denied for EU regions, and keep it light so it does not undercut the privacy positioning the site sells on.</div>
-        <div class="meta"><span class="chip who">Claude</span><span class="chip">~45 min</span></div>
+      <div class="card" data-id="p0-consent" data-done="1">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Cookie consent banner</span><span class="pill p-ship">Shipped</span></div>
+        <div class="d">Consent Mode v2 with <b>region-scoped defaults</b>: the 32 EEA, UK and Swiss regions start <b>denied</b> until the visitor accepts; everywhere else starts granted, which is lawful for first-party non-advertising analytics and keeps the launch data usable. The banner shows to everyone and <b>Decline is honoured everywhere</b>, because a decline that quietly does nothing outside the EU would be a dark pattern on a site that sells partly on privacy. Deliberately a quiet bottom bar rather than a modal, two buttons of equal weight, no pre-ticked boxes. Verified end to end locally before deploy.</div>
+        <div class="meta"><span class="chip">19 Jul</span><span class="chip">commit ea8c753</span></div>
       </div>
     </div>
 
