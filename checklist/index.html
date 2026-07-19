@@ -153,8 +153,14 @@
   .cb:checked { background:var(--teal); border-color:var(--teal); }
   .cb:checked::after { content:"✓"; position:absolute; inset:0; display:grid; place-items:center; color:#fff; font-size:12px; font-weight:800; }
   .cb:focus-visible { outline:2px solid var(--teal-light); outline-offset:2px; }
+  .cb:disabled { cursor:default; background:var(--green); border-color:var(--green); }
   .card.ticked { opacity:.5; }
   .card.ticked .t { text-decoration:line-through; text-decoration-color:var(--ink-faint); }
+  /* Shipped items are complete as a matter of record, not something to tick.
+     Kept legible rather than dimmed, so the page reads as progress. */
+  .card.shipped { opacity:1; background:linear-gradient(158deg,#F4FAF7,#EDF6F1); border-color:#D5E9DF; }
+  .card.shipped .t { text-decoration:none; }
+  .p-ship { background:var(--green); color:#fff; }
 
   /* ---- shipped grid ---- */
   .shipped { margin-top:34px; background:linear-gradient(158deg,#F1F7F5,#E9F3EF); border:1px solid #DBEAE4; border-radius:18px; padding:22px 24px; box-shadow:var(--shadow); }
@@ -213,7 +219,7 @@
   <div class="stats">
     <div class="stat teal"><div class="v">✓ Submitted</div><div class="k">1.0 build 109 · auto-release on approval</div></div>
     <div class="stat accent"><div class="v">~24–48h</div><div class="k">Apple review. Phase 0 has to land inside this window</div></div>
-    <div class="stat risk"><div class="v">4 pages</div><div class="k">Internal pages publicly readable right now</div></div>
+    <div class="stat risk"><div class="v">18MB</div><div class="k">Hero video still uncompressed, the last speed risk</div></div>
     <div class="stat"><div class="v">GA4 live</div><div class="k">Web funnel measurable. App has no analytics yet</div></div>
   </div>
 
@@ -254,26 +260,26 @@
     <!-- ===== PHASE 0 ===== -->
     <div class="phase-label"><span class="pn">Phase 0</span><span class="pw">Before approval · today and this weekend</span><span class="bar"></span></div>
 
-    <div class="node risk">
-      <div class="dot">!</div>
-      <div class="card" data-id="p0-takedown">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">Take down the three exposed internal pages</span><span class="pill p-risk">Do first</span></div>
-        <div class="d">Delete <code>/persona-review/</code>, <code>/pricing-model/</code> and <code>/checklist-gatetest/</code> from the repo so they 404. The pricing model source is safe locally at <code>design-sandbox/26-pebble-cost-model.html</code>, nothing is lost. Do this before approval drives any attention at the domain.</div>
-        <div class="meta"><span class="chip who">Claude can do this</span><span class="chip">~5 min</span></div>
+    <div class="node done">
+      <div class="dot">✓</div>
+      <div class="card" data-id="p0-takedown" data-done="1">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Take down the three exposed internal pages</span><span class="pill p-ship">Shipped</span></div>
+        <div class="d"><code>/persona-review/</code>, <code>/pricing-model/</code> and <code>/checklist-gatetest/</code> removed. All three verified <b>404 at origin</b>, cache-busted. Both sources preserved locally in <code>design-sandbox/</code>, so nothing was lost. Edge cache clears the last cached copies within 10 minutes.</div>
+        <div class="meta"><span class="chip">19 Jul</span><span class="chip">commit bbd4d60</span></div>
       </div>
     </div>
 
     <div class="node risk">
       <div class="dot">!</div>
       <div class="card" data-id="p0-video">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">Fix the 18MB hero video</span><span class="pill p-risk">Conversion + cost</span></div>
-        <div class="d"><code>assets/ultramock.mp4</code> is <b>18MB</b>, sits above the fold, and carries <code>preload="auto"</code> with autoplay. Every single visitor downloads all of it before the page settles, roughly <b>15 seconds on mobile data</b>. Two fixes: switch to <code>preload="none"</code> so the poster carries the hero, then re-encode. Also a bandwidth risk, GitHub Pages soft-caps at 100GB/month and 18MB × 5,000 visitors is 90GB.</div>
-        <div class="meta"><span class="chip who">Claude + one ffmpeg run</span><span class="chip">~20 min</span></div>
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Compress the 18MB hero video</span><span class="pill p-risk">Needs ffmpeg</span></div>
+        <div class="d"><b>Half done.</b> <code>preload="auto"</code> is now <code>preload="metadata"</code>, so the video streams instead of blocking the page, and the 20KB poster carries the hero. <b>The file is still 18MB</b> and autoplays on every viewport including mobile. macOS <code>avconvert</code> cannot help, its presets are archival-quality and every output came out <b>larger</b> than the source (720p 21MB, HEVC 26MB). Needs ffmpeg with CRF encoding, which should land 2 to 4MB. Worth also serving the poster only on mobile, since mobile visitors are the ones who tap Download and are paying for the data.</div>
+        <div class="meta"><span class="chip who">You install ffmpeg, Claude runs it</span><span class="chip">~15 min</span></div>
       </div>
     </div>
 
     <div class="node now">
-      <div class="dot">2</div>
+      <div class="dot">1</div>
       <div class="card" data-id="p0-weight">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Compress the rest of the media</span><span class="pill p-now">Speed</span></div>
         <div class="d">Beyond the video: <code>hero-dual-iphone.png</code> 1.9MB · <code>ellie-founder.png</code> 836KB and <code>thomas-founder.png</code> 300KB (both PNG, should be JPEG) · <code>screens/activities.jpg</code> 800KB and <code>screens/trips.jpg</code> 616KB, well over the documented 80 to 230KB recipe. Around <b>4MB recoverable</b> without visible quality loss.</div>
@@ -281,35 +287,35 @@
       </div>
     </div>
 
+    <div class="node done">
+      <div class="dot">✓</div>
+      <div class="card" data-id="p0-llm" data-done="1">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">LLM discoverability: llms.txt + crawler rules</span><span class="pill p-ship">Shipped</span></div>
+        <div class="d"><a href="/llms.txt" style="color:var(--teal-deep)">llms.txt</a> is live with curated positioning, the audience, the differentiator, and explicit notes on how <b>not</b> to summarise it (calling this a milestone tracker misses the point). <code>robots.txt</code> now names <b>9 AI agents</b> explicitly, GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, Claude-Web, anthropic-ai, PerplexityBot, Google-Extended, Applebot-Extended and CCBot, all allowed. This page is disallowed for every one of them.</div>
+        <div class="meta"><span class="chip">19 Jul</span><span class="chip">decision: allow, and curate</span></div>
+      </div>
+    </div>
+
+    <div class="node done">
+      <div class="dot">✓</div>
+      <div class="card" data-id="p0-seo" data-done="1">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Close the four SEO gaps</span><span class="pill p-ship">Shipped</span></div>
+        <div class="d">All four closed and verified live. <code>/brief/</code> now has a real <code>h1</code>, its visual headline promoted from a <code>div</code> with <code>margin:0</code> added so the layout is untouched · <code>/join/</code> has its canonical, which matters because every invite link lands there · <code>privacy.html</code> and <code>terms.html</code> gained OG and Twitter tags, so legal links stop unfurling bare when shared.</div>
+        <div class="meta"><span class="chip">19 Jul</span><span class="chip">commit bbd4d60</span></div>
+      </div>
+    </div>
+
+    <div class="node now">
+      <div class="dot">2</div>
+      <div class="card" data-id="p0-copy">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Rewrite two lines in your own voice</span><span class="pill p-now">Only you can do this</span></div>
+        <div class="d"><b>Mechanical half shipped:</b> all <b>18</b> em-dashes removed from visible copy (the earlier count of 14 undercounted), and "AI" dropped from both pricing bullets and the Pebble alt text. <b>Two lines left deliberately</b>, words preserved verbatim: the hero subhead, and the heading "Pebble, your AI advisor" with its matching feature label. Suggested direction for the heading was <b>"thinking ahead for you"</b>, since the strategy positions this as operational relief rather than parenting advice, and "advisor" is the exact ground Huckleberry's Berry already occupies.</div>
+        <div class="meta"><span class="chip who">You</span><span class="chip">~10 min</span></div>
+      </div>
+    </div>
+
     <div class="node now">
       <div class="dot">3</div>
-      <div class="card" data-id="p0-llm">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">LLM discoverability: llms.txt + crawler rules</span><span class="pill p-now">New channel</span></div>
-        <div class="d">Neither exists today. <code>robots.txt</code> has <b>zero</b> directives for GPTBot, ClaudeBot, PerplexityBot, CCBot or Google-Extended, and there is no <code>llms.txt</code>. When a parent asks an assistant "what app helps coordinate family schedules with grandparents", you want to be findable and described accurately rather than guessed at. Add <code>llms.txt</code> with the positioning, the audience and the differentiator, and make the crawler policy an explicit decision instead of a default.</div>
-        <div class="meta"><span class="chip who">Claude</span><span class="chip">~20 min</span><span class="chip">decision: allow or block AI crawlers</span></div>
-      </div>
-    </div>
-
-    <div class="node now">
-      <div class="dot">4</div>
-      <div class="card" data-id="p0-seo">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">Close the four SEO gaps</span><span class="pill p-quick">Quick</span></div>
-        <div class="d">The metadata pass was mostly solid. Four holes remain: <code>/brief/</code> has <b>no h1 at all</b> · <code>/join/</code> is missing its canonical <b>and</b> has two h1s · <code>privacy.html</code> and <code>terms.html</code> have no <code>og:image</code>, so they unfurl bare when shared. <code>/join/</code> matters most, it is the page every invite link lands on.</div>
-        <div class="meta"><span class="chip who">Claude</span><span class="chip">~10 min</span></div>
-      </div>
-    </div>
-
-    <div class="node now">
-      <div class="dot">5</div>
-      <div class="card" data-id="p0-copy">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">Copy pass: soften AI, remove em-dashes</span><span class="pill p-now">Awaiting your nod</span></div>
-        <div class="d">Of 28 "AI" hits on the homepage, only <b>5 are positioning copy</b>. The rest are meta tags, code comments, the privacy block (keep, it does trust work) and one false positive, your Firebase key starts <code>AIza</code>. Same pass fixes <b>14 em-dash violations</b> in visible copy, against a project-wide rule. Table is in the session, needs your approval on wording.</div>
-        <div class="meta"><span class="chip who">You approve, Claude ships</span><span class="chip">~15 min</span></div>
-      </div>
-    </div>
-
-    <div class="node now">
-      <div class="dot">6</div>
       <div class="card" data-id="p0-email">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Email capture + vendor pick</span><span class="pill p-now">Blocks the push</span></div>
         <div class="d">No capture anywhere on the site. Without it, everyone the LinkedIn push sends who is not ready to install right now is lost for good. Needs a vendor that covers both the list and transactional send, so it also unblocks the welcome email. Wire the signup as a GA4 event so it lands in the funnel.</div>
@@ -318,7 +324,7 @@
     </div>
 
     <div class="node now">
-      <div class="dot">7</div>
+      <div class="dot">4</div>
       <div class="card" data-id="p0-consent">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Cookie consent banner</span><span class="pill p-cond">Obligation</span></div>
         <div class="d">GA4 went live today and sets cookies, so EU visitors need consent. Low urgency at current traffic, real once the push starts. Wire it to Consent Mode v2 defaulting to denied for EU regions, and keep it light so it does not undercut the privacy positioning the site sells on.</div>
@@ -327,7 +333,7 @@
     </div>
 
     <div class="node now">
-      <div class="dot">8</div>
+      <div class="dot">5</div>
       <div class="card" data-id="p0-drafts">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Draft the seed outreach and LinkedIn sequence</span><span class="pill p-now">Write now, send later</span></div>
         <div class="d">Written while there is time, not in the scramble on approval day. Personal-contact message, a build-in-public post for the waiting window, and the launch post itself. Founder story rather than product announcement, 15 years in EdTech is the credibility. Personal profile only, and nothing touching P3.</div>
@@ -347,7 +353,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">9</div>
+      <div class="dot">6</div>
       <div class="card" data-id="p1-verify">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Verify the live listing and the whole download path</span><span class="pill p-quick">30 min</span></div>
         <div class="d">Screenshots in order, description rendering, subscription visible and purchasable, and every website CTA resolving to the live listing. The 17 site links now carry <code>id6764684381</code>, so they should light up automatically. Confirm rather than assume, this is the one path everything else depends on.</div>
@@ -355,7 +361,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">10</div>
+      <div class="dot">7</div>
       <div class="card" data-id="p1-seed">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Seed outreach, install ask only</span><span class="pill p-now">The soft launch</span></div>
         <div class="d">Personal contacts direct, closest LinkedIn ties, local parent community. <b>Ask for the install and nothing else.</b> Bundling an install ask with a review ask halves the response on both, and a review written before anyone has used the app reads hollow and says nothing useful.</div>
@@ -364,7 +370,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">11</div>
+      <div class="dot">8</div>
       <div class="card" data-id="p1-watch">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Watch the first real funnel data</span><span class="pill p-run">GA4</span></div>
         <div class="d">First time there has ever been traffic against instrumentation. What to read: which CTA placement actually converts (<code>nav</code> vs <code>hero</code> vs <code>pricing_trial</code> vs <code>final_cta</code>), and whether people reach pricing at all via scroll depth. A low scroll depth is a copy problem, low traffic at high depth is a distribution problem. Different fixes.</div>
@@ -375,7 +381,7 @@
     <div class="phase-label"><span class="pn">Phase 2</span><span class="pw">Days 2 to 7 · reviews and real feedback</span><span class="bar"></span></div>
 
     <div class="node">
-      <div class="dot">12</div>
+      <div class="dot">9</div>
       <div class="card" data-id="p2-reviews">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Ask for reviews, individually, after use</span><span class="pill p-now">ASO fuel</span></div>
         <div class="d">Separate message, a few days after the install ask, only to people who actually opened it. Early ratings move App Store ranking disproportionately, and a listing with reviews converts far better than one without. <b>Target ~10 before the wider push.</b> This is manual for now because there is no in-app prompt, see Phase 3.</div>
@@ -384,7 +390,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">13</div>
+      <div class="dot">10</div>
       <div class="card" data-id="p2-feedback">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Harvest friction from the seed cohort</span><span class="pill p-run">Feeds 1.0.1</span></div>
         <div class="d">This substitutes for the missing app analytics, and at this size it is better. Around 20 people you can actually talk to beats a funnel chart on 20 people. What confused them, where they stopped, whether they invited anyone. Everything here becomes 1.0.1.</div>
@@ -395,7 +401,7 @@
     <div class="phase-label"><span class="pn">Phase 3</span><span class="pw">Week 2 · ship 1.0.1</span><span class="bar"></span></div>
 
     <div class="node">
-      <div class="dot">14</div>
+      <div class="dot">11</div>
       <div class="card" data-id="p3-review-prompt">
         <div class="top"><input type="checkbox" class="cb"><span class="t">In-app review prompt</span><span class="pill p-risk">Biggest single win</span></div>
         <div class="d">There is <b>zero</b> <code>SKStoreReviewController</code> in the app. Reviews are the top ASO ranking input and the top listing conversion factor, and right now getting them is you asking people by hand, forever. Apple throttles to 3 prompts per user per year and handles it for you. Fire after a genuine win, a milestone marked or a good Pebble answer, never on launch or mid-task.</div>
@@ -404,7 +410,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">15</div>
+      <div class="dot">12</div>
       <div class="card" data-id="p3-analytics">
         <div class="top"><input type="checkbox" class="cb"><span class="t">App analytics, linked to the same GA4 property</span><span class="pill p-now">Gates the push</span></div>
         <div class="d">FirebaseAnalytics is not linked in the Xcode target and there are no <code>logEvent</code> calls anywhere. Add the SPM product, then link Firebase to the <b>existing</b> property <code>G-9JQBCG8SVM</code> from Firebase Console, not a new one, or web and app split permanently and cross-platform funnels become impossible. Instrument <code>invite_sent</code> and <code>invite_redeemed</code> first, that is the growth loop and it is completely unmeasured. Also needs a privacy nutrition label revision, since it changes the declared collection profile.</div>
@@ -413,7 +419,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">16</div>
+      <div class="dot">13</div>
       <div class="card" data-id="p3-invite-url">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Swap the iOS invite share URL</span><span class="pill p-quick">One line</span></div>
         <div class="d"><code>SettingsView</code> → <code>InviteCodeRow</code> still shares <code>pebblepath.ai</code> rather than the listing. Every invite sent between now and 1.0.1 sends people to the marketing site instead of straight to install. The website side is already fixed.</div>
@@ -421,7 +427,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">17</div>
+      <div class="dot">14</div>
       <div class="card" data-id="p3-ship">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Submit 1.0.1</span><span class="pill p-gate">Gate</span></div>
         <div class="d">Bundle the three above with the seed-cohort fixes. You cannot submit while 1.0 is in review, so this starts only after approval. Another 24 to 48h of review. <b>Do not rush it</b>, the most valuable content in this release is the feedback, and that needs a week to accumulate.</div>
@@ -432,7 +438,7 @@
     <div class="phase-label"><span class="pn">Phase 4</span><span class="pw">Week 2 to 3 · the wider push</span><span class="bar"></span></div>
 
     <div class="node">
-      <div class="dot">18</div>
+      <div class="dot">15</div>
       <div class="card" data-id="p4-linkedin">
         <div class="top"><input type="checkbox" class="cb"><span class="t">LinkedIn launch post</span><span class="pill p-now">Spend it once</span></div>
         <div class="d">Held until now on purpose. By this point the listing has reviews, the site is fast, the funnel is measured, and the app can ask for its own reviews. Posting on approval day would have spent your one launch moment driving traffic at a zero-review listing you could not measure. Founder story, not product announcement.</div>
@@ -441,7 +447,16 @@
     </div>
 
     <div class="node">
-      <div class="dot">19</div>
+      <div class="dot">16</div>
+      <div class="card" data-id="p4-company-page">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">LinkedIn company page: assets and content</span><span class="pill p-run">Supporting asset</span></div>
+        <div class="d"><a href="https://www.linkedin.com/company/pebblepath/" style="color:var(--teal-deep)">linkedin.com/company/pebblepath</a>, already linked from the site footer. It will not out-reach your personal profile at this stage and should not be treated as a channel in its own right. Its job is <b>credibility on arrival</b>: when someone reads your founder post and clicks through, a bare page undercuts the story. Needs the banner, logo, tagline, About section, and enough posts that it does not look abandoned.</div>
+        <div class="meta"><span class="chip who">Claude drafts, you publish</span></div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="dot">17</div>
       <div class="card" data-id="p4-communities">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Parenting communities</span><span class="pill p-cond">Read the rules first</span></div>
         <div class="d">Reddit and Facebook parenting groups have strict and unevenly enforced self-promotion rules. Read each one before posting, a ban costs more than the post earns. The whole-family angle is the one that survives scrutiny in these rooms, because it is genuinely different rather than another tracker.</div>
@@ -452,7 +467,7 @@
     <div class="phase-label"><span class="pn">Phase 5</span><span class="pw">Ongoing · the compounding work</span><span class="bar"></span></div>
 
     <div class="node later">
-      <div class="dot">20</div>
+      <div class="dot">18</div>
       <div class="card" data-id="p5-invite-loop">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Surface the invite loop</span><span class="pill p-now">Highest leverage in the product</span></div>
         <div class="d"><code>InviteCodeRow</code> exists in exactly one place, <code>SettingsFamilyView</code>. Three taps deep, never prompted, absent from onboarding and the dashboard. Joining a family requires a code, so <b>every household naturally pulls in a co-parent, a grandparent, a caregiver</b>. A family that invites two people instead of zero doubles acquisition at zero cost, which beats any channel you could buy. Candidate moments: end of onboarding, family-circle empty state, after the first milestone.</div>
@@ -461,7 +476,7 @@
     </div>
 
     <div class="node later">
-      <div class="dot">21</div>
+      <div class="dot">19</div>
       <div class="card" data-id="p5-aso">
         <div class="top"><input type="checkbox" class="cb"><span class="t">ASO iteration</span><span class="pill p-later">Cheap to test</span></div>
         <div class="d">Promotional text is editable <b>without</b> a review cycle, which makes it the right field for testing hooks and announcing features. Subtitle and keywords need a version, so batch those with releases. Watch which search terms convert once there is enough traffic to read.</div>
@@ -469,7 +484,7 @@
     </div>
 
     <div class="node later">
-      <div class="dot">22</div>
+      <div class="dot">20</div>
       <div class="card" data-id="p5-deferred">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Carried-over deferrals</span><span class="pill p-later">Not blocking</span></div>
         <div class="d">Server-side IAP receipt validation · lawyer review of the legal docs, in flight · LLC formation · the Portal reCAPTCHA 403 IAM check then flipping App Check to enforce · the GA MCP server, worth setting up once there is data to point it at.</div>
@@ -527,11 +542,15 @@
   function paint() {
     var done = 0;
     cards.forEach(function (c) {
-      var on = !!state[c.getAttribute('data-id')];
+      // data-done items are shipped and verified. They count as complete
+      // regardless of local state, and cannot be un-ticked.
+      var shipped = c.getAttribute('data-done') === '1';
+      var on = shipped || !!state[c.getAttribute('data-id')];
       if (on) done++;
-      c.classList.toggle('ticked', on);
+      c.classList.toggle('shipped', shipped);
+      c.classList.toggle('ticked', on && !shipped);
       var box = c.querySelector('.cb');
-      if (box) box.checked = on;
+      if (box) { box.checked = on; box.disabled = shipped; }
     });
     var total = cards.length;
     var pct = total ? Math.round((done / total) * 100) : 0;
