@@ -219,7 +219,7 @@
   <div class="stats">
     <div class="stat teal"><div class="v">✓ Submitted</div><div class="k">1.0 build 109 · auto-release on approval</div></div>
     <div class="stat accent"><div class="v">~24–48h</div><div class="k">Apple review. Phase 0 has to land inside this window</div></div>
-    <div class="stat risk"><div class="v">18MB</div><div class="k">Hero video still uncompressed, the last speed risk</div></div>
+    <div class="stat teal"><div class="v">3.4MB</div><div class="k">Hero video was 18MB. 15MB off the critical path</div></div>
     <div class="stat"><div class="v">GA4 live</div><div class="k">Web funnel measurable. App has no analytics yet</div></div>
   </div>
 
@@ -269,12 +269,12 @@
       </div>
     </div>
 
-    <div class="node risk">
-      <div class="dot">!</div>
-      <div class="card" data-id="p0-video">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">Replace the 18MB hero video</span><span class="pill p-run">Thomas re-exporting</span></div>
-        <div class="d"><b>Half done.</b> <code>preload="auto"</code> is now <code>preload="metadata"</code>, so it streams instead of blocking the page. <b>The file is still 18MB</b> and autoplays on every viewport including mobile. Thomas is re-exporting at <b>720p with the latest screenshots</b>, which supersedes the ffmpeg route (macOS <code>avconvert</code> was useless here, every preset came out larger than the source). Spec: same filename <code>assets/ultramock.mp4</code>, 1280x720 landscape, H.264, no audio, under 4MB. <b>The poster must be regenerated too</b>, <code>ultramock-poster.png</code> is a still of the current video, so leaving it means visitors see old screenshots then a jump. Note the hero crops hard, <code>scale(1.22) translateX(7%)</code>, so keep key content in the middle 60% of the frame.</div>
-        <div class="meta"><span class="chip who">Thomas exports, Claude verifies + deploys</span></div>
+    <div class="node done">
+      <div class="dot">✓</div>
+      <div class="card" data-id="p0-video" data-done="1">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Replace the 18MB hero video</span><span class="pill p-ship">Shipped</span></div>
+        <div class="d"><b>18.4MB to 3.4MB, an 82% cut.</b> Thomas re-exported with current Build 109 screens, but Ultramock writes at a fixed ~10 Mbps regardless of settings, so the new export landed <b>within 5KB of the old one</b>. Re-exporting was never going to fix the weight, and macOS <code>avconvert</code> could not either (every preset came out LARGER than the source). Transcoded instead via AVFoundation, where <code>AVVideoAverageBitRateKey</code> is the knob that actually exists: 1920x1080 at 1.82 Mbps, all 923 frames, UI text still crisp because flat interface art compresses well. <b>A second pass was needed:</b> AVAssetWriter writes the moov atom LAST, so the first output was no longer faststart and a browser would have had to fetch all 3.4MB before showing a frame. Smaller file, worse start. Remuxed passthrough with <code>shouldOptimizeForNetworkUse</code> to move moov to the front with no second generation of loss. Poster regenerated from frame one of the shipping file so there is no jump, PNG to JPEG (88K), both URLs versioned to defeat the 4-hour asset cache.</div>
+        <div class="meta"><span class="chip">19 Jul</span><span class="chip">commit eed99e1</span></div>
       </div>
     </div>
 
