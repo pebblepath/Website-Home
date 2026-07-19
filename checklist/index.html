@@ -272,9 +272,9 @@
     <div class="node risk">
       <div class="dot">!</div>
       <div class="card" data-id="p0-video">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">Compress the 18MB hero video</span><span class="pill p-risk">Needs ffmpeg</span></div>
-        <div class="d"><b>Half done.</b> <code>preload="auto"</code> is now <code>preload="metadata"</code>, so the video streams instead of blocking the page, and the 20KB poster carries the hero. <b>The file is still 18MB</b> and autoplays on every viewport including mobile. macOS <code>avconvert</code> cannot help, its presets are archival-quality and every output came out <b>larger</b> than the source (720p 21MB, HEVC 26MB). Needs ffmpeg with CRF encoding, which should land 2 to 4MB. Worth also serving the poster only on mobile, since mobile visitors are the ones who tap Download and are paying for the data.</div>
-        <div class="meta"><span class="chip who">You install ffmpeg, Claude runs it</span><span class="chip">~15 min</span></div>
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Replace the 18MB hero video</span><span class="pill p-run">Thomas re-exporting</span></div>
+        <div class="d"><b>Half done.</b> <code>preload="auto"</code> is now <code>preload="metadata"</code>, so it streams instead of blocking the page. <b>The file is still 18MB</b> and autoplays on every viewport including mobile. Thomas is re-exporting at <b>720p with the latest screenshots</b>, which supersedes the ffmpeg route (macOS <code>avconvert</code> was useless here, every preset came out larger than the source). Spec: same filename <code>assets/ultramock.mp4</code>, 1280x720 landscape, H.264, no audio, under 4MB. <b>The poster must be regenerated too</b>, <code>ultramock-poster.png</code> is a still of the current video, so leaving it means visitors see old screenshots then a jump. Note the hero crops hard, <code>scale(1.22) translateX(7%)</code>, so keep key content in the middle 60% of the frame.</div>
+        <div class="meta"><span class="chip who">Thomas exports, Claude verifies + deploys</span></div>
       </div>
     </div>
 
