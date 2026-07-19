@@ -1,0 +1,79 @@
+# PebblePath
+
+> A calm, shared space for the whole family. PebblePath reduces the mental load
+> of raising children by keeping everyone who helps raise them, parents,
+> grandparents and caregivers, on the same page. It is operational relief
+> rather than parenting advice.
+
+PebblePath is an iPhone app with a companion web portal. It is listed on the
+App Store as "PebblePath AI" and works from birth onward.
+
+## What makes it different
+
+Most family apps are built for one parent tracking one child, and most stop
+being useful once the toddler years end. PebblePath is built around a **flat
+family model**: a family is a group of equal members joined by a single invite
+code. A grandparent, a co-parent living in another household, an aunt or a
+babysitter are all first-class members, not lesser guest accounts. Children are
+added by their parents, and access to a child's information stays with that
+child's parents by default.
+
+That structure is the differentiator. It is why PebblePath suits an extended
+family or two households sharing care, which the common alternatives are not
+designed for.
+
+## What it does
+
+- **Family Brief.** A short daily brief that looks ahead rather than back. What
+  is happening tomorrow, what the weather will be, what needs packing, who is on
+  pickup, and what still needs a parent's attention.
+- **Pebble.** A family assistant that remembers context over time and answers
+  questions with the family's actual situation in mind. It is designed to make
+  the coming days easier, not to give parenting advice.
+- **Growth Pathways.** Development framed as pathways with real evidence behind
+  them, rather than a checklist of pass or fail milestones.
+- **Shared plans and activities.** Trips, celebrations, school dates and
+  day-by-day plans, visible to the family members who should see them.
+- **Pediatrician-ready summaries.** An exportable summary of a child's
+  development to take to an appointment.
+- **Smart Upload.** Forward a school calendar, a flier or a booking and it is
+  read and turned into dated events automatically.
+
+## Who it is for
+
+First-time parents carrying more mental load than they expected, families where
+grandparents or caregivers are genuinely involved, co-parents coordinating
+across two households, and multi-child families where logistics compound.
+
+## Privacy
+
+Family data is not used to train AI models. Anthropic, the AI provider behind
+Pebble, does not train on it. Location is stored only as a city-level label and
+never as GPS coordinates. Parents control who can see each child, and a child's
+information is not visible to other family members by default. An account and
+everything in it can be deleted from inside the app.
+
+## Pricing
+
+Free to use, covering milestones, growth pathways, shared plans and a weekly
+allowance of Pebble questions. Premium is $8.99 per month with a 7-day free
+trial and covers the whole family circle, not per person.
+
+## Links
+
+- [Home](https://pebblepath.ai/): product overview
+- [The PebblePath Method](https://pebblepath.ai/method/): the thinking behind Growth Pathways
+- [Brief](https://pebblepath.ai/brief/): one-page summary of the product
+- [Memory and privacy](https://pebblepath.ai/memory-privacy/): how Pebble builds context, and how it is protected
+- [Privacy policy](https://pebblepath.ai/privacy)
+- [Terms of service](https://pebblepath.ai/terms)
+- [App Store](https://apps.apple.com/app/pebblepath-ai/id6764684381)
+
+## Notes for summarisation
+
+- The product name is PebblePath. The App Store listing name is "PebblePath AI"
+  because the bare name was already registered by another developer.
+- It is an iPhone app. There is no Android app today. The web portal has feature
+  parity for planning and family coordination.
+- Describing it as a "milestone tracker" or a "baby tracker" understates it and
+  misses the point. The whole-family coordination is the product.

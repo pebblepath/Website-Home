@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>PebblePath — Launch Timeline</title>
+<title>PebblePath — Launch &amp; GTM Timeline</title>
 <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
@@ -23,6 +23,7 @@
     --ink:#22302D; --ink-soft:#5C6B66; --ink-faint:#8A948F;
     --teal:#3D9B8F; --teal-deep:#1F5C54; --teal-mid:#2D7A70; --teal-light:#5CBFB0; --sand:#E8DCC8;
     --terra:#C67B5C; --terra-dark:#A8624A; --amber:#C98A29; --green:#4C9A66; --grey:#9AA09B;
+    --red:#B4453A; --red-soft:#F6E7E4;
     --line:#EAE4DA; --track:#E8E2D6;
     --sans:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     --display:'Nunito','Inter',-apple-system,sans-serif;
@@ -55,33 +56,36 @@
   .lede b { color:var(--ink); font-weight:600; }
 
   .gauge-box { display:flex; flex-direction:column; align-items:center; gap:11px; }
-  .gauge { --pct:96; width:132px; height:132px; border-radius:50%;
+  .gauge { --pct:0; width:132px; height:132px; border-radius:50%;
     background:conic-gradient(var(--teal-light) 0deg, var(--teal) calc(var(--pct)*3.6deg), var(--track) 0);
-    display:grid; place-items:center; position:relative; box-shadow:0 10px 28px -12px rgba(61,155,143,.55); }
+    display:grid; place-items:center; position:relative; box-shadow:0 10px 28px -12px rgba(61,155,143,.55);
+    transition:background .4s ease; }
   .gauge::after { content:""; position:absolute; inset:14px; border-radius:50%; background:var(--card); box-shadow:inset 0 1px 3px rgba(31,92,84,.07); }
   .gauge-num { position:relative; z-index:1; text-align:center; line-height:1; }
   .gauge-num .n { font-family:var(--display); font-size:36px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.03em; color:var(--teal-deep); }
   .gauge-num .n span { font-size:17px; font-weight:700; color:var(--teal); }
-  .gauge-label { font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint); font-weight:700; }
+  .gauge-label { font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint); font-weight:700; text-align:center; }
 
   /* ---- stat row ---- */
   .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:28px 0 4px; }
   .stat { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:15px 16px; box-shadow:var(--shadow); }
   .stat .v { font-family:var(--display); font-size:20px; font-weight:800; letter-spacing:-.02em; line-height:1.05; }
   .stat .k { font-size:12px; color:var(--ink-soft); margin-top:6px; line-height:1.4; }
-  .stat.accent .v { color:var(--terra); } .stat.teal .v { color:var(--teal-deep); }
+  .stat.accent .v { color:var(--terra); } .stat.teal .v { color:var(--teal-deep); } .stat.risk .v { color:var(--red); }
 
-  /* ---- parallel band ---- */
-  .parallel { position:relative; margin:30px 0 6px; background:linear-gradient(150deg,#F2EDE3,#EAE0CE);
-              border:1px solid #E0D2BC; border-radius:16px; padding:18px 20px 19px; box-shadow:var(--shadow); }
-  .parallel .ph { display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-family:var(--display); font-weight:800; font-size:14px; color:#8a6a3f; margin-bottom:2px; }
-  .parallel .ph .badge { font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; background:#fff; color:var(--terra-dark); border:1px solid #E0D2BC; border-radius:999px; padding:3px 9px; font-weight:800; }
-  .parallel .sub { font-size:12.5px; color:#6f6244; margin:0 0 14px; line-height:1.5; }
-  .par-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-  .par { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:13px 14px; }
-  .par .ptag { font-size:9.5px; text-transform:uppercase; letter-spacing:.08em; font-weight:800; color:var(--terra); }
-  .par .pt { font-family:var(--display); font-weight:800; font-size:14px; margin-top:4px; letter-spacing:-.01em; }
-  .par .pd { font-size:12px; color:var(--ink-soft); margin-top:5px; line-height:1.48; }
+  /* ---- risk band ---- */
+  .risk-band { position:relative; margin:30px 0 6px; background:linear-gradient(150deg,#FBF0ED,#F6E4DF);
+              border:1px solid #EFD3CA; border-radius:16px; padding:18px 20px 19px; box-shadow:var(--shadow); }
+  .risk-band .ph { display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-family:var(--display); font-weight:800; font-size:14px; color:var(--red); margin-bottom:2px; }
+  .risk-band .ph .badge { font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; background:#fff; color:var(--red); border:1px solid #EFD3CA; border-radius:999px; padding:3px 9px; font-weight:800; }
+  .risk-band .sub { font-size:12.5px; color:#7d5750; margin:0 0 14px; line-height:1.5; }
+  .risk-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  .rk { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:13px 14px; }
+  .rk .rtag { font-size:9.5px; text-transform:uppercase; letter-spacing:.08em; font-weight:800; color:var(--red); }
+  .rk .rt { font-family:var(--display); font-weight:800; font-size:14px; margin-top:4px; letter-spacing:-.01em; }
+  .rk .rt code { font-size:12px; background:var(--card-2); border:1px solid var(--line); border-radius:4px; padding:1px 5px; }
+  .rk .rd { font-size:12px; color:var(--ink-soft); margin-top:5px; line-height:1.48; }
+  .rk .rd b { color:var(--ink); font-weight:600; }
 
   /* ---- timeline ---- */
   .tl-head { display:flex; align-items:baseline; flex-wrap:wrap; gap:6px 12px; margin:40px 0 4px; }
@@ -89,6 +93,12 @@
   .tl-head .count { font-size:12.5px; color:var(--ink-faint); }
   .tl-note { font-size:13px; color:var(--ink-soft); margin:0 0 20px; max-width:70ch; line-height:1.55; }
   .tl-note b { color:var(--ink); font-weight:600; }
+
+  .phase-label { display:flex; align-items:center; gap:10px; margin:26px 0 12px; }
+  .phase-label .pn { font-family:var(--display); font-weight:800; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--teal-deep);
+                     background:#E1EFEC; border-radius:999px; padding:4px 12px; }
+  .phase-label .pw { font-size:12px; color:var(--ink-faint); }
+  .phase-label .bar { flex:1; height:1px; background:var(--line); }
 
   .tl { position:relative; }
   .tl::before { content:""; position:absolute; left:20px; top:16px; bottom:30px; width:2px; border-radius:2px;
@@ -102,14 +112,16 @@
   .node.now .dot { border-color:var(--terra); color:var(--terra);
     box-shadow:0 0 0 5px var(--paper), 0 0 0 7px rgba(198,123,92,.20); animation:pulse 2.6s ease-in-out infinite; }
   @keyframes pulse { 0%,100%{ box-shadow:0 0 0 5px var(--paper), 0 0 0 7px rgba(198,123,92,.18);} 50%{ box-shadow:0 0 0 5px var(--paper), 0 0 0 11px rgba(198,123,92,.04);} }
+  .node.risk .dot { border-color:var(--red); color:var(--red); }
   .node.decision .dot { border-radius:9px; transform:rotate(45deg); border-color:var(--amber); color:var(--amber); }
   .node.decision .dot b { display:block; transform:rotate(-45deg); }
   .node.milestone .dot { width:44px; height:44px; background:var(--teal-deep); border-color:var(--teal-deep); color:#fff; font-size:18px; }
   .node.review .dot { border-style:dashed; border-color:var(--teal-mid); color:var(--teal-mid); }
   .node.later .dot { border-color:var(--grey); color:var(--grey); }
 
-  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; box-shadow:var(--shadow); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; box-shadow:var(--shadow); transition:opacity .25s ease; }
   .node.now .card { border-color:#EAC9B8; box-shadow:0 1px 2px rgba(198,123,92,.06), 0 10px 26px -14px rgba(198,123,92,.4); }
+  .node.risk .card { border-color:#EFD3CA; box-shadow:0 1px 2px rgba(180,69,58,.06), 0 10px 26px -14px rgba(180,69,58,.35); }
   .node.milestone .card { background:linear-gradient(158deg,#F1F7F5,#E4F0EB); border-color:#CFE6DF; }
   .node.later .card { background:var(--card-2); }
   .node.review .card { background:transparent; border-style:dashed; box-shadow:none; padding:10px 16px; }
@@ -118,6 +130,7 @@
   .node.milestone .t { font-size:18px; color:var(--teal-deep); }
   .card .d { color:var(--ink-soft); font-size:13px; line-height:1.55; }
   .card .d b { color:var(--ink); font-weight:600; }
+  .card .d code { font-size:11.5px; background:var(--card-2); border:1px solid var(--line); border-radius:4px; padding:1px 5px; }
   .card .meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:9px; }
   .chip { font-size:11px; color:var(--ink-faint); background:var(--card-2); border:1px solid var(--line); border-radius:999px; padding:3px 10px; }
   .chip.who { color:var(--teal-deep); }
@@ -126,19 +139,22 @@
   .p-now { background:var(--terra); color:#fff; }
   .p-run { background:#E1EFEC; color:var(--teal-deep); }
   .p-cond{ background:#F7ECD4; color:#946316; }
-  .p-prog{ background:#F7ECD4; color:#946316; }
   .p-quick{ background:#E1F0E4; color:#2F7346; }
   .p-done{ background:#E1F0E4; color:#2F7346; }
   .p-later{ background:#ECEBE6; color:#6E736C; }
   .p-gate{ background:var(--teal-deep); color:#fff; }
+  .p-risk{ background:var(--red); color:#fff; }
 
-  /* ---- not-a-blocker ---- */
-  .noblock { margin-top:16px; background:var(--card); border:1px solid var(--line); border-left:4px solid var(--grey); border-radius:12px; padding:15px 18px; box-shadow:var(--shadow); }
-  .noblock h3 { font-family:var(--display); font-size:14px; font-weight:800; margin:0 0 8px; color:var(--ink); }
-  .noblock ul { margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:6px; }
-  .noblock li { font-size:12.5px; color:var(--ink-soft); line-height:1.5; padding-left:16px; position:relative; }
-  .noblock li::before { content:"✕"; position:absolute; left:0; color:var(--grey); font-size:10px; top:2px; }
-  .noblock li b { color:var(--ink); font-weight:600; }
+  /* ---- checkbox ---- */
+  .cb { appearance:none; -webkit-appearance:none; flex:none; width:19px; height:19px; border-radius:6px;
+        border:2px solid var(--track); background:var(--card); cursor:pointer; position:relative;
+        transition:background .15s ease, border-color .15s ease; }
+  .cb:hover { border-color:var(--teal-light); }
+  .cb:checked { background:var(--teal); border-color:var(--teal); }
+  .cb:checked::after { content:"✓"; position:absolute; inset:0; display:grid; place-items:center; color:#fff; font-size:12px; font-weight:800; }
+  .cb:focus-visible { outline:2px solid var(--teal-light); outline-offset:2px; }
+  .card.ticked { opacity:.5; }
+  .card.ticked .t { text-decoration:line-through; text-decoration-color:var(--ink-faint); }
 
   /* ---- shipped grid ---- */
   .shipped { margin-top:34px; background:linear-gradient(158deg,#F1F7F5,#E9F3EF); border:1px solid #DBEAE4; border-radius:18px; padding:22px 24px; box-shadow:var(--shadow); }
@@ -154,9 +170,12 @@
   .legend .lg { display:flex; align-items:center; gap:7px; }
   .legend .sw { width:12px; height:12px; border-radius:50%; border:2px solid var(--teal); background:var(--card); flex:none; }
   .legend .sw.now { border-color:var(--terra); } .legend .sw.done { background:var(--teal); border-color:var(--teal); }
-  .legend .sw.dec { border-radius:3px; transform:rotate(45deg); border-color:var(--amber); }
+  .legend .sw.risk { border-color:var(--red); }
   .legend .sw.mile { background:var(--teal-deep); border-color:var(--teal-deep); } .legend .sw.late { border-color:var(--grey); }
-  footer { margin-top:44px; border-top:1px solid var(--line); padding-top:20px; font-size:12.5px; color:var(--ink-faint); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .reset { background:none; border:1px solid var(--line); border-radius:999px; padding:4px 12px; font:inherit; font-size:11.5px;
+           color:var(--ink-faint); cursor:pointer; }
+  .reset:hover { border-color:var(--terra); color:var(--terra); }
+  footer { margin-top:44px; border-top:1px solid var(--line); padding-top:20px; font-size:12.5px; color:var(--ink-faint); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:center; }
 
   @media (max-width:680px){
     .wrap { padding:30px 18px 64px; }
@@ -168,12 +187,12 @@
     .gauge-num .n { font-size:29px; } .gauge-num .n span { font-size:14px; }
     .stats { grid-template-columns:repeat(2,1fr); gap:11px; }
     .stat .v { font-size:18px; }
-    .par-grid, .ship-grid { grid-template-columns:1fr; }
+    .risk-grid, .ship-grid { grid-template-columns:1fr; }
     .node { grid-template-columns:38px 1fr; gap:12px; }
     .tl::before { left:18px; }
     .dot { box-shadow:0 0 0 4px var(--paper); }
   }
-  @media (prefers-reduced-motion: reduce){ .node.now .dot { animation:none; } }
+  @media (prefers-reduced-motion: reduce){ .node.now .dot { animation:none; } .gauge { transition:none; } }
 </style>
 </head>
 <body>
@@ -181,175 +200,368 @@
   <div class="brand"><img src="../assets/favicon-32x32.png" alt=""><span>PebblePath</span></div>
   <header>
     <div>
-      <div class="eyebrow">Launch timeline · 14 Jul 2026</div>
-      <h1>The path to Submit, in order</h1>
-      <p class="lede">The critical path is <b>clear</b>. Every gate, the final build, the screenshots, the privacy labels and the demo account are all closed and verified. <b>Build 108 is the binary to submit.</b> One step remains: attach the build and the subscription in App Store Connect, then hit Submit.</p>
+      <div class="eyebrow">Launch &amp; GTM · 19 Jul 2026</div>
+      <h1>From submitted to a launch that compounds</h1>
+      <p class="lede">1.0 build 109 is <b>with Apple</b>, auto-release on approval. The build work is done. What follows is everything around it: closing the exposure risks, making the site fast and measurable, then a <b>soft launch first</b> so the wider push lands on a listing that already has reviews. Tick items as you go, progress saves in this browser.</p>
     </div>
     <div class="gauge-box">
-      <div class="gauge" style="--pct:99"><div class="gauge-num"><div class="n">99<span>%</span></div></div></div>
-      <div class="gauge-label">to submission</div>
+      <div class="gauge" id="gauge"><div class="gauge-num"><div class="n" id="gnum">0<span>%</span></div></div></div>
+      <div class="gauge-label" id="glabel">0 of 0 done</div>
     </div>
   </header>
 
   <div class="stats">
-    <div class="stat teal"><div class="v">✓ Done</div><div class="k">Foundation, compliance, features, Premium (Gate A)</div></div>
-    <div class="stat accent"><div class="v">▶ Last mile</div><div class="k">Submit. Nothing else is outstanding</div></div>
-    <div class="stat"><div class="v">Build&nbsp;108</div><div class="k">Verified on TestFlight. This is the binary to attach</div></div>
-    <div class="stat"><div class="v">~30 min</div><div class="k">To submit, then ~24–48h Apple review</div></div>
+    <div class="stat teal"><div class="v">✓ Submitted</div><div class="k">1.0 build 109 · auto-release on approval</div></div>
+    <div class="stat accent"><div class="v">~24–48h</div><div class="k">Apple review. Phase 0 has to land inside this window</div></div>
+    <div class="stat risk"><div class="v">4 pages</div><div class="k">Internal pages publicly readable right now</div></div>
+    <div class="stat"><div class="v">GA4 live</div><div class="k">Web funnel measurable. App has no analytics yet</div></div>
   </div>
 
-  <!-- PARALLEL -->
-  <div class="parallel">
-    <div class="ph">Start today, in parallel <span class="badge">runs alongside · doesn't block Submit</span></div>
-    <p class="sub">These have external lead time, so kick them off now and let them run in the background while you work the timeline below. None of them gate the submission.</p>
-    <div class="par-grid">
-      <div class="par"><div class="ptag">External · start now</div><div class="pt">Lawyer review</div><div class="pd">Privacy Policy + Terms. Longest human lead time. Docs are already live &amp; linked (Apple's actual requirement) — sign-off is risk mitigation, not a review gate.</div></div>
-      <div class="par"><div class="ptag" style="color:var(--green)">✓ Approved · closed</div><div class="pt">Google OAuth verification</div><div class="pd"><b>Approved by Google</b> for <code style="font-size:11px">calendar.readonly</code> (15 Jul, same day). The 100-user cap and the "unverified app" warning are gone, and the repeat-consent prompt stops. Nothing left to do.</div></div>
-      <div class="par"><div class="ptag">External · optional</div><div class="pt">LLC formation</div><div class="pd">Sole prop is fine to launch. Start the filing now so the entity is in place before public scale — not a Submit gate.</div></div>
+  <!-- RISK BAND -->
+  <div class="risk-band">
+    <div class="ph">Exposed on the public domain <span class="badge">verified live · HTTP 200</span></div>
+    <p class="sub"><code>noindex</code> keeps these out of Google. It does <b>not</b> stop anyone who has, guesses or is given the URL, and AI crawlers do not reliably honour it. All four return 200 right now.</p>
+    <div class="risk-grid">
+      <div class="rk">
+        <div class="rtag">Highest risk · take down</div>
+        <div class="rt"><code>/persona-review/</code></div>
+        <div class="rd">Contains a <b>real child's name</b>, both parents' names, and <b>39 uid references</b> plus Firestore internals. On a product whose entire pitch is that family data stays private. This is the one that would genuinely hurt.</div>
+      </div>
+      <div class="rk">
+        <div class="rtag">High risk · take down</div>
+        <div class="rt"><code>/pricing-model/</code></div>
+        <div class="rd">Internal unit economics. <b>74 references to margin</b>, per-family API costs, Sonnet and Opus rates, and price points you are not charging ($1.99, $14.99, $29.99 against the real $8.99).</div>
+      </div>
+      <div class="rk">
+        <div class="rtag">Medium · take down</div>
+        <div class="rt"><code>/checklist-gatetest/</code></div>
+        <div class="rd">Stale internal QA play-by-play from the Gate B and C runs. No reason to be reachable now that the gates are closed.</div>
+      </div>
+      <div class="rk">
+        <div class="rtag">Low · keep, harden</div>
+        <div class="rt"><code>/checklist/</code> and <code>/brain/</code></div>
+        <div class="rd">This page and the Family Memory Engine concept. <code>/brain/</code> is a deliberate marketing asset. Keep both, add a <code>robots.txt</code> disallow. The demo password is <b>not</b> published anywhere, that was checked.</div>
+      </div>
     </div>
   </div>
 
   <!-- TIMELINE -->
-  <div class="tl-head"><h2>The critical path</h2><span class="count">all clear · Submit is next</span></div>
-  <p class="tl-note">Every step below is closed and verified. The gates were sequenced ahead of the screenshots on purpose, so that anything capable of forcing a new build surfaced <b>before</b> the store imagery was captured.</p>
+  <div class="tl-head"><h2>The path</h2><span class="count" id="headcount"></span></div>
+  <p class="tl-note">Phase 0 is the only part with a deadline: it has to land <b>before</b> Apple approves, because approval turns the site live to real traffic. Everything after that is paced to protect one thing, the single launch post you only get to spend once.</p>
 
-  <div class="tl">
+  <div class="tl" id="tl">
 
-    <div class="node done">
-      <div class="dot">✓</div>
-      <div class="card">
-        <div class="top"><span class="t">Foundation + Premium (Gate A)</span><span class="pill p-done">Done</span></div>
-        <div class="d">Everything structural — infra, compliance, features, security sprint, App Store record, subscription — is shipped. Premium gating A/B/C is sandbox-verified end-to-end (purchase → webhook → server flag). Build 102 was the archived build at this point; the submission candidate is now 108.</div>
+    <!-- ===== PHASE 0 ===== -->
+    <div class="phase-label"><span class="pn">Phase 0</span><span class="pw">Before approval · today and this weekend</span><span class="bar"></span></div>
+
+    <div class="node risk">
+      <div class="dot">!</div>
+      <div class="card" data-id="p0-takedown">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Take down the three exposed internal pages</span><span class="pill p-risk">Do first</span></div>
+        <div class="d">Delete <code>/persona-review/</code>, <code>/pricing-model/</code> and <code>/checklist-gatetest/</code> from the repo so they 404. The pricing model source is safe locally at <code>design-sandbox/26-pebble-cost-model.html</code>, nothing is lost. Do this before approval drives any attention at the domain.</div>
+        <div class="meta"><span class="chip who">Claude can do this</span><span class="chip">~5 min</span></div>
       </div>
     </div>
 
-    <div class="node done">
-      <div class="dot">✓</div>
-      <div class="card">
-        <div class="top"><span class="t">Approval-hardening dry-run</span><span class="pill p-done">Done · 18 Jul</span></div>
-        <div class="d">IAP paywall completeness verified — <b>Restore Purchases</b> exercised for real (it surfaced the token-drift bug, now fixed + webhook hardened + deployed), Terms/Privacy links + auto-renew disclosure present. The leak fix confirmed closed in Gate B's probe.</div>
+    <div class="node risk">
+      <div class="dot">!</div>
+      <div class="card" data-id="p0-video">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Fix the 18MB hero video</span><span class="pill p-risk">Conversion + cost</span></div>
+        <div class="d"><code>assets/ultramock.mp4</code> is <b>18MB</b>, sits above the fold, and carries <code>preload="auto"</code> with autoplay. Every single visitor downloads all of it before the page settles, roughly <b>15 seconds on mobile data</b>. Two fixes: switch to <code>preload="none"</code> so the poster carries the hero, then re-encode. Also a bandwidth risk, GitHub Pages soft-caps at 100GB/month and 18MB × 5,000 visitors is 90GB.</div>
+        <div class="meta"><span class="chip who">Claude + one ffmpeg run</span><span class="chip">~20 min</span></div>
       </div>
     </div>
 
-    <div class="node done">
-      <div class="dot">✓</div>
-      <div class="card">
-        <div class="top"><span class="t">Test gates B · C · E</span><span class="pill p-done">All done · 18 Jul</span></div>
-        <div class="d"><b>B ✓</b> — full persona walkthrough with a live second account: privacy model held (the connection/non-parent invariants verified on real data), and the run flushed out <b>4 launch-critical bugs</b>, all fixed. <b>C ✓</b> — cross-device push both ways + deep-link. <b>E ✓</b> — writes reach the server after a clean reinstall.</div>
-        <div class="meta"><span class="chip who">Thomas + Ellie · devices</span><span class="chip">~½ day</span></div>
+    <div class="node now">
+      <div class="dot">2</div>
+      <div class="card" data-id="p0-weight">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Compress the rest of the media</span><span class="pill p-now">Speed</span></div>
+        <div class="d">Beyond the video: <code>hero-dual-iphone.png</code> 1.9MB · <code>ellie-founder.png</code> 836KB and <code>thomas-founder.png</code> 300KB (both PNG, should be JPEG) · <code>screens/activities.jpg</code> 800KB and <code>screens/trips.jpg</code> 616KB, well over the documented 80 to 230KB recipe. Around <b>4MB recoverable</b> without visible quality loss.</div>
+        <div class="meta"><span class="chip who">Claude</span><span class="chip">~15 min</span></div>
       </div>
     </div>
 
-    <div class="node done">
-      <div class="dot">✓</div>
-      <div class="card">
-        <div class="top"><span class="t">Gate D — private-mode verified</span><span class="pill p-done">Done · 18 Jul</span></div>
-        <div class="d">Private Pebble messages confirmed hidden from the co-parent on two devices. Bonus: the strict server-side rule was already live (published in June), so no Console publish was needed — the verify was the last open piece.</div>
+    <div class="node now">
+      <div class="dot">3</div>
+      <div class="card" data-id="p0-llm">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">LLM discoverability: llms.txt + crawler rules</span><span class="pill p-now">New channel</span></div>
+        <div class="d">Neither exists today. <code>robots.txt</code> has <b>zero</b> directives for GPTBot, ClaudeBot, PerplexityBot, CCBot or Google-Extended, and there is no <code>llms.txt</code>. When a parent asks an assistant "what app helps coordinate family schedules with grandparents", you want to be findable and described accurately rather than guessed at. Add <code>llms.txt</code> with the positioning, the audience and the differentiator, and make the crawler policy an explicit decision instead of a default.</div>
+        <div class="meta"><span class="chip who">Claude</span><span class="chip">~20 min</span><span class="chip">decision: allow or block AI crawlers</span></div>
       </div>
     </div>
 
-    <div class="node done">
-      <div class="dot">✓</div>
-      <div class="card">
-        <div class="top"><span class="t">Final rebuild — the gate-run bundle</span><span class="pill p-done">Build 108 · verified</span></div>
-        <div class="d"><b>7 fixes + 2 polish</b> rode build 106: non-parent privacy (liveContext) · Members-list labels · Pebble quota label · live-promotion listener re-attach · promoted-parent <code style="font-size:11px">memberIds</code> · flat-family deletion cascade · the inline re-auth <b>Delete-account sheet</b> · solo avatar for non-parents · the read-only <b>"covered by your family" Premium card</b>. <b>Build 108</b> adds the dismissible Home packing card. All verified on TestFlight: deletion sheet (wrong + right password, Google one-tap) · Members list · Grandpa's solo avatar + covered card. <b>108 is the binary to submit.</b></div>
+    <div class="node now">
+      <div class="dot">4</div>
+      <div class="card" data-id="p0-seo">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Close the four SEO gaps</span><span class="pill p-quick">Quick</span></div>
+        <div class="d">The metadata pass was mostly solid. Four holes remain: <code>/brief/</code> has <b>no h1 at all</b> · <code>/join/</code> is missing its canonical <b>and</b> has two h1s · <code>privacy.html</code> and <code>terms.html</code> have no <code>og:image</code>, so they unfurl bare when shared. <code>/join/</code> matters most, it is the page every invite link lands on.</div>
+        <div class="meta"><span class="chip who">Claude</span><span class="chip">~10 min</span></div>
       </div>
     </div>
 
-    <div class="node done">
-      <div class="dot">✓</div>
-      <div class="card">
-        <div class="top"><span class="t">Retake App Store screenshots</span><span class="pill p-done">Done · 19 Jul</span></div>
-        <div class="d">Captured on the final build with device frames, real content and final UI. Retires the stale <code style="font-size:11px">1 May</code> set (which predated the dashboard redesign, flash-cards, themes, Family Brief hero, Activities rebuild and Settings hub). No web / Android / "beta" surfaces.</div>
-        <div class="meta"><span class="chip who">Thomas</span></div>
+    <div class="node now">
+      <div class="dot">5</div>
+      <div class="card" data-id="p0-copy">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Copy pass: soften AI, remove em-dashes</span><span class="pill p-now">Awaiting your nod</span></div>
+        <div class="d">Of 28 "AI" hits on the homepage, only <b>5 are positioning copy</b>. The rest are meta tags, code comments, the privacy block (keep, it does trust work) and one false positive, your Firebase key starts <code>AIza</code>. Same pass fixes <b>14 em-dash violations</b> in visible copy, against a project-wide rule. Table is in the session, needs your approval on wording.</div>
+        <div class="meta"><span class="chip who">You approve, Claude ships</span><span class="chip">~15 min</span></div>
       </div>
     </div>
 
-    <div class="node done">
-      <div class="dot">✓</div>
-      <div class="card">
-        <div class="top"><span class="t">Reconcile privacy nutrition labels</span><span class="pill p-done">Published · 18 Jul</span></div>
-        <div class="d">All four changes live in App Store Connect and verified: <b>Coarse Location added</b> · <b>Crash + Performance Data removed</b> · Analytics purpose dropped from Product Interaction and Device ID. Exactly 11 data types; labels, the cheatsheet doc, and the live privacy policy now agree.</div>
-        <div class="meta"><span class="chip who">Thomas · App Store Connect</span></div>
+    <div class="node now">
+      <div class="dot">6</div>
+      <div class="card" data-id="p0-email">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Email capture + vendor pick</span><span class="pill p-now">Blocks the push</span></div>
+        <div class="d">No capture anywhere on the site. Without it, everyone the LinkedIn push sends who is not ready to install right now is lost for good. Needs a vendor that covers both the list and transactional send, so it also unblocks the welcome email. Wire the signup as a GA4 event so it lands in the funnel.</div>
+        <div class="meta"><span class="chip who">You pick vendor, Claude builds</span><span class="chip">~1h</span></div>
       </div>
     </div>
 
-    <div class="node done">
-      <div class="dot">✓</div>
-      <div class="card">
-        <div class="top"><span class="t">Confirm demo account is not premium</span><span class="pill p-done">Verified · 18 Jul</span></div>
-        <div class="d"><code style="font-size:11px">demo@pebblepath.ai</code> confirmed clean: all three premium fields unset, and <b>durably locked</b> — with no token or transaction-id on the doc, the hardened webhook can't match a stray sandbox renewal to it. Untouched until Submit.</div>
+    <div class="node now">
+      <div class="dot">7</div>
+      <div class="card" data-id="p0-consent">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Cookie consent banner</span><span class="pill p-cond">Obligation</span></div>
+        <div class="d">GA4 went live today and sets cookies, so EU visitors need consent. Low urgency at current traffic, real once the push starts. Wire it to Consent Mode v2 defaulting to denied for EU regions, and keep it light so it does not undercut the privacy positioning the site sells on.</div>
+        <div class="meta"><span class="chip who">Claude</span><span class="chip">~45 min</span></div>
       </div>
     </div>
+
+    <div class="node now">
+      <div class="dot">8</div>
+      <div class="card" data-id="p0-drafts">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Draft the seed outreach and LinkedIn sequence</span><span class="pill p-now">Write now, send later</span></div>
+        <div class="d">Written while there is time, not in the scramble on approval day. Personal-contact message, a build-in-public post for the waiting window, and the launch post itself. Founder story rather than product announcement, 15 years in EdTech is the credibility. Personal profile only, and nothing touching P3.</div>
+        <div class="meta"><span class="chip who">Claude drafts, your voice</span><span class="chip">~45 min</span></div>
+      </div>
+    </div>
+
+    <!-- ===== PHASE 1 ===== -->
+    <div class="phase-label"><span class="pn">Phase 1</span><span class="pw">Approval day · soft launch</span><span class="bar"></span></div>
 
     <div class="node milestone">
-      <div class="dot">➤</div>
-      <div class="card">
-        <div class="top"><span class="t">Submit for Review</span><span class="pill p-gate">Milestone</span></div>
-        <div class="d">Attach the <b>final verified build</b> and the subscription <code style="font-size:11px">ai.pebblepath.app.premium.family.monthly</code> ($8.99/mo) to the version, then submit. The legacy $1.99 / $19.99 products are no longer sold, so attaching those instead would ship a <b>dead paywall</b>. No "What's New" needed for a 1.0.</div>
+      <div class="dot">★</div>
+      <div class="card" data-id="p1-approved">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Apple approves, 1.0 goes live</span><span class="pill p-gate">Gate</span></div>
+        <div class="d">Auto-release is on, so it publishes the moment it passes. If it bounces, check <code>demo@pebblepath.ai</code> first, a sign-in failure or the reviewer landing in an empty family is the most common cause and a same-day fix.</div>
       </div>
     </div>
 
-    <div class="node review">
-      <div class="dot">⏳</div>
-      <div class="card">
-        <div class="d">Apple review — typically <b>~24–48h</b>. Respond fast to any feedback; most rejections are metadata / IAP completeness, already hardened for.</div>
+    <div class="node">
+      <div class="dot">9</div>
+      <div class="card" data-id="p1-verify">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Verify the live listing and the whole download path</span><span class="pill p-quick">30 min</span></div>
+        <div class="d">Screenshots in order, description rendering, subscription visible and purchasable, and every website CTA resolving to the live listing. The 17 site links now carry <code>id6764684381</code>, so they should light up automatically. Confirm rather than assume, this is the one path everything else depends on.</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="dot">10</div>
+      <div class="card" data-id="p1-seed">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Seed outreach, install ask only</span><span class="pill p-now">The soft launch</span></div>
+        <div class="d">Personal contacts direct, closest LinkedIn ties, local parent community. <b>Ask for the install and nothing else.</b> Bundling an install ask with a review ask halves the response on both, and a review written before anyone has used the app reads hollow and says nothing useful.</div>
+        <div class="meta"><span class="chip who">You</span><span class="chip">target ~20 installs</span></div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="dot">11</div>
+      <div class="card" data-id="p1-watch">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Watch the first real funnel data</span><span class="pill p-run">GA4</span></div>
+        <div class="d">First time there has ever been traffic against instrumentation. What to read: which CTA placement actually converts (<code>nav</code> vs <code>hero</code> vs <code>pricing_trial</code> vs <code>final_cta</code>), and whether people reach pricing at all via scroll depth. A low scroll depth is a copy problem, low traffic at high depth is a distribution problem. Different fixes.</div>
+      </div>
+    </div>
+
+    <!-- ===== PHASE 2 ===== -->
+    <div class="phase-label"><span class="pn">Phase 2</span><span class="pw">Days 2 to 7 · reviews and real feedback</span><span class="bar"></span></div>
+
+    <div class="node">
+      <div class="dot">12</div>
+      <div class="card" data-id="p2-reviews">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Ask for reviews, individually, after use</span><span class="pill p-now">ASO fuel</span></div>
+        <div class="d">Separate message, a few days after the install ask, only to people who actually opened it. Early ratings move App Store ranking disproportionately, and a listing with reviews converts far better than one without. <b>Target ~10 before the wider push.</b> This is manual for now because there is no in-app prompt, see Phase 3.</div>
+        <div class="meta"><span class="chip who">You</span><span class="chip">target 10 reviews</span></div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="dot">13</div>
+      <div class="card" data-id="p2-feedback">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Harvest friction from the seed cohort</span><span class="pill p-run">Feeds 1.0.1</span></div>
+        <div class="d">This substitutes for the missing app analytics, and at this size it is better. Around 20 people you can actually talk to beats a funnel chart on 20 people. What confused them, where they stopped, whether they invited anyone. Everything here becomes 1.0.1.</div>
+      </div>
+    </div>
+
+    <!-- ===== PHASE 3 ===== -->
+    <div class="phase-label"><span class="pn">Phase 3</span><span class="pw">Week 2 · ship 1.0.1</span><span class="bar"></span></div>
+
+    <div class="node">
+      <div class="dot">14</div>
+      <div class="card" data-id="p3-review-prompt">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">In-app review prompt</span><span class="pill p-risk">Biggest single win</span></div>
+        <div class="d">There is <b>zero</b> <code>SKStoreReviewController</code> in the app. Reviews are the top ASO ranking input and the top listing conversion factor, and right now getting them is you asking people by hand, forever. Apple throttles to 3 prompts per user per year and handles it for you. Fire after a genuine win, a milestone marked or a good Pebble answer, never on launch or mid-task.</div>
+        <div class="meta"><span class="chip who">Claude writes, you build</span><span class="chip">~1h</span></div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="dot">15</div>
+      <div class="card" data-id="p3-analytics">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">App analytics, linked to the same GA4 property</span><span class="pill p-now">Gates the push</span></div>
+        <div class="d">FirebaseAnalytics is not linked in the Xcode target and there are no <code>logEvent</code> calls anywhere. Add the SPM product, then link Firebase to the <b>existing</b> property <code>G-9JQBCG8SVM</code> from Firebase Console, not a new one, or web and app split permanently and cross-platform funnels become impossible. Instrument <code>invite_sent</code> and <code>invite_redeemed</code> first, that is the growth loop and it is completely unmeasured. Also needs a privacy nutrition label revision, since it changes the declared collection profile.</div>
+        <div class="meta"><span class="chip who">Claude writes, you build</span><span class="chip">~half day</span></div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="dot">16</div>
+      <div class="card" data-id="p3-invite-url">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Swap the iOS invite share URL</span><span class="pill p-quick">One line</span></div>
+        <div class="d"><code>SettingsView</code> → <code>InviteCodeRow</code> still shares <code>pebblepath.ai</code> rather than the listing. Every invite sent between now and 1.0.1 sends people to the marketing site instead of straight to install. The website side is already fixed.</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="dot">17</div>
+      <div class="card" data-id="p3-ship">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Submit 1.0.1</span><span class="pill p-gate">Gate</span></div>
+        <div class="d">Bundle the three above with the seed-cohort fixes. You cannot submit while 1.0 is in review, so this starts only after approval. Another 24 to 48h of review. <b>Do not rush it</b>, the most valuable content in this release is the feedback, and that needs a week to accumulate.</div>
+      </div>
+    </div>
+
+    <!-- ===== PHASE 4 ===== -->
+    <div class="phase-label"><span class="pn">Phase 4</span><span class="pw">Week 2 to 3 · the wider push</span><span class="bar"></span></div>
+
+    <div class="node">
+      <div class="dot">18</div>
+      <div class="card" data-id="p4-linkedin">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">LinkedIn launch post</span><span class="pill p-now">Spend it once</span></div>
+        <div class="d">Held until now on purpose. By this point the listing has reviews, the site is fast, the funnel is measured, and the app can ask for its own reviews. Posting on approval day would have spent your one launch moment driving traffic at a zero-review listing you could not measure. Founder story, not product announcement.</div>
+        <div class="meta"><span class="chip who">You</span></div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="dot">19</div>
+      <div class="card" data-id="p4-communities">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Parenting communities</span><span class="pill p-cond">Read the rules first</span></div>
+        <div class="d">Reddit and Facebook parenting groups have strict and unevenly enforced self-promotion rules. Read each one before posting, a ban costs more than the post earns. The whole-family angle is the one that survives scrutiny in these rooms, because it is genuinely different rather than another tracker.</div>
+      </div>
+    </div>
+
+    <!-- ===== PHASE 5 ===== -->
+    <div class="phase-label"><span class="pn">Phase 5</span><span class="pw">Ongoing · the compounding work</span><span class="bar"></span></div>
+
+    <div class="node later">
+      <div class="dot">20</div>
+      <div class="card" data-id="p5-invite-loop">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Surface the invite loop</span><span class="pill p-now">Highest leverage in the product</span></div>
+        <div class="d"><code>InviteCodeRow</code> exists in exactly one place, <code>SettingsFamilyView</code>. Three taps deep, never prompted, absent from onboarding and the dashboard. Joining a family requires a code, so <b>every household naturally pulls in a co-parent, a grandparent, a caregiver</b>. A family that invites two people instead of zero doubles acquisition at zero cost, which beats any channel you could buy. Candidate moments: end of onboarding, family-circle empty state, after the first milestone.</div>
+        <div class="meta"><span class="chip who">Product work</span></div>
       </div>
     </div>
 
     <div class="node later">
-      <div class="dot">5</div>
-      <div class="card">
-        <div class="top"><span class="t">After approval — before public go-live</span><span class="pill p-later">Post-approval</span></div>
-        <div class="d">Approval isn't forced public availability — gate the go-live on: <b>server-side IAP receipt validation</b> · <b>new-signup welcome email</b> (pick Cloudflare / SendGrid / Resend) · fix the <b>Portal reCAPTCHA 403</b> then <b>enforce App Check</b> per-service (iOS a few days after approval) · consider a <b>phased release</b>. Finish lawyer + OAuth + LLC if still running.</div>
+      <div class="dot">21</div>
+      <div class="card" data-id="p5-aso">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">ASO iteration</span><span class="pill p-later">Cheap to test</span></div>
+        <div class="d">Promotional text is editable <b>without</b> a review cycle, which makes it the right field for testing hooks and announcing features. Subtitle and keywords need a version, so batch those with releases. Watch which search terms convert once there is enough traffic to read.</div>
+      </div>
+    </div>
+
+    <div class="node later">
+      <div class="dot">22</div>
+      <div class="card" data-id="p5-deferred">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Carried-over deferrals</span><span class="pill p-later">Not blocking</span></div>
+        <div class="d">Server-side IAP receipt validation · lawyer review of the legal docs, in flight · LLC formation · the Portal reCAPTCHA 403 IAM check then flipping App Check to enforce · the GA MCP server, worth setting up once there is data to point it at.</div>
       </div>
     </div>
 
   </div>
 
-  <!-- NOT A BLOCKER -->
-  <div class="noblock">
-    <h3>Not blockers — don't let these pull you off sequence</h3>
-    <ul>
-      <li><b>Fixing reCAPTCHA / enforcing App Check</b> — Portal-only; App Check is Unenforced, so it rejects zero live traffic. Post-approval.</li>
-      <li><b>Google OAuth verification</b> — Testing mode (100-user cap) is fine at 1.0 scale; it's a growth ceiling, not an Apple gate.</li>
-      <li><b>Lawyer review</b> — the docs are already live &amp; linked, which is Apple's actual requirement.</li>
-      <li><b>Server IAP validation · LLC</b> — pre-public hardening, not pre-Submit.</li>
-      <li><b>"What's New" notes</b> — not required for a 1.0 initial submission.</li>
-    </ul>
-  </div>
-
-  <div class="legend">
-    <div class="lg"><span class="sw now"></span> Do next</div>
-    <div class="lg"><span class="sw"></span> Sequenced step</div>
-    <div class="lg"><span class="sw dec"></span> Decision point</div>
-    <div class="lg"><span class="sw mile"></span> Submit milestone</div>
-    <div class="lg"><span class="sw late"></span> After approval</div>
-    <div class="lg"><span class="sw done"></span> Done</div>
-  </div>
-
-  <!-- SHIPPED -->
+  <!-- SHIPPED TODAY -->
   <div class="shipped">
-    <h2>Already shipped — why it's 96%</h2>
-    <p class="s">Everything structural is done. The timeline above is finish-and-ship work, not foundation.</p>
+    <h2>Shipped today, 19 Jul</h2>
+    <p class="s">Before the strategy work started</p>
     <div class="ship-grid">
-      <div class="ship"><span class="ck">✓</span><span class="ck-t">Apple Developer + App Store Connect record <span>· bundle <code style="background:#fff;border:1px solid #dbe7e2;border-radius:4px;padding:.5px 4px;font-size:12px">ai.pebblepath.app</code></span></span></div>
-      <div class="ship"><span class="ck">✓</span><span class="ck-t">$8.99/mo subscription + 7-day trial <span>· receipt webhook verified end-to-end</span></span></div>
-      <div class="ship"><span class="ck">✓</span><span class="ck-t">Privacy labels · age rating · app icon · launch screen</span></div>
-      <div class="ship"><span class="ck">✓</span><span class="ck-t">Privacy Policy + Terms live · COPPA self-assessment</span></div>
-      <div class="ship"><span class="ck">✓</span><span class="ck-t">In-app consent · 18+ affirmation · account deletion</span></div>
-      <div class="ship"><span class="ck">✓</span><span class="ck-t">Push (FCM + prod APNs) · Universal Links · iMessage preview</span></div>
-      <div class="ship"><span class="ck">✓</span><span class="ck-t">Privacy Manifest re-audit <span>· clean, 14 Jul</span></span></div>
-      <div class="ship"><span class="ck">✓</span><span class="ck-t">Security sprint <span>· API key off-device, App Check, PII tokenization, private-mode, Face ID, audit log, CSP enforced</span></span></div>
-      <div class="ship"><span class="ck">✓</span><span class="ck-t">Full-app visual harmonization + P1–P7 persona audit <span>· flat-family privacy re-verified live</span></span></div>
-      <div class="ship"><span class="ck">✓</span><span class="ck-t">Pexels auto-cover + sign-out token fixes <span>· Build 102, on TestFlight</span></span></div>
+      <div class="ship"><span class="ck">✓</span><span class="ck-t">1.0 build 109 submitted to App Review <span>· auto-release on approval</span></span></div>
+      <div class="ship"><span class="ck">✓</span><span class="ck-t"><b>16 dead App Store links fixed</b> <span>· every download CTA sitewide was a permanent 404</span></span></div>
+      <div class="ship"><span class="ck">✓</span><span class="ck-t">GA4 live on all 11 marketing pages <span>· placement-tagged funnel events</span></span></div>
+      <div class="ship"><span class="ck">✓</span><span class="ck-t">Edge-cache bug caught and fixed <span>· assets cache 4h, HTML 10min</span></span></div>
+      <div class="ship"><span class="ck">✓</span><span class="ck-t">Beachhead and launch shape decided <span>· soft launch, whole-family wedge</span></span></div>
+      <div class="ship"><span class="ck">✓</span><span class="ck-t">Two false "done" claims corrected <span>· App Store links, app analytics</span></span></div>
     </div>
   </div>
 
+  <div class="legend">
+    <div class="lg"><span class="sw risk"></span>Risk, do first</div>
+    <div class="lg"><span class="sw now"></span>Active now</div>
+    <div class="lg"><span class="sw"></span>Queued</div>
+    <div class="lg"><span class="sw mile"></span>Gate or milestone</div>
+    <div class="lg"><span class="sw late"></span>Ongoing</div>
+  </div>
+
   <footer>
-    <span>Sequenced from the security-hardening, persona-review, prelaunch-tail &amp; Premium-gating trackers.</span>
-    <span>PebblePath AI · invited beta → public submission</span>
+    <span>PebblePath · launch and GTM tracker · progress saves in this browser</span>
+    <button class="reset" id="reset" type="button">Reset all</button>
   </footer>
 </div>
+
+<script>
+(function () {
+  var KEY = 'pp-gtm-checklist-v1';
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.card[data-id]'));
+  var gauge = document.getElementById('gauge');
+  var gnum  = document.getElementById('gnum');
+  var glabel= document.getElementById('glabel');
+  var head  = document.getElementById('headcount');
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; }
+  }
+  function save(state) {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  var state = load();
+
+  function paint() {
+    var done = 0;
+    cards.forEach(function (c) {
+      var on = !!state[c.getAttribute('data-id')];
+      if (on) done++;
+      c.classList.toggle('ticked', on);
+      var box = c.querySelector('.cb');
+      if (box) box.checked = on;
+    });
+    var total = cards.length;
+    var pct = total ? Math.round((done / total) * 100) : 0;
+    gauge.style.setProperty('--pct', pct);
+    gnum.innerHTML = pct + '<span>%</span>';
+    glabel.textContent = done + ' of ' + total + ' done';
+    head.textContent = done + ' of ' + total + ' complete';
+  }
+
+  cards.forEach(function (c) {
+    var box = c.querySelector('.cb');
+    if (!box) return;
+    var id = c.getAttribute('data-id');
+    box.setAttribute('aria-label', 'Mark complete: ' + (c.querySelector('.t') || {}).textContent);
+    box.addEventListener('change', function () {
+      if (box.checked) { state[id] = 1; } else { delete state[id]; }
+      save(state);
+      paint();
+    });
+  });
+
+  document.getElementById('reset').addEventListener('click', function () {
+    if (!confirm('Clear all ticks on this tracker?')) return;
+    state = {};
+    save(state);
+    paint();
+  });
+
+  paint();
+})();
+</script>
 </body>
 </html>

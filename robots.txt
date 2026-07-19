@@ -1,4 +1,57 @@
+# PebblePath — https://pebblepath.ai
+# Updated 2026-07-19
+
 User-agent: *
 Allow: /
+Disallow: /checklist/
+
+# ---------------------------------------------------------------------------
+# AI assistants and answer engines are explicitly welcome.
+#
+# PebblePath is a new app with no search history, so being described
+# accurately when a parent asks an assistant for a recommendation is a real
+# discovery channel. See /llms.txt for a curated summary written for exactly
+# that purpose.
+# ---------------------------------------------------------------------------
+
+User-agent: GPTBot
+Allow: /
+Disallow: /checklist/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /checklist/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /checklist/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /checklist/
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /checklist/
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /checklist/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /checklist/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /checklist/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /checklist/
+
+User-agent: CCBot
+Allow: /
+Disallow: /checklist/
 
 Sitemap: https://pebblepath.ai/sitemap.xml
