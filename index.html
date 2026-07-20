@@ -2996,11 +2996,17 @@
   .signup-btn:hover { background: rgba(255,255,255,0.26); }
   .signup-btn:active { transform: scale(0.98); }
   .signup-btn[disabled] { opacity: .55; cursor: default; transform: none; }
-  .signup-msg {
-    min-height: 20px; margin: 12px 0 0; font-size: 14px; line-height: 1.5;
+  /* Collapses to zero height when empty. min-height plus a top margin was
+     reserving 32px of dead space under the button on every page load. The
+     margin now arrives only with the message. */
+  /* .cta-final-content p sets margin-bottom:28px and is more specific
+     (0-1-1) than a bare .signup-msg (0-1-0), so it has to be beaten
+     on specificity rather than just declared later. */
+  .cta-signup .signup-msg {
+    margin: 0; font-size: 14px; line-height: 1.5;
     color: #fff; opacity: 0; transition: opacity .25s ease;
   }
-  .signup-msg.show { opacity: 1; }
+  .cta-signup .signup-msg.show { opacity: 1; margin-top: 12px; }
   .signup-msg.err { color: #FFD9CC; }
   .signup-sr {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -3111,8 +3117,8 @@
   </defs>
 </svg>
 <section class="hero-v2">
-  <video class="hero-v2-video" autoplay muted loop playsinline preload="metadata" poster="assets/ultramock-poster.jpg?v=4">
-    <source src="assets/ultramock.mp4?v=4" type="video/mp4">
+  <video class="hero-v2-video" autoplay muted loop playsinline preload="metadata" poster="assets/ultramock-poster.jpg?v=5">
+    <source src="assets/ultramock.mp4?v=5" type="video/mp4">
   </video>
   <div class="hero-v2-panel"></div>
   <div class="hero-v2-glow"></div>
