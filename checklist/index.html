@@ -74,14 +74,14 @@
   .stat.accent .v { color:var(--terra); } .stat.teal .v { color:var(--teal-deep); } .stat.risk .v { color:var(--red); }
 
   /* ---- risk band ---- */
-  .risk-band { position:relative; margin:30px 0 6px; background:linear-gradient(150deg,#FBF0ED,#F6E4DF);
-              border:1px solid #EFD3CA; border-radius:16px; padding:18px 20px 19px; box-shadow:var(--shadow); }
+  .risk-band { position:relative; margin:30px 0 6px; background:linear-gradient(150deg,#F1F7F5,#E9F3EF);
+              border:1px solid #DBEAE4; border-radius:16px; padding:18px 20px 19px; box-shadow:var(--shadow); }
   .risk-band .ph { display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-family:var(--display); font-weight:800; font-size:14px; color:var(--red); margin-bottom:2px; }
   .risk-band .ph .badge { font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; background:#fff; color:var(--red); border:1px solid #EFD3CA; border-radius:999px; padding:3px 9px; font-weight:800; }
   .risk-band .sub { font-size:12.5px; color:#7d5750; margin:0 0 14px; line-height:1.5; }
   .risk-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
   .rk { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:13px 14px; }
-  .rk .rtag { font-size:9.5px; text-transform:uppercase; letter-spacing:.08em; font-weight:800; color:var(--red); }
+  .rk .rtag { font-size:9.5px; text-transform:uppercase; letter-spacing:.08em; font-weight:800; color:var(--green); }
   .rk .rt { font-family:var(--display); font-weight:800; font-size:14px; margin-top:4px; letter-spacing:-.01em; }
   .rk .rt code { font-size:12px; background:var(--card-2); border:1px solid var(--line); border-radius:4px; padding:1px 5px; }
   .rk .rd { font-size:12px; color:var(--ink-soft); margin-top:5px; line-height:1.48; }
@@ -160,6 +160,23 @@
      Kept legible rather than dimmed, so the page reads as progress. */
   .card.shipped { opacity:1; background:linear-gradient(158deg,#F4FAF7,#EDF6F1); border-color:#D5E9DF; }
   .card.shipped .t { text-decoration:none; }
+  /* Shipped work stays on the record but stops competing for attention.
+     Detail collapses; click the row to re-open it. */
+  .card.shipped { cursor:pointer; padding:11px 14px; }
+  .card.shipped .d, .card.shipped .meta { display:none; }
+  .card.shipped.open .d, .card.shipped.open .meta { display:block; }
+  .card.shipped.open .meta { display:flex; }
+  .card.shipped .top { margin-bottom:0; }
+  .card.shipped .t { font-size:14.5px; color:var(--ink-soft); }
+  .card.shipped .cb { opacity:.55; }
+  .node.done { padding-bottom:9px; }
+  /* On .top (a flex row), not .card (a block) - otherwise it lands on its
+     own line and adds ~25px to every collapsed row. */
+  .card.shipped .top::after {
+    content:"details"; margin-left:auto; font-size:10.5px; letter-spacing:.04em;
+    color:var(--ink-faint); opacity:.8;
+  }
+  .card.shipped.open .top::after { content:"hide"; }
   .p-ship { background:var(--green); color:#fff; }
 
   /* ---- shipped grid ---- */
@@ -225,26 +242,26 @@
 
   <!-- RISK BAND -->
   <div class="risk-band">
-    <div class="ph">Exposed on the public domain <span class="badge">verified live · HTTP 200</span></div>
-    <p class="sub"><code>noindex</code> keeps these out of Google. It does <b>not</b> stop anyone who has, guesses or is given the URL, and AI crawlers do not reliably honour it. All four return 200 right now.</p>
+    <div class="ph" style="color:var(--green)">Exposure closed <span class="badge" style="color:var(--green);border-color:#CFE6DF">all four now 404 · verified</span></div>
+    <p class="sub" style="color:#4a6b5e">Found live on 19 Jul and taken down the same day. <code>noindex</code> kept them out of Google but did nothing about anyone who had, guessed or was given the URL, and AI crawlers do not reliably honour it. <b>Kept here as the record of what was exposed.</b></p>
     <div class="risk-grid">
       <div class="rk">
-        <div class="rtag">Highest risk · take down</div>
+        <div class="rtag">Removed · was highest risk</div>
         <div class="rt"><code>/persona-review/</code></div>
         <div class="rd">Contains a <b>real child's name</b>, both parents' names, and <b>39 uid references</b> plus Firestore internals. On a product whose entire pitch is that family data stays private. This is the one that would genuinely hurt.</div>
       </div>
       <div class="rk">
-        <div class="rtag">High risk · take down</div>
+        <div class="rtag">Removed · was high risk</div>
         <div class="rt"><code>/pricing-model/</code></div>
         <div class="rd">Internal unit economics. <b>74 references to margin</b>, per-family API costs, Sonnet and Opus rates, and price points you are not charging ($1.99, $14.99, $29.99 against the real $8.99).</div>
       </div>
       <div class="rk">
-        <div class="rtag">Medium · take down</div>
+        <div class="rtag">Removed · stale QA doc</div>
         <div class="rt"><code>/checklist-gatetest/</code></div>
         <div class="rd">Stale internal QA play-by-play from the Gate B and C runs. No reason to be reachable now that the gates are closed.</div>
       </div>
       <div class="rk">
-        <div class="rtag">Low · keep, harden</div>
+        <div class="rtag">Kept · hardened</div>
         <div class="rt"><code>/checklist/</code> and <code>/brain/</code></div>
         <div class="rd">This page and the Family Memory Engine concept. <code>/brain/</code> is a deliberate marketing asset. Keep both, add a <code>robots.txt</code> disallow. The demo password is <b>not</b> published anywhere, that was checked.</div>
       </div>
@@ -278,8 +295,8 @@
       </div>
     </div>
 
-    <div class="node now">
-      <div class="dot">1</div>
+    <div class="node done">
+      <div class="dot">✓</div>
       <div class="card" data-id="p0-weight" data-done="1">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Compress the rest of the media</span><span class="pill p-ship">Shipped</span></div>
         <div class="d"><b>~1.4MB off the critical path.</b> Three showcase screenshots were shipping at full App Store resolution (1320x2868) instead of the 700x1520 web recipe: activities 800K to 236K, trips 616K to 192K, pebble 256K to 100K. The founder portraits were 800px for a 240px slot, now 480px (2x retina): 836K to 312K and 300K to 200K. <b>They could not become JPEGs</b>, all three PNGs genuinely carry alpha, checked before touching them. <code>hero-dual-iphone.png</code> barely moved and is still 1.8MB; it is desktop-only yet still fetched on mobile, so moving it to a CSS background inside the existing <code>min-width:1024px</code> block would stop phones downloading 1.8MB they never render. Left alone as it touches hero layout.</div>
@@ -305,8 +322,8 @@
       </div>
     </div>
 
-    <div class="node now">
-      <div class="dot">2</div>
+    <div class="node done">
+      <div class="dot">✓</div>
       <div class="card" data-id="p0-copy" data-done="1">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Copy pass</span><span class="pill p-later">Parked by choice</span></div>
         <div class="d"><b>Mechanical half shipped:</b> all 18 em-dashes removed from visible copy, "AI" dropped from both pricing bullets and the Pebble alt text. <b>The rest is parked by choice</b> (19 Jul): Thomas is keeping "Pebble, your AI advisor" as it stands. The hero subhead needed nothing, the version originally flagged sits inside a commented-out legacy hero and never renders.</div>
@@ -314,8 +331,8 @@
       </div>
     </div>
 
-    <div class="node now">
-      <div class="dot">3</div>
+    <div class="node done">
+      <div class="dot">✓</div>
       <div class="card" data-id="p0-email" data-done="1">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Email capture + vendor pick</span><span class="pill p-ship">Shipped</span></div>
         <div class="d"><b>Kit</b>, form <code>9702391</code>, folded into the CTA card. Posts <b>straight to Kit</b> rather than embedding their widget, so it looks like the site. Fires a GA4 <code>email_signup</code> event. <b>Verified end to end 19 Jul</b> with a real submission: reaches Kit, creates a subscriber. Two bugs surfaced on the way. (1) Kit answers HTTP 200 even when it REJECTS an address, so the first handler would have shown "check your inbox" to people who were never subscribed. (2) The CSP blocked the request entirely in production while passing locally. <b>Note:</b> double opt-in is on, so submissions land <i>unconfirmed</i> and do NOT count on the form card. Check Subscribers &rarr; Unconfirmed, or a working form reads 0.</div>
@@ -323,8 +340,8 @@
       </div>
     </div>
 
-    <div class="node now">
-      <div class="dot">4</div>
+    <div class="node done">
+      <div class="dot">✓</div>
       <div class="card" data-id="p0-consent" data-done="1">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Cookie consent banner</span><span class="pill p-ship">Shipped</span></div>
         <div class="d">Consent Mode v2 with <b>region-scoped defaults</b>: the 32 EEA, UK and Swiss regions start <b>denied</b> until the visitor accepts; everywhere else starts granted, which is lawful for first-party non-advertising analytics and keeps the launch data usable. The banner shows to everyone and <b>Decline is honoured everywhere</b>, because a decline that quietly does nothing outside the EU would be a dark pattern on a site that sells partly on privacy. Deliberately a quiet bottom bar rather than a modal, two buttons of equal weight, no pre-ticked boxes. Verified end to end locally before deploy.</div>
@@ -333,7 +350,7 @@
     </div>
 
     <div class="node now">
-      <div class="dot">5</div>
+      <div class="dot">1</div>
       <div class="card" data-id="p0-drafts">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Seed outreach + LinkedIn sequence</span><span class="pill p-later">Parked</span></div>
         <div class="d"><b>Parked 19 Jul.</b> Written while there is time rather than in the scramble on approval day: personal-contact message, a build-in-public post for the waiting window, and the launch post. Founder story rather than product announcement, 15 years in EdTech is the credibility. Personal profile only, nothing touching P3. <b>No deadline before approval</b>, which is why it is parked and not blocking.</div>
@@ -353,7 +370,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">6</div>
+      <div class="dot">2</div>
       <div class="card" data-id="p1-verify">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Verify the live listing and the whole download path</span><span class="pill p-quick">30 min</span></div>
         <div class="d">Screenshots in order, description rendering, subscription visible and purchasable, and every website CTA resolving to the live listing. The 17 site links now carry <code>id6764684381</code>, so they should light up automatically. Confirm rather than assume, this is the one path everything else depends on.</div>
@@ -361,7 +378,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">7</div>
+      <div class="dot">3</div>
       <div class="card" data-id="p1-seed">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Seed outreach, install ask only</span><span class="pill p-now">The soft launch</span></div>
         <div class="d">Personal contacts direct, closest LinkedIn ties, local parent community. <b>Ask for the install and nothing else.</b> Bundling an install ask with a review ask halves the response on both, and a review written before anyone has used the app reads hollow and says nothing useful.</div>
@@ -370,7 +387,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">8</div>
+      <div class="dot">4</div>
       <div class="card" data-id="p1-watch">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Watch the first real funnel data</span><span class="pill p-run">GA4</span></div>
         <div class="d">First time there has ever been traffic against instrumentation. What to read: which CTA placement actually converts (<code>nav</code> vs <code>hero</code> vs <code>pricing_trial</code> vs <code>final_cta</code>), and whether people reach pricing at all via scroll depth. A low scroll depth is a copy problem, low traffic at high depth is a distribution problem. Different fixes.</div>
@@ -381,7 +398,7 @@
     <div class="phase-label"><span class="pn">Phase 2</span><span class="pw">Days 2 to 7 · reviews and real feedback</span><span class="bar"></span></div>
 
     <div class="node">
-      <div class="dot">9</div>
+      <div class="dot">5</div>
       <div class="card" data-id="p2-reviews">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Ask for reviews, individually, after use</span><span class="pill p-now">ASO fuel</span></div>
         <div class="d">Separate message, a few days after the install ask, only to people who actually opened it. Early ratings move App Store ranking disproportionately, and a listing with reviews converts far better than one without. <b>Target ~10 before the wider push.</b> This is manual for now because there is no in-app prompt, see Phase 3.</div>
@@ -390,7 +407,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">10</div>
+      <div class="dot">6</div>
       <div class="card" data-id="p2-feedback">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Harvest friction from the seed cohort</span><span class="pill p-run">Feeds 1.0.1</span></div>
         <div class="d">This substitutes for the missing app analytics, and at this size it is better. Around 20 people you can actually talk to beats a funnel chart on 20 people. What confused them, where they stopped, whether they invited anyone. Everything here becomes 1.0.1.</div>
@@ -401,7 +418,7 @@
     <div class="phase-label"><span class="pn">Phase 3</span><span class="pw">Week 2 · ship 1.0.1</span><span class="bar"></span></div>
 
     <div class="node">
-      <div class="dot">11</div>
+      <div class="dot">7</div>
       <div class="card" data-id="p3-review-prompt">
         <div class="top"><input type="checkbox" class="cb"><span class="t">In-app review prompt</span><span class="pill p-risk">Biggest single win</span></div>
         <div class="d">There is <b>zero</b> <code>SKStoreReviewController</code> in the app. Reviews are the top ASO ranking input and the top listing conversion factor, and right now getting them is you asking people by hand, forever. Apple throttles to 3 prompts per user per year and handles it for you. Fire after a genuine win, a milestone marked or a good Pebble answer, never on launch or mid-task.</div>
@@ -410,7 +427,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">12</div>
+      <div class="dot">8</div>
       <div class="card" data-id="p3-analytics">
         <div class="top"><input type="checkbox" class="cb"><span class="t">App analytics, linked to the same GA4 property</span><span class="pill p-now">Gates the push</span></div>
         <div class="d">FirebaseAnalytics is not linked in the Xcode target and there are no <code>logEvent</code> calls anywhere. Add the SPM product, then link Firebase to the <b>existing</b> property <code>G-9JQBCG8SVM</code> from Firebase Console, not a new one, or web and app split permanently and cross-platform funnels become impossible. Instrument <code>invite_sent</code> and <code>invite_redeemed</code> first, that is the growth loop and it is completely unmeasured. Also needs a privacy nutrition label revision, since it changes the declared collection profile.</div>
@@ -419,7 +436,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">13</div>
+      <div class="dot">9</div>
       <div class="card" data-id="p3-invite-url">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Swap the iOS invite share URL</span><span class="pill p-quick">One line</span></div>
         <div class="d"><code>SettingsView</code> → <code>InviteCodeRow</code> still shares <code>pebblepath.ai</code> rather than the listing. Every invite sent between now and 1.0.1 sends people to the marketing site instead of straight to install. The website side is already fixed.</div>
@@ -427,7 +444,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">14</div>
+      <div class="dot">10</div>
       <div class="card" data-id="p3-ship">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Submit 1.0.1</span><span class="pill p-gate">Gate</span></div>
         <div class="d">Bundle the three above with the seed-cohort fixes. You cannot submit while 1.0 is in review, so this starts only after approval. Another 24 to 48h of review. <b>Do not rush it</b>, the most valuable content in this release is the feedback, and that needs a week to accumulate.</div>
@@ -438,7 +455,7 @@
     <div class="phase-label"><span class="pn">Phase 4</span><span class="pw">Week 2 to 3 · the wider push</span><span class="bar"></span></div>
 
     <div class="node">
-      <div class="dot">15</div>
+      <div class="dot">11</div>
       <div class="card" data-id="p4-linkedin">
         <div class="top"><input type="checkbox" class="cb"><span class="t">LinkedIn launch post</span><span class="pill p-now">Spend it once</span></div>
         <div class="d">Held until now on purpose. By this point the listing has reviews, the site is fast, the funnel is measured, and the app can ask for its own reviews. Posting on approval day would have spent your one launch moment driving traffic at a zero-review listing you could not measure. Founder story, not product announcement.</div>
@@ -447,7 +464,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">16</div>
+      <div class="dot">12</div>
       <div class="card" data-id="p4-company-page">
         <div class="top"><input type="checkbox" class="cb"><span class="t">LinkedIn company page: assets and content</span><span class="pill p-run">Supporting asset</span></div>
         <div class="d"><a href="https://www.linkedin.com/company/pebblepath/" style="color:var(--teal-deep)">linkedin.com/company/pebblepath</a>, already linked from the site footer. It will not out-reach your personal profile at this stage and should not be treated as a channel in its own right. Its job is <b>credibility on arrival</b>: when someone reads your founder post and clicks through, a bare page undercuts the story. Needs the banner, logo, tagline, About section, and enough posts that it does not look abandoned.</div>
@@ -456,7 +473,7 @@
     </div>
 
     <div class="node">
-      <div class="dot">17</div>
+      <div class="dot">13</div>
       <div class="card" data-id="p4-communities">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Parenting communities</span><span class="pill p-cond">Read the rules first</span></div>
         <div class="d">Reddit and Facebook parenting groups have strict and unevenly enforced self-promotion rules. Read each one before posting, a ban costs more than the post earns. The whole-family angle is the one that survives scrutiny in these rooms, because it is genuinely different rather than another tracker.</div>
@@ -467,7 +484,7 @@
     <div class="phase-label"><span class="pn">Phase 5</span><span class="pw">Ongoing · the compounding work</span><span class="bar"></span></div>
 
     <div class="node later">
-      <div class="dot">18</div>
+      <div class="dot">14</div>
       <div class="card" data-id="p5-invite-loop">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Surface the invite loop</span><span class="pill p-now">Highest leverage in the product</span></div>
         <div class="d"><code>InviteCodeRow</code> exists in exactly one place, <code>SettingsFamilyView</code>. Three taps deep, never prompted, absent from onboarding and the dashboard. Joining a family requires a code, so <b>every household naturally pulls in a co-parent, a grandparent, a caregiver</b>. A family that invites two people instead of zero doubles acquisition at zero cost, which beats any channel you could buy. Candidate moments: end of onboarding, family-circle empty state, after the first milestone.</div>
@@ -476,7 +493,7 @@
     </div>
 
     <div class="node later">
-      <div class="dot">19</div>
+      <div class="dot">15</div>
       <div class="card" data-id="p5-aso">
         <div class="top"><input type="checkbox" class="cb"><span class="t">ASO iteration</span><span class="pill p-later">Cheap to test</span></div>
         <div class="d">Promotional text is editable <b>without</b> a review cycle, which makes it the right field for testing hooks and announcing features. Subtitle and keywords need a version, so batch those with releases. Watch which search terms convert once there is enough traffic to read.</div>
@@ -484,7 +501,7 @@
     </div>
 
     <div class="node later">
-      <div class="dot">20</div>
+      <div class="dot">16</div>
       <div class="card" data-id="p5-deferred">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Carried-over deferrals</span><span class="pill p-later">Not blocking</span></div>
         <div class="d">Server-side IAP receipt validation · lawyer review of the legal docs, in flight · LLC formation · the Portal reCAPTCHA 403 IAM check then flipping App Check to enforce · the GA MCP server, worth setting up once there is data to point it at.</div>
@@ -569,6 +586,16 @@
       if (box.checked) { state[id] = 1; } else { delete state[id]; }
       save(state);
       paint();
+    });
+  });
+
+  // Shipped rows expand on click. Guard against the disabled checkbox
+  // swallowing the event, and never touch rows that are still open.
+  cards.forEach(function (c) {
+    if (c.getAttribute('data-done') !== '1') return;
+    c.addEventListener('click', function (e) {
+      if (e.target && e.target.classList && e.target.classList.contains('cb')) return;
+      c.classList.toggle('open');
     });
   });
 
