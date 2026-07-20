@@ -208,7 +208,7 @@
     <div>
       <div class="eyebrow">Launch &amp; GTM · 19 Jul 2026</div>
       <h1>From submitted to a launch that compounds</h1>
-      <p class="lede">1.0 build 109 is <b>with Apple</b>, auto-release on approval. The build work is done. What follows is everything around it: closing the exposure risks, making the site fast and measurable, then a <b>soft launch first</b> so the wider push lands on a listing that already has reviews. Tick items as you go, progress saves in this browser.</p>
+      <p class="lede">1.0 build 109 is <b>with Apple</b>, auto-release on approval. Phase 0 is effectively closed: the exposure risks are gone, the site is measurable, and the two things that were <b>silently broken all day</b> (GA4 and the signup form, both blocked by the CSP) are fixed and verified against real network traffic. What remains is the soft launch itself. Tick items as you go, progress saves in this browser.</p>
     </div>
     <div class="gauge-box">
       <div class="gauge" id="gauge"><div class="gauge-num"><div class="n" id="gnum">0<span>%</span></div></div></div>
@@ -219,8 +219,8 @@
   <div class="stats">
     <div class="stat teal"><div class="v">✓ Submitted</div><div class="k">1.0 build 109 · auto-release on approval</div></div>
     <div class="stat accent"><div class="v">~24–48h</div><div class="k">Apple review. Phase 0 has to land inside this window</div></div>
-    <div class="stat teal"><div class="v">3.4MB</div><div class="k">Hero video was 18MB. 15MB off the critical path</div></div>
-    <div class="stat"><div class="v">GA4 live</div><div class="k">Web funnel measurable. App has no analytics yet</div></div>
+    <div class="stat accent"><div class="v">22MB</div><div class="k">Hero video, uncompressed by choice. Heaviest asset</div></div>
+    <div class="stat teal"><div class="v">GA4 + Kit</div><div class="k">Both verified transmitting after the CSP fix</div></div>
   </div>
 
   <!-- RISK BAND -->
@@ -273,7 +273,7 @@
       <div class="dot">✓</div>
       <div class="card" data-id="p0-video" data-done="1">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Replace the 18MB hero video</span><span class="pill p-ship">Shipped</span></div>
-        <div class="d"><b>18.4MB to 3.4MB, an 82% cut.</b> Thomas re-exported with current Build 109 screens, but Ultramock writes at a fixed ~10 Mbps regardless of settings, so the new export landed <b>within 5KB of the old one</b>. Re-exporting was never going to fix the weight, and macOS <code>avconvert</code> could not either (every preset came out LARGER than the source). Transcoded instead via AVFoundation, where <code>AVVideoAverageBitRateKey</code> is the knob that actually exists: 1920x1080 at 1.82 Mbps, all 923 frames, UI text still crisp because flat interface art compresses well. <b>A second pass was needed:</b> AVAssetWriter writes the moov atom LAST, so the first output was no longer faststart and a browser would have had to fetch all 3.4MB before showing a frame. Smaller file, worse start. Remuxed passthrough with <code>shouldOptimizeForNetworkUse</code> to move moov to the front with no second generation of loss. Poster regenerated from frame one of the shipping file so there is no jump, PNG to JPEG (88K), both URLs versioned to defeat the 4-hour asset cache.</div>
+        <div class="d"><b>VideoV3 shipped, uncompressed.</b> Two earlier attempts to shrink it were rejected: Ultramock exports at a fixed ~8 to 10 Mbps regardless of settings, and a 1.82 Mbps AVFoundation transcode was visibly worse in motion. <b>My quality check there was bad</b> (compared frame one, a keyframe, which is the best case by construction). Also removed the hero's <code>scale(1.22)</code>, which was tuned for the older wider-framed export and was compounding the tighter new composition. Now <b>22MB, the heaviest the hero has been</b>, deliberately accepted. Poster taken at t=2.0s: full phone, Family Brief, Build 109 Home.</div>
         <div class="meta"><span class="chip">19 Jul</span><span class="chip">commit eed99e1</span></div>
       </div>
     </div>
@@ -307,9 +307,9 @@
 
     <div class="node now">
       <div class="dot">2</div>
-      <div class="card" data-id="p0-copy">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">Rewrite one line in your own voice</span><span class="pill p-now">Only you can do this</span></div>
-        <div class="d"><b>Mechanical half shipped:</b> all 18 em-dashes removed from visible copy, and "AI" dropped from both pricing bullets and the Pebble alt text. <b>Scope then shrank on inspection.</b> The hero subhead I flagged sits inside a <b>commented-out legacy hero</b> (disabled 24 Jun when HERO V2 shipped, kept as a revert path), so it never renders. The live hero already reads "A calm shared space for growing together. Proactive guidance and a family hub for parents, siblings, and caregivers." Already clean, nothing to do. <b>One thing left</b>, in two places that must match: the <code>h3</code> "Pebble, your AI advisor" and the showcase label "Pebble, your AI parenting advisor". The mobile variant is already clean. Suggested direction: <b>"thinking ahead for you"</b>, since the strategy positions this as operational relief rather than advice, and "advisor" is the ground Huckleberry's Berry already occupies.</div>
+      <div class="card" data-id="p0-copy" data-done="1">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Copy pass</span><span class="pill p-later">Parked by choice</span></div>
+        <div class="d"><b>Mechanical half shipped:</b> all 18 em-dashes removed from visible copy, "AI" dropped from both pricing bullets and the Pebble alt text. <b>The rest is parked by choice</b> (19 Jul): Thomas is keeping "Pebble, your AI advisor" as it stands. The hero subhead needed nothing, the version originally flagged sits inside a commented-out legacy hero and never renders.</div>
         <div class="meta"><span class="chip who">You</span><span class="chip">~5 min</span></div>
       </div>
     </div>
@@ -335,8 +335,8 @@
     <div class="node now">
       <div class="dot">5</div>
       <div class="card" data-id="p0-drafts">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">Draft the seed outreach and LinkedIn sequence</span><span class="pill p-now">Write now, send later</span></div>
-        <div class="d">Written while there is time, not in the scramble on approval day. Personal-contact message, a build-in-public post for the waiting window, and the launch post itself. Founder story rather than product announcement, 15 years in EdTech is the credibility. Personal profile only, and nothing touching P3.</div>
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Seed outreach + LinkedIn sequence</span><span class="pill p-later">Parked</span></div>
+        <div class="d"><b>Parked 19 Jul.</b> Written while there is time rather than in the scramble on approval day: personal-contact message, a build-in-public post for the waiting window, and the launch post. Founder story rather than product announcement, 15 years in EdTech is the credibility. Personal profile only, nothing touching P3. <b>No deadline before approval</b>, which is why it is parked and not blocking.</div>
         <div class="meta"><span class="chip who">Claude drafts, your voice</span><span class="chip">~45 min</span></div>
       </div>
     </div>
