@@ -1,8 +1,8 @@
-var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,configurable:!0,writable:!0,value:t}):g[e]=t;var $=(g,e,t)=>Yt(g,typeof e!="symbol"?e+"":e,t);import{i as D,a as E,b as n,o as At,w as V}from"./lit-DdSsY2EC.js";import{f as qt,h as Ht,j as Vt,k as Wt,G as ct,O as Kt,l as Jt,s as Xt,m as Pt,n as Qt,o as Zt,q as ei,t as ti,v as k,w as T,x as C,R as ii,y as ri,z as N,A as W,B as z,D as q,E as ne,H as K,T as Pe,I as Y,J as X,K as St}from"./firebase-core-Dmfgjia1.js";import{g as ai,h as H}from"./firebase-functions-BQqAsnzQ.js";import{g as si,a as re,r as te,u as ae}from"./firebase-storage-DV4pfGoB.js";(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const r of document.querySelectorAll('link[rel="modulepreload"]'))i(r);new MutationObserver(r=>{for(const a of r)if(a.type==="childList")for(const s of a.addedNodes)s.tagName==="LINK"&&s.rel==="modulepreload"&&i(s)}).observe(document,{childList:!0,subtree:!0});function t(r){const a={};return r.integrity&&(a.integrity=r.integrity),r.referrerPolicy&&(a.referrerPolicy=r.referrerPolicy),r.crossOrigin==="use-credentials"?a.credentials="include":r.crossOrigin==="anonymous"?a.credentials="omit":a.credentials="same-origin",a}function i(r){if(r.ep)return;r.ep=!0;const a=t(r);fetch(r.href,a)}})();class Se extends D{constructor(){super(),this.variant="default",this.lifted=!1,this.padding="md"}render(){const e=["panel",this.variant==="strong"?"strong":"",this.lifted?"lifted":"",`pad-${this.padding}`].filter(Boolean).join(" ");return n`
+var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,configurable:!0,writable:!0,value:t}):g[e]=t;var $=(g,e,t)=>Yt(g,typeof e!="symbol"?e+"":e,t);import{i as D,a as E,b as o,o as Pt,w as V}from"./lit-DdSsY2EC.js";import{f as qt,h as Ht,j as Vt,k as Wt,G as ct,O as Kt,l as Jt,s as Xt,m as St,n as Qt,o as Zt,q as ei,t as ti,v as k,w as T,x as C,R as ii,y as ri,z as N,A as W,B as z,D as q,E as oe,H as K,T as Se,I as Y,J as X,K as At}from"./firebase-core-Dmfgjia1.js";import{g as ai,h as H}from"./firebase-functions-BQqAsnzQ.js";import{g as si,a as re,r as te,u as ae}from"./firebase-storage-DV4pfGoB.js";(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const r of document.querySelectorAll('link[rel="modulepreload"]'))i(r);new MutationObserver(r=>{for(const a of r)if(a.type==="childList")for(const s of a.addedNodes)s.tagName==="LINK"&&s.rel==="modulepreload"&&i(s)}).observe(document,{childList:!0,subtree:!0});function t(r){const a={};return r.integrity&&(a.integrity=r.integrity),r.referrerPolicy&&(a.referrerPolicy=r.referrerPolicy),r.crossOrigin==="use-credentials"?a.credentials="include":r.crossOrigin==="anonymous"?a.credentials="omit":a.credentials="same-origin",a}function i(r){if(r.ep)return;r.ep=!0;const a=t(r);fetch(r.href,a)}})();class Ae extends D{constructor(){super(),this.variant="default",this.lifted=!1,this.padding="md"}render(){const e=["panel",this.variant==="strong"?"strong":"",this.lifted?"lifted":"",`pad-${this.padding}`].filter(Boolean).join(" ");return o`
       <div class=${e}>
         <div class="content"><slot></slot></div>
       </div>
-    `}}$(Se,"properties",{variant:{type:String},lifted:{type:Boolean},padding:{type:String}}),$(Se,"styles",E`
+    `}}$(Ae,"properties",{variant:{type:String},lifted:{type:Boolean},padding:{type:String}}),$(Ae,"styles",E`
     :host {
       display: block;
     }
@@ -66,7 +66,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
       position: relative;
       z-index: 1;
     }
-  `);customElements.define("glass-panel",Se);class Me extends D{constructor(){super(),this.variant="primary",this.size="md",this.full=!1,this.disabled=!1}render(){const e=[this.variant,`size-${this.size}`,this.full?"full":""].filter(Boolean).join(" ");return n`
+  `);customElements.define("glass-panel",Ae);class Me extends D{constructor(){super(),this.variant="primary",this.size="md",this.full=!1,this.disabled=!1}render(){const e=[this.variant,`size-${this.size}`,this.full?"full":""].filter(Boolean).join(" ");return o`
       <button class=${e} ?disabled=${this.disabled}>
         <slot></slot>
       </button>
@@ -188,7 +188,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
       background: rgba(74, 70, 66, 0.56);
       border-color: rgba(255, 255, 255, 0.42);
     }
-  `);customElements.define("glass-button",Me);class Te extends D{constructor(){super(),this.size=44}render(){const e=this.size;return n`
+  `);customElements.define("glass-button",Me);class Te extends D{constructor(){super(),this.size=44}render(){const e=this.size;return o`
       <svg
         viewBox="0 0 64 64"
         width=${e}
@@ -245,7 +245,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
       display: block;
       filter: drop-shadow(0 6px 18px rgba(20, 12, 6, 0.45));
     }
-  `);customElements.define("cairn-mark",Te);class Mt extends D{constructor(){super(),this.size=24,this.color="currentColor",this.mode="production"}render(){const e=Number(this.size)||24,t=this.color||"currentColor",i=this.mode==="template"?{fill:t,opacity:.25}:{fill:"white",opacity:.33};return n`
+  `);customElements.define("cairn-mark",Te);class Mt extends D{constructor(){super(),this.size=24,this.color="currentColor",this.mode="production"}render(){const e=Number(this.size)||24,t=this.color||"currentColor",i=this.mode==="template"?{fill:t,opacity:.25}:{fill:"white",opacity:.33};return o`
       <svg
         width=${e}
         height=${e}
@@ -264,11 +264,11 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
         <path fill=${i.fill} fill-opacity=${i.opacity}
           d="M7.5 10.5C8 8.5 9.8 7.8 12 7.8C14.2 7.8 16 8.5 16 10.5C16 12 14.2 12.5 12 12.5C9.8 12.5 7.5 12 7.5 10.5Z"></path>
       </svg>
-    `}}$(Mt,"properties",{size:{type:Number},color:{type:String},mode:{type:String}});customElements.define("pebble-icon",Mt);class Ie extends D{constructor(){super(),this.name="",this.hue=200,this.photo="",this.size=36,this.showName=!1}_initials(){return this.name.split(/\s+/).map(e=>e[0]).filter(Boolean).slice(0,2).join("").toUpperCase()}render(){const e=`linear-gradient(135deg, hsl(${this.hue}, 55%, 62%) 0%, hsl(${(this.hue+40)%360}, 50%, 42%) 100%)`,t=this.photo?"rgba(120, 120, 128, 0.22)":e,i=`width:${this.size}px;height:${this.size}px;background:${t};font-size:${this.size*.38}px;`;return n`
+    `}}$(Mt,"properties",{size:{type:Number},color:{type:String},mode:{type:String}});customElements.define("pebble-icon",Mt);class Ie extends D{constructor(){super(),this.name="",this.hue=200,this.photo="",this.size=36,this.showName=!1}_initials(){return this.name.split(/\s+/).map(e=>e[0]).filter(Boolean).slice(0,2).join("").toUpperCase()}render(){const e=`linear-gradient(135deg, hsl(${this.hue}, 55%, 62%) 0%, hsl(${(this.hue+40)%360}, 50%, 42%) 100%)`,t=this.photo?"rgba(120, 120, 128, 0.22)":e,i=`width:${this.size}px;height:${this.size}px;background:${t};font-size:${this.size*.38}px;`;return o`
       <div class="avatar" style=${i} title=${this.name}>
-        ${this.photo?n`<img src=${this.photo} alt=${this.name} />`:n`<span>${this._initials()}</span>`}
+        ${this.photo?o`<img src=${this.photo} alt=${this.name} />`:o`<span>${this._initials()}</span>`}
       </div>
-      ${this.showName?n`<span class="name">${this.name}</span>`:""}
+      ${this.showName?o`<span class="name">${this.name}</span>`:""}
     `}}$(Ie,"properties",{name:{type:String},hue:{type:Number},photo:{type:String},size:{type:Number},showName:{type:Boolean,attribute:"show-name"}}),$(Ie,"styles",E`
     :host {
       display: inline-flex;
@@ -301,17 +301,17 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
       font-weight: 500;
       color: var(--text-secondary);
     }
-  `);customElements.define("member-chip",Ie);const ni="modulepreload",oi=function(g){return"/portal/"+g},pt={},ee=function(e,t,i){let r=Promise.resolve();if(t&&t.length>0){let s=function(l){return Promise.all(l.map(c=>Promise.resolve(c).then(p=>({status:"fulfilled",value:p}),p=>({status:"rejected",reason:p}))))};document.getElementsByTagName("link");const o=document.querySelector("meta[property=csp-nonce]"),d=(o==null?void 0:o.nonce)||(o==null?void 0:o.getAttribute("nonce"));r=s(t.map(l=>{if(l=oi(l),l in pt)return;pt[l]=!0;const c=l.endsWith(".css"),p=c?'[rel="stylesheet"]':"";if(document.querySelector(`link[href="${l}"]${p}`))return;const h=document.createElement("link");if(h.rel=c?"stylesheet":ni,c||(h.as="script"),h.crossOrigin="",h.href=l,d&&h.setAttribute("nonce",d),document.head.appendChild(h),c)return new Promise((u,b)=>{h.addEventListener("load",u),h.addEventListener("error",()=>b(new Error(`Unable to preload CSS for ${l}`)))})}))}function a(s){const o=new Event("vite:preloadError",{cancelable:!0});if(o.payload=s,window.dispatchEvent(o),!o.defaultPrevented)throw s}return r.then(s=>{for(const o of s||[])o.status==="rejected"&&a(o.reason);return e().catch(a)})},ze={apiKey:"AIzaSyA6NKZNLVBeeLrXcLJSXus5M832AxpI2wk",authDomain:"pebblepath-992b6.firebaseapp.com",projectId:"pebblepath-992b6",storageBucket:"pebblepath-992b6.firebasestorage.app",messagingSenderId:"497141667291",appId:"1:497141667291:web:ee84c186db54389d10c3fe"},j=!!(ze.apiKey&&ze.projectId),oe=j?qt(ze):null,li="6LcRxvosAAAAAM2kb_rubOHlX39yOW73WbaIB_w4";var Ct;j&&typeof window<"u"&&((Ct=window.location)==null?void 0:Ct.hostname)==="localhost"&&(self.FIREBASE_APPCHECK_DEBUG_TOKEN=!0);const di=j?Ht(oe,{provider:new ii(li),isTokenAutoRefreshEnabled:!0}):null,x=j?Vt(oe):null,m=j?Wt(oe):null,R=j?ai(oe,"us-central1"):null,O=j?si(oe):null,De=j?new ct:null;De&&De.setCustomParameters({prompt:"select_account"});const ve=j?new ct:null;ve&&ve.addScope("https://www.googleapis.com/auth/calendar.readonly");let fe=null,Fe=0;async function Tt(){if(!x||!ve)throw new Error("Firebase not configured.");if(fe&&Date.now()<Fe-6e4)return fe;const g=x.currentUser;if(!g)throw new Error("Please sign in before importing your calendar.");if(!(g.providerData??[]).some(a=>a.providerId==="google.com")){const a=new Error("Calendar import needs a Google account. You're signed in another way, so Cairn can't read your Google Calendar here yet. Add events manually for now.");throw a.code="calendar/needs-google-account",a}let t;try{t=await Jt(g,ve)}catch(a){if((a==null?void 0:a.code)==="auth/user-mismatch"){const s=new Error("Please choose the same Google account you use to sign in to Cairn.");throw s.code=a.code,s}if((a==null?void 0:a.code)==="auth/popup-closed-by-user"||(a==null?void 0:a.code)==="auth/cancelled-popup-request"){const s=new Error("Calendar connection cancelled.");throw s.code=a.code,s}throw a}const i=ct.credentialFromResult(t),r=i==null?void 0:i.accessToken;if(!r)throw new Error("Couldn't get a Calendar access token. Try again.");return fe=r,Fe=Date.now()+3600*1e3,r}function ci(){fe=null,Fe=0}function ye(){if(!x)throw new Error("Firebase not configured. Fill in .env first.");return Pt(x,De)}const ge=j?new Kt("apple.com"):null;ge&&(ge.addScope("email"),ge.addScope("name"));function Ee(){if(!x||!ge)throw new Error("Firebase not configured. Fill in .env first.");return Pt(x,ge)}function It(g,e){if(!x)throw new Error("Firebase not configured.");return ei(x,g,e)}async function zt(g,e,t){if(!x)throw new Error("Firebase not configured.");const i=await Qt(x,g,e);if(t&&t.trim())try{await Zt(i.user,{displayName:t.trim()})}catch{}return i}function Dt(g){if(!x)throw new Error("Firebase not configured.");return ti(x,g)}function Ft(){return x?Xt(x):Promise.resolve()}function Et(g){return x?ri(x,g):(g(null),()=>{})}const pi=Object.freeze(Object.defineProperty({__proto__:null,Timestamp:Pe,addDoc:Y,app:oe,appCheck:di,auth:x,clearCalendarToken:ci,collection:z,connectGoogleCalendar:Tt,db:m,deleteDoc:X,doc:k,firebaseApp:oe,functions:R,getDocs:ne,getDownloadURL:re,httpsCallable:H,increment:St,isConfigured:j,onAuth:Et,onSnapshot:N,query:W,sendPasswordReset:Dt,serverTimestamp:C,setDoc:K,signIn:ye,signInWithApple:Ee,signInWithEmail:It,signOutUser:Ft,signUpWithEmail:zt,storage:O,storageRef:te,updateDoc:T,uploadBytes:ae,where:q},Symbol.toStringTag,{value:"Module"})),hi={"united states":"US","united states of america":"US",usa:"US",us:"US","united kingdom":"GB",uk:"GB","great britain":"GB",england:"GB",scotland:"GB",wales:"GB","northern ireland":"GB",canada:"CA",australia:"AU",ireland:"IE",france:"FR",germany:"DE",spain:"ES",italy:"IT",netherlands:"NL","the netherlands":"NL",belgium:"BE",switzerland:"CH",austria:"AT",portugal:"PT",sweden:"SE",norway:"NO",denmark:"DK",finland:"FI","new zealand":"NZ",mexico:"MX",brazil:"BR","south africa":"ZA",india:"IN",japan:"JP",singapore:"SG",poland:"PL"};class gi extends EventTarget{constructor(){super(),this.state={user:null,family:null,children:[],trips:[],events:[],activities:[],holidays:[],ppFamily:null,ppIsMember:!1,ppIsChildViewer:!1,myChildAccessRequest:null,incomingChildRequests:[],ppChildren:[],selectedChildId:null,childMilestones:[],childInsights:[],childReports:[],childDailyCard:null,familyDailyCard:null,nonParentDailyCard:null,pebbleAnchors:[],pebbleRhythms:[],pebblePatterns:[],pebbleLiveContext:[],childPebbleMessages:[],childPebbleSessions:[],planningMessages:[]},this._uid=null,this._unsubUser=null,this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this._unsubActivities=null,this._unsubPlanning=null,this._unsubNonParentDaily=null,this._currentFamilyId=null,this._inviteCodeMigratedFamilyId=null,this._holidayKey=null,this._ppFamilyId=null,this._selectedChildId=null,this._unsubPpFamily=null,this._unsubPpChildren=null,this._unsubChildMs=null,this._unsubChildIns=null,this._unsubChildDaily=null,this._unsubFamilyDaily=null,this._memFid=null,this._memLayers=null,this._memSlices={},this._memUnsubs=[],this._memChildUnsubs=[],this._memChildKey="",this._unsubChildPebble=null,this._unsubChildSessions=null,this._ppReadOnly=!1,this._unsubIncomingReq=null,this._unsubMyReq=null,this.userDocResolved=!1}get familyId(){return this._currentFamilyId}start(e){!m||!e||this._uid!==e&&(this.stop(),this._uid=e,this._unsubUser=N(k(m,"users",e),t=>{var a,s,o,d,l,c,p,h,u,b;this.userDocResolved=!0,this.state.user=t.exists()?{id:t.id,...t.data()}:null;const i=((a=this.state.user)==null?void 0:a.cairnFamilyId)??((s=this.state.user)==null?void 0:s.familyId)??null;!i&&this.state.user&&this._healFamilyPointer(e),i!==this._currentFamilyId&&(this._currentFamilyId=i,(o=this._unsubFamily)==null||o.call(this),(d=this._unsubChildren)==null||d.call(this),(l=this._unsubTrips)==null||l.call(this),(c=this._unsubEvents)==null||c.call(this),(p=this._unsubActivities)==null||p.call(this),(h=this._unsubPlanning)==null||h.call(this),(u=this._unsubNonParentDaily)==null||u.call(this),this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this._unsubActivities=null,this._unsubPlanning=null,this._unsubNonParentDaily=null,this.state.family=null,this.state.children=[],this.state.trips=[],this.state.events=[],this.state.activities=[],this.state.nonParentDailyCard=null,this.state.planningMessages=[],i&&this._subscribeFamily(i));const r=((b=this.state.user)==null?void 0:b.familyId)??null;r!==this._ppFamilyId&&(this._ppFamilyId=r,this._teardownPpFamily(),r&&this._subscribePpFamily(r)),this._emit()}))}async _healFamilyPointer(e){if(!this._healing){this._healing=!0;try{const t=W(z(m,"families"),q("cairnMemberIds","array-contains",e)),i=await ne(t);if(!i.empty){await K(k(m,"users",e),{cairnFamilyId:i.docs[0].id,updatedAt:C()},{merge:!0});return}const r=W(z(m,"families"),q("memberIds","array-contains",e)),a=await ne(r);a.empty||await K(k(m,"users",e),{familyId:a.docs[0].id,updatedAt:C()},{merge:!0})}catch(t){console.warn("[Cairn] auto-heal family pointer failed:",t==null?void 0:t.code,t==null?void 0:t.message)}finally{this._healing=!1}}}async _loadHolidays(){var s,o;const e=(o=(s=this.state.family)==null?void 0:s.homeLocation)==null?void 0:o.country,t=hi[String(e??"").trim().toLowerCase()]??null;if(!t){this.state.holidays.length&&(this.state.holidays=[],this._holidayKey=null,this._emit());return}const i=new Date().getFullYear(),r=[i,i+1],a=`${t}:${r.join(",")}`;if(this._holidayKey!==a){this._holidayKey=a;try{const d=[];for(const c of r){const p=`pp_hol_${t}_${c}`;let h=null;try{const u=JSON.parse(localStorage.getItem(p)||"null");u&&Date.now()-u.t<720*3600*1e3&&(h=u.h)}catch{}if(!h){const u=await fetch(`https://date.nager.at/api/v3/PublicHolidays/${c}/${t}`);if(!u.ok)continue;const b=await u.json();h=(Array.isArray(b)?b:[]).map(w=>({date:w.date,name:w.name||w.localName||"Holiday"}));try{localStorage.setItem(p,JSON.stringify({t:Date.now(),h}))}catch{}}for(const u of h)d.push({id:`hol-${t}-${u.date}-${u.name}`,title:u.name,date:u.date,source:"holiday"})}const l=new Set;this.state.holidays=d.filter(c=>{const p=`${c.date}|${c.title}`;return l.has(p)?!1:(l.add(p),!0)}),this._emit()}catch{this._holidayKey=null}}}_subscribeFamily(e){var i,r,a;this._unsubFamily=N(k(m,"families",e),s=>{this.state.family=s.exists()?{id:s.id,...s.data()}:null,this._reconcileChildViewer(),this._loadHolidays(),this._maybeMigrateInviteCodeFormat(),this._emit()}),(i=this._unsubMyReq)==null||i.call(this),this._unsubMyReq=N(k(m,"families",e,"childAccessRequests",this._uid),s=>{this.state.myChildAccessRequest=s.exists()?{id:s.id,...s.data()}:null,this._emit()},s=>console.warn("[Portal] childAccessRequest (mine) error:",s.code,s.message)),this._unsubChildren=N(z(m,"families",e,"children"),s=>{this.state.children=s.docs.map(o=>{var l,c;const d=o.data();return{id:o.id,...d,dateOfBirth:((c=(l=d.dateOfBirth)==null?void 0:l.toDate)==null?void 0:c.call(l))??(d.dateOfBirth?new Date(d.dateOfBirth):null)}}),this._emit()}),this._unsubTrips=N(W(z(m,"families",e,"trips"),q("visibleTo","array-contains",this._uid)),s=>{this.state.trips=s.docs.map(o=>{var l,c,p,h;const d=o.data();return{id:o.id,...d,start:d.start??"",end:d.end??"",createdAt:((c=(l=d.createdAt)==null?void 0:l.toDate)==null?void 0:c.call(l))??null,updatedAt:((h=(p=d.updatedAt)==null?void 0:p.toDate)==null?void 0:h.call(p))??null}}).sort((o,d)=>String(o.start).localeCompare(String(d.start))),this._backfillVisibleTo("trips",s.docs),this._emit()},s=>{console.warn("[Cairn] trips subscription error:",s.code,s.message)}),this._unsubEvents=N(W(z(m,"families",e,"familyEvents"),q("visibleTo","array-contains",this._uid)),s=>{this.state.events=s.docs.map(o=>{var l,c,p,h;const d=o.data();return{id:o.id,...d,date:d.date??"",createdAt:((c=(l=d.createdAt)==null?void 0:l.toDate)==null?void 0:c.call(l))??null,updatedAt:((h=(p=d.updatedAt)==null?void 0:p.toDate)==null?void 0:h.call(p))??null}}),this._backfillVisibleTo("familyEvents",s.docs),this._emit()},s=>{console.warn("[Cairn] familyEvents subscription error:",s.code,s.message)}),this._unsubActivities=N(W(z(m,"families",e,"activities"),q("visibleTo","array-contains",this._uid)),s=>{this.state.activities=s.docs.map(o=>{var l,c,p,h;const d=o.data();return{id:o.id,...d,day:d.day??"",createdAt:((c=(l=d.createdAt)==null?void 0:l.toDate)==null?void 0:c.call(l))??null,updatedAt:((h=(p=d.updatedAt)==null?void 0:p.toDate)==null?void 0:h.call(p))??null}}).sort((o,d)=>{var p,h,u,b;const l=String(o.day??"").localeCompare(String(d.day??""));if(l!==0)return l;const c=String(o.time??"").localeCompare(String(d.time??""));return c!==0?c:(((h=(p=o.createdAt)==null?void 0:p.getTime)==null?void 0:h.call(p))??0)-(((b=(u=d.createdAt)==null?void 0:u.getTime)==null?void 0:b.call(u))??0)}),this._emit()},s=>{console.warn("[Cairn] activities subscription error:",s.code,s.message)}),(r=this._unsubPlanning)==null||r.call(this),this._unsubPlanning=N(z(m,"families",e,"pebblePlanningMessages"),s=>{this.state.planningMessages=s.docs.map(o=>{var l,c;const d=o.data();return{id:o.id,role:d.role,content:d.content,senderUid:d.senderUid,timestamp:((c=(l=d.timestamp)==null?void 0:l.toDate)==null?void 0:c.call(l))??(d.timestamp?new Date(d.timestamp):null)}}).sort((o,d)=>{var l,c,p,h;return(((c=(l=o.timestamp)==null?void 0:l.getTime)==null?void 0:c.call(l))??0)-(((h=(p=d.timestamp)==null?void 0:p.getTime)==null?void 0:h.call(p))??0)}),this._emit()},s=>console.warn("[Cairn] pebblePlanningMessages subscription error:",s.code,s.message)),(a=this._unsubNonParentDaily)==null||a.call(this);const t=this._readBriefCache("nonparent",e);t&&(this.state.nonParentDailyCard=t),this._unsubNonParentDaily=N(z(m,"families",e,"nonParentDailyCards"),s=>{var p,h;const o=s.docs.map(u=>({id:u.id,...u.data()}));o.sort((u,b)=>String(b.id).localeCompare(String(u.id)));const d=o[0]??null,l=((h=(p=d==null?void 0:d.generatedAt)==null?void 0:p.toMillis)==null?void 0:h.call(p))??0,c=l>0&&Z(new Date(l))===Z(new Date);this.state.nonParentDailyCard=c?d:null,c&&this._writeBriefCache("nonparent",e,d),this._emit()},s=>console.warn("[Portal] nonParentDailyCards error:",s.code,s.message))}_reconcileChildViewer(){var a;if((a=this.state.user)!=null&&a.familyId)return;const e=this.state.family,t=this._uid,r=!!(e&&Array.isArray(e.childViewers)&&e.childViewers.includes(t)&&!(Array.isArray(e.memberIds)&&e.memberIds.includes(t)))?e.id:null;r!==this._ppFamilyId&&(this._ppFamilyId=r,this._ppReadOnly=!!r,this._teardownPpFamily(),r&&this._subscribePpFamily(r),this._emit())}_subscribePpFamily(e){if(this._unsubPpFamily=N(k(m,"families",e),t=>{var a;const i=t.exists()?{id:t.id,...t.data()}:null;this.state.ppFamily=i;const r=!!(i&&Array.isArray(i.memberIds)&&i.memberIds.includes(this._uid));this.state.ppIsMember=r,this.state.ppIsChildViewer=!!(!r&&i&&Array.isArray(i.childViewers)&&i.childViewers.includes(this._uid)),r&&this._subscribeIncomingRequests(e),(a=this.state.user)!=null&&a.familyId||this._reconcileChildViewer(),this._emit()},t=>{console.warn("[Portal] ppFamily subscription error:",t.code,t.message)}),this._unsubPpChildren=N(z(m,"families",e,"children"),t=>{var s;const i=t.docs.map(o=>{var l,c;const d=o.data();return{id:o.id,...d,dateOfBirth:((c=(l=d.dateOfBirth)==null?void 0:l.toDate)==null?void 0:c.call(l))??(d.dateOfBirth?new Date(d.dateOfBirth):null)}}).sort((o,d)=>{var l,c,p,h;return(((c=(l=o.createdAt)==null?void 0:l.toMillis)==null?void 0:c.call(l))??0)-(((h=(p=d.createdAt)==null?void 0:p.toMillis)==null?void 0:h.call(p))??0)});this.state.ppChildren=i,this._attachMemoryChildSubs(),this._resolveChildPhotos(e,i);const a=this._selectedChildId&&i.some(o=>o.id===this._selectedChildId)?this._selectedChildId:((s=i[0])==null?void 0:s.id)??null;a!==this._selectedChildId?this._subscribeChild(a):a||this._teardownChild(),this._emit()},t=>{console.warn("[Portal] ppChildren subscription error:",t.code,t.message)}),!this._ppReadOnly){const t=this._readBriefCache("family",e);t&&(this.state.familyDailyCard=t),this._unsubFamilyDaily=N(z(m,"families",e,"familyDailyCards"),i=>{var d,l;const r=i.docs.map(c=>({id:c.id,...c.data()}));r.sort((c,p)=>String(p.id).localeCompare(String(c.id)));const a=r[0]??null,s=((l=(d=a==null?void 0:a.generatedAt)==null?void 0:d.toMillis)==null?void 0:l.call(d))??0,o=s>0&&Z(new Date(s))===Z(new Date);this.state.familyDailyCard=o?a:null,o&&this._writeBriefCache("family",e,a),this._emit()},i=>console.warn("[Portal] familyDailyCards error:",i.code,i.message)),this._subscribePebbleMemory(e)}}_subscribePebbleMemory(e){const t=i=>{var r;return((r=i==null?void 0:i.toMillis)==null?void 0:r.call(i))??0};this._memUnsubs.forEach(i=>i==null?void 0:i()),this._memChildUnsubs.forEach(i=>i==null?void 0:i()),this._memFid=e,this._memLayers=[{col:"anchors",key:"pebbleAnchors",extra:null,sort:(i,r)=>t(r.updatedAt)-t(i.updatedAt)},{col:"rhythms",key:"pebbleRhythms",extra:null,sort:(i,r)=>t(r.updatedAt)-t(i.updatedAt)},{col:"patterns",key:"pebblePatterns",extra:i=>!i.dismissedAt,sort:(i,r)=>t(r.derivedAt)-t(i.derivedAt)},{col:"liveContext",key:"pebbleLiveContext",extra:i=>!i.dismissedAt&&t(i.validFrom)>=Date.now()-336*3600*1e3,sort:(i,r)=>t(r.validFrom)-t(i.validFrom),cap:90}],this._memSlices={},this._memUnsubs=[],this._memChildUnsubs=[],this._memChildKey="";for(const i of this._memLayers){this._memSlices[i.key]={family:[],member:[],child:[]};const r=z(m,"families",e,i.col);this._memUnsubs.push(N(W(r,q("scope","==","family")),a=>{this._memSlices[i.key].family=a.docs.map(s=>({id:s.id,...s.data()})),this._recomputeMemLayer(i)},a=>console.warn(`[Portal] ${i.col}/family error:`,a.code,a.message))),this._uid&&this._memUnsubs.push(N(W(r,q("scope","==","member"),q("memberUid","==",this._uid)),a=>{this._memSlices[i.key].member=a.docs.map(s=>({id:s.id,...s.data()})),this._recomputeMemLayer(i)},a=>console.warn(`[Portal] ${i.col}/member error:`,a.code,a.message)))}this._attachMemoryChildSubs()}_recomputeMemLayer(e){const t=this._memSlices[e.key];if(!t)return;const i=new Set;let r=[];for(const a of[t.family,t.member,t.child])for(const s of a)i.has(s.id)||(i.add(s.id),r.push(s));e.extra&&(r=r.filter(e.extra)),r.sort(e.sort),e.cap&&r.length>e.cap&&(r=r.slice(0,e.cap)),this.state[e.key]=r,this._emit()}_attachMemoryChildSubs(){if(!this._memFid||!this._memLayers)return;const e=(this.state.ppChildren||[]).filter(i=>(i==null?void 0:i.id)&&Array.isArray(i.parentIds)&&i.parentIds.includes(this._uid)).map(i=>i.id).slice(0,30),t=e.join(",");if(t!==this._memChildKey){if(this._memChildKey=t,this._memChildUnsubs.forEach(i=>i==null?void 0:i()),this._memChildUnsubs=[],e.length===0){for(const i of this._memLayers)this._memSlices[i.key]&&(this._memSlices[i.key].child=[],this._recomputeMemLayer(i));return}for(const i of this._memLayers){const r=z(m,"families",this._memFid,i.col);this._memChildUnsubs.push(N(W(r,q("scope","==","child"),q("childId","in",e)),a=>{this._memSlices[i.key].child=a.docs.map(s=>({id:s.id,...s.data()})),this._recomputeMemLayer(i)},a=>console.warn(`[Portal] ${i.col}/child error:`,a.code,a.message)))}}}_briefCacheKey(e,t){return`pp_brief_${e}_${t}`}_writeBriefCache(e,t,i){if(!(!t||!i))try{localStorage.setItem(this._briefCacheKey(e,t),JSON.stringify({dateKey:Z(new Date),card:i}))}catch{}}_readBriefCache(e,t){if(!t)return null;try{const i=localStorage.getItem(this._briefCacheKey(e,t));if(!i)return null;const r=JSON.parse(i);if((r==null?void 0:r.dateKey)===Z(new Date)&&r.card)return r.card}catch{}return null}clearBriefCaches(){try{const e=[];for(let t=0;t<localStorage.length;t++){const i=localStorage.key(t);i&&i.startsWith("pp_brief_")&&e.push(i)}e.forEach(t=>localStorage.removeItem(t))}catch{}}_subscribeIncomingRequests(e){var t;(t=this._unsubIncomingReq)==null||t.call(this),this._unsubIncomingReq=N(z(m,"families",e,"childAccessRequests"),i=>{this.state.incomingChildRequests=i.docs.map(r=>({id:r.id,...r.data()})).filter(r=>r.status==="pending").sort((r,a)=>{var s,o,d,l;return(((o=(s=r.requestedAt)==null?void 0:s.toMillis)==null?void 0:o.call(s))??0)-(((l=(d=a.requestedAt)==null?void 0:d.toMillis)==null?void 0:l.call(d))??0)}),this._emit()},i=>console.warn("[Portal] childAccessRequests error:",i.code,i.message))}_subscribeChild(e){if(this._teardownChild(),this._selectedChildId=e,this.state.selectedChildId=e,!e||!this._ppFamilyId){this.state.childMilestones=[],this.state.childInsights=[],this.state.childDailyCard=null,this.state.childReports=[],this.state.childPebbleMessages=[],this.state.childPebbleSessions=[];return}const t=["families",this._ppFamilyId,"children",e];this._unsubChildMs=N(z(m,...t,"milestones"),i=>{this.state.childMilestones=i.docs.map(r=>({id:r.id,...r.data()})).sort((r,a)=>(r.ageRangeStartMonths??0)-(a.ageRangeStartMonths??0)),this._emit()},i=>console.warn("[Portal] milestones error:",i.code,i.message)),this._unsubChildIns=N(z(m,...t,"insights"),i=>{this.state.childInsights=i.docs.map(r=>({id:r.id,...r.data()})).sort((r,a)=>(a.relevanceScore??0)-(r.relevanceScore??0)),this._emit()},i=>console.warn("[Portal] insights error:",i.code,i.message)),this._ppReadOnly?(this.state.childDailyCard=null,this.state.childReports=[]):(this.state.childDailyCard=this._readBriefCache("child",e)||null,this._emit(),this._unsubChildDaily=N(z(m,...t,"dailyCards"),i=>{var d,l;const r=i.docs.map(c=>({id:c.id,...c.data()}));r.sort((c,p)=>String(p.id).localeCompare(String(c.id)));const a=r[0]??null,s=((l=(d=a==null?void 0:a.generatedAt)==null?void 0:d.toMillis)==null?void 0:l.call(d))??0,o=s>0&&Z(new Date(s))===Z(new Date);this.state.childDailyCard=o?a:null,o&&this._writeBriefCache("child",e,a),this._emit()},i=>console.warn("[Portal] dailyCards error:",i.code,i.message)),this._unsubChildReports=N(z(m,...t,"developmentReports"),i=>{const r=a=>{var s,o;return a.reportDate&&/^\d{4}-\d{2}-\d{2}$/.test(a.reportDate)?new Date(`${a.reportDate}T00:00:00`).getTime():((o=(s=a.createdAt)==null?void 0:s.toMillis)==null?void 0:o.call(s))??0};this.state.childReports=i.docs.map(a=>({id:a.id,...a.data()})).sort((a,s)=>r(s)-r(a)),this._emit()},i=>console.warn("[Portal] developmentReports error:",i.code,i.message))),this._unsubChildPebble=N(z(m,...t,"pebbleMessages"),i=>{this.state.childPebbleMessages=i.docs.map(r=>({id:r.id,...r.data()})).filter(r=>!(r.isPrivate===!0&&r.senderUid!==this._uid)).sort((r,a)=>{var s,o,d,l;return(((o=(s=r.timestamp)==null?void 0:s.toMillis)==null?void 0:o.call(s))??0)-(((l=(d=a.timestamp)==null?void 0:d.toMillis)==null?void 0:l.call(d))??0)}),this._emit()},i=>console.warn("[Portal] pebbleMessages error:",i.code,i.message)),this._unsubChildSessions=N(z(m,...t,"pebbleSessions"),i=>{this.state.childPebbleSessions=i.docs.map(r=>({id:r.id,...r.data()})).filter(r=>r.archived!==!0).filter(r=>!(r.isPrivate===!0&&r.createdBy!==this._uid)).sort((r,a)=>{var s,o,d,l,c,p,h,u;return(((o=(s=a.lastMessageAt)==null?void 0:s.toMillis)==null?void 0:o.call(s))??((l=(d=a.createdAt)==null?void 0:d.toMillis)==null?void 0:l.call(d))??0)-(((p=(c=r.lastMessageAt)==null?void 0:c.toMillis)==null?void 0:p.call(c))??((u=(h=r.createdAt)==null?void 0:h.toMillis)==null?void 0:u.call(h))??0)}),this._emit()},i=>console.warn("[Portal] pebbleSessions error:",i.code,i.message))}_resolveChildPhotos(e,t){if(O){this._photoTried||(this._photoTried=new Set);for(const i of t){const r=i.profilePhotoURL;if(typeof r=="string"&&/^https?:\/\//i.test(r))continue;const a=e+"/"+i.id;this._photoTried.has(a)||(this._photoTried.add(a),re(te(O,"families/"+e+"/avatars/children/"+i.id)).then(s=>{const o=this.state.ppChildren||[],d=o.findIndex(l=>l.id===i.id);d>=0&&(o[d]={...o[d],profilePhotoURL:s},this.state.ppChildren=[...o],this._emit())}).catch(()=>{this._photoTried.delete(a)}))}}}selectChild(e){!e||e===this._selectedChildId||this.state.ppChildren.some(t=>t.id===e)&&(this._subscribeChild(e),this._emit())}async askPebbleAboutChild(e,t,i=[],r=!1,a=""){if(!R)throw new Error("Firebase functions not configured.");if(!this._ppFamilyId)throw new Error("No PebblePath family.");if(!e)throw new Error("No child selected.");return(await H(R,"askPebbleAboutChild")({familyId:this._ppFamilyId,childId:e,question:t,history:i,isPrivate:r===!0,sessionId:a||""})).data}async streamPebbleChat(e,t,i=[],r=!1,a="",{onStatus:s,onDelta:o}={}){if(!R)throw new Error("Firebase functions not configured.");if(!this._ppFamilyId)throw new Error("No PebblePath family.");if(!e)throw new Error("No child selected.");const d=H(R,"streamPebbleChatPortal"),{stream:l,data:c}=await d.stream({familyId:this._ppFamilyId,childId:e,question:t,history:i,isPrivate:r===!0,sessionId:a||""});for await(const p of l)p&&(p.kind==="status"&&typeof s=="function"?s(p.status):p.kind==="delta"&&typeof p.text=="string"&&typeof o=="function"&&o(p.text));return await c}buildPlanningContext(){const e=[],t=this.state.family,i=t==null?void 0:t.homeLocation;if(i&&(i.city||i.region||i.country)){const c=[i.city,i.region,i.country].filter(Boolean);c.length&&e.push("Family home: "+c.join(", ")+".")}const r=new Date().toISOString().slice(0,10),a=(c,p)=>p&&p!==c?c+" to "+p:c,s=(Array.isArray(this.state.trips)?this.state.trips:[]).filter(c=>c&&c.title&&(!c.end||String(c.end)>=r)).slice(0,12);s.length&&(e.push(""),e.push("Trips:"),s.forEach(c=>{const p=a(String(c.start??""),String(c.end??"")),h=c.start&&String(c.start)<=r&&(!c.end||String(c.end)>=r),u=c.location?" at "+c.location:"";e.push("- "+c.title+(p?" ("+p+")":"")+u+(h?" [ACTIVE NOW]":""))}));const o=(Array.isArray(this.state.events)?this.state.events:[]).filter(c=>c&&c.title&&(!c.date||String(c.date)>=r)).sort((c,p)=>String(c.date??"").localeCompare(String(p.date??""))).slice(0,15);o.length&&(e.push(""),e.push("Upcoming family events:"),o.forEach(c=>{e.push("- "+c.title+(c.date?" ("+c.date+")":""))}));const d=(Array.isArray(this.state.activities)?this.state.activities:[]).filter(c=>c&&c.title&&!c.tripId&&(!c.day||String(c.day)>=r)).sort((c,p)=>String(c.day??"").localeCompare(String(p.day??""))).slice(0,15);return d.length&&(e.push(""),e.push("Planned activities:"),d.forEach(c=>{const p=[c.day,c.time].filter(Boolean).join(" ");e.push("- "+c.title+(p?" ("+p+")":""))})),e.join(`
-`).trim()||"This is a family-planning conversation. Help with activities, plans, and logistics. No child information is available."}async askPebblePlanning(e,t=[]){if(!R)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family.");return(await H(R,"askPebblePlanning")({familyId:this._currentFamilyId,question:e,history:t,clientContext:this.buildPlanningContext()})).data}async streamPebblePlanning(e,t=[],{onStatus:i,onDelta:r}={}){if(!R)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family.");const a=H(R,"streamPebblePlanning"),{stream:s,data:o}=await a.stream({familyId:this._currentFamilyId,question:e,history:t,clientContext:this.buildPlanningContext()});for await(const d of s)d&&(d.kind==="status"&&typeof i=="function"?i(d.status):d.kind==="delta"&&typeof d.text=="string"&&typeof r=="function"&&r(d.text));return await o}async appendPlanningMessage(e){if(!this._currentFamilyId)throw new Error("No family.");if(!this._uid)throw new Error("Not signed in.");const t={role:e.role,content:e.content,timestamp:Pe.now()};e.role==="user"&&(t.senderUid=this._uid),await Y(z(m,"families",this._currentFamilyId,"pebblePlanningMessages"),t)}async deleteAllPlanningMessages(){if(!this._currentFamilyId)return;const e=await ne(z(m,"families",this._currentFamilyId,"pebblePlanningMessages"));await Promise.all(e.docs.map(t=>X(t.ref)))}_toMillis(e){var t,i,r;return((r=(i=(t=e==null?void 0:e.toDate)==null?void 0:t.call(e))==null?void 0:i.getTime)==null?void 0:r.call(i))??(e?new Date(e).getTime():null)}get _pebbleUnlimited(){const e=this.state.user;return!!(e&&(e.isPremium===!0||e.bypassPebbleQuota===!0))}_pebbleQuotaShouldReset(e=new Date){var i;const t=this._toMillis((i=this.state.family)==null?void 0:i.pebbleWeekStartedAt);return t==null?!0:e.getTime()-t>=10080*60*1e3}pebbleQuestionsRemaining(e=new Date){const t=this.state.family,i=typeof(t==null?void 0:t.pebbleQuestionsLimit)=="number"?t.pebbleQuestionsLimit:5;if(this._pebbleQuotaShouldReset(e))return i;const r=typeof(t==null?void 0:t.pebbleQuestionsUsed)=="number"?t.pebbleQuestionsUsed:0;return Math.max(0,i-r)}pebbleWeekRollover(e=new Date){var i;const t=this._toMillis((i=this.state.family)==null?void 0:i.pebbleWeekStartedAt);return t==null||this._pebbleQuotaShouldReset(e)?null:new Date(t+10080*60*1e3)}pebbleQuota(){var r;const e=this.state.user,t=this._pebbleUnlimited,i=this.pebbleQuestionsRemaining();return{unlimited:t,bypassed:(e==null?void 0:e.bypassPebbleQuota)===!0,premium:(e==null?void 0:e.isPremium)===!0,limit:((r=this.state.family)==null?void 0:r.pebbleQuestionsLimit)??5,remaining:i,atLimit:!t&&i<=0,rollover:this.pebbleWeekRollover()}}async incrementPebbleQuota(){if(this._pebbleUnlimited||!this._currentFamilyId)return;const e=k(m,"families",this._currentFamilyId);try{this._pebbleQuotaShouldReset()?await T(e,{pebbleQuestionsUsed:1,pebbleWeekStartedAt:Pe.now()}):await T(e,{pebbleQuestionsUsed:St(1)})}catch(t){console.warn("[Cairn] pebble quota increment failed:",t==null?void 0:t.code,t==null?void 0:t.message)}}async setHomeLocation(e,t=this._currentFamilyId){if(!t||!(e!=null&&e.city))return;const i={city:String(e.city).trim(),country:String(e.country||"United States").trim()},r=String(e.region??"").trim();r&&(i.region=r),await T(k(m,"families",t),{homeLocation:i})}async refreshFamilyBrief(){if(!R)throw new Error("Firebase functions not configured.");if(!this._ppFamilyId)throw new Error("No PebblePath family.");return(await H(R,"refreshFamilyBrief")({familyId:this._ppFamilyId})).data}async refreshNonParentBrief(){if(!R)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family.");const e=H(R,"generateNonParentBrief");try{return(await e({familyId:this._currentFamilyId})).data}catch(t){if((t==null?void 0:t.code)==="functions/failed-precondition")return null;throw t}}_childPebbleBase(e){return["families",this._ppFamilyId,"children",e,"pebbleSessions"]}async createPebbleSession(e,{title:t,isPrivate:i}={}){if(!m||!this._ppFamilyId||!e)throw new Error("No child selected.");return(await Y(z(m,...this._childPebbleBase(e)),{title:(t||"New chat").trim()||"New chat",isPrivate:i===!0,archived:!1,createdBy:this._uid??"",createdAt:C(),lastMessageAt:C()})).id}async renamePebbleSession(e,t,i){!m||!this._ppFamilyId||!e||!t||await T(k(m,...this._childPebbleBase(e),t),{title:(i||"").trim()||"Untitled chat"})}async setPebbleSessionPrivacy(e,t,i){!m||!this._ppFamilyId||!e||!t||await T(k(m,...this._childPebbleBase(e),t),{isPrivate:i===!0})}async archivePebbleSession(e,t){!m||!this._ppFamilyId||!e||!t||await T(k(m,...this._childPebbleBase(e),t),{archived:!0})}async touchPebbleSession(e,t){if(!(!m||!this._ppFamilyId||!e||!t))try{await T(k(m,...this._childPebbleBase(e),t),{lastMessageAt:C()})}catch{}}_teardownChild(){var e,t,i,r,a,s;(e=this._unsubChildMs)==null||e.call(this),(t=this._unsubChildIns)==null||t.call(this),(i=this._unsubChildDaily)==null||i.call(this),(r=this._unsubChildReports)==null||r.call(this),(a=this._unsubChildPebble)==null||a.call(this),(s=this._unsubChildSessions)==null||s.call(this),this._unsubChildMs=this._unsubChildIns=this._unsubChildDaily=this._unsubChildReports=this._unsubChildPebble=this._unsubChildSessions=null}_teardownPpFamily(){var e,t,i,r;this._teardownChild(),(e=this._unsubPpFamily)==null||e.call(this),(t=this._unsubPpChildren)==null||t.call(this),(i=this._unsubFamilyDaily)==null||i.call(this),this._memUnsubs.forEach(a=>a==null?void 0:a()),this._memChildUnsubs.forEach(a=>a==null?void 0:a()),(r=this._unsubIncomingReq)==null||r.call(this),this._unsubPpFamily=null,this._unsubPpChildren=null,this._unsubFamilyDaily=null,this._memUnsubs=[],this._memChildUnsubs=[],this._memSlices={},this._memFid=null,this._memLayers=null,this._memChildKey="",this._unsubIncomingReq=null,this._selectedChildId=null,this.state.ppFamily=null,this.state.ppIsMember=!1,this.state.ppIsChildViewer=!1,this.state.incomingChildRequests=[],this.state.ppChildren=[],this.state.selectedChildId=null,this.state.childMilestones=[],this.state.childInsights=[],this.state.childDailyCard=null,this.state.familyDailyCard=null,this.state.pebbleAnchors=[],this.state.pebbleRhythms=[],this.state.pebblePatterns=[],this.state.pebbleLiveContext=[],this.state.childPebbleMessages=[],this.state.childPebbleSessions=[]}async requestChildAccess(){var t;const e=this._currentFamilyId;if(!e)throw new Error("No family to request access from.");await K(k(m,"families",e,"childAccessRequests",this._uid),{uid:this._uid,displayName:((t=this.state.user)==null?void 0:t.displayName)??"Family member",requestedAt:C(),status:"pending"})}async withdrawChildAccessRequest(){const e=this._currentFamilyId;e&&await X(k(m,"families",e,"childAccessRequests",this._uid))}async setMemberLabel(e,t){!this._uid||!e||await T(k(m,"users",this._uid),{[`memberLabels.${e}`]:(t??"").trim()})}async approveChildAccess(e){var r;const t=this._ppFamilyId;if(!t||!this.state.ppIsMember)throw new Error("Only a parent can approve access.");const i=Array.isArray((r=this.state.ppFamily)==null?void 0:r.childViewers)?this.state.ppFamily.childViewers:[];i.includes(e)||await T(k(m,"families",t),{childViewers:[...i,e],updatedAt:C()}),await T(k(m,"families",t,"childAccessRequests",e),{status:"approved",actionedBy:this._uid,actionedAt:C()})}async declineChildAccess(e){const t=this._ppFamilyId;if(!t||!this.state.ppIsMember)throw new Error("Only a parent can decline access.");await T(k(m,"families",t,"childAccessRequests",e),{status:"declined",actionedBy:this._uid,actionedAt:C()})}async grantChildViewerDirectly(e){var r;const t=this._ppFamilyId;if(!t||!this.state.ppIsMember)throw new Error("Only a parent can grant access.");const i=Array.isArray((r=this.state.ppFamily)==null?void 0:r.childViewers)?this.state.ppFamily.childViewers:[];i.includes(e)||await T(k(m,"families",t),{childViewers:[...i,e],updatedAt:C()})}async grantParentAccessForOwnChildren(e){var d;const t=this._ppFamilyId;if(!t||!this.state.ppIsMember)throw new Error("Only a parent can grant access.");const i=this._uid;if(!i)throw new Error("Not signed in.");const a=(Array.isArray(this.state.ppChildren)?this.state.ppChildren:[]).filter(l=>(l==null?void 0:l.id)&&Array.isArray(l.parentIds)&&l.parentIds.includes(i));if(a.length===0)return[];const s=[];for(const l of a){const c=Array.isArray(l.parentIds)?l.parentIds:[];if(c.includes(e)){s.push(l.name??"your child");continue}await T(k(m,"families",t,"children",l.id),{parentIds:[...c,e],updatedAt:C()}),s.push(l.name??"your child")}const o=Array.isArray((d=this.state.ppFamily)==null?void 0:d.memberIds)?this.state.ppFamily.memberIds:[];return o.includes(e)||await T(k(m,"families",t),{memberIds:[...o,e],updatedAt:C()}),s}async revokeChildViewer(e){var a;const t=this._ppFamilyId;if(!t||!this.state.ppIsMember)throw new Error("Only a parent can revoke access.");const i=Array.isArray((a=this.state.ppFamily)==null?void 0:a.childViewers)?this.state.ppFamily.childViewers:[],r=i.filter(s=>s!==e);r.length!==i.length&&await T(k(m,"families",t),{childViewers:r,updatedAt:C()});try{await T(k(m,"families",t,"childAccessRequests",e),{status:"declined",actionedBy:this._uid,actionedAt:C()})}catch{}}_backfillVisibleTo(e,t){if(!m||!this._currentFamilyId)return;const i=this.state.family;if(i){this._vtBackfilled||(this._vtBackfilled=new Set);for(const r of t){const a=r.data();if(Array.isArray(a.visibleTo))continue;const s=`${e}/${r.id}`;this._vtBackfilled.has(s)||(this._vtBackfilled.add(s),T(k(m,"families",this._currentFamilyId,e,r.id),{visibleTo:me(a.visibility??"family",i,a.createdBy,Array.isArray(a.attendees)?a.attendees:[])}).catch(o=>{this._vtBackfilled.delete(s),console.warn(`[Cairn] visibleTo backfill failed (${s}):`,o==null?void 0:o.code,o==null?void 0:o.message)}))}}}async _visibleToFor(e,t,i){const r=(e==null?void 0:e.visibility)??"family",a=Array.isArray(e==null?void 0:e.attendees)?e.attendees:[],s=r==="extended"?await bi(t):[];return me(r,t,i,a,s)}async saveTrip(e){var l;if(!m||!this._currentFamilyId)throw new Error("No family yet.");const t=(l=x==null?void 0:x.currentUser)==null?void 0:l.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...s}=e,o={...s,updatedAt:C()};return o.visibleTo=await this._visibleToFor(s,this.state.family,s.createdBy??t),i?(await T(k(m,"families",this._currentFamilyId,"trips",i),o),i):(o.createdBy=t,o.createdAt=C(),(await Y(z(m,"families",this._currentFamilyId,"trips"),o)).id)}async deleteTrip(e){if(!m||!this._currentFamilyId)throw new Error("No family yet.");await X(k(m,"families",this._currentFamilyId,"trips",e))}packingTemplatesListener(e){return!m||!this._currentFamilyId?()=>{}:N(z(m,"families",this._currentFamilyId,"packingTemplates"),t=>{const i=t.docs.map(r=>({id:r.id,...r.data()})).sort((r,a)=>{var s,o,d,l;return(((o=(s=a.updatedAt)==null?void 0:s.toMillis)==null?void 0:o.call(s))??0)-(((l=(d=r.updatedAt)==null?void 0:d.toMillis)==null?void 0:l.call(d))??0)});e(i)},t=>{console.warn("[Portal] packingTemplates error:",t.code,t.message),e([])})}packingListListener(e,t){return!m||!this._currentFamilyId||!e?()=>{}:N(z(m,"families",this._currentFamilyId,"trips",e,"packingList"),i=>{const r=i.docs.map(a=>({id:a.id,...a.data()})).sort((a,s)=>{const o=String(a.groupName??"").localeCompare(String(s.groupName??""));return o!==0?o:(a.order??0)-(s.order??0)});t(r)},i=>{console.warn("[Portal] packingList error:",i.code,i.message),t([])})}_packingListCol(e){return z(m,"families",this._currentFamilyId,"trips",e,"packingList")}async addPackingItem(e,{groupName:t,text:i,order:r=0,addedByPebble:a=!1}){var l;if(!m||!this._currentFamilyId)throw new Error("No family yet.");const s=(l=x==null?void 0:x.currentUser)==null?void 0:l.uid;if(!s)throw new Error("Not signed in.");const o=String(i??"").trim();if(!o)throw new Error("Add an item.");return(await Y(this._packingListCol(e),{groupName:t,text:o,checked:!1,order:r,addedBy:s,addedByPebble:a===!0,addedAt:C()})).id}async togglePackingItem(e,t){!m||!this._currentFamilyId||!(t!=null&&t.id)||await T(k(this._packingListCol(e),t.id),{checked:t.checked!==!0})}async updatePackingItemText(e,t,i){if(!m||!this._currentFamilyId||!t)return;const r=String(i??"").trim();r&&await T(k(this._packingListCol(e),t),{text:r})}async deletePackingItem(e,t){!m||!this._currentFamilyId||!t||await X(k(this._packingListCol(e),t))}async applyPackingTemplate(e,t){var a;if(!m||!this._currentFamilyId||!(t!=null&&t.id))return;const i=(a=x==null?void 0:x.currentUser)==null?void 0:a.uid;if(!i)throw new Error("Not signed in.");const r=[];for(const s of Array.isArray(t.groups)?t.groups:[]){const o=Array.isArray(s.items)?s.items:[];for(const d of o.slice().sort((l,c)=>(l.order??0)-(c.order??0)))r.push(Y(this._packingListCol(e),{templateId:t.id,groupName:s.name,text:String(d.text??"").trim(),checked:!1,order:d.order??0,addedBy:i,addedByPebble:d.addedByPebble===!0,addedAt:C()}))}r.length!==0&&(await Promise.all(r),await T(k(m,"families",this._currentFamilyId,"trips",e),{"packingListMeta.derivedFromTemplateId":t.id}))}async savePackingListAsTemplate(e,t,i){var l;if(!m||!this._currentFamilyId)throw new Error("No family yet.");const r=(l=x==null?void 0:x.currentUser)==null?void 0:l.uid;if(!r)throw new Error("Not signed in.");const a=new Map;for(const c of Array.isArray(i)?i:[]){const p=c.groupName??"Parents";a.has(p)||a.set(p,[]),a.get(p).push(c)}const s=[...a.entries()].map(([c,p])=>({id:crypto.randomUUID(),name:c,items:p.slice().sort((h,u)=>(h.order??0)-(u.order??0)).map((h,u)=>({id:crypto.randomUUID(),text:String(h.text??"").trim(),order:u,addedByPebble:h.addedByPebble===!0}))})),o=C();return(await Y(z(m,"families",this._currentFamilyId,"packingTemplates"),{name:String(e??"My list").trim()||"My list",...t?{iconKey:t}:{},groups:s,createdBy:r,createdAt:o,updatedAt:o})).id}async deletePackingTemplate(e){!m||!this._currentFamilyId||!e||await X(k(m,"families",this._currentFamilyId,"packingTemplates",e))}async markPackingReviewed(e){!m||!this._currentFamilyId||!e||await T(k(m,"families",this._currentFamilyId,"trips",e),{"packingListMeta.lastReviewedAt":C()})}async generatePackingReview(e,t,i,r,a,s){if(!R)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family yet.");return(await H(R,"generatePackingReview")({familyId:this._currentFamilyId,tripId:e,trip:t,family:i,currentList:r,dismissedTexts:a,groupNames:s})).data}async generateFamilyPlan(e,t){var s;if(!R)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family yet.");const r=await H(R,"generateFamilyPlan")({familyId:this._currentFamilyId,family:e,window:t}),a=(s=r==null?void 0:r.data)==null?void 0:s.candidates;return Array.isArray(a)?a:[]}async saveEvent(e){var l;if(!m||!this._currentFamilyId)throw new Error("No family yet.");const t=(l=x==null?void 0:x.currentUser)==null?void 0:l.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...s}=e,o={...s,updatedAt:C()};return o.visibleTo=await this._visibleToFor(s,this.state.family,s.createdBy??t),i?(await T(k(m,"families",this._currentFamilyId,"familyEvents",i),o),i):(o.createdBy=t,o.createdAt=C(),(await Y(z(m,"families",this._currentFamilyId,"familyEvents"),o)).id)}async deleteEvent(e){if(!m||!this._currentFamilyId)throw new Error("No family yet.");await X(k(m,"families",this._currentFamilyId,"familyEvents",e))}activitiesListener(e){if(!m||!this._currentFamilyId||!this._uid)return()=>{};const t=W(z(m,"families",this._currentFamilyId,"activities"),q("visibleTo","array-contains",this._uid));return N(t,i=>{const r=i.docs.map(a=>({id:a.id,...a.data()})).sort((a,s)=>{var l,c,p,h;const o=String(a.day??"").localeCompare(String(s.day??""));if(o!==0)return o;const d=String(a.time??"").localeCompare(String(s.time??""));return d!==0?d:(((c=(l=a.createdAt)==null?void 0:l.toMillis)==null?void 0:c.call(l))??0)-(((h=(p=s.createdAt)==null?void 0:p.toMillis)==null?void 0:h.call(p))??0)});e(r)},i=>{console.warn("[Portal] activities subscription error:",i.code,i.message),e([])})}async saveActivity(e){var c;if(!m||!this._currentFamilyId)throw new Error("No family yet.");const t=(c=x==null?void 0:x.currentUser)==null?void 0:c.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...s}=e,o={...s,updatedAt:C()},d=s.addedBy??t;if(s.tripId){const p=(this.state.trips??[]).find(h=>h.id===s.tripId);o.visibleTo=Array.isArray(p==null?void 0:p.visibleTo)&&p.visibleTo.length?p.visibleTo:await this._visibleToFor(s,this.state.family,d)}else{const p=Array.isArray(s.personIds)?s.personIds:[];o.visibleTo=await this._visibleToFor({...s,attendees:p},this.state.family,d)}return i?(await T(k(m,"families",this._currentFamilyId,"activities",i),o),i):(o.addedBy=t,o.createdAt=C(),(await Y(z(m,"families",this._currentFamilyId,"activities"),o)).id)}async deleteActivity(e){if(!m||!this._currentFamilyId)throw new Error("No family yet.");await X(k(m,"families",this._currentFamilyId,"activities",e))}async updateActivity(e,t){if(!m||!this._currentFamilyId)throw new Error("No family yet.");await T(k(m,"families",this._currentFamilyId,"activities",e),t)}async uploadActivityAttachment(e,t){if(!O||!this._currentFamilyId)throw new Error("Storage unavailable.");const i=`families/${this._currentFamilyId}/planAttachments/activity__${e}`,r=te(O,i);return await ae(r,t,{contentType:t.type||"application/octet-stream"}),re(r)}async uploadSchoolCalendar(e){if(!O||!this._currentFamilyId)throw new Error("Storage unavailable.");const t=e.type||"",i=/pdf/.test(t)?"pdf":/^image\//.test(t)?"image":/word|officedocument|msword/.test(t)?"docx":"pdf",r=`families/${this._currentFamilyId}/schoolCalendarUploads/${Date.now()}`;return await ae(te(O,r),e,{contentType:t||"application/octet-stream"}),{storagePath:r,fileType:i}}async uploadTripPreview(e){var s;if(!O||!this._currentFamilyId)throw new Error("Storage unavailable.");if(!/^image\//.test(e.type||""))throw new Error("Preview image must be an image file.");const t=await this._downscaleImageForUpload(e),i=((s=crypto==null?void 0:crypto.randomUUID)==null?void 0:s.call(crypto))||`${Date.now()}-${Math.random().toString(36).slice(2)}`,r=`families/${this._currentFamilyId}/trip-previews/${i}`,a=te(O,r);return await ae(a,t,{contentType:t.type||"image/jpeg"}),await re(a)}async _downscaleImageForUpload(e,t=1600,i=.82){var r;try{if(typeof createImageBitmap!="function"||typeof document>"u")return e;let a;try{a=await createImageBitmap(e,{imageOrientation:"from-image"})}catch{a=await createImageBitmap(e)}const s=Math.max(a.width,a.height),o=s>t?t/s:1,d=Math.max(1,Math.round(a.width*o)),l=Math.max(1,Math.round(a.height*o)),c=document.createElement("canvas");c.width=d,c.height=l;const p=c.getContext("2d");if(!p)return e;p.drawImage(a,0,0,d,l),(r=a.close)==null||r.call(a);const h=await new Promise(u=>c.toBlob(u,"image/jpeg",i));return h&&h.size>0?h:e}catch(a){return console.warn("[uploadTripPreview] downscale failed, uploading original:",a),e}}async extractSchoolCalendarEvents(e,t){var s;if(!R||!this._currentFamilyId)throw new Error("No family yet.");const r=await H(R,"extractSchoolCalendar")({familyId:this._currentFamilyId,storagePath:e,fileType:t}),a=(s=r==null?void 0:r.data)==null?void 0:s.events;return Array.isArray(a)?a:[]}async classifyUpload(e,t){if(!R||!this._currentFamilyId)throw new Error("No family yet.");const i=(this.state.trips??[]).slice(0,40).map(s=>({id:s.id,title:s.title??"",...s.location?{location:s.location}:{},start:s.start??"",end:s.end??""})).filter(s=>s.id&&/^\d{4}-\d{2}-\d{2}$/.test(s.start)),a=await H(R,"extractSchoolCalendar")({familyId:this._currentFamilyId,storagePath:e,fileType:t,classify:!0,trips:i});return(a==null?void 0:a.data)??{documentKind:"unknown"}}async importSchoolEvents(e,t={}){var w;if(!m||!this._currentFamilyId)throw new Error("No family yet.");const i=(w=x==null?void 0:x.currentUser)==null?void 0:w.uid;if(!i)throw new Error("Not signed in.");const r=this.state.family??{},a=Array.isArray(r.memberIds)?r.memberIds:[],s=Array.isArray(r.cairnMemberIds)?r.cairnMemberIds:[],o=[...new Set([...a,...s,i])],d=me("family",r,i),l=t.category==="celebration",c=String(t.tag??"").trim().slice(0,60),p=z(m,"families",this._currentFamilyId,"familyEvents"),h=z(m,"families",this._currentFamilyId,"activities"),u=(e??[]).filter(v=>v&&/^\d{4}-\d{2}-\d{2}$/.test(String(v.date??""))&&String(v.title??"").trim()).slice(0,250);let b=0;return await Promise.all(u.map(async v=>{const _=String(v.description??"").trim().slice(0,1e3);l?await Y(p,{title:String(v.title).trim().slice(0,120),date:v.date,type:"custom",recurring:!1,category:"celebration",...c?{calTag:c}:{},..._?{notes:_}:{},source:"school-import",personIds:o,visibility:"family",visibleTo:d,createdBy:i,createdAt:C(),updatedAt:C()}):await Y(h,{title:String(v.title).trim().slice(0,120),type:"note",day:v.date,..._?{notes:_}:{},...c?{calTag:c}:{},source:"school-import",visibility:"family",visibleTo:d,addedBy:i,createdAt:C(),updatedAt:C()}),b+=1})),b}async upsertDevelopmentReport(e,t){var c;if(!m||!this._ppFamilyId||!e)throw new Error("No child yet.");const i=(c=x==null?void 0:x.currentUser)==null?void 0:c.uid;if(!i)throw new Error("Not signed in.");const r=z(m,"families",this._ppFamilyId,"children",e,"developmentReports"),a=new Date,{id:s,createdAt:o,...d}=t;return s?(await T(k(r,s),{...d,updatedAt:a}),s):(await Y(r,{...d,addedBy:d.addedBy??i,createdAt:a,updatedAt:a})).id}async deleteDevelopmentReport(e,t){!m||!this._ppFamilyId||!e||!t||await X(k(m,"families",this._ppFamilyId,"children",e,"developmentReports",t))}async uploadReportAttachment(e,t){if(!O||!this._ppFamilyId)throw new Error("Storage unavailable.");const i=`families/${this._ppFamilyId}/planAttachments/report__${e}`,r=te(O,i);return await ae(r,t,{contentType:t.type||"application/octet-stream"}),re(r)}async importReport(e,t,i){const r={title:String(t.title??"").trim().slice(0,200)||"Report",...t.source?{source:String(t.source).slice(0,160)}:{},...t.periodLabel?{periodLabel:String(t.periodLabel).trim().slice(0,120)}:{},...t.reportDate?{reportDate:t.reportDate}:{},summary:String(t.summary??"").trim().slice(0,4e3),...Array.isArray(t.highlights)&&t.highlights.length?{highlights:t.highlights}:{}},a=await this.upsertDevelopmentReport(e,r);if(i&&a)try{const s=await this.uploadReportAttachment(a,i);await this.upsertDevelopmentReport(e,{id:a,...r,attachmentURL:s,attachmentName:(i.type||"").includes("pdf")?`${r.title}.pdf`:`${r.title}.jpg`})}catch(s){console.warn("[Portal] report attachment upload failed:",(s==null?void 0:s.code)??(s==null?void 0:s.message))}return a}matchingTrips(e,t){const i=e,r=t||e;return/^\d{4}-\d{2}-\d{2}$/.test(String(i))?(this.state.trips??[]).filter(a=>a.start&&a.end&&a.start<=r&&i<=a.end).sort((a,s)=>String(a.start).localeCompare(String(s.start))):[]}async importBooking(e,t,i){var l;if(!m||!this._currentFamilyId)throw new Error("No family yet.");if(!((l=x==null?void 0:x.currentUser)==null?void 0:l.uid))throw new Error("Not signed in.");let a=null;(t==null?void 0:t.type)==="existing"?a=t.tripId??null:(t==null?void 0:t.type)==="newTrip"&&(a=await this._createTripFromBooking(e)),(t==null?void 0:t.type)==="existing"&&a&&await this._fillTripFieldsFromBooking(a,e);const s=this.state.activities??[],o=["visit","meal","travel","note"];let d=0;for(const c of i){if(!c._sel)continue;const p=String(c.title??"").trim().slice(0,120);if(!p||!/^\d{4}-\d{2}-\d{2}$/.test(String(c.day??""))||s.some(w=>w.source==="booking-import"&&w.day===c.day&&w.title===p&&(w.tripId??null)===(a??null)))continue;const u=o.includes(c.type)?c.type:"note",b=String(c.notes??"").trim().slice(0,1e3);await this.saveActivity({title:p,type:u,day:c.day,...c.time?{time:c.time}:{},...Number.isFinite(c.durationMins)?{durationMins:c.durationMins}:{},...b?{notes:b}:{},...a?{tripId:a}:{},visibility:"family",source:"booking-import"}),d+=1}return d}async _createTripFromBooking(e){var l,c,p;const t=(l=x==null?void 0:x.currentUser)==null?void 0:l.uid,i=this._tripDateSpan(e),r=((c=e.newTripProposal)==null?void 0:c.location)??e.location??null;let s={title:((p=e.newTripProposal)==null?void 0:p.title)??(r?`Trip to ${r}`:"New trip"),...r?{location:r}:{},start:i.start,end:i.end,visibility:"family",createdBy:t};this._applyBookingFieldsToTrip(s,e,!1),s=await this.seedDestinationCover(s);const o=await this.saveTrip(s),d=me("family",this.state.family,t);return(this.state.trips??[]).some(h=>h.id===o)||(this.state.trips=[...this.state.trips??[],{...s,id:o,visibleTo:d}]),o}async _fillTripFieldsFromBooking(e,t){const i=(this.state.trips??[]).find(o=>o.id===e);if(!i)return;const r={...i};let a=this._applyBookingFieldsToTrip(r,t,!0);if(!!!(r.previewImage||r.coverImage)){const o=await this.seedDestinationCover(r);o.previewImage&&o.previewImage!==r.previewImage&&(Object.assign(r,o),a=!0)}if(a)try{await this.saveTrip(r)}catch(o){console.warn("[importBooking] fill trip fields failed:",(o==null?void 0:o.code)??(o==null?void 0:o.message))}}_applyBookingFieldsToTrip(e,t,i){var l,c;let r=!1;const a=(p,h)=>{h&&(i&&e[p]||e[p]!==h&&(e[p]=h,r=!0))};a("location",((l=t.newTripProposal)==null?void 0:l.location)??t.location);const s=(()=>{var b,w;const p=(b=t.lodging)==null?void 0:b.url;if(p&&/^https?:\/\//i.test(p))return p;const h=(w=t.lodging)==null?void 0:w.title;if(!h)return null;const u=[h,t.location].filter(Boolean).join(" ");return`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(u)}`})();a("lodgingTitle",(c=t.lodging)==null?void 0:c.title),a("lodgingUrl",s);const o=t.flight??{};a("flightAirline",o.airline),a("flightNumber",o.number),a("flightDepartAirport",o.departAirport),a("flightArriveAirport",o.arriveAirport),a("flightDepartTime",o.departTime),a("flightArriveTime",o.arriveTime);const d=t.returnFlight??{};return a("returnFlightAirline",d.airline),a("returnFlightNumber",d.number),a("returnFlightDepartAirport",d.departAirport),a("returnFlightArriveAirport",d.arriveAirport),a("returnFlightDepartTime",d.departTime),a("returnFlightArriveTime",d.arriveTime),r}_tripDateSpan(e){var s,o;if((s=e.newTripProposal)!=null&&s.start&&((o=e.newTripProposal)!=null&&o.end))return{start:e.newTripProposal.start,end:e.newTripProposal.end};const t=(e.timeline??[]).map(d=>d.day).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(String(d??""))).sort(),i=new Date().toISOString().slice(0,10),r=t[0]??i,a=t[t.length-1]??r;return{start:r,end:a}}async renameCalTag(e,t){if(!m||!this._currentFamilyId)throw new Error("No family yet.");const i=String(e??"").trim(),r=String(t??"").trim().slice(0,60);return!i||!r||i===r?0:this._applyTagWrite(i,{calTag:r,updatedAt:C()})}async deleteCalTag(e){if(!m||!this._currentFamilyId)throw new Error("No family yet.");const t=String(e??"").trim();return t?this._applyTagWrite(t,{calTag:null,updatedAt:C()}):0}async _applyTagWrite(e,t){const i=[];for(const r of this.state.events??[])r!=null&&r.id&&String((r==null?void 0:r.calTag)??"").trim()===e&&i.push(["familyEvents",r.id]);for(const r of this.state.activities??[])r!=null&&r.id&&String((r==null?void 0:r.calTag)??"").trim()===e&&i.push(["activities",r.id]);return await Promise.all(i.map(([r,a])=>T(k(m,"families",this._currentFamilyId,r,a),t))),i.length}async previewUrl(e){if(!e||typeof e!="string"||!/^https?:\/\//i.test(e.trim()))return null;if(!R)throw new Error("Firebase functions not configured.");return(await H(R,"previewUrl")({url:e.trim()})).data}async fetchDestinationImage(e){const t=(e??"").trim();if(!t||!R)return null;try{return(await H(R,"fetchDestinationImage")({query:t})).data??null}catch(i){return console.warn("[Portal] fetchDestinationImage failed:",(i==null?void 0:i.code)??(i==null?void 0:i.message)),null}}async seedDestinationCover(e){const t=!!(e.previewImage&&String(e.previewImage).trim()),i=!!(e.coverImage&&String(e.coverImage).trim());if(t||i)return e;const r=(e.location??"").trim();if(!r)return e;const a=await this.fetchDestinationImage(r);if(a&&a.image){const s={...e,previewImage:a.image};return a.photographer&&(s.coverImagePhotographer=a.photographer),a.sourceUrl&&(s.coverImageSourceUrl=a.sourceUrl),s}return e}async askPebble(e,t=[]){if(!R)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family yet.");return(await H(R,"askPebbleAboutActivities")({question:e,familyId:this._currentFamilyId,history:t})).data}async updateChildBirthday(e,t){if(!m||!this._currentFamilyId)throw new Error("No family yet.");await T(k(m,"families",this._currentFamilyId,"children",e),{dateOfBirth:t,updatedAt:C()})}async findFamilyByConnectCode(e){var i;if(!m)throw new Error("Firebase not configured.");const t=String(e??"").trim().toUpperCase();if(t)try{const{getDoc:r}=await ee(async()=>{const{getDoc:s}=await import("./firebase-core-Dmfgjia1.js").then(o=>o.L);return{getDoc:s}},[]),a=await r(k(m,"inviteCodes",t));if(a.exists()&&typeof((i=a.data())==null?void 0:i.familyId)=="string"){const s=a.data();return console.debug("[ConnectCode] resolved via /inviteCodes mapping →",s.familyId),{id:s.familyId,name:s.familyName??"",cairnInviteCodeExpiresAt:s.expiresAt??null,_matchedCodeKind:"cairn",_viaMapping:!0}}}catch(r){console.debug("[ConnectCode] mapping lookup errored, trying legacy:",r==null?void 0:r.code)}try{const r=await ne(W(z(m,"families"),q("cairnInviteCode","==",e)));if(!r.empty){const s=r.docs[0];return console.debug("[ConnectCode] resolved via LEGACY list query (cairn field)"),{id:s.id,...s.data(),_matchedCodeKind:"cairn"}}const a=await ne(W(z(m,"families"),q("inviteCode","==",e)));if(!a.empty){const s=a.docs[0];return console.debug("[ConnectCode] resolved via LEGACY list query (pp field)"),{id:s.id,...s.data(),_matchedCodeKind:"pp"}}}catch(r){return console.debug("[ConnectCode] legacy fallback denied (expected post-gate-D):",r==null?void 0:r.code),null}return null}async _applyCairnJoin(e){var l;const t=(l=x==null?void 0:x.currentUser)==null?void 0:l.uid;if(!t)throw new Error("Not signed in.");const i=x.currentUser;let r=e;if(e._viaMapping)try{const{getDoc:c}=await ee(async()=>{const{getDoc:h}=await import("./firebase-core-Dmfgjia1.js").then(u=>u.L);return{getDoc:h}},[]),p=await c(k(m,"families",e.id));r=p.exists()?{id:p.id,...p.data()}:null}catch{r=null}const a=(r==null?void 0:r.cairnMemberIds)??[],s=(r==null?void 0:r.memberIds)??[];if(a.includes(t)||s.includes(t))return await K(k(m,"users",t),{email:i.email??"",displayName:i.displayName??"",profilePhotoURL:i.photoURL??null,cairnFamilyId:e.id,updatedAt:C()},{merge:!0}),await this._recordMutualConnection(e.id,t),e.id;if(r){const c=r.cairnMaxMembers??20;if(a.length>=c){const p=new Error("This family's connection ring is full.");throw p.code="full",p}}const o=new Date,d={displayName:i.displayName??"",profilePhotoURL:i.photoURL??null,role:"member",joinedAt:o,updatedAt:o};try{const{arrayUnion:c}=await ee(async()=>{const{arrayUnion:p}=await import("./firebase-core-Dmfgjia1.js").then(h=>h.L);return{arrayUnion:p}},[]);await T(k(m,"families",e.id),{cairnMemberIds:c(t),[`memberProfiles.${t}`]:d,updatedAt:C()})}catch(c){if((c==null?void 0:c.code)==="permission-denied"){const p=new Error("Couldn't join this family. The code may have been replaced, or the family's circle is full. Ask them for a fresh invite.");throw p.code="join-rejected",p}throw c}return await K(k(m,"users",t),{email:i.email??"",displayName:i.displayName??"",profilePhotoURL:i.photoURL??null,cairnFamilyId:e.id,role:"member",notificationPreferences:{milestoneReminders:!0,tipNotifications:!0,schoolDeadlines:!0},createdAt:C(),updatedAt:C()},{merge:!0}),await this._recordMutualConnection(e.id,t),e.id}async redeemConnectCode(e){var s,o;if(!m)throw new Error("Firebase not configured.");if(!((s=x==null?void 0:x.currentUser)==null?void 0:s.uid))throw new Error("Not signed in.");const i=await this.findFamilyByConnectCode(e);if(!i){const d=new Error("Invite code not found.");throw d.code="not-found",d}const r=i._matchedCodeKind==="pp"?i.inviteCodeExpiresAt:i.cairnInviteCodeExpiresAt,a=((o=r==null?void 0:r.toDate)==null?void 0:o.call(r))??(r?new Date(r):null);if(!a||a<new Date){const d=new Error("This invite code has expired.");throw d.code="expired",d}return this._applyCairnJoin(i)}async _recordMutualConnection(e,t){var i;try{const{getDoc:r,arrayUnion:a}=await ee(async()=>{const{getDoc:d,arrayUnion:l}=await import("./firebase-core-Dmfgjia1.js").then(c=>c.L);return{getDoc:d,arrayUnion:l}},[]),s=await r(k(m,"users",t)),o=s.exists()?(i=s.data())==null?void 0:i.familyId:null;if(!o||o===e)return;await T(k(m,"families",e),{connectedFamilyIds:a(o),updatedAt:C()}),await T(k(m,"families",o),{connectedFamilyIds:a(e),updatedAt:C()})}catch(r){console.warn("[connect] mutual connection record skipped (non-fatal):",r)}}async saveSubGroup({id:e,name:t,memberIds:i}){if(!m||!this._currentFamilyId)throw new Error("No family yet.");const r=e??`g_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,6)}`;return await T(k(m,"families",this._currentFamilyId),{[`subGroups.${r}`]:{name:t.trim(),memberIds:Array.isArray(i)?[...i]:[],updatedAt:C()},updatedAt:C()}),r}async deleteSubGroup(e){if(!m||!this._currentFamilyId)throw new Error("No family yet.");const{deleteField:t}=await ee(async()=>{const{deleteField:i}=await import("./firebase-core-Dmfgjia1.js").then(r=>r.L);return{deleteField:i}},[]);await T(k(m,"families",this._currentFamilyId),{[`subGroups.${e}`]:t(),updatedAt:C()})}async setCairnMemberSubGroup(e,t){var a;if(!m||!this._currentFamilyId)throw new Error("No family yet.");if(!e)throw new Error("uid is required.");const i=((a=this.state.family)==null?void 0:a.subGroups)??{},r={};for(const[s,o]of Object.entries(i)){const d=Array.isArray(o.memberIds)?o.memberIds:[];s===t?d.includes(e)||(r[`subGroups.${s}.memberIds`]=[...d,e]):d.includes(e)&&(r[`subGroups.${s}.memberIds`]=d.filter(l=>l!==e))}Object.keys(r).length!==0&&(r.updatedAt=C(),await T(k(m,"families",this._currentFamilyId),r))}async removeCairnMember(e){if(!m||!this._currentFamilyId)throw new Error("No family yet.");if(!e)throw new Error("uid is required.");const t=this.state.family??{};if((Array.isArray(t.memberIds)?t.memberIds:[]).includes(e))throw new Error("parents can’t be removed from the ring here.");const{deleteField:r}=await ee(async()=>{const{deleteField:l}=await import("./firebase-core-Dmfgjia1.js").then(c=>c.L);return{deleteField:l}},[]),a={updatedAt:C()},s=Array.isArray(t.cairnMemberIds)?t.cairnMemberIds:[];s.includes(e)&&(a.cairnMemberIds=s.filter(l=>l!==e)),t.memberProfiles&&t.memberProfiles[e]&&(a[`memberProfiles.${e}`]=r());const o=Array.isArray(t.childViewers)?t.childViewers:[];o.includes(e)&&(a.childViewers=o.filter(l=>l!==e));const d=t.subGroups??{};for(const[l,c]of Object.entries(d)){const p=Array.isArray(c.memberIds)?c.memberIds:[];p.includes(e)&&(a[`subGroups.${l}.memberIds`]=p.filter(h=>h!==e))}await T(k(m,"families",this._currentFamilyId),a);try{await X(k(m,"families",this._currentFamilyId,"childAccessRequests",e))}catch{}}async createCairnOnlyFamily(e){if(!m)throw new Error("Firebase not configured.");const t=x==null?void 0:x.currentUser,i=t==null?void 0:t.uid;if(!i)throw new Error("Not signed in.");const r=(e??"").trim();if(!r)throw new Error("Family name is required.");const a=new Date,s=we(),o=new Date(Date.now()+720*60*60*1e3),d={displayName:t.displayName??"",profilePhotoURL:t.photoURL??null,role:"admin",joinedAt:a,updatedAt:a},l={name:r,createdBy:i,createdInApp:"cairn",memberIds:[],cairnMemberIds:[i],connectedFamilyIds:[],cairnMaxMembers:20,cairnInviteCode:s,cairnInviteCodeExpiresAt:o,memberProfiles:{[i]:d},createdAt:C(),updatedAt:C()},c=await Y(z(m,"families"),l);try{await K(k(m,"inviteCodes",s),{familyId:c.id,familyName:r,expiresAt:o,createdAt:C()})}catch(p){console.warn("[Cairn] invite-code mapping write failed (backfill heals):",p==null?void 0:p.code)}return await K(k(m,"users",i),{email:t.email??"",displayName:t.displayName??"",profilePhotoURL:t.photoURL??null,cairnFamilyId:c.id,role:"admin",notificationPreferences:{milestoneReminders:!1,tipNotifications:!1,schoolDeadlines:!1},createdAt:C(),updatedAt:C()},{merge:!0}),c.id}async createPebblePathFamily(e){if(!m)throw new Error("Firebase not configured.");const t=x==null?void 0:x.currentUser,i=t==null?void 0:t.uid;if(!i)throw new Error("Not signed in.");const r=(e??"").trim();if(!r)throw new Error("Family name is required.");const a=new Date,s=we(),o=new Date(Date.now()+720*60*60*1e3),d={displayName:t.displayName??"",profilePhotoURL:t.photoURL??null,role:"admin",joinedAt:a,updatedAt:a},l={name:r,createdBy:i,memberIds:[i],cairnMemberIds:[i],connectedFamilyIds:[],cairnMaxMembers:20,inviteCode:s,inviteCodeExpiresAt:o,cairnInviteCode:s,cairnInviteCodeExpiresAt:o,memberProfiles:{[i]:d},createdAt:C(),updatedAt:C()},c=await Y(z(m,"families"),l);try{await K(k(m,"inviteCodes",s),{familyId:c.id,familyName:r,expiresAt:o,createdAt:C()})}catch(p){console.warn("[Cairn] invite-code mapping write failed (backfill heals):",p==null?void 0:p.code)}return await K(k(m,"users",i),{email:t.email??"",displayName:t.displayName??"",profilePhotoURL:t.photoURL??null,familyId:c.id,role:"owner",notificationPreferences:{milestoneReminders:!1,tipNotifications:!1,schoolDeadlines:!1},createdAt:C(),updatedAt:C()},{merge:!0}),c.id}async createChild(e,t){var p,h;if(!m)throw new Error("Firebase not configured.");const i=(p=x==null?void 0:x.currentUser)==null?void 0:p.uid;if(!i)throw new Error("Not signed in.");if(!e)throw new Error("No family.");const r=((t==null?void 0:t.name)??"").trim();if(!r)throw new Error("Child's name is required.");if(!((t==null?void 0:t.dateOfBirth)instanceof Date))throw new Error("Child's date of birth is required.");const{getDoc:a}=await ee(async()=>{const{getDoc:u}=await import("./firebase-core-Dmfgjia1.js").then(b=>b.L);return{getDoc:u}},[]),s=await a(k(m,"families",e)),o=s.exists()?Array.isArray((h=s.data())==null?void 0:h.memberIds)?s.data().memberIds:[]:[],d=o.length?o:[i],l={name:r,dateOfBirth:t.dateOfBirth,profilePhotoURL:null,developmentalFlags:Array.isArray(t==null?void 0:t.developmentalFlags)?t.developmentalFlags:[],pediatricianNotes:null,region:(t==null?void 0:t.region)??null,parentIds:d,needsServerSeed:!0,createdAt:C(),updatedAt:C()};return(await Y(z(m,"families",e,"children"),l)).id}async uploadChildAvatar(e,t,i){if(!m||!O)throw new Error("Firebase not configured.");if(!e||!t)throw new Error("Missing family/child id.");if(!i)throw new Error("No image.");const r=i.type&&i.type.startsWith("image/")?i.type:"image/jpeg",a=te(O,`families/${e}/avatars/children/${t}`);await ae(a,i,{contentType:r});const s=await re(a);return await T(k(m,"families",e,"children",t),{profilePhotoURL:s,updatedAt:C()}),s}async uploadUserAvatar(e,t){var o;if(!m||!O)throw new Error("Firebase not configured.");const i=(o=x==null?void 0:x.currentUser)==null?void 0:o.uid;if(!i)throw new Error("Not signed in.");if(!e)throw new Error("No family.");if(!t)throw new Error("No image.");const r=t.type&&t.type.startsWith("image/")?t.type:"image/jpeg",a=te(O,`families/${e}/avatars/users/${i}`);await ae(a,t,{contentType:r});const s=await re(a);await T(k(m,"users",i),{profilePhotoURL:s,updatedAt:C()});try{await T(k(m,"families",e),{[`memberProfiles.${i}.profilePhotoURL`]:s,[`memberProfiles.${i}.updatedAt`]:C(),updatedAt:C()})}catch(d){console.warn("memberProfiles photo fan-out failed:",d)}return s}async requestToBeCoParent(e){var a,s,o,d,l;if(!m)throw new Error("Firebase not configured.");const t=(a=x==null?void 0:x.currentUser)==null?void 0:a.uid;if(!t)throw new Error("Not signed in.");const i=this._currentFamilyId??((s=this.state.user)==null?void 0:s.cairnFamilyId)??((o=this.state.user)==null?void 0:o.familyId)??null;if(!i)throw new Error("No family.");if(!e)throw new Error("No child.");const r=((d=this.state.user)==null?void 0:d.displayName)??((l=x==null?void 0:x.currentUser)==null?void 0:l.displayName)??"";await K(k(m,"families",i,"children",e,"coParentRequests",t),{uid:t,displayName:r,status:"pending",requestedAt:C()})}async fetchFamilyChildren(e){if(!m||!e)return[];try{return(await ne(z(m,"families",e,"children"))).docs.map(i=>({id:i.id,...i.data()}))}catch(t){return console.warn("[parent-prompt] fetchFamilyChildren skipped (non-fatal):",t),[]}}async regenerateCairnInviteCode(){if(!m||!this._currentFamilyId)throw new Error("No family yet.");const e=we(),t=new Date(Date.now()+720*60*60*1e3),i=this.state.family,r=String((i==null?void 0:i.cairnInviteCode)??"").toUpperCase(),a=String((i==null?void 0:i.inviteCode)??"").toUpperCase();if(r&&r!==a&&r!==e)try{await X(k(m,"inviteCodes",r))}catch(s){console.warn("[Cairn] stale invite-code mapping delete failed:",s==null?void 0:s.code)}await T(k(m,"families",this._currentFamilyId),{cairnInviteCode:e,cairnInviteCodeExpiresAt:t,updatedAt:C()});try{await K(k(m,"inviteCodes",e),{familyId:this._currentFamilyId,familyName:(i==null?void 0:i.name)??"",expiresAt:t,createdAt:C()})}catch(s){console.warn("[Cairn] invite-code mapping write failed (backfill heals):",s==null?void 0:s.code)}return{code:e,expiresAt:t}}_maybeMigrateInviteCodeFormat(){const e=this.state.family;if(!e||!this._uid||this._inviteCodeMigratedFamilyId===e.id)return;const t=e.cairnInviteCode;if(!t||typeof t!="string")return;if(!t.includes("-")){this._inviteCodeMigratedFamilyId=e.id;return}(Array.isArray(e.memberIds)?e.memberIds:[]).includes(this._uid)&&(this._inviteCodeMigratedFamilyId=e.id,this.regenerateCairnInviteCode().catch(r=>{console.debug("invite-code format migration deferred:",(r==null?void 0:r.code)??(r==null?void 0:r.message)??r)}))}stop(){var e,t,i,r,a,s,o,d;(e=this._unsubUser)==null||e.call(this),(t=this._unsubFamily)==null||t.call(this),(i=this._unsubChildren)==null||i.call(this),(r=this._unsubTrips)==null||r.call(this),(a=this._unsubEvents)==null||a.call(this),(s=this._unsubActivities)==null||s.call(this),(o=this._unsubPlanning)==null||o.call(this),(d=this._unsubNonParentDaily)==null||d.call(this),this._unsubUser=this._unsubFamily=this._unsubChildren=this._unsubTrips=this._unsubEvents=this._unsubActivities=this._unsubPlanning=this._unsubNonParentDaily=null,this._teardownPpFamily(),this._uid=null,this._currentFamilyId=null,this._inviteCodeMigratedFamilyId=null,this._holidayKey=null,this._ppFamilyId=null,this.userDocResolved=!1,this.state={user:null,family:null,children:[],trips:[],events:[],holidays:[],ppFamily:null,ppIsMember:!1,ppChildren:[],selectedChildId:null,childMilestones:[],childInsights:[],childReports:[],childDailyCard:null,familyDailyCard:null,nonParentDailyCard:null,pebbleAnchors:[],pebbleRhythms:[],pebblePatterns:[],pebbleLiveContext:[],childPebbleMessages:[],childPebbleSessions:[],planningMessages:[]}}_emit(){this.dispatchEvent(new Event("change"))}}const f=new gi;function Rt(g,e){const t=e==null?void 0:e.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:g!=null&&g.photoURL?g.photoURL:null}function Nt(g,e){return Array.isArray(e)&&e.some(t=>Array.isArray(t==null?void 0:t.parentIds)&&t.parentIds.includes(g))}function ui(g,e,t=[]){if(!e)return[];const i=e.memberIds??[],r=e.cairnMemberIds??e.memberIds??[],a=e.memberProfiles??{},s=i.includes(g),o=s?r:Array.from(new Set([...r,...i])),d=[];let l=280;for(const c of o){if(c===g||s&&i.includes(c))continue;const p=a[c],h=p==null?void 0:p.profilePhotoURL,u=Array.isArray(t)&&t.length>0?Nt(c,t):i.includes(c);d.push({uid:c,displayName:(p==null?void 0:p.displayName)??"Family",photoURL:typeof h=="string"&&/^https?:\/\//i.test(h)?h:null,role:u?"co-parent":"extended",circles:["extended"],hue:l}),l=(l+47)%360}return d}async function mi(g,e){var o,d;const t=Array.isArray(e==null?void 0:e.connectedFamilyIds)?e.connectedFamilyIds:[];if(t.length===0||!m)return[];const{getDoc:i}=await ee(async()=>{const{getDoc:l}=await import("./firebase-core-Dmfgjia1.js").then(c=>c.L);return{getDoc:l}},[]),r=[],a=new Set(g?[g]:[]);let s=150;for(const l of t)try{const c=await i(k(m,"families",l));if(!c.exists())continue;const p=c.data()??{},h=p.memberProfiles??{},u=p.name??"Connection";for(const b of p.memberIds??[]){if(a.has(b))continue;a.add(b);const w=(o=h[b])==null?void 0:o.profilePhotoURL;r.push({uid:b,displayName:((d=h[b])==null?void 0:d.displayName)??"Connection",photoURL:typeof w=="string"&&/^https?:\/\//i.test(w)?w:null,role:"connection",circles:["connection"],familyName:u,hue:s}),s=(s+53)%360}}catch{}return r}function me(g,e,t,i=[],r=[]){const a=(e==null?void 0:e.memberIds)??[],s=(e==null?void 0:e.cairnMemberIds)??[],o=t?[t]:[],d=Array.isArray(i)?i:[],l=Array.isArray(r)?r:[];return g==="personal"?[...new Set(o)]:g==="extended"?[...new Set([...a,...s,...o,...d,...l])]:[...new Set([...a,...o,...d])]}async function bi(g){var r;const e=Array.isArray(g==null?void 0:g.connectedFamilyIds)?g.connectedFamilyIds:[];if(e.length===0||!m)return[];const{getDoc:t}=await ee(async()=>{const{getDoc:a}=await import("./firebase-core-Dmfgjia1.js").then(s=>s.L);return{getDoc:a}},[]),i=new Set;for(const a of e)try{const s=await t(k(m,"families",a));if(!s.exists())continue;for(const o of((r=s.data())==null?void 0:r.memberIds)??[])i.add(o)}catch{}return[...i]}function we(){const g="ABCDEFGHJKMNPQRSTUVWXYZ23456789";let e="";for(let t=0;t<6;t++)e+=g[Math.floor(Math.random()*g.length)];return e}function fi(g,e,t,i,r){const a=[],s=new Set((i==null?void 0:i.memberIds)??[]),o=s.has(g);if(a.push({uid:g,displayName:(e==null?void 0:e.displayName)??(t==null?void 0:t.displayName)??"You",photoURL:Rt(e,t),role:o?"self":"self-extended",circles:["immediate"],hue:198}),!o)return a;const d=(i==null?void 0:i.memberProfiles)??{};for(const[c,p]of Object.entries(d)){if(c===g||!s.has(c))continue;const h=p.profilePhotoURL,u=Nt(c,r);a.push({uid:c,displayName:p.displayName??(u?"Co-parent":"Family"),photoURL:typeof h=="string"&&/^https?:\/\//i.test(h)?h:null,role:u?"co-parent":"member",circles:["immediate"],hue:8})}let l=142;for(const c of r??[]){const p=c.profilePhotoURL;a.push({uid:`child:${c.id}`,displayName:c.name,photoURL:typeof p=="string"&&/^https?:\/\//i.test(p)?p:null,role:"child",circles:["immediate"],hue:l,dateOfBirth:c.dateOfBirth}),l=(l+58)%360}return a}function vi(g){const e=[];for(const t of g??[]){if(!t.dateOfBirth)continue;const i=t.dateOfBirth,r=i.getUTCFullYear(),a=String(i.getUTCMonth()+1).padStart(2,"0"),s=String(i.getUTCDate()).padStart(2,"0");e.push({id:`bday:${t.id}`,type:"birthday",date:`${r}-${a}-${s}`,personIds:[`child:${t.id}`],title:`${t.name}'s birthday`,_childId:t.id,_childName:t.name,recurring:!0})}return e}function ht(g,e=new Date){if(!(g!=null&&g.date))return{date:null,yearsElapsed:0};const t=M(g.date);if(!t||Number.isNaN(t.getTime()))return{date:null,yearsElapsed:0};if(!g.recurring)return{date:t,yearsElapsed:0};const i=new Date(e.getFullYear(),t.getMonth(),t.getDate()),r=i<new Date(e.getFullYear(),e.getMonth(),e.getDate())?new Date(e.getFullYear()+1,t.getMonth(),t.getDate()):i,a=r.getFullYear()-t.getFullYear();return{date:r,yearsElapsed:a}}const gt=["linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)","linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)","linear-gradient(135deg, #3d9b8f 0%, #1f5c54 100%)","linear-gradient(135deg, #d4a843 0%, #c67b5c 55%, #c98a8a 100%)","linear-gradient(135deg, #8b7bb5 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #6b9ac4 0%, #3d9b8f 100%)"];function M(g){if(!g)return null;if(g instanceof Date)return g;const e=String(g).match(/^(\d{4})-(\d{2})-(\d{2})/);return e?new Date(Number(e[1]),Number(e[2])-1,Number(e[3])):new Date(g)}function Z(g){if(!g)return null;const e=g.getFullYear(),t=String(g.getMonth()+1).padStart(2,"0"),i=String(g.getDate()).padStart(2,"0");return`${e}-${t}-${i}`}async function yi(g,e=90,t=100){const i=new Date,r=new Date(i.getTime()+e*24*60*60*1e3),a=new URL("https://www.googleapis.com/calendar/v3/calendars/primary/events");a.searchParams.set("timeMin",i.toISOString()),a.searchParams.set("timeMax",r.toISOString()),a.searchParams.set("maxResults",String(t)),a.searchParams.set("singleEvents","true"),a.searchParams.set("orderBy","startTime");const s=await fetch(a.toString(),{headers:{Authorization:`Bearer ${g}`}});if(!s.ok){const d=await s.text();throw s.status===401?new Error("Your Google session expired. Connect your calendar again."):s.status===403&&/accessNotConfigured|SERVICE_DISABLED|PERMISSION_DENIED|insufficient/i.test(d)?new Error("Google Calendar access isn’t configured for this project yet. (Admin: enable the Google Calendar API and add the calendar.readonly scope to the OAuth consent screen in Google Cloud Console.)"):new Error(`Google Calendar: ${s.status} ${d.slice(0,160)}`)}return((await s.json()).items??[]).filter(d=>{var l,c;return d.status!=="cancelled"&&(((l=d.start)==null?void 0:l.date)||((c=d.start)==null?void 0:c.dateTime))})}function xi(g,e){var r,a,s,o,d,l,c,p;const t=((r=g.start)==null?void 0:r.date)??((s=(a=g.start)==null?void 0:a.dateTime)==null?void 0:s.slice(0,10))??"";let i=((o=g.end)==null?void 0:o.date)??((l=(d=g.end)==null?void 0:d.dateTime)==null?void 0:l.slice(0,10))??t;if((c=g.start)!=null&&c.date&&((p=g.end)!=null&&p.date)){const h=new Date(i);h.setDate(h.getDate()-1),i=h.toISOString().slice(0,10)}return{title:g.summary||"(untitled)",location:g.location??"",start:t,end:i,attendees:e?[e]:[],viewers:[],visibility:"family",notes:(g.description??"").slice(0,1e3),gcalEventId:g.id,gcalEventLink:g.htmlLink??null}}function Bt(g){if(g!=null&&g.coverGradient)return g.coverGradient;const e=((g==null?void 0:g.title)??(g==null?void 0:g.id)??"")+((g==null?void 0:g.location)??"");let t=0;for(let i=0;i<e.length;i++)t=t*31+e.charCodeAt(i)>>>0;return gt[t%gt.length]}class Re extends D{constructor(){super(),this.start="",this.end="",this._displayMonth=null,this._hoverDate=null}willUpdate(e){if(e.has("start")||this._displayMonth===null){const t=this.start?M(this.start):new Date;this._displayMonth=new Date(t.getFullYear(),t.getMonth(),1)}}_isoFor(e,t,i){return`${e}-${String(t+1).padStart(2,"0")}-${String(i).padStart(2,"0")}`}_emit(e,t){this.start=e,this.end=t,this._hoverDate=null,this.dispatchEvent(new CustomEvent("range-change",{detail:{start:e,end:t},bubbles:!0,composed:!0}))}_onDayClick(e){if(!this.start||this.start&&this.end){this._emit(e,"");return}e<this.start?this._emit(e,this.start):this._emit(this.start,e)}_onDayHover(e){this.start&&!this.end&&(this._hoverDate=e)}_onLeave(){this._hoverDate=null}_shiftMonth(e){const t=this._displayMonth;this._displayMonth=new Date(t.getFullYear(),t.getMonth()+e,1)}_isToday(e,t,i){const r=new Date;return r.getFullYear()===e&&r.getMonth()===t&&r.getDate()===i}_inSelectedRange(e){return!this.start||!this.end?!1:e>this.start&&e<this.end}_inHoverRange(e){if(!this.start||this.end||!this._hoverDate)return!1;const t=this._hoverDate<this.start?this._hoverDate:this.start,i=this._hoverDate<this.start?this.start:this._hoverDate;return e>t&&e<i}_summary(){if(!this.start&&!this.end)return"Pick a start date";const e=t=>{const i=M(t);return i?i.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"}):""};return this.start&&!this.end?`From ${e(this.start)}, pick an end date`:this.start===this.end?e(this.start):`${e(this.start)} – ${e(this.end)}`}_renderGrid(){const e=this._displayMonth.getFullYear(),t=this._displayMonth.getMonth(),r=(new Date(e,t,1).getDay()+6)%7,a=new Date(e,t+1,0).getDate(),s=[];for(let o=0;o<r;o++)s.push(n`<div class="empty"></div>`);for(let o=1;o<=a;o++){const d=this._isoFor(e,t,o),l=d===this.start,c=d===this.end&&d!==this.start,p=this._inSelectedRange(d),h=this._inHoverRange(d),u=this._isToday(e,t,o),b=["day",l?"start":"",c?"end":"",p?"in-range":"",h?"hover-range":"",u&&!l&&!c?"today":""].filter(Boolean).join(" ");s.push(n`
+  `);customElements.define("member-chip",Ie);const oi="modulepreload",ni=function(g){return"/portal/"+g},pt={},ee=function(e,t,i){let r=Promise.resolve();if(t&&t.length>0){let s=function(l){return Promise.all(l.map(c=>Promise.resolve(c).then(p=>({status:"fulfilled",value:p}),p=>({status:"rejected",reason:p}))))};document.getElementsByTagName("link");const n=document.querySelector("meta[property=csp-nonce]"),d=(n==null?void 0:n.nonce)||(n==null?void 0:n.getAttribute("nonce"));r=s(t.map(l=>{if(l=ni(l),l in pt)return;pt[l]=!0;const c=l.endsWith(".css"),p=c?'[rel="stylesheet"]':"";if(document.querySelector(`link[href="${l}"]${p}`))return;const h=document.createElement("link");if(h.rel=c?"stylesheet":oi,c||(h.as="script"),h.crossOrigin="",h.href=l,d&&h.setAttribute("nonce",d),document.head.appendChild(h),c)return new Promise((u,b)=>{h.addEventListener("load",u),h.addEventListener("error",()=>b(new Error(`Unable to preload CSS for ${l}`)))})}))}function a(s){const n=new Event("vite:preloadError",{cancelable:!0});if(n.payload=s,window.dispatchEvent(n),!n.defaultPrevented)throw s}return r.then(s=>{for(const n of s||[])n.status==="rejected"&&a(n.reason);return e().catch(a)})},ze={apiKey:"AIzaSyA6NKZNLVBeeLrXcLJSXus5M832AxpI2wk",authDomain:"pebblepath-992b6.firebaseapp.com",projectId:"pebblepath-992b6",storageBucket:"pebblepath-992b6.firebasestorage.app",messagingSenderId:"497141667291",appId:"1:497141667291:web:ee84c186db54389d10c3fe"},j=!!(ze.apiKey&&ze.projectId),ne=j?qt(ze):null,li="6LcRxvosAAAAAM2kb_rubOHlX39yOW73WbaIB_w4";var Ct;j&&typeof window<"u"&&((Ct=window.location)==null?void 0:Ct.hostname)==="localhost"&&(self.FIREBASE_APPCHECK_DEBUG_TOKEN=!0);const di=j?Ht(ne,{provider:new ii(li),isTokenAutoRefreshEnabled:!0}):null,x=j?Vt(ne):null,m=j?Wt(ne):null,R=j?ai(ne,"us-central1"):null,O=j?si(ne):null,De=j?new ct:null;De&&De.setCustomParameters({prompt:"select_account"});const ve=j?new ct:null;ve&&ve.addScope("https://www.googleapis.com/auth/calendar.readonly");let fe=null,Fe=0;async function Tt(){if(!x||!ve)throw new Error("Firebase not configured.");if(fe&&Date.now()<Fe-6e4)return fe;const g=x.currentUser;if(!g)throw new Error("Please sign in before importing your calendar.");if(!(g.providerData??[]).some(a=>a.providerId==="google.com")){const a=new Error("Calendar import needs a Google account. You're signed in another way, so Cairn can't read your Google Calendar here yet. Add events manually for now.");throw a.code="calendar/needs-google-account",a}let t;try{t=await Jt(g,ve)}catch(a){if((a==null?void 0:a.code)==="auth/user-mismatch"){const s=new Error("Please choose the same Google account you use to sign in to Cairn.");throw s.code=a.code,s}if((a==null?void 0:a.code)==="auth/popup-closed-by-user"||(a==null?void 0:a.code)==="auth/cancelled-popup-request"){const s=new Error("Calendar connection cancelled.");throw s.code=a.code,s}throw a}const i=ct.credentialFromResult(t),r=i==null?void 0:i.accessToken;if(!r)throw new Error("Couldn't get a Calendar access token. Try again.");return fe=r,Fe=Date.now()+3600*1e3,r}function ci(){fe=null,Fe=0}function ye(){if(!x)throw new Error("Firebase not configured. Fill in .env first.");return St(x,De)}const ge=j?new Kt("apple.com"):null;ge&&(ge.addScope("email"),ge.addScope("name"));function Ee(){if(!x||!ge)throw new Error("Firebase not configured. Fill in .env first.");return St(x,ge)}function It(g,e){if(!x)throw new Error("Firebase not configured.");return ei(x,g,e)}async function zt(g,e,t){if(!x)throw new Error("Firebase not configured.");const i=await Qt(x,g,e);if(t&&t.trim())try{await Zt(i.user,{displayName:t.trim()})}catch{}return i}function Dt(g){if(!x)throw new Error("Firebase not configured.");return ti(x,g)}function Ft(){return x?Xt(x):Promise.resolve()}function Et(g){return x?ri(x,g):(g(null),()=>{})}const pi=Object.freeze(Object.defineProperty({__proto__:null,Timestamp:Se,addDoc:Y,app:ne,appCheck:di,auth:x,clearCalendarToken:ci,collection:z,connectGoogleCalendar:Tt,db:m,deleteDoc:X,doc:k,firebaseApp:ne,functions:R,getDocs:oe,getDownloadURL:re,httpsCallable:H,increment:At,isConfigured:j,onAuth:Et,onSnapshot:N,query:W,sendPasswordReset:Dt,serverTimestamp:C,setDoc:K,signIn:ye,signInWithApple:Ee,signInWithEmail:It,signOutUser:Ft,signUpWithEmail:zt,storage:O,storageRef:te,updateDoc:T,uploadBytes:ae,where:q},Symbol.toStringTag,{value:"Module"})),hi={"united states":"US","united states of america":"US",usa:"US",us:"US","united kingdom":"GB",uk:"GB","great britain":"GB",england:"GB",scotland:"GB",wales:"GB","northern ireland":"GB",canada:"CA",australia:"AU",ireland:"IE",france:"FR",germany:"DE",spain:"ES",italy:"IT",netherlands:"NL","the netherlands":"NL",belgium:"BE",switzerland:"CH",austria:"AT",portugal:"PT",sweden:"SE",norway:"NO",denmark:"DK",finland:"FI","new zealand":"NZ",mexico:"MX",brazil:"BR","south africa":"ZA",india:"IN",japan:"JP",singapore:"SG",poland:"PL"};class gi extends EventTarget{constructor(){super(),this.state={user:null,family:null,children:[],trips:[],events:[],activities:[],holidays:[],ppFamily:null,ppIsMember:!1,ppIsChildViewer:!1,myChildAccessRequest:null,incomingChildRequests:[],ppChildren:[],selectedChildId:null,childMilestones:[],childInsights:[],childReports:[],childDailyCard:null,familyDailyCard:null,nonParentDailyCard:null,pebbleAnchors:[],pebbleRhythms:[],pebblePatterns:[],pebbleLiveContext:[],childPebbleMessages:[],childPebbleSessions:[],planningMessages:[]},this._uid=null,this._unsubUser=null,this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this._unsubActivities=null,this._unsubPlanning=null,this._unsubNonParentDaily=null,this._currentFamilyId=null,this._inviteCodeMigratedFamilyId=null,this._holidayKey=null,this._ppFamilyId=null,this._selectedChildId=null,this._unsubPpFamily=null,this._unsubPpChildren=null,this._unsubChildMs=null,this._unsubChildIns=null,this._unsubChildDaily=null,this._unsubFamilyDaily=null,this._memFid=null,this._memLayers=null,this._memSlices={},this._memUnsubs=[],this._memChildUnsubs=[],this._memChildKey="",this._unsubChildPebble=null,this._unsubChildSessions=null,this._ppReadOnly=!1,this._unsubIncomingReq=null,this._unsubMyReq=null,this.userDocResolved=!1}get familyId(){return this._currentFamilyId}start(e){!m||!e||this._uid!==e&&(this.stop(),this._uid=e,this._unsubUser=N(k(m,"users",e),t=>{var a,s,n,d,l,c,p,h,u,b;this.userDocResolved=!0,this.state.user=t.exists()?{id:t.id,...t.data()}:null;const i=((a=this.state.user)==null?void 0:a.cairnFamilyId)??((s=this.state.user)==null?void 0:s.familyId)??null;!i&&this.state.user&&this._healFamilyPointer(e),i!==this._currentFamilyId&&(this._currentFamilyId=i,(n=this._unsubFamily)==null||n.call(this),(d=this._unsubChildren)==null||d.call(this),(l=this._unsubTrips)==null||l.call(this),(c=this._unsubEvents)==null||c.call(this),(p=this._unsubActivities)==null||p.call(this),(h=this._unsubPlanning)==null||h.call(this),(u=this._unsubNonParentDaily)==null||u.call(this),this._unsubFamily=null,this._unsubChildren=null,this._unsubTrips=null,this._unsubEvents=null,this._unsubActivities=null,this._unsubPlanning=null,this._unsubNonParentDaily=null,this.state.family=null,this.state.children=[],this.state.trips=[],this.state.events=[],this.state.activities=[],this.state.nonParentDailyCard=null,this.state.planningMessages=[],i&&this._subscribeFamily(i));const r=((b=this.state.user)==null?void 0:b.familyId)??null;r!==this._ppFamilyId&&(this._ppFamilyId=r,this._teardownPpFamily(),r&&this._subscribePpFamily(r)),this._emit()}))}async _healFamilyPointer(e){if(!this._healing){this._healing=!0;try{const t=W(z(m,"families"),q("cairnMemberIds","array-contains",e)),i=await oe(t);if(!i.empty){await K(k(m,"users",e),{cairnFamilyId:i.docs[0].id,updatedAt:C()},{merge:!0});return}const r=W(z(m,"families"),q("memberIds","array-contains",e)),a=await oe(r);a.empty||await K(k(m,"users",e),{familyId:a.docs[0].id,updatedAt:C()},{merge:!0})}catch(t){console.warn("[Cairn] auto-heal family pointer failed:",t==null?void 0:t.code,t==null?void 0:t.message)}finally{this._healing=!1}}}async _loadHolidays(){var s,n;const e=(n=(s=this.state.family)==null?void 0:s.homeLocation)==null?void 0:n.country,t=hi[String(e??"").trim().toLowerCase()]??null;if(!t){this.state.holidays.length&&(this.state.holidays=[],this._holidayKey=null,this._emit());return}const i=new Date().getFullYear(),r=[i,i+1],a=`${t}:${r.join(",")}`;if(this._holidayKey!==a){this._holidayKey=a;try{const d=[];for(const c of r){const p=`pp_hol_${t}_${c}`;let h=null;try{const u=JSON.parse(localStorage.getItem(p)||"null");u&&Date.now()-u.t<720*3600*1e3&&(h=u.h)}catch{}if(!h){const u=await fetch(`https://date.nager.at/api/v3/PublicHolidays/${c}/${t}`);if(!u.ok)continue;const b=await u.json();h=(Array.isArray(b)?b:[]).map(w=>({date:w.date,name:w.name||w.localName||"Holiday"}));try{localStorage.setItem(p,JSON.stringify({t:Date.now(),h}))}catch{}}for(const u of h)d.push({id:`hol-${t}-${u.date}-${u.name}`,title:u.name,date:u.date,source:"holiday"})}const l=new Set;this.state.holidays=d.filter(c=>{const p=`${c.date}|${c.title}`;return l.has(p)?!1:(l.add(p),!0)}),this._emit()}catch{this._holidayKey=null}}}_subscribeFamily(e){var i,r,a;this._unsubFamily=N(k(m,"families",e),s=>{this.state.family=s.exists()?{id:s.id,...s.data()}:null,this._reconcileChildViewer(),this._loadHolidays(),this._maybeMigrateInviteCodeFormat(),this._emit()}),(i=this._unsubMyReq)==null||i.call(this),this._unsubMyReq=N(k(m,"families",e,"childAccessRequests",this._uid),s=>{this.state.myChildAccessRequest=s.exists()?{id:s.id,...s.data()}:null,this._emit()},s=>console.warn("[Portal] childAccessRequest (mine) error:",s.code,s.message)),this._unsubChildren=N(z(m,"families",e,"children"),s=>{this.state.children=s.docs.map(n=>{var l,c;const d=n.data();return{id:n.id,...d,dateOfBirth:((c=(l=d.dateOfBirth)==null?void 0:l.toDate)==null?void 0:c.call(l))??(d.dateOfBirth?new Date(d.dateOfBirth):null)}}),this._emit()}),this._unsubTrips=N(W(z(m,"families",e,"trips"),q("visibleTo","array-contains",this._uid)),s=>{this.state.trips=s.docs.map(n=>{var l,c,p,h;const d=n.data();return{id:n.id,...d,start:d.start??"",end:d.end??"",createdAt:((c=(l=d.createdAt)==null?void 0:l.toDate)==null?void 0:c.call(l))??null,updatedAt:((h=(p=d.updatedAt)==null?void 0:p.toDate)==null?void 0:h.call(p))??null}}).sort((n,d)=>String(n.start).localeCompare(String(d.start))),this._backfillVisibleTo("trips",s.docs),this._emit()},s=>{console.warn("[Cairn] trips subscription error:",s.code,s.message)}),this._unsubEvents=N(W(z(m,"families",e,"familyEvents"),q("visibleTo","array-contains",this._uid)),s=>{this.state.events=s.docs.map(n=>{var l,c,p,h;const d=n.data();return{id:n.id,...d,date:d.date??"",createdAt:((c=(l=d.createdAt)==null?void 0:l.toDate)==null?void 0:c.call(l))??null,updatedAt:((h=(p=d.updatedAt)==null?void 0:p.toDate)==null?void 0:h.call(p))??null}}),this._backfillVisibleTo("familyEvents",s.docs),this._emit()},s=>{console.warn("[Cairn] familyEvents subscription error:",s.code,s.message)}),this._unsubActivities=N(W(z(m,"families",e,"activities"),q("visibleTo","array-contains",this._uid)),s=>{this.state.activities=s.docs.map(n=>{var l,c,p,h;const d=n.data();return{id:n.id,...d,day:d.day??"",createdAt:((c=(l=d.createdAt)==null?void 0:l.toDate)==null?void 0:c.call(l))??null,updatedAt:((h=(p=d.updatedAt)==null?void 0:p.toDate)==null?void 0:h.call(p))??null}}).sort((n,d)=>{var p,h,u,b;const l=String(n.day??"").localeCompare(String(d.day??""));if(l!==0)return l;const c=String(n.time??"").localeCompare(String(d.time??""));return c!==0?c:(((h=(p=n.createdAt)==null?void 0:p.getTime)==null?void 0:h.call(p))??0)-(((b=(u=d.createdAt)==null?void 0:u.getTime)==null?void 0:b.call(u))??0)}),this._emit()},s=>{console.warn("[Cairn] activities subscription error:",s.code,s.message)}),(r=this._unsubPlanning)==null||r.call(this),this._unsubPlanning=N(z(m,"families",e,"pebblePlanningMessages"),s=>{this.state.planningMessages=s.docs.map(n=>{var l,c;const d=n.data();return{id:n.id,role:d.role,content:d.content,senderUid:d.senderUid,timestamp:((c=(l=d.timestamp)==null?void 0:l.toDate)==null?void 0:c.call(l))??(d.timestamp?new Date(d.timestamp):null)}}).sort((n,d)=>{var l,c,p,h;return(((c=(l=n.timestamp)==null?void 0:l.getTime)==null?void 0:c.call(l))??0)-(((h=(p=d.timestamp)==null?void 0:p.getTime)==null?void 0:h.call(p))??0)}),this._emit()},s=>console.warn("[Cairn] pebblePlanningMessages subscription error:",s.code,s.message)),(a=this._unsubNonParentDaily)==null||a.call(this);const t=this._readBriefCache("nonparent",e);t&&(this.state.nonParentDailyCard=t),this._unsubNonParentDaily=N(z(m,"families",e,"nonParentDailyCards"),s=>{var p,h;const n=s.docs.map(u=>({id:u.id,...u.data()}));n.sort((u,b)=>String(b.id).localeCompare(String(u.id)));const d=n[0]??null,l=((h=(p=d==null?void 0:d.generatedAt)==null?void 0:p.toMillis)==null?void 0:h.call(p))??0,c=l>0&&Z(new Date(l))===Z(new Date);this.state.nonParentDailyCard=c?d:null,c&&this._writeBriefCache("nonparent",e,d),this._emit()},s=>console.warn("[Portal] nonParentDailyCards error:",s.code,s.message))}_reconcileChildViewer(){var a;if((a=this.state.user)!=null&&a.familyId)return;const e=this.state.family,t=this._uid,r=!!(e&&Array.isArray(e.childViewers)&&e.childViewers.includes(t)&&!(Array.isArray(e.memberIds)&&e.memberIds.includes(t)))?e.id:null;r!==this._ppFamilyId&&(this._ppFamilyId=r,this._ppReadOnly=!!r,this._teardownPpFamily(),r&&this._subscribePpFamily(r),this._emit())}_subscribePpFamily(e){if(this._unsubPpFamily=N(k(m,"families",e),t=>{var a;const i=t.exists()?{id:t.id,...t.data()}:null;this.state.ppFamily=i;const r=!!(i&&Array.isArray(i.memberIds)&&i.memberIds.includes(this._uid));this.state.ppIsMember=r,this.state.ppIsChildViewer=!!(!r&&i&&Array.isArray(i.childViewers)&&i.childViewers.includes(this._uid)),r&&this._subscribeIncomingRequests(e),(a=this.state.user)!=null&&a.familyId||this._reconcileChildViewer(),this._emit()},t=>{console.warn("[Portal] ppFamily subscription error:",t.code,t.message)}),this._unsubPpChildren=N(z(m,"families",e,"children"),t=>{var s;const i=t.docs.map(n=>{var l,c;const d=n.data();return{id:n.id,...d,dateOfBirth:((c=(l=d.dateOfBirth)==null?void 0:l.toDate)==null?void 0:c.call(l))??(d.dateOfBirth?new Date(d.dateOfBirth):null)}}).sort((n,d)=>{var l,c,p,h;return(((c=(l=n.createdAt)==null?void 0:l.toMillis)==null?void 0:c.call(l))??0)-(((h=(p=d.createdAt)==null?void 0:p.toMillis)==null?void 0:h.call(p))??0)});this.state.ppChildren=i,this._attachMemoryChildSubs(),this._resolveChildPhotos(e,i);const a=this._selectedChildId&&i.some(n=>n.id===this._selectedChildId)?this._selectedChildId:((s=i[0])==null?void 0:s.id)??null;a!==this._selectedChildId?this._subscribeChild(a):a||this._teardownChild(),this._emit()},t=>{console.warn("[Portal] ppChildren subscription error:",t.code,t.message)}),!this._ppReadOnly){const t=this._readBriefCache("family",e);t&&(this.state.familyDailyCard=t),this._unsubFamilyDaily=N(z(m,"families",e,"familyDailyCards"),i=>{var d,l;const r=i.docs.map(c=>({id:c.id,...c.data()}));r.sort((c,p)=>String(p.id).localeCompare(String(c.id)));const a=r[0]??null,s=((l=(d=a==null?void 0:a.generatedAt)==null?void 0:d.toMillis)==null?void 0:l.call(d))??0,n=s>0&&Z(new Date(s))===Z(new Date);this.state.familyDailyCard=n?a:null,n&&this._writeBriefCache("family",e,a),this._emit()},i=>console.warn("[Portal] familyDailyCards error:",i.code,i.message)),this._subscribePebbleMemory(e)}}_subscribePebbleMemory(e){const t=i=>{var r;return((r=i==null?void 0:i.toMillis)==null?void 0:r.call(i))??0};this._memUnsubs.forEach(i=>i==null?void 0:i()),this._memChildUnsubs.forEach(i=>i==null?void 0:i()),this._memFid=e,this._memLayers=[{col:"anchors",key:"pebbleAnchors",extra:null,sort:(i,r)=>t(r.updatedAt)-t(i.updatedAt)},{col:"rhythms",key:"pebbleRhythms",extra:null,sort:(i,r)=>t(r.updatedAt)-t(i.updatedAt)},{col:"patterns",key:"pebblePatterns",extra:i=>!i.dismissedAt,sort:(i,r)=>t(r.derivedAt)-t(i.derivedAt)},{col:"liveContext",key:"pebbleLiveContext",extra:i=>!i.dismissedAt&&t(i.validFrom)>=Date.now()-336*3600*1e3,sort:(i,r)=>t(r.validFrom)-t(i.validFrom),cap:90}],this._memSlices={},this._memUnsubs=[],this._memChildUnsubs=[],this._memChildKey="";for(const i of this._memLayers){this._memSlices[i.key]={family:[],member:[],child:[]};const r=z(m,"families",e,i.col);this._memUnsubs.push(N(W(r,q("scope","==","family")),a=>{this._memSlices[i.key].family=a.docs.map(s=>({id:s.id,...s.data()})),this._recomputeMemLayer(i)},a=>console.warn(`[Portal] ${i.col}/family error:`,a.code,a.message))),this._uid&&this._memUnsubs.push(N(W(r,q("scope","==","member"),q("memberUid","==",this._uid)),a=>{this._memSlices[i.key].member=a.docs.map(s=>({id:s.id,...s.data()})),this._recomputeMemLayer(i)},a=>console.warn(`[Portal] ${i.col}/member error:`,a.code,a.message)))}this._attachMemoryChildSubs()}_recomputeMemLayer(e){const t=this._memSlices[e.key];if(!t)return;const i=new Set;let r=[];for(const a of[t.family,t.member,t.child])for(const s of a)i.has(s.id)||(i.add(s.id),r.push(s));e.extra&&(r=r.filter(e.extra)),r.sort(e.sort),e.cap&&r.length>e.cap&&(r=r.slice(0,e.cap)),this.state[e.key]=r,this._emit()}_attachMemoryChildSubs(){if(!this._memFid||!this._memLayers)return;const e=(this.state.ppChildren||[]).filter(i=>(i==null?void 0:i.id)&&Array.isArray(i.parentIds)&&i.parentIds.includes(this._uid)).map(i=>i.id).slice(0,30),t=e.join(",");if(t!==this._memChildKey){if(this._memChildKey=t,this._memChildUnsubs.forEach(i=>i==null?void 0:i()),this._memChildUnsubs=[],e.length===0){for(const i of this._memLayers)this._memSlices[i.key]&&(this._memSlices[i.key].child=[],this._recomputeMemLayer(i));return}for(const i of this._memLayers){const r=z(m,"families",this._memFid,i.col);this._memChildUnsubs.push(N(W(r,q("scope","==","child"),q("childId","in",e)),a=>{this._memSlices[i.key].child=a.docs.map(s=>({id:s.id,...s.data()})),this._recomputeMemLayer(i)},a=>console.warn(`[Portal] ${i.col}/child error:`,a.code,a.message)))}}}_briefCacheKey(e,t){return`pp_brief_${e}_${t}`}_writeBriefCache(e,t,i){if(!(!t||!i))try{localStorage.setItem(this._briefCacheKey(e,t),JSON.stringify({dateKey:Z(new Date),card:i}))}catch{}}_readBriefCache(e,t){if(!t)return null;try{const i=localStorage.getItem(this._briefCacheKey(e,t));if(!i)return null;const r=JSON.parse(i);if((r==null?void 0:r.dateKey)===Z(new Date)&&r.card)return r.card}catch{}return null}clearBriefCaches(){try{const e=[];for(let t=0;t<localStorage.length;t++){const i=localStorage.key(t);i&&i.startsWith("pp_brief_")&&e.push(i)}e.forEach(t=>localStorage.removeItem(t))}catch{}}_subscribeIncomingRequests(e){var t;(t=this._unsubIncomingReq)==null||t.call(this),this._unsubIncomingReq=N(z(m,"families",e,"childAccessRequests"),i=>{this.state.incomingChildRequests=i.docs.map(r=>({id:r.id,...r.data()})).filter(r=>r.status==="pending").sort((r,a)=>{var s,n,d,l;return(((n=(s=r.requestedAt)==null?void 0:s.toMillis)==null?void 0:n.call(s))??0)-(((l=(d=a.requestedAt)==null?void 0:d.toMillis)==null?void 0:l.call(d))??0)}),this._emit()},i=>console.warn("[Portal] childAccessRequests error:",i.code,i.message))}_subscribeChild(e){if(this._teardownChild(),this._selectedChildId=e,this.state.selectedChildId=e,!e||!this._ppFamilyId){this.state.childMilestones=[],this.state.childInsights=[],this.state.childDailyCard=null,this.state.childReports=[],this.state.childPebbleMessages=[],this.state.childPebbleSessions=[];return}const t=["families",this._ppFamilyId,"children",e];this._unsubChildMs=N(z(m,...t,"milestones"),i=>{this.state.childMilestones=i.docs.map(r=>({id:r.id,...r.data()})).sort((r,a)=>(r.ageRangeStartMonths??0)-(a.ageRangeStartMonths??0)),this._emit()},i=>console.warn("[Portal] milestones error:",i.code,i.message)),this._unsubChildIns=N(z(m,...t,"insights"),i=>{this.state.childInsights=i.docs.map(r=>({id:r.id,...r.data()})).sort((r,a)=>(a.relevanceScore??0)-(r.relevanceScore??0)),this._emit()},i=>console.warn("[Portal] insights error:",i.code,i.message)),this._ppReadOnly?(this.state.childDailyCard=null,this.state.childReports=[]):(this.state.childDailyCard=this._readBriefCache("child",e)||null,this._emit(),this._unsubChildDaily=N(z(m,...t,"dailyCards"),i=>{var d,l;const r=i.docs.map(c=>({id:c.id,...c.data()}));r.sort((c,p)=>String(p.id).localeCompare(String(c.id)));const a=r[0]??null,s=((l=(d=a==null?void 0:a.generatedAt)==null?void 0:d.toMillis)==null?void 0:l.call(d))??0,n=s>0&&Z(new Date(s))===Z(new Date);this.state.childDailyCard=n?a:null,n&&this._writeBriefCache("child",e,a),this._emit()},i=>console.warn("[Portal] dailyCards error:",i.code,i.message)),this._unsubChildReports=N(z(m,...t,"developmentReports"),i=>{const r=a=>{var s,n;return a.reportDate&&/^\d{4}-\d{2}-\d{2}$/.test(a.reportDate)?new Date(`${a.reportDate}T00:00:00`).getTime():((n=(s=a.createdAt)==null?void 0:s.toMillis)==null?void 0:n.call(s))??0};this.state.childReports=i.docs.map(a=>({id:a.id,...a.data()})).sort((a,s)=>r(s)-r(a)),this._emit()},i=>console.warn("[Portal] developmentReports error:",i.code,i.message))),this._unsubChildPebble=N(z(m,...t,"pebbleMessages"),i=>{this.state.childPebbleMessages=i.docs.map(r=>({id:r.id,...r.data()})).filter(r=>!(r.isPrivate===!0&&r.senderUid!==this._uid)).sort((r,a)=>{var s,n,d,l;return(((n=(s=r.timestamp)==null?void 0:s.toMillis)==null?void 0:n.call(s))??0)-(((l=(d=a.timestamp)==null?void 0:d.toMillis)==null?void 0:l.call(d))??0)}),this._emit()},i=>console.warn("[Portal] pebbleMessages error:",i.code,i.message)),this._unsubChildSessions=N(z(m,...t,"pebbleSessions"),i=>{this.state.childPebbleSessions=i.docs.map(r=>({id:r.id,...r.data()})).filter(r=>r.archived!==!0).filter(r=>!(r.isPrivate===!0&&r.createdBy!==this._uid)).sort((r,a)=>{var s,n,d,l,c,p,h,u;return(((n=(s=a.lastMessageAt)==null?void 0:s.toMillis)==null?void 0:n.call(s))??((l=(d=a.createdAt)==null?void 0:d.toMillis)==null?void 0:l.call(d))??0)-(((p=(c=r.lastMessageAt)==null?void 0:c.toMillis)==null?void 0:p.call(c))??((u=(h=r.createdAt)==null?void 0:h.toMillis)==null?void 0:u.call(h))??0)}),this._emit()},i=>console.warn("[Portal] pebbleSessions error:",i.code,i.message))}_resolveChildPhotos(e,t){if(O){this._photoTried||(this._photoTried=new Set);for(const i of t){const r=i.profilePhotoURL;if(typeof r=="string"&&/^https?:\/\//i.test(r))continue;const a=e+"/"+i.id;this._photoTried.has(a)||(this._photoTried.add(a),re(te(O,"families/"+e+"/avatars/children/"+i.id)).then(s=>{const n=this.state.ppChildren||[],d=n.findIndex(l=>l.id===i.id);d>=0&&(n[d]={...n[d],profilePhotoURL:s},this.state.ppChildren=[...n],this._emit())}).catch(()=>{this._photoTried.delete(a)}))}}}selectChild(e){!e||e===this._selectedChildId||this.state.ppChildren.some(t=>t.id===e)&&(this._subscribeChild(e),this._emit())}async askPebbleAboutChild(e,t,i=[],r=!1,a=""){if(!R)throw new Error("Firebase functions not configured.");if(!this._ppFamilyId)throw new Error("No PebblePath family.");if(!e)throw new Error("No child selected.");return(await H(R,"askPebbleAboutChild")({familyId:this._ppFamilyId,childId:e,question:t,history:i,isPrivate:r===!0,sessionId:a||""})).data}async streamPebbleChat(e,t,i=[],r=!1,a="",{onStatus:s,onDelta:n}={}){if(!R)throw new Error("Firebase functions not configured.");if(!this._ppFamilyId)throw new Error("No PebblePath family.");if(!e)throw new Error("No child selected.");const d=H(R,"streamPebbleChatPortal"),{stream:l,data:c}=await d.stream({familyId:this._ppFamilyId,childId:e,question:t,history:i,isPrivate:r===!0,sessionId:a||""});for await(const p of l)p&&(p.kind==="status"&&typeof s=="function"?s(p.status):p.kind==="delta"&&typeof p.text=="string"&&typeof n=="function"&&n(p.text));return await c}buildPlanningContext(){const e=[],t=this.state.family,i=t==null?void 0:t.homeLocation;if(i&&(i.city||i.region||i.country)){const c=[i.city,i.region,i.country].filter(Boolean);c.length&&e.push("Family home: "+c.join(", ")+".")}const r=new Date().toISOString().slice(0,10),a=(c,p)=>p&&p!==c?c+" to "+p:c,s=(Array.isArray(this.state.trips)?this.state.trips:[]).filter(c=>c&&c.title&&(!c.end||String(c.end)>=r)).slice(0,12);s.length&&(e.push(""),e.push("Trips:"),s.forEach(c=>{const p=a(String(c.start??""),String(c.end??"")),h=c.start&&String(c.start)<=r&&(!c.end||String(c.end)>=r),u=c.location?" at "+c.location:"";e.push("- "+c.title+(p?" ("+p+")":"")+u+(h?" [ACTIVE NOW]":""))}));const n=(Array.isArray(this.state.events)?this.state.events:[]).filter(c=>c&&c.title&&(!c.date||String(c.date)>=r)).sort((c,p)=>String(c.date??"").localeCompare(String(p.date??""))).slice(0,15);n.length&&(e.push(""),e.push("Upcoming family events:"),n.forEach(c=>{e.push("- "+c.title+(c.date?" ("+c.date+")":""))}));const d=(Array.isArray(this.state.activities)?this.state.activities:[]).filter(c=>c&&c.title&&!c.tripId&&(!c.day||String(c.day)>=r)).sort((c,p)=>String(c.day??"").localeCompare(String(p.day??""))).slice(0,15);return d.length&&(e.push(""),e.push("Planned activities:"),d.forEach(c=>{const p=[c.day,c.time].filter(Boolean).join(" ");e.push("- "+c.title+(p?" ("+p+")":""))})),e.join(`
+`).trim()||"This is a family-planning conversation. Help with activities, plans, and logistics. No child information is available."}async askPebblePlanning(e,t=[]){if(!R)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family.");return(await H(R,"askPebblePlanning")({familyId:this._currentFamilyId,question:e,history:t,clientContext:this.buildPlanningContext()})).data}async streamPebblePlanning(e,t=[],{onStatus:i,onDelta:r}={}){if(!R)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family.");const a=H(R,"streamPebblePlanning"),{stream:s,data:n}=await a.stream({familyId:this._currentFamilyId,question:e,history:t,clientContext:this.buildPlanningContext()});for await(const d of s)d&&(d.kind==="status"&&typeof i=="function"?i(d.status):d.kind==="delta"&&typeof d.text=="string"&&typeof r=="function"&&r(d.text));return await n}async appendPlanningMessage(e){if(!this._currentFamilyId)throw new Error("No family.");if(!this._uid)throw new Error("Not signed in.");const t={role:e.role,content:e.content,timestamp:Se.now()};e.role==="user"&&(t.senderUid=this._uid),await Y(z(m,"families",this._currentFamilyId,"pebblePlanningMessages"),t)}async deleteAllPlanningMessages(){if(!this._currentFamilyId)return;const e=await oe(z(m,"families",this._currentFamilyId,"pebblePlanningMessages"));await Promise.all(e.docs.map(t=>X(t.ref)))}_toMillis(e){var t,i,r;return((r=(i=(t=e==null?void 0:e.toDate)==null?void 0:t.call(e))==null?void 0:i.getTime)==null?void 0:r.call(i))??(e?new Date(e).getTime():null)}get _pebbleUnlimited(){const e=this.state.user;return!!(e&&(e.isPremium===!0||e.bypassPebbleQuota===!0))}_pebbleQuotaShouldReset(e=new Date){var i;const t=this._toMillis((i=this.state.family)==null?void 0:i.pebbleWeekStartedAt);return t==null?!0:e.getTime()-t>=10080*60*1e3}pebbleQuestionsRemaining(e=new Date){const t=this.state.family,i=typeof(t==null?void 0:t.pebbleQuestionsLimit)=="number"?t.pebbleQuestionsLimit:5;if(this._pebbleQuotaShouldReset(e))return i;const r=typeof(t==null?void 0:t.pebbleQuestionsUsed)=="number"?t.pebbleQuestionsUsed:0;return Math.max(0,i-r)}pebbleWeekRollover(e=new Date){var i;const t=this._toMillis((i=this.state.family)==null?void 0:i.pebbleWeekStartedAt);return t==null||this._pebbleQuotaShouldReset(e)?null:new Date(t+10080*60*1e3)}pebbleQuota(){var r;const e=this.state.user,t=this._pebbleUnlimited,i=this.pebbleQuestionsRemaining();return{unlimited:t,bypassed:(e==null?void 0:e.bypassPebbleQuota)===!0,premium:(e==null?void 0:e.isPremium)===!0,limit:((r=this.state.family)==null?void 0:r.pebbleQuestionsLimit)??5,remaining:i,atLimit:!t&&i<=0,rollover:this.pebbleWeekRollover()}}async incrementPebbleQuota(){if(this._pebbleUnlimited||!this._currentFamilyId)return;const e=k(m,"families",this._currentFamilyId);try{this._pebbleQuotaShouldReset()?await T(e,{pebbleQuestionsUsed:1,pebbleWeekStartedAt:Se.now()}):await T(e,{pebbleQuestionsUsed:At(1)})}catch(t){console.warn("[Cairn] pebble quota increment failed:",t==null?void 0:t.code,t==null?void 0:t.message)}}async setHomeLocation(e,t=this._currentFamilyId){if(!t||!(e!=null&&e.city))return;const i={city:String(e.city).trim(),country:String(e.country||"United States").trim()},r=String(e.region??"").trim();r&&(i.region=r),await T(k(m,"families",t),{homeLocation:i})}async refreshFamilyBrief(){if(!R)throw new Error("Firebase functions not configured.");if(!this._ppFamilyId)throw new Error("No PebblePath family.");return(await H(R,"refreshFamilyBrief")({familyId:this._ppFamilyId})).data}async refreshNonParentBrief(){if(!R)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family.");const e=H(R,"generateNonParentBrief");try{return(await e({familyId:this._currentFamilyId})).data}catch(t){if((t==null?void 0:t.code)==="functions/failed-precondition")return null;throw t}}_childPebbleBase(e){return["families",this._ppFamilyId,"children",e,"pebbleSessions"]}async createPebbleSession(e,{title:t,isPrivate:i}={}){if(!m||!this._ppFamilyId||!e)throw new Error("No child selected.");return(await Y(z(m,...this._childPebbleBase(e)),{title:(t||"New chat").trim()||"New chat",isPrivate:i===!0,archived:!1,createdBy:this._uid??"",createdAt:C(),lastMessageAt:C()})).id}async renamePebbleSession(e,t,i){!m||!this._ppFamilyId||!e||!t||await T(k(m,...this._childPebbleBase(e),t),{title:(i||"").trim()||"Untitled chat"})}async setPebbleSessionPrivacy(e,t,i){!m||!this._ppFamilyId||!e||!t||await T(k(m,...this._childPebbleBase(e),t),{isPrivate:i===!0})}async archivePebbleSession(e,t){!m||!this._ppFamilyId||!e||!t||await T(k(m,...this._childPebbleBase(e),t),{archived:!0})}async touchPebbleSession(e,t){if(!(!m||!this._ppFamilyId||!e||!t))try{await T(k(m,...this._childPebbleBase(e),t),{lastMessageAt:C()})}catch{}}_teardownChild(){var e,t,i,r,a,s;(e=this._unsubChildMs)==null||e.call(this),(t=this._unsubChildIns)==null||t.call(this),(i=this._unsubChildDaily)==null||i.call(this),(r=this._unsubChildReports)==null||r.call(this),(a=this._unsubChildPebble)==null||a.call(this),(s=this._unsubChildSessions)==null||s.call(this),this._unsubChildMs=this._unsubChildIns=this._unsubChildDaily=this._unsubChildReports=this._unsubChildPebble=this._unsubChildSessions=null}_teardownPpFamily(){var e,t,i,r;this._teardownChild(),(e=this._unsubPpFamily)==null||e.call(this),(t=this._unsubPpChildren)==null||t.call(this),(i=this._unsubFamilyDaily)==null||i.call(this),this._memUnsubs.forEach(a=>a==null?void 0:a()),this._memChildUnsubs.forEach(a=>a==null?void 0:a()),(r=this._unsubIncomingReq)==null||r.call(this),this._unsubPpFamily=null,this._unsubPpChildren=null,this._unsubFamilyDaily=null,this._memUnsubs=[],this._memChildUnsubs=[],this._memSlices={},this._memFid=null,this._memLayers=null,this._memChildKey="",this._unsubIncomingReq=null,this._selectedChildId=null,this.state.ppFamily=null,this.state.ppIsMember=!1,this.state.ppIsChildViewer=!1,this.state.incomingChildRequests=[],this.state.ppChildren=[],this.state.selectedChildId=null,this.state.childMilestones=[],this.state.childInsights=[],this.state.childDailyCard=null,this.state.familyDailyCard=null,this.state.pebbleAnchors=[],this.state.pebbleRhythms=[],this.state.pebblePatterns=[],this.state.pebbleLiveContext=[],this.state.childPebbleMessages=[],this.state.childPebbleSessions=[]}async requestChildAccess(){var t;const e=this._currentFamilyId;if(!e)throw new Error("No family to request access from.");await K(k(m,"families",e,"childAccessRequests",this._uid),{uid:this._uid,displayName:((t=this.state.user)==null?void 0:t.displayName)??"Family member",requestedAt:C(),status:"pending"})}async withdrawChildAccessRequest(){const e=this._currentFamilyId;e&&await X(k(m,"families",e,"childAccessRequests",this._uid))}async setMemberLabel(e,t){!this._uid||!e||await T(k(m,"users",this._uid),{[`memberLabels.${e}`]:(t??"").trim()})}async approveChildAccess(e){var r;const t=this._ppFamilyId;if(!t||!this.state.ppIsMember)throw new Error("Only a parent can approve access.");const i=Array.isArray((r=this.state.ppFamily)==null?void 0:r.childViewers)?this.state.ppFamily.childViewers:[];i.includes(e)||await T(k(m,"families",t),{childViewers:[...i,e],updatedAt:C()}),await T(k(m,"families",t,"childAccessRequests",e),{status:"approved",actionedBy:this._uid,actionedAt:C()})}async declineChildAccess(e){const t=this._ppFamilyId;if(!t||!this.state.ppIsMember)throw new Error("Only a parent can decline access.");await T(k(m,"families",t,"childAccessRequests",e),{status:"declined",actionedBy:this._uid,actionedAt:C()})}async grantChildViewerDirectly(e){var r;const t=this._ppFamilyId;if(!t||!this.state.ppIsMember)throw new Error("Only a parent can grant access.");const i=Array.isArray((r=this.state.ppFamily)==null?void 0:r.childViewers)?this.state.ppFamily.childViewers:[];i.includes(e)||await T(k(m,"families",t),{childViewers:[...i,e],updatedAt:C()})}async grantParentAccessForOwnChildren(e){var d;const t=this._ppFamilyId;if(!t||!this.state.ppIsMember)throw new Error("Only a parent can grant access.");const i=this._uid;if(!i)throw new Error("Not signed in.");const a=(Array.isArray(this.state.ppChildren)?this.state.ppChildren:[]).filter(l=>(l==null?void 0:l.id)&&Array.isArray(l.parentIds)&&l.parentIds.includes(i));if(a.length===0)return[];const s=[];for(const l of a){const c=Array.isArray(l.parentIds)?l.parentIds:[];if(c.includes(e)){s.push(l.name??"your child");continue}await T(k(m,"families",t,"children",l.id),{parentIds:[...c,e],updatedAt:C()}),s.push(l.name??"your child")}const n=Array.isArray((d=this.state.ppFamily)==null?void 0:d.memberIds)?this.state.ppFamily.memberIds:[];return n.includes(e)||await T(k(m,"families",t),{memberIds:[...n,e],updatedAt:C()}),s}async revokeChildViewer(e){var a;const t=this._ppFamilyId;if(!t||!this.state.ppIsMember)throw new Error("Only a parent can revoke access.");const i=Array.isArray((a=this.state.ppFamily)==null?void 0:a.childViewers)?this.state.ppFamily.childViewers:[],r=i.filter(s=>s!==e);r.length!==i.length&&await T(k(m,"families",t),{childViewers:r,updatedAt:C()});try{await T(k(m,"families",t,"childAccessRequests",e),{status:"declined",actionedBy:this._uid,actionedAt:C()})}catch{}}_backfillVisibleTo(e,t){if(!m||!this._currentFamilyId)return;const i=this.state.family;if(i){this._vtBackfilled||(this._vtBackfilled=new Set);for(const r of t){const a=r.data();if(Array.isArray(a.visibleTo))continue;const s=`${e}/${r.id}`;this._vtBackfilled.has(s)||(this._vtBackfilled.add(s),T(k(m,"families",this._currentFamilyId,e,r.id),{visibleTo:me(a.visibility??"family",i,a.createdBy,Array.isArray(a.attendees)?a.attendees:[])}).catch(n=>{this._vtBackfilled.delete(s),console.warn(`[Cairn] visibleTo backfill failed (${s}):`,n==null?void 0:n.code,n==null?void 0:n.message)}))}}}async _visibleToFor(e,t,i){const r=(e==null?void 0:e.visibility)??"family",a=Array.isArray(e==null?void 0:e.attendees)?e.attendees:[],s=r==="extended"?await bi(t):[];return me(r,t,i,a,s)}async saveTrip(e){var l;if(!m||!this._currentFamilyId)throw new Error("No family yet.");const t=(l=x==null?void 0:x.currentUser)==null?void 0:l.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...s}=e,n={...s,updatedAt:C()};return n.visibleTo=await this._visibleToFor(s,this.state.family,s.createdBy??t),i?(await T(k(m,"families",this._currentFamilyId,"trips",i),n),i):(n.createdBy=t,n.createdAt=C(),(await Y(z(m,"families",this._currentFamilyId,"trips"),n)).id)}async deleteTrip(e){if(!m||!this._currentFamilyId)throw new Error("No family yet.");await X(k(m,"families",this._currentFamilyId,"trips",e))}packingTemplatesListener(e){return!m||!this._currentFamilyId?()=>{}:N(z(m,"families",this._currentFamilyId,"packingTemplates"),t=>{const i=t.docs.map(r=>({id:r.id,...r.data()})).sort((r,a)=>{var s,n,d,l;return(((n=(s=a.updatedAt)==null?void 0:s.toMillis)==null?void 0:n.call(s))??0)-(((l=(d=r.updatedAt)==null?void 0:d.toMillis)==null?void 0:l.call(d))??0)});e(i)},t=>{console.warn("[Portal] packingTemplates error:",t.code,t.message),e([])})}packingListListener(e,t){return!m||!this._currentFamilyId||!e?()=>{}:N(z(m,"families",this._currentFamilyId,"trips",e,"packingList"),i=>{const r=i.docs.map(a=>({id:a.id,...a.data()})).sort((a,s)=>{const n=String(a.groupName??"").localeCompare(String(s.groupName??""));return n!==0?n:(a.order??0)-(s.order??0)});t(r)},i=>{console.warn("[Portal] packingList error:",i.code,i.message),t([])})}_packingListCol(e){return z(m,"families",this._currentFamilyId,"trips",e,"packingList")}async addPackingItem(e,{groupName:t,text:i,order:r=0,addedByPebble:a=!1}){var l;if(!m||!this._currentFamilyId)throw new Error("No family yet.");const s=(l=x==null?void 0:x.currentUser)==null?void 0:l.uid;if(!s)throw new Error("Not signed in.");const n=String(i??"").trim();if(!n)throw new Error("Add an item.");return(await Y(this._packingListCol(e),{groupName:t,text:n,checked:!1,order:r,addedBy:s,addedByPebble:a===!0,addedAt:C()})).id}async togglePackingItem(e,t){!m||!this._currentFamilyId||!(t!=null&&t.id)||await T(k(this._packingListCol(e),t.id),{checked:t.checked!==!0})}async updatePackingItemText(e,t,i){if(!m||!this._currentFamilyId||!t)return;const r=String(i??"").trim();r&&await T(k(this._packingListCol(e),t),{text:r})}async deletePackingItem(e,t){!m||!this._currentFamilyId||!t||await X(k(this._packingListCol(e),t))}async applyPackingTemplate(e,t){var a;if(!m||!this._currentFamilyId||!(t!=null&&t.id))return;const i=(a=x==null?void 0:x.currentUser)==null?void 0:a.uid;if(!i)throw new Error("Not signed in.");const r=[];for(const s of Array.isArray(t.groups)?t.groups:[]){const n=Array.isArray(s.items)?s.items:[];for(const d of n.slice().sort((l,c)=>(l.order??0)-(c.order??0)))r.push(Y(this._packingListCol(e),{templateId:t.id,groupName:s.name,text:String(d.text??"").trim(),checked:!1,order:d.order??0,addedBy:i,addedByPebble:d.addedByPebble===!0,addedAt:C()}))}r.length!==0&&(await Promise.all(r),await T(k(m,"families",this._currentFamilyId,"trips",e),{"packingListMeta.derivedFromTemplateId":t.id}))}async savePackingListAsTemplate(e,t,i){var l;if(!m||!this._currentFamilyId)throw new Error("No family yet.");const r=(l=x==null?void 0:x.currentUser)==null?void 0:l.uid;if(!r)throw new Error("Not signed in.");const a=new Map;for(const c of Array.isArray(i)?i:[]){const p=c.groupName??"Parents";a.has(p)||a.set(p,[]),a.get(p).push(c)}const s=[...a.entries()].map(([c,p])=>({id:crypto.randomUUID(),name:c,items:p.slice().sort((h,u)=>(h.order??0)-(u.order??0)).map((h,u)=>({id:crypto.randomUUID(),text:String(h.text??"").trim(),order:u,addedByPebble:h.addedByPebble===!0}))})),n=C();return(await Y(z(m,"families",this._currentFamilyId,"packingTemplates"),{name:String(e??"My list").trim()||"My list",...t?{iconKey:t}:{},groups:s,createdBy:r,createdAt:n,updatedAt:n})).id}async deletePackingTemplate(e){!m||!this._currentFamilyId||!e||await X(k(m,"families",this._currentFamilyId,"packingTemplates",e))}async markPackingReviewed(e){!m||!this._currentFamilyId||!e||await T(k(m,"families",this._currentFamilyId,"trips",e),{"packingListMeta.lastReviewedAt":C()})}async generatePackingReview(e,t,i,r,a,s){if(!R)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family yet.");return(await H(R,"generatePackingReview")({familyId:this._currentFamilyId,tripId:e,trip:t,family:i,currentList:r,dismissedTexts:a,groupNames:s})).data}async generateFamilyPlan(e,t){var s;if(!R)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family yet.");const r=await H(R,"generateFamilyPlan")({familyId:this._currentFamilyId,family:e,window:t}),a=(s=r==null?void 0:r.data)==null?void 0:s.candidates;return Array.isArray(a)?a:[]}async saveEvent(e){var l;if(!m||!this._currentFamilyId)throw new Error("No family yet.");const t=(l=x==null?void 0:x.currentUser)==null?void 0:l.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...s}=e,n={...s,updatedAt:C()};return n.visibleTo=await this._visibleToFor(s,this.state.family,s.createdBy??t),i?(await T(k(m,"families",this._currentFamilyId,"familyEvents",i),n),i):(n.createdBy=t,n.createdAt=C(),(await Y(z(m,"families",this._currentFamilyId,"familyEvents"),n)).id)}async deleteEvent(e){if(!m||!this._currentFamilyId)throw new Error("No family yet.");await X(k(m,"families",this._currentFamilyId,"familyEvents",e))}activitiesListener(e){if(!m||!this._currentFamilyId||!this._uid)return()=>{};const t=W(z(m,"families",this._currentFamilyId,"activities"),q("visibleTo","array-contains",this._uid));return N(t,i=>{const r=i.docs.map(a=>({id:a.id,...a.data()})).sort((a,s)=>{var l,c,p,h;const n=String(a.day??"").localeCompare(String(s.day??""));if(n!==0)return n;const d=String(a.time??"").localeCompare(String(s.time??""));return d!==0?d:(((c=(l=a.createdAt)==null?void 0:l.toMillis)==null?void 0:c.call(l))??0)-(((h=(p=s.createdAt)==null?void 0:p.toMillis)==null?void 0:h.call(p))??0)});e(r)},i=>{console.warn("[Portal] activities subscription error:",i.code,i.message),e([])})}async saveActivity(e){var c;if(!m||!this._currentFamilyId)throw new Error("No family yet.");const t=(c=x==null?void 0:x.currentUser)==null?void 0:c.uid;if(!t)throw new Error("Not signed in.");const{id:i,createdAt:r,updatedAt:a,...s}=e,n={...s,updatedAt:C()},d=s.addedBy??t;if(s.tripId){const p=(this.state.trips??[]).find(h=>h.id===s.tripId);n.visibleTo=Array.isArray(p==null?void 0:p.visibleTo)&&p.visibleTo.length?p.visibleTo:await this._visibleToFor(s,this.state.family,d)}else{const p=Array.isArray(s.personIds)?s.personIds:[];n.visibleTo=await this._visibleToFor({...s,attendees:p},this.state.family,d)}return i?(await T(k(m,"families",this._currentFamilyId,"activities",i),n),i):(n.addedBy=t,n.createdAt=C(),(await Y(z(m,"families",this._currentFamilyId,"activities"),n)).id)}async deleteActivity(e){if(!m||!this._currentFamilyId)throw new Error("No family yet.");await X(k(m,"families",this._currentFamilyId,"activities",e))}async updateActivity(e,t){if(!m||!this._currentFamilyId)throw new Error("No family yet.");await T(k(m,"families",this._currentFamilyId,"activities",e),t)}async uploadActivityAttachment(e,t){if(!O||!this._currentFamilyId)throw new Error("Storage unavailable.");const i=`families/${this._currentFamilyId}/planAttachments/activity__${e}`,r=te(O,i);return await ae(r,t,{contentType:t.type||"application/octet-stream"}),re(r)}async uploadSchoolCalendar(e){if(!O||!this._currentFamilyId)throw new Error("Storage unavailable.");const t=e.type||"",i=/pdf/.test(t)?"pdf":/^image\//.test(t)?"image":/word|officedocument|msword/.test(t)?"docx":"pdf",r=`families/${this._currentFamilyId}/schoolCalendarUploads/${Date.now()}`;return await ae(te(O,r),e,{contentType:t||"application/octet-stream"}),{storagePath:r,fileType:i}}async uploadTripPreview(e){var s;if(!O||!this._currentFamilyId)throw new Error("Storage unavailable.");if(!/^image\//.test(e.type||""))throw new Error("Preview image must be an image file.");const t=await this._downscaleImageForUpload(e),i=((s=crypto==null?void 0:crypto.randomUUID)==null?void 0:s.call(crypto))||`${Date.now()}-${Math.random().toString(36).slice(2)}`,r=`families/${this._currentFamilyId}/trip-previews/${i}`,a=te(O,r);return await ae(a,t,{contentType:t.type||"image/jpeg"}),await re(a)}async _downscaleImageForUpload(e,t=1600,i=.82){var r;try{if(typeof createImageBitmap!="function"||typeof document>"u")return e;let a;try{a=await createImageBitmap(e,{imageOrientation:"from-image"})}catch{a=await createImageBitmap(e)}const s=Math.max(a.width,a.height),n=s>t?t/s:1,d=Math.max(1,Math.round(a.width*n)),l=Math.max(1,Math.round(a.height*n)),c=document.createElement("canvas");c.width=d,c.height=l;const p=c.getContext("2d");if(!p)return e;p.drawImage(a,0,0,d,l),(r=a.close)==null||r.call(a);const h=await new Promise(u=>c.toBlob(u,"image/jpeg",i));return h&&h.size>0?h:e}catch(a){return console.warn("[uploadTripPreview] downscale failed, uploading original:",a),e}}async extractSchoolCalendarEvents(e,t){var s;if(!R||!this._currentFamilyId)throw new Error("No family yet.");const r=await H(R,"extractSchoolCalendar")({familyId:this._currentFamilyId,storagePath:e,fileType:t}),a=(s=r==null?void 0:r.data)==null?void 0:s.events;return Array.isArray(a)?a:[]}async classifyUpload(e,t){if(!R||!this._currentFamilyId)throw new Error("No family yet.");const i=(this.state.trips??[]).slice(0,40).map(s=>({id:s.id,title:s.title??"",...s.location?{location:s.location}:{},start:s.start??"",end:s.end??""})).filter(s=>s.id&&/^\d{4}-\d{2}-\d{2}$/.test(s.start)),a=await H(R,"extractSchoolCalendar")({familyId:this._currentFamilyId,storagePath:e,fileType:t,classify:!0,trips:i});return(a==null?void 0:a.data)??{documentKind:"unknown"}}async importSchoolEvents(e,t={}){var w;if(!m||!this._currentFamilyId)throw new Error("No family yet.");const i=(w=x==null?void 0:x.currentUser)==null?void 0:w.uid;if(!i)throw new Error("Not signed in.");const r=this.state.family??{},a=Array.isArray(r.memberIds)?r.memberIds:[],s=Array.isArray(r.cairnMemberIds)?r.cairnMemberIds:[],n=[...new Set([...a,...s,i])],d=me("family",r,i),l=t.category==="celebration",c=String(t.tag??"").trim().slice(0,60),p=z(m,"families",this._currentFamilyId,"familyEvents"),h=z(m,"families",this._currentFamilyId,"activities"),u=(e??[]).filter(v=>v&&/^\d{4}-\d{2}-\d{2}$/.test(String(v.date??""))&&String(v.title??"").trim()).slice(0,250);let b=0;return await Promise.all(u.map(async v=>{const _=String(v.description??"").trim().slice(0,1e3);l?await Y(p,{title:String(v.title).trim().slice(0,120),date:v.date,type:"custom",recurring:!1,category:"celebration",...c?{calTag:c}:{},..._?{notes:_}:{},source:"school-import",personIds:n,visibility:"family",visibleTo:d,createdBy:i,createdAt:C(),updatedAt:C()}):await Y(h,{title:String(v.title).trim().slice(0,120),type:"note",day:v.date,..._?{notes:_}:{},...c?{calTag:c}:{},source:"school-import",visibility:"family",visibleTo:d,addedBy:i,createdAt:C(),updatedAt:C()}),b+=1})),b}async upsertDevelopmentReport(e,t){var c;if(!m||!this._ppFamilyId||!e)throw new Error("No child yet.");const i=(c=x==null?void 0:x.currentUser)==null?void 0:c.uid;if(!i)throw new Error("Not signed in.");const r=z(m,"families",this._ppFamilyId,"children",e,"developmentReports"),a=new Date,{id:s,createdAt:n,...d}=t;return s?(await T(k(r,s),{...d,updatedAt:a}),s):(await Y(r,{...d,addedBy:d.addedBy??i,createdAt:a,updatedAt:a})).id}async deleteDevelopmentReport(e,t){!m||!this._ppFamilyId||!e||!t||await X(k(m,"families",this._ppFamilyId,"children",e,"developmentReports",t))}async uploadReportAttachment(e,t){if(!O||!this._ppFamilyId)throw new Error("Storage unavailable.");const i=`families/${this._ppFamilyId}/planAttachments/report__${e}`,r=te(O,i);return await ae(r,t,{contentType:t.type||"application/octet-stream"}),re(r)}async importReport(e,t,i){const r={title:String(t.title??"").trim().slice(0,200)||"Report",...t.source?{source:String(t.source).slice(0,160)}:{},...t.periodLabel?{periodLabel:String(t.periodLabel).trim().slice(0,120)}:{},...t.reportDate?{reportDate:t.reportDate}:{},summary:String(t.summary??"").trim().slice(0,4e3),...Array.isArray(t.highlights)&&t.highlights.length?{highlights:t.highlights}:{}},a=await this.upsertDevelopmentReport(e,r);if(i&&a)try{const s=await this.uploadReportAttachment(a,i);await this.upsertDevelopmentReport(e,{id:a,...r,attachmentURL:s,attachmentName:(i.type||"").includes("pdf")?`${r.title}.pdf`:`${r.title}.jpg`})}catch(s){console.warn("[Portal] report attachment upload failed:",(s==null?void 0:s.code)??(s==null?void 0:s.message))}return a}matchingTrips(e,t){const i=e,r=t||e;return/^\d{4}-\d{2}-\d{2}$/.test(String(i))?(this.state.trips??[]).filter(a=>a.start&&a.end&&a.start<=r&&i<=a.end).sort((a,s)=>String(a.start).localeCompare(String(s.start))):[]}async importBooking(e,t,i){var l;if(!m||!this._currentFamilyId)throw new Error("No family yet.");if(!((l=x==null?void 0:x.currentUser)==null?void 0:l.uid))throw new Error("Not signed in.");let a=null;(t==null?void 0:t.type)==="existing"?a=t.tripId??null:(t==null?void 0:t.type)==="newTrip"&&(a=await this._createTripFromBooking(e)),(t==null?void 0:t.type)==="existing"&&a&&await this._fillTripFieldsFromBooking(a,e);const s=this.state.activities??[],n=["visit","meal","travel","note"];let d=0;for(const c of i){if(!c._sel)continue;const p=String(c.title??"").trim().slice(0,120);if(!p||!/^\d{4}-\d{2}-\d{2}$/.test(String(c.day??""))||s.some(w=>w.source==="booking-import"&&w.day===c.day&&w.title===p&&(w.tripId??null)===(a??null)))continue;const u=n.includes(c.type)?c.type:"note",b=String(c.notes??"").trim().slice(0,1e3);await this.saveActivity({title:p,type:u,day:c.day,...c.time?{time:c.time}:{},...Number.isFinite(c.durationMins)?{durationMins:c.durationMins}:{},...b?{notes:b}:{},...a?{tripId:a}:{},visibility:"family",source:"booking-import"}),d+=1}return d}async _createTripFromBooking(e){var l,c,p;const t=(l=x==null?void 0:x.currentUser)==null?void 0:l.uid,i=this._tripDateSpan(e),r=((c=e.newTripProposal)==null?void 0:c.location)??e.location??null;let s={title:((p=e.newTripProposal)==null?void 0:p.title)??(r?`Trip to ${r}`:"New trip"),...r?{location:r}:{},start:i.start,end:i.end,visibility:"family",createdBy:t};this._applyBookingFieldsToTrip(s,e,!1),s=await this.seedDestinationCover(s);const n=await this.saveTrip(s),d=me("family",this.state.family,t);return(this.state.trips??[]).some(h=>h.id===n)||(this.state.trips=[...this.state.trips??[],{...s,id:n,visibleTo:d}]),n}async _fillTripFieldsFromBooking(e,t){const i=(this.state.trips??[]).find(n=>n.id===e);if(!i)return;const r={...i};let a=this._applyBookingFieldsToTrip(r,t,!0);if(!!!(r.previewImage||r.coverImage)){const n=await this.seedDestinationCover(r);n.previewImage&&n.previewImage!==r.previewImage&&(Object.assign(r,n),a=!0)}if(a)try{await this.saveTrip(r)}catch(n){console.warn("[importBooking] fill trip fields failed:",(n==null?void 0:n.code)??(n==null?void 0:n.message))}}_applyBookingFieldsToTrip(e,t,i){var l,c;let r=!1;const a=(p,h)=>{h&&(i&&e[p]||e[p]!==h&&(e[p]=h,r=!0))};a("location",((l=t.newTripProposal)==null?void 0:l.location)??t.location);const s=(()=>{var b,w;const p=(b=t.lodging)==null?void 0:b.url;if(p&&/^https?:\/\//i.test(p))return p;const h=(w=t.lodging)==null?void 0:w.title;if(!h)return null;const u=[h,t.location].filter(Boolean).join(" ");return`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(u)}`})();a("lodgingTitle",(c=t.lodging)==null?void 0:c.title),a("lodgingUrl",s);const n=t.flight??{};a("flightAirline",n.airline),a("flightNumber",n.number),a("flightDepartAirport",n.departAirport),a("flightArriveAirport",n.arriveAirport),a("flightDepartTime",n.departTime),a("flightArriveTime",n.arriveTime);const d=t.returnFlight??{};return a("returnFlightAirline",d.airline),a("returnFlightNumber",d.number),a("returnFlightDepartAirport",d.departAirport),a("returnFlightArriveAirport",d.arriveAirport),a("returnFlightDepartTime",d.departTime),a("returnFlightArriveTime",d.arriveTime),r}_tripDateSpan(e){var s,n;if((s=e.newTripProposal)!=null&&s.start&&((n=e.newTripProposal)!=null&&n.end))return{start:e.newTripProposal.start,end:e.newTripProposal.end};const t=(e.timeline??[]).map(d=>d.day).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(String(d??""))).sort(),i=new Date().toISOString().slice(0,10),r=t[0]??i,a=t[t.length-1]??r;return{start:r,end:a}}async renameCalTag(e,t){if(!m||!this._currentFamilyId)throw new Error("No family yet.");const i=String(e??"").trim(),r=String(t??"").trim().slice(0,60);return!i||!r||i===r?0:this._applyTagWrite(i,{calTag:r,updatedAt:C()})}async deleteCalTag(e){if(!m||!this._currentFamilyId)throw new Error("No family yet.");const t=String(e??"").trim();return t?this._applyTagWrite(t,{calTag:null,updatedAt:C()}):0}async _applyTagWrite(e,t){const i=[];for(const r of this.state.events??[])r!=null&&r.id&&String((r==null?void 0:r.calTag)??"").trim()===e&&i.push(["familyEvents",r.id]);for(const r of this.state.activities??[])r!=null&&r.id&&String((r==null?void 0:r.calTag)??"").trim()===e&&i.push(["activities",r.id]);return await Promise.all(i.map(([r,a])=>T(k(m,"families",this._currentFamilyId,r,a),t))),i.length}async previewUrl(e){if(!e||typeof e!="string"||!/^https?:\/\//i.test(e.trim()))return null;if(!R)throw new Error("Firebase functions not configured.");return(await H(R,"previewUrl")({url:e.trim()})).data}async fetchDestinationImage(e){const t=(e??"").trim();if(!t||!R)return null;try{return(await H(R,"fetchDestinationImage")({query:t})).data??null}catch(i){return console.warn("[Portal] fetchDestinationImage failed:",(i==null?void 0:i.code)??(i==null?void 0:i.message)),null}}async seedDestinationCover(e){const t=!!(e.previewImage&&String(e.previewImage).trim()),i=!!(e.coverImage&&String(e.coverImage).trim());if(t||i)return e;const r=(e.location??"").trim();if(!r)return e;const a=await this.fetchDestinationImage(r);if(a&&a.image){const s={...e,previewImage:a.image};return a.photographer&&(s.coverImagePhotographer=a.photographer),a.sourceUrl&&(s.coverImageSourceUrl=a.sourceUrl),s}return e}async askPebble(e,t=[]){if(!R)throw new Error("Firebase functions not configured.");if(!this._currentFamilyId)throw new Error("No family yet.");return(await H(R,"askPebbleAboutActivities")({question:e,familyId:this._currentFamilyId,history:t})).data}async updateChildBirthday(e,t){if(!m||!this._currentFamilyId)throw new Error("No family yet.");await T(k(m,"families",this._currentFamilyId,"children",e),{dateOfBirth:t,updatedAt:C()})}async findFamilyByConnectCode(e){var i;if(!m)throw new Error("Firebase not configured.");const t=String(e??"").trim().toUpperCase();if(t)try{const{getDoc:r}=await ee(async()=>{const{getDoc:s}=await import("./firebase-core-Dmfgjia1.js").then(n=>n.L);return{getDoc:s}},[]),a=await r(k(m,"inviteCodes",t));if(a.exists()&&typeof((i=a.data())==null?void 0:i.familyId)=="string"){const s=a.data();return console.debug("[ConnectCode] resolved via /inviteCodes mapping →",s.familyId),{id:s.familyId,name:s.familyName??"",cairnInviteCodeExpiresAt:s.expiresAt??null,_matchedCodeKind:"cairn",_viaMapping:!0}}}catch(r){console.debug("[ConnectCode] mapping lookup errored, trying legacy:",r==null?void 0:r.code)}try{const r=await oe(W(z(m,"families"),q("cairnInviteCode","==",e)));if(!r.empty){const s=r.docs[0];return console.debug("[ConnectCode] resolved via LEGACY list query (cairn field)"),{id:s.id,...s.data(),_matchedCodeKind:"cairn"}}const a=await oe(W(z(m,"families"),q("inviteCode","==",e)));if(!a.empty){const s=a.docs[0];return console.debug("[ConnectCode] resolved via LEGACY list query (pp field)"),{id:s.id,...s.data(),_matchedCodeKind:"pp"}}}catch(r){return console.debug("[ConnectCode] legacy fallback denied (expected post-gate-D):",r==null?void 0:r.code),null}return null}async _applyCairnJoin(e){var l;const t=(l=x==null?void 0:x.currentUser)==null?void 0:l.uid;if(!t)throw new Error("Not signed in.");const i=x.currentUser;let r=e;if(e._viaMapping)try{const{getDoc:c}=await ee(async()=>{const{getDoc:h}=await import("./firebase-core-Dmfgjia1.js").then(u=>u.L);return{getDoc:h}},[]),p=await c(k(m,"families",e.id));r=p.exists()?{id:p.id,...p.data()}:null}catch{r=null}const a=(r==null?void 0:r.cairnMemberIds)??[],s=(r==null?void 0:r.memberIds)??[];if(a.includes(t)||s.includes(t))return await K(k(m,"users",t),{email:i.email??"",displayName:i.displayName??"",profilePhotoURL:i.photoURL??null,cairnFamilyId:e.id,updatedAt:C()},{merge:!0}),await this._recordMutualConnection(e.id,t),e.id;if(r){const c=r.cairnMaxMembers??20;if(a.length>=c){const p=new Error("This family's connection ring is full.");throw p.code="full",p}}const n=new Date,d={displayName:i.displayName??"",profilePhotoURL:i.photoURL??null,role:"member",joinedAt:n,updatedAt:n};try{const{arrayUnion:c}=await ee(async()=>{const{arrayUnion:p}=await import("./firebase-core-Dmfgjia1.js").then(h=>h.L);return{arrayUnion:p}},[]);await T(k(m,"families",e.id),{cairnMemberIds:c(t),[`memberProfiles.${t}`]:d,updatedAt:C()})}catch(c){if((c==null?void 0:c.code)==="permission-denied"){const p=new Error("Couldn't join this family. The code may have been replaced, or the family's circle is full. Ask them for a fresh invite.");throw p.code="join-rejected",p}throw c}return await K(k(m,"users",t),{email:i.email??"",displayName:i.displayName??"",profilePhotoURL:i.photoURL??null,cairnFamilyId:e.id,role:"member",notificationPreferences:{milestoneReminders:!0,tipNotifications:!0,schoolDeadlines:!0},createdAt:C(),updatedAt:C()},{merge:!0}),await this._recordMutualConnection(e.id,t),e.id}async redeemConnectCode(e){var s,n;if(!m)throw new Error("Firebase not configured.");if(!((s=x==null?void 0:x.currentUser)==null?void 0:s.uid))throw new Error("Not signed in.");const i=await this.findFamilyByConnectCode(e);if(!i){const d=new Error("Invite code not found.");throw d.code="not-found",d}const r=i._matchedCodeKind==="pp"?i.inviteCodeExpiresAt:i.cairnInviteCodeExpiresAt,a=((n=r==null?void 0:r.toDate)==null?void 0:n.call(r))??(r?new Date(r):null);if(!a||a<new Date){const d=new Error("This invite code has expired.");throw d.code="expired",d}return this._applyCairnJoin(i)}async _recordMutualConnection(e,t){var i;try{const{getDoc:r,arrayUnion:a}=await ee(async()=>{const{getDoc:d,arrayUnion:l}=await import("./firebase-core-Dmfgjia1.js").then(c=>c.L);return{getDoc:d,arrayUnion:l}},[]),s=await r(k(m,"users",t)),n=s.exists()?(i=s.data())==null?void 0:i.familyId:null;if(!n||n===e)return;await T(k(m,"families",e),{connectedFamilyIds:a(n),updatedAt:C()}),await T(k(m,"families",n),{connectedFamilyIds:a(e),updatedAt:C()})}catch(r){console.warn("[connect] mutual connection record skipped (non-fatal):",r)}}async saveSubGroup({id:e,name:t,memberIds:i}){if(!m||!this._currentFamilyId)throw new Error("No family yet.");const r=e??`g_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,6)}`;return await T(k(m,"families",this._currentFamilyId),{[`subGroups.${r}`]:{name:t.trim(),memberIds:Array.isArray(i)?[...i]:[],updatedAt:C()},updatedAt:C()}),r}async deleteSubGroup(e){if(!m||!this._currentFamilyId)throw new Error("No family yet.");const{deleteField:t}=await ee(async()=>{const{deleteField:i}=await import("./firebase-core-Dmfgjia1.js").then(r=>r.L);return{deleteField:i}},[]);await T(k(m,"families",this._currentFamilyId),{[`subGroups.${e}`]:t(),updatedAt:C()})}async setCairnMemberSubGroup(e,t){var a;if(!m||!this._currentFamilyId)throw new Error("No family yet.");if(!e)throw new Error("uid is required.");const i=((a=this.state.family)==null?void 0:a.subGroups)??{},r={};for(const[s,n]of Object.entries(i)){const d=Array.isArray(n.memberIds)?n.memberIds:[];s===t?d.includes(e)||(r[`subGroups.${s}.memberIds`]=[...d,e]):d.includes(e)&&(r[`subGroups.${s}.memberIds`]=d.filter(l=>l!==e))}Object.keys(r).length!==0&&(r.updatedAt=C(),await T(k(m,"families",this._currentFamilyId),r))}async removeCairnMember(e){if(!m||!this._currentFamilyId)throw new Error("No family yet.");if(!e)throw new Error("uid is required.");const t=this.state.family??{};if((Array.isArray(t.memberIds)?t.memberIds:[]).includes(e))throw new Error("parents can’t be removed from the ring here.");const{deleteField:r}=await ee(async()=>{const{deleteField:l}=await import("./firebase-core-Dmfgjia1.js").then(c=>c.L);return{deleteField:l}},[]),a={updatedAt:C()},s=Array.isArray(t.cairnMemberIds)?t.cairnMemberIds:[];s.includes(e)&&(a.cairnMemberIds=s.filter(l=>l!==e)),t.memberProfiles&&t.memberProfiles[e]&&(a[`memberProfiles.${e}`]=r());const n=Array.isArray(t.childViewers)?t.childViewers:[];n.includes(e)&&(a.childViewers=n.filter(l=>l!==e));const d=t.subGroups??{};for(const[l,c]of Object.entries(d)){const p=Array.isArray(c.memberIds)?c.memberIds:[];p.includes(e)&&(a[`subGroups.${l}.memberIds`]=p.filter(h=>h!==e))}await T(k(m,"families",this._currentFamilyId),a);try{await X(k(m,"families",this._currentFamilyId,"childAccessRequests",e))}catch{}}async createCairnOnlyFamily(e){if(!m)throw new Error("Firebase not configured.");const t=x==null?void 0:x.currentUser,i=t==null?void 0:t.uid;if(!i)throw new Error("Not signed in.");const r=(e??"").trim();if(!r)throw new Error("Family name is required.");const a=new Date,s=we(),n=new Date(Date.now()+720*60*60*1e3),d={displayName:t.displayName??"",profilePhotoURL:t.photoURL??null,role:"admin",joinedAt:a,updatedAt:a},l={name:r,createdBy:i,createdInApp:"cairn",memberIds:[],cairnMemberIds:[i],connectedFamilyIds:[],cairnMaxMembers:20,cairnInviteCode:s,cairnInviteCodeExpiresAt:n,memberProfiles:{[i]:d},createdAt:C(),updatedAt:C()},c=await Y(z(m,"families"),l);try{await K(k(m,"inviteCodes",s),{familyId:c.id,familyName:r,expiresAt:n,createdAt:C()})}catch(p){console.warn("[Cairn] invite-code mapping write failed (backfill heals):",p==null?void 0:p.code)}return await K(k(m,"users",i),{email:t.email??"",displayName:t.displayName??"",profilePhotoURL:t.photoURL??null,cairnFamilyId:c.id,role:"admin",notificationPreferences:{milestoneReminders:!1,tipNotifications:!1,schoolDeadlines:!1},createdAt:C(),updatedAt:C()},{merge:!0}),c.id}async createPebblePathFamily(e){if(!m)throw new Error("Firebase not configured.");const t=x==null?void 0:x.currentUser,i=t==null?void 0:t.uid;if(!i)throw new Error("Not signed in.");const r=(e??"").trim();if(!r)throw new Error("Family name is required.");const a=new Date,s=we(),n=new Date(Date.now()+720*60*60*1e3),d={displayName:t.displayName??"",profilePhotoURL:t.photoURL??null,role:"admin",joinedAt:a,updatedAt:a},l={name:r,createdBy:i,memberIds:[i],cairnMemberIds:[i],connectedFamilyIds:[],cairnMaxMembers:20,inviteCode:s,inviteCodeExpiresAt:n,cairnInviteCode:s,cairnInviteCodeExpiresAt:n,memberProfiles:{[i]:d},createdAt:C(),updatedAt:C()},c=await Y(z(m,"families"),l);try{await K(k(m,"inviteCodes",s),{familyId:c.id,familyName:r,expiresAt:n,createdAt:C()})}catch(p){console.warn("[Cairn] invite-code mapping write failed (backfill heals):",p==null?void 0:p.code)}return await K(k(m,"users",i),{email:t.email??"",displayName:t.displayName??"",profilePhotoURL:t.photoURL??null,familyId:c.id,role:"owner",notificationPreferences:{milestoneReminders:!1,tipNotifications:!1,schoolDeadlines:!1},createdAt:C(),updatedAt:C()},{merge:!0}),c.id}async createChild(e,t){var p,h;if(!m)throw new Error("Firebase not configured.");const i=(p=x==null?void 0:x.currentUser)==null?void 0:p.uid;if(!i)throw new Error("Not signed in.");if(!e)throw new Error("No family.");const r=((t==null?void 0:t.name)??"").trim();if(!r)throw new Error("Child's name is required.");if(!((t==null?void 0:t.dateOfBirth)instanceof Date))throw new Error("Child's date of birth is required.");const{getDoc:a}=await ee(async()=>{const{getDoc:u}=await import("./firebase-core-Dmfgjia1.js").then(b=>b.L);return{getDoc:u}},[]),s=await a(k(m,"families",e)),n=s.exists()?Array.isArray((h=s.data())==null?void 0:h.memberIds)?s.data().memberIds:[]:[],d=n.length?n:[i],l={name:r,dateOfBirth:t.dateOfBirth,profilePhotoURL:null,developmentalFlags:Array.isArray(t==null?void 0:t.developmentalFlags)?t.developmentalFlags:[],pediatricianNotes:null,region:(t==null?void 0:t.region)??null,parentIds:d,needsServerSeed:!0,createdAt:C(),updatedAt:C()};return(await Y(z(m,"families",e,"children"),l)).id}async uploadChildAvatar(e,t,i){if(!m||!O)throw new Error("Firebase not configured.");if(!e||!t)throw new Error("Missing family/child id.");if(!i)throw new Error("No image.");const r=i.type&&i.type.startsWith("image/")?i.type:"image/jpeg",a=te(O,`families/${e}/avatars/children/${t}`);await ae(a,i,{contentType:r});const s=await re(a);return await T(k(m,"families",e,"children",t),{profilePhotoURL:s,updatedAt:C()}),s}async uploadUserAvatar(e,t){var n;if(!m||!O)throw new Error("Firebase not configured.");const i=(n=x==null?void 0:x.currentUser)==null?void 0:n.uid;if(!i)throw new Error("Not signed in.");if(!e)throw new Error("No family.");if(!t)throw new Error("No image.");const r=t.type&&t.type.startsWith("image/")?t.type:"image/jpeg",a=te(O,`families/${e}/avatars/users/${i}`);await ae(a,t,{contentType:r});const s=await re(a);await T(k(m,"users",i),{profilePhotoURL:s,updatedAt:C()});try{await T(k(m,"families",e),{[`memberProfiles.${i}.profilePhotoURL`]:s,[`memberProfiles.${i}.updatedAt`]:C(),updatedAt:C()})}catch(d){console.warn("memberProfiles photo fan-out failed:",d)}return s}async requestToBeCoParent(e){var a,s,n,d,l;if(!m)throw new Error("Firebase not configured.");const t=(a=x==null?void 0:x.currentUser)==null?void 0:a.uid;if(!t)throw new Error("Not signed in.");const i=this._currentFamilyId??((s=this.state.user)==null?void 0:s.cairnFamilyId)??((n=this.state.user)==null?void 0:n.familyId)??null;if(!i)throw new Error("No family.");if(!e)throw new Error("No child.");const r=((d=this.state.user)==null?void 0:d.displayName)??((l=x==null?void 0:x.currentUser)==null?void 0:l.displayName)??"";await K(k(m,"families",i,"children",e,"coParentRequests",t),{uid:t,displayName:r,status:"pending",requestedAt:C()})}async fetchFamilyChildren(e){if(!m||!e)return[];try{return(await oe(z(m,"families",e,"children"))).docs.map(i=>({id:i.id,...i.data()}))}catch(t){return console.warn("[parent-prompt] fetchFamilyChildren skipped (non-fatal):",t),[]}}async regenerateCairnInviteCode(){if(!m||!this._currentFamilyId)throw new Error("No family yet.");const e=we(),t=new Date(Date.now()+720*60*60*1e3),i=this.state.family,r=String((i==null?void 0:i.cairnInviteCode)??"").toUpperCase(),a=String((i==null?void 0:i.inviteCode)??"").toUpperCase();if(r&&r!==a&&r!==e)try{await X(k(m,"inviteCodes",r))}catch(s){console.warn("[Cairn] stale invite-code mapping delete failed:",s==null?void 0:s.code)}await T(k(m,"families",this._currentFamilyId),{cairnInviteCode:e,cairnInviteCodeExpiresAt:t,updatedAt:C()});try{await K(k(m,"inviteCodes",e),{familyId:this._currentFamilyId,familyName:(i==null?void 0:i.name)??"",expiresAt:t,createdAt:C()})}catch(s){console.warn("[Cairn] invite-code mapping write failed (backfill heals):",s==null?void 0:s.code)}return{code:e,expiresAt:t}}_maybeMigrateInviteCodeFormat(){const e=this.state.family;if(!e||!this._uid||this._inviteCodeMigratedFamilyId===e.id)return;const t=e.cairnInviteCode;if(!t||typeof t!="string")return;if(!t.includes("-")){this._inviteCodeMigratedFamilyId=e.id;return}(Array.isArray(e.memberIds)?e.memberIds:[]).includes(this._uid)&&(this._inviteCodeMigratedFamilyId=e.id,this.regenerateCairnInviteCode().catch(r=>{console.debug("invite-code format migration deferred:",(r==null?void 0:r.code)??(r==null?void 0:r.message)??r)}))}stop(){var e,t,i,r,a,s,n,d;(e=this._unsubUser)==null||e.call(this),(t=this._unsubFamily)==null||t.call(this),(i=this._unsubChildren)==null||i.call(this),(r=this._unsubTrips)==null||r.call(this),(a=this._unsubEvents)==null||a.call(this),(s=this._unsubActivities)==null||s.call(this),(n=this._unsubPlanning)==null||n.call(this),(d=this._unsubNonParentDaily)==null||d.call(this),this._unsubUser=this._unsubFamily=this._unsubChildren=this._unsubTrips=this._unsubEvents=this._unsubActivities=this._unsubPlanning=this._unsubNonParentDaily=null,this._teardownPpFamily(),this._uid=null,this._currentFamilyId=null,this._inviteCodeMigratedFamilyId=null,this._holidayKey=null,this._ppFamilyId=null,this.userDocResolved=!1,this.state={user:null,family:null,children:[],trips:[],events:[],holidays:[],ppFamily:null,ppIsMember:!1,ppChildren:[],selectedChildId:null,childMilestones:[],childInsights:[],childReports:[],childDailyCard:null,familyDailyCard:null,nonParentDailyCard:null,pebbleAnchors:[],pebbleRhythms:[],pebblePatterns:[],pebbleLiveContext:[],childPebbleMessages:[],childPebbleSessions:[],planningMessages:[]}}_emit(){this.dispatchEvent(new Event("change"))}}const f=new gi;function Rt(g,e){const t=e==null?void 0:e.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:g!=null&&g.photoURL?g.photoURL:null}function Nt(g,e){return Array.isArray(e)&&e.some(t=>Array.isArray(t==null?void 0:t.parentIds)&&t.parentIds.includes(g))}function ui(g,e,t=[]){if(!e)return[];const i=e.memberIds??[],r=e.cairnMemberIds??e.memberIds??[],a=e.memberProfiles??{},s=i.includes(g),n=s?r:Array.from(new Set([...r,...i])),d=[];let l=280;for(const c of n){if(c===g||s&&i.includes(c))continue;const p=a[c],h=p==null?void 0:p.profilePhotoURL,u=Array.isArray(t)&&t.length>0?Nt(c,t):i.includes(c);d.push({uid:c,displayName:(p==null?void 0:p.displayName)??"Family",photoURL:typeof h=="string"&&/^https?:\/\//i.test(h)?h:null,role:u?"co-parent":"extended",circles:["extended"],hue:l}),l=(l+47)%360}return d}async function mi(g,e){var n,d;const t=Array.isArray(e==null?void 0:e.connectedFamilyIds)?e.connectedFamilyIds:[];if(t.length===0||!m)return[];const{getDoc:i}=await ee(async()=>{const{getDoc:l}=await import("./firebase-core-Dmfgjia1.js").then(c=>c.L);return{getDoc:l}},[]),r=[],a=new Set(g?[g]:[]);let s=150;for(const l of t)try{const c=await i(k(m,"families",l));if(!c.exists())continue;const p=c.data()??{},h=p.memberProfiles??{},u=p.name??"Connection";for(const b of p.memberIds??[]){if(a.has(b))continue;a.add(b);const w=(n=h[b])==null?void 0:n.profilePhotoURL;r.push({uid:b,displayName:((d=h[b])==null?void 0:d.displayName)??"Connection",photoURL:typeof w=="string"&&/^https?:\/\//i.test(w)?w:null,role:"connection",circles:["connection"],familyName:u,hue:s}),s=(s+53)%360}}catch{}return r}function me(g,e,t,i=[],r=[]){const a=(e==null?void 0:e.memberIds)??[],s=(e==null?void 0:e.cairnMemberIds)??[],n=t?[t]:[],d=Array.isArray(i)?i:[],l=Array.isArray(r)?r:[];return g==="personal"?[...new Set(n)]:g==="extended"?[...new Set([...a,...s,...n,...d,...l])]:[...new Set([...a,...n,...d])]}async function bi(g){var r;const e=Array.isArray(g==null?void 0:g.connectedFamilyIds)?g.connectedFamilyIds:[];if(e.length===0||!m)return[];const{getDoc:t}=await ee(async()=>{const{getDoc:a}=await import("./firebase-core-Dmfgjia1.js").then(s=>s.L);return{getDoc:a}},[]),i=new Set;for(const a of e)try{const s=await t(k(m,"families",a));if(!s.exists())continue;for(const n of((r=s.data())==null?void 0:r.memberIds)??[])i.add(n)}catch{}return[...i]}function we(){const g="ABCDEFGHJKMNPQRSTUVWXYZ23456789";let e="";for(let t=0;t<6;t++)e+=g[Math.floor(Math.random()*g.length)];return e}function fi(g,e,t,i,r){const a=[],s=new Set((i==null?void 0:i.memberIds)??[]),n=s.has(g);if(a.push({uid:g,displayName:(e==null?void 0:e.displayName)??(t==null?void 0:t.displayName)??"You",photoURL:Rt(e,t),role:n?"self":"self-extended",circles:["immediate"],hue:198}),!n)return a;const d=(i==null?void 0:i.memberProfiles)??{};for(const[c,p]of Object.entries(d)){if(c===g||!s.has(c))continue;const h=p.profilePhotoURL,u=Nt(c,r);a.push({uid:c,displayName:p.displayName??(u?"Co-parent":"Family"),photoURL:typeof h=="string"&&/^https?:\/\//i.test(h)?h:null,role:u?"co-parent":"member",circles:["immediate"],hue:8})}let l=142;for(const c of r??[]){const p=c.profilePhotoURL;a.push({uid:`child:${c.id}`,displayName:c.name,photoURL:typeof p=="string"&&/^https?:\/\//i.test(p)?p:null,role:"child",circles:["immediate"],hue:l,dateOfBirth:c.dateOfBirth}),l=(l+58)%360}return a}function vi(g){const e=[];for(const t of g??[]){if(!t.dateOfBirth)continue;const i=t.dateOfBirth,r=i.getUTCFullYear(),a=String(i.getUTCMonth()+1).padStart(2,"0"),s=String(i.getUTCDate()).padStart(2,"0");e.push({id:`bday:${t.id}`,type:"birthday",date:`${r}-${a}-${s}`,personIds:[`child:${t.id}`],title:`${t.name}'s birthday`,_childId:t.id,_childName:t.name,recurring:!0})}return e}function ht(g,e=new Date){if(!(g!=null&&g.date))return{date:null,yearsElapsed:0};const t=M(g.date);if(!t||Number.isNaN(t.getTime()))return{date:null,yearsElapsed:0};if(!g.recurring)return{date:t,yearsElapsed:0};const i=new Date(e.getFullYear(),t.getMonth(),t.getDate()),r=i<new Date(e.getFullYear(),e.getMonth(),e.getDate())?new Date(e.getFullYear()+1,t.getMonth(),t.getDate()):i,a=r.getFullYear()-t.getFullYear();return{date:r,yearsElapsed:a}}const gt=["linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)","linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)","linear-gradient(135deg, #3d9b8f 0%, #1f5c54 100%)","linear-gradient(135deg, #d4a843 0%, #c67b5c 55%, #c98a8a 100%)","linear-gradient(135deg, #8b7bb5 0%, #c98a8a 60%, #d4a843 100%)","linear-gradient(135deg, #6b9ac4 0%, #3d9b8f 100%)"];function M(g){if(!g)return null;if(g instanceof Date)return g;const e=String(g).match(/^(\d{4})-(\d{2})-(\d{2})/);return e?new Date(Number(e[1]),Number(e[2])-1,Number(e[3])):new Date(g)}function Z(g){if(!g)return null;const e=g.getFullYear(),t=String(g.getMonth()+1).padStart(2,"0"),i=String(g.getDate()).padStart(2,"0");return`${e}-${t}-${i}`}async function yi(g,e=90,t=100){const i=new Date,r=new Date(i.getTime()+e*24*60*60*1e3),a=new URL("https://www.googleapis.com/calendar/v3/calendars/primary/events");a.searchParams.set("timeMin",i.toISOString()),a.searchParams.set("timeMax",r.toISOString()),a.searchParams.set("maxResults",String(t)),a.searchParams.set("singleEvents","true"),a.searchParams.set("orderBy","startTime");const s=await fetch(a.toString(),{headers:{Authorization:`Bearer ${g}`}});if(!s.ok){const d=await s.text();throw s.status===401?new Error("Your Google session expired. Connect your calendar again."):s.status===403&&/accessNotConfigured|SERVICE_DISABLED|PERMISSION_DENIED|insufficient/i.test(d)?new Error("Google Calendar access isn’t configured for this project yet. (Admin: enable the Google Calendar API and add the calendar.readonly scope to the OAuth consent screen in Google Cloud Console.)"):new Error(`Google Calendar: ${s.status} ${d.slice(0,160)}`)}return((await s.json()).items??[]).filter(d=>{var l,c;return d.status!=="cancelled"&&(((l=d.start)==null?void 0:l.date)||((c=d.start)==null?void 0:c.dateTime))})}function xi(g,e){var r,a,s,n,d,l,c,p;const t=((r=g.start)==null?void 0:r.date)??((s=(a=g.start)==null?void 0:a.dateTime)==null?void 0:s.slice(0,10))??"";let i=((n=g.end)==null?void 0:n.date)??((l=(d=g.end)==null?void 0:d.dateTime)==null?void 0:l.slice(0,10))??t;if((c=g.start)!=null&&c.date&&((p=g.end)!=null&&p.date)){const h=new Date(i);h.setDate(h.getDate()-1),i=h.toISOString().slice(0,10)}return{title:g.summary||"(untitled)",location:g.location??"",start:t,end:i,attendees:e?[e]:[],viewers:[],visibility:"family",notes:(g.description??"").slice(0,1e3),gcalEventId:g.id,gcalEventLink:g.htmlLink??null}}function Bt(g){if(g!=null&&g.coverGradient)return g.coverGradient;const e=((g==null?void 0:g.title)??(g==null?void 0:g.id)??"")+((g==null?void 0:g.location)??"");let t=0;for(let i=0;i<e.length;i++)t=t*31+e.charCodeAt(i)>>>0;return gt[t%gt.length]}class Re extends D{constructor(){super(),this.start="",this.end="",this._displayMonth=null,this._hoverDate=null}willUpdate(e){if(e.has("start")||this._displayMonth===null){const t=this.start?M(this.start):new Date;this._displayMonth=new Date(t.getFullYear(),t.getMonth(),1)}}_isoFor(e,t,i){return`${e}-${String(t+1).padStart(2,"0")}-${String(i).padStart(2,"0")}`}_emit(e,t){this.start=e,this.end=t,this._hoverDate=null,this.dispatchEvent(new CustomEvent("range-change",{detail:{start:e,end:t},bubbles:!0,composed:!0}))}_onDayClick(e){if(!this.start||this.start&&this.end){this._emit(e,"");return}e<this.start?this._emit(e,this.start):this._emit(this.start,e)}_onDayHover(e){this.start&&!this.end&&(this._hoverDate=e)}_onLeave(){this._hoverDate=null}_shiftMonth(e){const t=this._displayMonth;this._displayMonth=new Date(t.getFullYear(),t.getMonth()+e,1)}_isToday(e,t,i){const r=new Date;return r.getFullYear()===e&&r.getMonth()===t&&r.getDate()===i}_inSelectedRange(e){return!this.start||!this.end?!1:e>this.start&&e<this.end}_inHoverRange(e){if(!this.start||this.end||!this._hoverDate)return!1;const t=this._hoverDate<this.start?this._hoverDate:this.start,i=this._hoverDate<this.start?this.start:this._hoverDate;return e>t&&e<i}_summary(){if(!this.start&&!this.end)return"Pick a start date";const e=t=>{const i=M(t);return i?i.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"}):""};return this.start&&!this.end?`From ${e(this.start)}, pick an end date`:this.start===this.end?e(this.start):`${e(this.start)} – ${e(this.end)}`}_renderGrid(){const e=this._displayMonth.getFullYear(),t=this._displayMonth.getMonth(),r=(new Date(e,t,1).getDay()+6)%7,a=new Date(e,t+1,0).getDate(),s=[];for(let n=0;n<r;n++)s.push(o`<div class="empty"></div>`);for(let n=1;n<=a;n++){const d=this._isoFor(e,t,n),l=d===this.start,c=d===this.end&&d!==this.start,p=this._inSelectedRange(d),h=this._inHoverRange(d),u=this._isToday(e,t,n),b=["day",l?"start":"",c?"end":"",p?"in-range":"",h?"hover-range":"",u&&!l&&!c?"today":""].filter(Boolean).join(" ");s.push(o`
         <button
           type="button"
           class=${b}
           @click=${()=>this._onDayClick(d)}
           @mouseover=${()=>this._onDayHover(d)}
         >
-          ${o}
+          ${n}
         </button>
-      `)}return s}render(){if(!this._displayMonth)return n``;const e=this._displayMonth.toLocaleString("en-GB",{month:"long",year:"numeric"});return n`
+      `)}return s}render(){if(!this._displayMonth)return o``;const e=this._displayMonth.toLocaleString("en-GB",{month:"long",year:"numeric"});return o`
       <div class="summary">${this._summary()}</div>
       <div class="head">
         <button class="nav" type="button" @click=${()=>this._shiftMonth(-1)} aria-label="Previous month">‹</button>
@@ -319,7 +319,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
         <button class="nav" type="button" @click=${()=>this._shiftMonth(1)} aria-label="Next month">›</button>
       </div>
       <div class="dow-row">
-        ${["Mo","Tu","We","Th","Fr","Sa","Su"].map(t=>n`<div class="dow">${t}</div>`)}
+        ${["Mo","Tu","We","Th","Fr","Sa","Su"].map(t=>o`<div class="dow">${t}</div>`)}
       </div>
       <div class="grid" @mouseleave=${this._onLeave}>${this._renderGrid()}</div>
     `}}$(Re,"properties",{start:{type:String},end:{type:String},_displayMonth:{state:!0},_hoverDate:{state:!0}}),$(Re,"styles",E`
@@ -445,7 +445,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
     }
-  `);customElements.define("date-range-picker",Re);class Ne extends D{constructor(){super(),this.open=!1,this.trip=null,this.members=[],this.extendedMembers=[],this.connectionMembers=[],this._visibilityAutoExtended=!1,this.currentUid="",this.familyId="",this.busy=!1,this.formMode="trip",this.subGroups={},this._draft=this._blankDraft(),this._error="",this._previewing=!1,this._previewError="",this._uploadingPreviewImage=!1,this._previewImageError="",this._previewDebounce=null,this._lastPreviewedUrl="",this._showReturn=!1,this._showOutboundDetails=!1,this._showReturnDetails=!1,this._showFlight=!1}willUpdate(e){(e.has("trip")||e.has("open"))&&(this.open&&(this._draft=this._draftFromTrip(this.trip),this._visibilityAutoExtended=!1,this._draft.id&&this._draft.lodgingUrl&&!this._draft.coverImage&&requestAnimationFrame(()=>this._autoRefreshPreview()),this._showReturn=!!(this._draft.returnFlightNumber||this._draft.returnFlightDepartTime||this._draft.returnFlightDepartAirport||this._draft.returnFlightArriveAirport),this._showOutboundDetails=!!(this._draft.flightDepartAirport||this._draft.flightArriveAirport),this._showReturnDetails=!!(this._draft.returnFlightDepartAirport||this._draft.returnFlightArriveAirport),this._showFlight=!!(this._draft.flightNumber||this._draft.flightAirline||this._draft.flightDepartTime||this._draft.flightDepartAirport||this._draft.flightArriveAirport||this._showReturn)),this._error="")}async _autoRefreshPreview(){const e=this._draft.lodgingUrl,t=this._draft.id;if(!(!e||!t||this._previewing)){this._previewing=!0,this._previewError="";try{const i=await f.previewUrl(e);if(!(i!=null&&i.image)){this._previewError="No preview image found for this URL.";return}const r={coverImage:i.image,lodgingHost:i.siteName??i.host??this._draft.lodgingHost??"",lodgingTitle:i.title??this._draft.lodgingTitle??""};this._draft={...this._draft,...r},this._lastPreviewedUrl=e;try{await f.saveTrip({id:t,...r})}catch(a){console.warn("Auto-save cover failed:",a)}}catch(i){console.warn("Auto preview failed:",i),this._previewError=(i==null?void 0:i.code)==="functions/unauthenticated"?"Preview needs you to be signed in.":"Preview unavailable. Try the Refresh button."}finally{this._previewing=!1}}}_blankDraft(){const e=new Date().toISOString().slice(0,10);return{id:null,title:"",location:"",start:e,end:e,visibility:"family",attendees:this.currentUid?[this.currentUid]:[],viewers:[],targetSubGroups:[],lodgingUrl:"",lodgingHost:"",lodgingTitle:"",previewImage:"",flightAirline:"",flightNumber:"",flightDepartAirport:"",flightDepartTime:"",flightArriveAirport:"",flightArriveTime:"",returnFlightAirline:"",returnFlightNumber:"",returnFlightDepartAirport:"",returnFlightDepartTime:"",returnFlightArriveAirport:"",returnFlightArriveTime:"",notes:""}}_draftFromTrip(e){return e?{id:e.id??null,title:e.title??"",location:e.location??"",start:e.start??new Date().toISOString().slice(0,10),end:e.end??e.start??new Date().toISOString().slice(0,10),visibility:e.visibility??"family",attendees:Array.isArray(e.attendees)?[...e.attendees]:[],viewers:Array.isArray(e.viewers)?[...e.viewers]:[],targetSubGroups:Array.isArray(e.targetSubGroups)?[...e.targetSubGroups]:[],lodgingUrl:e.lodgingUrl??"",lodgingHost:e.lodgingHost??"",lodgingTitle:e.lodgingTitle??"",flightAirline:e.flightAirline??"",flightNumber:e.flightNumber??"",flightDepartAirport:e.flightDepartAirport??"",flightDepartTime:e.flightDepartTime??"",flightArriveAirport:e.flightArriveAirport??"",flightArriveTime:e.flightArriveTime??"",returnFlightAirline:e.returnFlightAirline??"",returnFlightNumber:e.returnFlightNumber??"",returnFlightDepartAirport:e.returnFlightDepartAirport??"",returnFlightDepartTime:e.returnFlightDepartTime??"",returnFlightArriveAirport:e.returnFlightArriveAirport??"",returnFlightArriveTime:e.returnFlightArriveTime??"",coverImage:e.coverImage??"",previewImage:e.previewImage??"",notes:e.notes??""}:this._blankDraft()}_set(e,t){this._draft={...this._draft,[e]:t}}_resolvedPreviewImage(){const e=(this._draft.previewImage||"").trim();return e||(this._uploadedPreviewImageUrl?this._uploadedPreviewImageUrl:"")}async _onPreviewImageUpload(e){var i,r;const t=(r=(i=e.target)==null?void 0:i.files)==null?void 0:r[0];if(t){this._previewImageError="",this._uploadingPreviewImage=!0;try{const a=await f.uploadTripPreview(t);this._uploadedPreviewImageUrl=a,this._set("previewImage",a)}catch(a){console.warn("Preview image upload failed:",a),this._previewImageError=(a==null?void 0:a.message)||"Upload failed."}finally{this._uploadingPreviewImage=!1,e.target.value=""}}}_clearPreviewImage(){this._set("previewImage",""),this._uploadedPreviewImageUrl="",this._previewImageError=""}_onLodgingChange(e){this._set("lodgingUrl",e),this._previewError="",this._previewDebounce&&clearTimeout(this._previewDebounce);const t=e.trim();if(!t){this._set("coverImage",""),this._set("lodgingHost",""),this._set("lodgingTitle",""),this._lastPreviewedUrl="";return}/^https?:\/\//i.test(t)&&t!==this._lastPreviewedUrl&&(this._previewDebounce=setTimeout(()=>this._runPreview(t),700))}async _runPreview(e){this._previewing=!0,this._previewError="";try{const t=await f.previewUrl(e);if(!t)return;this._lastPreviewedUrl=e,this._draft={...this._draft,coverImage:t.image??this._draft.coverImage,lodgingHost:t.siteName??t.host??this._draft.lodgingHost,lodgingTitle:t.title??this._draft.lodgingTitle}}catch(t){console.warn("Preview failed:",t),(t==null?void 0:t.code)==="functions/unauthenticated"?this._previewError="Preview unavailable. Sign in.":(t==null?void 0:t.code)==="functions/invalid-argument"?this._previewError="That URL doesn’t look right.":this._previewError="Preview unavailable. Paste it again or skip."}finally{this._previewing=!1}}_isExtendedUid(e){return(this.extendedMembers??[]).some(t=>t.uid===e)}_setVisibility(e){this._visibilityAutoExtended=!1,this._set("visibility",e)}_toggleAttendee(e){const t=this._draft.attendees.includes(e),i=t?this._draft.attendees.filter(a=>a!==e):[...this._draft.attendees,e];let r=this._draft.viewers??[];t||(r=r.filter(a=>a!==e)),this._draft={...this._draft,attendees:i,viewers:r}}_toggleViewer(e){if(this._draft.attendees.includes(e))return;const i=(this._draft.viewers??[]).includes(e)?this._draft.viewers.filter(r=>r!==e):[...this._draft.viewers??[],e];this._set("viewers",i)}_toggleSubGroup(e){const i=(this._draft.targetSubGroups??[]).includes(e)?this._draft.targetSubGroups.filter(r=>r!==e):[...this._draft.targetSubGroups??[],e];this._set("targetSubGroups",i)}_onSave(){const e=this._draft;if(!e.title.trim()){this._error="Give the trip a title.";return}if(!e.start){this._error="Pick a start date.";return}const t=e.end||e.start;if(t<e.start){this._error="End date can’t be before start date.";return}if(!this.familyId){this._error="You need to be in a family first.";return}this._error="",this.dispatchEvent(new CustomEvent("save",{detail:{...e,end:t,title:e.title.trim(),location:e.location.trim(),previewImage:this._resolvedPreviewImage()}}))}_onDelete(){this._draft.id&&confirm("Delete this trip? This can’t be undone.")&&this.dispatchEvent(new CustomEvent("remove",{detail:{id:this._draft.id}}))}_onCancel(){this.dispatchEvent(new Event("cancel"))}render(){if(!this.open)return n``;const e=this._draft,t=!!e.id;return n`
+  `);customElements.define("date-range-picker",Re);class Ne extends D{constructor(){super(),this.open=!1,this.trip=null,this.members=[],this.extendedMembers=[],this.connectionMembers=[],this._visibilityAutoExtended=!1,this.currentUid="",this.familyId="",this.busy=!1,this.formMode="trip",this.subGroups={},this._draft=this._blankDraft(),this._error="",this._previewing=!1,this._previewError="",this._uploadingPreviewImage=!1,this._previewImageError="",this._previewDebounce=null,this._lastPreviewedUrl="",this._showReturn=!1,this._showOutboundDetails=!1,this._showReturnDetails=!1,this._showFlight=!1}willUpdate(e){(e.has("trip")||e.has("open"))&&(this.open&&(this._draft=this._draftFromTrip(this.trip),this._visibilityAutoExtended=!1,this._draft.id&&this._draft.lodgingUrl&&!this._draft.coverImage&&requestAnimationFrame(()=>this._autoRefreshPreview()),this._showReturn=!!(this._draft.returnFlightNumber||this._draft.returnFlightDepartTime||this._draft.returnFlightDepartAirport||this._draft.returnFlightArriveAirport),this._showOutboundDetails=!!(this._draft.flightDepartAirport||this._draft.flightArriveAirport),this._showReturnDetails=!!(this._draft.returnFlightDepartAirport||this._draft.returnFlightArriveAirport),this._showFlight=!!(this._draft.flightNumber||this._draft.flightAirline||this._draft.flightDepartTime||this._draft.flightDepartAirport||this._draft.flightArriveAirport||this._showReturn)),this._error="")}async _autoRefreshPreview(){const e=this._draft.lodgingUrl,t=this._draft.id;if(!(!e||!t||this._previewing)){this._previewing=!0,this._previewError="";try{const i=await f.previewUrl(e);if(!(i!=null&&i.image)){this._previewError="No preview image found for this URL.";return}const r={coverImage:i.image,lodgingHost:i.siteName??i.host??this._draft.lodgingHost??"",lodgingTitle:i.title??this._draft.lodgingTitle??""};this._draft={...this._draft,...r},this._lastPreviewedUrl=e;try{await f.saveTrip({id:t,...r})}catch(a){console.warn("Auto-save cover failed:",a)}}catch(i){console.warn("Auto preview failed:",i),this._previewError=(i==null?void 0:i.code)==="functions/unauthenticated"?"Preview needs you to be signed in.":"Preview unavailable. Try the Refresh button."}finally{this._previewing=!1}}}_blankDraft(){const e=new Date().toISOString().slice(0,10);return{id:null,title:"",location:"",start:e,end:e,visibility:"family",attendees:this.currentUid?[this.currentUid]:[],viewers:[],targetSubGroups:[],lodgingUrl:"",lodgingHost:"",lodgingTitle:"",previewImage:"",flightAirline:"",flightNumber:"",flightDepartAirport:"",flightDepartTime:"",flightArriveAirport:"",flightArriveTime:"",returnFlightAirline:"",returnFlightNumber:"",returnFlightDepartAirport:"",returnFlightDepartTime:"",returnFlightArriveAirport:"",returnFlightArriveTime:"",notes:""}}_draftFromTrip(e){return e?{id:e.id??null,title:e.title??"",location:e.location??"",start:e.start??new Date().toISOString().slice(0,10),end:e.end??e.start??new Date().toISOString().slice(0,10),visibility:e.visibility??"family",attendees:Array.isArray(e.attendees)?[...e.attendees]:[],viewers:Array.isArray(e.viewers)?[...e.viewers]:[],targetSubGroups:Array.isArray(e.targetSubGroups)?[...e.targetSubGroups]:[],lodgingUrl:e.lodgingUrl??"",lodgingHost:e.lodgingHost??"",lodgingTitle:e.lodgingTitle??"",flightAirline:e.flightAirline??"",flightNumber:e.flightNumber??"",flightDepartAirport:e.flightDepartAirport??"",flightDepartTime:e.flightDepartTime??"",flightArriveAirport:e.flightArriveAirport??"",flightArriveTime:e.flightArriveTime??"",returnFlightAirline:e.returnFlightAirline??"",returnFlightNumber:e.returnFlightNumber??"",returnFlightDepartAirport:e.returnFlightDepartAirport??"",returnFlightDepartTime:e.returnFlightDepartTime??"",returnFlightArriveAirport:e.returnFlightArriveAirport??"",returnFlightArriveTime:e.returnFlightArriveTime??"",coverImage:e.coverImage??"",previewImage:e.previewImage??"",notes:e.notes??""}:this._blankDraft()}_set(e,t){this._draft={...this._draft,[e]:t}}_resolvedPreviewImage(){const e=(this._draft.previewImage||"").trim();return e||(this._uploadedPreviewImageUrl?this._uploadedPreviewImageUrl:"")}async _onPreviewImageUpload(e){var i,r;const t=(r=(i=e.target)==null?void 0:i.files)==null?void 0:r[0];if(t){this._previewImageError="",this._uploadingPreviewImage=!0;try{const a=await f.uploadTripPreview(t);this._uploadedPreviewImageUrl=a,this._set("previewImage",a)}catch(a){console.warn("Preview image upload failed:",a),this._previewImageError=(a==null?void 0:a.message)||"Upload failed."}finally{this._uploadingPreviewImage=!1,e.target.value=""}}}_clearPreviewImage(){this._set("previewImage",""),this._uploadedPreviewImageUrl="",this._previewImageError=""}_onLodgingChange(e){this._set("lodgingUrl",e),this._previewError="",this._previewDebounce&&clearTimeout(this._previewDebounce);const t=e.trim();if(!t){this._set("coverImage",""),this._set("lodgingHost",""),this._set("lodgingTitle",""),this._lastPreviewedUrl="";return}/^https?:\/\//i.test(t)&&t!==this._lastPreviewedUrl&&(this._previewDebounce=setTimeout(()=>this._runPreview(t),700))}async _runPreview(e){this._previewing=!0,this._previewError="";try{const t=await f.previewUrl(e);if(!t)return;this._lastPreviewedUrl=e,this._draft={...this._draft,coverImage:t.image??this._draft.coverImage,lodgingHost:t.siteName??t.host??this._draft.lodgingHost,lodgingTitle:t.title??this._draft.lodgingTitle}}catch(t){console.warn("Preview failed:",t),(t==null?void 0:t.code)==="functions/unauthenticated"?this._previewError="Preview unavailable. Sign in.":(t==null?void 0:t.code)==="functions/invalid-argument"?this._previewError="That URL doesn’t look right.":this._previewError="Preview unavailable. Paste it again or skip."}finally{this._previewing=!1}}_isExtendedUid(e){return(this.extendedMembers??[]).some(t=>t.uid===e)}_setVisibility(e){this._visibilityAutoExtended=!1,this._set("visibility",e)}_toggleAttendee(e){const t=this._draft.attendees.includes(e),i=t?this._draft.attendees.filter(a=>a!==e):[...this._draft.attendees,e];let r=this._draft.viewers??[];t||(r=r.filter(a=>a!==e)),this._draft={...this._draft,attendees:i,viewers:r}}_toggleViewer(e){if(this._draft.attendees.includes(e))return;const i=(this._draft.viewers??[]).includes(e)?this._draft.viewers.filter(r=>r!==e):[...this._draft.viewers??[],e];this._set("viewers",i)}_toggleSubGroup(e){const i=(this._draft.targetSubGroups??[]).includes(e)?this._draft.targetSubGroups.filter(r=>r!==e):[...this._draft.targetSubGroups??[],e];this._set("targetSubGroups",i)}_onSave(){const e=this._draft;if(!e.title.trim()){this._error="Give the trip a title.";return}if(!e.start){this._error="Pick a start date.";return}const t=e.end||e.start;if(t<e.start){this._error="End date can’t be before start date.";return}if(!this.familyId){this._error="You need to be in a family first.";return}this._error="",this.dispatchEvent(new CustomEvent("save",{detail:{...e,end:t,title:e.title.trim(),location:e.location.trim(),previewImage:this._resolvedPreviewImage()}}))}_onDelete(){this._draft.id&&confirm("Delete this trip? This can’t be undone.")&&this.dispatchEvent(new CustomEvent("remove",{detail:{id:this._draft.id}}))}_onCancel(){this.dispatchEvent(new Event("cancel"))}render(){if(!this.open)return o``;const e=this._draft,t=!!e.id;return o`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -487,7 +487,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
               <div class="field">
                 <label>Visibility</label>
                 <div class="seg">
-                  ${["personal","family","extended"].map(i=>n`
+                  ${["personal","family","extended"].map(i=>o`
                       <button
                         class=${e.visibility===i?"active":""}
                         @click=${()=>this._setVisibility(i)}
@@ -502,7 +502,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
               <div class="field">
                 <label>Who's going</label>
                 <div class="attendees">
-                  ${this.members.map(i=>n`
+                  ${this.members.map(i=>o`
                       <div
                         class="att-chip ${e.attendees.includes(i.uid)?"on":""}"
                         @click=${()=>this._toggleAttendee(i.uid)}
@@ -517,10 +517,10 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
                       </div>
                     `)}
                 </div>
-                ${(this.extendedMembers??[]).length>0?n`
+                ${(this.extendedMembers??[]).length>0?o`
                       <div class="att-group-label">My connections</div>
                       <div class="attendees">
-                        ${this.extendedMembers.map(i=>n`
+                        ${this.extendedMembers.map(i=>o`
                             <div
                               class="att-chip ${e.attendees.includes(i.uid)?"on":""}"
                               @click=${()=>this._toggleAttendee(i.uid)}
@@ -536,10 +536,10 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
                           `)}
                       </div>
                     `:""}
-                ${(this.connectionMembers??[]).length>0?n`
+                ${(this.connectionMembers??[]).length>0?o`
                       <div class="att-group-label">Connections</div>
                       <div class="attendees">
-                        ${this.connectionMembers.map(i=>n`
+                        ${this.connectionMembers.map(i=>o`
                             <div
                               class="att-chip ${e.attendees.includes(i.uid)?"on":""}"
                               @click=${()=>this._toggleAttendee(i.uid)}
@@ -564,7 +564,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
                 </div>
                 <div class="preview-image-controls">
                   <label class="preview-upload-btn" ?data-busy=${this._uploadingPreviewImage}>
-                    ${this._uploadingPreviewImage?n`<span class="spinner"></span> Uploading…`:n`<span class="upload-icon">📷</span> Upload image`}
+                    ${this._uploadingPreviewImage?o`<span class="spinner"></span> Uploading…`:o`<span class="upload-icon">📷</span> Upload image`}
                     <input
                       type="file"
                       accept="image/*"
@@ -573,7 +573,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
                       hidden
                     />
                   </label>
-                  ${this._resolvedPreviewImage()?n`<button
+                  ${this._resolvedPreviewImage()?o`<button
                         type="button"
                         class="preview-clear-btn"
                         @click=${()=>this._clearPreviewImage()}
@@ -590,10 +590,10 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
                     style="flex:1;min-width:0;"
                   />
                 </div>
-                ${this._previewImageError?n`<div class="preview-error">${this._previewImageError}</div>`:""}
-                ${this._resolvedPreviewImage()?n`<div class="preview-image-thumb" style='background-image:url("${this._resolvedPreviewImage()}");'></div>`:""}
+                ${this._previewImageError?o`<div class="preview-error">${this._previewImageError}</div>`:""}
+                ${this._resolvedPreviewImage()?o`<div class="preview-image-thumb" style='background-image:url("${this._resolvedPreviewImage()}");'></div>`:""}
               </div>
-              ${this.formMode!=="activity"?n`
+              ${this.formMode!=="activity"?o`
                     <div class="field">
                       <label>Lodging URL</label>
                       <div style="display:flex;gap:8px;align-items:stretch;">
@@ -604,7 +604,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
                           @input=${i=>this._onLodgingChange(i.target.value)}
                           style="flex:1;min-width:0;"
                         />
-                        ${e.lodgingUrl?n`<button
+                        ${e.lodgingUrl?o`<button
                               type="button"
                               class="preview-refresh-btn"
                               ?disabled=${this._previewing}
@@ -614,12 +614,12 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
                               ↻
                             </button>`:""}
                       </div>
-                      ${this._previewing?n`<div class="preview-loading">
+                      ${this._previewing?o`<div class="preview-loading">
                             <div class="spinner"></div>
                             Fetching preview…
                           </div>`:""}
-                      ${this._previewError?n`<div class="preview-error">${this._previewError}</div>`:""}
-                      ${!this._previewing&&e.coverImage?n`<div class="preview">
+                      ${this._previewError?o`<div class="preview-error">${this._previewError}</div>`:""}
+                      ${!this._previewing&&e.coverImage?o`<div class="preview">
                             <div class="thumb" style='background-image:url("${e.coverImage}");'></div>
                             <div class="meta">
                               <div class="meta-title">${e.lodgingTitle||e.lodgingUrl}</div>
@@ -631,11 +631,11 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
             </div>
           </div>
 
-          ${e.visibility==="extended"&&Object.keys(this.subGroups??{}).length>0?n`
+          ${e.visibility==="extended"&&Object.keys(this.subGroups??{}).length>0?o`
                 <div class="field">
                   <label>Limit to sub-groups <span style="text-transform:none;font-weight:400;color:var(--text-tertiary);letter-spacing:0.01em;">(optional, leave empty to show to all extended)</span></label>
                   <div class="attendees">
-                    ${Object.entries(this.subGroups).map(([i,r])=>n`
+                    ${Object.entries(this.subGroups).map(([i,r])=>o`
                         <div
                           class="att-chip ${(e.targetSubGroups??[]).includes(i)?"on":""}"
                           @click=${()=>this._toggleSubGroup(i)}
@@ -657,7 +657,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
                in the iOS-parity form anymore. -->
 
 
-          ${this.formMode==="activity"?"":n`
+          ${this.formMode==="activity"?"":o`
           <fieldset class="flight-section">
             <legend>Flight (optional)</legend>
             <button
@@ -669,7 +669,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
               <span class="ft-label">Will you be flying?</span>
               <span class="ft-caret" aria-hidden="true">⌄</span>
             </button>
-            ${this._showFlight?n`<div class="flight-body">
+            ${this._showFlight?o`<div class="flight-body">
 
             <div class="flight-leg">
               <div class="leg-head">
@@ -701,7 +701,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
                   />
                 </div>
               </div>
-              ${this._showOutboundDetails?n`
+              ${this._showOutboundDetails?o`
                     <div class="row-airports">
                       <input
                         type="text"
@@ -722,7 +722,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
                   `:""}
             </div>
 
-            ${this._showReturn?n`
+            ${this._showReturn?o`
                   <div class="flight-leg">
                     <div class="leg-head">
                       <span class="leg-name">Return</span>
@@ -762,7 +762,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
                         />
                       </div>
                     </div>
-                    ${this._showReturnDetails?n`
+                    ${this._showReturnDetails?o`
                           <div class="row-airports">
                             <input
                               type="text"
@@ -782,7 +782,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
                           </div>
                         `:""}
                   </div>
-                `:n`
+                `:o`
                   <button
                     type="button"
                     class="return-toggle"
@@ -804,10 +804,10 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
             ></textarea>
           </div>
 
-          ${this._error?n`<div class="error">${this._error}</div>`:""}
+          ${this._error?o`<div class="error">${this._error}</div>`:""}
 
           <div class="actions">
-            ${t?n`<button class="delete-btn" @click=${this._onDelete} ?disabled=${this.busy}>
+            ${t?o`<button class="delete-btn" @click=${this._onDelete} ?disabled=${this.busy}>
                   Delete
                 </button>`:""}
             <div class="spacer"></div>
@@ -1411,7 +1411,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
     }
     .lookup-ok { color: var(--teal-pebble); }
     .lookup-error { color: var(--rose-soft); }
-  `);customElements.define("trip-form",Ne);class Be extends D{constructor(){super(),this.open=!1,this.event=null,this.members=[],this.familyId="",this.busy=!1,this._draft=this._blankDraft(),this._error=""}willUpdate(e){(e.has("event")||e.has("open"))&&(this.open&&(this._draft=this._draftFromEvent(this.event)),this._error="")}_blankDraft(){return{id:null,type:"birthday",title:"",date:new Date().toISOString().slice(0,10),personIds:[],recurring:!0,notes:"",visibility:"family"}}_draftFromEvent(e){return e?{id:e.id??null,type:e.type??"birthday",title:e.title??"",date:e.date??new Date().toISOString().slice(0,10),personIds:Array.isArray(e.personIds)?[...e.personIds]:[],recurring:e.recurring??!0,notes:e.notes??"",visibility:e.visibility??"family"}:this._blankDraft()}_set(e,t){this._draft={...this._draft,[e]:t}}_toggleType(e){this._set("type",e)}_togglePerson(e){const t=this._draft.personIds.includes(e);this._set("personIds",t?this._draft.personIds.filter(i=>i!==e):[...this._draft.personIds,e])}_onSave(){const e=this._draft;if(!e.title.trim()){this._error="Give it a title.";return}if(!e.date){this._error="Pick a date.";return}if(!this.familyId){this._error="No family yet.";return}this._error="",this.dispatchEvent(new CustomEvent("save",{detail:{...e,title:e.title.trim(),notes:e.notes.trim()}}))}_onDelete(){this._draft.id&&confirm("Delete this event? This can't be undone.")&&this.dispatchEvent(new CustomEvent("remove",{detail:{id:this._draft.id}}))}_onCancel(){this.dispatchEvent(new Event("cancel"))}render(){if(!this.open)return n``;const e=this._draft,t=!!e.id;return n`
+  `);customElements.define("trip-form",Ne);class Be extends D{constructor(){super(),this.open=!1,this.event=null,this.members=[],this.familyId="",this.busy=!1,this._draft=this._blankDraft(),this._error=""}willUpdate(e){(e.has("event")||e.has("open"))&&(this.open&&(this._draft=this._draftFromEvent(this.event)),this._error="")}_blankDraft(){return{id:null,type:"birthday",title:"",date:new Date().toISOString().slice(0,10),personIds:[],recurring:!0,notes:"",visibility:"family"}}_draftFromEvent(e){return e?{id:e.id??null,type:e.type??"birthday",title:e.title??"",date:e.date??new Date().toISOString().slice(0,10),personIds:Array.isArray(e.personIds)?[...e.personIds]:[],recurring:e.recurring??!0,notes:e.notes??"",visibility:e.visibility??"family"}:this._blankDraft()}_set(e,t){this._draft={...this._draft,[e]:t}}_toggleType(e){this._set("type",e)}_togglePerson(e){const t=this._draft.personIds.includes(e);this._set("personIds",t?this._draft.personIds.filter(i=>i!==e):[...this._draft.personIds,e])}_onSave(){const e=this._draft;if(!e.title.trim()){this._error="Give it a title.";return}if(!e.date){this._error="Pick a date.";return}if(!this.familyId){this._error="No family yet.";return}this._error="",this.dispatchEvent(new CustomEvent("save",{detail:{...e,title:e.title.trim(),notes:e.notes.trim()}}))}_onDelete(){this._draft.id&&confirm("Delete this event? This can't be undone.")&&this.dispatchEvent(new CustomEvent("remove",{detail:{id:this._draft.id}}))}_onCancel(){this.dispatchEvent(new Event("cancel"))}render(){if(!this.open)return o``;const e=this._draft,t=!!e.id;return o`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -1423,7 +1423,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
           <div class="field">
             <label>Type</label>
             <div class="seg">
-              ${[{v:"birthday",label:"Birthday"},{v:"anniversary",label:"Anniversary"},{v:"custom",label:"Other"}].map(i=>n`
+              ${[{v:"birthday",label:"Birthday"},{v:"anniversary",label:"Anniversary"},{v:"custom",label:"Other"}].map(i=>o`
                   <button
                     class=${e.type===i.v?"active":""}
                     @click=${()=>this._toggleType(i.v)}
@@ -1469,11 +1469,11 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
             </div>
           </div>
 
-          ${this.members.length>0?n`
+          ${this.members.length>0?o`
                 <div class="field">
                   <label>Who is this about</label>
                   <div class="people">
-                    ${this.members.map(i=>n`
+                    ${this.members.map(i=>o`
                         <div
                           class="person-chip ${e.personIds.includes(i.uid)?"on":""}"
                           @click=${()=>this._togglePerson(i.uid)}
@@ -1494,7 +1494,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
           <div class="field">
             <label>Visibility</label>
             <div class="seg">
-              ${["personal","family","extended"].map(i=>n`
+              ${["personal","family","extended"].map(i=>o`
                   <button
                     class=${e.visibility===i?"active":""}
                     @click=${()=>this._set("visibility",i)}
@@ -1514,10 +1514,10 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
             ></textarea>
           </div>
 
-          ${this._error?n`<div class="error">${this._error}</div>`:""}
+          ${this._error?o`<div class="error">${this._error}</div>`:""}
 
           <div class="actions">
-            ${t?n`<button class="delete-btn" @click=${this._onDelete} ?disabled=${this.busy}>
+            ${t?o`<button class="delete-btn" @click=${this._onDelete} ?disabled=${this.busy}>
                   Delete
                 </button>`:""}
             <div class="spacer"></div>
@@ -1762,7 +1762,7 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
       margin-top: 6px;
       line-height: 1.4;
     }
-  `);customElements.define("event-form",Be);class Le extends D{constructor(){super(),this.immediate=[],this.extended=[]}_self(){return(this.immediate??[]).find(e=>e.role==="self"||e.role==="self-extended")}_family(){return(this.immediate??[]).filter(e=>e.role==="co-parent"||e.role==="child")}_connections(){const e=(this.immediate??[]).filter(t=>t.role==="member");return[...this.extended??[],...e]}_pos(e,t,i,r){if(t<=0)return"left:50%;top:50%;";const a=(r+e/t*360)*(Math.PI/180),s=50+i*Math.cos(a),o=50+i*Math.sin(a);return`left:${s}%;top:${o}%;`}_node(e,t,i){const r=(e.displayName??"").split(/\s+/)[0]||e.displayName||"";return n`
+  `);customElements.define("event-form",Be);class Le extends D{constructor(){super(),this.immediate=[],this.extended=[]}_self(){return(this.immediate??[]).find(e=>e.role==="self"||e.role==="self-extended")}_family(){return(this.immediate??[]).filter(e=>e.role==="co-parent"||e.role==="child")}_connections(){const e=(this.immediate??[]).filter(t=>t.role==="member");return[...this.extended??[],...e]}_pos(e,t,i,r){if(t<=0)return"left:50%;top:50%;";const a=(r+e/t*360)*(Math.PI/180),s=50+i*Math.cos(a),n=50+i*Math.sin(a);return`left:${s}%;top:${n}%;`}_node(e,t,i){const r=(e.displayName??"").split(/\s+/)[0]||e.displayName||"";return o`
       <div class="node" style=${i}>
         <member-chip
           .name=${e.displayName??""}
@@ -1772,11 +1772,23 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
         ></member-chip>
         <span class="cap">${r}</span>
       </div>
-    `}render(){const e=this._self(),t=this._family(),i=this._connections(),r=-90+180/Math.max(1,t.length);return n`
+    `}render(){const e=this._self(),t=this._family(),i=this._connections(),r=-90+180/Math.max(1,t.length);return o`
       <div class="stage">
         <div class="disc">
           <div class="ring connections"></div>
           <div class="ring family"></div>
+
+          <svg class="pebble" style="top:8%;right:12%;width:44px;height:37px" viewBox="0 0 52 44" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 24C2 14 14 3 27 4c14 1 24 9 22 20-2 12-16 19-30 15C10 36 9 31 6 24Z" fill="#C67B5C"/>
+          </svg>
+          <svg class="pebble" style="bottom:10%;left:9%;width:34px;height:29px" viewBox="0 0 40 34" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 18C1 10 11 2 21 3c11 1 18 7 16 16-2 10-13 15-23 11C7 27 6 24 4 18Z" fill="#C67B5C"/>
+          </svg>
+          <svg class="pebble" style="bottom:28%;right:27%;width:32px;height:27px" viewBox="0 0 38 32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 17C1 9 10 2 19 3c10 1 16 7 15 15-2 9-12 14-21 10C7 25 6 22 4 17Z" fill="#3D9B8F"/>
+          </svg>
+
+          <div class="halo"></div>
 
           ${i.map((a,s)=>this._node(a,36,this._pos(s,i.length,37,-90)))}
           ${t.map((a,s)=>this._node(a,36,this._pos(s,t.length,19,r)))}
@@ -1834,37 +1846,64 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
       aspect-ratio: 1 / 1;
       pointer-events: none;
     }
+    /* 2026-07-23 (design-sandbox/54 hybrid, iOS-lockstep) — frosted
+       GLASS discs replace the dashed rings + flat tints (dashes read
+       as prototype). Outer full disc = connections (terracotta inner
+       glow); inner disc stacks ON TOP = household (teal glow), so the
+       old donut mask is no longer needed. White-frost glass reads
+       correctly on both the light mesh and the dusk theme. */
     .ring.connections {
       width: 92%;
-      /* Tier 3 swapped from purple → terracotta (#c67b5c → rgb 198,
-         123, 92) to match the brand. Opacities reduced slightly now
-         that the donut mask prevents color-mixing with the inner
-         ring. */
-      border: 1.5px dashed rgba(198, 123, 92, 0.6);
-      background: rgba(198, 123, 92, 0.32);
-      /* Donut shape — mask out the inner area where the family ring
-         sits so the two rings don't color-mix. The family ring is
-         54% of the disc; the connections ring is 92%, so the family
-         radius as a fraction of the connections radius is
-         54/92 ≈ 0.587. With closest-side (50% of element width as the
-         100% reference), the family radius is 58.7% of that gradient
-         radius. A 4% gradient transition smooths the edge. */
-      -webkit-mask-image: radial-gradient(
-        circle closest-side,
-        transparent 58%,
-        #000 62%
+      background: radial-gradient(
+        circle at 50% 46%,
+        rgba(255, 255, 255, 0.10) 0%,
+        rgba(255, 255, 255, 0.26) 100%
       );
-      mask-image: radial-gradient(
-        circle closest-side,
-        transparent 58%,
-        #000 62%
-      );
+      backdrop-filter: blur(6px) saturate(1.05);
+      -webkit-backdrop-filter: blur(6px) saturate(1.05);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.5),
+        inset 0 0 46px rgba(198, 123, 92, 0.20),
+        inset 0 0 90px rgba(198, 123, 92, 0.08),
+        0 18px 40px -22px rgba(122, 60, 40, 0.35);
     }
     .ring.family {
       width: 54%;
-      /* Opacity reduced slightly alongside the Tier 3 change. */
-      border: 1.5px dashed rgba(31, 92, 84, 0.65);
-      background: rgba(31, 92, 84, 0.35);
+      background: radial-gradient(
+        circle at 50% 44%,
+        rgba(255, 255, 255, 0.26) 0%,
+        rgba(255, 255, 255, 0.44) 100%
+      );
+      backdrop-filter: blur(9px) saturate(1.1);
+      -webkit-backdrop-filter: blur(9px) saturate(1.1);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.65),
+        inset 0 0 40px rgba(61, 155, 143, 0.28),
+        inset 0 0 70px rgba(61, 155, 143, 0.10),
+        0 14px 32px -20px rgba(31, 92, 84, 0.4);
+    }
+    /* Soft radial glow halo behind You — the centrepiece marker. */
+    .halo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 44%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(92, 191, 176, 0.42) 0%,
+        rgba(107, 154, 196, 0.20) 40%,
+        rgba(92, 191, 176, 0) 72%
+      );
+      pointer-events: none;
+    }
+    /* Low-opacity hand-drawn pebble watermarks (brand shape library). */
+    .pebble {
+      position: absolute;
+      opacity: 0.1;
+      pointer-events: none;
     }
     .node {
       position: absolute;
@@ -1875,11 +1914,21 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
       gap: 4px;
       width: 78px;
     }
+    /* design-sandbox/54 hybrid — frosted name pills (were bare text).
+       Theme-adaptive via the glass tokens so the dusk theme flips
+       fill + border + ink automatically. */
     .node .cap {
       font-size: 10.5px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      max-width: 78px;
+      font-weight: 600;
+      color: var(--text-primary);
+      background: var(--glass-fill-strong);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      padding: 2px 9px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
+      max-width: 86px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -1903,12 +1952,19 @@ var Gt=Object.defineProperty;var Yt=(g,e,t)=>e in g?Gt(g,e,{enumerable:!0,config
     }
     .you .cap {
       font-size: 11px;
-      font-weight: 600;
-      color: var(--text-secondary);
+      font-weight: 700;
+      color: var(--dusty-blue);
+      background: var(--glass-fill-strong);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      border-radius: 999px;
+      padding: 2px 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.07);
     }
-  `);customElements.define("family-circle",Le);let se=null,ut=null;function wi(){return se||(se=document.createElement("div"),se.id="cairn-toast-host",Object.assign(se.style,{position:"fixed",bottom:"24px",left:"50%",transform:"translateX(-50%)",zIndex:9999,pointerEvents:"none"}),document.body.appendChild(se),se)}function y(g,{duration:e=2800}={}){const t=wi();clearTimeout(ut),t.innerHTML="";const i=document.createElement("div");i.textContent=g,Object.assign(i.style,{padding:"12px 18px",background:"rgba(20, 12, 6, 0.78)",backdropFilter:"blur(24px) saturate(180%)",webkitBackdropFilter:"blur(24px) saturate(180%)",border:"1px solid rgba(255, 248, 235, 0.22)",borderRadius:"999px",color:"rgba(255, 248, 235, 0.96)",fontFamily:"'Inter', system-ui, sans-serif",fontSize:"13.5px",fontWeight:"500",letterSpacing:"0.005em",boxShadow:"0 12px 32px rgba(20, 12, 6, 0.45)",pointerEvents:"auto",transform:"translateY(8px)",opacity:"0",transition:"opacity 200ms ease, transform 240ms ease"}),t.appendChild(i),requestAnimationFrame(()=>{i.style.opacity="1",i.style.transform="translateY(0)"}),ut=setTimeout(()=>{i.style.opacity="0",i.style.transform="translateY(8px)",setTimeout(()=>i.remove(),260)},e)}class Oe extends D{constructor(){super(),this.open=!1,this.family=null,this.immediate=[],this.extended=[],this.canRemove=!1,this._busy=!1,this._newGroupName="",this._editingGroupId=null,this._removingUid=null,this._addingChild=!1,this._childName="",this._childDob="",this._savingChild=!1,this._editingLabelUid=null,this._labelDraft="",this._grantTargetUid=null,this._grantingUid=null}_toggleGrantPicker(e){this._editingLabelUid===e&&(this._editingLabelUid=null),this._grantTargetUid=this._grantTargetUid===e?null:e}async _grantReadOnly(e,t){if(!this._grantingUid){this._grantingUid=e;try{await f.grantChildViewerDirectly(e),y(`Read-only access granted to ${t}.`),this._grantTargetUid=null}catch(i){console.error("grantChildViewerDirectly failed:",i),y(`Couldn't grant access: ${i.code??i.message}`,{duration:5e3})}finally{this._grantingUid=null}}}async _grantParent(e,t){if(!this._grantingUid){this._grantingUid=e;try{const i=await f.grantParentAccessForOwnChildren(e);if(!i||i.length===0)y("No children to grant access to. Add a child first, then try again.",{duration:5e3});else if(i.length===1)y(`${t} is now a parent of ${i[0]}.`);else if(i.length===2)y(`${t} is now a parent of ${i[0]} & ${i[1]}.`);else{const r=i.slice(0,-1).join(", "),a=i[i.length-1];y(`${t} is now a parent of ${r} & ${a}.`)}this._grantTargetUid=null}catch(i){console.error("grantParentAccessForOwnChildren failed:",i),y(`Couldn't grant access: ${i.code??i.message}`,{duration:5e3})}finally{this._grantingUid=null}}}_memberLabel(e){var i,r;const t=(r=(i=f.state.user)==null?void 0:i.memberLabels)==null?void 0:r[e];return t&&t.trim()?t.trim():""}_startLabelEdit(e){this._editingLabelUid=e,this._labelDraft=this._memberLabel(e)}async _saveLabel(e){const t=this._labelDraft;this._editingLabelUid=null;try{await f.setMemberLabel(e,t)}catch(i){y(`Couldn't save label: ${i.code??i.message}`,{duration:4e3})}this.requestUpdate()}_toggleAddChild(){this._addingChild=!this._addingChild,this._addingChild||(this._childName="",this._childDob="")}async _saveChild(){const e=(this._childName??"").trim();if(!e||this._savingChild)return;if(!this._childDob){y("Add your child's date of birth.");return}const t=new Date(`${this._childDob}T00:00:00`);if(Number.isNaN(t.getTime())){y("That date of birth doesn't look right.");return}const i=f.familyId;if(!i){y("Can't add a child. No family yet.");return}this._savingChild=!0;try{await f.createChild(i,{name:e,dateOfBirth:t}),y(`${e} added.`),this._childName="",this._childDob="",this._addingChild=!1}catch(r){console.error("Add child failed:",r),y((r==null?void 0:r.code)==="permission-denied"?"Only a parent in this family can add a child.":`Couldn't add the child: ${(r==null?void 0:r.message)??"try again"}`,{duration:5e3})}finally{this._savingChild=!1}}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _createSubGroup(){const e=this._newGroupName.trim();if(!(!e||this._busy)){this._busy=!0;try{const t=await f.saveSubGroup({name:e,memberIds:[]});this._newGroupName="",this._editingGroupId=t,y(`Sub-group "${e}" created.`)}catch(t){y(`Couldn't create: ${t.code??t.message}`,{duration:5e3})}finally{this._busy=!1}}}async _toggleSubGroupMember(e,t){var s,o;const i=(o=(s=this.family)==null?void 0:s.subGroups)==null?void 0:o[e];if(!i)return;const r=i.memberIds??[],a=r.includes(t)?r.filter(d=>d!==t):[...r,t];try{await f.saveSubGroup({id:e,name:i.name,memberIds:a})}catch(d){y(`Couldn't update: ${d.code??d.message}`,{duration:5e3})}}async _deleteSubGroup(e,t){if(confirm(`Delete the "${t}" sub-group?`))try{await f.deleteSubGroup(e),this._editingGroupId===e&&(this._editingGroupId=null),y("Sub-group deleted.")}catch(i){y(`Couldn't delete: ${i.code??i.message}`,{duration:5e3})}}async _removeMember(e){var i;if(this._removingUid)return;const t=e.displayName||"this person";if(confirm(`Remove ${t} from ${((i=this.family)==null?void 0:i.name)??"your family"}?
+  `);customElements.define("family-circle",Le);let se=null,ut=null;function wi(){return se||(se=document.createElement("div"),se.id="cairn-toast-host",Object.assign(se.style,{position:"fixed",bottom:"24px",left:"50%",transform:"translateX(-50%)",zIndex:9999,pointerEvents:"none"}),document.body.appendChild(se),se)}function y(g,{duration:e=2800}={}){const t=wi();clearTimeout(ut),t.innerHTML="";const i=document.createElement("div");i.textContent=g,Object.assign(i.style,{padding:"12px 18px",background:"rgba(20, 12, 6, 0.78)",backdropFilter:"blur(24px) saturate(180%)",webkitBackdropFilter:"blur(24px) saturate(180%)",border:"1px solid rgba(255, 248, 235, 0.22)",borderRadius:"999px",color:"rgba(255, 248, 235, 0.96)",fontFamily:"'Inter', system-ui, sans-serif",fontSize:"13.5px",fontWeight:"500",letterSpacing:"0.005em",boxShadow:"0 12px 32px rgba(20, 12, 6, 0.45)",pointerEvents:"auto",transform:"translateY(8px)",opacity:"0",transition:"opacity 200ms ease, transform 240ms ease"}),t.appendChild(i),requestAnimationFrame(()=>{i.style.opacity="1",i.style.transform="translateY(0)"}),ut=setTimeout(()=>{i.style.opacity="0",i.style.transform="translateY(8px)",setTimeout(()=>i.remove(),260)},e)}class Oe extends D{constructor(){super(),this.open=!1,this.family=null,this.immediate=[],this.extended=[],this.canRemove=!1,this._busy=!1,this._newGroupName="",this._editingGroupId=null,this._removingUid=null,this._addingChild=!1,this._childName="",this._childDob="",this._savingChild=!1,this._editingLabelUid=null,this._labelDraft="",this._grantTargetUid=null,this._grantingUid=null}_toggleGrantPicker(e){this._editingLabelUid===e&&(this._editingLabelUid=null),this._grantTargetUid=this._grantTargetUid===e?null:e}async _grantReadOnly(e,t){if(!this._grantingUid){this._grantingUid=e;try{await f.grantChildViewerDirectly(e),y(`Read-only access granted to ${t}.`),this._grantTargetUid=null}catch(i){console.error("grantChildViewerDirectly failed:",i),y(`Couldn't grant access: ${i.code??i.message}`,{duration:5e3})}finally{this._grantingUid=null}}}async _grantParent(e,t){if(!this._grantingUid){this._grantingUid=e;try{const i=await f.grantParentAccessForOwnChildren(e);if(!i||i.length===0)y("No children to grant access to. Add a child first, then try again.",{duration:5e3});else if(i.length===1)y(`${t} is now a parent of ${i[0]}.`);else if(i.length===2)y(`${t} is now a parent of ${i[0]} & ${i[1]}.`);else{const r=i.slice(0,-1).join(", "),a=i[i.length-1];y(`${t} is now a parent of ${r} & ${a}.`)}this._grantTargetUid=null}catch(i){console.error("grantParentAccessForOwnChildren failed:",i),y(`Couldn't grant access: ${i.code??i.message}`,{duration:5e3})}finally{this._grantingUid=null}}}_memberLabel(e){var i,r;const t=(r=(i=f.state.user)==null?void 0:i.memberLabels)==null?void 0:r[e];return t&&t.trim()?t.trim():""}_startLabelEdit(e){this._editingLabelUid=e,this._labelDraft=this._memberLabel(e)}async _saveLabel(e){const t=this._labelDraft;this._editingLabelUid=null;try{await f.setMemberLabel(e,t)}catch(i){y(`Couldn't save label: ${i.code??i.message}`,{duration:4e3})}this.requestUpdate()}_toggleAddChild(){this._addingChild=!this._addingChild,this._addingChild||(this._childName="",this._childDob="")}async _saveChild(){const e=(this._childName??"").trim();if(!e||this._savingChild)return;if(!this._childDob){y("Add your child's date of birth.");return}const t=new Date(`${this._childDob}T00:00:00`);if(Number.isNaN(t.getTime())){y("That date of birth doesn't look right.");return}const i=f.familyId;if(!i){y("Can't add a child. No family yet.");return}this._savingChild=!0;try{await f.createChild(i,{name:e,dateOfBirth:t}),y(`${e} added.`),this._childName="",this._childDob="",this._addingChild=!1}catch(r){console.error("Add child failed:",r),y((r==null?void 0:r.code)==="permission-denied"?"Only a parent in this family can add a child.":`Couldn't add the child: ${(r==null?void 0:r.message)??"try again"}`,{duration:5e3})}finally{this._savingChild=!1}}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _createSubGroup(){const e=this._newGroupName.trim();if(!(!e||this._busy)){this._busy=!0;try{const t=await f.saveSubGroup({name:e,memberIds:[]});this._newGroupName="",this._editingGroupId=t,y(`Sub-group "${e}" created.`)}catch(t){y(`Couldn't create: ${t.code??t.message}`,{duration:5e3})}finally{this._busy=!1}}}async _toggleSubGroupMember(e,t){var s,n;const i=(n=(s=this.family)==null?void 0:s.subGroups)==null?void 0:n[e];if(!i)return;const r=i.memberIds??[],a=r.includes(t)?r.filter(d=>d!==t):[...r,t];try{await f.saveSubGroup({id:e,name:i.name,memberIds:a})}catch(d){y(`Couldn't update: ${d.code??d.message}`,{duration:5e3})}}async _deleteSubGroup(e,t){if(confirm(`Delete the "${t}" sub-group?`))try{await f.deleteSubGroup(e),this._editingGroupId===e&&(this._editingGroupId=null),y("Sub-group deleted.")}catch(i){y(`Couldn't delete: ${i.code??i.message}`,{duration:5e3})}}async _removeMember(e){var i;if(this._removingUid)return;const t=e.displayName||"this person";if(confirm(`Remove ${t} from ${((i=this.family)==null?void 0:i.name)??"your family"}?
 
-They'll lose access to shared trips, celebrations and any read-only child access. You can re-invite them anytime with the invite code.`)){this._removingUid=e.uid;try{await f.removeCairnMember(e.uid),y(`${t} removed.`)}catch(r){y(`Couldn't remove: ${r.code??r.message}`,{duration:5e3})}finally{this._removingUid=null}}}async _regenerate(){if(!this._busy){this._busy=!0;try{await f.regenerateCairnInviteCode(),y("New invite code generated.")}catch(e){console.error(e),y(`Couldn't generate code: ${e.code??e.message}`,{duration:5e3})}finally{this._busy=!1}}}_inviteLink(e){return`${window.location.origin}/portal/?join=${e}`}async _copyLink(){var t;const e=(t=this.family)==null?void 0:t.cairnInviteCode;if(e)try{await navigator.clipboard.writeText(this._inviteLink(e)),y("Invite link copied to clipboard.")}catch{y("Could not copy. Try long-press the link instead.")}}async _share(){var i;const e=(i=this.family)==null?void 0:i.cairnInviteCode;if(!e)return;const t=this._inviteLink(e);if(navigator.share)try{await navigator.share({title:"Join our family on PebblePath",text:`Join our family on PebblePath. Invite code: ${e}. It's where we keep our family's milestones, plans, and everything we're coordinating, with a little help from Pebble, our family's AI assistant.`,url:t})}catch{}else this._copyLink()}_expiryText(e){if(!e)return"";const t=e.toDate?e.toDate():new Date(e),r=Math.max(0,Math.round((t-new Date)/(1440*60*1e3)));return r===0?"Expires today":r===1?"Expires tomorrow":`Expires in ${r} days`}render(){var r,a;if(!this.open)return n``;const e=(r=this.family)==null?void 0:r.cairnInviteCode,t=(a=this.family)==null?void 0:a.cairnInviteCodeExpiresAt,i=t&&(t.toDate?t.toDate():new Date(t))<new Date;return n`
+They'll lose access to shared trips, celebrations and any read-only child access. You can re-invite them anytime with the invite code.`)){this._removingUid=e.uid;try{await f.removeCairnMember(e.uid),y(`${t} removed.`)}catch(r){y(`Couldn't remove: ${r.code??r.message}`,{duration:5e3})}finally{this._removingUid=null}}}async _regenerate(){if(!this._busy){this._busy=!0;try{await f.regenerateCairnInviteCode(),y("New invite code generated.")}catch(e){console.error(e),y(`Couldn't generate code: ${e.code??e.message}`,{duration:5e3})}finally{this._busy=!1}}}_inviteLink(e){return`${window.location.origin}/portal/?join=${e}`}async _copyLink(){var t;const e=(t=this.family)==null?void 0:t.cairnInviteCode;if(e)try{await navigator.clipboard.writeText(this._inviteLink(e)),y("Invite link copied to clipboard.")}catch{y("Could not copy. Try long-press the link instead.")}}async _share(){var i;const e=(i=this.family)==null?void 0:i.cairnInviteCode;if(!e)return;const t=this._inviteLink(e);if(navigator.share)try{await navigator.share({title:"Join our family on PebblePath",text:`Join our family on PebblePath. Invite code: ${e}. It's where we keep our family's milestones, plans, and everything we're coordinating, with a little help from Pebble, our family's AI assistant.`,url:t})}catch{}else this._copyLink()}_expiryText(e){if(!e)return"";const t=e.toDate?e.toDate():new Date(e),r=Math.max(0,Math.round((t-new Date)/(1440*60*1e3)));return r===0?"Expires today":r===1?"Expires tomorrow":`Expires in ${r} days`}render(){var r,a;if(!this.open)return o``;const e=(r=this.family)==null?void 0:r.cairnInviteCode,t=(a=this.family)==null?void 0:a.cairnInviteCodeExpiresAt,i=t&&(t.toDate?t.toDate():new Date(t))<new Date;return o`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -1918,7 +1974,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
 
           <h3>My family · ${this.immediate.length}</h3>
-          ${this.immediate.length===0?n`<div class="empty">No one in your family yet.</div>`:this.immediate.map(s=>n`
+          ${this.immediate.length===0?o`<div class="empty">No one in your family yet.</div>`:this.immediate.map(s=>o`
                   <div class="member-row">
                     <member-chip
                       .name=${s.displayName}
@@ -1936,10 +1992,10 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 `)}
 
           <h3>My connections · ${this.extended.length}</h3>
-          ${this.extended.length===0?n`<div class="empty">
+          ${this.extended.length===0?o`<div class="empty">
                 Anyone you invite (grandparents, aunts, uncles, etc.) will appear here.
                 They can see trips and celebrations but not PebblePath child data.
-              </div>`:this.extended.map(s=>{const o=s.role==="co-parent"||s.role==="child",d=s.role==="co-parent"?"Co-parent":"Child";return n`
+              </div>`:this.extended.map(s=>{const n=s.role==="co-parent"||s.role==="child",d=s.role==="co-parent"?"Co-parent":"Child";return o`
                   <div class="member-row">
                     <member-chip
                       .name=${s.displayName}
@@ -1949,14 +2005,14 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     ></member-chip>
                     <div class="body">
                       <div class="name">${s.displayName}</div>
-                      ${o?n`<div class="role">${d}</div>`:this._editingLabelUid===s.uid?n`<input
+                      ${n?o`<div class="role">${d}</div>`:this._editingLabelUid===s.uid?o`<input
                             class="label-input"
                             .value=${this._labelDraft}
                             placeholder="Connection"
                             @input=${l=>this._labelDraft=l.target.value}
                             @keydown=${l=>{l.key==="Enter"&&this._saveLabel(s.uid),l.key==="Escape"&&(this._editingLabelUid=null)}}
                             @blur=${()=>this._saveLabel(s.uid)}
-                          />`:n`<button
+                          />`:o`<button
                             class="role-edit"
                             title="Set a private label only you can see"
                             @click=${()=>this._startLabelEdit(s.uid)}
@@ -1967,14 +2023,14 @@ They'll lose access to shared trips, celebrations and any read-only child access
                             >
                           </button>`}
                     </div>
-                    ${this.canRemove&&!o?n`<button
+                    ${this.canRemove&&!n?o`<button
                           class="grant-btn"
                           @click=${()=>this._toggleGrantPicker(s.uid)}
                           title="Grant ${s.displayName} access to child data"
                         >
                           ${this._grantTargetUid===s.uid?"Cancel":"Grant access"}
                         </button>`:""}
-                    ${this.canRemove&&!o?n`<button
+                    ${this.canRemove&&!n?o`<button
                           class="remove-btn"
                           ?disabled=${this._removingUid===s.uid}
                           @click=${()=>this._removeMember(s)}
@@ -1982,7 +2038,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                           ${this._removingUid===s.uid?"Removing…":"Remove"}
                         </button>`:""}
                   </div>
-                  ${this._grantTargetUid===s.uid?n`<div class="grant-picker">
+                  ${this._grantTargetUid===s.uid?o`<div class="grant-picker">
                         <div class="grant-picker-head">
                           <b>Pick a level for ${s.displayName}</b>
                           <span class="grant-picker-sub"
@@ -2031,7 +2087,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           ${""}
 
           <h3>Children</h3>
-          ${this._addingChild?n`
+          ${this._addingChild?o`
                 <div class="add-child-form">
                   <input
                     class="new-group-input"
@@ -2065,7 +2121,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     </glass-button>
                   </div>
                 </div>
-              `:n`
+              `:o`
                 <glass-button
                   variant="ghost"
                   full
@@ -2076,7 +2132,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
               `}
 
           <h3>Family invite code</h3>
-          ${e&&!i?n`
+          ${e&&!i?o`
                 <div class="invite-box">
                   <div class="invite-code">${e}</div>
                   <div class="invite-meta">${this._expiryText(t)} · share this code with anyone in your family</div>
@@ -2092,7 +2148,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     </glass-button>
                   </div>
                 </div>
-              `:n`
+              `:o`
                 <div class="invite-empty">
                   ${i?"Your invite code has expired. Generate a new one to invite people to your family.":"No invite code yet. Generate one to invite people to your family."}
                   <br />
@@ -2541,8 +2597,8 @@ They'll lose access to shared trips, celebrations and any read-only child access
     .add-child-actions glass-button {
       flex: 1;
     }
-  `);customElements.define("manage-members-modal",Oe);const _i=[[/(^|\.)airbnb\./,"Airbnb"],[/(^|\.)(vrbo|homeaway)\./,"Vrbo"],[/(^|\.)booking\./,"Booking.com"],[/(^|\.)expedia\./,"Expedia"],[/(^|\.)hipcamp\./,"Hipcamp"],[/(^|\.)tripadvisor\./,"Tripadvisor"],[/(^|\.)hotels\./,"Hotels.com"],[/(^|\.)(marriott|hilton|hyatt|ihg|accor|fourseasons)\./,"Hotel"],[/(^|\.)plumguide\./,"Plum Guide"]];function Lt(g){const e=(g&&g.lodgingUrl?String(g.lodgingUrl):"").trim();if(e){let t="";try{t=new URL(e.includes("://")?e:`https://${e}`).hostname}catch{t=""}if(t){const i=t.toLowerCase();for(const[r,a]of _i)if(r.test(i))return a}return"Other"}return g&&g.lodgingHost?"Other":""}function ki(g,e){const t=[];if(t.push(g.title||"Portal activity"),g.location&&t.push(g.location),g.start&&g.end){const r=M(g.start),a=M(g.end),s=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),o=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});t.push(g.start===g.end?o:`${s} – ${o}`)}if((g.lodgingUrl||g.lodgingHost||g.lodgingTitle)&&t.push(`Lodging: ${[Lt(g),g.lodgingTitle].filter(Boolean).join(", ")}`),g.flightNumber||g.flightAirline||g.flightDepartAirport){const r=[],a=[g.flightAirline,g.flightNumber].filter(Boolean).join(" ");if(a&&r.push(a),g.flightDepartAirport&&g.flightArriveAirport&&r.push(`${g.flightDepartAirport.toUpperCase()} → ${g.flightArriveAirport.toUpperCase()}`),g.flightDepartTime){const s=new Date(g.flightDepartTime);Number.isNaN(s.getTime())||r.push(`Depart: ${s.toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}`)}r.length&&t.push(`Flight: ${r.join(" · ")}`)}const i=(g.attendees??[]).map(r=>{var a;return(a=e.get(r))==null?void 0:a.displayName}).filter(Boolean);return i.length&&t.push(`With: ${i.join(", ")}`),g.notes&&t.push("",g.notes),t.push("","Shared from Portal · pebblepath.ai/portal"),t.join(`
-`)}class Ue extends D{constructor(){super(),this.trip=null,this.members=[],this._resizeObs=null}connectedCallback(){super.connectedCallback(),typeof ResizeObserver<"u"&&(this._resizeObs=new ResizeObserver(()=>this._fitTitle()))}disconnectedCallback(){var e;super.disconnectedCallback(),(e=this._resizeObs)==null||e.disconnect()}updated(){if(this._resizeObs&&this.renderRoot){const e=this.renderRoot.querySelector("article");e&&!e._observed&&(this._resizeObs.observe(e),e._observed=!0)}this._fitTitle()}_fitTitle(){if(!this.renderRoot)return;const e=this.renderRoot.querySelector("h3");if(!e)return;e.style.fontSize="";let t=19;for(e.style.fontSize=`${t}px`;e.scrollWidth>e.clientWidth+1&&t>13;)t-=.5,e.style.fontSize=`${t}px`}_fmtDates(e,t){const i=M(e),r=M(t);if(!i||!r)return"";const a=i.toLocaleString("en-GB",{month:"short"}),s=r.toLocaleString("en-GB",{month:"short"});return a===s&&i.getFullYear()===r.getFullYear()?`${i.getDate()} – ${r.getDate()} ${a}`:`${i.getDate()} ${a} – ${r.getDate()} ${s}`}async _onShare(e,t,i){i.stopPropagation();const r=ki(e,t);if(navigator.share)try{await navigator.share({title:`Portal: ${e.title??"activity"}`,text:r})}catch{}else try{await navigator.clipboard.writeText(r),y("Itinerary copied to clipboard.")}catch{y("Could not copy. Try again from a browser tab.")}}render(){const e=this.trip;if(!e)return n``;const t=e.previewImage&&String(e.previewImage).trim()||e.coverImage,i=t?`--cover-img: url("${t}");`:`background: ${Bt(e)};`,r=t?"cover has-image":"cover",a=new Map(this.members.map(l=>[l.uid,l])),s=(e.attendees??[]).map(l=>a.get(l)).filter(Boolean),o=s.slice(0,4),d=Math.max(0,s.length-o.length);return n`
+  `);customElements.define("manage-members-modal",Oe);const _i=[[/(^|\.)airbnb\./,"Airbnb"],[/(^|\.)(vrbo|homeaway)\./,"Vrbo"],[/(^|\.)booking\./,"Booking.com"],[/(^|\.)expedia\./,"Expedia"],[/(^|\.)hipcamp\./,"Hipcamp"],[/(^|\.)tripadvisor\./,"Tripadvisor"],[/(^|\.)hotels\./,"Hotels.com"],[/(^|\.)(marriott|hilton|hyatt|ihg|accor|fourseasons)\./,"Hotel"],[/(^|\.)plumguide\./,"Plum Guide"]];function Lt(g){const e=(g&&g.lodgingUrl?String(g.lodgingUrl):"").trim();if(e){let t="";try{t=new URL(e.includes("://")?e:`https://${e}`).hostname}catch{t=""}if(t){const i=t.toLowerCase();for(const[r,a]of _i)if(r.test(i))return a}return"Other"}return g&&g.lodgingHost?"Other":""}function ki(g,e){const t=[];if(t.push(g.title||"Portal activity"),g.location&&t.push(g.location),g.start&&g.end){const r=M(g.start),a=M(g.end),s=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),n=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});t.push(g.start===g.end?n:`${s} – ${n}`)}if((g.lodgingUrl||g.lodgingHost||g.lodgingTitle)&&t.push(`Lodging: ${[Lt(g),g.lodgingTitle].filter(Boolean).join(", ")}`),g.flightNumber||g.flightAirline||g.flightDepartAirport){const r=[],a=[g.flightAirline,g.flightNumber].filter(Boolean).join(" ");if(a&&r.push(a),g.flightDepartAirport&&g.flightArriveAirport&&r.push(`${g.flightDepartAirport.toUpperCase()} → ${g.flightArriveAirport.toUpperCase()}`),g.flightDepartTime){const s=new Date(g.flightDepartTime);Number.isNaN(s.getTime())||r.push(`Depart: ${s.toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}`)}r.length&&t.push(`Flight: ${r.join(" · ")}`)}const i=(g.attendees??[]).map(r=>{var a;return(a=e.get(r))==null?void 0:a.displayName}).filter(Boolean);return i.length&&t.push(`With: ${i.join(", ")}`),g.notes&&t.push("",g.notes),t.push("","Shared from Portal · pebblepath.ai/portal"),t.join(`
+`)}class Ue extends D{constructor(){super(),this.trip=null,this.members=[],this._resizeObs=null}connectedCallback(){super.connectedCallback(),typeof ResizeObserver<"u"&&(this._resizeObs=new ResizeObserver(()=>this._fitTitle()))}disconnectedCallback(){var e;super.disconnectedCallback(),(e=this._resizeObs)==null||e.disconnect()}updated(){if(this._resizeObs&&this.renderRoot){const e=this.renderRoot.querySelector("article");e&&!e._observed&&(this._resizeObs.observe(e),e._observed=!0)}this._fitTitle()}_fitTitle(){if(!this.renderRoot)return;const e=this.renderRoot.querySelector("h3");if(!e)return;e.style.fontSize="";let t=19;for(e.style.fontSize=`${t}px`;e.scrollWidth>e.clientWidth+1&&t>13;)t-=.5,e.style.fontSize=`${t}px`}_fmtDates(e,t){const i=M(e),r=M(t);if(!i||!r)return"";const a=i.toLocaleString("en-GB",{month:"short"}),s=r.toLocaleString("en-GB",{month:"short"});return a===s&&i.getFullYear()===r.getFullYear()?`${i.getDate()} – ${r.getDate()} ${a}`:`${i.getDate()} ${a} – ${r.getDate()} ${s}`}async _onShare(e,t,i){i.stopPropagation();const r=ki(e,t);if(navigator.share)try{await navigator.share({title:`Portal: ${e.title??"activity"}`,text:r})}catch{}else try{await navigator.clipboard.writeText(r),y("Itinerary copied to clipboard.")}catch{y("Could not copy. Try again from a browser tab.")}}render(){const e=this.trip;if(!e)return o``;const t=e.previewImage&&String(e.previewImage).trim()||e.coverImage,i=t?`--cover-img: url("${t}");`:`background: ${Bt(e)};`,r=t?"cover has-image":"cover",a=new Map(this.members.map(l=>[l.uid,l])),s=(e.attendees??[]).map(l=>a.get(l)).filter(Boolean),n=s.slice(0,4),d=Math.max(0,s.length-n.length);return o`
       <article
         tabindex="0"
         aria-label="${e.title}, open day plan"
@@ -2555,24 +2611,24 @@ They'll lose access to shared trips, celebrations and any read-only child access
         <div class="body">
           <h3>${e.title}</h3>
           <div class="location">${e.location||"—"}</div>
-          ${e.lodgingUrl||e.lodgingHost?(()=>{const l=Lt(e);return n`<div class="lodging">
-                  ${l?n`<span class="pill">${l}</span>`:""}
+          ${e.lodgingUrl||e.lodgingHost?(()=>{const l=Lt(e);return o`<div class="lodging">
+                  ${l?o`<span class="pill">${l}</span>`:""}
                   <span class="lodging-text">${e.lodgingTitle||e.lodgingUrl||""}</span>
                 </div>`})():""}
-          ${e.flightNumber||e.flightDepartAirport?n`<div class="flight-info">
+          ${e.flightNumber||e.flightDepartAirport?o`<div class="flight-info">
                 <span class="plane">✈</span>
                 <span>${[e.flightAirline,e.flightNumber].filter(Boolean).join(" ")}</span>
-                ${e.flightDepartAirport&&e.flightArriveAirport?n`<span class="route">${e.flightDepartAirport.toUpperCase()} → ${e.flightArriveAirport.toUpperCase()}</span>`:""}
+                ${e.flightDepartAirport&&e.flightArriveAirport?o`<span class="route">${e.flightDepartAirport.toUpperCase()} → ${e.flightArriveAirport.toUpperCase()}</span>`:""}
               </div>`:""}
           <div class="footer">
             <div class="attendees">
-              ${o.map(l=>n`<member-chip
+              ${n.map(l=>o`<member-chip
                   .name=${l.displayName}
                   .photo=${l.photoURL??""}
                   .hue=${l.hue}
                   size="28"
                 ></member-chip>`)}
-              ${d>0?n`<span class="more">+${d}</span>`:""}
+              ${d>0?o`<span class="more">+${d}</span>`:""}
             </div>
             <div class="actions">
               <button
@@ -2821,7 +2877,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       width: 15px;
       height: 15px;
     }
-  `);customElements.define("trip-card",Ue);class je extends D{constructor(){super(),this.open=!1,this.trips=[],this.members=[]}_onCancel(){this.dispatchEvent(new Event("cancel"))}_groupByYear(e){const t=[...e].sort((a,s)=>String(a.start).localeCompare(String(s.start))),i=new Date;i.setHours(0,0,0,0);const r=new Map;for(const a of t){if(!a.start)continue;const s=M(a.start),o=M(a.end);if(!s)continue;const d=s.getFullYear();r.has(d)||r.set(d,[]);const l=o?o<i:!1;r.get(d).push({trip:a,isPast:l})}return r}render(){var r;if(!this.open)return n``;const e=this._groupByYear(this.trips??[]),t=((r=this.trips)==null?void 0:r.length)??0,i=new Date().getFullYear();return n`
+  `);customElements.define("trip-card",Ue);class je extends D{constructor(){super(),this.open=!1,this.trips=[],this.members=[]}_onCancel(){this.dispatchEvent(new Event("cancel"))}_groupByYear(e){const t=[...e].sort((a,s)=>String(a.start).localeCompare(String(s.start))),i=new Date;i.setHours(0,0,0,0);const r=new Map;for(const a of t){if(!a.start)continue;const s=M(a.start),n=M(a.end);if(!s)continue;const d=s.getFullYear();r.has(d)||r.set(d,[]);const l=n?n<i:!1;r.get(d).push({trip:a,isPast:l})}return r}render(){var r;if(!this.open)return o``;const e=this._groupByYear(this.trips??[]),t=((r=this.trips)==null?void 0:r.length)??0,i=new Date().getFullYear();return o`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -2829,17 +2885,17 @@ They'll lose access to shared trips, celebrations and any read-only child access
             <h2>All trips<span class="count">${t} ${t===1?"trip":"trips"}</span></h2>
             <button class="close" @click=${this._onCancel} aria-label="Close">×</button>
           </div>
-          ${t===0?n`<div class="empty">
+          ${t===0?o`<div class="empty">
                 No trips for this circle yet.<br />
                 Close this and tap <strong>+ New trip</strong> to add one.
-              </div>`:Array.from(e.entries()).map(([a,s])=>n`
+              </div>`:Array.from(e.entries()).map(([a,s])=>o`
                   <div class="year ${a===i?"current":""}">
                     ${a}
                   </div>
                   <div class="grid">
-                    ${s.map(({trip:o,isPast:d})=>n`
+                    ${s.map(({trip:n,isPast:d})=>o`
                         <div class=${d?"past":""}>
-                          <trip-card .trip=${o} .members=${this.members}></trip-card>
+                          <trip-card .trip=${n} .members=${this.members}></trip-card>
                         </div>
                       `)}
                   </div>
@@ -2958,7 +3014,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       padding: 38px 12px;
       line-height: 1.55;
     }
-  `);customElements.define("all-trips-modal",je);class Ge extends D{constructor(){super(),this.open=!1,this._events=[],this._selected=new Set,this._loading=!1,this._error="",this._importing=!1,this._started=!1,this._mode=null,this._targetTripId="",this._skippedOutOfRange=0,this._addedCount=0}willUpdate(e){e.has("open")&&this.open&&(this._started=!1,this._error="",this._mode=null,this._targetTripId="",this._skippedOutOfRange=0,this._addedCount=0)}_eligibleTrips(){const e=new Date().toISOString().slice(0,10);return(Array.isArray(f.state.trips)?f.state.trips:[]).filter(i=>i&&i.end&&String(i.end)>=e).sort((i,r)=>String(i.start||"").localeCompare(String(r.start||"")))}_pickMode(e){this._mode=e}_pickTrip(e){this._targetTripId=e}_start(){this._loading||(this._started=!0,this._load())}async _load(){var e,t,i,r,a,s;this._loading=!0,this._error="";try{const o=await Tt(),d=await yi(o,90),l=new Set((f.state.trips??[]).filter(p=>p.gcalEventId).map(p=>p.gcalEventId));this._events=d.map(p=>({...p,_alreadyImported:l.has(p.id)}));const c=new Set;for(const p of this._events){if(p._alreadyImported)continue;const h=((e=p.start)==null?void 0:e.date)??((i=(t=p.start)==null?void 0:t.dateTime)==null?void 0:i.slice(0,10)),u=((r=p.end)==null?void 0:r.date)??((s=(a=p.end)==null?void 0:a.dateTime)==null?void 0:s.slice(0,10));h&&u&&u!==h&&c.add(p.id)}this._selected=c}catch(o){console.error(o),this._error=(o==null?void 0:o.message)??"Could not load calendar events."}finally{this._loading=!1}}_toggle(e){const t=new Set(this._selected);t.has(e)?t.delete(e):t.add(e),this._selected=t}_toggleAll(){const e=this._events.filter(t=>!t._alreadyImported);this._selected.size===e.length?this._selected=new Set:this._selected=new Set(e.map(t=>t.id))}async _import(){var s,o,d,l;if(this._importing||this._selected.size===0)return;this._importing=!0;const e=(s=x==null?void 0:x.currentUser)==null?void 0:s.uid,t=this._events.filter(c=>this._selected.has(c.id));let i=0,r=0,a=0;if(this._mode==="addToTrip"){const c=this._eligibleTrips().find(p=>p.id===this._targetTripId);if(!c){this._importing=!1,y("Couldn’t find that activity. Try again.",{duration:4e3});return}for(const p of t){const h=((o=p.start)==null?void 0:o.date)??((l=(d=p.start)==null?void 0:d.dateTime)==null?void 0:l.slice(0,10));if(!h){a++;continue}if(h<c.start||h>c.end){a++;continue}const u=this._calendarEventToPlanItem(p,h),b={title:u.title,type:u.type,day:u.day,tripId:c.id,source:"google-calendar"};u.time&&(b.time=u.time),Number.isFinite(u.durationMins)&&(b.durationMins=u.durationMins);try{await f.saveActivity(b),i++}catch(w){console.error("add-to-trip activity failed for event",p.id,w),r++}}this._importing=!1,this._skippedOutOfRange=a,this._addedCount=i;return}for(const c of t){const p=xi(c,e);try{await f.saveTrip(p),i++}catch(h){console.error("Import failed for event",c.id,h),r++}}this._importing=!1,r===0?y(`Imported ${i} ${i===1?"activity":"activities"}.`):y(`Imported ${i}, ${r} failed.`,{duration:5e3}),this._events=[],this._selected=new Set,this.dispatchEvent(new Event("cancel"))}_calendarEventToPlanItem(e,t){var o,d;const i=`${e.summary??""} ${e.description??""}`.toLowerCase();let r="visit";/(lunch|dinner|breakfast|brunch|coffee|restaurant|caf[eé])/i.test(i)?r="meal":/(flight|airline|airport|drive|train|taxi|uber|lyft|transfer)/i.test(i)&&(r="travel");let a="",s;if((o=e.start)!=null&&o.dateTime&&((d=e.end)!=null&&d.dateTime)){const l=new Date(e.start.dateTime),c=new Date(e.end.dateTime),p=String(l.getHours()).padStart(2,"0"),h=String(l.getMinutes()).padStart(2,"0");a=`${p}:${h}`;const u=Math.round((c-l)/6e4);u>0&&(s=Math.min(u,600))}return{title:(e.summary||"(untitled)").trim(),type:r,day:t,time:a,durationMins:s}}_openPlannerForTarget(){this._targetTripId&&(this.dispatchEvent(new CustomEvent("open-trip-planner",{detail:{tripId:this._targetTripId},bubbles:!0,composed:!0})),this._closeAndReset())}_closeAndReset(){this._events=[],this._selected=new Set,this._mode=null,this._targetTripId="",this._skippedOutOfRange=0,this._addedCount=0,this._started=!1,this.dispatchEvent(new Event("cancel"))}_onCancel(){this.dispatchEvent(new Event("cancel"))}_fmtRange(e){var c,p,h,u,b,w,v,_;const t=((c=e.start)==null?void 0:c.date)??((h=(p=e.start)==null?void 0:p.dateTime)==null?void 0:h.slice(0,10)),i=((u=e.end)==null?void 0:u.date)??((w=(b=e.end)==null?void 0:b.dateTime)==null?void 0:w.slice(0,10));if(!t)return"";const r=new Date(t);if(!i||i===t)return r.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});let a=new Date(i);(v=e.start)!=null&&v.date&&((_=e.end)!=null&&_.date)&&a.setDate(a.getDate()-1);const s=r.getMonth()===a.getMonth()&&r.getFullYear()===a.getFullYear(),o=r.getFullYear()===a.getFullYear();if(s)return`${r.getDate()}–${a.getDate()} ${r.toLocaleString("en-GB",{month:"short",year:"numeric"})}`;const d=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),l=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});return o?`${d} – ${l}`:`${r.toLocaleDateString()} – ${a.toLocaleDateString()}`}render(){if(!this.open)return n``;const e=this._events.filter(s=>!s._alreadyImported),t=e.length>0&&this._selected.size===e.length,i=this._mode===null,r=this._mode==="addToTrip"&&!this._targetTripId,a=this._mode==="addToTrip"&&this._addedCount>0&&!this._importing;return n`
+  `);customElements.define("all-trips-modal",je);class Ge extends D{constructor(){super(),this.open=!1,this._events=[],this._selected=new Set,this._loading=!1,this._error="",this._importing=!1,this._started=!1,this._mode=null,this._targetTripId="",this._skippedOutOfRange=0,this._addedCount=0}willUpdate(e){e.has("open")&&this.open&&(this._started=!1,this._error="",this._mode=null,this._targetTripId="",this._skippedOutOfRange=0,this._addedCount=0)}_eligibleTrips(){const e=new Date().toISOString().slice(0,10);return(Array.isArray(f.state.trips)?f.state.trips:[]).filter(i=>i&&i.end&&String(i.end)>=e).sort((i,r)=>String(i.start||"").localeCompare(String(r.start||"")))}_pickMode(e){this._mode=e}_pickTrip(e){this._targetTripId=e}_start(){this._loading||(this._started=!0,this._load())}async _load(){var e,t,i,r,a,s;this._loading=!0,this._error="";try{const n=await Tt(),d=await yi(n,90),l=new Set((f.state.trips??[]).filter(p=>p.gcalEventId).map(p=>p.gcalEventId));this._events=d.map(p=>({...p,_alreadyImported:l.has(p.id)}));const c=new Set;for(const p of this._events){if(p._alreadyImported)continue;const h=((e=p.start)==null?void 0:e.date)??((i=(t=p.start)==null?void 0:t.dateTime)==null?void 0:i.slice(0,10)),u=((r=p.end)==null?void 0:r.date)??((s=(a=p.end)==null?void 0:a.dateTime)==null?void 0:s.slice(0,10));h&&u&&u!==h&&c.add(p.id)}this._selected=c}catch(n){console.error(n),this._error=(n==null?void 0:n.message)??"Could not load calendar events."}finally{this._loading=!1}}_toggle(e){const t=new Set(this._selected);t.has(e)?t.delete(e):t.add(e),this._selected=t}_toggleAll(){const e=this._events.filter(t=>!t._alreadyImported);this._selected.size===e.length?this._selected=new Set:this._selected=new Set(e.map(t=>t.id))}async _import(){var s,n,d,l;if(this._importing||this._selected.size===0)return;this._importing=!0;const e=(s=x==null?void 0:x.currentUser)==null?void 0:s.uid,t=this._events.filter(c=>this._selected.has(c.id));let i=0,r=0,a=0;if(this._mode==="addToTrip"){const c=this._eligibleTrips().find(p=>p.id===this._targetTripId);if(!c){this._importing=!1,y("Couldn’t find that activity. Try again.",{duration:4e3});return}for(const p of t){const h=((n=p.start)==null?void 0:n.date)??((l=(d=p.start)==null?void 0:d.dateTime)==null?void 0:l.slice(0,10));if(!h){a++;continue}if(h<c.start||h>c.end){a++;continue}const u=this._calendarEventToPlanItem(p,h),b={title:u.title,type:u.type,day:u.day,tripId:c.id,source:"google-calendar"};u.time&&(b.time=u.time),Number.isFinite(u.durationMins)&&(b.durationMins=u.durationMins);try{await f.saveActivity(b),i++}catch(w){console.error("add-to-trip activity failed for event",p.id,w),r++}}this._importing=!1,this._skippedOutOfRange=a,this._addedCount=i;return}for(const c of t){const p=xi(c,e);try{await f.saveTrip(p),i++}catch(h){console.error("Import failed for event",c.id,h),r++}}this._importing=!1,r===0?y(`Imported ${i} ${i===1?"activity":"activities"}.`):y(`Imported ${i}, ${r} failed.`,{duration:5e3}),this._events=[],this._selected=new Set,this.dispatchEvent(new Event("cancel"))}_calendarEventToPlanItem(e,t){var n,d;const i=`${e.summary??""} ${e.description??""}`.toLowerCase();let r="visit";/(lunch|dinner|breakfast|brunch|coffee|restaurant|caf[eé])/i.test(i)?r="meal":/(flight|airline|airport|drive|train|taxi|uber|lyft|transfer)/i.test(i)&&(r="travel");let a="",s;if((n=e.start)!=null&&n.dateTime&&((d=e.end)!=null&&d.dateTime)){const l=new Date(e.start.dateTime),c=new Date(e.end.dateTime),p=String(l.getHours()).padStart(2,"0"),h=String(l.getMinutes()).padStart(2,"0");a=`${p}:${h}`;const u=Math.round((c-l)/6e4);u>0&&(s=Math.min(u,600))}return{title:(e.summary||"(untitled)").trim(),type:r,day:t,time:a,durationMins:s}}_openPlannerForTarget(){this._targetTripId&&(this.dispatchEvent(new CustomEvent("open-trip-planner",{detail:{tripId:this._targetTripId},bubbles:!0,composed:!0})),this._closeAndReset())}_closeAndReset(){this._events=[],this._selected=new Set,this._mode=null,this._targetTripId="",this._skippedOutOfRange=0,this._addedCount=0,this._started=!1,this.dispatchEvent(new Event("cancel"))}_onCancel(){this.dispatchEvent(new Event("cancel"))}_fmtRange(e){var c,p,h,u,b,w,v,_;const t=((c=e.start)==null?void 0:c.date)??((h=(p=e.start)==null?void 0:p.dateTime)==null?void 0:h.slice(0,10)),i=((u=e.end)==null?void 0:u.date)??((w=(b=e.end)==null?void 0:b.dateTime)==null?void 0:w.slice(0,10));if(!t)return"";const r=new Date(t);if(!i||i===t)return r.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});let a=new Date(i);(v=e.start)!=null&&v.date&&((_=e.end)!=null&&_.date)&&a.setDate(a.getDate()-1);const s=r.getMonth()===a.getMonth()&&r.getFullYear()===a.getFullYear(),n=r.getFullYear()===a.getFullYear();if(s)return`${r.getDate()}–${a.getDate()} ${r.toLocaleString("en-GB",{month:"short",year:"numeric"})}`;const d=r.toLocaleString("en-GB",{day:"numeric",month:"short"}),l=a.toLocaleString("en-GB",{day:"numeric",month:"short",year:"numeric"});return n?`${d} – ${l}`:`${r.toLocaleDateString()} – ${a.toLocaleDateString()}`}render(){if(!this.open)return o``;const e=this._events.filter(s=>!s._alreadyImported),t=e.length>0&&this._selected.size===e.length,i=this._mode===null,r=this._mode==="addToTrip"&&!this._targetTripId,a=this._mode==="addToTrip"&&this._addedCount>0&&!this._importing;return o`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -2970,7 +3026,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           ${i?this._renderModeChooser():r?this._renderTripPicker():a?this._renderDone():this._renderLoadAndList(e,t)}
         </glass-panel>
       </div>
-    `}_renderModeChooser(){const t=this._eligibleTrips().length>0;return n`
+    `}_renderModeChooser(){const t=this._eligibleTrips().length>0;return o`
       <p class="lede">What would you like to do with your calendar events?</p>
       <div class="mode-cards">
         <button class="mode-card" @click=${()=>this._pickMode("newTrips")}>
@@ -3005,18 +3061,18 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <div class="mode-card-body">
             <div class="mode-card-title">Add events to an existing Activity</div>
             <div class="mode-card-subtitle">
-              ${t?n`Pick a trip: events become items in its day planner.`:n`You'll need a current or upcoming Activity first.`}
+              ${t?o`Pick a trip: events become items in its day planner.`:o`You'll need a current or upcoming Activity first.`}
             </div>
           </div>
         </button>
       </div>
-    `}_renderTripPicker(){const e=this._eligibleTrips();return n`
+    `}_renderTripPicker(){const e=this._eligibleTrips();return o`
       <p class="lede">
         Which Activity should these events join? Each imported event becomes
         an item in the trip's day planner.
       </p>
       <div class="trip-picker-list">
-        ${e.map(t=>n`
+        ${e.map(t=>o`
             <button class="trip-pick-row" @click=${()=>this._pickTrip(t.id)}>
               <div class="trip-pick-body">
                 <div class="trip-pick-title">${t.title||"(untitled trip)"}</div>
@@ -3031,13 +3087,13 @@ They'll lose access to shared trips, celebrations and any read-only child access
           Back
         </glass-button>
       </div>
-    `}_fmtTripRange(e){const t=e.start?new Date(e.start):null,i=e.end?new Date(e.end):null;if(!t)return"";const r={day:"numeric",month:"short"};return!i||+i==+t?t.toLocaleDateString("en-GB",r):`${t.toLocaleDateString("en-GB",r)} – ${i.toLocaleDateString("en-GB",r)}`}_renderDone(){const e=this._eligibleTrips().find(i=>i.id===this._targetTripId),t=(e==null?void 0:e.title)||"your Activity";return n`
+    `}_fmtTripRange(e){const t=e.start?new Date(e.start):null,i=e.end?new Date(e.end):null;if(!t)return"";const r={day:"numeric",month:"short"};return!i||+i==+t?t.toLocaleDateString("en-GB",r):`${t.toLocaleDateString("en-GB",r)} – ${i.toLocaleDateString("en-GB",r)}`}_renderDone(){const e=this._eligibleTrips().find(i=>i.id===this._targetTripId),t=(e==null?void 0:e.title)||"your Activity";return o`
       <p class="lede">
         Added <strong>${this._addedCount}</strong>
         ${this._addedCount===1?"item":"items"} to
         <strong>${t}</strong>'s day planner.
       </p>
-      ${this._skippedOutOfRange>0?n`<div class="skipped-note">
+      ${this._skippedOutOfRange>0?o`<div class="skipped-note">
             Skipped ${this._skippedOutOfRange}
             ${this._skippedOutOfRange===1?"event":"events"}
             outside the trip's dates.
@@ -3050,13 +3106,13 @@ They'll lose access to shared trips, celebrations and any read-only child access
           Open day plan
         </glass-button>
       </div>
-    `}_renderLoadAndList(e,t){return n`
+    `}_renderLoadAndList(e,t){return o`
       <p class="lede">
         Looking at your <strong>primary Google Calendar</strong> for the next 90 days.
-        ${this._mode==="addToTrip"?n`Tick the events you want as items in the trip's day planner. The rest stay where they are.`:n`Tick the events you want as Portal activities. The rest stay where they are.`}
+        ${this._mode==="addToTrip"?o`Tick the events you want as items in the trip's day planner. The rest stay where they are.`:o`Tick the events you want as Portal activities. The rest stay where they are.`}
       </p>
 
-      ${this._started?this._loading?n`<div class="loading">Loading your calendar…</div>`:this._error?n`
+      ${this._started?this._loading?o`<div class="loading">Loading your calendar…</div>`:this._error?o`
                 <div class="error">${this._error}</div>
                 <div class="intro-actions">
                   <glass-button variant="ghost" @click=${this._onCancel}>
@@ -3066,9 +3122,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     Try again
                   </glass-button>
                 </div>
-              `:this._events.length===0?n`<div class="empty">No events found in the next 90 days.</div>`:n`
+              `:this._events.length===0?o`<div class="empty">No events found in the next 90 days.</div>`:o`
                 <div class="list">
-                  ${this._events.map(i=>n`
+                  ${this._events.map(i=>o`
                       <div
                         class="row ${i._alreadyImported?"disabled":this._selected.has(i.id)?"on":""}"
                         @click=${()=>!i._alreadyImported&&this._toggle(i.id)}
@@ -3078,10 +3134,10 @@ They'll lose access to shared trips, celebrations and any read-only child access
                           <div class="title">${i.summary||"(untitled)"}</div>
                           <div class="meta">
                             <span>${this._fmtRange(i)}</span>
-                            ${i.location?n`<span>· ${i.location}</span>`:""}
+                            ${i.location?o`<span>· ${i.location}</span>`:""}
                           </div>
                         </div>
-                        ${i._alreadyImported?n`<span class="badge">In Portal</span>`:""}
+                        ${i._alreadyImported?o`<span class="badge">In Portal</span>`:""}
                       </div>
                     `)}
                 </div>
@@ -3102,7 +3158,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     </glass-button>
                   </div>
                 </div>
-              `:n`
+              `:o`
                 <div class="intro">
                   <p class="intro-lede">
                     We'll pull the next <strong>90 days</strong> from your
@@ -3461,7 +3517,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       font-size: 13px;
       margin-top: 10px;
     }
-  `);customElements.define("import-calendar-modal",Ge);class Ye extends D{constructor(){super(),this.open=!1,this.user=null,this.pebbleUser=null,this._name="",this._savingName=!1,this._uploadingPhoto=!1}willUpdate(e){var t;e.has("open")&&this.open&&(this._name=((t=this.user)==null?void 0:t.displayName)??"")}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _saveName(){var i,r;const e=this._name.trim();if(!e||e===(((i=this.user)==null?void 0:i.displayName)??""))return;const t=(r=x==null?void 0:x.currentUser)==null?void 0:r.uid;if(!(!t||!m)){this._savingName=!0;try{await T(k(m,"users",t),{displayName:e,updatedAt:C()});const a=f.familyId;if(a)try{await T(k(m,"families",a),{[`memberProfiles.${t}.displayName`]:e,[`memberProfiles.${t}.updatedAt`]:C(),updatedAt:C()})}catch(s){console.warn("memberProfiles fan-out failed:",s)}y("Display name updated.")}catch(a){console.error(a),y(`Couldn't save: ${a.code??a.message}`,{duration:5e3})}finally{this._savingName=!1}}}async _signOut(){confirm("Sign out of PebblePath?")&&(this.dispatchEvent(new Event("cancel")),await Ft())}_triggerPhotoPicker(){var e;(e=this.renderRoot.querySelector("#photo-file"))==null||e.click()}async _onPhotoChosen(e){var a,s;const t=(a=e.target.files)==null?void 0:a[0];if(e.target.value="",!t)return;if(!t.type.startsWith("image/")){y("Pick an image file (JPG, PNG, etc.).");return}if(t.size>5*1024*1024){y("Photo is too big. Keep it under 5 MB.");return}const i=(s=x==null?void 0:x.currentUser)==null?void 0:s.uid,r=f.familyId;if(!i||!r||!O){y("Can't upload yet. You need to be in a family first.");return}this._uploadingPhoto=!0;try{const o=te(O,`families/${r}/avatars/users/${i}`);await ae(o,t,{contentType:t.type});const d=await re(o);await T(k(m,"users",i),{profilePhotoURL:d,updatedAt:C()});try{await T(k(m,"families",r),{[`memberProfiles.${i}.profilePhotoURL`]:d,[`memberProfiles.${i}.updatedAt`]:C(),updatedAt:C()})}catch(l){console.warn("memberProfiles photo fan-out failed:",l)}y("Photo updated.")}catch(o){console.error("Photo upload failed",o),y(`Upload failed: ${o.code??o.message}`,{duration:5e3})}finally{this._uploadingPhoto=!1}}render(){if(!this.open)return n``;const e=this.user,t=this._name.trim()&&this._name.trim()!==((e==null?void 0:e.displayName)??"");return n`
+  `);customElements.define("import-calendar-modal",Ge);class Ye extends D{constructor(){super(),this.open=!1,this.user=null,this.pebbleUser=null,this._name="",this._savingName=!1,this._uploadingPhoto=!1}willUpdate(e){var t;e.has("open")&&this.open&&(this._name=((t=this.user)==null?void 0:t.displayName)??"")}_onCancel(){this.dispatchEvent(new Event("cancel"))}async _saveName(){var i,r;const e=this._name.trim();if(!e||e===(((i=this.user)==null?void 0:i.displayName)??""))return;const t=(r=x==null?void 0:x.currentUser)==null?void 0:r.uid;if(!(!t||!m)){this._savingName=!0;try{await T(k(m,"users",t),{displayName:e,updatedAt:C()});const a=f.familyId;if(a)try{await T(k(m,"families",a),{[`memberProfiles.${t}.displayName`]:e,[`memberProfiles.${t}.updatedAt`]:C(),updatedAt:C()})}catch(s){console.warn("memberProfiles fan-out failed:",s)}y("Display name updated.")}catch(a){console.error(a),y(`Couldn't save: ${a.code??a.message}`,{duration:5e3})}finally{this._savingName=!1}}}async _signOut(){confirm("Sign out of PebblePath?")&&(this.dispatchEvent(new Event("cancel")),await Ft())}_triggerPhotoPicker(){var e;(e=this.renderRoot.querySelector("#photo-file"))==null||e.click()}async _onPhotoChosen(e){var a,s;const t=(a=e.target.files)==null?void 0:a[0];if(e.target.value="",!t)return;if(!t.type.startsWith("image/")){y("Pick an image file (JPG, PNG, etc.).");return}if(t.size>5*1024*1024){y("Photo is too big. Keep it under 5 MB.");return}const i=(s=x==null?void 0:x.currentUser)==null?void 0:s.uid,r=f.familyId;if(!i||!r||!O){y("Can't upload yet. You need to be in a family first.");return}this._uploadingPhoto=!0;try{const n=te(O,`families/${r}/avatars/users/${i}`);await ae(n,t,{contentType:t.type});const d=await re(n);await T(k(m,"users",i),{profilePhotoURL:d,updatedAt:C()});try{await T(k(m,"families",r),{[`memberProfiles.${i}.profilePhotoURL`]:d,[`memberProfiles.${i}.updatedAt`]:C(),updatedAt:C()})}catch(l){console.warn("memberProfiles photo fan-out failed:",l)}y("Photo updated.")}catch(n){console.error("Photo upload failed",n),y(`Upload failed: ${n.code??n.message}`,{duration:5e3})}finally{this._uploadingPhoto=!1}}render(){if(!this.open)return o``;const e=this.user,t=this._name.trim()&&this._name.trim()!==((e==null?void 0:e.displayName)??"");return o`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -3500,7 +3556,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
               .value=${this._name}
               @input=${i=>this._name=i.target.value}
             />
-            ${t?n`<button
+            ${t?o`<button
                   class="save-btn"
                   ?disabled=${this._savingName}
                   @click=${this._saveName}
@@ -3669,17 +3725,17 @@ They'll lose access to shared trips, celebrations and any read-only child access
       background: rgba(201, 138, 138, 0.1);
       border-color: rgba(201, 138, 138, 0.5);
     }
-  `);customElements.define("profile-sheet",Ye);const ue=class ue extends D{constructor(){super(),this.open=!1}static get OPTIONS(){return[{type:"trip",tone:"sage",icon:n`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+  `);customElements.define("profile-sheet",Ye);const ue=class ue extends D{constructor(){super(),this.open=!1}static get OPTIONS(){return[{type:"trip",tone:"sage",icon:o`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M9 3.5h6A2.5 2.5 0 0 1 17.5 6v1h2A2.5 2.5 0 0 1 22 9.5v9A2.5 2.5 0 0 1 19.5 21h-15A2.5 2.5 0 0 1 2 18.5v-9A2.5 2.5 0 0 1 4.5 7h2V6A2.5 2.5 0 0 1 9 3.5zm.5 3.5h5V6a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 0-.5.5v1z"/>
-        </svg>`,label:"Trip",desc:"A getaway or a day out, with a day-by-day plan. Lodging and flights optional."},{type:"activity",tone:"amber",icon:n`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        </svg>`,label:"Trip",desc:"A getaway or a day out, with a day-by-day plan. Lodging and flights optional."},{type:"activity",tone:"amber",icon:o`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M12 2.6l2.82 5.72 6.31.92a.7.7 0 0 1 .39 1.2l-4.57 4.45 1.08 6.29a.7.7 0 0 1-1.02.74L12 18.94l-5.65 2.97a.7.7 0 0 1-1.02-.74l1.08-6.29-4.57-4.45a.7.7 0 0 1 .39-1.2l6.31-.92z"/>
-        </svg>`,label:"Activity",desc:"A single thing to do, on the family calendar. Add a time if it has one."},{type:"event",tone:"terracotta",icon:n`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        </svg>`,label:"Activity",desc:"A single thing to do, on the family calendar. Add a time if it has one."},{type:"event",tone:"terracotta",icon:o`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M11.25 9H4a1 1 0 0 0-1 1v1.5a1 1 0 0 0 1 1h7.25V9zm1.5 0v3.5H20a1 1 0 0 0 1-1V10a1 1 0 0 0-1-1h-7.25zM11.25 14H4.5v5.5A1.5 1.5 0 0 0 6 21h5.25v-7zm1.5 0v7H18a1.5 1.5 0 0 0 1.5-1.5V14h-6.75zM8.4 3a2.1 2.1 0 0 0-.5 4.15c.86.2 1.96.05 3.1-.4C10.3 5.05 9.5 3.2 8.4 3zm7.2 0c-1.1.2-1.9 2.05-2.6 3.75 1.14.45 2.24.6 3.1.4A2.1 2.1 0 0 0 15.6 3z"/>
-        </svg>`,label:"Birthday or anniversary",desc:"Recurring celebration on a specific date."},{type:"import",tone:"tide",icon:n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        </svg>`,label:"Birthday or anniversary",desc:"Recurring celebration on a specific date."},{type:"import",tone:"tide",icon:o`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M21 11V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h7" />
           <path d="M3 9h18M8 2.5v3M16 2.5v3" />
           <path d="M18 15v6M15 18h6" />
-        </svg>`,label:"Import from Calendar",desc:"Pull recent events from your Google Calendar."}]}_pick(e){this.dispatchEvent(new CustomEvent("pick",{detail:{type:e}}))}_cancel(){this.dispatchEvent(new Event("cancel"))}render(){return this.open?n`
+        </svg>`,label:"Import from Calendar",desc:"Pull recent events from your Google Calendar."}]}_pick(e){this.dispatchEvent(new CustomEvent("pick",{detail:{type:e}}))}_cancel(){this.dispatchEvent(new Event("cancel"))}render(){return this.open?o`
       <div class="backdrop" @click=${this._cancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -3688,7 +3744,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             <button class="close" @click=${this._cancel} aria-label="Close">×</button>
           </div>
           <div class="options">
-            ${ue.OPTIONS.map(e=>n`
+            ${ue.OPTIONS.map(e=>o`
                 <button
                   class="option ${e.mobileOnly?"mobile-only":""}"
                   @click=${()=>this._pick(e.type)}
@@ -3703,7 +3759,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
         </glass-panel>
       </div>
-    `:n``}};$(ue,"properties",{open:{type:Boolean,reflect:!0}}),$(ue,"styles",E`
+    `:o``}};$(ue,"properties",{open:{type:Boolean,reflect:!0}}),$(ue,"styles",E`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -3827,7 +3883,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       line-height: 1.45;
       margin-top: 2px;
     }
-  `);let qe=ue;customElements.define("activity-type-picker",qe);class He extends D{constructor(){super(),this.open=!1,this.floating=!1,this.family=null,this.trips=[],this._messages=[],this._input="",this._loading=!1,this._error="",this._followUps=[]}willUpdate(e){var t;e.has("_messages")&&(this.floating=(((t=this._messages)==null?void 0:t.length)??0)>0)}_onCancel(){this.dispatchEvent(new Event("cancel"))}_suggestions(){const e=[],t=(this.trips??[]).filter(i=>i.start&&new Date(i.start)>=new Date).sort((i,r)=>String(i.start).localeCompare(String(r.start)))[0];return t&&(e.push(`What should we do in ${t.location||t.title}?`),e.push(`What should we pack for ${t.title}?`)),e.push("Plan a family activity for this weekend"),e.push("Gift ideas for an upcoming birthday"),e.slice(0,4)}async _send(e){const t=(e??this._input).trim();if(!(!t||this._loading)){this._error="",this._input="",this._followUps=[],this._messages=[...this._messages,{role:"user",content:t}],this._loading=!0,this.updateComplete.then(()=>this._scrollToBottom());try{const i=this._messages.slice(0,-1).map(a=>({role:a.role,content:a.content})),r=await f.askPebble(t,i);this._messages=[...this._messages,{role:"assistant",content:r.answer}],this._followUps=Array.isArray(r.followUps)?r.followUps:[]}catch(i){console.error(i),(i==null?void 0:i.code)==="functions/unauthenticated"?this._error="Pebble needs you to be signed in.":(i==null?void 0:i.code)==="functions/permission-denied"?this._error="You're not in this family yet.":(i==null?void 0:i.code)==="functions/not-found"||(i==null?void 0:i.code)==="functions/internal"?this._error="Pebble isn't available right now — the Cloud Function may not be deployed yet.":this._error=(i==null?void 0:i.message)??"Pebble could not answer right now."}finally{this._loading=!1,this.updateComplete.then(()=>this._scrollToBottom())}}}_scrollToBottom(){const e=this.renderRoot.querySelector(".thread");e&&(e.scrollTop=e.scrollHeight)}_renderPebbleIcon(){return n`<pebble-icon color="#fff"></pebble-icon>`}render(){if(!this.open)return n``;const e=this._suggestions();return n`
+  `);let qe=ue;customElements.define("activity-type-picker",qe);class He extends D{constructor(){super(),this.open=!1,this.floating=!1,this.family=null,this.trips=[],this._messages=[],this._input="",this._loading=!1,this._error="",this._followUps=[]}willUpdate(e){var t;e.has("_messages")&&(this.floating=(((t=this._messages)==null?void 0:t.length)??0)>0)}_onCancel(){this.dispatchEvent(new Event("cancel"))}_suggestions(){const e=[],t=(this.trips??[]).filter(i=>i.start&&new Date(i.start)>=new Date).sort((i,r)=>String(i.start).localeCompare(String(r.start)))[0];return t&&(e.push(`What should we do in ${t.location||t.title}?`),e.push(`What should we pack for ${t.title}?`)),e.push("Plan a family activity for this weekend"),e.push("Gift ideas for an upcoming birthday"),e.slice(0,4)}async _send(e){const t=(e??this._input).trim();if(!(!t||this._loading)){this._error="",this._input="",this._followUps=[],this._messages=[...this._messages,{role:"user",content:t}],this._loading=!0,this.updateComplete.then(()=>this._scrollToBottom());try{const i=this._messages.slice(0,-1).map(a=>({role:a.role,content:a.content})),r=await f.askPebble(t,i);this._messages=[...this._messages,{role:"assistant",content:r.answer}],this._followUps=Array.isArray(r.followUps)?r.followUps:[]}catch(i){console.error(i),(i==null?void 0:i.code)==="functions/unauthenticated"?this._error="Pebble needs you to be signed in.":(i==null?void 0:i.code)==="functions/permission-denied"?this._error="You're not in this family yet.":(i==null?void 0:i.code)==="functions/not-found"||(i==null?void 0:i.code)==="functions/internal"?this._error="Pebble isn't available right now — the Cloud Function may not be deployed yet.":this._error=(i==null?void 0:i.message)??"Pebble could not answer right now."}finally{this._loading=!1,this.updateComplete.then(()=>this._scrollToBottom())}}}_scrollToBottom(){const e=this.renderRoot.querySelector(".thread");e&&(e.scrollTop=e.scrollHeight)}_renderPebbleIcon(){return o`<pebble-icon color="#fff"></pebble-icon>`}render(){if(!this.open)return o``;const e=this._suggestions();return o`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="panel" @keydown=${t=>{t.key==="Escape"&&this._onCancel()}}>
           <div class="header">
@@ -3840,7 +3896,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
 
           <div class="thread">
-            ${this._messages.length===0?n`
+            ${this._messages.length===0?o`
                   <div class="empty">
                     <div class="lede">Hi — what's on your mind?</div>
                     <div class="sub">
@@ -3849,18 +3905,18 @@ They'll lose access to shared trips, celebrations and any read-only child access
                       — anything family-shaped.
                     </div>
                     <div class="suggestions">
-                      ${e.map(t=>n`
+                      ${e.map(t=>o`
                           <button class="suggestion" @click=${()=>this._send(t)}>
                             ${t}
                           </button>
                         `)}
                     </div>
                   </div>
-                `:n`
-                  ${this._messages.map(t=>n`<div class="bubble ${t.role}">${t.content}</div>`)}
-                  ${this._loading?n`<div class="typing"><span></span><span></span><span></span></div>`:this._followUps.length>0?n`
+                `:o`
+                  ${this._messages.map(t=>o`<div class="bubble ${t.role}">${t.content}</div>`)}
+                  ${this._loading?o`<div class="typing"><span></span><span></span><span></span></div>`:this._followUps.length>0?o`
                         <div class="follow-ups">
-                          ${this._followUps.map(t=>n`
+                          ${this._followUps.map(t=>o`
                               <button class="follow-up" @click=${()=>this._send(t)}>
                                 ${t}
                               </button>
@@ -3870,7 +3926,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 `}
           </div>
 
-          ${this._error?n`<div class="error">${this._error}</div>`:""}
+          ${this._error?o`<div class="error">${this._error}</div>`:""}
 
           <form
             class="composer"
@@ -4232,7 +4288,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       text-align: center;
       line-height: 1.5;
     }
-  `);customElements.define("pebble-chat",He);class Ot extends D{render(){return n`
+  `);customElements.define("pebble-chat",He);class Ot extends D{render(){return o`
       <img class="icon" src=${"/portal/assets/pebblepath-icon.png"} alt="" aria-hidden="true" />
       <div class="wordmark">PebblePath</div>
       <a
@@ -4318,7 +4374,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
     .cta:hover .arrow {
       transform: translateX(3px);
     }
-  `);customElements.define("discover-pebblepath",Ot);class Ve extends D{constructor(){super(),this.code="",this._family=null,this._loading=!0,this._joining=!1,this._error="",this._step="join",this._children=[],this._claiming=!1,this._claimedName=null,this._joinedFamilyId=null,this._photoBlob=null,this._photoPreview="",this._uploadingPhoto=!1,this._pendingKids=[]}willUpdate(e){e.has("code")&&this.code&&this._lookup()}async _lookup(){var e;this._loading=!0,this._error="";try{const t=await f.findFamilyByConnectCode(this.code);if(!t)this._error="Invite code not found. Check it was typed correctly.",this._family=null;else{const i=t._matchedCodeKind==="pp"?t.inviteCodeExpiresAt:t.cairnInviteCodeExpiresAt,r=((e=i==null?void 0:i.toDate)==null?void 0:e.call(i))??(i?new Date(i):null);!r||r<new Date?(this._error="This invite code has expired. Ask the family for a fresh one.",this._family=null):this._family=t}}catch(t){console.error(t),this._error=(t==null?void 0:t.message)??"Couldn't look up the invite."}finally{this._loading=!1}}async _join(){var e;if(!this._joining){this._joining=!0,this._error="";try{const t=await f.redeemConnectCode(this.code);y(`Welcome to ${((e=this._family)==null?void 0:e.name)??"the family"}.`),this._joinedFamilyId=t;const i=await f.fetchFamilyChildren(t);this._pendingKids=Array.isArray(i)?i:[],this._step="photo"}catch(t){console.error(t),this._error=(t==null?void 0:t.message)??"Could not join."}finally{this._joining=!1}}}async _claimChild(e){if(!(this._claiming||!(e!=null&&e.id))){this._claiming=!0,this._error="";try{await f.requestToBeCoParent(e.id),this._claimedName=e.name??"your child"}catch(t){console.error(t),this._error=(t==null?void 0:t.message)??"Couldn't send the request."}finally{this._claiming=!1}}}_notAParent(){this._goNotifications()}_goNotifications(){this._step="notifications"}_pickPhoto(){var e;(e=this.renderRoot.querySelector("#joiner-photo-file"))==null||e.click()}async _onPhotoChosen(e){const t=await this._readPickedImage(e);t&&(this._photoBlob=t,this._photoPreview&&URL.revokeObjectURL(this._photoPreview),this._photoPreview=URL.createObjectURL(t))}async _uploadOwnPhotoIfAny(){if(!(!this._photoBlob||!this._joinedFamilyId))try{await f.uploadUserAvatar(this._joinedFamilyId,this._photoBlob)}catch(e){console.warn("joiner avatar upload failed (non-fatal):",e),y("Couldn't save your photo, add it later in Settings.")}}async _continueFromPhoto(){if(!this._uploadingPhoto){this._uploadingPhoto=!0;try{await this._uploadOwnPhotoIfAny()}finally{this._uploadingPhoto=!1}this._afterPhoto()}}_skipPhoto(){this._afterPhoto()}_afterPhoto(){this._pendingKids.length?(this._children=this._pendingKids,this._step="parent"):this._goNotifications()}async _readPickedImage(e){var i;const t=(i=e.target.files)==null?void 0:i[0];if(e.target.value="",!t)return null;if(!t.type.startsWith("image/"))return y("Pick an image file (JPG, PNG, etc.)."),null;if(t.size>15*1024*1024)return y("That photo is very large. Pick one under 15 MB."),null;try{return await this._processAvatarImage(t)}catch(r){return console.warn("photo processing failed:",r),y("Couldn't read that image. Try another."),null}}async _processAvatarImage(e){var l;let t;try{t=await createImageBitmap(e,{imageOrientation:"from-image"})}catch{t=await createImageBitmap(e)}const i=Math.min(t.width,t.height),r=(t.width-i)/2,a=(t.height-i)/2,s=512,o=document.createElement("canvas");return o.width=s,o.height=s,o.getContext("2d").drawImage(t,r,a,i,i,0,0,s,s),(l=t.close)==null||l.call(t),await new Promise((c,p)=>{o.toBlob(h=>h?c(h):p(new Error("toBlob returned null")),"image/jpeg",.85)})}_finishJoin(){this.dispatchEvent(new CustomEvent("joined",{detail:{familyId:this._joinedFamilyId}}))}_cancel(){this.dispatchEvent(new Event("cancel"))}_inviterFromFamily(e){var r;if(!e)return null;const t=(r=e.memberProfiles)==null?void 0:r[e.createdBy];if(!t)return null;const i=t.profilePhotoURL;return{displayName:t.displayName??"A family member",photoURL:typeof i=="string"&&/^https?:\/\//i.test(i)?i:null}}_renderPhoto(){return n`
+  `);customElements.define("discover-pebblepath",Ot);class Ve extends D{constructor(){super(),this.code="",this._family=null,this._loading=!0,this._joining=!1,this._error="",this._step="join",this._children=[],this._claiming=!1,this._claimedName=null,this._joinedFamilyId=null,this._photoBlob=null,this._photoPreview="",this._uploadingPhoto=!1,this._pendingKids=[]}willUpdate(e){e.has("code")&&this.code&&this._lookup()}async _lookup(){var e;this._loading=!0,this._error="";try{const t=await f.findFamilyByConnectCode(this.code);if(!t)this._error="Invite code not found. Check it was typed correctly.",this._family=null;else{const i=t._matchedCodeKind==="pp"?t.inviteCodeExpiresAt:t.cairnInviteCodeExpiresAt,r=((e=i==null?void 0:i.toDate)==null?void 0:e.call(i))??(i?new Date(i):null);!r||r<new Date?(this._error="This invite code has expired. Ask the family for a fresh one.",this._family=null):this._family=t}}catch(t){console.error(t),this._error=(t==null?void 0:t.message)??"Couldn't look up the invite."}finally{this._loading=!1}}async _join(){var e;if(!this._joining){this._joining=!0,this._error="";try{const t=await f.redeemConnectCode(this.code);y(`Welcome to ${((e=this._family)==null?void 0:e.name)??"the family"}.`),this._joinedFamilyId=t;const i=await f.fetchFamilyChildren(t);this._pendingKids=Array.isArray(i)?i:[],this._step="photo"}catch(t){console.error(t),this._error=(t==null?void 0:t.message)??"Could not join."}finally{this._joining=!1}}}async _claimChild(e){if(!(this._claiming||!(e!=null&&e.id))){this._claiming=!0,this._error="";try{await f.requestToBeCoParent(e.id),this._claimedName=e.name??"your child"}catch(t){console.error(t),this._error=(t==null?void 0:t.message)??"Couldn't send the request."}finally{this._claiming=!1}}}_notAParent(){this._goNotifications()}_goNotifications(){this._step="notifications"}_pickPhoto(){var e;(e=this.renderRoot.querySelector("#joiner-photo-file"))==null||e.click()}async _onPhotoChosen(e){const t=await this._readPickedImage(e);t&&(this._photoBlob=t,this._photoPreview&&URL.revokeObjectURL(this._photoPreview),this._photoPreview=URL.createObjectURL(t))}async _uploadOwnPhotoIfAny(){if(!(!this._photoBlob||!this._joinedFamilyId))try{await f.uploadUserAvatar(this._joinedFamilyId,this._photoBlob)}catch(e){console.warn("joiner avatar upload failed (non-fatal):",e),y("Couldn't save your photo, add it later in Settings.")}}async _continueFromPhoto(){if(!this._uploadingPhoto){this._uploadingPhoto=!0;try{await this._uploadOwnPhotoIfAny()}finally{this._uploadingPhoto=!1}this._afterPhoto()}}_skipPhoto(){this._afterPhoto()}_afterPhoto(){this._pendingKids.length?(this._children=this._pendingKids,this._step="parent"):this._goNotifications()}async _readPickedImage(e){var i;const t=(i=e.target.files)==null?void 0:i[0];if(e.target.value="",!t)return null;if(!t.type.startsWith("image/"))return y("Pick an image file (JPG, PNG, etc.)."),null;if(t.size>15*1024*1024)return y("That photo is very large. Pick one under 15 MB."),null;try{return await this._processAvatarImage(t)}catch(r){return console.warn("photo processing failed:",r),y("Couldn't read that image. Try another."),null}}async _processAvatarImage(e){var l;let t;try{t=await createImageBitmap(e,{imageOrientation:"from-image"})}catch{t=await createImageBitmap(e)}const i=Math.min(t.width,t.height),r=(t.width-i)/2,a=(t.height-i)/2,s=512,n=document.createElement("canvas");return n.width=s,n.height=s,n.getContext("2d").drawImage(t,r,a,i,i,0,0,s,s),(l=t.close)==null||l.call(t),await new Promise((c,p)=>{n.toBlob(h=>h?c(h):p(new Error("toBlob returned null")),"image/jpeg",.85)})}_finishJoin(){this.dispatchEvent(new CustomEvent("joined",{detail:{familyId:this._joinedFamilyId}}))}_cancel(){this.dispatchEvent(new Event("cancel"))}_inviterFromFamily(e){var r;if(!e)return null;const t=(r=e.memberProfiles)==null?void 0:r[e.createdBy];if(!t)return null;const i=t.profilePhotoURL;return{displayName:t.displayName??"A family member",photoURL:typeof i=="string"&&/^https?:\/\//i.test(i)?i:null}}_renderPhoto(){return o`
       <div class="wrap">
         <div class="mark">
           <img
@@ -4345,7 +4401,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
               aria-label="Add a profile photo"
             >
               <span class="ring">
-                ${this._photoPreview?n`<img src=${this._photoPreview} alt="" />`:n`<svg
+                ${this._photoPreview?o`<img src=${this._photoPreview} alt="" />`:o`<svg
                       class="ph"
                       viewBox="0 0 24 24"
                       fill="currentColor"
@@ -4396,7 +4452,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
         </glass-panel>
       </div>
-    `}_renderNotifications(){return n`
+    `}_renderNotifications(){return o`
       <div class="wrap">
         <div class="mark">
           <img
@@ -4437,7 +4493,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
         </glass-panel>
       </div>
-    `}_renderParentPrompt(){var t;const e=((t=this._family)==null?void 0:t.name)??"this family";return n`
+    `}_renderParentPrompt(){var t;const e=((t=this._family)==null?void 0:t.name)??"this family";return o`
       <div class="wrap">
         <div class="mark">
           <img
@@ -4452,7 +4508,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <div class="mark-name">PebblePath</div>
         </div>
         <glass-panel padding="lg" variant="strong" lifted>
-          ${this._claimedName?n`
+          ${this._claimedName?o`
                 <h1>Request sent</h1>
                 <div class="sent">
                   ✓ We've asked an existing parent to confirm your
@@ -4469,7 +4525,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     Continue
                   </glass-button>
                 </div>
-              `:n`
+              `:o`
                 <h1>Are you a parent or caregiver in ${e}?</h1>
                 <p class="prompt-lede">
                   If you're a parent or active caregiver of one of
@@ -4478,7 +4534,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                   information until they do.
                 </p>
                 <div class="child-list">
-                  ${this._children.map(i=>n`
+                  ${this._children.map(i=>o`
                       <button
                         class="child-btn"
                         ?disabled=${this._claiming}
@@ -4500,11 +4556,11 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     No, I'm not a parent or caregiver here
                   </glass-button>
                 </div>
-                ${this._error?n`<div class="error">${this._error}</div>`:""}
+                ${this._error?o`<div class="error">${this._error}</div>`:""}
               `}
         </glass-panel>
       </div>
-    `}render(){var a,s,o,d,l;if(this._step==="photo")return this._renderPhoto();if(this._step==="parent")return this._renderParentPrompt();if(this._step==="notifications")return this._renderNotifications();const e=this._inviterFromFamily(this._family),t=Array.isArray((a=this._family)==null?void 0:a.cairnMemberIds)||Array.isArray((s=this._family)==null?void 0:s.memberIds),i=(((o=this._family)==null?void 0:o.cairnMemberIds)??((d=this._family)==null?void 0:d.memberIds)??[]).length,r=(((l=this._family)==null?void 0:l.memberIds)??[]).length;return n`
+    `}render(){var a,s,n,d,l;if(this._step==="photo")return this._renderPhoto();if(this._step==="parent")return this._renderParentPrompt();if(this._step==="notifications")return this._renderNotifications();const e=this._inviterFromFamily(this._family),t=Array.isArray((a=this._family)==null?void 0:a.cairnMemberIds)||Array.isArray((s=this._family)==null?void 0:s.memberIds),i=(((n=this._family)==null?void 0:n.cairnMemberIds)??((d=this._family)==null?void 0:d.memberIds)??[]).length,r=(((l=this._family)==null?void 0:l.memberIds)??[]).length;return o`
       <div class="wrap">
         <div class="mark">
           <img
@@ -4519,10 +4575,10 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <div class="mark-name">PebblePath</div>
         </div>
         <glass-panel padding="lg" variant="strong" lifted>
-          ${this._loading?n`<div class="loading">Looking up <code>${this.code}</code>…</div>`:this._family?n`
+          ${this._loading?o`<div class="loading">Looking up <code>${this.code}</code>…</div>`:this._family?o`
                 <h1>You're invited.</h1>
                 <div class="preview">
-                  ${e?n`
+                  ${e?o`
                         <member-chip
                           .name=${e.displayName}
                           .photo=${e.photoURL??""}
@@ -4534,7 +4590,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                         </div>
                       `:""}
                   <div class="family-name">${this._family.name??"A family"}</div>
-                  ${t?n`<div class="meta">
+                  ${t?o`<div class="meta">
                         ${i} ${i===1?"person":"people"} on the Portal${r&&r<i?` · ${r} on PebblePath`:""}
                       </div>`:""}
                 </div>
@@ -4557,8 +4613,8 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     Not now
                   </glass-button>
                 </div>
-                ${this._error?n`<div class="error">${this._error}</div>`:""}
-              `:n`
+                ${this._error?o`<div class="error">${this._error}</div>`:""}
+              `:o`
                 <h1>Hmm.</h1>
                 <p style="text-align:center;color:var(--text-secondary);margin:0 0 22px;line-height:1.55;">
                   ${this._error||"This invite link doesn't look right."}
@@ -4820,7 +4876,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
     .av-pick input[type='file'] {
       display: none;
     }
-  `);customElements.define("join-family-screen",Ve);class We extends D{constructor(){super(),this.error="",this.busy=!1,this.joinCode="",this._codeInputOpen=!1,this._code=""}async _handleSignIn(){if(this.busy)return;const e=(this._code??"").trim().toUpperCase();if(this._codeInputOpen&&e){const t=e.startsWith("CAIRN-")?e:`CAIRN-${e.replace(/^CAIRN-?/i,"")}`;try{localStorage.setItem("cairn:pendingJoinCode",t)}catch{}}this.busy=!0,this.error="";try{await ye()}catch(t){this.error=(t==null?void 0:t.message)??"Sign-in failed."}finally{this.busy=!1}}_toggleCode(){this._codeInputOpen=!this._codeInputOpen,this._codeInputOpen&&requestAnimationFrame(()=>{var e;(e=this.renderRoot.querySelector(".code-input"))==null||e.focus()})}_renderGoogleIcon(){return n`
+  `);customElements.define("join-family-screen",Ve);class We extends D{constructor(){super(),this.error="",this.busy=!1,this.joinCode="",this._codeInputOpen=!1,this._code=""}async _handleSignIn(){if(this.busy)return;const e=(this._code??"").trim().toUpperCase();if(this._codeInputOpen&&e){const t=e.startsWith("CAIRN-")?e:`CAIRN-${e.replace(/^CAIRN-?/i,"")}`;try{localStorage.setItem("cairn:pendingJoinCode",t)}catch{}}this.busy=!0,this.error="";try{await ye()}catch(t){this.error=(t==null?void 0:t.message)??"Sign-in failed."}finally{this.busy=!1}}_toggleCode(){this._codeInputOpen=!this._codeInputOpen,this._codeInputOpen&&requestAnimationFrame(()=>{var e;(e=this.renderRoot.querySelector(".code-input"))==null||e.focus()})}_renderGoogleIcon(){return o`
       <svg viewBox="0 0 48 48" aria-hidden="true">
         <path
           fill="#EA4335"
@@ -4840,7 +4896,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         />
         <path fill="none" d="M0 0h48v48H0z" />
       </svg>
-    `}render(){return n`
+    `}render(){return o`
       <div class="wrap">
         <div class="brand">
           <div class="mark-row">
@@ -4857,7 +4913,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <div class="companion">Web Portal</div>
         </div>
         <glass-panel padding="lg" lifted variant="strong">
-          ${this.joinCode?n`<div class="invite-banner">
+          ${this.joinCode?o`<div class="invite-banner">
                 <strong>You've been invited to a family on PebblePath.</strong><br />
                 Sign in to continue — we'll show you the family next.
                 <br /><code>${this.joinCode}</code>
@@ -4876,12 +4932,12 @@ They'll lose access to shared trips, celebrations and any read-only child access
               ${this.busy?"Signing in…":this._codeInputOpen&&this._code.trim()?"Sign in with Google & join":"Sign in with Google"}
             </button>
           </div>
-          ${this.joinCode?"":n`<div class="have-code">
+          ${this.joinCode?"":o`<div class="have-code">
                 <button type="button" @click=${this._toggleCode}>
                   ${this._codeInputOpen?"× Cancel code":"I have a family code"}
                 </button>
               </div>`}
-          ${this._codeInputOpen?n`
+          ${this._codeInputOpen?o`
                 <div class="code-row">
                   <input
                     class="code-input"
@@ -4901,12 +4957,12 @@ They'll lose access to shared trips, celebrations and any read-only child access
                   Google. We'll add you to the family right after sign-in.
                 </div>
               `:""}
-          ${j?"":n`<div class="config-hint">
+          ${j?"":o`<div class="config-hint">
                 Sign-in is awaiting your Firebase config — copy
                 <code>.env.example</code> to <code>.env</code> and fill in the web-app
                 values from PebblePath's Firebase Console.
               </div>`}
-          ${this.error?n`<div class="error">${this.error}</div>`:""}
+          ${this.error?o`<div class="error">${this.error}</div>`:""}
         </glass-panel>
       </div>
     `}}$(We,"properties",{error:{state:!0},busy:{state:!0},joinCode:{type:String},_codeInputOpen:{state:!0},_code:{state:!0}}),$(We,"styles",E`
@@ -5195,14 +5251,14 @@ They'll lose access to shared trips, celebrations and any read-only child access
       letter-spacing: 0.04em;
       text-transform: uppercase;
     }
-  `);customElements.define("sign-in-screen",We);const $i="cairn:pendingJoinCode",mt="cairn:pendingLoginIntent";class Ke extends D{constructor(){super(),this.error="",this.busy=!1,this.joinCode="",this._step="welcome",this._email="",this._password="",this._displayName="",this._consent=!1,this._code="",this._resetSent=!1,this._invited=!1}willUpdate(e){if(e.has("joinCode")&&this.joinCode&&!this._invited){try{localStorage.setItem($i,(this.joinCode??"").trim().toUpperCase())}catch{}this._invited=!0}}_iconGoogle(){return n`<svg viewBox="0 0 48 48" aria-hidden="true">
+  `);customElements.define("sign-in-screen",We);const $i="cairn:pendingJoinCode",mt="cairn:pendingLoginIntent";class Ke extends D{constructor(){super(),this.error="",this.busy=!1,this.joinCode="",this._step="welcome",this._email="",this._password="",this._displayName="",this._consent=!1,this._code="",this._resetSent=!1,this._invited=!1}willUpdate(e){if(e.has("joinCode")&&this.joinCode&&!this._invited){try{localStorage.setItem($i,(this.joinCode??"").trim().toUpperCase())}catch{}this._invited=!0}}_iconGoogle(){return o`<svg viewBox="0 0 48 48" aria-hidden="true">
       <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.65 4.65-6.08 8-11.3 8-6.63 0-12-5.37-12-12s5.37-12 12-12c3.06 0 5.84 1.15 7.96 3.04l5.66-5.66C34.05 6.05 29.27 4 24 4 12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20c0-1.34-.14-2.65-.4-3.5z"/>
       <path fill="#FF3D00" d="M6.31 14.69l6.57 4.82C14.66 16.06 19.04 13 24 13c3.06 0 5.84 1.15 7.96 3.04l5.66-5.66C34.05 6.05 29.27 4 24 4 16.32 4 9.66 8.34 6.31 14.69z"/>
       <path fill="#4CAF50" d="M24 44c5.16 0 9.86-1.98 13.41-5.19l-6.19-5.24C29.21 35.09 26.71 36 24 36c-5.2 0-9.62-3.33-11.28-7.97l-6.51 5.02C9.5 39.56 16.23 44 24 44z"/>
       <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.79 2.24-2.23 4.16-4.09 5.57l6.19 5.24C39.5 36.46 44 30.5 44 24c0-1.34-.14-2.65-.4-3.5z"/>
-    </svg>`}_iconApple(){return n`<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+    </svg>`}_iconApple(){return o`<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
       <path d="M17.05 12.5c0-2.92 2.4-4.32 2.5-4.4-1.36-2-3.48-2.27-4.24-2.3-1.8-.18-3.52 1.06-4.43 1.06-.92 0-2.33-1.03-3.84-1-1.97.03-3.8 1.15-4.82 2.92-2.06 3.57-.52 8.85 1.48 11.76.98 1.42 2.14 3.02 3.66 2.97 1.47-.06 2.03-.95 3.81-.95 1.78 0 2.28.95 3.84.92 1.58-.03 2.59-1.45 3.55-2.88 1.12-1.65 1.58-3.26 1.6-3.34-.04-.02-3.07-1.18-3.11-4.66zm-2.94-8.55c.81-.99 1.36-2.36 1.21-3.73-1.17.05-2.59.78-3.42 1.76-.75.87-1.4 2.27-1.23 3.6 1.3.1 2.64-.66 3.44-1.63z"/>
-    </svg>`}_go(e){this._step=e,this.error="",this._resetSent=!1;try{e==="login"?localStorage.setItem(mt,"1"):localStorage.removeItem(mt)}catch{}}async _runAuth(e,{onSuccess:t}={}){if(!this.busy){this.busy=!0,this.error="";try{const i=await e();t==null||t(i)}catch(i){console.error(i),this.error=this._humanizeAuthError(i)}finally{this.busy=!1}}}_humanizeAuthError(e){const t=(e==null?void 0:e.code)??"";return t==="auth/invalid-credential"||t==="auth/wrong-password"?"That email and password don't match. Try again or reset your password.":t==="auth/user-not-found"?"No account with that email yet.":t==="auth/email-already-in-use"?"An account already exists for that email. Try signing in instead.":t==="auth/invalid-email"?"That email doesn't look right.":t==="auth/weak-password"?"Pick a password with at least 6 characters.":t==="auth/popup-closed-by-user"?"Sign-in cancelled. Try again when you're ready.":t==="auth/popup-blocked"?"Your browser blocked the sign-in popup. Allow popups and retry.":(e==null?void 0:e.message)??"Sign-in failed. Try again."}render(){return n`
+    </svg>`}_go(e){this._step=e,this.error="",this._resetSent=!1;try{e==="login"?localStorage.setItem(mt,"1"):localStorage.removeItem(mt)}catch{}}async _runAuth(e,{onSuccess:t}={}){if(!this.busy){this.busy=!0,this.error="";try{const i=await e();t==null||t(i)}catch(i){console.error(i),this.error=this._humanizeAuthError(i)}finally{this.busy=!1}}}_humanizeAuthError(e){const t=(e==null?void 0:e.code)??"";return t==="auth/invalid-credential"||t==="auth/wrong-password"?"That email and password don't match. Try again or reset your password.":t==="auth/user-not-found"?"No account with that email yet.":t==="auth/email-already-in-use"?"An account already exists for that email. Try signing in instead.":t==="auth/invalid-email"?"That email doesn't look right.":t==="auth/weak-password"?"Pick a password with at least 6 characters.":t==="auth/popup-closed-by-user"?"Sign-in cancelled. Try again when you're ready.":t==="auth/popup-blocked"?"Your browser blocked the sign-in popup. Allow popups and retry.":(e==null?void 0:e.message)??"Sign-in failed. Try again."}render(){return o`
       <div class="wrap">
         <div class="brand">
           <div class="mark-row">
@@ -5225,7 +5281,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           ${j?"":this._renderConfigHint()}
         </glass-panel>
       </div>
-    `}_renderWelcome(){return n`
+    `}_renderWelcome(){return o`
       <h1>Let's connect</h1>
       <p class="lede">
         ${this._invited?"You've been invited to a family. Register or sign in to join.":"One shared space for the whole family."}
@@ -5250,7 +5306,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </glass-button>
         </div>
       </div>
-    `}_renderProviders({google:e,apple:t,busyText:i}){return n`
+    `}_renderProviders({google:e,apple:t,busyText:i}){return o`
       <div class="providers">
         <button
           class="provider-btn"
@@ -5269,7 +5325,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <span>${this.busy?i:"Sign in with Apple"}</span>
         </button>
       </div>
-    `}_renderLogin(){return n`
+    `}_renderLogin(){return o`
       <button
         class="back"
         aria-label="Back"
@@ -5312,8 +5368,8 @@ They'll lose access to shared trips, celebrations and any read-only child access
         <div class="toggle-row">
           <button @click=${this._sendReset}>Forgot password?</button>
         </div>
-        ${this.error?n`<div class="error">${this.error}</div>`:""}
-        ${this._resetSent?n`<div class="success">Check your inbox for the reset link.</div>`:""}
+        ${this.error?o`<div class="error">${this.error}</div>`:""}
+        ${this._resetSent?o`<div class="success">Check your inbox for the reset link.</div>`:""}
         <div class="actions">
           <glass-button
             variant="primary"
@@ -5325,7 +5381,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         </div>
         ${this._renderProviders({google:()=>this._runAuth(()=>ye()),apple:()=>this._runAuth(()=>Ee()),busyText:"Signing in…"})}
       </div>
-    `}_submitEmailAuth(){const e=(this._email??"").trim(),t=this._password??"";if(this._step==="register"){const i=(this._displayName??"").trim();if(!i){this.error="Please enter your name.";return}if(!e.includes("@")){this.error="That email doesn't look right.";return}if(t.length<6){this.error="Pick a password with at least 6 characters.";return}if(!this._consent){this.error="Please confirm you are 18+ and agree to the Terms and Privacy Policy.";return}this._runAuth(()=>zt(e,t,i))}else{if(!e||!t){this.error="Email and password are required.";return}this._runAuth(()=>It(e,t))}}async _sendReset(){const e=(this._email??"").trim();if(!e){this.error="Enter your email first, then tap Forgot password.";return}this.busy=!0,this.error="";try{await Dt(e),this._resetSent=!0}catch(t){this.error=this._humanizeAuthError(t)}finally{this.busy=!1}}_renderRegister(){const e=(this._displayName??"").trim().length>0&&(this._email??"").includes("@")&&(this._password??"").length>=6&&this._consent&&!this.busy;return n`
+    `}_submitEmailAuth(){const e=(this._email??"").trim(),t=this._password??"";if(this._step==="register"){const i=(this._displayName??"").trim();if(!i){this.error="Please enter your name.";return}if(!e.includes("@")){this.error="That email doesn't look right.";return}if(t.length<6){this.error="Pick a password with at least 6 characters.";return}if(!this._consent){this.error="Please confirm you are 18+ and agree to the Terms and Privacy Policy.";return}this._runAuth(()=>zt(e,t,i))}else{if(!e||!t){this.error="Email and password are required.";return}this._runAuth(()=>It(e,t))}}async _sendReset(){const e=(this._email??"").trim();if(!e){this.error="Enter your email first, then tap Forgot password.";return}this.busy=!0,this.error="";try{await Dt(e),this._resetSent=!0}catch(t){this.error=this._humanizeAuthError(t)}finally{this.busy=!1}}_renderRegister(){const e=(this._displayName??"").trim().length>0&&(this._email??"").includes("@")&&(this._password??"").length>=6&&this._consent&&!this.busy;return o`
       <button
         class="back"
         aria-label="Back"
@@ -5396,7 +5452,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             >Privacy Policy</a>.
           </span>
         </label>
-        ${this.error?n`<div class="error">${this.error}</div>`:""}
+        ${this.error?o`<div class="error">${this.error}</div>`:""}
         <div class="actions">
           <glass-button
             variant="primary"
@@ -5408,7 +5464,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         </div>
         ${this._renderProviders({google:()=>this._runAuth(()=>ye()),apple:()=>this._runAuth(()=>Ee()),busyText:"Creating…"})}
       </div>
-    `}_renderConfigHint(){return n`
+    `}_renderConfigHint(){return o`
       <div class="config-hint">
         Sign-in is awaiting your Firebase config — copy
         <code>.env.example</code> to <code>.env</code> and fill in the web-app
@@ -5835,9 +5891,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
       font-weight: 500;
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
     }
-  `);customElements.define("register-screen",Ke);const de=class de extends D{constructor(){super(),this.value="family"}_select(e){e!==this.value&&(this.value=e,this.dispatchEvent(new CustomEvent("circle-change",{detail:{value:e},bubbles:!0,composed:!0})))}render(){return n`
+  `);customElements.define("register-screen",Ke);const de=class de extends D{constructor(){super(),this.value="family"}_select(e){e!==this.value&&(this.value=e,this.dispatchEvent(new CustomEvent("circle-change",{detail:{value:e},bubbles:!0,composed:!0})))}render(){return o`
       <div class="track" role="tablist" aria-label="Circle">
-        ${de.OPTIONS.map(e=>n`
+        ${de.OPTIONS.map(e=>o`
             <button
               role="tab"
               aria-selected=${this.value===e.value}
@@ -5897,17 +5953,17 @@ They'll lose access to shared trips, celebrations and any read-only child access
         inset 0 1px 0 rgba(255, 255, 255, 0.5);
       font-weight: 600;
     }
-  `);let Je=de;customElements.define("circle-switcher",Je);class Xe extends D{constructor(){super(),this.event=null,this.members=[]}_icon(e){return e==="birthday"?n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  `);let Je=de;customElements.define("circle-switcher",Je);class Xe extends D{constructor(){super(),this.event=null,this.members=[]}_icon(e){return e==="birthday"?o`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M5 14h14v6H5z" />
         <path d="M5 14c0-2 1.5-3 3-3h8c1.5 0 3 1 3 3" />
         <path d="M12 11V7" />
         <path d="M11 5.5c0-.8.5-1.5 1-2 .5.5 1 1.2 1 2 0 .6-.4 1-1 1s-1-.4-1-1z" fill="currentColor" stroke="none" />
-      </svg>`:e==="anniversary"?n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      </svg>`:e==="anniversary"?o`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="9" cy="13" r="5" />
         <circle cx="15" cy="13" r="5" />
-      </svg>`:n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      </svg>`:o`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" />
-    </svg>`}_fmtDate(e){const t=M(e)??new Date(e);return{day:t.getDate(),month:t.toLocaleString("en-GB",{month:"short"})}}render(){const e=this.event;if(!e)return n``;const i=(M(e.date)??new Date(e.date)).toLocaleDateString("en-GB",e.recurring??!1?{day:"numeric",month:"short"}:{day:"numeric",month:"short",year:"numeric"}),r=e.subtitle&&e.subtitle.length?e.subtitle:e.recurring??!1?"Yearly":"";return n`
+    </svg>`}_fmtDate(e){const t=M(e)??new Date(e);return{day:t.getDate(),month:t.toLocaleString("en-GB",{month:"short"})}}render(){const e=this.event;if(!e)return o``;const i=(M(e.date)??new Date(e.date)).toLocaleDateString("en-GB",e.recurring??!1?{day:"numeric",month:"short"}:{day:"numeric",month:"short",year:"numeric"}),r=e.subtitle&&e.subtitle.length?e.subtitle:e.recurring??!1?"Yearly":"";return o`
       <div
         class="row"
         @click=${()=>this.dispatchEvent(new CustomEvent("edit-event",{detail:e,bubbles:!0,composed:!0}))}
@@ -5917,8 +5973,8 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <div class="title-row">
             <div class="title">${e.title}</div>
           </div>
-          ${e.calTag||r?n`<div class="meta">
-                ${e.calTag?n`<span class="tagpill">${e.calTag}</span>`:""}${r}
+          ${e.calTag||r?o`<div class="meta">
+                ${e.calTag?o`<span class="tagpill">${e.calTag}</span>`:""}${r}
               </div>`:""}
         </div>
         <div class="date">${i}</div>
@@ -6036,7 +6092,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       flex-shrink: 0;
       white-space: nowrap;
     }
-  `);customElements.define("event-row",Xe);class Qe extends D{constructor(){super(),this.open=!1,this.activity=null,this.members=[],this.children=[],this.familyId="",this.currentUid="",this.busy=!1,this.defaultDay="",this.defaultTripId=null,this.defaultTime="",this.defaultDuration=60,this._draft=this._blankDraft(),this._error=""}willUpdate(e){(e.has("activity")||e.has("open"))&&(this.open&&(this._draft=this.activity?this._draftFromActivity(this.activity):this._blankDraft()),this._error="")}_blankDraft(){const e=new Date().toISOString().slice(0,10);return{id:null,title:"",type:"visit",day:this.defaultDay||e,time:this.defaultTime||"",durationMins:this.defaultDuration||60,personIds:[],visibility:"family",calTag:"",notes:"",url:"",tripId:this.defaultTripId||null}}_draftFromActivity(e){if(!e)return this._blankDraft();const t=new Date().toISOString().slice(0,10);return{id:e.id??null,title:e.title??"",type:e.type??"visit",day:e.day??t,time:e.time??"",durationMins:e.durationMins??60,personIds:Array.isArray(e.personIds)?[...e.personIds]:[],visibility:e.visibility??"family",calTag:e.calTag??"",notes:e.notes??"",url:e.url??"",tripId:e.tripId??null}}_set(e,t){this._draft={...this._draft,[e]:t}}_toggleTime(){this._set("time",this._draft.time?"":"09:00")}_togglePerson(e){const t=this._draft.personIds.includes(e);this._set("personIds",t?this._draft.personIds.filter(i=>i!==e):[...this._draft.personIds,e])}_onSave(){const e=this._draft;if(!e.title.trim()){this._error="Give it a title.";return}if(!e.day){this._error="Pick a date.";return}if(!this.familyId){this._error="No family yet.";return}const t=(e.url??"").trim();if(t&&!/^https?:\/\//i.test(t)){this._error="Links must start with http:// or https://";return}this._error="";const i=!!e.time,r={id:e.id,title:e.title.trim(),type:e.type,day:e.day,time:i?e.time:null,durationMins:i?e.durationMins:null,personIds:[...e.personIds],visibility:e.visibility,calTag:e.calTag.trim()||null,notes:e.notes.trim()||null,url:t||null};e.tripId&&(r.tripId=e.tripId),this.dispatchEvent(new CustomEvent("save",{detail:r}))}_onDelete(){this._draft.id&&confirm("Delete this activity? This can't be undone.")&&this.dispatchEvent(new CustomEvent("remove",{detail:{id:this._draft.id}}))}_onCancel(){this.dispatchEvent(new Event("cancel"))}render(){var o;if(!this.open)return n``;const e=this._draft,t=!!e.id,i=!!e.tripId,r=!t||!i||(((o=this.activity)==null?void 0:o.addedBy)??"")===(this.currentUid??""),a=!!e.time,s=[{v:30,label:"30m"},{v:60,label:"1h"},{v:120,label:"2h"},{v:180,label:"3h"},{v:1440,label:"All day"}];return n`
+  `);customElements.define("event-row",Xe);class Qe extends D{constructor(){super(),this.open=!1,this.activity=null,this.members=[],this.children=[],this.familyId="",this.currentUid="",this.busy=!1,this.defaultDay="",this.defaultTripId=null,this.defaultTime="",this.defaultDuration=60,this._draft=this._blankDraft(),this._error=""}willUpdate(e){(e.has("activity")||e.has("open"))&&(this.open&&(this._draft=this.activity?this._draftFromActivity(this.activity):this._blankDraft()),this._error="")}_blankDraft(){const e=new Date().toISOString().slice(0,10);return{id:null,title:"",type:"visit",day:this.defaultDay||e,time:this.defaultTime||"",durationMins:this.defaultDuration||60,personIds:[],visibility:"family",calTag:"",notes:"",url:"",tripId:this.defaultTripId||null}}_draftFromActivity(e){if(!e)return this._blankDraft();const t=new Date().toISOString().slice(0,10);return{id:e.id??null,title:e.title??"",type:e.type??"visit",day:e.day??t,time:e.time??"",durationMins:e.durationMins??60,personIds:Array.isArray(e.personIds)?[...e.personIds]:[],visibility:e.visibility??"family",calTag:e.calTag??"",notes:e.notes??"",url:e.url??"",tripId:e.tripId??null}}_set(e,t){this._draft={...this._draft,[e]:t}}_toggleTime(){this._set("time",this._draft.time?"":"09:00")}_togglePerson(e){const t=this._draft.personIds.includes(e);this._set("personIds",t?this._draft.personIds.filter(i=>i!==e):[...this._draft.personIds,e])}_onSave(){const e=this._draft;if(!e.title.trim()){this._error="Give it a title.";return}if(!e.day){this._error="Pick a date.";return}if(!this.familyId){this._error="No family yet.";return}const t=(e.url??"").trim();if(t&&!/^https?:\/\//i.test(t)){this._error="Links must start with http:// or https://";return}this._error="";const i=!!e.time,r={id:e.id,title:e.title.trim(),type:e.type,day:e.day,time:i?e.time:null,durationMins:i?e.durationMins:null,personIds:[...e.personIds],visibility:e.visibility,calTag:e.calTag.trim()||null,notes:e.notes.trim()||null,url:t||null};e.tripId&&(r.tripId=e.tripId),this.dispatchEvent(new CustomEvent("save",{detail:r}))}_onDelete(){this._draft.id&&confirm("Delete this activity? This can't be undone.")&&this.dispatchEvent(new CustomEvent("remove",{detail:{id:this._draft.id}}))}_onCancel(){this.dispatchEvent(new Event("cancel"))}render(){var n;if(!this.open)return o``;const e=this._draft,t=!!e.id,i=!!e.tripId,r=!t||!i||(((n=this.activity)==null?void 0:n.addedBy)??"")===(this.currentUid??""),a=!!e.time,s=[{v:30,label:"30m"},{v:60,label:"1h"},{v:120,label:"2h"},{v:180,label:"3h"},{v:1440,label:"All day"}];return o`
       <div class="backdrop" @click=${this._onCancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -6045,7 +6101,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             <button class="close" @click=${this._onCancel} aria-label="Close">×</button>
           </div>
 
-          ${r?"":n`<div class="ro-note">
+          ${r?"":o`<div class="ro-note">
                 You can view this activity. Only the person who added it can
                 edit it.
               </div>`}
@@ -6054,7 +6110,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <div class="field">
             <label>Type</label>
             <div class="seg">
-              ${[{v:"visit",label:"Visit"},{v:"meal",label:"Meal"},{v:"travel",label:"Travel"},{v:"note",label:"Note"}].map(d=>n`
+              ${[{v:"visit",label:"Visit"},{v:"meal",label:"Meal"},{v:"travel",label:"Travel"},{v:"note",label:"Note"}].map(d=>o`
                   <button
                     class=${e.type===d.v?"active":""}
                     @click=${()=>this._set("type",d.v)}
@@ -6098,7 +6154,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
               </div>
               <div class="toggle-switch"></div>
             </div>
-            ${a?n`
+            ${a?o`
                   <div class="time-detail row-2">
                     <div class="field">
                       <label>Starts at</label>
@@ -6111,7 +6167,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     <div class="field">
                       <label>Duration</label>
                       <div class="dur-chips">
-                        ${s.map(d=>n`
+                        ${s.map(d=>o`
                             <button
                               class="dur-chip ${e.durationMins===d.v?"on":""}"
                               @click=${()=>this._set("durationMins",d.v)}
@@ -6125,19 +6181,19 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 `:""}
           </div>
 
-          ${i?n`
+          ${i?o`
                 <div class="field">
                   <div class="trip-note">
                     <span aria-hidden="true">ⓘ</span>
                     <span>This is part of a trip, so it's visible to everyone on that trip.</span>
                   </div>
                 </div>
-              `:n`
+              `:o`
                 ${this._whosGoing(e)}
                 <div class="field">
                   <label>Visibility</label>
                   <div class="seg">
-                    ${["personal","family","extended"].map(d=>n`
+                    ${["personal","family","extended"].map(d=>o`
                         <button
                           class=${e.visibility===d?"active":""}
                           @click=${()=>this._set("visibility",d)}
@@ -6179,11 +6235,11 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
           </div>
 
-          ${this._error?n`<div class="error">${this._error}</div>`:""}
+          ${this._error?o`<div class="error">${this._error}</div>`:""}
 
           <div class="actions">
-            ${r?n`
-                  ${t?n`<button class="delete-btn" @click=${this._onDelete} ?disabled=${this.busy}>
+            ${r?o`
+                  ${t?o`<button class="delete-btn" @click=${this._onDelete} ?disabled=${this.busy}>
                         Delete
                       </button>`:""}
                   <div class="spacer"></div>
@@ -6193,7 +6249,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                   <glass-button variant="primary" @click=${this._onSave} ?disabled=${this.busy}>
                     ${this.busy?"Saving…":t?"Save changes":"Add activity"}
                   </glass-button>
-                `:n`
+                `:o`
                   <div class="spacer"></div>
                   <glass-button variant="primary" @click=${this._onCancel}>
                     Close
@@ -6202,11 +6258,11 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
         </glass-panel>
       </div>
-    `}_whosGoing(e){const t=Array.isArray(this.members)?this.members:[],i=Array.isArray(this.children)?this.children:[];return t.length===0&&i.length===0?"":n`
+    `}_whosGoing(e){const t=Array.isArray(this.members)?this.members:[],i=Array.isArray(this.children)?this.children:[];return t.length===0&&i.length===0?"":o`
       <div class="field">
         <label>Who's going</label>
         <div class="people">
-          ${t.map(r=>n`
+          ${t.map(r=>o`
               <div
                 class="person-chip ${e.personIds.includes(r.uid)?"on":""}"
                 @click=${()=>this._togglePerson(r.uid)}
@@ -6220,7 +6276,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 ${r.displayName}
               </div>
             `)}
-          ${i.map(r=>n`
+          ${i.map(r=>o`
               <div
                 class="person-chip ${e.personIds.includes("child:"+r.id)?"on":""}"
                 @click=${()=>this._togglePerson("child:"+r.id)}
@@ -6515,7 +6571,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       color: var(--text-secondary);
       line-height: 1.45;
     }
-  `);customElements.define("activity-form",Qe);class Ze extends D{constructor(){super();$(this,"_accept","application/pdf,image/*,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword");this.open=!1,this.knownTags=[],this.children=[],this.canSaveReports=!1,this._reset()}_reset(){this._phase="pick",this._events=[],this._err="",this._count=0,this._category="activity",this._tag="",this._documentKind="",this._report=null,this._file=null,this._rChildId=null,this._rTitle="",this._rPeriod="",this._rSummary="",this._rKeepFile=!0,this._booking=null,this._bRows=[],this._bTarget={type:"calendarOnly"}}willUpdate(t){t.has("open")&&this.open&&this._reset()}_cancel(){this.dispatchEvent(new Event("cancel"))}async _onFile(t){var r;const i=(r=t.target.files)==null?void 0:r[0];if(t.target.value="",!!i){this._file=i,this._phase="working",this._err="";try{const{storagePath:a,fileType:s}=await f.uploadSchoolCalendar(i),o=await f.classifyUpload(a,s),d=(o==null?void 0:o.documentKind)??"unknown";if(this._documentKind=d,d==="calendar"){const l=Array.isArray(o.events)?o.events:[];if(!l.length){this._phase="error",this._err="Couldn't find any dated events in that file. Try a clearer PDF or a screenshot of the calendar.";return}this._events=l.map(c=>({...c,_sel:!0})).sort((c,p)=>String(c.date).localeCompare(String(p.date))),this._phase="review"}else if(d==="report"){if(!this.canSaveReports){this._phase="error",this._err="Report cards can only be saved to a child's profile by their parent.";return}const l=o.report??{};if(!String(l.summary??"").trim()){this._phase="error",this._err="I couldn't pull a summary out of that report. Try a clearer photo or PDF.";return}this._report=l,this._rTitle=l.title??"Report",this._rPeriod=l.periodLabel??"",this._rSummary=l.summary??"",this._rKeepFile=!0,this._rChildId=this._defaultReportChildId(l),this._phase="report-review"}else if(d==="booking"){const l=o.booking??{};this._booking=l,this._bRows=(Array.isArray(l.timeline)?l.timeline:[]).map(c=>({day:c.day??"",time:c.time??"",durationMins:Number.isFinite(c.durationMins)?c.durationMins:null,title:c.title??"",type:c.type??"note",notes:c.notes??"",_sel:!0})),l.suggestedTripId?this._bTarget={type:"existing",tripId:l.suggestedTripId}:l.newTripProposal?this._bTarget={type:"newTrip"}:this._bTarget={type:"calendarOnly"},this._phase="booking-review"}else this._phase="error",this._err=o!=null&&o.reason?`I couldn't read that as a calendar, booking, or report. ${o.reason}`:"I couldn't tell what that file is. Try a clearer photo, or a calendar, a booking confirmation, or a report."}catch(a){console.error("smart upload failed:",a),this._phase="error",this._err=(a==null?void 0:a.code)==="functions/permission-denied"?"You're not a member of this family.":(a==null?void 0:a.code)==="storage/unauthorized"?"The upload rule needs publishing. Ask the team to deploy storage.rules.":(a==null?void 0:a.code)==="functions/not-found"||(a==null?void 0:a.code)==="functions/internal"?"The importer isn't available right now. Try again in a moment.":(a==null?void 0:a.message)??"Something went wrong. Try again."}}}_defaultReportChildId(t){var a;const i=this.children??[];if(!i.length)return null;const r=String((t==null?void 0:t.childNameGuess)??"").trim().toLowerCase();if(r){const s=i.find(o=>{const d=String(o.name??"").toLowerCase();return d===r||r.includes(d)});if(s)return s.id}return((a=i[0])==null?void 0:a.id)??null}async _confirmReport(){var t,i,r;if(!(!this._rChildId||!this._rTitle.trim()||!this._rSummary.trim())){this._phase="working";try{await f.importReport(this._rChildId,{title:this._rTitle,source:(t=this._report)==null?void 0:t.source,periodLabel:this._rPeriod,reportDate:(i=this._report)==null?void 0:i.reportDate,summary:this._rSummary,highlights:(r=this._report)==null?void 0:r.highlights},this._rKeepFile?this._file:null),this._count=1,this._phase="done",y("Report saved to the profile."),this.dispatchEvent(new CustomEvent("added",{detail:1}))}catch(a){console.error("importReport failed:",a),this._phase="error",this._err=(a==null?void 0:a.code)==="permission-denied"?"Couldn't save. You may not have permission.":(a==null?void 0:a.message)??"Couldn't save the report. Try again."}}}_patchB(t,i,r){const a=this._bRows.slice();a[t]={...a[t],[i]:r},this._bRows=a}_bSpan(){var r;const t=(r=this._booking)==null?void 0:r.newTripProposal;if(t!=null&&t.start&&(t!=null&&t.end))return{start:t.start,end:t.end};const i=this._bRows.map(a=>a.day).filter(a=>/^\d{4}-\d{2}-\d{2}$/.test(String(a??""))).sort();return{start:i[0]??"",end:i[i.length-1]??i[0]??""}}_matchingTrips(){const{start:t,end:i}=this._bSpan();return t?f.matchingTrips(t,i):[]}_prettyDay(t){if(!/^\d{4}-\d{2}-\d{2}$/.test(String(t??"")))return t??"";const[i,r,a]=t.split("-").map(Number);return new Date(i,r-1,a).toLocaleDateString("en-US",{month:"short",day:"numeric"})}_tripDateLabel(t){const i=this._prettyDay(t.start);return t.end&&t.end!==t.start?`${i} to ${this._prettyDay(t.end)}`:i}_bookingNoun(t){return t==="flight"?"flight booking":t==="hotel"?"hotel booking":t==="car"?"car rental":t==="restaurant"?"restaurant reservation":"booking"}_bHeaderText(){const t=this._booking??{};let i=`I found a ${this._bookingNoun(t.bookingType)}`;t.location&&(i+=` in ${t.location}`);const{start:r,end:a}=this._bSpan();return r&&(i+=` for ${this._prettyDay(r)}`,a&&a!==r&&(i+=` to ${this._prettyDay(a)}`)),`${i}. Where should it go?`}_bFillPreview(){var s,o,d,l,c,p,h;if(((s=this._bTarget)==null?void 0:s.type)!=="existing")return[];const t=(f.state.trips??[]).find(u=>u.id===this._bTarget.tripId);if(!t)return[];const i=this._booking??{},r=(u,b)=>!u&&!!b,a=[];return(r(t.lodgingTitle,(o=i.lodging)==null?void 0:o.title)||r(t.lodgingUrl,(d=i.lodging)==null?void 0:d.url))&&a.push("Lodging"),(r(t.flightAirline,(l=i.flight)==null?void 0:l.airline)||r(t.flightDepartAirport,(c=i.flight)==null?void 0:c.departAirport))&&a.push("Flight"),(r(t.returnFlightAirline,(p=i.returnFlight)==null?void 0:p.airline)||r(t.returnFlightDepartAirport,(h=i.returnFlight)==null?void 0:h.departAirport))&&a.push("Return flight"),a}_bAddLabel(){var t,i;return((t=this._bTarget)==null?void 0:t.type)==="newTrip"?"Create trip":((i=this._bTarget)==null?void 0:i.type)==="existing"?"Add to trip":`Add ${this._bRows.filter(r=>r._sel).length}`}_renderTRow(t,i,r,a){return n`<button
+  `);customElements.define("activity-form",Qe);class Ze extends D{constructor(){super();$(this,"_accept","application/pdf,image/*,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword");this.open=!1,this.knownTags=[],this.children=[],this.canSaveReports=!1,this._reset()}_reset(){this._phase="pick",this._events=[],this._err="",this._count=0,this._category="activity",this._tag="",this._documentKind="",this._report=null,this._file=null,this._rChildId=null,this._rTitle="",this._rPeriod="",this._rSummary="",this._rKeepFile=!0,this._booking=null,this._bRows=[],this._bTarget={type:"calendarOnly"}}willUpdate(t){t.has("open")&&this.open&&this._reset()}_cancel(){this.dispatchEvent(new Event("cancel"))}async _onFile(t){var r;const i=(r=t.target.files)==null?void 0:r[0];if(t.target.value="",!!i){this._file=i,this._phase="working",this._err="";try{const{storagePath:a,fileType:s}=await f.uploadSchoolCalendar(i),n=await f.classifyUpload(a,s),d=(n==null?void 0:n.documentKind)??"unknown";if(this._documentKind=d,d==="calendar"){const l=Array.isArray(n.events)?n.events:[];if(!l.length){this._phase="error",this._err="Couldn't find any dated events in that file. Try a clearer PDF or a screenshot of the calendar.";return}this._events=l.map(c=>({...c,_sel:!0})).sort((c,p)=>String(c.date).localeCompare(String(p.date))),this._phase="review"}else if(d==="report"){if(!this.canSaveReports){this._phase="error",this._err="Report cards can only be saved to a child's profile by their parent.";return}const l=n.report??{};if(!String(l.summary??"").trim()){this._phase="error",this._err="I couldn't pull a summary out of that report. Try a clearer photo or PDF.";return}this._report=l,this._rTitle=l.title??"Report",this._rPeriod=l.periodLabel??"",this._rSummary=l.summary??"",this._rKeepFile=!0,this._rChildId=this._defaultReportChildId(l),this._phase="report-review"}else if(d==="booking"){const l=n.booking??{};this._booking=l,this._bRows=(Array.isArray(l.timeline)?l.timeline:[]).map(c=>({day:c.day??"",time:c.time??"",durationMins:Number.isFinite(c.durationMins)?c.durationMins:null,title:c.title??"",type:c.type??"note",notes:c.notes??"",_sel:!0})),l.suggestedTripId?this._bTarget={type:"existing",tripId:l.suggestedTripId}:l.newTripProposal?this._bTarget={type:"newTrip"}:this._bTarget={type:"calendarOnly"},this._phase="booking-review"}else this._phase="error",this._err=n!=null&&n.reason?`I couldn't read that as a calendar, booking, or report. ${n.reason}`:"I couldn't tell what that file is. Try a clearer photo, or a calendar, a booking confirmation, or a report."}catch(a){console.error("smart upload failed:",a),this._phase="error",this._err=(a==null?void 0:a.code)==="functions/permission-denied"?"You're not a member of this family.":(a==null?void 0:a.code)==="storage/unauthorized"?"The upload rule needs publishing. Ask the team to deploy storage.rules.":(a==null?void 0:a.code)==="functions/not-found"||(a==null?void 0:a.code)==="functions/internal"?"The importer isn't available right now. Try again in a moment.":(a==null?void 0:a.message)??"Something went wrong. Try again."}}}_defaultReportChildId(t){var a;const i=this.children??[];if(!i.length)return null;const r=String((t==null?void 0:t.childNameGuess)??"").trim().toLowerCase();if(r){const s=i.find(n=>{const d=String(n.name??"").toLowerCase();return d===r||r.includes(d)});if(s)return s.id}return((a=i[0])==null?void 0:a.id)??null}async _confirmReport(){var t,i,r;if(!(!this._rChildId||!this._rTitle.trim()||!this._rSummary.trim())){this._phase="working";try{await f.importReport(this._rChildId,{title:this._rTitle,source:(t=this._report)==null?void 0:t.source,periodLabel:this._rPeriod,reportDate:(i=this._report)==null?void 0:i.reportDate,summary:this._rSummary,highlights:(r=this._report)==null?void 0:r.highlights},this._rKeepFile?this._file:null),this._count=1,this._phase="done",y("Report saved to the profile."),this.dispatchEvent(new CustomEvent("added",{detail:1}))}catch(a){console.error("importReport failed:",a),this._phase="error",this._err=(a==null?void 0:a.code)==="permission-denied"?"Couldn't save. You may not have permission.":(a==null?void 0:a.message)??"Couldn't save the report. Try again."}}}_patchB(t,i,r){const a=this._bRows.slice();a[t]={...a[t],[i]:r},this._bRows=a}_bSpan(){var r;const t=(r=this._booking)==null?void 0:r.newTripProposal;if(t!=null&&t.start&&(t!=null&&t.end))return{start:t.start,end:t.end};const i=this._bRows.map(a=>a.day).filter(a=>/^\d{4}-\d{2}-\d{2}$/.test(String(a??""))).sort();return{start:i[0]??"",end:i[i.length-1]??i[0]??""}}_matchingTrips(){const{start:t,end:i}=this._bSpan();return t?f.matchingTrips(t,i):[]}_prettyDay(t){if(!/^\d{4}-\d{2}-\d{2}$/.test(String(t??"")))return t??"";const[i,r,a]=t.split("-").map(Number);return new Date(i,r-1,a).toLocaleDateString("en-US",{month:"short",day:"numeric"})}_tripDateLabel(t){const i=this._prettyDay(t.start);return t.end&&t.end!==t.start?`${i} to ${this._prettyDay(t.end)}`:i}_bookingNoun(t){return t==="flight"?"flight booking":t==="hotel"?"hotel booking":t==="car"?"car rental":t==="restaurant"?"restaurant reservation":"booking"}_bHeaderText(){const t=this._booking??{};let i=`I found a ${this._bookingNoun(t.bookingType)}`;t.location&&(i+=` in ${t.location}`);const{start:r,end:a}=this._bSpan();return r&&(i+=` for ${this._prettyDay(r)}`,a&&a!==r&&(i+=` to ${this._prettyDay(a)}`)),`${i}. Where should it go?`}_bFillPreview(){var s,n,d,l,c,p,h;if(((s=this._bTarget)==null?void 0:s.type)!=="existing")return[];const t=(f.state.trips??[]).find(u=>u.id===this._bTarget.tripId);if(!t)return[];const i=this._booking??{},r=(u,b)=>!u&&!!b,a=[];return(r(t.lodgingTitle,(n=i.lodging)==null?void 0:n.title)||r(t.lodgingUrl,(d=i.lodging)==null?void 0:d.url))&&a.push("Lodging"),(r(t.flightAirline,(l=i.flight)==null?void 0:l.airline)||r(t.flightDepartAirport,(c=i.flight)==null?void 0:c.departAirport))&&a.push("Flight"),(r(t.returnFlightAirline,(p=i.returnFlight)==null?void 0:p.airline)||r(t.returnFlightDepartAirport,(h=i.returnFlight)==null?void 0:h.departAirport))&&a.push("Return flight"),a}_bAddLabel(){var t,i;return((t=this._bTarget)==null?void 0:t.type)==="newTrip"?"Create trip":((i=this._bTarget)==null?void 0:i.type)==="existing"?"Add to trip":`Add ${this._bRows.filter(r=>r._sel).length}`}_renderTRow(t,i,r,a){return o`<button
       type="button"
       class="trow ${r?"on":""}"
       @click=${a}
@@ -6523,9 +6579,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
       <span class="trad">${r?"●":"○"}</span>
       <span class="ttxt">
         <span class="ttitle">${t}</span>
-        ${i?n`<span class="tsub">${i}</span>`:""}
+        ${i?o`<span class="tsub">${i}</span>`:""}
       </span>
-    </button>`}async _confirmBooking(){const t=this._bRows.filter(i=>i._sel);if(t.length){this._phase="working";try{await f.importBooking(this._booking,this._bTarget,this._bRows),this._count=t.length,this._phase="done",y("Booking added."),this.dispatchEvent(new CustomEvent("added",{detail:t.length}))}catch(i){console.error("importBooking failed:",i),this._phase="error",this._err=(i==null?void 0:i.code)==="permission-denied"?"Couldn't save. You may not have permission.":(i==null?void 0:i.message)??"Couldn't save the booking. Try again."}}}_patch(t,i,r){const a=this._events.slice();a[t]={...a[t],[i]:r},this._events=a}get _selected(){return this._events.filter(t=>t._sel&&/^\d{4}-\d{2}-\d{2}$/.test(t.date)&&t.title.trim())}get _allSelected(){return this._events.length>0&&this._events.every(t=>t._sel)}_toggleAll(){const t=!this._allSelected;this._events=this._events.map(i=>({...i,_sel:t}))}async _confirm(){const t=this._selected;if(t.length){this._phase="working";try{const i=await f.importSchoolEvents(t.map(r=>({date:r.date,title:r.title.trim(),type:r.type,description:r.description})),{category:this._category,tag:this._tag});this._count=i,this._phase="done",y(`Added ${i} event${i===1?"":"s"} to the calendar.`),this.dispatchEvent(new CustomEvent("added",{detail:i}))}catch(i){console.error("importSchoolEvents failed:",i),this._phase="error",this._err=(i==null?void 0:i.code)==="permission-denied"?"Couldn't save. You may not have permission.":(i==null?void 0:i.message)??"Couldn't save the events. Try again."}}}render(){var t,i;return this.open?n`
+    </button>`}async _confirmBooking(){const t=this._bRows.filter(i=>i._sel);if(t.length){this._phase="working";try{await f.importBooking(this._booking,this._bTarget,this._bRows),this._count=t.length,this._phase="done",y("Booking added."),this.dispatchEvent(new CustomEvent("added",{detail:t.length}))}catch(i){console.error("importBooking failed:",i),this._phase="error",this._err=(i==null?void 0:i.code)==="permission-denied"?"Couldn't save. You may not have permission.":(i==null?void 0:i.message)??"Couldn't save the booking. Try again."}}}_patch(t,i,r){const a=this._events.slice();a[t]={...a[t],[i]:r},this._events=a}get _selected(){return this._events.filter(t=>t._sel&&/^\d{4}-\d{2}-\d{2}$/.test(t.date)&&t.title.trim())}get _allSelected(){return this._events.length>0&&this._events.every(t=>t._sel)}_toggleAll(){const t=!this._allSelected;this._events=this._events.map(i=>({...i,_sel:t}))}async _confirm(){const t=this._selected;if(t.length){this._phase="working";try{const i=await f.importSchoolEvents(t.map(r=>({date:r.date,title:r.title.trim(),type:r.type,description:r.description})),{category:this._category,tag:this._tag});this._count=i,this._phase="done",y(`Added ${i} event${i===1?"":"s"} to the calendar.`),this.dispatchEvent(new CustomEvent("added",{detail:i}))}catch(i){console.error("importSchoolEvents failed:",i),this._phase="error",this._err=(i==null?void 0:i.code)==="permission-denied"?"Couldn't save. You may not have permission.":(i==null?void 0:i.message)??"Couldn't save the events. Try again."}}}render(){var t,i;return this.open?o`
       <div class="backdrop" @click=${this._cancel}></div>
       <div class="sheet">
         <glass-panel padding="lg" variant="strong" lifted>
@@ -6535,7 +6591,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
               ×
             </button>
           </div>
-          ${this._phase==="pick"?n`
+          ${this._phase==="pick"?o`
                 <p class="lede">
                   Upload a calendar or schedule, a booking confirmation
                   (flight, hotel, restaurant),${this.canSaveReports?" a flier, or a report card":" or a flier"}, as a
@@ -6558,11 +6614,11 @@ They'll lose access to shared trips, celebrations and any read-only child access
                   is saved until you confirm it.
                 </div>
               `:""}
-          ${this._phase==="working"?n`<div class="working">
+          ${this._phase==="working"?o`<div class="working">
                 <div class="spin"></div>
                 <div>Reading it…</div>
               </div>`:""}
-          ${this._phase==="review"?n`
+          ${this._phase==="review"?o`
                 <p class="lede">
                   Found <strong>${this._events.length}</strong> dated
                   ${this._events.length===1?"event":"events"}. Uncheck
@@ -6572,7 +6628,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 <div class="catbar">
                   <div class="catseg" role="group" aria-label="Add these as">
                     <span class="catlbl">Add as</span>
-                    ${[["activity","Activities"],["celebration","Celebrations"]].map(([r,a])=>n`<button
+                    ${[["activity","Activities"],["celebration","Celebrations"]].map(([r,a])=>o`<button
                         type="button"
                         class="catopt ${this._category===r?"on":""}"
                         @click=${()=>this._category=r}
@@ -6589,9 +6645,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     @input=${r=>this._tag=r.target.value}
                   />
                 </div>
-                ${(this.knownTags??[]).length?n`<div class="tagsuggest">
+                ${(this.knownTags??[]).length?o`<div class="tagsuggest">
                       <span class="tslbl">Reuse a tag</span>
-                      ${this.knownTags.map(r=>n`<button
+                      ${this.knownTags.map(r=>o`<button
                           type="button"
                           class="tschip ${this._tag===r?"on":""}"
                           @click=${()=>this._tag=this._tag===r?"":r}
@@ -6600,7 +6656,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                         </button>`)}
                     </div>`:""}
                 <div class="list">
-                  ${this._events.map((r,a)=>n`<div class="row ${r._sel?"":"off"}">
+                  ${this._events.map((r,a)=>o`<div class="row ${r._sel?"":"off"}">
                       <input
                         type="checkbox"
                         .checked=${r._sel}
@@ -6644,15 +6700,15 @@ They'll lose access to shared trips, celebrations and any read-only child access
                   </div>
                 </div>
               `:""}
-          ${this._phase==="report-review"?n`
+          ${this._phase==="report-review"?o`
                 <p class="lede">
                   I read the report and pulled out a summary. Pick the child,
                   edit anything, then save it to their profile. I'll keep it
                   in mind whenever you ask about them.
                 </p>
-                ${(this.children??[]).length>1?n`<div class="catbar">
+                ${(this.children??[]).length>1?o`<div class="catbar">
                       <span class="catlbl">For</span>
-                      ${this.children.map(r=>n`<button
+                      ${this.children.map(r=>o`<button
                           type="button"
                           class="catopt ${this._rChildId===r.id?"on":""}"
                           @click=${()=>this._rChildId=r.id}
@@ -6682,7 +6738,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                   placeholder="Summary"
                   @input=${r=>this._rSummary=r.target.value}
                 ></textarea>
-                ${this._file?n`<label class="keepfile">
+                ${this._file?o`<label class="keepfile">
                       <input
                         type="checkbox"
                         .checked=${this._rKeepFile}
@@ -6705,7 +6761,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                   </div>
                 </div>
               `:""}
-          ${this._phase==="booking-review"?n`
+          ${this._phase==="booking-review"?o`
                 <p class="lede">${this._bHeaderText()}</p>
                 <div class="catlbl" style="margin-bottom: 6px">Add to</div>
                 <div class="trips">
@@ -6713,12 +6769,12 @@ They'll lose access to shared trips, celebrations and any read-only child access
                   ${this._renderTRow("New trip",((i=(t=this._booking)==null?void 0:t.newTripProposal)==null?void 0:i.title)??"",this._bTarget.type==="newTrip",()=>this._bTarget={type:"newTrip"})}
                   ${this._renderTRow("Just the calendar","Add as standalone items, not a trip",this._bTarget.type==="calendarOnly",()=>this._bTarget={type:"calendarOnly"})}
                 </div>
-                ${this._bFillPreview().length?n`<div class="fillnote">
+                ${this._bFillPreview().length?o`<div class="fillnote">
                       Also fills this trip's empty details:
                       ${this._bFillPreview().join(", ")}.
                     </div>`:""}
                 <div class="list">
-                  ${this._bRows.map((r,a)=>n`<div class="row ${r._sel?"":"off"}">
+                  ${this._bRows.map((r,a)=>o`<div class="row ${r._sel?"":"off"}">
                       <input
                         type="checkbox"
                         .checked=${r._sel}
@@ -6736,7 +6792,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                         .value=${r.title}
                         @input=${s=>this._patchB(a,"title",s.target.value)}
                       />
-                      ${r.time?n`<span class="ty">${r.time}</span>`:""}
+                      ${r.time?o`<span class="ty">${r.time}</span>`:""}
                       <span class="ty">${r.type}</span>
                     </div>`)}
                 </div>
@@ -6760,20 +6816,20 @@ They'll lose access to shared trips, celebrations and any read-only child access
                   </div>
                 </div>
               `:""}
-          ${this._phase==="done"?n`<div class="done">
-                ${this._documentKind==="report"?n`<div class="sub" style="margin-top: 8px">
+          ${this._phase==="done"?o`<div class="done">
+                ${this._documentKind==="report"?o`<div class="sub" style="margin-top: 8px">
                       Report saved to the profile.
-                    </div>`:this._documentKind==="booking"?n`<div class="sub" style="margin-top: 8px">
+                    </div>`:this._documentKind==="booking"?o`<div class="sub" style="margin-top: 8px">
                         ${this._count} item${this._count===1?"":"s"} added
                         to your activities.
-                      </div>`:n`<div class="big">${this._count}</div>
+                      </div>`:o`<div class="big">${this._count}</div>
                         <div class="sub">
                           event${this._count===1?"":"s"} added to your
                           family calendar.
                         </div>`}
                 <button class="btn-primary" @click=${this._cancel}>Done</button>
               </div>`:""}
-          ${this._phase==="error"?n`<div>
+          ${this._phase==="error"?o`<div>
                 <div class="err">${this._err}</div>
                 <div class="foot" style="justify-content:center;">
                   <button class="btn-ghost" @click=${()=>this._reset()}>
@@ -6783,7 +6839,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
               </div>`:""}
         </glass-panel>
       </div>
-    `:n``}}$(Ze,"properties",{open:{type:Boolean,reflect:!0},knownTags:{type:Array},children:{type:Array},canSaveReports:{type:Boolean},_phase:{state:!0},_events:{state:!0},_err:{state:!0},_count:{state:!0},_category:{state:!0},_tag:{state:!0},_documentKind:{state:!0},_report:{state:!0},_rChildId:{state:!0},_rTitle:{state:!0},_rPeriod:{state:!0},_rSummary:{state:!0},_rKeepFile:{state:!0},_booking:{state:!0},_bRows:{state:!0},_bTarget:{state:!0}}),$(Ze,"styles",E`
+    `:o``}}$(Ze,"properties",{open:{type:Boolean,reflect:!0},knownTags:{type:Array},children:{type:Array},canSaveReports:{type:Boolean},_phase:{state:!0},_events:{state:!0},_err:{state:!0},_count:{state:!0},_category:{state:!0},_tag:{state:!0},_documentKind:{state:!0},_report:{state:!0},_rChildId:{state:!0},_rTitle:{state:!0},_rPeriod:{state:!0},_rSummary:{state:!0},_rKeepFile:{state:!0},_booking:{state:!0},_bRows:{state:!0},_bTarget:{state:!0}}),$(Ze,"styles",E`
     * { box-sizing: border-box; }
     :host {
       position: fixed;
@@ -7190,25 +7246,25 @@ They'll lose access to shared trips, celebrations and any read-only child access
       color: var(--text-secondary);
       margin: -2px 0 14px;
     }
-  `);customElements.define("school-import-modal",Ze);const Ci=["Reading your family's context","Thinking it through","Gathering a few ideas","Pulling the pieces together"],Ai=["Looking up fresh ideas","Finding current options","Checking the latest"];class et extends D{constructor(){super(),this.messages=[],this.memberProfiles={},this.myUid="",this.prefill="",this.quota=null,this._session=[],this._input="",this._loading=!1,this._streaming=null,this._streamTick=0,this._streamTimer=null,this._error="",this.compact=!1,this._listening=!1,this._recognition=null}disconnectedCallback(){var e;super.disconnectedCallback(),this._stopStreamCaptions();try{(e=this._recognition)==null||e.abort()}catch{}this._recognition=null}get _voiceSupported(){return!!(window.SpeechRecognition||window.webkitSpeechRecognition)}_toggleVoice(){var i;if(this._listening){try{(i=this._recognition)==null||i.stop()}catch{}return}const e=window.SpeechRecognition||window.webkitSpeechRecognition;if(!e)return;const t=new e;t.lang="en-US",t.interimResults=!0,t.continuous=!1,t.onresult=r=>{let a="";for(let s=0;s<r.results.length;s+=1)a+=r.results[s][0].transcript;this._input=a},t.onerror=r=>{this._listening=!1,(r.error==="not-allowed"||r.error==="service-not-allowed")&&(this._error="Microphone access is blocked, allow it in your browser to ask by voice.")},t.onend=()=>{this._listening=!1,this._recognition=null},this._recognition=t,this._listening=!0,this._error="";try{t.start()}catch{this._listening=!1,this._recognition=null}}willUpdate(e){if(e.has("messages")&&!this._loading){const t=(this.messages??[]).map(r=>({role:r.role,content:r.content,senderUid:r.senderUid})),i=this._session.slice(t.length);this._session=i.length?[...t,...i]:t}e.has("prefill")&&this.prefill&&(this._input=this.prefill)}updated(e){(e.has("messages")||e.has("_session")||e.has("_loading"))&&this.updateComplete.then(()=>this._scrollToBottom())}_scrollToBottom(){const e=this.renderRoot.querySelector(".thread");e&&(e.scrollTop=e.scrollHeight)}async _send(e){var o,d;const t=(e??this._input).trim();if(!t||this._loading||this._atLimit)return;this._error="",this._input="";const i=this._session.slice(-20).map(l=>({role:l.role,content:l.content}));this._session=[...this._session,{role:"user",content:t,senderUid:this.myUid}],this._loading=!0,this._streaming={phase:"thinking",text:""},this._startStreamCaptions();try{await f.appendPlanningMessage({role:"user",content:t})}catch(l){this._stopStreamCaptions(),this._streaming=null,this._loading=!1,this._session=this._session.slice(0,-1),this._input=t,this._error=this._sendErrorMessage(l);return}let r=!1;const a=async l=>{const c=l??"…";r=!0,this._session=[...this._session,{role:"assistant",content:c}];try{await f.appendPlanningMessage({role:"assistant",content:c})}catch{}},s=async()=>{try{const l=await f.askPebblePlanning(t,i);await a((l==null?void 0:l.answer)??"…")}catch(l){console.error(l),this._error=this._sendErrorMessage(l)}};try{const l=await f.streamPebblePlanning(t,i,{onStatus:p=>{p==="searching_web"&&this._streaming&&!this._streaming.text&&(this._streaming={...this._streaming,phase:"searching"})},onDelta:p=>{this._stopStreamCaptions(),this._streaming={phase:"streaming",text:p||""}}}),c=((l==null?void 0:l.answer)??((o=this._streaming)==null?void 0:o.text)??"").trim();c?await a(c):await s()}catch(l){console.error(l);const c=(((d=this._streaming)==null?void 0:d.text)??"").trim();c.length>=20?await a(c):await s()}finally{this._stopStreamCaptions(),this._streaming=null,this._loading=!1,r&&f.incrementPebbleQuota()}}_sendErrorMessage(e){return(e==null?void 0:e.code)==="functions/unauthenticated"?"Pebble needs you to be signed in.":(e==null?void 0:e.code)==="functions/not-found"||(e==null?void 0:e.code)==="functions/internal"?"Pebble isn't available right now, try again in a moment.":(e==null?void 0:e.message)??"Pebble could not answer right now."}async _clear(){if(this._session.length&&window.confirm("Clear your family's planning chat with Pebble? This can't be undone."))try{await f.deleteAllPlanningMessages(),this._session=[]}catch(e){this._error=(e==null?void 0:e.message)??"Couldn't clear the chat."}}_startStreamCaptions(){this._stopStreamCaptions(),this._streamTick=0,this._streamTimer=setInterval(()=>{this._streamTick+=1},2400)}_stopStreamCaptions(){this._streamTimer&&(clearInterval(this._streamTimer),this._streamTimer=null)}_streamCaption(){var t;const e=((t=this._streaming)==null?void 0:t.phase)==="searching"?Ai:Ci;return e[this._streamTick%e.length]}_isDark(){return typeof document<"u"?!document.documentElement.classList.contains("theme-light"):!0}_firstName(){var i,r;const e=(r=(i=this.memberProfiles)==null?void 0:i[this.myUid])==null?void 0:r.displayName;return String(e??"").trim().split(/\s+/)[0]||"there"}get _atLimit(){var e;return((e=this.quota)==null?void 0:e.atLimit)===!0}_quotaLabel(){const e=this.quota;if(!e)return"";if(e.bypassed)return"Unlimited · beta tester";if(e.premium)return"Unlimited · Premium";const t=e.remaining;return t+(t===1?" question":" questions")+" left this week · Free"}_rolloverLabel(){var t;const e=(t=this.quota)==null?void 0:t.rollover;if(!e)return"";try{return(e instanceof Date?e:new Date(e)).toLocaleDateString(void 0,{weekday:"short",month:"short",day:"numeric"})}catch{return""}}_limitMessage(){var i;const e=((i=this.quota)==null?void 0:i.limit)??5,t=this._rolloverLabel();return"Your family has used its "+e+" Pebble questions this week."+(t?" They reset "+t+".":"")+" For unlimited, subscribe to Premium in the PebblePath app."}_smartUpload(){this.dispatchEvent(new CustomEvent("smart-upload",{bubbles:!0,composed:!0}))}_pico(){return n`<pebble-icon></pebble-icon>`}_senderName(e){var i;if(!e||e===this.myUid)return"You";const t=(i=this.memberProfiles)==null?void 0:i[e];return t!=null&&t.displayName?t.displayName:e.charAt(0).toUpperCase()+e.slice(1)}_senderPhoto(e){var i,r;const t=(r=(i=this.memberProfiles)==null?void 0:i[e])==null?void 0:r.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:""}_fmt(e){const i=String(e??"").replace(/^[ \t ]+/gm,"").trim().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>").replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,!?]|$)/g,"$1<i>$2</i>").replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');return At(i)}render(){const e=this._session.length>0;return n`
+  `);customElements.define("school-import-modal",Ze);const Ci=["Reading your family's context","Thinking it through","Gathering a few ideas","Pulling the pieces together"],Pi=["Looking up fresh ideas","Finding current options","Checking the latest"];class et extends D{constructor(){super(),this.messages=[],this.memberProfiles={},this.myUid="",this.prefill="",this.quota=null,this._session=[],this._input="",this._loading=!1,this._streaming=null,this._streamTick=0,this._streamTimer=null,this._error="",this.compact=!1,this._listening=!1,this._recognition=null}disconnectedCallback(){var e;super.disconnectedCallback(),this._stopStreamCaptions();try{(e=this._recognition)==null||e.abort()}catch{}this._recognition=null}get _voiceSupported(){return!!(window.SpeechRecognition||window.webkitSpeechRecognition)}_toggleVoice(){var i;if(this._listening){try{(i=this._recognition)==null||i.stop()}catch{}return}const e=window.SpeechRecognition||window.webkitSpeechRecognition;if(!e)return;const t=new e;t.lang="en-US",t.interimResults=!0,t.continuous=!1,t.onresult=r=>{let a="";for(let s=0;s<r.results.length;s+=1)a+=r.results[s][0].transcript;this._input=a},t.onerror=r=>{this._listening=!1,(r.error==="not-allowed"||r.error==="service-not-allowed")&&(this._error="Microphone access is blocked, allow it in your browser to ask by voice.")},t.onend=()=>{this._listening=!1,this._recognition=null},this._recognition=t,this._listening=!0,this._error="";try{t.start()}catch{this._listening=!1,this._recognition=null}}willUpdate(e){if(e.has("messages")&&!this._loading){const t=(this.messages??[]).map(r=>({role:r.role,content:r.content,senderUid:r.senderUid})),i=this._session.slice(t.length);this._session=i.length?[...t,...i]:t}e.has("prefill")&&this.prefill&&(this._input=this.prefill)}updated(e){(e.has("messages")||e.has("_session")||e.has("_loading"))&&this.updateComplete.then(()=>this._scrollToBottom())}_scrollToBottom(){const e=this.renderRoot.querySelector(".thread");e&&(e.scrollTop=e.scrollHeight)}async _send(e){var n,d;const t=(e??this._input).trim();if(!t||this._loading||this._atLimit)return;this._error="",this._input="";const i=this._session.slice(-20).map(l=>({role:l.role,content:l.content}));this._session=[...this._session,{role:"user",content:t,senderUid:this.myUid}],this._loading=!0,this._streaming={phase:"thinking",text:""},this._startStreamCaptions();try{await f.appendPlanningMessage({role:"user",content:t})}catch(l){this._stopStreamCaptions(),this._streaming=null,this._loading=!1,this._session=this._session.slice(0,-1),this._input=t,this._error=this._sendErrorMessage(l);return}let r=!1;const a=async l=>{const c=l??"…";r=!0,this._session=[...this._session,{role:"assistant",content:c}];try{await f.appendPlanningMessage({role:"assistant",content:c})}catch{}},s=async()=>{try{const l=await f.askPebblePlanning(t,i);await a((l==null?void 0:l.answer)??"…")}catch(l){console.error(l),this._error=this._sendErrorMessage(l)}};try{const l=await f.streamPebblePlanning(t,i,{onStatus:p=>{p==="searching_web"&&this._streaming&&!this._streaming.text&&(this._streaming={...this._streaming,phase:"searching"})},onDelta:p=>{this._stopStreamCaptions(),this._streaming={phase:"streaming",text:p||""}}}),c=((l==null?void 0:l.answer)??((n=this._streaming)==null?void 0:n.text)??"").trim();c?await a(c):await s()}catch(l){console.error(l);const c=(((d=this._streaming)==null?void 0:d.text)??"").trim();c.length>=20?await a(c):await s()}finally{this._stopStreamCaptions(),this._streaming=null,this._loading=!1,r&&f.incrementPebbleQuota()}}_sendErrorMessage(e){return(e==null?void 0:e.code)==="functions/unauthenticated"?"Pebble needs you to be signed in.":(e==null?void 0:e.code)==="functions/not-found"||(e==null?void 0:e.code)==="functions/internal"?"Pebble isn't available right now, try again in a moment.":(e==null?void 0:e.message)??"Pebble could not answer right now."}async _clear(){if(this._session.length&&window.confirm("Clear your family's planning chat with Pebble? This can't be undone."))try{await f.deleteAllPlanningMessages(),this._session=[]}catch(e){this._error=(e==null?void 0:e.message)??"Couldn't clear the chat."}}_startStreamCaptions(){this._stopStreamCaptions(),this._streamTick=0,this._streamTimer=setInterval(()=>{this._streamTick+=1},2400)}_stopStreamCaptions(){this._streamTimer&&(clearInterval(this._streamTimer),this._streamTimer=null)}_streamCaption(){var t;const e=((t=this._streaming)==null?void 0:t.phase)==="searching"?Pi:Ci;return e[this._streamTick%e.length]}_isDark(){return typeof document<"u"?!document.documentElement.classList.contains("theme-light"):!0}_firstName(){var i,r;const e=(r=(i=this.memberProfiles)==null?void 0:i[this.myUid])==null?void 0:r.displayName;return String(e??"").trim().split(/\s+/)[0]||"there"}get _atLimit(){var e;return((e=this.quota)==null?void 0:e.atLimit)===!0}_quotaLabel(){const e=this.quota;if(!e)return"";if(e.bypassed)return"Unlimited · beta tester";if(e.premium)return"Unlimited · Premium";const t=e.remaining;return t+(t===1?" question":" questions")+" left this week · Free"}_rolloverLabel(){var t;const e=(t=this.quota)==null?void 0:t.rollover;if(!e)return"";try{return(e instanceof Date?e:new Date(e)).toLocaleDateString(void 0,{weekday:"short",month:"short",day:"numeric"})}catch{return""}}_limitMessage(){var i;const e=((i=this.quota)==null?void 0:i.limit)??5,t=this._rolloverLabel();return"Your family has used its "+e+" Pebble questions this week."+(t?" They reset "+t+".":"")+" For unlimited, subscribe to Premium in the PebblePath app."}_smartUpload(){this.dispatchEvent(new CustomEvent("smart-upload",{bubbles:!0,composed:!0}))}_pico(){return o`<pebble-icon></pebble-icon>`}_senderName(e){var i;if(!e||e===this.myUid)return"You";const t=(i=this.memberProfiles)==null?void 0:i[e];return t!=null&&t.displayName?t.displayName:e.charAt(0).toUpperCase()+e.slice(1)}_senderPhoto(e){var i,r;const t=(r=(i=this.memberProfiles)==null?void 0:i[e])==null?void 0:r.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:""}_fmt(e){const i=String(e??"").replace(/^[ \t ]+/gm,"").trim().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>").replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,!?]|$)/g,"$1<i>$2</i>").replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');return Pt(i)}render(){const e=this._session.length>0;return o`
       <div class="pebble-wrap ${this.compact?"compact":""}">
         <div class="chatpane">
           <div class="toprow">
             <span class="qstrip ${this._atLimit?"lim":""}">${this._quotaLabel()}</span>
-            ${e?n`<button class="clear" @click=${()=>this._clear()}>
+            ${e?o`<button class="clear" @click=${()=>this._clear()}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
                   Clear
                 </button>`:""}
           </div>
           <div class="thread">
-            ${e?n`
-                  ${this._session.map((t,i)=>t.role==="assistant"?n`<div class="msg pb" data-idx="${i}">
+            ${e?o`
+                  ${this._session.map((t,i)=>t.role==="assistant"?o`<div class="msg pb" data-idx="${i}">
                           <span class="pic">${this._pico()}</span>
                           <div class="col">
                             <!-- prettier-ignore -->
                             <div class="bubble">${this._fmt(t.content)}</div>
                           </div>
-                        </div>`:n`<div class="msg you" data-idx="${i}">
+                        </div>`:o`<div class="msg you" data-idx="${i}">
                           <span class="av">
                             <member-chip
                               .name=${this._senderName(t.senderUid)}
@@ -7222,17 +7278,17 @@ They'll lose access to shared trips, celebrations and any read-only child access
                             <div class="bubble">${this._fmt(t.content)}</div>
                           </div>
                         </div>`)}
-                  ${this._streaming?n`<div class="msg pb" data-idx="streaming">
+                  ${this._streaming?o`<div class="msg pb" data-idx="streaming">
                         <span class="pic">${this._pico()}</span>
                         <div class="col">
-                          ${this._streaming.text?n`<!-- prettier-ignore -->
-                                <div class="bubble">${this._fmt(this._streaming.text)}</div>`:n`<div class="bubble waiting">
+                          ${this._streaming.text?o`<!-- prettier-ignore -->
+                                <div class="bubble">${this._fmt(this._streaming.text)}</div>`:o`<div class="bubble waiting">
                                 <span class="wcap">${this._streamCaption()}</span>
                                 <span class="wdots"><span></span><span></span><span></span></span>
                               </div>`}
                         </div>
                       </div>`:""}
-                `:n`<div class="landing ${this._isDark()?"dark":""}">
+                `:o`<div class="landing ${this._isDark()?"dark":""}">
                   <div class="landing-inner">
                     <div class="stone-wrap" aria-hidden="true">
                       <div class="stone">
@@ -7267,7 +7323,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                         <h3>Weekend ideas</h3>
                         <p>Things for your family to do nearby.</p>
                       </button>
-                      ${this._voiceSupported?n`<button class="lcard" @click=${()=>this._toggleVoice()}>
+                      ${this._voiceSupported?o`<button class="lcard" @click=${()=>this._toggleVoice()}>
                             <span class="lico teal">
                               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h2l2-7 4 14 3-9 2 4h5"/></svg>
                             </span>
@@ -7279,8 +7335,8 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 </div>`}
           </div>
 
-          ${this._error?n`<div class="error">${this._error}</div>`:""}
-          ${this._atLimit?n`<div class="limitbanner">${this._limitMessage()}</div>`:""}
+          ${this._error?o`<div class="error">${this._error}</div>`:""}
+          ${this._atLimit?o`<div class="limitbanner">${this._limitMessage()}</div>`:""}
 
           <form
             class="composer ${this._atLimit?"disabled":""}"
@@ -7293,7 +7349,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
               @keydown=${t=>{t.key==="Enter"&&!t.shiftKey&&(t.preventDefault(),this._send())}}
               ?disabled=${this._loading||this._atLimit}
             ></textarea>
-            ${this._voiceSupported?n`<button
+            ${this._voiceSupported?o`<button
                   type="button"
                   class="mic ${this._listening?"on":""}"
                   @click=${()=>this._toggleVoice()}
@@ -7956,7 +8012,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       text-align: center;
       line-height: 1.5;
     }
-  `);customElements.define("family-pebble",et);const bt=[{vb:"0 0 100 70",d:"M 8 38 C 6 18, 26 6, 48 8 C 72 10, 94 18, 94 38 C 94 58, 72 66, 48 64 C 22 62, 10 58, 8 38 Z"},{vb:"0 0 80 90",d:"M 38 6 C 56 8, 70 24, 72 46 C 74 70, 58 84, 38 84 C 16 84, 6 66, 8 44 C 10 22, 22 4, 38 6 Z"},{vb:"0 0 90 80",d:"M 14 26 C 18 10, 38 4, 56 8 C 78 14, 86 32, 82 50 C 76 70, 54 78, 32 72 C 12 66, 10 42, 14 26 Z"},{vb:"0 0 70 60",d:"M 8 30 C 8 14, 22 6, 38 8 C 54 10, 64 22, 62 36 C 60 52, 44 56, 28 54 C 14 52, 8 44, 8 30 Z"},{vb:"0 0 110 75",d:"M 8 38 C 6 18, 30 8, 56 10 C 84 12, 104 22, 104 40 C 102 58, 80 68, 52 66 C 24 64, 10 56, 8 38 Z"},{vb:"0 0 95 75",d:"M 14 24 C 18 10, 40 6, 56 12 C 70 18, 80 18, 86 30 C 90 44, 80 56, 64 60 C 48 64, 28 60, 18 50 C 10 42, 10 32, 14 24 Z"},{vb:"0 0 80 80",d:"M 14 20 C 20 10, 36 6, 52 10 C 68 16, 76 30, 72 48 C 66 64, 50 72, 32 66 C 16 60, 8 44, 10 30 C 12 24, 12 22, 14 20 Z"}];function Pi(g){let e=5381;const t=String(g??"");for(let i=0;i<t.length;i+=1)e=e*33^t.charCodeAt(i);return bt[Math.abs(e)%bt.length]}const ft={motor:{cls:"fam-motor",fill:"#6b9ac4",dom:"Motor"},language:{cls:"fam-language",fill:"#d4a843",dom:"Language"},socialEmotional:{cls:"fam-social",fill:"#c98a8a",dom:"Social-Emotional"},cognitive:{cls:"fam-cognitive",fill:"#8b7bb5",dom:"Cognitive"},cross:{cls:"fam-cross",fill:"#3d9b8f",dom:""}},vt={strength:{label:"Strength",svg:n`<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.94 5.96 6.58.96-4.76 4.64 1.12 6.55L12 17.6l-5.88 3.01 1.12-6.55-4.76-4.64 6.58-.96L12 2.5z"/></svg>`},watching:{label:"Watching",svg:n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/></svg>`},connection:{label:"Connection",svg:n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.07-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`},nudge:{label:"Try this",svg:n`<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg>`}};class tt extends D{constructor(){super(),this.type="nudge",this.domain="cross",this.title="",this.body=""}render(){const e=ft[this.domain]??ft.cross,t=vt[this.type]??vt.nudge,i=Pi(`${this.title}${this.type}`);return n`
+  `);customElements.define("family-pebble",et);const bt=[{vb:"0 0 100 70",d:"M 8 38 C 6 18, 26 6, 48 8 C 72 10, 94 18, 94 38 C 94 58, 72 66, 48 64 C 22 62, 10 58, 8 38 Z"},{vb:"0 0 80 90",d:"M 38 6 C 56 8, 70 24, 72 46 C 74 70, 58 84, 38 84 C 16 84, 6 66, 8 44 C 10 22, 22 4, 38 6 Z"},{vb:"0 0 90 80",d:"M 14 26 C 18 10, 38 4, 56 8 C 78 14, 86 32, 82 50 C 76 70, 54 78, 32 72 C 12 66, 10 42, 14 26 Z"},{vb:"0 0 70 60",d:"M 8 30 C 8 14, 22 6, 38 8 C 54 10, 64 22, 62 36 C 60 52, 44 56, 28 54 C 14 52, 8 44, 8 30 Z"},{vb:"0 0 110 75",d:"M 8 38 C 6 18, 30 8, 56 10 C 84 12, 104 22, 104 40 C 102 58, 80 68, 52 66 C 24 64, 10 56, 8 38 Z"},{vb:"0 0 95 75",d:"M 14 24 C 18 10, 40 6, 56 12 C 70 18, 80 18, 86 30 C 90 44, 80 56, 64 60 C 48 64, 28 60, 18 50 C 10 42, 10 32, 14 24 Z"},{vb:"0 0 80 80",d:"M 14 20 C 20 10, 36 6, 52 10 C 68 16, 76 30, 72 48 C 66 64, 50 72, 32 66 C 16 60, 8 44, 10 30 C 12 24, 12 22, 14 20 Z"}];function Si(g){let e=5381;const t=String(g??"");for(let i=0;i<t.length;i+=1)e=e*33^t.charCodeAt(i);return bt[Math.abs(e)%bt.length]}const ft={motor:{cls:"fam-motor",fill:"#6b9ac4",dom:"Motor"},language:{cls:"fam-language",fill:"#d4a843",dom:"Language"},socialEmotional:{cls:"fam-social",fill:"#c98a8a",dom:"Social-Emotional"},cognitive:{cls:"fam-cognitive",fill:"#8b7bb5",dom:"Cognitive"},cross:{cls:"fam-cross",fill:"#3d9b8f",dom:""}},vt={strength:{label:"Strength",svg:o`<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.94 5.96 6.58.96-4.76 4.64 1.12 6.55L12 17.6l-5.88 3.01 1.12-6.55-4.76-4.64 6.58-.96L12 2.5z"/></svg>`},watching:{label:"Watching",svg:o`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/></svg>`},connection:{label:"Connection",svg:o`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.07-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`},nudge:{label:"Try this",svg:o`<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg>`}};class tt extends D{constructor(){super(),this.type="nudge",this.domain="cross",this.title="",this.body=""}render(){const e=ft[this.domain]??ft.cross,t=vt[this.type]??vt.nudge,i=Si(`${this.title}${this.type}`);return o`
       <div class="insight ${e.cls}">
         <svg
           class="wm"
@@ -7971,7 +8027,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <div class="icontent">
             <div class="cat">
               <span class="type">${t.label}</span>
-              ${e.dom?n`<span class="sep">·</span
+              ${e.dom?o`<span class="sep">·</span
                     ><span class="dom">${e.dom}</span>`:""}
             </div>
             <h4>${this.title}</h4>
@@ -8076,7 +8132,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
     .fam-cross { background: linear-gradient(135deg, rgba(61,155,143,0.16), rgba(61,155,143,0.05)), var(--glass-fill); }
     .fam-cross .icirc { background: rgba(61,155,143,0.22); color: var(--ink-teal); }
     .fam-cross .cat .type { color: var(--ink-teal); }
-  `);customElements.define("insight-card",tt);const ce=[{key:"attentionToLiteracy",short:"Reading",name:"From noticing to reading",color:"#d4a843",deep:"#8a6c2e",bright:"#e8c66b"},{key:"movementToCoordination",short:"Movement",name:"From first moves to confident motion",color:"#6b9ac4",deep:"#3d5b7d",bright:"#9cc0e8"},{key:"curiosityToReasoning",short:"Reasoning",name:"From curiosity to reasoning",color:"#8b7bb5",deep:"#5a4877",bright:"#c4bae0"},{key:"regulationToIndependence",short:"Independence",name:"From self-soothing to self-reliance",color:"#3d9b8f",deep:"#1f5c54",bright:"#7fd8c9"},{key:"connectionToFriendship",short:"Friendship",name:"From first smiles to friendship",color:"#c98a8a",deep:"#8e4a42",bright:"#e8bbbb"},{key:"graspToWriting",short:"Writing",name:"From grasping to writing",color:"#c67b5c",deep:"#a8624a",bright:"#e0a488"}],Si={attentionToLiteracy:V`<path d="M4 5.5C4 5 9 4 11 6.5v12C9 17 4 18 4 18.5ZM18 5.5C18 5 13 4 11 6.5v12c2-1.5 7-.5 7 0Z"/>`,movementToCoordination:V`<circle cx="14" cy="5" r="2"/><path d="M13 9l-2.5 4 2.5 2.5.5 4.5M10.5 13L7 12M14 11l3 1.5 1 3.5"/>`,curiosityToReasoning:V`<path d="M9 18h6M10 21h4M12 3a6 6 0 0 1 4 10.5c-.7.7-1 1.2-1 2.5H9c0-1.3-.3-1.8-1-2.5A6 6 0 0 1 12 3Z"/>`,regulationToIndependence:V`<path d="M12 21v-8M12 13c-3.5 0-5-2.5-5-5.5 3.5 0 5 2.5 5 5.5ZM12 13c3.5 0 5-2.5 5-5.5-3.5 0-5 2.5-5 5.5Z"/>`,connectionToFriendship:V`<circle cx="8" cy="8" r="2.4"/><circle cx="16" cy="8.5" r="2.2"/><path d="M3.5 18.5a4.5 4.5 0 0 1 9 0M12.5 17.5a3.8 3.8 0 0 1 7.5 0"/>`,graspToWriting:V`<path d="M5 19l-1 1 1-4L15 6l3 3L8 19l-3 1ZM14 7l3 3"/>`},_e=[{key:"motor",name:"Motor",color:"#6b9ac4",deep:"#3d5b7d",bright:"#9cc0e8"},{key:"language",name:"Language",color:"#d4a843",deep:"#8a6c2e",bright:"#e8c66b"},{key:"socialEmotional",name:"Social-Emo.",color:"#c98a8a",deep:"#8e4a42",bright:"#e8bbbb"},{key:"cognitive",name:"Cognitive",color:"#8b7bb5",deep:"#5a4877",bright:"#c4bae0"}],ie=g=>g==="selfCare"?"motor":g,pe=104,ke=730,yt=[60,118,176,234];class it extends D{constructor(){super(),this.child=null,this.milestones=[],this._selected="attentionToLiteracy"}connectedCallback(){super.connectedCallback(),this._themeObs=new MutationObserver(()=>this.requestUpdate()),this._themeObs.observe(document.documentElement,{attributes:!0,attributeFilter:["class"]})}disconnectedCallback(){var e;(e=this._themeObs)==null||e.disconnect(),super.disconnectedCallback()}_ageMonths(){var r,a;const e=(r=this.child)==null?void 0:r.dateOfBirth;if(!e||Number.isNaN(((a=e.getTime)==null?void 0:a.call(e))??NaN))return 0;const t=new Date;let i=(t.getFullYear()-e.getFullYear())*12+(t.getMonth()-e.getMonth());return t.getDate()<e.getDate()&&(i-=1),Math.max(0,i)}_arcProgress(e){const t=(this.milestones??[]).filter(r=>r.arc===e),i=t.filter(r=>r.status==="achieved").length;return{done:i,total:t.length,fraction:t.length?i/t.length:0}}_hasArcData(){return(this.milestones??[]).some(e=>e.arc)}_isDark(){return!document.documentElement.classList.contains("theme-light")}_lbl(e){return this._isDark()?e.bright:e.deep}_radar(){const e=ce.map(h=>this._arcProgress(h.key).fraction),t=Math.max(0,...e),i=.32,r=.92,a=t>0?e.map(h=>i+(r-i)*(h/t)):e.map(()=>i),s=140,o=130,d=85,l=[[140,33,"middle"],[221,86,"start"],[221,178,"start"],[140,236,"middle"],[59,178,"end"],[59,86,"end"]],c=ce.map((h,u)=>{const b=(-90+60*u)*Math.PI/180,w=d*a[u];return{key:h.key,color:h.color,deep:h.deep,bright:h.bright,short:h.short,x:s+w*Math.cos(b),y:o+w*Math.sin(b),gx:s+d*Math.cos(b),gy:o+d*Math.sin(b),ix:s+d*.5*Math.cos(b),iy:o+d*.5*Math.sin(b),lx:l[u][0],ly:l[u][1],anchor:l[u][2]}}),p=c.find(h=>h.key===this._selected)??c[0];return{verts:c,ring:p,cx:s,cy:o}}_timeline(){const e=this.milestones??[],t=this._ageMonths(),i=e.reduce((A,S)=>S.status==="achieved"?Math.max(A,S.ageRangeEndMonths??S.ageRangeStartMonths??0):A,0);let r=Math.max(i+12,t+6,18);r=Math.ceil(r/6)*6;const a=A=>pe+Math.min(A??0,r)/r*(ke-pe),s=A=>_e.findIndex(S=>S.key===ie(A)),o=_e.map((A,S)=>{const L=e.filter(B=>ie(B.category)===A.key),U=L.filter(B=>B.status==="achieved").sort((B,Q)=>(B.ageRangeStartMonths??0)-(Q.ageRangeStartMonths??0));let G=U;U.length>7&&(G=Array.from({length:7},(B,Q)=>U[Math.round(Q*(U.length-1)/6)]));const P=G.map(B=>({x:a(B.ageRangeStartMonths??0),achieved:!0})),F=L.filter(B=>B.status!=="achieved").sort((B,Q)=>(B.ageRangeStartMonths??0)-(Q.ageRangeStartMonths??0))[0];return F&&P.push({x:a(F.ageRangeStartMonths??0),achieved:!1}),{...A,y:yt[S],dots:P}}),d=22,l=48,c=e.filter(A=>A.arc===this._selected&&(A.ageRangeStartMonths??0)<=r).sort((A,S)=>(A.ageRangeStartMonths??0)-(S.ageRangeStartMonths??0)),p={},h=c.filter(A=>{const S=ie(A.category),L=a(A.ageRangeStartMonths??0);return p[S]===void 0||L-p[S]>=d?(p[S]=L,!0):!1});let u=h;h.length>2&&(u=h.filter((A,S)=>{const L=S===0||S===h.length-1,U=S>0&&ie(h[S-1].category)!==ie(A.category),G=S<h.length-1&&ie(h[S+1].category)!==ie(A.category);return L||U||G}));let b=u;if(u.length>2){b=[];let A=-1/0;u.forEach((S,L)=>{const U=a(S.ageRangeStartMonths??0),G=L===u.length-1;b.length===0||U-A>=l?(b.push(S),A=U):G&&(b[b.length-1]=S,A=U)})}const w=b.map(A=>({x:a(A.ageRangeStartMonths??0),y:yt[s(A.category)]})),v=A=>{var S;return((S=_e.find(L=>L.key===ie(A)))==null?void 0:S.color)??"#6b9ac4"},_=A=>A<=0?"birth":A<24?`${A} mo`:A%12===0?`${A/12} yr`:`${(A/12).toFixed(1)} yr`,I=Array.from({length:7},(A,S)=>{const L=Math.round(S*r/6);return{x:a(L),label:_(L)}});return{lanes:o,ribbon:w,axis:I,todayX:a(Math.min(t,r)),gradFrom:b.length?v(b[0].category):"#6b9ac4",gradTo:b.length?v(b[b.length-1].category):"#6b9ac4"}}_ribbonPath(e){if(e.length<2)return"";if(e.length===2)return`M${e[0].x},${e[0].y} L${e[1].x},${e[1].y}`;let t=`M${e[0].x},${e[0].y}`;for(let i=0;i<e.length-1;i++){const r=e[i-1]??e[0],a=e[i],s=e[i+1],o=e[i+2]??e[i+1];let d=a.y+(s.y-r.y)/6,l=s.y-(o.y-a.y)/6;const c=Math.min(a.y,s.y),p=Math.max(a.y,s.y);d=Math.max(c,Math.min(p,d)),l=Math.max(c,Math.min(p,l)),t+=` C${a.x+(s.x-r.x)/6},${d} ${s.x-(o.x-a.x)/6},${l} ${s.x},${s.y}`}return t}_select(e){this._selected=e}updated(){var s,o,d,l;const e=(s=this.renderRoot)==null?void 0:s.querySelector("#gpRibbon"),t=(o=this.renderRoot)==null?void 0:o.querySelector("#gpHalo");if(!e||!e.getTotalLength)return;const i=e.getTotalLength(),r=(l=(d=window.matchMedia)==null?void 0:d.call(window,"(prefers-reduced-motion: reduce)"))==null?void 0:l.matches;[e,t].forEach(c=>{c&&(c.style.transition="none",c.style.strokeDasharray=i,c.style.strokeDashoffset=i)}),e.getBoundingClientRect();const a=r?"none":"stroke-dashoffset 1.9s cubic-bezier(.45,.05,.25,1)";[e,t].forEach(c=>{c&&(c.style.transition=a,c.style.strokeDashoffset=0)})}render(){var d,l;if(!this.child)return n``;if(!this._hasArcData())return this._renderEmpty();const e=ce.find(c=>c.key===this._selected)??ce[0],t=this._arcProgress(e.key),i=this._radar(),r=this._timeline(),a=this._ribbonPath(r.ribbon),s=((d=r.ribbon[0])==null?void 0:d.x)??pe,o=((l=r.ribbon[r.ribbon.length-1])==null?void 0:l.x)??ke;return n`
+  `);customElements.define("insight-card",tt);const ce=[{key:"attentionToLiteracy",short:"Reading",name:"From noticing to reading",color:"#d4a843",deep:"#8a6c2e",bright:"#e8c66b"},{key:"movementToCoordination",short:"Movement",name:"From first moves to confident motion",color:"#6b9ac4",deep:"#3d5b7d",bright:"#9cc0e8"},{key:"curiosityToReasoning",short:"Reasoning",name:"From curiosity to reasoning",color:"#8b7bb5",deep:"#5a4877",bright:"#c4bae0"},{key:"regulationToIndependence",short:"Independence",name:"From self-soothing to self-reliance",color:"#3d9b8f",deep:"#1f5c54",bright:"#7fd8c9"},{key:"connectionToFriendship",short:"Friendship",name:"From first smiles to friendship",color:"#c98a8a",deep:"#8e4a42",bright:"#e8bbbb"},{key:"graspToWriting",short:"Writing",name:"From grasping to writing",color:"#c67b5c",deep:"#a8624a",bright:"#e0a488"}],Ai={attentionToLiteracy:V`<path d="M4 5.5C4 5 9 4 11 6.5v12C9 17 4 18 4 18.5ZM18 5.5C18 5 13 4 11 6.5v12c2-1.5 7-.5 7 0Z"/>`,movementToCoordination:V`<circle cx="14" cy="5" r="2"/><path d="M13 9l-2.5 4 2.5 2.5.5 4.5M10.5 13L7 12M14 11l3 1.5 1 3.5"/>`,curiosityToReasoning:V`<path d="M9 18h6M10 21h4M12 3a6 6 0 0 1 4 10.5c-.7.7-1 1.2-1 2.5H9c0-1.3-.3-1.8-1-2.5A6 6 0 0 1 12 3Z"/>`,regulationToIndependence:V`<path d="M12 21v-8M12 13c-3.5 0-5-2.5-5-5.5 3.5 0 5 2.5 5 5.5ZM12 13c3.5 0 5-2.5 5-5.5-3.5 0-5 2.5-5 5.5Z"/>`,connectionToFriendship:V`<circle cx="8" cy="8" r="2.4"/><circle cx="16" cy="8.5" r="2.2"/><path d="M3.5 18.5a4.5 4.5 0 0 1 9 0M12.5 17.5a3.8 3.8 0 0 1 7.5 0"/>`,graspToWriting:V`<path d="M5 19l-1 1 1-4L15 6l3 3L8 19l-3 1ZM14 7l3 3"/>`},_e=[{key:"motor",name:"Motor",color:"#6b9ac4",deep:"#3d5b7d",bright:"#9cc0e8"},{key:"language",name:"Language",color:"#d4a843",deep:"#8a6c2e",bright:"#e8c66b"},{key:"socialEmotional",name:"Social-Emo.",color:"#c98a8a",deep:"#8e4a42",bright:"#e8bbbb"},{key:"cognitive",name:"Cognitive",color:"#8b7bb5",deep:"#5a4877",bright:"#c4bae0"}],ie=g=>g==="selfCare"?"motor":g,pe=104,ke=730,yt=[60,118,176,234];class it extends D{constructor(){super(),this.child=null,this.milestones=[],this._selected="attentionToLiteracy"}connectedCallback(){super.connectedCallback(),this._themeObs=new MutationObserver(()=>this.requestUpdate()),this._themeObs.observe(document.documentElement,{attributes:!0,attributeFilter:["class"]})}disconnectedCallback(){var e;(e=this._themeObs)==null||e.disconnect(),super.disconnectedCallback()}_ageMonths(){var r,a;const e=(r=this.child)==null?void 0:r.dateOfBirth;if(!e||Number.isNaN(((a=e.getTime)==null?void 0:a.call(e))??NaN))return 0;const t=new Date;let i=(t.getFullYear()-e.getFullYear())*12+(t.getMonth()-e.getMonth());return t.getDate()<e.getDate()&&(i-=1),Math.max(0,i)}_arcProgress(e){const t=(this.milestones??[]).filter(r=>r.arc===e),i=t.filter(r=>r.status==="achieved").length;return{done:i,total:t.length,fraction:t.length?i/t.length:0}}_hasArcData(){return(this.milestones??[]).some(e=>e.arc)}_isDark(){return!document.documentElement.classList.contains("theme-light")}_lbl(e){return this._isDark()?e.bright:e.deep}_radar(){const e=ce.map(h=>this._arcProgress(h.key).fraction),t=Math.max(0,...e),i=.32,r=.92,a=t>0?e.map(h=>i+(r-i)*(h/t)):e.map(()=>i),s=140,n=130,d=85,l=[[140,33,"middle"],[221,86,"start"],[221,178,"start"],[140,236,"middle"],[59,178,"end"],[59,86,"end"]],c=ce.map((h,u)=>{const b=(-90+60*u)*Math.PI/180,w=d*a[u];return{key:h.key,color:h.color,deep:h.deep,bright:h.bright,short:h.short,x:s+w*Math.cos(b),y:n+w*Math.sin(b),gx:s+d*Math.cos(b),gy:n+d*Math.sin(b),ix:s+d*.5*Math.cos(b),iy:n+d*.5*Math.sin(b),lx:l[u][0],ly:l[u][1],anchor:l[u][2]}}),p=c.find(h=>h.key===this._selected)??c[0];return{verts:c,ring:p,cx:s,cy:n}}_timeline(){const e=this.milestones??[],t=this._ageMonths(),i=e.reduce((P,A)=>A.status==="achieved"?Math.max(P,A.ageRangeEndMonths??A.ageRangeStartMonths??0):P,0);let r=Math.max(i+12,t+6,18);r=Math.ceil(r/6)*6;const a=P=>pe+Math.min(P??0,r)/r*(ke-pe),s=P=>_e.findIndex(A=>A.key===ie(P)),n=_e.map((P,A)=>{const L=e.filter(B=>ie(B.category)===P.key),U=L.filter(B=>B.status==="achieved").sort((B,Q)=>(B.ageRangeStartMonths??0)-(Q.ageRangeStartMonths??0));let G=U;U.length>7&&(G=Array.from({length:7},(B,Q)=>U[Math.round(Q*(U.length-1)/6)]));const S=G.map(B=>({x:a(B.ageRangeStartMonths??0),achieved:!0})),F=L.filter(B=>B.status!=="achieved").sort((B,Q)=>(B.ageRangeStartMonths??0)-(Q.ageRangeStartMonths??0))[0];return F&&S.push({x:a(F.ageRangeStartMonths??0),achieved:!1}),{...P,y:yt[A],dots:S}}),d=22,l=48,c=e.filter(P=>P.arc===this._selected&&(P.ageRangeStartMonths??0)<=r).sort((P,A)=>(P.ageRangeStartMonths??0)-(A.ageRangeStartMonths??0)),p={},h=c.filter(P=>{const A=ie(P.category),L=a(P.ageRangeStartMonths??0);return p[A]===void 0||L-p[A]>=d?(p[A]=L,!0):!1});let u=h;h.length>2&&(u=h.filter((P,A)=>{const L=A===0||A===h.length-1,U=A>0&&ie(h[A-1].category)!==ie(P.category),G=A<h.length-1&&ie(h[A+1].category)!==ie(P.category);return L||U||G}));let b=u;if(u.length>2){b=[];let P=-1/0;u.forEach((A,L)=>{const U=a(A.ageRangeStartMonths??0),G=L===u.length-1;b.length===0||U-P>=l?(b.push(A),P=U):G&&(b[b.length-1]=A,P=U)})}const w=b.map(P=>({x:a(P.ageRangeStartMonths??0),y:yt[s(P.category)]})),v=P=>{var A;return((A=_e.find(L=>L.key===ie(P)))==null?void 0:A.color)??"#6b9ac4"},_=P=>P<=0?"birth":P<24?`${P} mo`:P%12===0?`${P/12} yr`:`${(P/12).toFixed(1)} yr`,I=Array.from({length:7},(P,A)=>{const L=Math.round(A*r/6);return{x:a(L),label:_(L)}});return{lanes:n,ribbon:w,axis:I,todayX:a(Math.min(t,r)),gradFrom:b.length?v(b[0].category):"#6b9ac4",gradTo:b.length?v(b[b.length-1].category):"#6b9ac4"}}_ribbonPath(e){if(e.length<2)return"";if(e.length===2)return`M${e[0].x},${e[0].y} L${e[1].x},${e[1].y}`;let t=`M${e[0].x},${e[0].y}`;for(let i=0;i<e.length-1;i++){const r=e[i-1]??e[0],a=e[i],s=e[i+1],n=e[i+2]??e[i+1];let d=a.y+(s.y-r.y)/6,l=s.y-(n.y-a.y)/6;const c=Math.min(a.y,s.y),p=Math.max(a.y,s.y);d=Math.max(c,Math.min(p,d)),l=Math.max(c,Math.min(p,l)),t+=` C${a.x+(s.x-r.x)/6},${d} ${s.x-(n.x-a.x)/6},${l} ${s.x},${s.y}`}return t}_select(e){this._selected=e}updated(){var s,n,d,l;const e=(s=this.renderRoot)==null?void 0:s.querySelector("#gpRibbon"),t=(n=this.renderRoot)==null?void 0:n.querySelector("#gpHalo");if(!e||!e.getTotalLength)return;const i=e.getTotalLength(),r=(l=(d=window.matchMedia)==null?void 0:d.call(window,"(prefers-reduced-motion: reduce)"))==null?void 0:l.matches;[e,t].forEach(c=>{c&&(c.style.transition="none",c.style.strokeDasharray=i,c.style.strokeDashoffset=i)}),e.getBoundingClientRect();const a=r?"none":"stroke-dashoffset 1.9s cubic-bezier(.45,.05,.25,1)";[e,t].forEach(c=>{c&&(c.style.transition=a,c.style.strokeDashoffset=0)})}render(){var d,l;if(!this.child)return o``;if(!this._hasArcData())return this._renderEmpty();const e=ce.find(c=>c.key===this._selected)??ce[0],t=this._arcProgress(e.key),i=this._radar(),r=this._timeline(),a=this._ribbonPath(r.ribbon),s=((d=r.ribbon[0])==null?void 0:d.x)??pe,n=((l=r.ribbon[r.ribbon.length-1])==null?void 0:l.x)??ke;return o`
       <h2 class="sec">Growth Pathways</h2>
       <div class="gp">
         <div class="card radar">
@@ -8088,7 +8144,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
 
         <div class="main">
           <div class="pgrid">
-            ${ce.map(c=>n`
+            ${ce.map(c=>o`
               <button
                 class=${"pchip"+(c.key===this._selected?" on":"")}
                 style=${`--ac:${c.color};--at:${c.color}29`}
@@ -8097,7 +8153,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
               >
                 <span class="ig">
                   <svg viewBox="0 0 24 24" fill="none" stroke=${c.color}
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${Si[c.key]}</svg>
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${Ai[c.key]}</svg>
                 </span>
                 <span class="pl">${c.short}</span>
               </button>`)}
@@ -8110,7 +8166,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
 
           <div class="card tlc">
-            ${this._renderTimeline(r,a,s,o)}
+            ${this._renderTimeline(r,a,s,n)}
             <div class="tlhint">The ribbon is the selected pathway, woven over time.</div>
             <div class="legend">
               <span><span class="d" style="background:#3d9b8f"></span> Reached</span>
@@ -8120,7 +8176,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
         </div>
       </div>
-    `}_renderRadar(e){const t=e.verts.map(a=>`${a.gx},${a.gy}`).join(" "),i=e.verts.map(a=>`${a.ix},${a.iy}`).join(" "),r=e.verts.map(a=>`${a.x},${a.y}`).join(" ");return n`
+    `}_renderRadar(e){const t=e.verts.map(a=>`${a.gx},${a.gy}`).join(" "),i=e.verts.map(a=>`${a.ix},${a.iy}`).join(" "),r=e.verts.map(a=>`${a.x},${a.y}`).join(" ");return o`
       <svg viewBox="0 5 280 250" class="radar-svg" aria-label="Growth pathways radar">
         <polygon points=${t} fill="none" stroke="#1f5c54" stroke-opacity="0.10" stroke-width="1"></polygon>
         <polygon points=${i} fill="none" stroke="#1f5c54" stroke-opacity="0.09" stroke-width="1"></polygon>
@@ -8130,7 +8186,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         <circle cx=${e.ring.x} cy=${e.ring.y} r="9" fill="none" stroke="#1f5c54" stroke-width="2"></circle>
         ${e.verts.map(a=>V`<text x=${a.lx} y=${a.ly} text-anchor=${a.anchor} font-size="11.5" font-weight="600" fill=${this._lbl(a)}>${a.short}</text>`)}
       </svg>
-    `}_renderTimeline(e,t,i,r){return n`
+    `}_renderTimeline(e,t,i,r){return o`
       <svg viewBox="0 0 760 300" class="tl-svg" aria-label="Pathway timeline">
         <defs>
           <linearGradient id="gpRibGrad" gradientUnits="userSpaceOnUse" x1=${i} y1="0" x2=${r} y2="0">
@@ -8163,7 +8219,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <circle cx=${a.x} cy=${a.y} r="6" fill="#3d9b8f" stroke="#fff" stroke-width="1.8"></circle>
         `)}
       </svg>
-    `}_renderEmpty(){var e;return n`
+    `}_renderEmpty(){var e;return o`
       <h2 class="sec">Growth Pathways</h2>
       <div class="card empty">
         <div class="eh">Pathways need milestone data</div>
@@ -8244,9 +8300,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
     .empty { padding: 30px 22px; text-align: center; }
     .empty .eh { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--text-primary); margin-bottom: 6px; }
     .empty .eb { font-size: 13px; color: var(--text-secondary); max-width: 460px; margin: 0 auto; line-height: 1.5; }
-  `);customElements.define("growth-pathways",it);const $e=[{key:"motor",label:"Motor",color:"#6b9ac4",svg:n`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="13.5" cy="5.5" r="2"/><path d="M9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5 0-.8.1L6 7.6V12h2V8.9l1.8-.7z"/></svg>`},{key:"language",label:"Language",color:"#d4a843",svg:n`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>`},{key:"socialEmotional",label:"Social-Emotional",color:"#c98a8a",svg:n`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`},{key:"cognitive",label:"Cognitive",color:"#8b7bb5",svg:n`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 4.2A2.7 2.7 0 0 0 6.4 5.9a2.6 2.6 0 0 0-2.5 2.6c0 .5.1.9.3 1.3A2.7 2.7 0 0 0 3 12.2a2.7 2.7 0 0 0 1.2 2.2 2.6 2.6 0 0 0-.2 1c0 1.5 1.2 2.7 2.7 2.7.2 0 .4 0 .6-.1A2.7 2.7 0 0 0 11 20V4.2zm2 0v15.8a2.7 2.7 0 0 0 3.7-1.9c.2 0 .4.1.6.1 1.5 0 2.7-1.2 2.7-2.7 0-.4-.1-.7-.2-1A2.7 2.7 0 0 0 21 12.2a2.7 2.7 0 0 0-1.2-2.4c.2-.4.3-.8.3-1.3a2.6 2.6 0 0 0-2.5-2.6A2.7 2.7 0 0 0 13 4.2z"/></svg>`}];function he(g){return g==="selfCare"?"motor":g}function Mi(g){var s;if(!g||Number.isNaN(((s=g.getTime)==null?void 0:s.call(g))??NaN))return"";const e=new Date;let t=(e.getFullYear()-g.getFullYear())*12+(e.getMonth()-g.getMonth());e.getDate()<g.getDate()&&(t-=1),t=Math.max(0,t);const i=Math.floor(t/12),r=t%12;if(i===0)return`${r} month${r===1?"":"s"}`;const a=r?`, ${r} month${r===1?"":"s"}`:"";return`${i} year${i===1?"":"s"}${a}`}class rt extends D{constructor(){super(),this.child=null,this.children=[],this.milestones=[],this.insights=[],this.dailyCard=null,this.reports=[],this._editingReportId=null,this._erTitle="",this._erPeriod="",this._erSummary="",this._confirmDeleteReportId=null,this.readonly=!1,this._focusedDot=null,this._onDocClick=e=>{var r;if(this._focusedDot==null)return;(((r=e.composedPath)==null?void 0:r.call(e))??[]).some(a=>{var s,o,d,l;return((o=(s=a==null?void 0:a.classList)==null?void 0:s.contains)==null?void 0:o.call(s,"tl-dot"))||((l=(d=a==null?void 0:a.classList)==null?void 0:d.contains)==null?void 0:l.call(d,"tl-popover"))})||(this._focusedDot=null)}}connectedCallback(){super.connectedCallback(),document.addEventListener("click",this._onDocClick)}disconnectedCallback(){document.removeEventListener("click",this._onDocClick),super.disconnectedCallback()}_domainStats(e){const t=(this.milestones??[]).filter(a=>he(a.category)===e),i=t.filter(a=>a.status==="achieved").length,r=t.length;return{achieved:i,total:r,pct:r?Math.round(i/r*100):0}}_pebbleIcon(){return n`<pebble-icon></pebble-icon>`}_ageMonths(e){var r;if(!e||Number.isNaN(((r=e.getTime)==null?void 0:r.call(e))??NaN))return 0;const t=new Date;let i=(t.getFullYear()-e.getFullYear())*12+(t.getMonth()-e.getMonth());return t.getDate()<e.getDate()&&(i-=1),Math.max(0,i)}_activeProgress(e,t){const i=Array.isArray(e)?e:[],r=this._ageMonths(t),a=i.filter(o=>{const d=o.ageRangeStartMonths??0;return(o.ageRangeEndMonths??d)>=r&&d<=r+12});return{done:a.filter(o=>o.status==="achieved").length,total:a.length}}_timelineModel(){var p;const e=this.milestones??[],t=this._ageMonths((p=this.child)==null?void 0:p.dateOfBirth),i=e.reduce((h,u)=>u.status==="achieved"?Math.max(h,u.ageRangeEndMonths??u.ageRangeStartMonths??0):h,0);let r=Math.max(i+12,t+6,18);r=Math.ceil(r/6)*6;const a=h=>Math.min(98,Math.max(2,(h??0)/r*100)),s=h=>h<=0?"birth":h<24?`${h} mo`:h%12===0?`${h/12} yr`:`${(h/12).toFixed(1).replace(/\.0$/,"")} yr`,o=(h,u)=>{const b=h.ageRangeStartMonths??0,w=h.ageRangeEndMonths??b;return{left:a(b),future:!!u,title:h.title??"",status:h.status,ageLabel:b===w?`at ${s(b)}`:`${s(b)}–${s(w)}`}},d=[{key:"motor",cls:"motor",name:"Motor"},{key:"language",cls:"language",name:"Language"},{key:"socialEmotional",cls:"social",name:"Social-Emo."},{key:"cognitive",cls:"cognitive",name:"Cognitive"}].map(h=>{const u=e.filter(I=>he(I.category)===h.key),b=u.filter(I=>I.status==="achieved").sort((I,A)=>(I.ageRangeStartMonths??0)-(A.ageRangeStartMonths??0));let w=b;b.length>7&&(w=Array.from({length:7},(I,A)=>b[Math.round(A*(b.length-1)/6)]));const v=w.map(I=>o(I,!1)),_=u.filter(I=>I.status!=="achieved").sort((I,A)=>(I.ageRangeStartMonths??0)-(A.ageRangeStartMonths??0))[0];return _&&v.push(o(_,!0)),{...h,dots:v}}),l=Array.from({length:7},(h,u)=>s(Math.round(u*r/6))),c=Math.min(1,Math.max(0,t/r));return{lanes:d,axis:l,ageM:t,nowFrac:c}}render(){const e=this.child;if(!e)return n`<div class="panel empty">No child selected yet.</div>`;const t=this.milestones??[],i=t.filter(p=>p.status==="achieved"),r=this._activeProgress(t,e.dateOfBirth),a=i.slice().sort((p,h)=>(h.ageRangeStartMonths??0)-(p.ageRangeStartMonths??0)).slice(0,4),s=t.filter(p=>p.status!=="achieved").slice(0,4),o=e.themeColorHex||"var(--teal-pebble)",d=(this.insights??[]).slice(0,4),l=p=>p==="achieved"?"done":p==="emerging"?"emerging":"up",c=p=>p==="achieved"?"Achieved":p==="emerging"?"Emerging":"Upcoming";return n`
-      ${(this.children??[]).length>1?n`<div class="switcher">
-            ${this.children.map(p=>n`<button
+  `);customElements.define("growth-pathways",it);const $e=[{key:"motor",label:"Motor",color:"#6b9ac4",svg:o`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="13.5" cy="5.5" r="2"/><path d="M9.8 8.9 7 23h2.1l1.8-8 2.1 2v6h2v-7.5l-2.1-2 .6-3c1.3 1.5 3.3 2.5 5.5 2.5v-2c-1.9 0-3.5-1-4.3-2.4l-1-1.6c-.4-.6-1-1-1.7-1-.3 0-.5 0-.8.1L6 7.6V12h2V8.9l1.8-.7z"/></svg>`},{key:"language",label:"Language",color:"#d4a843",svg:o`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>`},{key:"socialEmotional",label:"Social-Emotional",color:"#c98a8a",svg:o`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`},{key:"cognitive",label:"Cognitive",color:"#8b7bb5",svg:o`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 4.2A2.7 2.7 0 0 0 6.4 5.9a2.6 2.6 0 0 0-2.5 2.6c0 .5.1.9.3 1.3A2.7 2.7 0 0 0 3 12.2a2.7 2.7 0 0 0 1.2 2.2 2.6 2.6 0 0 0-.2 1c0 1.5 1.2 2.7 2.7 2.7.2 0 .4 0 .6-.1A2.7 2.7 0 0 0 11 20V4.2zm2 0v15.8a2.7 2.7 0 0 0 3.7-1.9c.2 0 .4.1.6.1 1.5 0 2.7-1.2 2.7-2.7 0-.4-.1-.7-.2-1A2.7 2.7 0 0 0 21 12.2a2.7 2.7 0 0 0-1.2-2.4c.2-.4.3-.8.3-1.3a2.6 2.6 0 0 0-2.5-2.6A2.7 2.7 0 0 0 13 4.2z"/></svg>`}];function he(g){return g==="selfCare"?"motor":g}function Mi(g){var s;if(!g||Number.isNaN(((s=g.getTime)==null?void 0:s.call(g))??NaN))return"";const e=new Date;let t=(e.getFullYear()-g.getFullYear())*12+(e.getMonth()-g.getMonth());e.getDate()<g.getDate()&&(t-=1),t=Math.max(0,t);const i=Math.floor(t/12),r=t%12;if(i===0)return`${r} month${r===1?"":"s"}`;const a=r?`, ${r} month${r===1?"":"s"}`:"";return`${i} year${i===1?"":"s"}${a}`}class rt extends D{constructor(){super(),this.child=null,this.children=[],this.milestones=[],this.insights=[],this.dailyCard=null,this.reports=[],this._editingReportId=null,this._erTitle="",this._erPeriod="",this._erSummary="",this._confirmDeleteReportId=null,this.readonly=!1,this._focusedDot=null,this._onDocClick=e=>{var r;if(this._focusedDot==null)return;(((r=e.composedPath)==null?void 0:r.call(e))??[]).some(a=>{var s,n,d,l;return((n=(s=a==null?void 0:a.classList)==null?void 0:s.contains)==null?void 0:n.call(s,"tl-dot"))||((l=(d=a==null?void 0:a.classList)==null?void 0:d.contains)==null?void 0:l.call(d,"tl-popover"))})||(this._focusedDot=null)}}connectedCallback(){super.connectedCallback(),document.addEventListener("click",this._onDocClick)}disconnectedCallback(){document.removeEventListener("click",this._onDocClick),super.disconnectedCallback()}_domainStats(e){const t=(this.milestones??[]).filter(a=>he(a.category)===e),i=t.filter(a=>a.status==="achieved").length,r=t.length;return{achieved:i,total:r,pct:r?Math.round(i/r*100):0}}_pebbleIcon(){return o`<pebble-icon></pebble-icon>`}_ageMonths(e){var r;if(!e||Number.isNaN(((r=e.getTime)==null?void 0:r.call(e))??NaN))return 0;const t=new Date;let i=(t.getFullYear()-e.getFullYear())*12+(t.getMonth()-e.getMonth());return t.getDate()<e.getDate()&&(i-=1),Math.max(0,i)}_activeProgress(e,t){const i=Array.isArray(e)?e:[],r=this._ageMonths(t),a=i.filter(n=>{const d=n.ageRangeStartMonths??0;return(n.ageRangeEndMonths??d)>=r&&d<=r+12});return{done:a.filter(n=>n.status==="achieved").length,total:a.length}}_timelineModel(){var p;const e=this.milestones??[],t=this._ageMonths((p=this.child)==null?void 0:p.dateOfBirth),i=e.reduce((h,u)=>u.status==="achieved"?Math.max(h,u.ageRangeEndMonths??u.ageRangeStartMonths??0):h,0);let r=Math.max(i+12,t+6,18);r=Math.ceil(r/6)*6;const a=h=>Math.min(98,Math.max(2,(h??0)/r*100)),s=h=>h<=0?"birth":h<24?`${h} mo`:h%12===0?`${h/12} yr`:`${(h/12).toFixed(1).replace(/\.0$/,"")} yr`,n=(h,u)=>{const b=h.ageRangeStartMonths??0,w=h.ageRangeEndMonths??b;return{left:a(b),future:!!u,title:h.title??"",status:h.status,ageLabel:b===w?`at ${s(b)}`:`${s(b)}–${s(w)}`}},d=[{key:"motor",cls:"motor",name:"Motor"},{key:"language",cls:"language",name:"Language"},{key:"socialEmotional",cls:"social",name:"Social-Emo."},{key:"cognitive",cls:"cognitive",name:"Cognitive"}].map(h=>{const u=e.filter(I=>he(I.category)===h.key),b=u.filter(I=>I.status==="achieved").sort((I,P)=>(I.ageRangeStartMonths??0)-(P.ageRangeStartMonths??0));let w=b;b.length>7&&(w=Array.from({length:7},(I,P)=>b[Math.round(P*(b.length-1)/6)]));const v=w.map(I=>n(I,!1)),_=u.filter(I=>I.status!=="achieved").sort((I,P)=>(I.ageRangeStartMonths??0)-(P.ageRangeStartMonths??0))[0];return _&&v.push(n(_,!0)),{...h,dots:v}}),l=Array.from({length:7},(h,u)=>s(Math.round(u*r/6))),c=Math.min(1,Math.max(0,t/r));return{lanes:d,axis:l,ageM:t,nowFrac:c}}render(){const e=this.child;if(!e)return o`<div class="panel empty">No child selected yet.</div>`;const t=this.milestones??[],i=t.filter(p=>p.status==="achieved"),r=this._activeProgress(t,e.dateOfBirth),a=i.slice().sort((p,h)=>(h.ageRangeStartMonths??0)-(p.ageRangeStartMonths??0)).slice(0,4),s=t.filter(p=>p.status!=="achieved").slice(0,4),n=e.themeColorHex||"var(--teal-pebble)",d=(this.insights??[]).slice(0,4),l=p=>p==="achieved"?"done":p==="emerging"?"emerging":"up",c=p=>p==="achieved"?"Achieved":p==="emerging"?"Emerging":"Upcoming";return o`
+      ${(this.children??[]).length>1?o`<div class="switcher">
+            ${this.children.map(p=>o`<button
                 class=${p.id===e.id?"on":""}
                 @click=${()=>this.dispatchEvent(new CustomEvent("select-child",{detail:p.id,bubbles:!0,composed:!0}))}
               >
@@ -8263,7 +8319,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       <section>
         <div
           class="child-card"
-          style="--theme:${o};--wm:url('${"/portal/"}assets/playgroundv2.jpg');"
+          style="--theme:${n};--wm:url('${"/portal/"}assets/playgroundv2.jpg');"
         >
           <span class="ring">
             <member-chip
@@ -8299,10 +8355,10 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <div>
             <div class="section-head"><h2>Coming up</h2></div>
             <div class="panel">
-              ${s.length===0?n`<div class="empty">
+              ${s.length===0?o`<div class="empty">
                     Nothing flagged as next right now. ${e.name} is on
                     track across the board.
-                  </div>`:s.map(p=>{var u,b;const h=((u=$e.find(w=>w.key===he(p.category)))==null?void 0:u.color)??"#6b9ac4";return n`<div class="ms-row">
+                  </div>`:s.map(p=>{var u,b;const h=((u=$e.find(w=>w.key===he(p.category)))==null?void 0:u.color)??"#6b9ac4";return o`<div class="ms-row">
                       <span class="ms-dot" style="background:${h}"></span>
                       <div class="t">
                         ${p.title}
@@ -8321,9 +8377,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
               <h2>Recently achieved</h2>
             </div>
             <div class="panel">
-              ${a.length===0?n`<div class="empty">
+              ${a.length===0?o`<div class="empty">
                     No milestones logged as achieved yet.
-                  </div>`:a.map(p=>{var u;const h=((u=$e.find(b=>b.key===he(p.category)))==null?void 0:u.color)??"#6b9ac4";return n`<div class="ms-row">
+                  </div>`:a.map(p=>{var u;const h=((u=$e.find(b=>b.key===he(p.category)))==null?void 0:u.color)??"#6b9ac4";return o`<div class="ms-row">
                       <span class="ms-dot" style="background:${h}"></span>
                       <div class="t">${p.title}</div>
                       <span class="ms-stat done">Achieved</span>
@@ -8333,7 +8389,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
 
           <div>
             <div class="section-head"><h2>Growth insights</h2></div>
-            ${d.length===0?n`<div class="panel insights-empty">
+            ${d.length===0?o`<div class="panel insights-empty">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -8353,8 +8409,8 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     insights appear here as more milestones are logged in
                     the app.
                   </p>
-                </div>`:n`<div class="insight-stack">
-                  ${d.map(p=>n`<insight-card
+                </div>`:o`<div class="insight-stack">
+                  ${d.map(p=>o`<insight-card
                       .type=${p.type}
                       .domain=${p.domain}
                       .title=${p.title}
@@ -8366,12 +8422,12 @@ They'll lose access to shared trips, celebrations and any read-only child access
       </section>
 
       <section>
-        ${this.readonly?n`<div class="vis-note">
+        ${this.readonly?o`<div class="vis-note">
               You're seeing ${e.name}'s milestones &amp; growth
               insights <b>read-only</b>, shared by the parents. Pebble,
               the pediatrician summary and any editing stay with the
               parents. A parent can revoke this access any time.
-            </div>`:n`<div class="panel">
+            </div>`:o`<div class="panel">
                 <div class="cta-card">
                   <div class="cic">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v5h5"/><path d="M14 3H6v18h12V8z"/><path d="M9 13h6M9 17h6"/></svg>
@@ -8395,20 +8451,20 @@ They'll lose access to shared trips, celebrations and any read-only child access
       </section>
 
       ${this.readonly?"":this._renderReports(e)}
-    `}_renderReports(e){const t=this.reports??[];return n`
+    `}_renderReports(e){const t=this.reports??[];return o`
       <section>
         <div class="section-head"><h2>Reports &amp; assessments</h2></div>
-        ${t.length===0?n`<div class="panel reports-empty">
+        ${t.length===0?o`<div class="panel reports-empty">
               <p>
                 Upload a report card or daycare note in Pebble's Smart
                 Upload. It'll live here and inform what Pebble knows
                 about ${(e==null?void 0:e.name)??"your child"}.
               </p>
-            </div>`:n`<div class="insight-stack">
+            </div>`:o`<div class="insight-stack">
               ${t.map(i=>this._renderReportCard(i))}
             </div>`}
       </section>
-    `}_renderReportCard(e){if(this._editingReportId===e.id)return n`<div class="report-card">
+    `}_renderReportCard(e){if(this._editingReportId===e.id)return o`<div class="report-card">
         <input
           class="r-field"
           type="text"
@@ -8445,7 +8501,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             Save
           </button>
         </div>
-      </div>`;const t=[e.source,e.periodLabel||e.reportDate].filter(Boolean).join(" · ");return n`<div class="report-card">
+      </div>`;const t=[e.source,e.periodLabel||e.reportDate].filter(Boolean).join(" · ");return o`<div class="report-card">
       <div class="r-head">
         <h4>${e.title}</h4>
         <div class="r-tools">
@@ -8467,16 +8523,16 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </button>
         </div>
       </div>
-      ${t?n`<div class="r-sub">${t}</div>`:""}
+      ${t?o`<div class="r-sub">${t}</div>`:""}
       <p class="r-summary">${e.summary}</p>
-      ${e.attachmentURL?n`<a
+      ${e.attachmentURL?o`<a
             class="r-file"
             href=${e.attachmentURL}
             target="_blank"
             rel="noopener"
             >${e.attachmentName||"Open original file"}</a
           >`:""}
-      ${this._confirmDeleteReportId===e.id?n`<div class="r-confirm">
+      ${this._confirmDeleteReportId===e.id?o`<div class="r-confirm">
             <span>Delete this report?</span>
             <button
               class="r-btn-ghost"
@@ -9240,7 +9296,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       cursor: pointer;
       font-family: var(--font-body);
     }
-  `);customElements.define("child-overview",rt);const Ti=["Reading your family's context","Thinking it through","Gathering a few ideas","Pulling the pieces together"],Ii=["Looking up fresh ideas","Finding current options","Checking the latest"];class at extends D{constructor(){super(),this.child=null,this.messages=[],this.sessions=[],this.prefill="",this.memberProfiles={},this.myUid="",this.quota=null,this._session=[],this._input="",this._loading=!1,this._streaming=null,this._streamTick=0,this._streamTimer=null,this._error="",this._seededKey="",this._activeSessionId=null,this._renamingId=null,this._isPrivate=!1,this._railOpen=!1,this.compact=!1,this._listening=!1,this._recognition=null}disconnectedCallback(){var e;super.disconnectedCallback(),this._stopStreamCaptions();try{(e=this._recognition)==null||e.abort()}catch{}this._recognition=null}get _voiceSupported(){return!!(window.SpeechRecognition||window.webkitSpeechRecognition)}_toggleVoice(){var i;if(this._listening){try{(i=this._recognition)==null||i.stop()}catch{}return}const e=window.SpeechRecognition||window.webkitSpeechRecognition;if(!e)return;const t=new e;t.lang="en-US",t.interimResults=!0,t.continuous=!1,t.onresult=r=>{let a="";for(let s=0;s<r.results.length;s+=1)a+=r.results[s][0].transcript;this._input=a},t.onerror=r=>{this._listening=!1,(r.error==="not-allowed"||r.error==="service-not-allowed")&&(this._error="Microphone access is blocked. Allow it in your browser to ask by voice.")},t.onend=()=>{this._listening=!1,this._recognition=null},this._recognition=t,this._listening=!0,this._error="";try{t.start()}catch{this._listening=!1,this._recognition=null}}willUpdate(e){var i;if(e.has("child")&&(this._session=[],this._error="",this._activeSessionId=null,this._seededKey="",this._stopStreamCaptions(),this._streaming=null),this._activeSessionId==null&&(e.has("sessions")||e.has("messages")||e.has("child"))){const r=this._sessionList();r.length&&(this._activeSessionId=r[0].id)}const t=`${((i=this.child)==null?void 0:i.id)??""}|${this._activeSessionId??""}`;if(t!==this._seededKey&&(e.has("messages")||e.has("sessions")||e.has("child")||e.has("_activeSessionId"))){this._session=this._messagesForActive().map(a=>({role:a.role,content:a.content,senderUid:a.senderUid,isPrivate:a.isPrivate===!0})),this._seededKey=t;const r=this._activeSession();this._isPrivate=r?r.isPrivate===!0:!1}e.has("prefill")&&this.prefill&&(this._input=this.prefill)}_sessionList(){const e=(this.sessions??[]).map(i=>({id:i.id,title:i.title||"Untitled chat",isPrivate:i.isPrivate===!0,_real:!0}));return(this.messages??[]).some(i=>!i.sessionId)&&e.push({id:"__legacy",title:"Earlier chats",isPrivate:!1,_real:!1}),e}_activeSession(){return this._sessionList().find(e=>e.id===this._activeSessionId)??null}_messagesForActive(){const e=this._activeSessionId;if(e==null)return[];const t=this.messages??[];return e==="__legacy"?t.filter(i=>!i.sessionId):t.filter(i=>i.sessionId===e)}_selectSession(e){if(this._activeSessionId===e){this._railOpen=!1;return}this._activeSessionId=e,this._railOpen=!1,this._error=""}async _newChat(){var e;if(this._railOpen=!1,this._error="",!!((e=this.child)!=null&&e.id))try{const t=await f.createPebbleSession(this.child.id,{title:"New chat",isPrivate:!1});this._activeSessionId=t,this._session=[],this._input="",this.updateComplete.then(()=>{var i;return(i=this.renderRoot.querySelector("textarea"))==null?void 0:i.focus()})}catch(t){this._error=(t==null?void 0:t.message)??"Couldn't start a new chat."}}async _renameSession(e){var r;if(!(e!=null&&e._real)||!((r=this.child)!=null&&r.id))return;const t=window.prompt("Rename chat",e.title);if(t==null)return;const i=t.trim();if(!(!i||i===e.title))try{await f.renamePebbleSession(this.child.id,e.id,i)}catch(a){this._error=(a==null?void 0:a.message)??"Couldn't rename."}}async _archiveSession(e){var t;if(!(!(e!=null&&e._real)||!((t=this.child)!=null&&t.id))&&window.confirm(`Archive "${e.title}"? It'll leave your chat list.`))try{await f.archivePebbleSession(this.child.id,e.id),this._activeSessionId===e.id&&(this._activeSessionId=null,this._seededKey="")}catch(i){this._error=(i==null?void 0:i.message)??"Couldn't archive."}}async _togglePrivacy(e){var i;const t=this._activeSession();if(this._isPrivate=e,!(!t||!t._real||!((i=this.child)!=null&&i.id)))try{await f.setPebbleSessionPrivacy(this.child.id,t.id,e)}catch(r){this._error=(r==null?void 0:r.message)??"Couldn't change privacy."}}updated(e){(e.has("messages")||e.has("_session")||e.has("_loading"))&&this.updateComplete.then(()=>this._scrollToBottom())}_scrollToBottom(){const e=this.renderRoot.querySelector(".thread");e&&(e.scrollTop=e.scrollHeight)}_suggestions(){var t;const e=((t=this.child)==null?void 0:t.name)??"your child";return[`What's coming up for ${e}?`,`Ideas for a rainy weekend with ${e}`,`Is ${e}'s speech on track?`,`How can I support ${e} this week?`]}_recentQuestions(){const e=[];return this._session.forEach((t,i)=>{if(t.role!=="user")return;const r=String(t.content??"").trim();r&&e.push({idx:i,text:r,isPrivate:t.isPrivate===!0})}),e.reverse()}_scrollToMsg(e){this._railOpen=!1,this.updateComplete.then(()=>{const t=this.renderRoot.querySelector(`.thread [data-idx="${e}"]`);t&&t.scrollIntoView({behavior:"smooth",block:"center"})})}_newQuestion(){this._railOpen=!1,this._input="",this.updateComplete.then(()=>{const e=this.renderRoot.querySelector("textarea");e==null||e.focus(),this._scrollToBottom()})}async _send(e){var c,p,h;const t=(e??this._input).trim();if(!t||this._loading)return;if(!((c=this.child)!=null&&c.id)){this._error="No child selected.";return}if(this._atLimit)return;this._error="",this._input="";const i=this._session.slice(-20).map(u=>({role:u.role,content:u.content})),r=this._isPrivate===!0;let a=this._activeSessionId;const s=this._activeSession();if(!s||!s._real)try{a=await f.createPebbleSession(this.child.id,{title:t.slice(0,48),isPrivate:r}),this._activeSessionId=a,this._seededKey=`${this.child.id}|${a}`,this._session=[]}catch(u){this._error=(u==null?void 0:u.message)??"Couldn't start a chat.";return}else s.title==="New chat"&&this._session.filter(u=>u.role==="user").length===0&&f.renamePebbleSession(this.child.id,a,t.slice(0,48)).catch(()=>{});this._session=[...this._session,{role:"user",content:t,senderUid:this.myUid,isPrivate:r}],this._loading=!0,this._streaming={phase:"thinking",text:""},this._startStreamCaptions();let o=!1;const d=u=>{o=!0,this._session=[...this._session,{role:"assistant",content:u??"…",isPrivate:r,senderUid:r?this.myUid:void 0}]},l=async()=>{try{const u=await f.askPebbleAboutChild(this.child.id,t,i,r,a);d((u==null?void 0:u.answer)??"…")}catch(u){console.error(u),this._error=this._sendErrorMessage(u)}};try{const u=await f.streamPebbleChat(this.child.id,t,i,r,a,{onStatus:w=>{w==="searching_web"&&this._streaming&&!this._streaming.text&&(this._streaming={...this._streaming,phase:"searching"})},onDelta:w=>{this._stopStreamCaptions(),this._streaming={phase:"streaming",text:w||""}}}),b=((u==null?void 0:u.answer)??((p=this._streaming)==null?void 0:p.text)??"").trim();b?d(b):await l()}catch(u){console.error(u);const b=(((h=this._streaming)==null?void 0:h.text)??"").trim();b.length>=20?d(b):await l()}finally{this._stopStreamCaptions(),this._streaming=null,this._loading=!1,o&&f.incrementPebbleQuota()}}_sendErrorMessage(e){return(e==null?void 0:e.code)==="functions/unauthenticated"?"Pebble needs you to be signed in.":(e==null?void 0:e.code)==="functions/permission-denied"?"Pebble's child advisor is for parents on this household.":(e==null?void 0:e.code)==="functions/not-found"||(e==null?void 0:e.code)==="functions/internal"?"Pebble isn't available right now, try again in a moment.":(e==null?void 0:e.message)??"Pebble could not answer right now."}_startStreamCaptions(){this._stopStreamCaptions(),this._streamTick=0,this._streamTimer=setInterval(()=>{this._streamTick+=1},2400)}_stopStreamCaptions(){this._streamTimer&&(clearInterval(this._streamTimer),this._streamTimer=null)}_streamCaption(){var t;const e=((t=this._streaming)==null?void 0:t.phase)==="searching"?Ii:Ti;return e[this._streamTick%e.length]}_isDark(){return typeof document<"u"?!document.documentElement.classList.contains("theme-light"):!0}_firstName(){var i,r;const e=(r=(i=this.memberProfiles)==null?void 0:i[this.myUid])==null?void 0:r.displayName;return String(e??"").trim().split(/\s+/)[0]||"there"}get _atLimit(){var e;return((e=this.quota)==null?void 0:e.atLimit)===!0}_quotaLabel(){const e=this.quota;if(!e)return"";if(e.bypassed)return"Unlimited · beta tester";if(e.premium)return"Unlimited · Premium";const t=e.remaining;return t+(t===1?" question":" questions")+" left this week · Free"}_rolloverLabel(){var t;const e=(t=this.quota)==null?void 0:t.rollover;if(!e)return"";try{return(e instanceof Date?e:new Date(e)).toLocaleDateString(void 0,{weekday:"short",month:"short",day:"numeric"})}catch{return""}}_limitMessage(){var i;const e=((i=this.quota)==null?void 0:i.limit)??5,t=this._rolloverLabel();return"Your family has used its "+e+" Pebble questions this week."+(t?" They reset "+t+".":"")+" For unlimited, subscribe to Premium in the PebblePath app."}_smartUpload(){this.dispatchEvent(new CustomEvent("smart-upload",{bubbles:!0,composed:!0}))}_pico(){return n`<pebble-icon></pebble-icon>`}_senderName(e){var i;if(!e||e===this.myUid)return"You";const t=(i=this.memberProfiles)==null?void 0:i[e];return t!=null&&t.displayName?t.displayName:e.charAt(0).toUpperCase()+e.slice(1)}_senderPhoto(e){var i,r;const t=(r=(i=this.memberProfiles)==null?void 0:i[e])==null?void 0:r.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:""}_fmt(e){const i=String(e??"").replace(/^[ \t\u00A0]+/gm,"").trim().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>").replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,!?]|$)/g,"$1<i>$2</i>").replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');return At(i)}render(){var a;(a=this.child)==null||a.name;const e=this._session.length>0,t=this._sessionList(),i=this._activeSession(),r=!i||!!i._real;return n`
+  `);customElements.define("child-overview",rt);const Ti=["Reading your family's context","Thinking it through","Gathering a few ideas","Pulling the pieces together"],Ii=["Looking up fresh ideas","Finding current options","Checking the latest"];class at extends D{constructor(){super(),this.child=null,this.messages=[],this.sessions=[],this.prefill="",this.memberProfiles={},this.myUid="",this.quota=null,this._session=[],this._input="",this._loading=!1,this._streaming=null,this._streamTick=0,this._streamTimer=null,this._error="",this._seededKey="",this._activeSessionId=null,this._renamingId=null,this._isPrivate=!1,this._railOpen=!1,this.compact=!1,this._listening=!1,this._recognition=null}disconnectedCallback(){var e;super.disconnectedCallback(),this._stopStreamCaptions();try{(e=this._recognition)==null||e.abort()}catch{}this._recognition=null}get _voiceSupported(){return!!(window.SpeechRecognition||window.webkitSpeechRecognition)}_toggleVoice(){var i;if(this._listening){try{(i=this._recognition)==null||i.stop()}catch{}return}const e=window.SpeechRecognition||window.webkitSpeechRecognition;if(!e)return;const t=new e;t.lang="en-US",t.interimResults=!0,t.continuous=!1,t.onresult=r=>{let a="";for(let s=0;s<r.results.length;s+=1)a+=r.results[s][0].transcript;this._input=a},t.onerror=r=>{this._listening=!1,(r.error==="not-allowed"||r.error==="service-not-allowed")&&(this._error="Microphone access is blocked. Allow it in your browser to ask by voice.")},t.onend=()=>{this._listening=!1,this._recognition=null},this._recognition=t,this._listening=!0,this._error="";try{t.start()}catch{this._listening=!1,this._recognition=null}}willUpdate(e){var i;if(e.has("child")&&(this._session=[],this._error="",this._activeSessionId=null,this._seededKey="",this._stopStreamCaptions(),this._streaming=null),this._activeSessionId==null&&(e.has("sessions")||e.has("messages")||e.has("child"))){const r=this._sessionList();r.length&&(this._activeSessionId=r[0].id)}const t=`${((i=this.child)==null?void 0:i.id)??""}|${this._activeSessionId??""}`;if(t!==this._seededKey&&(e.has("messages")||e.has("sessions")||e.has("child")||e.has("_activeSessionId"))){this._session=this._messagesForActive().map(a=>({role:a.role,content:a.content,senderUid:a.senderUid,isPrivate:a.isPrivate===!0})),this._seededKey=t;const r=this._activeSession();this._isPrivate=r?r.isPrivate===!0:!1}e.has("prefill")&&this.prefill&&(this._input=this.prefill)}_sessionList(){const e=(this.sessions??[]).map(i=>({id:i.id,title:i.title||"Untitled chat",isPrivate:i.isPrivate===!0,_real:!0}));return(this.messages??[]).some(i=>!i.sessionId)&&e.push({id:"__legacy",title:"Earlier chats",isPrivate:!1,_real:!1}),e}_activeSession(){return this._sessionList().find(e=>e.id===this._activeSessionId)??null}_messagesForActive(){const e=this._activeSessionId;if(e==null)return[];const t=this.messages??[];return e==="__legacy"?t.filter(i=>!i.sessionId):t.filter(i=>i.sessionId===e)}_selectSession(e){if(this._activeSessionId===e){this._railOpen=!1;return}this._activeSessionId=e,this._railOpen=!1,this._error=""}async _newChat(){var e;if(this._railOpen=!1,this._error="",!!((e=this.child)!=null&&e.id))try{const t=await f.createPebbleSession(this.child.id,{title:"New chat",isPrivate:!1});this._activeSessionId=t,this._session=[],this._input="",this.updateComplete.then(()=>{var i;return(i=this.renderRoot.querySelector("textarea"))==null?void 0:i.focus()})}catch(t){this._error=(t==null?void 0:t.message)??"Couldn't start a new chat."}}async _renameSession(e){var r;if(!(e!=null&&e._real)||!((r=this.child)!=null&&r.id))return;const t=window.prompt("Rename chat",e.title);if(t==null)return;const i=t.trim();if(!(!i||i===e.title))try{await f.renamePebbleSession(this.child.id,e.id,i)}catch(a){this._error=(a==null?void 0:a.message)??"Couldn't rename."}}async _archiveSession(e){var t;if(!(!(e!=null&&e._real)||!((t=this.child)!=null&&t.id))&&window.confirm(`Archive "${e.title}"? It'll leave your chat list.`))try{await f.archivePebbleSession(this.child.id,e.id),this._activeSessionId===e.id&&(this._activeSessionId=null,this._seededKey="")}catch(i){this._error=(i==null?void 0:i.message)??"Couldn't archive."}}async _togglePrivacy(e){var i;const t=this._activeSession();if(this._isPrivate=e,!(!t||!t._real||!((i=this.child)!=null&&i.id)))try{await f.setPebbleSessionPrivacy(this.child.id,t.id,e)}catch(r){this._error=(r==null?void 0:r.message)??"Couldn't change privacy."}}updated(e){(e.has("messages")||e.has("_session")||e.has("_loading"))&&this.updateComplete.then(()=>this._scrollToBottom())}_scrollToBottom(){const e=this.renderRoot.querySelector(".thread");e&&(e.scrollTop=e.scrollHeight)}_suggestions(){var t;const e=((t=this.child)==null?void 0:t.name)??"your child";return[`What's coming up for ${e}?`,`Ideas for a rainy weekend with ${e}`,`Is ${e}'s speech on track?`,`How can I support ${e} this week?`]}_recentQuestions(){const e=[];return this._session.forEach((t,i)=>{if(t.role!=="user")return;const r=String(t.content??"").trim();r&&e.push({idx:i,text:r,isPrivate:t.isPrivate===!0})}),e.reverse()}_scrollToMsg(e){this._railOpen=!1,this.updateComplete.then(()=>{const t=this.renderRoot.querySelector(`.thread [data-idx="${e}"]`);t&&t.scrollIntoView({behavior:"smooth",block:"center"})})}_newQuestion(){this._railOpen=!1,this._input="",this.updateComplete.then(()=>{const e=this.renderRoot.querySelector("textarea");e==null||e.focus(),this._scrollToBottom()})}async _send(e){var c,p,h;const t=(e??this._input).trim();if(!t||this._loading)return;if(!((c=this.child)!=null&&c.id)){this._error="No child selected.";return}if(this._atLimit)return;this._error="",this._input="";const i=this._session.slice(-20).map(u=>({role:u.role,content:u.content})),r=this._isPrivate===!0;let a=this._activeSessionId;const s=this._activeSession();if(!s||!s._real)try{a=await f.createPebbleSession(this.child.id,{title:t.slice(0,48),isPrivate:r}),this._activeSessionId=a,this._seededKey=`${this.child.id}|${a}`,this._session=[]}catch(u){this._error=(u==null?void 0:u.message)??"Couldn't start a chat.";return}else s.title==="New chat"&&this._session.filter(u=>u.role==="user").length===0&&f.renamePebbleSession(this.child.id,a,t.slice(0,48)).catch(()=>{});this._session=[...this._session,{role:"user",content:t,senderUid:this.myUid,isPrivate:r}],this._loading=!0,this._streaming={phase:"thinking",text:""},this._startStreamCaptions();let n=!1;const d=u=>{n=!0,this._session=[...this._session,{role:"assistant",content:u??"…",isPrivate:r,senderUid:r?this.myUid:void 0}]},l=async()=>{try{const u=await f.askPebbleAboutChild(this.child.id,t,i,r,a);d((u==null?void 0:u.answer)??"…")}catch(u){console.error(u),this._error=this._sendErrorMessage(u)}};try{const u=await f.streamPebbleChat(this.child.id,t,i,r,a,{onStatus:w=>{w==="searching_web"&&this._streaming&&!this._streaming.text&&(this._streaming={...this._streaming,phase:"searching"})},onDelta:w=>{this._stopStreamCaptions(),this._streaming={phase:"streaming",text:w||""}}}),b=((u==null?void 0:u.answer)??((p=this._streaming)==null?void 0:p.text)??"").trim();b?d(b):await l()}catch(u){console.error(u);const b=(((h=this._streaming)==null?void 0:h.text)??"").trim();b.length>=20?d(b):await l()}finally{this._stopStreamCaptions(),this._streaming=null,this._loading=!1,n&&f.incrementPebbleQuota()}}_sendErrorMessage(e){return(e==null?void 0:e.code)==="functions/unauthenticated"?"Pebble needs you to be signed in.":(e==null?void 0:e.code)==="functions/permission-denied"?"Pebble's child advisor is for parents on this household.":(e==null?void 0:e.code)==="functions/not-found"||(e==null?void 0:e.code)==="functions/internal"?"Pebble isn't available right now, try again in a moment.":(e==null?void 0:e.message)??"Pebble could not answer right now."}_startStreamCaptions(){this._stopStreamCaptions(),this._streamTick=0,this._streamTimer=setInterval(()=>{this._streamTick+=1},2400)}_stopStreamCaptions(){this._streamTimer&&(clearInterval(this._streamTimer),this._streamTimer=null)}_streamCaption(){var t;const e=((t=this._streaming)==null?void 0:t.phase)==="searching"?Ii:Ti;return e[this._streamTick%e.length]}_isDark(){return typeof document<"u"?!document.documentElement.classList.contains("theme-light"):!0}_firstName(){var i,r;const e=(r=(i=this.memberProfiles)==null?void 0:i[this.myUid])==null?void 0:r.displayName;return String(e??"").trim().split(/\s+/)[0]||"there"}get _atLimit(){var e;return((e=this.quota)==null?void 0:e.atLimit)===!0}_quotaLabel(){const e=this.quota;if(!e)return"";if(e.bypassed)return"Unlimited · beta tester";if(e.premium)return"Unlimited · Premium";const t=e.remaining;return t+(t===1?" question":" questions")+" left this week · Free"}_rolloverLabel(){var t;const e=(t=this.quota)==null?void 0:t.rollover;if(!e)return"";try{return(e instanceof Date?e:new Date(e)).toLocaleDateString(void 0,{weekday:"short",month:"short",day:"numeric"})}catch{return""}}_limitMessage(){var i;const e=((i=this.quota)==null?void 0:i.limit)??5,t=this._rolloverLabel();return"Your family has used its "+e+" Pebble questions this week."+(t?" They reset "+t+".":"")+" For unlimited, subscribe to Premium in the PebblePath app."}_smartUpload(){this.dispatchEvent(new CustomEvent("smart-upload",{bubbles:!0,composed:!0}))}_pico(){return o`<pebble-icon></pebble-icon>`}_senderName(e){var i;if(!e||e===this.myUid)return"You";const t=(i=this.memberProfiles)==null?void 0:i[e];return t!=null&&t.displayName?t.displayName:e.charAt(0).toUpperCase()+e.slice(1)}_senderPhoto(e){var i,r;const t=(r=(i=this.memberProfiles)==null?void 0:i[e])==null?void 0:r.profilePhotoURL;return typeof t=="string"&&/^https?:\/\//i.test(t)?t:""}_fmt(e){const i=String(e??"").replace(/^[ \t\u00A0]+/gm,"").trim().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>").replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,!?]|$)/g,"$1<i>$2</i>").replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');return Pt(i)}render(){var a;(a=this.child)==null||a.name;const e=this._session.length>0,t=this._sessionList(),i=this._activeSession(),r=!i||!!i._real;return o`
       <div class="pebble-wrap ${this.compact?"compact":""}">
         <aside class="rail ${this._railOpen?"open":""}">
           <div class="rail-head">Chats</div>
@@ -9248,25 +9304,25 @@ They'll lose access to shared trips, celebrations and any read-only child access
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
             New chat
           </button>
-          ${t.length===0?"":t.map(s=>n`<div
+          ${t.length===0?"":t.map(s=>o`<div
                   class="rail-item ${s.id===this._activeSessionId?"on":""}"
                   title=${s.title}
                   @click=${()=>this._selectSession(s.id)}
                 >
-                  ${s.isPrivate?n`<svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round"/></svg>`:""}
+                  ${s.isPrivate?o`<svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round"/></svg>`:""}
                   <span class="rail-title">${s.title}</span>
-                  ${s._real?n`<span class="rail-acts">
+                  ${s._real?o`<span class="rail-acts">
                         <button
                           class="ra"
                           title="Rename"
-                          @click=${o=>{o.stopPropagation(),this._renameSession(s)}}
+                          @click=${n=>{n.stopPropagation(),this._renameSession(s)}}
                         >
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
                         </button>
                         <button
                           class="ra"
                           title="Archive"
-                          @click=${o=>{o.stopPropagation(),this._archiveSession(s)}}
+                          @click=${n=>{n.stopPropagation(),this._archiveSession(s)}}
                         >
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8M10 12h4"/></svg>
                         </button>
@@ -9314,14 +9370,14 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
         </div>
         <div class="thread">
-            ${e?n`
-                  ${this._session.map((s,o)=>s.role==="assistant"?n`<div class="msg pb" data-idx="${o}">
+            ${e?o`
+                  ${this._session.map((s,n)=>s.role==="assistant"?o`<div class="msg pb" data-idx="${n}">
                           <span class="pic">${this._pico()}</span>
                           <div class="col">
                             <!-- prettier-ignore -->
                             <div class="bubble">${this._fmt(s.content)}</div>
                           </div>
-                        </div>`:n`<div class="msg you" data-idx="${o}">
+                        </div>`:o`<div class="msg you" data-idx="${n}">
                           <span class="av">
                             <member-chip
                               .name=${this._senderName(s.senderUid)}
@@ -9337,17 +9393,17 @@ They'll lose access to shared trips, celebrations and any read-only child access
                             <div class="bubble">${this._fmt(s.content)}</div>
                           </div>
                         </div>`)}
-                  ${this._streaming?n`<div class="msg pb" data-idx="streaming">
+                  ${this._streaming?o`<div class="msg pb" data-idx="streaming">
                         <span class="pic">${this._pico()}</span>
                         <div class="col">
-                          ${this._streaming.text?n`<!-- prettier-ignore -->
-                                <div class="bubble">${this._fmt(this._streaming.text)}</div>`:n`<div class="bubble waiting">
+                          ${this._streaming.text?o`<!-- prettier-ignore -->
+                                <div class="bubble">${this._fmt(this._streaming.text)}</div>`:o`<div class="bubble waiting">
                                 <span class="wcap">${this._streamCaption()}</span>
                                 <span class="wdots"><span></span><span></span><span></span></span>
                               </div>`}
                         </div>
                       </div>`:""}
-                `:n`<div class="landing ${this._isDark()?"dark":""}">
+                `:o`<div class="landing ${this._isDark()?"dark":""}">
                   <div class="landing-inner">
                     <div class="stone-wrap" aria-hidden="true">
                       <div class="stone">
@@ -9385,7 +9441,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                         <h3>Plan trip activities</h3>
                         <p>Ideas for your upcoming trips.</p>
                       </button>
-                      ${this._voiceSupported?n`<button
+                      ${this._voiceSupported?o`<button
                             class="lcard"
                             @click=${()=>this._toggleVoice()}
                           >
@@ -9400,8 +9456,8 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 </div>`}
           </div>
 
-          ${this._error?n`<div class="error">${this._error}</div>`:""}
-          ${this._atLimit?n`<div class="limitbanner">${this._limitMessage()}</div>`:""}
+          ${this._error?o`<div class="error">${this._error}</div>`:""}
+          ${this._atLimit?o`<div class="limitbanner">${this._limitMessage()}</div>`:""}
 
           <form
             class="composer ${this._atLimit?"disabled":""}"
@@ -9414,7 +9470,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
               @keydown=${s=>{s.key==="Enter"&&!s.shiftKey&&(s.preventDefault(),this._send())}}
               ?disabled=${this._loading||this._atLimit}
             ></textarea>
-            ${this._voiceSupported?n`<button
+            ${this._voiceSupported?o`<button
                   type="button"
                   class="mic ${this._listening?"on":""}"
                   @click=${()=>this._toggleVoice()}
@@ -10211,11 +10267,11 @@ They'll lose access to shared trips, celebrations and any read-only child access
       text-align: center;
       line-height: 1.5;
     }
-  `);customElements.define("child-pebble",at);class st extends D{constructor(){super(),this.trip=null,this._items=[],this._templates=[],this._hasStarted=!1,this._adHoc=[],this._drafts={},this._editingId=null,this._editText="",this._review=null,this._reviewing=!1,this._reviewError="",this._useOpen=!1,this._saveOpen=!1,this._saveName="",this._addGroupOpen=!1,this._newGroup="",this._dismissed=new Set,this._unsub=null,this._tplUnsub=null,this._subId=null}connectedCallback(){super.connectedCallback(),this._tplUnsub=f.packingTemplatesListener(e=>{this._templates=e}),this._subscribe()}disconnectedCallback(){var e,t;super.disconnectedCallback(),(e=this._unsub)==null||e.call(this),(t=this._tplUnsub)==null||t.call(this),this._unsub=this._tplUnsub=null,this._subId=null}willUpdate(e){e.has("trip")&&this._subscribe()}_subscribe(){var t,i;const e=((t=this.trip)==null?void 0:t.id)??null;e!==this._subId&&((i=this._unsub)==null||i.call(this),this._subId=e,this._items=[],this._review=null,this._hasStarted=!1,this._adHoc=[],e&&(this._unsub=f.packingListListener(e,r=>{this._items=r})))}get _tripId(){var e;return((e=this.trip)==null?void 0:e.id)??null}get _showEmpty(){return this._items.length===0&&!this._hasStarted&&this._adHoc.length===0}get _groupNames(){const e=new Set,t=[];for(const i of["Parents","Children"])e.has(i)||(e.add(i),t.push(i));for(const i of this._items)i.groupName&&!e.has(i.groupName)&&(e.add(i.groupName),t.push(i.groupName));for(const i of this._adHoc)e.has(i)||(e.add(i),t.push(i));return t}_itemsFor(e){return this._items.filter(t=>t.groupName===e).sort((t,i)=>(t.order??0)-(i.order??0))}async _toggle(e){if(this._tripId)try{await f.togglePackingItem(this._tripId,e)}catch(t){console.warn(t)}}async _addItem(e){const t=String(this._drafts[e]??"").trim();if(!t||!this._tripId)return;const i=this._itemsFor(e).reduce((r,a)=>Math.max(r,a.order??0),-1)+1;this._drafts={...this._drafts,[e]:""},this._hasStarted=!0;try{await f.addPackingItem(this._tripId,{groupName:e,text:t,order:i})}catch(r){console.warn("[packing] add failed",r)}this.updateComplete.then(()=>{const r=this.renderRoot.querySelector(`input[data-add="${CSS.escape(e)}"]`);r==null||r.focus()})}async _delete(e){if(this._tripId)try{await f.deletePackingItem(this._tripId,e.id)}catch(t){console.warn(t)}}_startEdit(e){this._editingId=e.id,this._editText=e.text??"",this.updateComplete.then(()=>{const t=this.renderRoot.querySelector("input.edit-input");t==null||t.focus(),t==null||t.select()})}async _commitEdit(e){const t=String(this._editText??"").trim();if(this._editingId=null,!(!t||t===e.text||!this._tripId))try{await f.updatePackingItemText(this._tripId,e.id,t)}catch(i){console.warn(i)}}async _applyTemplate(e){if(this._useOpen=!1,this._hasStarted=!0,!!this._tripId)try{await f.applyPackingTemplate(this._tripId,e)}catch(t){console.warn(t)}}_addGroup(){const e=String(this._newGroup??"").trim();e&&(this._groupNames.includes(e)||(this._adHoc=[...this._adHoc,e]),this._newGroup="",this._addGroupOpen=!1,this._hasStarted=!0)}async _saveAsTemplate(){const e=String(this._saveName??"").trim();if(e){this._saveOpen=!1,this._saveName="";try{await f.savePackingListAsTemplate(e,"",this._items)}catch(t){console.warn("[packing] save template failed",t)}}}_familyPayload(){var l;const e=f.state,t=((l=e.ppFamily)==null?void 0:l.memberProfiles)??{},i=Object.values(t).map(c=>c==null?void 0:c.displayName).filter(Boolean),r=Array.isArray(e.pebbleAnchors)?e.pebbleAnchors:[],a=Array.isArray(e.pebbleRhythms)?e.pebbleRhythms:[],s=c=>{var h;const p=((h=c==null?void 0:c.getTime)==null?void 0:h.call(c))??(c?new Date(c).getTime():0);return p?Math.max(0,Math.floor((Date.now()-p)/(30.44*24*3600*1e3))):0},o=(Array.isArray(e.ppChildren)?e.ppChildren:[]).map(c=>({name:c.name,ageMonths:s(c.dateOfBirth),anchors:r.filter(p=>p.scope==="child"&&p.childId===c.id).map(p=>p.label),rhythms:a.filter(p=>p.scope==="child"&&p.childId===c.id).map(p=>p.title),recentObservations:[]})),d=r.filter(c=>c.scope==="family").map(c=>c.label);return{parents:i,children:o,familyAnchors:d}}_tripPayload(){const e=this.trip??{},t={title:e.title||"Trip"};return e.location&&(t.location=e.location),e.start&&(t.startDate=e.start),e.end&&(t.endDate=e.end),e.lodgingTitle&&(t.lodgingTitle=e.lodgingTitle),(e.lodgingNotes||e.notes)&&(t.lodgingNotes=e.lodgingNotes||e.notes),(e.flightDepartAirline||e.flightAirline)&&(t.flightAirline=e.flightDepartAirline||e.flightAirline),t}async _runReview(){if(!(this._reviewing||!this._tripId)){this._reviewing=!0,this._reviewError="",this._hasStarted=!0;try{const e=this._items.map(i=>({groupName:i.groupName,text:i.text,checked:i.checked===!0,addedByPebble:i.addedByPebble===!0})),t=await f.generatePackingReview(this._tripId,this._tripPayload(),this._familyPayload(),e,[...this._dismissed],this._groupNames);this._review={additions:Array.isArray(t==null?void 0:t.additions)?t.additions:[],concerns:Array.isArray(t==null?void 0:t.concerns)?t.concerns:[],removals:Array.isArray(t==null?void 0:t.removals)?t.removals:[]},f.markPackingReviewed(this._tripId).catch(()=>{})}catch(e){this._reviewError=(e==null?void 0:e.message)||"Pebble could not review right now."}finally{this._reviewing=!1}}}async _acceptAddition(e){if(!this._tripId)return;const t=this._itemsFor(e.groupName).reduce((i,r)=>Math.max(i,r.order??0),-1)+1;try{await f.addPackingItem(this._tripId,{groupName:this._groupNames.includes(e.groupName)?e.groupName:"Parents",text:e.text,order:t,addedByPebble:!0})}catch(i){console.warn(i)}this._dropSuggestion("additions",e)}_dismiss(e,t){this._dismissed.add(String(t.text||"").toLowerCase()),this._dropSuggestion(e,t)}_dropSuggestion(e,t){if(!this._review)return;const i=`${t.groupName}::${(t.text||"").toLowerCase()}`;this._review={...this._review,[e]:this._review[e].filter(r=>`${r.groupName}::${(r.text||"").toLowerCase()}`!==i)}}_avatars(e){var i;const t=f.state;if(e==="Parents"){const r=((i=t.ppFamily)==null?void 0:i.memberProfiles)??{};return Object.entries(r).slice(0,3).map(([a,s])=>({id:a,name:(s==null?void 0:s.displayName)??"?",photo:(s==null?void 0:s.profilePhotoURL)??"",hue:150}))}return e==="Children"?(Array.isArray(t.ppChildren)?t.ppChildren:[]).slice(0,3).map(r=>({id:r.id,name:r.name,photo:r.profilePhotoURL??"",hue:265})):[]}render(){return this._showEmpty?this._renderEmpty():n`
+  `);customElements.define("child-pebble",at);class st extends D{constructor(){super(),this.trip=null,this._items=[],this._templates=[],this._hasStarted=!1,this._adHoc=[],this._drafts={},this._editingId=null,this._editText="",this._review=null,this._reviewing=!1,this._reviewError="",this._useOpen=!1,this._saveOpen=!1,this._saveName="",this._addGroupOpen=!1,this._newGroup="",this._dismissed=new Set,this._unsub=null,this._tplUnsub=null,this._subId=null}connectedCallback(){super.connectedCallback(),this._tplUnsub=f.packingTemplatesListener(e=>{this._templates=e}),this._subscribe()}disconnectedCallback(){var e,t;super.disconnectedCallback(),(e=this._unsub)==null||e.call(this),(t=this._tplUnsub)==null||t.call(this),this._unsub=this._tplUnsub=null,this._subId=null}willUpdate(e){e.has("trip")&&this._subscribe()}_subscribe(){var t,i;const e=((t=this.trip)==null?void 0:t.id)??null;e!==this._subId&&((i=this._unsub)==null||i.call(this),this._subId=e,this._items=[],this._review=null,this._hasStarted=!1,this._adHoc=[],e&&(this._unsub=f.packingListListener(e,r=>{this._items=r})))}get _tripId(){var e;return((e=this.trip)==null?void 0:e.id)??null}get _showEmpty(){return this._items.length===0&&!this._hasStarted&&this._adHoc.length===0}get _groupNames(){const e=new Set,t=[];for(const i of["Parents","Children"])e.has(i)||(e.add(i),t.push(i));for(const i of this._items)i.groupName&&!e.has(i.groupName)&&(e.add(i.groupName),t.push(i.groupName));for(const i of this._adHoc)e.has(i)||(e.add(i),t.push(i));return t}_itemsFor(e){return this._items.filter(t=>t.groupName===e).sort((t,i)=>(t.order??0)-(i.order??0))}async _toggle(e){if(this._tripId)try{await f.togglePackingItem(this._tripId,e)}catch(t){console.warn(t)}}async _addItem(e){const t=String(this._drafts[e]??"").trim();if(!t||!this._tripId)return;const i=this._itemsFor(e).reduce((r,a)=>Math.max(r,a.order??0),-1)+1;this._drafts={...this._drafts,[e]:""},this._hasStarted=!0;try{await f.addPackingItem(this._tripId,{groupName:e,text:t,order:i})}catch(r){console.warn("[packing] add failed",r)}this.updateComplete.then(()=>{const r=this.renderRoot.querySelector(`input[data-add="${CSS.escape(e)}"]`);r==null||r.focus()})}async _delete(e){if(this._tripId)try{await f.deletePackingItem(this._tripId,e.id)}catch(t){console.warn(t)}}_startEdit(e){this._editingId=e.id,this._editText=e.text??"",this.updateComplete.then(()=>{const t=this.renderRoot.querySelector("input.edit-input");t==null||t.focus(),t==null||t.select()})}async _commitEdit(e){const t=String(this._editText??"").trim();if(this._editingId=null,!(!t||t===e.text||!this._tripId))try{await f.updatePackingItemText(this._tripId,e.id,t)}catch(i){console.warn(i)}}async _applyTemplate(e){if(this._useOpen=!1,this._hasStarted=!0,!!this._tripId)try{await f.applyPackingTemplate(this._tripId,e)}catch(t){console.warn(t)}}_addGroup(){const e=String(this._newGroup??"").trim();e&&(this._groupNames.includes(e)||(this._adHoc=[...this._adHoc,e]),this._newGroup="",this._addGroupOpen=!1,this._hasStarted=!0)}async _saveAsTemplate(){const e=String(this._saveName??"").trim();if(e){this._saveOpen=!1,this._saveName="";try{await f.savePackingListAsTemplate(e,"",this._items)}catch(t){console.warn("[packing] save template failed",t)}}}_familyPayload(){var l;const e=f.state,t=((l=e.ppFamily)==null?void 0:l.memberProfiles)??{},i=Object.values(t).map(c=>c==null?void 0:c.displayName).filter(Boolean),r=Array.isArray(e.pebbleAnchors)?e.pebbleAnchors:[],a=Array.isArray(e.pebbleRhythms)?e.pebbleRhythms:[],s=c=>{var h;const p=((h=c==null?void 0:c.getTime)==null?void 0:h.call(c))??(c?new Date(c).getTime():0);return p?Math.max(0,Math.floor((Date.now()-p)/(30.44*24*3600*1e3))):0},n=(Array.isArray(e.ppChildren)?e.ppChildren:[]).map(c=>({name:c.name,ageMonths:s(c.dateOfBirth),anchors:r.filter(p=>p.scope==="child"&&p.childId===c.id).map(p=>p.label),rhythms:a.filter(p=>p.scope==="child"&&p.childId===c.id).map(p=>p.title),recentObservations:[]})),d=r.filter(c=>c.scope==="family").map(c=>c.label);return{parents:i,children:n,familyAnchors:d}}_tripPayload(){const e=this.trip??{},t={title:e.title||"Trip"};return e.location&&(t.location=e.location),e.start&&(t.startDate=e.start),e.end&&(t.endDate=e.end),e.lodgingTitle&&(t.lodgingTitle=e.lodgingTitle),(e.lodgingNotes||e.notes)&&(t.lodgingNotes=e.lodgingNotes||e.notes),(e.flightDepartAirline||e.flightAirline)&&(t.flightAirline=e.flightDepartAirline||e.flightAirline),t}async _runReview(){if(!(this._reviewing||!this._tripId)){this._reviewing=!0,this._reviewError="",this._hasStarted=!0;try{const e=this._items.map(i=>({groupName:i.groupName,text:i.text,checked:i.checked===!0,addedByPebble:i.addedByPebble===!0})),t=await f.generatePackingReview(this._tripId,this._tripPayload(),this._familyPayload(),e,[...this._dismissed],this._groupNames);this._review={additions:Array.isArray(t==null?void 0:t.additions)?t.additions:[],concerns:Array.isArray(t==null?void 0:t.concerns)?t.concerns:[],removals:Array.isArray(t==null?void 0:t.removals)?t.removals:[]},f.markPackingReviewed(this._tripId).catch(()=>{})}catch(e){this._reviewError=(e==null?void 0:e.message)||"Pebble could not review right now."}finally{this._reviewing=!1}}}async _acceptAddition(e){if(!this._tripId)return;const t=this._itemsFor(e.groupName).reduce((i,r)=>Math.max(i,r.order??0),-1)+1;try{await f.addPackingItem(this._tripId,{groupName:this._groupNames.includes(e.groupName)?e.groupName:"Parents",text:e.text,order:t,addedByPebble:!0})}catch(i){console.warn(i)}this._dropSuggestion("additions",e)}_dismiss(e,t){this._dismissed.add(String(t.text||"").toLowerCase()),this._dropSuggestion(e,t)}_dropSuggestion(e,t){if(!this._review)return;const i=`${t.groupName}::${(t.text||"").toLowerCase()}`;this._review={...this._review,[e]:this._review[e].filter(r=>`${r.groupName}::${(r.text||"").toLowerCase()}`!==i)}}_avatars(e){var i;const t=f.state;if(e==="Parents"){const r=((i=t.ppFamily)==null?void 0:i.memberProfiles)??{};return Object.entries(r).slice(0,3).map(([a,s])=>({id:a,name:(s==null?void 0:s.displayName)??"?",photo:(s==null?void 0:s.profilePhotoURL)??"",hue:150}))}return e==="Children"?(Array.isArray(t.ppChildren)?t.ppChildren:[]).slice(0,3).map(r=>({id:r.id,name:r.name,photo:r.profilePhotoURL??"",hue:265})):[]}render(){return this._showEmpty?this._renderEmpty():o`
       ${this._renderReview()}
       ${this._groupNames.map(e=>this._renderGroup(e))}
       <div class="foot-actions">
-        ${this._addGroupOpen?n`<div class="inline-input">
+        ${this._addGroupOpen?o`<div class="inline-input">
               <input
                 type="text"
                 placeholder="List name (e.g. Beach gear)"
@@ -10224,8 +10280,8 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 @keydown=${e=>e.key==="Enter"&&this._addGroup()}
               />
               <button class="mini-go" @click=${()=>this._addGroup()}>Add</button>
-            </div>`:n`<button class="ghost-btn" @click=${()=>{this._addGroupOpen=!0}}>+ Add another list</button>`}
-        ${this._items.length>0?this._saveOpen?n`<div class="inline-input">
+            </div>`:o`<button class="ghost-btn" @click=${()=>{this._addGroupOpen=!0}}>+ Add another list</button>`}
+        ${this._items.length>0?this._saveOpen?o`<div class="inline-input">
                 <input
                   type="text"
                   placeholder="Save as (e.g. Beach trips)"
@@ -10234,21 +10290,21 @@ They'll lose access to shared trips, celebrations and any read-only child access
                   @keydown=${e=>e.key==="Enter"&&this._saveAsTemplate()}
                 />
                 <button class="mini-go" @click=${()=>this._saveAsTemplate()}>Save</button>
-              </div>`:n`<button class="save-btn" @click=${()=>{var e,t;this._saveOpen=!0,this._saveName=((e=this.trip)==null?void 0:e.location)||((t=this.trip)==null?void 0:t.title)||""}}>
+              </div>`:o`<button class="save-btn" @click=${()=>{var e,t;this._saveOpen=!0,this._saveName=((e=this.trip)==null?void 0:e.location)||((t=this.trip)==null?void 0:t.title)||""}}>
                 Save this list for future trips
               </button>`:""}
       </div>
-    `}_renderEmpty(){const e=this._templates.slice(0,3).map(i=>i.name).join(", "),t=this._templates.length-3;return n`
+    `}_renderEmpty(){const e=this._templates.slice(0,3).map(i=>i.name).join(", "),t=this._templates.length-3;return o`
       <div class="empty">
-        ${this._templates.length>0?n`<button class="cta primary" @click=${()=>{this._useOpen=!this._useOpen}}>
+        ${this._templates.length>0?o`<button class="cta primary" @click=${()=>{this._useOpen=!this._useOpen}}>
               <span class="cta-ic">📋</span>
               <span class="cta-body">
                 <span class="cta-t">Use my lists</span>
                 <span class="cta-s">${e}${t>0?` + ${t} more`:""}</span>
               </span>
             </button>`:""}
-        ${this._useOpen?n`<div class="tpl-picker">
-              ${this._templates.map(i=>n`<button class="tpl-opt" @click=${()=>this._applyTemplate(i)}>
+        ${this._useOpen?o`<div class="tpl-picker">
+              ${this._templates.map(i=>o`<button class="tpl-opt" @click=${()=>this._applyTemplate(i)}>
                   ${i.name}
                   <small>${this._templateItemCount(i)} items</small>
                 </button>`)}
@@ -10267,9 +10323,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
             <span class="cta-s">Generates a starter from this trip and your family.</span>
           </span>
         </button>
-        ${this._reviewError?n`<div class="err">${this._reviewError}</div>`:""}
+        ${this._reviewError?o`<div class="err">${this._reviewError}</div>`:""}
       </div>
-    `}_templateItemCount(e){return(Array.isArray(e.groups)?e.groups:[]).reduce((t,i)=>t+(Array.isArray(i.items)?i.items.length:0),0)}_renderReview(){const e=this._review,t=e&&e.additions.length+e.concerns.length+e.removals.length>0;return n`
+    `}_templateItemCount(e){return(Array.isArray(e.groups)?e.groups:[]).reduce((t,i)=>t+(Array.isArray(i.items)?i.items.length:0),0)}_renderReview(){const e=this._review,t=e&&e.additions.length+e.concerns.length+e.removals.length>0;return o`
       ${t?this._renderSuggestions(e):""}
       <button class="review-cta ${this._reviewing?"loading":""}" @click=${()=>this._runReview()} ?disabled=${this._reviewing}>
         <pebble-icon size="18"></pebble-icon>
@@ -10278,30 +10334,30 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <span class="rc-s">${this._reviewing?"Checking the trip, lodging, and your family…":"Checks against the trip, lodging, and what we know about your family."}</span>
         </span>
       </button>
-      ${this._reviewError?n`<div class="err">${this._reviewError}</div>`:""}
-    `}_renderSuggestions(e){const t=(i,r,a)=>n`<div class="sug-row ${a}">
+      ${this._reviewError?o`<div class="err">${this._reviewError}</div>`:""}
+    `}_renderSuggestions(e){const t=(i,r,a)=>o`<div class="sug-row ${a}">
       <div class="sug-text">
         <b>${r.text}</b>
         <small>${r.reason}</small>
       </div>
       <div class="sug-actions">
-        ${i==="additions"?n`<button class="sug-add" title="Add" @click=${()=>this._acceptAddition(r)}>Add</button>`:""}
+        ${i==="additions"?o`<button class="sug-add" title="Add" @click=${()=>this._acceptAddition(r)}>Add</button>`:""}
         <button class="sug-x" title="Dismiss" @click=${()=>this._dismiss(i,r)}>✕</button>
       </div>
-    </div>`;return n`<div class="suggestions">
+    </div>`;return o`<div class="suggestions">
       <div class="sug-head"><pebble-icon size="14"></pebble-icon> Pebble's suggestions</div>
       ${e.additions.map(i=>t("additions",i,"add"))}
       ${e.concerns.map(i=>t("concerns",i,"concern"))}
       ${e.removals.map(i=>t("removals",i,"remove"))}
-    </div>`}_renderGroup(e){const t=this._itemsFor(e),i=this._avatars(e),r=t.filter(a=>a.checked===!0).length;return n`<div class="group">
+    </div>`}_renderGroup(e){const t=this._itemsFor(e),i=this._avatars(e),r=t.filter(a=>a.checked===!0).length;return o`<div class="group">
       <div class="group-head">
         <div class="gh-left">
           <span class="gh-name">${e}</span>
-          ${i.length?n`<span class="gh-avatars">
-                ${i.map(a=>n`<member-chip .name=${a.name} .photo=${a.photo} .hue=${a.hue} size="22"></member-chip>`)}
+          ${i.length?o`<span class="gh-avatars">
+                ${i.map(a=>o`<member-chip .name=${a.name} .photo=${a.photo} .hue=${a.hue} size="22"></member-chip>`)}
               </span>`:""}
         </div>
-        ${t.length?n`<span class="gh-count">${r}/${t.length}</span>`:""}
+        ${t.length?o`<span class="gh-count">${r}/${t.length}</span>`:""}
       </div>
       <div class="items">
         ${t.map(a=>this._renderItem(a))}
@@ -10317,24 +10373,24 @@ They'll lose access to shared trips, celebrations and any read-only child access
           />
         </div>
       </div>
-    </div>`}_renderItem(e){const t=this._editingId===e.id;return n`<div class="item ${e.checked?"done":""}">
+    </div>`}_renderItem(e){const t=this._editingId===e.id;return o`<div class="item ${e.checked?"done":""}">
       <button
         class="check ${e.checked?"on":""}"
         role="checkbox"
         aria-checked=${e.checked?"true":"false"}
         @click=${()=>this._toggle(e)}
       >
-        ${e.checked?n`<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>`:""}
+        ${e.checked?o`<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"></path></svg>`:""}
       </button>
-      ${t?n`<input
+      ${t?o`<input
             class="edit-input"
             type="text"
             .value=${this._editText}
             @input=${i=>this._editText=i.target.value}
             @keydown=${i=>{i.key==="Enter"&&this._commitEdit(e),i.key==="Escape"&&(this._editingId=null)}}
             @blur=${()=>this._commitEdit(e)}
-          />`:n`<span class="item-text" @click=${()=>this._startEdit(e)}>${e.text}</span>`}
-      ${e.addedByPebble?n`<span class="peb-dot" title="Added by Pebble"></span>`:""}
+          />`:o`<span class="item-text" @click=${()=>this._startEdit(e)}>${e.text}</span>`}
+      ${e.addedByPebble?o`<span class="peb-dot" title="Added by Pebble"></span>`:""}
       <button class="item-x" title="Delete" @click=${()=>this._delete(e)}>✕</button>
     </div>`}}$(st,"properties",{trip:{type:Object},_items:{state:!0},_templates:{state:!0},_hasStarted:{state:!0},_adHoc:{state:!0},_drafts:{state:!0},_editingId:{state:!0},_editText:{state:!0},_review:{state:!0},_reviewing:{state:!0},_reviewError:{state:!0},_useOpen:{state:!0},_saveOpen:{state:!0},_saveName:{state:!0},_addGroupOpen:{state:!0},_newGroup:{state:!0}}),$(st,"styles",E`
     * { box-sizing: border-box; }
@@ -10638,16 +10694,16 @@ They'll lose access to shared trips, celebrations and any read-only child access
       padding: 0 18px;
       border-radius: 12px;
     }
-  `);customElements.define("packing-list",st);const Ce=[{key:"visit",label:"Visit"},{key:"meal",label:"Meal"},{key:"travel",label:"Travel"},{key:"note",label:"Note"}],zi=[{m:30,label:"30 min"},{m:60,label:"1 h"},{m:90,label:"1½ h"},{m:120,label:"2 h"},{m:180,label:"3 h"},{m:240,label:"4 h"},{m:480,label:"All day"}],J=40;function xt(g){const e=String(g??"").match(/^(\d{4})-(\d{2})-(\d{2})/);return e?new Date(Number(e[1]),Number(e[2])-1,Number(e[3])):null}function Di(g){const e=g.getFullYear(),t=String(g.getMonth()+1).padStart(2,"0"),i=String(g.getDate()).padStart(2,"0");return`${e}-${t}-${i}`}function be(g){const e=String(g??"").match(/^(\d{1,2}):?(\d{2})?/);return e?Number(e[1])+(e[2]?Number(e[2])/60:0):null}function Ae(g){const e=Math.floor(g),t=Math.round((g-e)*60);return`${String(e).padStart(2,"0")}:${String(t).padStart(2,"0")}`}class nt extends D{constructor(){super(),this.open=!1,this.trip=null,this.activities=[],this.members=[],this.currentUid="",this._items=[],this._dayKey=null,this._title="",this._time="12:00",this._type="visit",this._dur=60,this._url="",this._file=null,this._fileName="",this._busy=!1,this._view="day",this._weekStart=0,this._sel=null,this._tab="plan",this._dragCtx=null,this._onGridMove=this._gridMove.bind(this),this._onGridUp=this._gridUp.bind(this),this._unsub=null,this._subId=null}_weekDays(){const e=this._days();if(e.length<=7)return e;const t=Math.min(Math.max(0,this._weekStart),Math.max(0,e.length-7));return e.slice(t,t+7)}_minFromPointer(e,t,i,r){const a=t.getBoundingClientRect(),s=Math.max(0,Math.min(e-a.top,a.height)),o=i*60+s/J*60,d=Math.round(o/15)*15;return Math.max(i*60,Math.min(r*60,d))}_gridDown(e,t,i,r){if(e.button!=null&&e.button!==0||e.target.closest&&e.target.closest(".evt, .wk-evt, button, a"))return;const a=e.currentTarget,s=this._minFromPointer(e.clientY,a,i,r);this._dragCtx={dayKey:t,lo:i,hi:r,el:a},this._sel={dayKey:t,aMin:s,bMin:s},window.addEventListener("pointermove",this._onGridMove),window.addEventListener("pointerup",this._onGridUp),e.preventDefault()}_gridMove(e){if(!this._dragCtx||!this._sel)return;const{el:t,lo:i,hi:r}=this._dragCtx;this._sel={...this._sel,bMin:this._minFromPointer(e.clientY,t,i,r)}}_gridUp(){window.removeEventListener("pointermove",this._onGridMove),window.removeEventListener("pointerup",this._onGridUp);const e=this._sel,t=this._dragCtx;if(this._sel=null,this._dragCtx=null,!e||!t)return;let i=Math.min(e.aMin,e.bMin),a=Math.max(e.aMin,e.bMin)-i;a<15&&(a=this._dur&&this._dur>=15?this._dur:60);const s=String(Math.floor(i/60)).padStart(2,"0"),o=String(i%60).padStart(2,"0");this._dayKey=e.dayKey,this._time=`${s}:${o}`,this._dur=a,this.updateComplete.then(()=>{const d=this.renderRoot.querySelector(".add-row input.t");d&&d.focus()})}_selGhost(e,t){const i=this._sel;if(!i||i.dayKey!==e)return"";const r=Math.min(i.aMin,i.bMin),a=Math.max(i.aMin,i.bMin),s=(r-t*60)/60*J,o=Math.max(3,(a-r)/60*J),d=`${String(Math.floor(r/60)).padStart(2,"0")}:${String(r%60).padStart(2,"0")}`;return n`<div
+  `);customElements.define("packing-list",st);const Ce=[{key:"visit",label:"Visit"},{key:"meal",label:"Meal"},{key:"travel",label:"Travel"},{key:"note",label:"Note"}],zi=[{m:30,label:"30 min"},{m:60,label:"1 h"},{m:90,label:"1½ h"},{m:120,label:"2 h"},{m:180,label:"3 h"},{m:240,label:"4 h"},{m:480,label:"All day"}],J=40;function xt(g){const e=String(g??"").match(/^(\d{4})-(\d{2})-(\d{2})/);return e?new Date(Number(e[1]),Number(e[2])-1,Number(e[3])):null}function Di(g){const e=g.getFullYear(),t=String(g.getMonth()+1).padStart(2,"0"),i=String(g.getDate()).padStart(2,"0");return`${e}-${t}-${i}`}function be(g){const e=String(g??"").match(/^(\d{1,2}):?(\d{2})?/);return e?Number(e[1])+(e[2]?Number(e[2])/60:0):null}function Pe(g){const e=Math.floor(g),t=Math.round((g-e)*60);return`${String(e).padStart(2,"0")}:${String(t).padStart(2,"0")}`}class ot extends D{constructor(){super(),this.open=!1,this.trip=null,this.activities=[],this.members=[],this.currentUid="",this._items=[],this._dayKey=null,this._title="",this._time="12:00",this._type="visit",this._dur=60,this._url="",this._file=null,this._fileName="",this._busy=!1,this._view="day",this._weekStart=0,this._sel=null,this._tab="plan",this._dragCtx=null,this._onGridMove=this._gridMove.bind(this),this._onGridUp=this._gridUp.bind(this),this._unsub=null,this._subId=null}_weekDays(){const e=this._days();if(e.length<=7)return e;const t=Math.min(Math.max(0,this._weekStart),Math.max(0,e.length-7));return e.slice(t,t+7)}_minFromPointer(e,t,i,r){const a=t.getBoundingClientRect(),s=Math.max(0,Math.min(e-a.top,a.height)),n=i*60+s/J*60,d=Math.round(n/15)*15;return Math.max(i*60,Math.min(r*60,d))}_gridDown(e,t,i,r){if(e.button!=null&&e.button!==0||e.target.closest&&e.target.closest(".evt, .wk-evt, button, a"))return;const a=e.currentTarget,s=this._minFromPointer(e.clientY,a,i,r);this._dragCtx={dayKey:t,lo:i,hi:r,el:a},this._sel={dayKey:t,aMin:s,bMin:s},window.addEventListener("pointermove",this._onGridMove),window.addEventListener("pointerup",this._onGridUp),e.preventDefault()}_gridMove(e){if(!this._dragCtx||!this._sel)return;const{el:t,lo:i,hi:r}=this._dragCtx;this._sel={...this._sel,bMin:this._minFromPointer(e.clientY,t,i,r)}}_gridUp(){window.removeEventListener("pointermove",this._onGridMove),window.removeEventListener("pointerup",this._onGridUp);const e=this._sel,t=this._dragCtx;if(this._sel=null,this._dragCtx=null,!e||!t)return;let i=Math.min(e.aMin,e.bMin),a=Math.max(e.aMin,e.bMin)-i;a<15&&(a=this._dur&&this._dur>=15?this._dur:60);const s=String(Math.floor(i/60)).padStart(2,"0"),n=String(i%60).padStart(2,"0");this._dayKey=e.dayKey,this._time=`${s}:${n}`,this._dur=a,this.updateComplete.then(()=>{const d=this.renderRoot.querySelector(".add-row input.t");d&&d.focus()})}_selGhost(e,t){const i=this._sel;if(!i||i.dayKey!==e)return"";const r=Math.min(i.aMin,i.bMin),a=Math.max(i.aMin,i.bMin),s=(r-t*60)/60*J,n=Math.max(3,(a-r)/60*J),d=`${String(Math.floor(r/60)).padStart(2,"0")}:${String(r%60).padStart(2,"0")}`;return o`<div
       class="sel-ghost"
-      style="top:${s}px;height:${o}px;"
+      style="top:${s}px;height:${n}px;"
     >
       <span>${d}</span>
-    </div>`}willUpdate(e){var t,i;if(e.has("open")||e.has("trip")){const r=((t=this.trip)==null?void 0:t.id)??null;this.open&&r?(this._subId!==r&&(this._teardown(),this._subId=r,this._tab="plan",this._dayKey=((i=this._days()[0])==null?void 0:i.key)??"",this._view=this._days().length>1?"week":"day"),this._recomputeItems()):this.open||this._teardown()}e.has("activities")&&this._recomputeItems()}_recomputeItems(){var t;const e=((t=this.trip)==null?void 0:t.id)??null;this._items=e?(this.activities??[]).filter(i=>i&&i.tripId===e):[]}disconnectedCallback(){super.disconnectedCallback(),this._teardown()}_teardown(){this._subId=null,this._items=[],window.removeEventListener("pointermove",this._onGridMove),window.removeEventListener("pointerup",this._onGridUp),this._sel=null,this._dragCtx=null}_close(){this.dispatchEvent(new Event("cancel"))}_openEdit(){this.trip&&this.dispatchEvent(new CustomEvent("edit-trip",{detail:{trip:this.trip},bubbles:!0,composed:!0}))}_days(){var s,o;const e=xt((s=this.trip)==null?void 0:s.start),t=xt((o=this.trip)==null?void 0:o.end)??e;if(!e)return[{key:"",lbl:"Day",d:"The trip"}];const i=[],r=new Date(e);let a=0;for(;r<=t&&a<31;)i.push({key:Di(r),lbl:r.toLocaleDateString("en-GB",{weekday:"short"}),d:r.toLocaleDateString("en-GB",{day:"numeric",month:"short"})}),r.setDate(r.getDate()+1),a+=1;return i.length?i:[{key:"",lbl:"Day",d:"The trip"}]}_member(e){return(this.members??[]).find(t=>t.uid===e)??null}async _add(){const e=this._title.trim();if(!e||this._busy)return;this._busy=!0;const t=this._file;try{const i=this._url.trim(),r=await f.saveActivity({title:e,type:this._type,day:this._dayKey??"",time:this._time||null,durationMins:this._dur,url:/^https?:\/\//i.test(i)?i:null,tripId:this.trip.id});if(t&&r)try{const a=await f.uploadActivityAttachment(r,t);await f.updateActivity(r,{attachmentURL:a,attachmentName:t.name||"attachment"})}catch(a){console.error("plan attachment upload failed:",a),y((a==null?void 0:a.code)==="storage/unauthorized"?"Item added, but the attachment needs the Storage rule published.":"Item added. Couldn't attach the file, try again.",{duration:5e3})}this._title="",this._url="",this._file=null,this._fileName="",this._dur=60}catch(i){console.error("saveActivity (planner add) failed:",i),y((i==null?void 0:i.code)==="permission-denied"?"Couldn't add. The planner rule may need publishing.":`Couldn't add: ${(i==null?void 0:i.message)??"try again"}`,{duration:5e3})}finally{this._busy=!1}}async _remove(e){try{await f.deleteActivity(e.id)}catch(t){y(`Couldn't remove: ${(t==null?void 0:t.code)??(t==null?void 0:t.message)}`,{duration:4e3})}}_renderWeek(){const e=this._weekDays(),t=e.length||1,i=new Set(e.map(l=>l.key)),r=(this._items||[]).filter(l=>i.has(String(l.day??"")));let a=8,s=20;for(const l of r){const c=be(l.time);if(c==null)continue;const p=Math.max(.5,(Number(l.durationMins)||60)/60);a=Math.min(a,Math.floor(c)),s=Math.max(s,Math.ceil(c+p))}a=Math.max(0,Math.min(a,8)),s=Math.min(24,Math.max(s,20));const o=[];for(let l=a;l<s;l++)o.push(n`<div class="wk-hr">${String(l).padStart(2,"0")}:00</div>`);const d=(s-a)*J;return n`
+    </div>`}willUpdate(e){var t,i;if(e.has("open")||e.has("trip")){const r=((t=this.trip)==null?void 0:t.id)??null;this.open&&r?(this._subId!==r&&(this._teardown(),this._subId=r,this._tab="plan",this._dayKey=((i=this._days()[0])==null?void 0:i.key)??"",this._view=this._days().length>1?"week":"day"),this._recomputeItems()):this.open||this._teardown()}e.has("activities")&&this._recomputeItems()}_recomputeItems(){var t;const e=((t=this.trip)==null?void 0:t.id)??null;this._items=e?(this.activities??[]).filter(i=>i&&i.tripId===e):[]}disconnectedCallback(){super.disconnectedCallback(),this._teardown()}_teardown(){this._subId=null,this._items=[],window.removeEventListener("pointermove",this._onGridMove),window.removeEventListener("pointerup",this._onGridUp),this._sel=null,this._dragCtx=null}_close(){this.dispatchEvent(new Event("cancel"))}_openEdit(){this.trip&&this.dispatchEvent(new CustomEvent("edit-trip",{detail:{trip:this.trip},bubbles:!0,composed:!0}))}_days(){var s,n;const e=xt((s=this.trip)==null?void 0:s.start),t=xt((n=this.trip)==null?void 0:n.end)??e;if(!e)return[{key:"",lbl:"Day",d:"The trip"}];const i=[],r=new Date(e);let a=0;for(;r<=t&&a<31;)i.push({key:Di(r),lbl:r.toLocaleDateString("en-GB",{weekday:"short"}),d:r.toLocaleDateString("en-GB",{day:"numeric",month:"short"})}),r.setDate(r.getDate()+1),a+=1;return i.length?i:[{key:"",lbl:"Day",d:"The trip"}]}_member(e){return(this.members??[]).find(t=>t.uid===e)??null}async _add(){const e=this._title.trim();if(!e||this._busy)return;this._busy=!0;const t=this._file;try{const i=this._url.trim(),r=await f.saveActivity({title:e,type:this._type,day:this._dayKey??"",time:this._time||null,durationMins:this._dur,url:/^https?:\/\//i.test(i)?i:null,tripId:this.trip.id});if(t&&r)try{const a=await f.uploadActivityAttachment(r,t);await f.updateActivity(r,{attachmentURL:a,attachmentName:t.name||"attachment"})}catch(a){console.error("plan attachment upload failed:",a),y((a==null?void 0:a.code)==="storage/unauthorized"?"Item added, but the attachment needs the Storage rule published.":"Item added. Couldn't attach the file, try again.",{duration:5e3})}this._title="",this._url="",this._file=null,this._fileName="",this._dur=60}catch(i){console.error("saveActivity (planner add) failed:",i),y((i==null?void 0:i.code)==="permission-denied"?"Couldn't add. The planner rule may need publishing.":`Couldn't add: ${(i==null?void 0:i.message)??"try again"}`,{duration:5e3})}finally{this._busy=!1}}async _remove(e){try{await f.deleteActivity(e.id)}catch(t){y(`Couldn't remove: ${(t==null?void 0:t.code)??(t==null?void 0:t.message)}`,{duration:4e3})}}_renderWeek(){const e=this._weekDays(),t=e.length||1,i=new Set(e.map(l=>l.key)),r=(this._items||[]).filter(l=>i.has(String(l.day??"")));let a=8,s=20;for(const l of r){const c=be(l.time);if(c==null)continue;const p=Math.max(.5,(Number(l.durationMins)||60)/60);a=Math.min(a,Math.floor(c)),s=Math.max(s,Math.ceil(c+p))}a=Math.max(0,Math.min(a,8)),s=Math.min(24,Math.max(s,20));const n=[];for(let l=a;l<s;l++)n.push(o`<div class="wk-hr">${String(l).padStart(2,"0")}:00</div>`);const d=(s-a)*J;return o`
       <div class="wk">
         <div class="wk-head" style="--cols:${t};">
           <div class="wk-hc"></div>
-          ${e.map(l=>n`<div
+          ${e.map(l=>o`<div
               class="wk-hc ${l.key===(this._dayKey??"")?"on":""}"
               title="Open ${l.d} in day view"
               @click=${()=>{this._dayKey=l.key,this._view="day"}}
@@ -10656,19 +10712,19 @@ They'll lose access to shared trips, celebrations and any read-only child access
             </div>`)}
         </div>
         <div class="wk-body" style="--cols:${t};">
-          <div class="wk-gutter">${o}</div>
-          ${e.map(l=>{const c=r.filter(p=>String(p.day??"")===String(l.key));return n`<div
+          <div class="wk-gutter">${n}</div>
+          ${e.map(l=>{const c=r.filter(p=>String(p.day??"")===String(l.key));return o`<div
               class="wk-col"
               style="height:${d}px;"
               @pointerdown=${p=>this._gridDown(p,l.key,a,s)}
             >
               ${this._selGhost(l.key,a)}
-              ${c.map(p=>{const h=be(p.time);if(h==null)return"";const u=Math.max(.5,(Number(p.durationMins)||60)/60),b=(h-a)*J+2,w=Math.max(26,u*J-4),v=Ce.some(_=>_.key===p.type)?p.type:"note";return n`<div
+              ${c.map(p=>{const h=be(p.time);if(h==null)return"";const u=Math.max(.5,(Number(p.durationMins)||60)/60),b=(h-a)*J+2,w=Math.max(26,u*J-4),v=Ce.some(_=>_.key===p.type)?p.type:"note";return o`<div
                   class="wk-evt ${v}"
                   style="top:${b}px;height:${w}px;"
                   title=${p.title}
                 >
-                  ${p.addedBy===this.currentUid?n`<button
+                  ${p.addedBy===this.currentUid?o`<button
                         class="wkdel"
                         title="Remove"
                         @click=${()=>this._remove(p)}
@@ -10676,23 +10732,23 @@ They'll lose access to shared trips, celebrations and any read-only child access
                         ×
                       </button>`:""}
                   <b>${p.title}</b>
-                  <span>${Ae(h)}</span>
+                  <span>${Pe(h)}</span>
                 </div>`})}
             </div>`})}
         </div>
       </div>
-    `}render(){var d;if(!this.open||!this.trip)return n``;const e=this._days(),t=this._dayKey??((d=e[0])==null?void 0:d.key)??"",i=(this._items||[]).filter(l=>String(l.day??"")===String(t));let r=8,a=20;for(const l of i){const c=be(l.time);if(c==null)continue;const p=Math.max(.5,(Number(l.durationMins)||60)/60);r=Math.min(r,Math.floor(c)),a=Math.max(a,Math.ceil(c+p))}r=Math.max(0,Math.min(r,8)),a=Math.min(24,Math.max(a,20));const s=[];for(let l=r;l<a;l++)s.push(n`<div class="sched-row">
+    `}render(){var d;if(!this.open||!this.trip)return o``;const e=this._days(),t=this._dayKey??((d=e[0])==null?void 0:d.key)??"",i=(this._items||[]).filter(l=>String(l.day??"")===String(t));let r=8,a=20;for(const l of i){const c=be(l.time);if(c==null)continue;const p=Math.max(.5,(Number(l.durationMins)||60)/60);r=Math.min(r,Math.floor(c)),a=Math.max(a,Math.ceil(c+p))}r=Math.max(0,Math.min(r,8)),a=Math.min(24,Math.max(a,20));const s=[];for(let l=r;l<a;l++)s.push(o`<div class="sched-row">
         <div class="hr">${String(l).padStart(2,"0")}:00</div>
         <div></div>
-      </div>`);const o=i.map(l=>{const c=be(l.time);if(c==null)return null;const p=Math.max(.5,(Number(l.durationMins)||60)/60),h=(c-r)*J+3,u=p*J-8,b=this._member(l.addedBy),w=Ce.some(v=>v.key===l.type)?l.type:"note";return n`<div
+      </div>`);const n=i.map(l=>{const c=be(l.time);if(c==null)return null;const p=Math.max(.5,(Number(l.durationMins)||60)/60),h=(c-r)*J+3,u=p*J-8,b=this._member(l.addedBy),w=Ce.some(v=>v.key===l.type)?l.type:"note";return o`<div
           class="evt ${w}"
           style="top:${h}px;height:${Math.max(34,u)}px;"
         >
           <div class="et">
             <b>${l.title}</b>
-            <span>${Ae(c)}${p?`–${Ae(c+p)}`:""}</span>
-            ${l.url||l.attachmentURL?n`<div class="adorn">
-                  ${l.url?n`<a
+            <span>${Pe(c)}${p?`–${Pe(c+p)}`:""}</span>
+            ${l.url||l.attachmentURL?o`<div class="adorn">
+                  ${l.url?o`<a
                         href=${l.url}
                         target="_blank"
                         rel="noopener"
@@ -10700,7 +10756,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                         @click=${v=>v.stopPropagation()}
                         ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.07.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.07-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Link</a
                       >`:""}
-                  ${l.attachmentURL?n`<a
+                  ${l.attachmentURL?o`<a
                         href=${l.attachmentURL}
                         target="_blank"
                         rel="noopener"
@@ -10719,8 +10775,8 @@ They'll lose access to shared trips, celebrations and any read-only child access
             ></member-chip>
             <span class="nm">${(b==null?void 0:b.displayName)??"Someone"}</span>
           </div>
-          ${l.addedBy===this.currentUid?n`<button class="del" title="Remove" @click=${()=>this._remove(l)}>×</button>`:""}
-        </div>`}).filter(Boolean);return n`
+          ${l.addedBy===this.currentUid?o`<button class="del" title="Remove" @click=${()=>this._remove(l)}>×</button>`:""}
+        </div>`}).filter(Boolean);return o`
       <section>
         <div class="glass">
           <div class="pl-head">
@@ -10729,7 +10785,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
               <div class="pl-sub">
                 Shared day plan${this.trip.location?` · ${this.trip.location}`:""}. Everyone on the trip can add
                 <span class="who-adds">
-                  ${(this.members??[]).slice(0,4).map(l=>n`<member-chip
+                  ${(this.members??[]).slice(0,4).map(l=>o`<member-chip
                       .name=${l.displayName}
                       .photo=${l.photoURL??""}
                       .hue=${l.hue??198}
@@ -10766,7 +10822,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             </button>
           </div>
 
-          ${this._tab==="packing"?n`<packing-list .trip=${this.trip}></packing-list>`:n`
+          ${this._tab==="packing"?o`<packing-list .trip=${this.trip}></packing-list>`:o`
           <div class="pl-modebar">
             <div class="view-toggle" role="group" aria-label="Planner view">
               <button
@@ -10782,7 +10838,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 Week
               </button>
             </div>
-            ${this._view==="week"&&e.length>7?n`<div class="wk-pager">
+            ${this._view==="week"&&e.length>7?o`<div class="wk-pager">
                   <button
                     ?disabled=${this._weekStart<=0}
                     @click=${()=>this._weekStart=Math.max(0,this._weekStart-7)}
@@ -10801,9 +10857,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 </div>`:""}
           </div>
 
-          ${this._view==="week"?this._renderWeek():n`
+          ${this._view==="week"?this._renderWeek():o`
                 <div class="day-rail">
-                  ${e.map(l=>n`<button
+                  ${e.map(l=>o`<button
                       class="day-pill ${l.key===t?"on":""}"
                       @click=${()=>this._dayKey=l.key}
                     >
@@ -10818,7 +10874,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                       class="sched-track"
                       @pointerdown=${l=>this._gridDown(l,t,r,a)}
                     >
-                      ${o.length?o:n`<div class="sched-empty">
+                      ${n.length?n:o`<div class="sched-empty">
                             Drag to block out a time, or add an item below.
                           </div>`}
                       ${this._selGhost(t,r)}
@@ -10851,14 +10907,14 @@ They'll lose access to shared trips, celebrations and any read-only child access
               .value=${this._type}
               @change=${l=>this._type=l.target.value}
             >
-              ${Ce.map(l=>n`<option value=${l.key}>${l.label}</option>`)}
+              ${Ce.map(l=>o`<option value=${l.key}>${l.label}</option>`)}
             </select>
             <select
               class="dur"
               aria-label="Duration"
               @change=${l=>this._dur=Number(l.target.value)}
             >
-              ${zi.map(l=>n`<option
+              ${zi.map(l=>o`<option
                   value=${String(l.m)}
                   ?selected=${l.m===this._dur}
                 >
@@ -10893,7 +10949,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           `}
         </div>
       </section>
-    `}}$(nt,"properties",{open:{type:Boolean,reflect:!0},trip:{type:Object},activities:{type:Array},members:{type:Array},currentUid:{type:String},_items:{state:!0},_dayKey:{state:!0},_title:{state:!0},_time:{state:!0},_type:{state:!0},_dur:{state:!0},_url:{state:!0},_fileName:{state:!0},_busy:{state:!0},_view:{state:!0},_weekStart:{state:!0},_sel:{state:!0},_tab:{state:!0}}),$(nt,"styles",E`
+    `}}$(ot,"properties",{open:{type:Boolean,reflect:!0},trip:{type:Object},activities:{type:Array},members:{type:Array},currentUid:{type:String},_items:{state:!0},_dayKey:{state:!0},_title:{state:!0},_time:{state:!0},_type:{state:!0},_dur:{state:!0},_url:{state:!0},_fileName:{state:!0},_busy:{state:!0},_view:{state:!0},_weekStart:{state:!0},_sel:{state:!0},_tab:{state:!0}}),$(ot,"styles",E`
     *, *::before, *::after { box-sizing: border-box; }
     :host { display: block; }
     :host(:not([open])) { display: none; }
@@ -11456,8 +11512,8 @@ They'll lose access to shared trips, celebrations and any read-only child access
         max-width: none;
       }
     }
-  `);customElements.define("trip-planner",nt);const wt=["Checking the weekend weather…","Finding nearby spots…","Scoring ideas for your family…","Building your plan…","Weighing the options…","Putting it together…"];class ot extends D{constructor(){super(),this.open=!1,this._state="empty",this._loadingStep=0,this._candidates=[],this._rec=0,this._error="",this._accepted=null,this._captionTimer=null}willUpdate(e){e.has("open")&&this.open&&this._restoreCache()}updated(e){e.has("_state")&&(this._state==="loading"?this._startLoadingCaptions():this._stopLoadingCaptions())}disconnectedCallback(){super.disconnectedCallback(),this._stopLoadingCaptions()}_startLoadingCaptions(){this._stopLoadingCaptions(),this._loadingStep=0;const e=wt.length,t=Math.max(0,e-3);let i=!1;const r=()=>{if(i){const a=this._loadingStep+1;this._loadingStep=a>=e?t:a}else{const a=this._loadingStep+1;a>=e-1?(this._loadingStep=e-1,i=!0):this._loadingStep=a}this._captionTimer=setTimeout(r,i?3500:2500)};this._captionTimer=setTimeout(r,2500)}_stopLoadingCaptions(){this._captionTimer&&(clearTimeout(this._captionTimer),this._captionTimer=null)}_window(){const e=new Date,t=new Date(e.getFullYear(),e.getMonth(),e.getDate()),i=t.getDay(),r=i===6?0:i===0?-1:6-i,a=new Date(t.getTime()+r*864e5),s=new Date(a.getTime()+864e5),o=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;return{sat:a,sun:s,satKey:o(a),sunKey:o(s)}}_weekendLabel(){const{sat:e,sun:t}=this._window(),i=r=>r.toLocaleDateString(void 0,{weekday:"short",month:"short",day:"numeric"});return`${i(e)} – ${i(t)}`}_cacheKey(){return`pp_weekend_plan_${this._window().satKey}`}_restoreCache(){if(!(this._state==="loaded"&&this._candidates.length))try{const e=localStorage.getItem(this._cacheKey());if(!e)return;const t=JSON.parse(e);Array.isArray(t==null?void 0:t.candidates)&&t.candidates.length&&(this._candidates=t.candidates,this._rec=Number.isInteger(t.rec)?t.rec:0,this._state="loaded")}catch{}}_saveCache(){try{localStorage.setItem(this._cacheKey(),JSON.stringify({candidates:this._candidates,rec:this._rec}))}catch{}}_familyPayload(){var h,u;const e=f.state,t=((h=e.ppFamily)==null?void 0:h.memberProfiles)??{},i=Object.values(t).map(b=>b==null?void 0:b.displayName).filter(Boolean),r=Array.isArray(e.pebbleAnchors)?e.pebbleAnchors:[],a=Array.isArray(e.pebbleRhythms)?e.pebbleRhythms:[],s=b=>{var v;const w=((v=b==null?void 0:b.getTime)==null?void 0:v.call(b))??(b?new Date(b).getTime():0);return w?Math.max(0,Math.floor((Date.now()-w)/(30.44*24*3600*1e3))):0},o=(Array.isArray(e.ppChildren)?e.ppChildren:[]).map(b=>({childId:b.id,name:b.name,ageMonths:s(b.dateOfBirth),anchors:r.filter(w=>w.scope==="child"&&w.childId===b.id).map(w=>w.value?`${w.label}: ${w.value}`:w.label),rhythms:a.filter(w=>w.scope==="child"&&w.childId===b.id).map(w=>w.timeOfDay?`${w.title} (${w.timeOfDay})`:w.title),recentObservations:[]})),d=r.filter(b=>b.scope==="family").map(b=>b.value?`${b.label}: ${b.value}`:b.label),l=(u=e.ppFamily)==null?void 0:u.homeLocation,c=l?[l.city,l.region,l.country].filter(b=>b&&String(b).trim()).join(", "):void 0,p={parents:i,children:o,familyAnchors:d};return c&&(p.homeLocation=c),p}_windowPayload(){const e=f.state,{sat:t,sun:i,satKey:r,sunKey:a}=this._window(),s=(Array.isArray(e.pebbleLiveContext)?e.pebbleLiveContext:[]).find(h=>h.kind==="weatherSnapshot"),o=[...(Array.isArray(e.events)?e.events:[]).filter(h=>h.date===r||h.date===a).map(h=>h.title),...(Array.isArray(e.activities)?e.activities:[]).filter(h=>!h.tripId&&(h.day===r||h.day===a)).map(h=>h.title)].filter(Boolean),d=new Date,l=new Date(d.getTime()+14*864e5),c=(Array.isArray(e.trips)?e.trips:[]).filter(h=>{const u=M(h.start);return u&&u>=d&&u<=l}).slice(0,5).map(h=>h.title),p={weekendStart:r,weekendEnd:a,occupiedEvents:o,upcomingTripTitles:c,recentlyDone:[]};return s!=null&&s.title&&(p.weatherSummary=s.title),p}async _generate(){if(this._state!=="loading"){this._state="loading",this._error="";try{const e=await f.generateFamilyPlan(this._familyPayload(),this._windowPayload());if(!e.length){this._state="error",this._error="Pebble could not find a plan for this weekend. Try again.";return}this._candidates=e,this._rec=0,this._state="loaded",this._saveCache()}catch(e){this._state="error",this._error=(e==null?void 0:e.message)||"Pebble could not plan right now. Try again."}}}async _accept(e,t){if(this.preview)return;const i=Array.isArray(e.perChildFit)?e.perChildFit:[],r=Array.isArray(e.logisticsNotes)?e.logisticsNotes:[],a=i.map(s=>`${s.childName}: ${s.reason}`);r.length&&a.push("",...r);try{await f.saveActivity({type:"note",title:e.title,day:e.date,notes:a.join(`
-`),visibility:"family",source:"pebble-weekend-plan"}),this._accepted=t,setTimeout(()=>{this._accepted=null},2200)}catch(s){this._error=(s==null?void 0:s.message)||"Could not add this plan."}}_close(){this.dispatchEvent(new Event("cancel"))}render(){return this.open?n`
+  `);customElements.define("trip-planner",ot);const wt=["Checking the weekend weather…","Finding nearby spots…","Scoring ideas for your family…","Building your plan…","Weighing the options…","Putting it together…"];class nt extends D{constructor(){super(),this.open=!1,this._state="empty",this._loadingStep=0,this._candidates=[],this._rec=0,this._error="",this._accepted=null,this._captionTimer=null}willUpdate(e){e.has("open")&&this.open&&this._restoreCache()}updated(e){e.has("_state")&&(this._state==="loading"?this._startLoadingCaptions():this._stopLoadingCaptions())}disconnectedCallback(){super.disconnectedCallback(),this._stopLoadingCaptions()}_startLoadingCaptions(){this._stopLoadingCaptions(),this._loadingStep=0;const e=wt.length,t=Math.max(0,e-3);let i=!1;const r=()=>{if(i){const a=this._loadingStep+1;this._loadingStep=a>=e?t:a}else{const a=this._loadingStep+1;a>=e-1?(this._loadingStep=e-1,i=!0):this._loadingStep=a}this._captionTimer=setTimeout(r,i?3500:2500)};this._captionTimer=setTimeout(r,2500)}_stopLoadingCaptions(){this._captionTimer&&(clearTimeout(this._captionTimer),this._captionTimer=null)}_window(){const e=new Date,t=new Date(e.getFullYear(),e.getMonth(),e.getDate()),i=t.getDay(),r=i===6?0:i===0?-1:6-i,a=new Date(t.getTime()+r*864e5),s=new Date(a.getTime()+864e5),n=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;return{sat:a,sun:s,satKey:n(a),sunKey:n(s)}}_weekendLabel(){const{sat:e,sun:t}=this._window(),i=r=>r.toLocaleDateString(void 0,{weekday:"short",month:"short",day:"numeric"});return`${i(e)} – ${i(t)}`}_cacheKey(){return`pp_weekend_plan_${this._window().satKey}`}_restoreCache(){if(!(this._state==="loaded"&&this._candidates.length))try{const e=localStorage.getItem(this._cacheKey());if(!e)return;const t=JSON.parse(e);Array.isArray(t==null?void 0:t.candidates)&&t.candidates.length&&(this._candidates=t.candidates,this._rec=Number.isInteger(t.rec)?t.rec:0,this._state="loaded")}catch{}}_saveCache(){try{localStorage.setItem(this._cacheKey(),JSON.stringify({candidates:this._candidates,rec:this._rec}))}catch{}}_familyPayload(){var h,u;const e=f.state,t=((h=e.ppFamily)==null?void 0:h.memberProfiles)??{},i=Object.values(t).map(b=>b==null?void 0:b.displayName).filter(Boolean),r=Array.isArray(e.pebbleAnchors)?e.pebbleAnchors:[],a=Array.isArray(e.pebbleRhythms)?e.pebbleRhythms:[],s=b=>{var v;const w=((v=b==null?void 0:b.getTime)==null?void 0:v.call(b))??(b?new Date(b).getTime():0);return w?Math.max(0,Math.floor((Date.now()-w)/(30.44*24*3600*1e3))):0},n=(Array.isArray(e.ppChildren)?e.ppChildren:[]).map(b=>({childId:b.id,name:b.name,ageMonths:s(b.dateOfBirth),anchors:r.filter(w=>w.scope==="child"&&w.childId===b.id).map(w=>w.value?`${w.label}: ${w.value}`:w.label),rhythms:a.filter(w=>w.scope==="child"&&w.childId===b.id).map(w=>w.timeOfDay?`${w.title} (${w.timeOfDay})`:w.title),recentObservations:[]})),d=r.filter(b=>b.scope==="family").map(b=>b.value?`${b.label}: ${b.value}`:b.label),l=(u=e.ppFamily)==null?void 0:u.homeLocation,c=l?[l.city,l.region,l.country].filter(b=>b&&String(b).trim()).join(", "):void 0,p={parents:i,children:n,familyAnchors:d};return c&&(p.homeLocation=c),p}_windowPayload(){const e=f.state,{sat:t,sun:i,satKey:r,sunKey:a}=this._window(),s=(Array.isArray(e.pebbleLiveContext)?e.pebbleLiveContext:[]).find(h=>h.kind==="weatherSnapshot"),n=[...(Array.isArray(e.events)?e.events:[]).filter(h=>h.date===r||h.date===a).map(h=>h.title),...(Array.isArray(e.activities)?e.activities:[]).filter(h=>!h.tripId&&(h.day===r||h.day===a)).map(h=>h.title)].filter(Boolean),d=new Date,l=new Date(d.getTime()+14*864e5),c=(Array.isArray(e.trips)?e.trips:[]).filter(h=>{const u=M(h.start);return u&&u>=d&&u<=l}).slice(0,5).map(h=>h.title),p={weekendStart:r,weekendEnd:a,occupiedEvents:n,upcomingTripTitles:c,recentlyDone:[]};return s!=null&&s.title&&(p.weatherSummary=s.title),p}async _generate(){if(this._state!=="loading"){this._state="loading",this._error="";try{const e=await f.generateFamilyPlan(this._familyPayload(),this._windowPayload());if(!e.length){this._state="error",this._error="Pebble could not find a plan for this weekend. Try again.";return}this._candidates=e,this._rec=0,this._state="loaded",this._saveCache()}catch(e){this._state="error",this._error=(e==null?void 0:e.message)||"Pebble could not plan right now. Try again."}}}async _accept(e,t){if(this.preview)return;const i=Array.isArray(e.perChildFit)?e.perChildFit:[],r=Array.isArray(e.logisticsNotes)?e.logisticsNotes:[],a=i.map(s=>`${s.childName}: ${s.reason}`);r.length&&a.push("",...r);try{await f.saveActivity({type:"note",title:e.title,day:e.date,notes:a.join(`
+`),visibility:"family",source:"pebble-weekend-plan"}),this._accepted=t,setTimeout(()=>{this._accepted=null},2200)}catch(s){this._error=(s==null?void 0:s.message)||"Could not add this plan."}}_close(){this.dispatchEvent(new Event("cancel"))}render(){return this.open?o`
       <div class="backdrop" @click=${this._close}></div>
       <div class="panel" role="dialog" aria-label="Weekend planner">
         <div class="head">
@@ -11472,27 +11528,27 @@ They'll lose access to shared trips, celebrations and any read-only child access
         </div>
         <div class="body">${this._renderState()}</div>
       </div>
-    `:n``}_renderState(){if(this._state==="loading")return n`
+    `:o``}_renderState(){if(this._state==="loading")return o`
         <div class="plan-cap">${wt[this._loadingStep]}</div>
         ${this._skeletonRec()}
         <div class="alts-head"><span class="sk" style="width:90px;height:11px"></span></div>
         ${this._skeletonAlt()}
         ${this._skeletonAlt()}
-      `;if(this._state==="error")return n`<div class="status">
+      `;if(this._state==="error")return o`<div class="status">
         <div class="err">${this._error}</div>
         <button class="big-cta" @click=${()=>this._generate()}>Try again</button>
-      </div>`;if(this._state==="loaded"&&this._candidates.length){const e=this._candidates[this._rec],t=this._candidates.filter((i,r)=>r!==this._rec);return n`
+      </div>`;if(this._state==="loaded"&&this._candidates.length){const e=this._candidates[this._rec],t=this._candidates.filter((i,r)=>r!==this._rec);return o`
         ${this._renderRecommended(e,this._rec)}
-        ${t.length?n`<div class="alts-head">Other ideas</div>
+        ${t.length?o`<div class="alts-head">Other ideas</div>
               ${this._candidates.map((i,r)=>({c:i,i:r})).filter(({i})=>i!==this._rec).map(({c:i,i:r})=>this._renderAlt(i,r))}`:""}
         <button class="regen" @click=${()=>this._generate()}>Regenerate ideas</button>
-      `}return n`<div class="status">
+      `}return o`<div class="status">
       <div class="status-t">Plan our weekend</div>
       <div class="status-s">Pebble suggests 2 to 3 ideas tuned to your family, the weather, and what's already on the calendar.</div>
       <button class="big-cta" @click=${()=>this._generate()}>
         <pebble-icon size="16" color="#fff"></pebble-icon> Plan our weekend
       </button>
-    </div>`}_skeletonRec(){return n`<div class="rec sk-card">
+    </div>`}_skeletonRec(){return o`<div class="rec sk-card">
       <span class="sk" style="width:96px;height:18px;border-radius:999px;margin-bottom:12px"></span>
       <span class="sk" style="width:72%;height:22px;margin-bottom:10px"></span>
       <span class="sk" style="width:94%;height:13px;margin-bottom:6px"></span>
@@ -11513,33 +11569,33 @@ They'll lose access to shared trips, celebrations and any read-only child access
         </div>
       </div>
       <span class="sk" style="width:100%;height:44px;border-radius:12px"></span>
-    </div>`}_skeletonAlt(){return n`<div class="alt sk-card">
+    </div>`}_skeletonAlt(){return o`<div class="alt sk-card">
       <div class="alt-body">
         <span class="sk" style="width:55%;height:14px;margin-bottom:6px"></span>
         <span class="sk" style="width:38%;height:11px"></span>
       </div>
-    </div>`}_renderRecommended(e,t){if(!e)return"";const i=Array.isArray(e.perChildFit)?e.perChildFit:[],r=Array.isArray(e.logisticsNotes)?e.logisticsNotes:[],a=[this._timeLabel(e),e.location,e.costEstimate,e.weatherSummary].filter(Boolean);return n`<div class="rec">
+    </div>`}_renderRecommended(e,t){if(!e)return"";const i=Array.isArray(e.perChildFit)?e.perChildFit:[],r=Array.isArray(e.logisticsNotes)?e.logisticsNotes:[],a=[this._timeLabel(e),e.location,e.costEstimate,e.weatherSummary].filter(Boolean);return o`<div class="rec">
       <div class="rec-badge">Recommended</div>
       <h2 class="rec-title">${e.title}</h2>
-      ${e.subtitle?n`<p class="rec-sub">${e.subtitle}</p>`:""}
-      ${a.length?n`<div class="rec-meta">${a.map(s=>n`<span>${s}</span>`)}</div>`:""}
-      ${i.length?n`<div class="fit">
-            ${i.map(s=>n`<div class="fit-row">
+      ${e.subtitle?o`<p class="rec-sub">${e.subtitle}</p>`:""}
+      ${a.length?o`<div class="rec-meta">${a.map(s=>o`<span>${s}</span>`)}</div>`:""}
+      ${i.length?o`<div class="fit">
+            ${i.map(s=>o`<div class="fit-row">
                 <span class="fit-name">${s.childName}</span>
                 <span class="fit-reason">${s.reason}</span>
               </div>`)}
           </div>`:""}
-      ${r.length?n`<ul class="logi">${r.map(s=>n`<li>${s}</li>`)}</ul>`:""}
+      ${r.length?o`<ul class="logi">${r.map(s=>o`<li>${s}</li>`)}</ul>`:""}
       <button class="accept ${this._accepted===t?"done":""}" @click=${()=>this._accept(e,t)}>
         ${this._accepted===t?"✓ Added to Activities":"Add to our calendar"}
       </button>
-    </div>`}_renderAlt(e,t){return n`<button class="alt" @click=${()=>{this._rec=t,this._saveCache()}}>
+    </div>`}_renderAlt(e,t){return o`<button class="alt" @click=${()=>{this._rec=t,this._saveCache()}}>
       <div class="alt-body">
         <div class="alt-title">${e.title}</div>
         <div class="alt-sub">${this._timeLabel(e)}${e.location?` · ${e.location}`:""}</div>
       </div>
       <span class="alt-go">Make recommended</span>
-    </button>`}_timeLabel(e){const t=a=>{if(!a)return"";const[s,o]=String(a).split(":").map(Number);if(Number.isNaN(s))return"";const d=s>=12?"pm":"am",l=(s+11)%12+1;return o?`${l}:${String(o).padStart(2,"0")}${d}`:`${l}${d}`},i=t(e.startTime),r=t(e.endTime);return i&&r?`${i}–${r}`:i||"Anytime"}}$(ot,"properties",{open:{type:Boolean,reflect:!0},_state:{state:!0},_loadingStep:{state:!0},_candidates:{state:!0},_rec:{state:!0},_error:{state:!0},_accepted:{state:!0}}),$(ot,"styles",E`
+    </button>`}_timeLabel(e){const t=a=>{if(!a)return"";const[s,n]=String(a).split(":").map(Number);if(Number.isNaN(s))return"";const d=s>=12?"pm":"am",l=(s+11)%12+1;return n?`${l}:${String(n).padStart(2,"0")}${d}`:`${l}${d}`},i=t(e.startTime),r=t(e.endTime);return i&&r?`${i}–${r}`:i||"Anytime"}}$(nt,"properties",{open:{type:Boolean,reflect:!0},_state:{state:!0},_loadingStep:{state:!0},_candidates:{state:!0},_rec:{state:!0},_error:{state:!0},_accepted:{state:!0}}),$(nt,"styles",E`
     * { box-sizing: border-box; }
     :host { display: contents; }
     button { font-family: inherit; cursor: pointer; }
@@ -11751,18 +11807,18 @@ They'll lose access to shared trips, celebrations and any read-only child access
       font-weight: 600;
       font-size: 13px;
     }
-  `);customElements.define("weekend-planner",ot);const Fi={uid:"preview-user",displayName:"Thomas Paris",email:"thomas@example.com",photoURL:null},_t=[{uid:"thomas",displayName:"Thomas",circles:["immediate"],hue:198},{uid:"partner",displayName:"Élise",circles:["immediate"],hue:8},{uid:"kid1",displayName:"Oscar",circles:["immediate"],hue:142},{uid:"kid2",displayName:"Mila",circles:["immediate"],hue:44},{uid:"mum",displayName:"Mum",circles:["extended"],hue:320},{uid:"dad",displayName:"Dad",circles:["extended"],hue:28},{uid:"sister",displayName:"Camille",circles:["extended"],hue:280},{uid:"bro-in-law",displayName:"Sam",circles:["extended"],hue:175},{uid:"niece",displayName:"Léa",circles:["extended"],hue:100}],Ei=[{id:"t1",title:"Côte d’Azur, summer",location:"Antibes, France",start:"2026-07-12",end:"2026-07-21",coverGradient:"linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)",lodgingHost:"Airbnb",lodgingTitle:"Villa near Cap d’Antibes",attendees:["thomas","partner","kid1","kid2","mum","dad"],notes:"Mum + Dad arrive day 2. Dinner reservations at La Guérite booked.",visibility:"extended"},{id:"t2",title:"Half-term in the Alps",location:"Chamonix, France",start:"2026-10-24",end:"2026-10-31",coverGradient:"linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)",lodgingHost:"Booking.com",lodgingTitle:"Chalet Les Drus",attendees:["thomas","partner","kid1","kid2"],notes:"Need ski school for the kids — book by September.",visibility:"immediate"},{id:"t3",title:"Camille’s 40th",location:"Lisbon, Portugal",start:"2026-09-05",end:"2026-09-08",coverGradient:"linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)",lodgingHost:"Airbnb",lodgingTitle:"Alfama rooftop apartment",attendees:["thomas","partner","sister","bro-in-law"],notes:"Surprise. Don’t mention to Camille.",visibility:"family"}],Ri=[{id:"e1",type:"birthday",date:"2026-05-24",personIds:["mum"],title:"Mum’s birthday"},{id:"e2",type:"anniversary",date:"2026-05-28",personIds:["mum","dad"],title:"Mum & Dad’s anniversary",subtitle:"38 years"},{id:"e3",type:"birthday",date:"2026-06-11",personIds:["kid1"],title:"Oscar turns 7"},{id:"e4",type:"birthday",date:"2026-06-30",personIds:["niece"],title:"Léa’s birthday"}],Ut={id:"preview-felix",name:"Felix",dateOfBirth:new Date("2023-11-15"),profilePhotoURL:null,pronouns:"he",themeColorHex:"#3D9B8F",developmentalFlags:["speech and language"]},Ni=[Ut],Bi=[{id:"m15",category:"socialEmotional",title:"Social smile",status:"achieved",ageRangeStartMonths:1,ageRangeEndMonths:3,arc:"attentionToLiteracy",arcOrder:1},{id:"m16",category:"language",title:"Babbles ('ba-ba', 'da-da')",status:"achieved",ageRangeStartMonths:4,ageRangeEndMonths:7,arc:"attentionToLiteracy",arcOrder:2},{id:"m17",category:"motor",title:"Sits without support",status:"achieved",ageRangeStartMonths:6,ageRangeEndMonths:9,arc:"movementToCoordination",arcOrder:3},{id:"m18",category:"cognitive",title:"Explores cause and effect",status:"achieved",ageRangeStartMonths:8,ageRangeEndMonths:12,arc:"curiosityToReasoning",arcOrder:2},{id:"m1",category:"motor",title:"Kicks a ball forward",status:"achieved",ageRangeStartMonths:18,ageRangeEndMonths:24,arc:"movementToCoordination",arcOrder:6},{id:"m2",category:"motor",title:"Walks up stairs holding on",status:"achieved",ageRangeStartMonths:18,ageRangeEndMonths:24,arc:"movementToCoordination",arcOrder:7},{id:"m3",category:"motor",title:"Jumps with both feet off the ground",status:"emerging",ageRangeStartMonths:24,ageRangeEndMonths:30,arc:"movementToCoordination",arcOrder:8},{id:"m4",category:"motor",title:"Pedals a tricycle",status:"notStarted",ageRangeStartMonths:30,ageRangeEndMonths:36,arc:"movementToCoordination",arcOrder:9},{id:"m5",category:"language",title:"Uses two-word phrases",status:"achieved",ageRangeStartMonths:18,ageRangeEndMonths:24,arc:"attentionToLiteracy",arcOrder:5},{id:"m6",category:"language",title:"Says first name when asked",status:"emerging",ageRangeStartMonths:24,ageRangeEndMonths:30,arc:"attentionToLiteracy",arcOrder:6},{id:"m7",category:"language",title:"Names six body parts",status:"notStarted",ageRangeStartMonths:24,ageRangeEndMonths:30,arc:"attentionToLiteracy",arcOrder:7},{id:"m8",category:"language",title:"Uses three-word sentences",status:"notStarted",ageRangeStartMonths:30,ageRangeEndMonths:36,arc:"attentionToLiteracy",arcOrder:8},{id:"m19",category:"cognitive",title:"Recognizes familiar logos and print",status:"notStarted",ageRangeStartMonths:36,ageRangeEndMonths:48,arc:"attentionToLiteracy",arcOrder:9},{id:"m9",category:"socialEmotional",title:"Shows affection unprompted",status:"achieved",ageRangeStartMonths:18,ageRangeEndMonths:24,arc:"connectionToFriendship",arcOrder:3},{id:"m10",category:"socialEmotional",title:"Plays alongside other children",status:"emerging",ageRangeStartMonths:24,ageRangeEndMonths:36,arc:"connectionToFriendship",arcOrder:4},{id:"m11",category:"socialEmotional",title:"Takes turns in simple games",status:"notStarted",ageRangeStartMonths:30,ageRangeEndMonths:42,arc:"connectionToFriendship",arcOrder:5},{id:"m12",category:"cognitive",title:"Follows a two-step instruction",status:"achieved",ageRangeStartMonths:18,ageRangeEndMonths:24,arc:"curiosityToReasoning",arcOrder:4},{id:"m13",category:"cognitive",title:"Sorts objects by shape or colour",status:"emerging",ageRangeStartMonths:30,ageRangeEndMonths:36,arc:"curiosityToReasoning",arcOrder:5},{id:"m14",category:"cognitive",title:"Completes a 4-piece puzzle",status:"notStarted",ageRangeStartMonths:30,ageRangeEndMonths:36,arc:"curiosityToReasoning",arcOrder:6}],Li=[{id:"i1",type:"strength",domain:"language",title:"Language is tracking ahead",body:"Felix is combining words earlier than the typical 24–30 month window — keep the back-and-forth conversations going.",relevanceScore:.95},{id:"i2",type:"connection",domain:"cross",title:"Fine-motor + sorting → pre-literacy",body:"A strong pincer grip alongside early sorting is a classic pre-literacy signal. Picture books with pointing build on both at once.",relevanceScore:.82},{id:"i3",type:"nudge",domain:"language",title:"Narrate your daily routine",body:'"Now we are washing hands… water on… soap…" — Felix is ready for longer sentence models during everyday moments.',relevanceScore:.7}],Oi={id:"2026-05-16",title:"Felix is stringing two words together",body:'You have logged "more milk" and "Daddy go" this week — early two-word speech, right on the edge of the 24–30 month window. Narrating your routine out loud is the single best way to grow sentence length from here.',topicForChat:"How can I support Felix's two-word speech?"},Ui={id:"2026-05-16",title:"Busy Saturday, water shoes for Felix",body:"Splash day at the park this morning, both kids back to routine by nap.",topicForChat:"What should we prep tonight for tomorrow?",mode:"brief",generatedAt:{toMillis:()=>new Date().setHours(6,14,0,0)},bullets:[{kind:"plan",text:"Splash day at 10. Park sprinklers are on for the morning."},{kind:"weather",text:"74°F and sunny. Sun hats for both kids."},{kind:"packing",text:"Felix's water shoes still unchecked on the bag list."},{kind:"coordinate",text:"Ellie is on pickup. You packed the towels last night."}]},ji=[{id:"p1",role:"user",content:"Felix isn't saying many words yet — should I be worried at 2.5?",senderUid:"partner"},{id:"p2",role:"assistant",content:"At 2½, every child's pace differs. From your logs Felix **uses two-word phrases** and follows two-step instructions — both strong signs. A few practical things to try, and a clear marker for when to mention it at his check-up."},{id:"p3",role:"user",content:"Any toddler-friendly ideas for a rainy weekend?",senderUid:"thomas"},{id:"p4",role:"assistant",content:"Rainy days are great for the kind of close-up play that grows language fastest at this stage. A few ideas matched to where Felix is right now."}];class lt extends D{constructor(){super(),this.user=Fi,this.pebbleUser=null,this.family=null,this.children=[],this.trips=[],this.events=[],this.activities=[],this.holidays=[],this._connectionMembers=[],this._connKey="",this.ppFamily=null,this.ppIsMember=!1,this.ppChildren=[],this.selectedChildId=null,this.childMilestones=[],this.childInsights=[],this.childReports=[],this.childDailyCard=null,this.familyDailyCard=null,this.nonParentDailyCard=null,this.pebbleAnchors=[],this.pebbleRhythms=[],this.pebblePatterns=[],this.pebbleLiveContext=[],this._wpkExpanded=new Set,this.childPebbleMessages=[],this.childPebbleSessions=[],this.planningMessages=[],this.pebbleQuota=null,this.ppIsChildViewer=!1,this.incomingChildRequests=[],this.myChildAccessRequest=null,this._claimingChildId=null,this._claimedChildName=null,this._joinAnotherCode="",this._joinAnotherBusy=!1,this._joinAnotherError="",this._joinAnotherSuccessName="",this._pebblePrefill="",this._plannerOpen=!1,this._plannerTrip=null,this.preview=!1,this.circle="extended",this._activeTab=this._restoreActiveTab(),this._refreshingFamilyBrief=!1,this._refreshingNonParentBrief=!1,this._autoBriefAttempted=!1,this._autoNonParentBriefAttempted=!1,this._weekendOpen=!1,this._wpkOpen=!1,this._packingTemplates=[],this._formOpen=!1,this._formTrip=null,this._formBusy=!1,this._membersOpen=!1,this._eventFormOpen=!1,this._eventFormEvent=null,this._eventFormBusy=!1,this._activityFormOpen=!1,this._activityFormActivity=null,this._activityFormBusy=!1,this._allTripsOpen=!1,this._editingFamilyName=!1,this._importOpen=!1,this._schoolImportOpen=!1,this._profileOpen=!1,this._typePickerOpen=!1,this._formMode="trip",this._pebbleFabOpen=!1,this._themeLight=typeof document<"u"&&document.documentElement.classList.contains("theme-light"),this._dragOverTarget=null;const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1),this._calendarView="month";const t=new Date(e);t.setHours(0,0,0,0),this._displayWeekStart=new Date(t),this._displayWeekStart.setDate(t.getDate()-t.getDay()),this._calFilters={trip:!0,holiday:!0,event:!0,celebrate:!0},this._managingTags=!1,this._tagRenaming=null,this._tagRenameDraft="",this._tagDeleting=null}_onJoinAnotherCodeInput(e){var r;const t=(((r=e.target)==null?void 0:r.value)??"").toString(),i=t.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6);i!==t&&(e.target.value=i),this._joinAnotherCode=i,this._joinAnotherError&&(this._joinAnotherError="")}async _attemptJoinAnotherFamily(){var t;const e=(this._joinAnotherCode??"").trim();if(!(e.length!==6||this._joinAnotherBusy)){this._joinAnotherBusy=!0,this._joinAnotherError="",this._joinAnotherSuccessName="";try{const i=await f.findFamilyByConnectCode(e);if(!i){this._joinAnotherError="Couldn't find that family. Double-check the code with whoever invited you.";return}const r=i.name||"the family";await f.redeemConnectCode(e),this._joinAnotherSuccessName=r,y(`Joined ${r}.`),this._joinAnotherCode=""}catch(i){console.error("Join another family failed:",i),this._joinAnotherError=((t=i==null?void 0:i.message)==null?void 0:t.replace(/^Error:\s*/,""))??"Couldn't join. Double-check the code with whoever invited you."}finally{this._joinAnotherBusy=!1}}}async _saveFamilyName(e){var a,s;const i=(e.target.value??"").trim(),r=((a=this.family)==null?void 0:a.name)??"";if(i&&i!==r&&((s=this.family)!=null&&s.id))try{const{db:o,doc:d,updateDoc:l,serverTimestamp:c}=await ee(async()=>{const{db:p,doc:h,updateDoc:u,serverTimestamp:b}=await Promise.resolve().then(()=>pi);return{db:p,doc:h,updateDoc:u,serverTimestamp:b}},void 0);await l(d(o,"families",this.family.id),{name:i,updatedAt:c()}),y("Family name updated.")}catch(o){console.error("Update family name failed:",o),y(`Couldn't save: ${o.code??o.message}`,{duration:5e3})}this._editingFamilyName=!1}_liveImmediate(){var e;return this.preview||!((e=this.user)!=null&&e.uid)?_t.filter(t=>t.circles.includes("immediate")):fi(this.user.uid,this.user,this.pebbleUser,this.family,this.children)}_liveExtended(){var e;return this.preview?_t.filter(t=>t.circles.includes("extended")):ui((e=this.user)==null?void 0:e.uid,this.family,this.children)}_liveConnections(){return this.preview?[]:this._connectionMembers??[]}async _refreshConnectionMembers(){var e;if(this.preview||!this.family){this._connectionMembers=[];return}try{this._connectionMembers=await mi((e=this.user)==null?void 0:e.uid,this.family)}catch{this._connectionMembers=[]}}updated(e){var t,i;if(e.has("family")){const r=Array.isArray((t=this.family)==null?void 0:t.connectedFamilyIds)?this.family.connectedFamilyIds:[],a=`${((i=this.family)==null?void 0:i.id)??""}|${[...r].sort().join(",")}`;a!==this._connKey&&(this._connKey=a,this._refreshConnectionMembers())}if(e.has("_activeTab")){if(this._positionTabSlider({animate:!0}),!this.preview)try{localStorage.setItem("cairn:activeTab",this._activeTab)}catch{}this._activeTab!=="cairn"&&this._wpkOpen&&(this._wpkOpen=!1)}}_liveTrips(){return this.preview?Ei:this.trips??[]}_liveEvents(){if(this.preview)return Ri;const e=r=>{const{date:a,yearsElapsed:s}=ht(r);return{...r,date:a?Z(a):r.date,_yearsElapsed:s,_originalDate:r.date}},t=vi(this.children).map(e),i=(this.events??[]).map(e);return[...t,...i].sort((r,a)=>String(r.date).localeCompare(String(a.date)))}_filteredMembers(){const e=this._liveImmediate(),t=this._liveExtended();return this.circle==="personal"?e.filter(i=>{var r;return i.uid===((r=this.user)==null?void 0:r.uid)}):this.circle==="family"?e:[...e,...t]}_circleTrips(){var s;const e=this._liveTrips(),t=((s=this.user)==null?void 0:s.uid)??"thomas";let i;this.circle==="personal"?i=e.filter(o=>{var d;return(d=o.attendees)==null?void 0:d.includes(t)}):this.circle==="family"?i=e.filter(o=>o.visibility!=="extended"&&this._userCanSeeTrip(o)):i=e.filter(o=>this._userCanSeeTrip(o));const r=new Set,a=[];for(const o of i){const d=o.id??`${o.title}|${o.start}|${o.end}`;r.has(d)||(r.add(d),a.push(o))}return a}_filteredTrips(){const e=new Date;return e.setHours(0,0,0,0),this._circleTrips().filter(t=>t.end?M(t.end)>=e:!0)}_userCanSeeTrip(e){var d,l,c,p,h,u;const t=(d=this.user)==null?void 0:d.uid;if(!t)return!1;if((l=e.attendees)!=null&&l.includes(t)||(c=e.viewers)!=null&&c.includes(t))return!0;const i=((p=this.family)==null?void 0:p.memberIds)??[],r=((h=this.family)==null?void 0:h.cairnMemberIds)??i,a=i.includes(t),s=r.includes(t);if(a)return!0;if(!s)return!1;const o=e.visibility||"family";if(o==="personal")return!1;if(o==="family")return!0;if(o==="extended"){const b=e.targetSubGroups??[];if(b.length===0)return!0;const w=Object.entries(((u=this.family)==null?void 0:u.subGroups)??{}).filter(([,v])=>(v.memberIds??[]).includes(t)).map(([v])=>v);return b.some(v=>w.includes(v))}return!1}_filteredEvents(){const e=new Set(this._filteredMembers().map(t=>t.uid));return this._liveEvents().filter(t=>(Array.isArray(t==null?void 0:t.personIds)?t.personIds:[]).some(r=>e.has(r)))}_standaloneActivities(){return(this.activities??[]).filter(e=>!(e!=null&&e.tripId)&&this._tagVisible(e))}_calendarActivities(){return(this.activities??[]).filter(e=>e&&this._tagVisible(e))}_smartCallout(){var o;const e=new Date,t=new Date(e.getFullYear(),e.getMonth(),e.getDate()),i=1440*60*1e3,r=d=>Math.round((d-t)/i);let a=null,s=1/0;for(const d of this._circleTrips()){if(!d.start)continue;const l=M(d.start);if(!l)continue;const c=r(l);c>0&&c<s&&(a={kind:"trip",item:d},s=c)}for(const d of this._filteredEvents()){if(!d.date)continue;const l=M(d.date);if(!l)continue;const c=r(l);c>=0&&c<s&&(a={kind:"event",item:d},s=c)}if(!a)return null;if(a.kind==="trip"){const d=((o=a.item.location)==null?void 0:o.trim())||a.item.title;return s===1?`${d} starts tomorrow.`:s<=14?`${d} in ${s} days.`:s<=60?`Next trip: ${d} in ${s} days.`:null}return s===0?`${a.item.title}, today.`:s===1?`${a.item.title}, tomorrow.`:s<=7?`${a.item.title} in ${s} days.`:null}_tripDensityByDay(e){const t=new Map;for(const i of this._filteredTrips()){if(!i.start||!i.end)continue;const r=M(i.start),a=M(i.end);if(Number.isNaN(r.getTime())||Number.isNaN(a.getTime())||r.getFullYear()>e||a.getFullYear()<e)continue;const s=new Date(Math.max(r,new Date(e,0,1))),o=new Date(Math.min(a,new Date(e,11,31)));for(;s<=o;){const d=`${String(s.getMonth()+1).padStart(2,"0")}-${String(s.getDate()).padStart(2,"0")}`;t.set(d,Math.min(1,(t.get(d)??0)+.5)),s.setDate(s.getDate()+1)}}return t}_shiftMonth(e){const t=this._displayMonth;this._displayMonth=new Date(t.getFullYear(),t.getMonth()+e,1)}_jumpToMonth(e,t){this._displayMonth=new Date(e,t,1)}_resetToToday(){const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1)}_openCreate(){if(this.preview){y("Sign in to create real activities.");return}if(!f.familyId){y("You need a PebblePath family first.");return}this._typePickerOpen=!0}_onTypePicked(e){this._typePickerOpen=!1;const t=e.detail.type;if(t==="event"){this._eventFormEvent=null,this._eventFormOpen=!0;return}if(t==="import"){this._importOpen=!0;return}if(t==="activity"){this._openNewActivity();return}this._formMode="trip",this._formTrip=null,this._formOpen=!0}_openPlanner(e){this._plannerTrip=e,this._plannerOpen=!0,this._activeTab="activities",this.updateComplete.then(()=>{requestAnimationFrame(()=>requestAnimationFrame(()=>{var i;const t=(i=this.renderRoot)==null?void 0:i.querySelector("trip-planner");t==null||t.scrollIntoView({behavior:"smooth",block:"start"})}))})}_onOpenTripPlannerFromImport(e){var r;const t=(r=e==null?void 0:e.detail)==null?void 0:r.tripId;if(!t)return;this._importOpen=!1;const i=(f.state.trips??[]).find(a=>a.id===t);i&&requestAnimationFrame(()=>this._openPlanner(i))}_openEdit(e){if(this.preview){y("Sign in to edit real activities.");return}const t=e.lodgingUrl||e.lodgingHost||e.flightNumber||e.flightDepartAirport;this._formMode=t?"trip":"activity",this._formTrip=e,this._formOpen=!0}async _onSaveTrip(e){let t=e.detail;this._formBusy=!0;try{t.id||(t=await f.seedDestinationCover(t)),await f.saveTrip(t),this._formOpen=!1,this._formTrip=null,y(t.id?"Trip updated.":"Trip created.")}catch(i){console.error("Save trip failed:",i),y(`Couldn't save: ${i.code??i.message}`,{duration:5e3})}finally{this._formBusy=!1}}async _onDeleteTrip(e){this._formBusy=!0;try{await f.deleteTrip(e.detail.id),this._formOpen=!1,this._formTrip=null,y("Trip deleted.")}catch(t){console.error("Delete trip failed:",t),y(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._formBusy=!1}}_openCreateEvent(){if(this.preview){y("Sign in to add real events.");return}if(!f.familyId){y("You need a family first.");return}this._eventFormEvent=null,this._eventFormOpen=!0}_openEditEvent(e){if(this.preview){y("Sign in to edit real events.");return}if(e!=null&&e._childId){const t=prompt(`Edit ${e._childName}'s birthday (YYYY-MM-DD):`,e.date);if(!t)return;if(!/^\d{4}-\d{2}-\d{2}$/.test(t)){y("Use YYYY-MM-DD format.");return}f.updateChildBirthday(e._childId,new Date(t)).then(()=>y(`Updated ${e._childName}'s birthday.`)).catch(i=>{console.error("Update child birthday failed:",i),y(`Couldn't update: ${i.code??i.message}`,{duration:5e3})});return}this._eventFormEvent={...e,date:e._originalDate??e.date},this._eventFormOpen=!0}async _onSaveEvent(e){this._eventFormBusy=!0;try{await f.saveEvent(e.detail),this._eventFormOpen=!1,this._eventFormEvent=null,y(e.detail.id?"Event updated.":"Event added.")}catch(t){console.error("Save event failed:",t),y(`Couldn't save: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}async _onDeleteEvent(e){this._eventFormBusy=!0;try{await f.deleteEvent(e.detail.id),this._eventFormOpen=!1,this._eventFormEvent=null,y("Event deleted.")}catch(t){console.error("Delete event failed:",t),y(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}_openNewActivity(){if(this.preview){y("Sign in to create real activities.");return}if(!f.familyId){y("You need a family first.");return}this._activityFormActivity=null,this._activityFormOpen=!0}_openEditActivity(e){if(this.preview){y("Sign in to edit real activities.");return}this._activityFormActivity={...e},this._activityFormOpen=!0}async _onSaveActivity(e){this._activityFormBusy=!0;try{await f.saveActivity(e.detail),this._activityFormOpen=!1,this._activityFormActivity=null,y(e.detail.id?"Activity updated.":"Activity added.")}catch(t){console.error("Save activity failed:",t),y(`Couldn't save: ${t.code??t.message}`,{duration:5e3})}finally{this._activityFormBusy=!1}}async _onDeleteActivity(e){this._activityFormBusy=!0;try{await f.deleteActivity(e.detail.id),this._activityFormOpen=!1,this._activityFormActivity=null,y("Activity deleted.")}catch(t){console.error("Delete activity failed:",t),y(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._activityFormBusy=!1}}get _pebbleAvailable(){return this.preview||this.ppIsMember||this.ppIsChildViewer||!!this.family}_tabDefs(){const e={id:"pebble",label:"Pebble",icon:n`<pebble-icon></pebble-icon>`};return[{id:"today",label:"Today",icon:n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9" /><path d="M5 10v10h14V10" /></svg>`},{id:"children",label:"Children",icon:n`<span
+  `);customElements.define("weekend-planner",nt);const Fi={uid:"preview-user",displayName:"Thomas Paris",email:"thomas@example.com",photoURL:null},_t=[{uid:"thomas",displayName:"Thomas",circles:["immediate"],hue:198},{uid:"partner",displayName:"Élise",circles:["immediate"],hue:8},{uid:"kid1",displayName:"Oscar",circles:["immediate"],hue:142},{uid:"kid2",displayName:"Mila",circles:["immediate"],hue:44},{uid:"mum",displayName:"Mum",circles:["extended"],hue:320},{uid:"dad",displayName:"Dad",circles:["extended"],hue:28},{uid:"sister",displayName:"Camille",circles:["extended"],hue:280},{uid:"bro-in-law",displayName:"Sam",circles:["extended"],hue:175},{uid:"niece",displayName:"Léa",circles:["extended"],hue:100}],Ei=[{id:"t1",title:"Côte d’Azur, summer",location:"Antibes, France",start:"2026-07-12",end:"2026-07-21",coverGradient:"linear-gradient(135deg, #6b9ac4 0%, #c98a8a 60%, #d4a843 100%)",lodgingHost:"Airbnb",lodgingTitle:"Villa near Cap d’Antibes",attendees:["thomas","partner","kid1","kid2","mum","dad"],notes:"Mum + Dad arrive day 2. Dinner reservations at La Guérite booked.",visibility:"extended"},{id:"t2",title:"Half-term in the Alps",location:"Chamonix, France",start:"2026-10-24",end:"2026-10-31",coverGradient:"linear-gradient(135deg, #7a9e7e 0%, #4a6754 70%, #2c4439 100%)",lodgingHost:"Booking.com",lodgingTitle:"Chalet Les Drus",attendees:["thomas","partner","kid1","kid2"],notes:"Need ski school for the kids — book by September.",visibility:"immediate"},{id:"t3",title:"Camille’s 40th",location:"Lisbon, Portugal",start:"2026-09-05",end:"2026-09-08",coverGradient:"linear-gradient(135deg, #c67b5c 0%, #d4a843 50%, #c98a8a 100%)",lodgingHost:"Airbnb",lodgingTitle:"Alfama rooftop apartment",attendees:["thomas","partner","sister","bro-in-law"],notes:"Surprise. Don’t mention to Camille.",visibility:"family"}],Ri=[{id:"e1",type:"birthday",date:"2026-05-24",personIds:["mum"],title:"Mum’s birthday"},{id:"e2",type:"anniversary",date:"2026-05-28",personIds:["mum","dad"],title:"Mum & Dad’s anniversary",subtitle:"38 years"},{id:"e3",type:"birthday",date:"2026-06-11",personIds:["kid1"],title:"Oscar turns 7"},{id:"e4",type:"birthday",date:"2026-06-30",personIds:["niece"],title:"Léa’s birthday"}],Ut={id:"preview-felix",name:"Felix",dateOfBirth:new Date("2023-11-15"),profilePhotoURL:null,pronouns:"he",themeColorHex:"#3D9B8F",developmentalFlags:["speech and language"]},Ni=[Ut],Bi=[{id:"m15",category:"socialEmotional",title:"Social smile",status:"achieved",ageRangeStartMonths:1,ageRangeEndMonths:3,arc:"attentionToLiteracy",arcOrder:1},{id:"m16",category:"language",title:"Babbles ('ba-ba', 'da-da')",status:"achieved",ageRangeStartMonths:4,ageRangeEndMonths:7,arc:"attentionToLiteracy",arcOrder:2},{id:"m17",category:"motor",title:"Sits without support",status:"achieved",ageRangeStartMonths:6,ageRangeEndMonths:9,arc:"movementToCoordination",arcOrder:3},{id:"m18",category:"cognitive",title:"Explores cause and effect",status:"achieved",ageRangeStartMonths:8,ageRangeEndMonths:12,arc:"curiosityToReasoning",arcOrder:2},{id:"m1",category:"motor",title:"Kicks a ball forward",status:"achieved",ageRangeStartMonths:18,ageRangeEndMonths:24,arc:"movementToCoordination",arcOrder:6},{id:"m2",category:"motor",title:"Walks up stairs holding on",status:"achieved",ageRangeStartMonths:18,ageRangeEndMonths:24,arc:"movementToCoordination",arcOrder:7},{id:"m3",category:"motor",title:"Jumps with both feet off the ground",status:"emerging",ageRangeStartMonths:24,ageRangeEndMonths:30,arc:"movementToCoordination",arcOrder:8},{id:"m4",category:"motor",title:"Pedals a tricycle",status:"notStarted",ageRangeStartMonths:30,ageRangeEndMonths:36,arc:"movementToCoordination",arcOrder:9},{id:"m5",category:"language",title:"Uses two-word phrases",status:"achieved",ageRangeStartMonths:18,ageRangeEndMonths:24,arc:"attentionToLiteracy",arcOrder:5},{id:"m6",category:"language",title:"Says first name when asked",status:"emerging",ageRangeStartMonths:24,ageRangeEndMonths:30,arc:"attentionToLiteracy",arcOrder:6},{id:"m7",category:"language",title:"Names six body parts",status:"notStarted",ageRangeStartMonths:24,ageRangeEndMonths:30,arc:"attentionToLiteracy",arcOrder:7},{id:"m8",category:"language",title:"Uses three-word sentences",status:"notStarted",ageRangeStartMonths:30,ageRangeEndMonths:36,arc:"attentionToLiteracy",arcOrder:8},{id:"m19",category:"cognitive",title:"Recognizes familiar logos and print",status:"notStarted",ageRangeStartMonths:36,ageRangeEndMonths:48,arc:"attentionToLiteracy",arcOrder:9},{id:"m9",category:"socialEmotional",title:"Shows affection unprompted",status:"achieved",ageRangeStartMonths:18,ageRangeEndMonths:24,arc:"connectionToFriendship",arcOrder:3},{id:"m10",category:"socialEmotional",title:"Plays alongside other children",status:"emerging",ageRangeStartMonths:24,ageRangeEndMonths:36,arc:"connectionToFriendship",arcOrder:4},{id:"m11",category:"socialEmotional",title:"Takes turns in simple games",status:"notStarted",ageRangeStartMonths:30,ageRangeEndMonths:42,arc:"connectionToFriendship",arcOrder:5},{id:"m12",category:"cognitive",title:"Follows a two-step instruction",status:"achieved",ageRangeStartMonths:18,ageRangeEndMonths:24,arc:"curiosityToReasoning",arcOrder:4},{id:"m13",category:"cognitive",title:"Sorts objects by shape or colour",status:"emerging",ageRangeStartMonths:30,ageRangeEndMonths:36,arc:"curiosityToReasoning",arcOrder:5},{id:"m14",category:"cognitive",title:"Completes a 4-piece puzzle",status:"notStarted",ageRangeStartMonths:30,ageRangeEndMonths:36,arc:"curiosityToReasoning",arcOrder:6}],Li=[{id:"i1",type:"strength",domain:"language",title:"Language is tracking ahead",body:"Felix is combining words earlier than the typical 24–30 month window — keep the back-and-forth conversations going.",relevanceScore:.95},{id:"i2",type:"connection",domain:"cross",title:"Fine-motor + sorting → pre-literacy",body:"A strong pincer grip alongside early sorting is a classic pre-literacy signal. Picture books with pointing build on both at once.",relevanceScore:.82},{id:"i3",type:"nudge",domain:"language",title:"Narrate your daily routine",body:'"Now we are washing hands… water on… soap…" — Felix is ready for longer sentence models during everyday moments.',relevanceScore:.7}],Oi={id:"2026-05-16",title:"Felix is stringing two words together",body:'You have logged "more milk" and "Daddy go" this week — early two-word speech, right on the edge of the 24–30 month window. Narrating your routine out loud is the single best way to grow sentence length from here.',topicForChat:"How can I support Felix's two-word speech?"},Ui={id:"2026-05-16",title:"Busy Saturday, water shoes for Felix",body:"Splash day at the park this morning, both kids back to routine by nap.",topicForChat:"What should we prep tonight for tomorrow?",mode:"brief",generatedAt:{toMillis:()=>new Date().setHours(6,14,0,0)},bullets:[{kind:"plan",text:"Splash day at 10. Park sprinklers are on for the morning."},{kind:"weather",text:"74°F and sunny. Sun hats for both kids."},{kind:"packing",text:"Felix's water shoes still unchecked on the bag list."},{kind:"coordinate",text:"Ellie is on pickup. You packed the towels last night."}]},ji=[{id:"p1",role:"user",content:"Felix isn't saying many words yet — should I be worried at 2.5?",senderUid:"partner"},{id:"p2",role:"assistant",content:"At 2½, every child's pace differs. From your logs Felix **uses two-word phrases** and follows two-step instructions — both strong signs. A few practical things to try, and a clear marker for when to mention it at his check-up."},{id:"p3",role:"user",content:"Any toddler-friendly ideas for a rainy weekend?",senderUid:"thomas"},{id:"p4",role:"assistant",content:"Rainy days are great for the kind of close-up play that grows language fastest at this stage. A few ideas matched to where Felix is right now."}];class lt extends D{constructor(){super(),this.user=Fi,this.pebbleUser=null,this.family=null,this.children=[],this.trips=[],this.events=[],this.activities=[],this.holidays=[],this._connectionMembers=[],this._connKey="",this.ppFamily=null,this.ppIsMember=!1,this.ppChildren=[],this.selectedChildId=null,this.childMilestones=[],this.childInsights=[],this.childReports=[],this.childDailyCard=null,this.familyDailyCard=null,this.nonParentDailyCard=null,this.pebbleAnchors=[],this.pebbleRhythms=[],this.pebblePatterns=[],this.pebbleLiveContext=[],this._wpkExpanded=new Set,this.childPebbleMessages=[],this.childPebbleSessions=[],this.planningMessages=[],this.pebbleQuota=null,this.ppIsChildViewer=!1,this.incomingChildRequests=[],this.myChildAccessRequest=null,this._claimingChildId=null,this._claimedChildName=null,this._joinAnotherCode="",this._joinAnotherBusy=!1,this._joinAnotherError="",this._joinAnotherSuccessName="",this._pebblePrefill="",this._plannerOpen=!1,this._plannerTrip=null,this.preview=!1,this.circle="extended",this._activeTab=this._restoreActiveTab(),this._refreshingFamilyBrief=!1,this._refreshingNonParentBrief=!1,this._autoBriefAttempted=!1,this._autoNonParentBriefAttempted=!1,this._weekendOpen=!1,this._wpkOpen=!1,this._packingTemplates=[],this._formOpen=!1,this._formTrip=null,this._formBusy=!1,this._membersOpen=!1,this._eventFormOpen=!1,this._eventFormEvent=null,this._eventFormBusy=!1,this._activityFormOpen=!1,this._activityFormActivity=null,this._activityFormBusy=!1,this._allTripsOpen=!1,this._editingFamilyName=!1,this._importOpen=!1,this._schoolImportOpen=!1,this._profileOpen=!1,this._typePickerOpen=!1,this._formMode="trip",this._pebbleFabOpen=!1,this._themeLight=typeof document<"u"&&document.documentElement.classList.contains("theme-light"),this._dragOverTarget=null;const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1),this._calendarView="month";const t=new Date(e);t.setHours(0,0,0,0),this._displayWeekStart=new Date(t),this._displayWeekStart.setDate(t.getDate()-t.getDay()),this._calFilters={trip:!0,holiday:!0,event:!0,celebrate:!0},this._managingTags=!1,this._tagRenaming=null,this._tagRenameDraft="",this._tagDeleting=null}_onJoinAnotherCodeInput(e){var r;const t=(((r=e.target)==null?void 0:r.value)??"").toString(),i=t.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6);i!==t&&(e.target.value=i),this._joinAnotherCode=i,this._joinAnotherError&&(this._joinAnotherError="")}async _attemptJoinAnotherFamily(){var t;const e=(this._joinAnotherCode??"").trim();if(!(e.length!==6||this._joinAnotherBusy)){this._joinAnotherBusy=!0,this._joinAnotherError="",this._joinAnotherSuccessName="";try{const i=await f.findFamilyByConnectCode(e);if(!i){this._joinAnotherError="Couldn't find that family. Double-check the code with whoever invited you.";return}const r=i.name||"the family";await f.redeemConnectCode(e),this._joinAnotherSuccessName=r,y(`Joined ${r}.`),this._joinAnotherCode=""}catch(i){console.error("Join another family failed:",i),this._joinAnotherError=((t=i==null?void 0:i.message)==null?void 0:t.replace(/^Error:\s*/,""))??"Couldn't join. Double-check the code with whoever invited you."}finally{this._joinAnotherBusy=!1}}}async _saveFamilyName(e){var a,s;const i=(e.target.value??"").trim(),r=((a=this.family)==null?void 0:a.name)??"";if(i&&i!==r&&((s=this.family)!=null&&s.id))try{const{db:n,doc:d,updateDoc:l,serverTimestamp:c}=await ee(async()=>{const{db:p,doc:h,updateDoc:u,serverTimestamp:b}=await Promise.resolve().then(()=>pi);return{db:p,doc:h,updateDoc:u,serverTimestamp:b}},void 0);await l(d(n,"families",this.family.id),{name:i,updatedAt:c()}),y("Family name updated.")}catch(n){console.error("Update family name failed:",n),y(`Couldn't save: ${n.code??n.message}`,{duration:5e3})}this._editingFamilyName=!1}_liveImmediate(){var e;return this.preview||!((e=this.user)!=null&&e.uid)?_t.filter(t=>t.circles.includes("immediate")):fi(this.user.uid,this.user,this.pebbleUser,this.family,this.children)}_liveExtended(){var e;return this.preview?_t.filter(t=>t.circles.includes("extended")):ui((e=this.user)==null?void 0:e.uid,this.family,this.children)}_liveConnections(){return this.preview?[]:this._connectionMembers??[]}async _refreshConnectionMembers(){var e;if(this.preview||!this.family){this._connectionMembers=[];return}try{this._connectionMembers=await mi((e=this.user)==null?void 0:e.uid,this.family)}catch{this._connectionMembers=[]}}updated(e){var t,i;if(e.has("family")){const r=Array.isArray((t=this.family)==null?void 0:t.connectedFamilyIds)?this.family.connectedFamilyIds:[],a=`${((i=this.family)==null?void 0:i.id)??""}|${[...r].sort().join(",")}`;a!==this._connKey&&(this._connKey=a,this._refreshConnectionMembers())}if(e.has("_activeTab")){if(this._positionTabSlider({animate:!0}),!this.preview)try{localStorage.setItem("cairn:activeTab",this._activeTab)}catch{}this._activeTab!=="cairn"&&this._wpkOpen&&(this._wpkOpen=!1)}}_liveTrips(){return this.preview?Ei:this.trips??[]}_liveEvents(){if(this.preview)return Ri;const e=r=>{const{date:a,yearsElapsed:s}=ht(r);return{...r,date:a?Z(a):r.date,_yearsElapsed:s,_originalDate:r.date}},t=vi(this.children).map(e),i=(this.events??[]).map(e);return[...t,...i].sort((r,a)=>String(r.date).localeCompare(String(a.date)))}_filteredMembers(){const e=this._liveImmediate(),t=this._liveExtended();return this.circle==="personal"?e.filter(i=>{var r;return i.uid===((r=this.user)==null?void 0:r.uid)}):this.circle==="family"?e:[...e,...t]}_circleTrips(){var s;const e=this._liveTrips(),t=((s=this.user)==null?void 0:s.uid)??"thomas";let i;this.circle==="personal"?i=e.filter(n=>{var d;return(d=n.attendees)==null?void 0:d.includes(t)}):this.circle==="family"?i=e.filter(n=>n.visibility!=="extended"&&this._userCanSeeTrip(n)):i=e.filter(n=>this._userCanSeeTrip(n));const r=new Set,a=[];for(const n of i){const d=n.id??`${n.title}|${n.start}|${n.end}`;r.has(d)||(r.add(d),a.push(n))}return a}_filteredTrips(){const e=new Date;return e.setHours(0,0,0,0),this._circleTrips().filter(t=>t.end?M(t.end)>=e:!0)}_userCanSeeTrip(e){var d,l,c,p,h,u;const t=(d=this.user)==null?void 0:d.uid;if(!t)return!1;if((l=e.attendees)!=null&&l.includes(t)||(c=e.viewers)!=null&&c.includes(t))return!0;const i=((p=this.family)==null?void 0:p.memberIds)??[],r=((h=this.family)==null?void 0:h.cairnMemberIds)??i,a=i.includes(t),s=r.includes(t);if(a)return!0;if(!s)return!1;const n=e.visibility||"family";if(n==="personal")return!1;if(n==="family")return!0;if(n==="extended"){const b=e.targetSubGroups??[];if(b.length===0)return!0;const w=Object.entries(((u=this.family)==null?void 0:u.subGroups)??{}).filter(([,v])=>(v.memberIds??[]).includes(t)).map(([v])=>v);return b.some(v=>w.includes(v))}return!1}_filteredEvents(){const e=new Set(this._filteredMembers().map(t=>t.uid));return this._liveEvents().filter(t=>(Array.isArray(t==null?void 0:t.personIds)?t.personIds:[]).some(r=>e.has(r)))}_standaloneActivities(){return(this.activities??[]).filter(e=>!(e!=null&&e.tripId)&&this._tagVisible(e))}_calendarActivities(){return(this.activities??[]).filter(e=>e&&this._tagVisible(e))}_smartCallout(){var n;const e=new Date,t=new Date(e.getFullYear(),e.getMonth(),e.getDate()),i=1440*60*1e3,r=d=>Math.round((d-t)/i);let a=null,s=1/0;for(const d of this._circleTrips()){if(!d.start)continue;const l=M(d.start);if(!l)continue;const c=r(l);c>0&&c<s&&(a={kind:"trip",item:d},s=c)}for(const d of this._filteredEvents()){if(!d.date)continue;const l=M(d.date);if(!l)continue;const c=r(l);c>=0&&c<s&&(a={kind:"event",item:d},s=c)}if(!a)return null;if(a.kind==="trip"){const d=((n=a.item.location)==null?void 0:n.trim())||a.item.title;return s===1?`${d} starts tomorrow.`:s<=14?`${d} in ${s} days.`:s<=60?`Next trip: ${d} in ${s} days.`:null}return s===0?`${a.item.title}, today.`:s===1?`${a.item.title}, tomorrow.`:s<=7?`${a.item.title} in ${s} days.`:null}_tripDensityByDay(e){const t=new Map;for(const i of this._filteredTrips()){if(!i.start||!i.end)continue;const r=M(i.start),a=M(i.end);if(Number.isNaN(r.getTime())||Number.isNaN(a.getTime())||r.getFullYear()>e||a.getFullYear()<e)continue;const s=new Date(Math.max(r,new Date(e,0,1))),n=new Date(Math.min(a,new Date(e,11,31)));for(;s<=n;){const d=`${String(s.getMonth()+1).padStart(2,"0")}-${String(s.getDate()).padStart(2,"0")}`;t.set(d,Math.min(1,(t.get(d)??0)+.5)),s.setDate(s.getDate()+1)}}return t}_shiftMonth(e){const t=this._displayMonth;this._displayMonth=new Date(t.getFullYear(),t.getMonth()+e,1)}_jumpToMonth(e,t){this._displayMonth=new Date(e,t,1)}_resetToToday(){const e=new Date;this._displayMonth=new Date(e.getFullYear(),e.getMonth(),1)}_openCreate(){if(this.preview){y("Sign in to create real activities.");return}if(!f.familyId){y("You need a PebblePath family first.");return}this._typePickerOpen=!0}_onTypePicked(e){this._typePickerOpen=!1;const t=e.detail.type;if(t==="event"){this._eventFormEvent=null,this._eventFormOpen=!0;return}if(t==="import"){this._importOpen=!0;return}if(t==="activity"){this._openNewActivity();return}this._formMode="trip",this._formTrip=null,this._formOpen=!0}_openPlanner(e){this._plannerTrip=e,this._plannerOpen=!0,this._activeTab="activities",this.updateComplete.then(()=>{requestAnimationFrame(()=>requestAnimationFrame(()=>{var i;const t=(i=this.renderRoot)==null?void 0:i.querySelector("trip-planner");t==null||t.scrollIntoView({behavior:"smooth",block:"start"})}))})}_onOpenTripPlannerFromImport(e){var r;const t=(r=e==null?void 0:e.detail)==null?void 0:r.tripId;if(!t)return;this._importOpen=!1;const i=(f.state.trips??[]).find(a=>a.id===t);i&&requestAnimationFrame(()=>this._openPlanner(i))}_openEdit(e){if(this.preview){y("Sign in to edit real activities.");return}const t=e.lodgingUrl||e.lodgingHost||e.flightNumber||e.flightDepartAirport;this._formMode=t?"trip":"activity",this._formTrip=e,this._formOpen=!0}async _onSaveTrip(e){let t=e.detail;this._formBusy=!0;try{t.id||(t=await f.seedDestinationCover(t)),await f.saveTrip(t),this._formOpen=!1,this._formTrip=null,y(t.id?"Trip updated.":"Trip created.")}catch(i){console.error("Save trip failed:",i),y(`Couldn't save: ${i.code??i.message}`,{duration:5e3})}finally{this._formBusy=!1}}async _onDeleteTrip(e){this._formBusy=!0;try{await f.deleteTrip(e.detail.id),this._formOpen=!1,this._formTrip=null,y("Trip deleted.")}catch(t){console.error("Delete trip failed:",t),y(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._formBusy=!1}}_openCreateEvent(){if(this.preview){y("Sign in to add real events.");return}if(!f.familyId){y("You need a family first.");return}this._eventFormEvent=null,this._eventFormOpen=!0}_openEditEvent(e){if(this.preview){y("Sign in to edit real events.");return}if(e!=null&&e._childId){const t=prompt(`Edit ${e._childName}'s birthday (YYYY-MM-DD):`,e.date);if(!t)return;if(!/^\d{4}-\d{2}-\d{2}$/.test(t)){y("Use YYYY-MM-DD format.");return}f.updateChildBirthday(e._childId,new Date(t)).then(()=>y(`Updated ${e._childName}'s birthday.`)).catch(i=>{console.error("Update child birthday failed:",i),y(`Couldn't update: ${i.code??i.message}`,{duration:5e3})});return}this._eventFormEvent={...e,date:e._originalDate??e.date},this._eventFormOpen=!0}async _onSaveEvent(e){this._eventFormBusy=!0;try{await f.saveEvent(e.detail),this._eventFormOpen=!1,this._eventFormEvent=null,y(e.detail.id?"Event updated.":"Event added.")}catch(t){console.error("Save event failed:",t),y(`Couldn't save: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}async _onDeleteEvent(e){this._eventFormBusy=!0;try{await f.deleteEvent(e.detail.id),this._eventFormOpen=!1,this._eventFormEvent=null,y("Event deleted.")}catch(t){console.error("Delete event failed:",t),y(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._eventFormBusy=!1}}_openNewActivity(){if(this.preview){y("Sign in to create real activities.");return}if(!f.familyId){y("You need a family first.");return}this._activityFormActivity=null,this._activityFormOpen=!0}_openEditActivity(e){if(this.preview){y("Sign in to edit real activities.");return}this._activityFormActivity={...e},this._activityFormOpen=!0}async _onSaveActivity(e){this._activityFormBusy=!0;try{await f.saveActivity(e.detail),this._activityFormOpen=!1,this._activityFormActivity=null,y(e.detail.id?"Activity updated.":"Activity added.")}catch(t){console.error("Save activity failed:",t),y(`Couldn't save: ${t.code??t.message}`,{duration:5e3})}finally{this._activityFormBusy=!1}}async _onDeleteActivity(e){this._activityFormBusy=!0;try{await f.deleteActivity(e.detail.id),this._activityFormOpen=!1,this._activityFormActivity=null,y("Activity deleted.")}catch(t){console.error("Delete activity failed:",t),y(`Couldn't delete: ${t.code??t.message}`,{duration:5e3})}finally{this._activityFormBusy=!1}}get _pebbleAvailable(){return this.preview||this.ppIsMember||this.ppIsChildViewer||!!this.family}_tabDefs(){const e={id:"pebble",label:"Pebble",icon:o`<pebble-icon></pebble-icon>`};return[{id:"today",label:"Today",icon:o`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9" /><path d="M5 10v10h14V10" /></svg>`},{id:"children",label:"Children",icon:o`<span
           class="children-icon"
           style="--children-src:url(${"/portal/"}children-blocks.png)"
           aria-hidden="true"
-        ></span>`},...this._pebbleAvailable?[e]:[],{id:"activities",label:"Activities",icon:n`<span
+        ></span>`},...this._pebbleAvailable?[e]:[],{id:"activities",label:"Activities",icon:o`<span
           class="mountain-icon"
           style="--mountain-src:url(${"/portal/"}mountain.png)"
           aria-hidden="true"
-        ></span>`},{id:"cairn",label:"Settings",icon:n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>`}]}_renderTabBar(){return n`
+        ></span>`},{id:"cairn",label:"Settings",icon:o`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>`}]}_renderTabBar(){return o`
       <nav class="tabs" role="tablist" aria-label="Sections">
         <span class="tab-slider" aria-hidden="true"></span>
-        ${this._tabDefs().map(e=>n`<button
+        ${this._tabDefs().map(e=>o`<button
             class="tab ${this._activeTab===e.id?"active":""}"
             role="tab"
             aria-selected=${this._activeTab===e.id?"true":"false"}
@@ -11771,10 +11827,10 @@ They'll lose access to shared trips, celebrations and any read-only child access
             ${e.icon}<span>${e.label}</span>
           </button>`)}
       </nav>
-    `}_positionTabSlider({animate:e=!0}={}){this._slideOn(".tabs",".tab-slider",".tab.active",e),this._slideOn(".bottomnav",".bn-slider",".bn-tab.active",e)}_slideOn(e,t,i,r){var d;const a=(d=this.renderRoot)==null?void 0:d.querySelector(e);if(!a)return;const s=a.querySelector(t),o=a.querySelector(i);if(!(!s||!o)&&o.offsetParent!==null){if(!r){const l=s.style.transition;s.style.transition="none",s.style.transform=`translateX(${o.offsetLeft}px)`,s.style.width=`${o.offsetWidth}px`,s.offsetWidth,s.classList.add("ready"),requestAnimationFrame(()=>{s.style.transition=l||""});return}s.classList.add("ready"),s.style.transform=`translateX(${o.offsetLeft}px)`,s.style.width=`${o.offsetWidth}px`}}firstUpdated(e){var t,i,r;if((t=super.firstUpdated)==null||t.call(this,e),this._positionTabSlider({animate:!1}),typeof ResizeObserver<"u"){this._tabsRO=new ResizeObserver(()=>{this._positionTabSlider({animate:!1})});const a=(i=this.renderRoot)==null?void 0:i.querySelector(".tabs"),s=(r=this.renderRoot)==null?void 0:r.querySelector(".bottomnav");a&&this._tabsRO.observe(a),s&&this._tabsRO.observe(s)}}connectedCallback(){super.connectedCallback(),this._pkgTplUnsub=f.packingTemplatesListener(e=>{this._packingTemplates=e})}disconnectedCallback(){var e,t;(e=this._tabsRO)==null||e.disconnect(),this._tabsRO=null,(t=this._pkgTplUnsub)==null||t.call(this),this._pkgTplUnsub=null,super.disconnectedCallback()}_renderBottomNav(){return n`
+    `}_positionTabSlider({animate:e=!0}={}){this._slideOn(".tabs",".tab-slider",".tab.active",e),this._slideOn(".bottomnav",".bn-slider",".bn-tab.active",e)}_slideOn(e,t,i,r){var d;const a=(d=this.renderRoot)==null?void 0:d.querySelector(e);if(!a)return;const s=a.querySelector(t),n=a.querySelector(i);if(!(!s||!n)&&n.offsetParent!==null){if(!r){const l=s.style.transition;s.style.transition="none",s.style.transform=`translateX(${n.offsetLeft}px)`,s.style.width=`${n.offsetWidth}px`,s.offsetWidth,s.classList.add("ready"),requestAnimationFrame(()=>{s.style.transition=l||""});return}s.classList.add("ready"),s.style.transform=`translateX(${n.offsetLeft}px)`,s.style.width=`${n.offsetWidth}px`}}firstUpdated(e){var t,i,r;if((t=super.firstUpdated)==null||t.call(this,e),this._positionTabSlider({animate:!1}),typeof ResizeObserver<"u"){this._tabsRO=new ResizeObserver(()=>{this._positionTabSlider({animate:!1})});const a=(i=this.renderRoot)==null?void 0:i.querySelector(".tabs"),s=(r=this.renderRoot)==null?void 0:r.querySelector(".bottomnav");a&&this._tabsRO.observe(a),s&&this._tabsRO.observe(s)}}connectedCallback(){super.connectedCallback(),this._pkgTplUnsub=f.packingTemplatesListener(e=>{this._packingTemplates=e})}disconnectedCallback(){var e,t;(e=this._tabsRO)==null||e.disconnect(),this._tabsRO=null,(t=this._pkgTplUnsub)==null||t.call(this),this._pkgTplUnsub=null,super.disconnectedCallback()}_renderBottomNav(){return o`
       <nav class="bottomnav" role="tablist" aria-label="Sections">
         <span class="bn-slider" aria-hidden="true"></span>
-        ${this._tabDefs().map(e=>n`<button
+        ${this._tabDefs().map(e=>o`<button
             class="bn-tab ${this._activeTab===e.id?"active":""}"
             role="tab"
             aria-selected=${this._activeTab===e.id?"true":"false"}
@@ -11783,22 +11839,22 @@ They'll lose access to shared trips, celebrations and any read-only child access
             ${e.icon}<span>${e.label}</span>
           </button>`)}
       </nav>
-    `}_restoreActiveTab(){const e=["today","children","pebble","activities","cairn"];try{const t=localStorage.getItem("cairn:activeTab");if(t&&e.includes(t))return t}catch{}return"today"}_renderActiveTab(){switch(this._activeTab){case"children":return this._renderChildrenTab();case"activities":return this._renderActivitiesTab();case"pebble":return this._renderPebbleTab();case"cairn":return this._renderCairnTab();default:return this._renderTodayTab()}}_renderTodayHeader(e=""){var c;const t=(((c=this.user)==null?void 0:c.displayName)??"there").split(" ")[0],i=this._filteredEvents(),r=new Date,a=new Date(r.getFullYear(),r.getMonth(),1),s=new Date(r.getFullYear(),r.getMonth()+1,0),o=i.filter(p=>{const h=M(p.date);return h&&h.getFullYear()===r.getFullYear()&&h.getMonth()===r.getMonth()}),l=this._circleTrips().filter(p=>{if(!p.start||!p.end)return!1;const h=M(p.start),u=M(p.end);return Number.isNaN(h.getTime())||Number.isNaN(u.getTime())?!1:h<=s&&u>=a}).length+o.length;return n`
+    `}_restoreActiveTab(){const e=["today","children","pebble","activities","cairn"];try{const t=localStorage.getItem("cairn:activeTab");if(t&&e.includes(t))return t}catch{}return"today"}_renderActiveTab(){switch(this._activeTab){case"children":return this._renderChildrenTab();case"activities":return this._renderActivitiesTab();case"pebble":return this._renderPebbleTab();case"cairn":return this._renderCairnTab();default:return this._renderTodayTab()}}_renderTodayHeader(e=""){var c;const t=(((c=this.user)==null?void 0:c.displayName)??"there").split(" ")[0],i=this._filteredEvents(),r=new Date,a=new Date(r.getFullYear(),r.getMonth(),1),s=new Date(r.getFullYear(),r.getMonth()+1,0),n=i.filter(p=>{const h=M(p.date);return h&&h.getFullYear()===r.getFullYear()&&h.getMonth()===r.getMonth()}),l=this._circleTrips().filter(p=>{if(!p.start||!p.end)return!1;const h=M(p.start),u=M(p.end);return Number.isNaN(h.getTime())||Number.isNaN(u.getTime())?!1:h<=s&&u>=a}).length+n.length;return o`
         <div class="hello">
           <div>
             <h1>Hi ${t}.</h1>
-            ${(()=>{const p=this._smartCallout();return p?n`<div class="smart">${p}</div>`:""})()}
-            ${l>0?n`<div class="stat">
+            ${(()=>{const p=this._smartCallout();return p?o`<div class="smart">${p}</div>`:""})()}
+            ${l>0?o`<div class="stat">
                   <span>${l}</span> ${l===1?"activity":"activities"} this month
                 </div>`:""}
-            ${this.family?this._editingFamilyName?n`<input
+            ${this.family?this._editingFamilyName?o`<input
                     class="family-name-input"
                     type="text"
                     .value=${this.family.name??""}
                     autofocus
                     @blur=${this._saveFamilyName}
                     @keydown=${p=>{p.key==="Enter"&&p.target.blur(),p.key==="Escape"&&(p.target.value=this.family.name??"",this._editingFamilyName=!1)}}
-                  />`:n`<div
+                  />`:o`<div
                     class="family-name"
                     title="Click to rename"
                     @click=${()=>this._editingFamilyName=!0}
@@ -11808,15 +11864,15 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
           ${e}
         </div>
-    `}_renderTabHeader(e,t,i=""){return n`
+    `}_renderTabHeader(e,t,i=""){return o`
         <div class="hello">
           <div>
             <h1>${e}</h1>
-            ${t?n`<div class="page-sub">${t}</div>`:""}
+            ${t?o`<div class="page-sub">${t}</div>`:""}
           </div>
           ${i}
         </div>
-    `}_renderComingUpSection(){const e=this._filteredTrips(),t=this._liveImmediate().concat(this._liveExtended());return n`
+    `}_renderComingUpSection(){const e=this._filteredTrips(),t=this._liveImmediate().concat(this._liveExtended());return o`
         <section>
           <div class="section-head">
             <h2>Coming up</h2>
@@ -11833,12 +11889,12 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M8 8l4-4 4 4"/><path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
                 Smart Upload
               </button>
-              ${this._circleTrips().length>4?n`<button class="link" @click=${()=>this._allTripsOpen=!0}>
+              ${this._circleTrips().length>4?o`<button class="link" @click=${()=>this._allTripsOpen=!0}>
                     All trips →
                   </button>`:""}
             </div>
           </div>
-          ${e.length===0?n`
+          ${e.length===0?o`
                 <glass-panel padding="lg" variant="strong">
                   <div class="empty-hero">
                     <div class="empty-icon" aria-hidden="true">
@@ -11868,9 +11924,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     </div>
                   </div>
                 </glass-panel>
-              `:n`
+              `:o`
                 <div class="trips-row">
-                  ${e.map(i=>n`<trip-card
+                  ${e.map(i=>o`<trip-card
                       .trip=${i}
                       .members=${t}
                       @open-planner=${r=>this._openPlanner(r.detail)}
@@ -11879,7 +11935,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 </div>
               `}
         </section>
-    `}_resetCalToToday(){const e=new Date;if(this._calendarView==="week"){const t=new Date(e.getFullYear(),e.getMonth(),e.getDate());t.setDate(t.getDate()-t.getDay()),this._displayWeekStart=t}else this._calendarView==="year"?this._displayMonth=new Date(e.getFullYear(),0,1):this._resetToToday()}_calToolbarPrev(){var e;if(this._calendarView==="week"){const t=new Date(this._displayWeekStart);t.setDate(t.getDate()-7),this._displayWeekStart=t}else if(this._calendarView==="year"){const t=((e=this._displayMonth)==null?void 0:e.getFullYear())??new Date().getFullYear();this._displayMonth=new Date(t-1,0,1)}else this._shiftMonth(-1)}_calToolbarNext(){var e;if(this._calendarView==="week"){const t=new Date(this._displayWeekStart);t.setDate(t.getDate()+7),this._displayWeekStart=t}else if(this._calendarView==="year"){const t=((e=this._displayMonth)==null?void 0:e.getFullYear())??new Date().getFullYear();this._displayMonth=new Date(t+1,0,1)}else this._shiftMonth(1)}_openItem(e){if(!e||!e.ref)return;if(e.cat==="trip"){this._openPlanner(e.ref);return}if(e.src==="activity"){this._openEditActivity(e.ref);return}(e.cat==="event"&&!e.ref.tripId||e.cat==="celebrate")&&this._openEditEvent(e.ref)}_eventCalCat(e){const t=e==null?void 0:e.category;return t==="plan"||t==="activity"?"event":t==="celebration"||(e==null?void 0:e.type)==="birthday"||(e==null?void 0:e.type)==="anniversary"?"celebrate":"event"}_isCelebrationEvent(e){return this._eventCalCat(e)==="celebrate"}_eventTags(){const e=new Set;for(const t of this._filteredEvents()){const i=String((t==null?void 0:t.calTag)??"").trim();i&&e.add(i)}for(const t of this.activities??[]){if(t!=null&&t.tripId)continue;const i=String((t==null?void 0:t.calTag)??"").trim();i&&e.add(i)}return[...e].sort((t,i)=>t.localeCompare(i))}_tagVisible(e){const t=String((e==null?void 0:e.calTag)??"").trim();return t?this._calFilters["tag:"+t]!==!1:!0}_dominantCategoryForDay(e){if(!e)return null;const t=e.getFullYear(),i=e.getMonth(),r=e.getDate();if(this._calFilters.trip)for(const o of this._circleTrips()){if(!o.start||!o.end)continue;const d=M(o.start),l=M(o.end);if(!(!d||!l)&&e>=d&&e<=l)return"trip"}if(this._calFilters.holiday)for(const o of this.holidays??[]){const d=M(o.date);if(d&&d.getFullYear()===t&&d.getMonth()===i&&d.getDate()===r)return"holiday"}let a=!1,s=!1;for(const o of this._filteredEvents()){const d=M(o.date);if(!d||d.getFullYear()!==t||d.getMonth()!==i||d.getDate()!==r||!this._tagVisible(o))continue;this._eventCalCat(o)==="celebrate"?a=!0:s=!0}for(const o of this._standaloneActivities()){const d=M(o.day);if(d&&d.getFullYear()===t&&d.getMonth()===i&&d.getDate()===r){s=!0;break}}return a&&this._calFilters.celebrate?"celebrate":s&&this._calFilters.event?"event":null}_renderCalToolbar(e,t){var s;let i="",r="";if(e==="week"){const o=new Date(this._displayWeekStart),d=new Date(o);d.setDate(o.getDate()+6);const l=p=>p.toLocaleDateString("en-GB",{month:"short",day:"numeric"});i=o.getMonth()===d.getMonth()&&o.getFullYear()===d.getFullYear()?`${l(o)} – ${d.getDate()}`:`${l(o)} – ${l(d)}`,r=String(o.getFullYear())}else if(e==="year"){const o=((s=this._displayMonth)==null?void 0:s.getFullYear())??t.getFullYear();i=String(o),r="Tap a month to open it"}else{const o=this._displayMonth??t;i=o.toLocaleString("en-GB",{month:"long",year:"numeric"}),r=String(o.getFullYear())}return n`
+    `}_resetCalToToday(){const e=new Date;if(this._calendarView==="week"){const t=new Date(e.getFullYear(),e.getMonth(),e.getDate());t.setDate(t.getDate()-t.getDay()),this._displayWeekStart=t}else this._calendarView==="year"?this._displayMonth=new Date(e.getFullYear(),0,1):this._resetToToday()}_calToolbarPrev(){var e;if(this._calendarView==="week"){const t=new Date(this._displayWeekStart);t.setDate(t.getDate()-7),this._displayWeekStart=t}else if(this._calendarView==="year"){const t=((e=this._displayMonth)==null?void 0:e.getFullYear())??new Date().getFullYear();this._displayMonth=new Date(t-1,0,1)}else this._shiftMonth(-1)}_calToolbarNext(){var e;if(this._calendarView==="week"){const t=new Date(this._displayWeekStart);t.setDate(t.getDate()+7),this._displayWeekStart=t}else if(this._calendarView==="year"){const t=((e=this._displayMonth)==null?void 0:e.getFullYear())??new Date().getFullYear();this._displayMonth=new Date(t+1,0,1)}else this._shiftMonth(1)}_openItem(e){if(!e||!e.ref)return;if(e.cat==="trip"){this._openPlanner(e.ref);return}if(e.src==="activity"){this._openEditActivity(e.ref);return}(e.cat==="event"&&!e.ref.tripId||e.cat==="celebrate")&&this._openEditEvent(e.ref)}_eventCalCat(e){const t=e==null?void 0:e.category;return t==="plan"||t==="activity"?"event":t==="celebration"||(e==null?void 0:e.type)==="birthday"||(e==null?void 0:e.type)==="anniversary"?"celebrate":"event"}_isCelebrationEvent(e){return this._eventCalCat(e)==="celebrate"}_eventTags(){const e=new Set;for(const t of this._filteredEvents()){const i=String((t==null?void 0:t.calTag)??"").trim();i&&e.add(i)}for(const t of this.activities??[]){if(t!=null&&t.tripId)continue;const i=String((t==null?void 0:t.calTag)??"").trim();i&&e.add(i)}return[...e].sort((t,i)=>t.localeCompare(i))}_tagVisible(e){const t=String((e==null?void 0:e.calTag)??"").trim();return t?this._calFilters["tag:"+t]!==!1:!0}_dominantCategoryForDay(e){if(!e)return null;const t=e.getFullYear(),i=e.getMonth(),r=e.getDate();if(this._calFilters.trip)for(const n of this._circleTrips()){if(!n.start||!n.end)continue;const d=M(n.start),l=M(n.end);if(!(!d||!l)&&e>=d&&e<=l)return"trip"}if(this._calFilters.holiday)for(const n of this.holidays??[]){const d=M(n.date);if(d&&d.getFullYear()===t&&d.getMonth()===i&&d.getDate()===r)return"holiday"}let a=!1,s=!1;for(const n of this._filteredEvents()){const d=M(n.date);if(!d||d.getFullYear()!==t||d.getMonth()!==i||d.getDate()!==r||!this._tagVisible(n))continue;this._eventCalCat(n)==="celebrate"?a=!0:s=!0}for(const n of this._standaloneActivities()){const d=M(n.day);if(d&&d.getFullYear()===t&&d.getMonth()===i&&d.getDate()===r){s=!0;break}}return a&&this._calFilters.celebrate?"celebrate":s&&this._calFilters.event?"event":null}_renderCalToolbar(e,t){var s;let i="",r="";if(e==="week"){const n=new Date(this._displayWeekStart),d=new Date(n);d.setDate(n.getDate()+6);const l=p=>p.toLocaleDateString("en-GB",{month:"short",day:"numeric"});i=n.getMonth()===d.getMonth()&&n.getFullYear()===d.getFullYear()?`${l(n)} – ${d.getDate()}`:`${l(n)} – ${l(d)}`,r=String(n.getFullYear())}else if(e==="year"){const n=((s=this._displayMonth)==null?void 0:s.getFullYear())??t.getFullYear();i=String(n),r="Tap a month to open it"}else{const n=this._displayMonth??t;i=n.toLocaleString("en-GB",{month:"long",year:"numeric"}),r=String(n.getFullYear())}return o`
       <div class="cal-tb">
         <div class="cal-tb-l">
           <button class="cal-today-btn" @click=${()=>this._resetCalToToday()}>Today</button>
@@ -11898,13 +11954,13 @@ They'll lose access to shared trips, celebrations and any read-only child access
         </div>
         <div class="cal-tb-r">
           <div class="cal-vswitch" role="tablist" aria-label="Calendar view">
-            ${[{id:"week",label:"Week"},{id:"month",label:"Month"},{id:"year",label:"Year"}].map(o=>n`
+            ${[{id:"week",label:"Week"},{id:"month",label:"Month"},{id:"year",label:"Year"}].map(n=>o`
                 <button
                   role="tab"
-                  aria-selected=${e===o.id?"true":"false"}
-                  class=${e===o.id?"on":""}
-                  @click=${()=>this._calendarView=o.id}
-                >${o.label}</button>
+                  aria-selected=${e===n.id?"true":"false"}
+                  class=${e===n.id?"on":""}
+                  @click=${()=>this._calendarView=n.id}
+                >${n.label}</button>
               `)}
           </div>
           <button class="cal-add cal-add--icon" @click=${()=>this._openCreate()} aria-label="Add to calendar" title="Add to calendar">
@@ -11912,7 +11968,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </button>
         </div>
       </div>
-    `}_renderCalMini(e){const t=this._displayMonth??e,i=t.getFullYear(),r=t.getMonth(),a=t.toLocaleString("en-GB",{month:"long",year:"numeric"}),s=new Date(i,r,1).getDay(),o=new Date(i,r+1,0).getDate(),d=new Date(i,r,0).getDate(),l=[];for(let h=s-1;h>=0;h--){const u=d-h;l.push({day:u,muted:!0,real:new Date(i,r-1,u)})}for(let h=1;h<=o;h++)l.push({day:h,muted:!1,real:new Date(i,r,h)});let c=1;for(;l.length<42;)l.push({day:c,muted:!0,real:new Date(i,r+1,c)}),c++;const p=(h,u)=>h.getFullYear()===u.getFullYear()&&h.getMonth()===u.getMonth()&&h.getDate()===u.getDate();return n`
+    `}_renderCalMini(e){const t=this._displayMonth??e,i=t.getFullYear(),r=t.getMonth(),a=t.toLocaleString("en-GB",{month:"long",year:"numeric"}),s=new Date(i,r,1).getDay(),n=new Date(i,r+1,0).getDate(),d=new Date(i,r,0).getDate(),l=[];for(let h=s-1;h>=0;h--){const u=d-h;l.push({day:u,muted:!0,real:new Date(i,r-1,u)})}for(let h=1;h<=n;h++)l.push({day:h,muted:!1,real:new Date(i,r,h)});let c=1;for(;l.length<42;)l.push({day:c,muted:!0,real:new Date(i,r+1,c)}),c++;const p=(h,u)=>h.getFullYear()===u.getFullYear()&&h.getMonth()===u.getMonth()&&h.getDate()===u.getDate();return o`
       <div class="cal-mini">
         <div class="cal-mini-top">
           <span class="mm">${a}</span>
@@ -11929,16 +11985,16 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
         </div>
         <div class="cal-mini-grid">
-          ${l.map(h=>{const u=p(h.real,e),b=u?null:this._dominantCategoryForDay(h.real),w=["cal-mini-d",h.muted?"muted":"",u?"today":""].filter(Boolean).join(" ");return n`<div
+          ${l.map(h=>{const u=p(h.real,e),b=u?null:this._dominantCategoryForDay(h.real),w=["cal-mini-d",h.muted?"muted":"",u?"today":""].filter(Boolean).join(" ");return o`<div
               class=${w}
               @click=${()=>{this._displayMonth=new Date(h.real.getFullYear(),h.real.getMonth(),1),this._calendarView="month"}}
             >
               ${h.day}
-              ${b?n`<span class=${"dot cat-"+b}></span>`:""}
+              ${b?o`<span class=${"dot cat-"+b}></span>`:""}
             </div>`})}
         </div>
       </div>
-    `}_renderCalFilters(){var c;const e=this._circleTrips(),t=this._filteredEvents(),i=t.filter(p=>this._eventCalCat(p)==="celebrate"),r=((c=this._displayMonth)==null?void 0:c.getFullYear())??new Date().getFullYear(),a=(this.holidays??[]).filter(p=>{var h;return((h=M(p.date))==null?void 0:h.getFullYear())===r}),s=[{id:"trip",label:"Trips",count:e.length},{id:"holiday",label:"Holidays",count:a.length},{id:"event",label:"Activities",count:this._calendarActivities().length},{id:"celebrate",label:"Celebrations",count:i.length}],o=this._eventTags(),d=p=>t.filter(h=>String((h==null?void 0:h.calTag)??"").trim()===p).length+(this.activities??[]).filter(h=>!(h!=null&&h.tripId)&&String((h==null?void 0:h.calTag)??"").trim()===p).length,l=(p,h,u,b)=>{const w=this._calFilters[h]!==!1;return n`
+    `}_renderCalFilters(){var c;const e=this._circleTrips(),t=this._filteredEvents(),i=t.filter(p=>this._eventCalCat(p)==="celebrate"),r=((c=this._displayMonth)==null?void 0:c.getFullYear())??new Date().getFullYear(),a=(this.holidays??[]).filter(p=>{var h;return((h=M(p.date))==null?void 0:h.getFullYear())===r}),s=[{id:"trip",label:"Trips",count:e.length},{id:"holiday",label:"Holidays",count:a.length},{id:"event",label:"Activities",count:this._calendarActivities().length},{id:"celebrate",label:"Celebrations",count:i.length}],n=this._eventTags(),d=p=>t.filter(h=>String((h==null?void 0:h.calTag)??"").trim()===p).length+(this.activities??[]).filter(h=>!(h!=null&&h.tripId)&&String((h==null?void 0:h.calTag)??"").trim()===p).length,l=(p,h,u,b)=>{const w=this._calFilters[h]!==!1;return o`
         <div
           class=${"cal-filt "+p+(w?"":" off")}
           @click=${()=>this._calFilters={...this._calFilters,[h]:!w}}
@@ -11948,17 +12004,17 @@ They'll lose access to shared trips, celebrations and any read-only child access
           @keydown=${v=>{(v.key===" "||v.key==="Enter")&&(v.preventDefault(),this._calFilters={...this._calFilters,[h]:!w})}}
         >
           <span class="sw">
-            ${w?n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`:""}
+            ${w?o`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`:""}
           </span>
           <span class="nm">${u}</span>
           <span class="ct">${b}</span>
         </div>
-      `};return n`
+      `};return o`
       <div class="cal-side-h">Calendars</div>
       <div class="cal-filt-list">
         ${s.map(p=>l("cat-"+p.id,p.id,p.label,p.count))}
       </div>
-      ${o.length?n`
+      ${n.length?o`
             <div class="cal-side-h cal-side-h--tags">
               <span>Tags</span>
               <button
@@ -11969,10 +12025,10 @@ They'll lose access to shared trips, celebrations and any read-only child access
               </button>
             </div>
             <div class="cal-filt-list">
-              ${this._managingTags?o.map(p=>this._renderTagManageRow(p,d(p))):o.map(p=>l("cat-tag","tag:"+p,p,d(p)))}
+              ${this._managingTags?n.map(p=>this._renderTagManageRow(p,d(p))):n.map(p=>l("cat-tag","tag:"+p,p,d(p)))}
             </div>
           `:""}
-    `}_renderTagManageRow(e,t){return this._tagRenaming===e?n`
+    `}_renderTagManageRow(e,t){return this._tagRenaming===e?o`
         <div class="tag-row tag-row--edit">
           <input
             class="tag-rename-in"
@@ -11999,7 +12055,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
-      `:this._tagDeleting===e?n`
+      `:this._tagDeleting===e?o`
         <div class="tag-row tag-row--confirm">
           <span class="tag-confirm-txt">Remove "${e}"? Events stay, they just lose this tag.</span>
           <div class="tag-confirm-actions">
@@ -12014,7 +12070,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             </button>
           </div>
         </div>
-      `:n`
+      `:o`
       <div class="tag-row">
         <span class="tag-name" title=${e}>${e}</span>
         <span class="tag-count">${t}</span>
@@ -12035,11 +12091,11 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
         </button>
       </div>
-    `}_startTagRename(e){this._tagDeleting=null,this._tagRenameDraft=e,this._tagRenaming=e}async _commitTagRename(e){const t=String(this._tagRenameDraft??"").trim().slice(0,60);if(this._tagRenaming=null,!(!t||t===e))try{const i=await f.renameCalTag(e,t);y(`Renamed tag to "${t}" on ${i} item${i===1?"":"s"}.`)}catch(i){console.error("renameCalTag failed:",i),y("Couldn't rename the tag, try again.")}}async _doDeleteTag(e){this._tagDeleting=null;try{const t=await f.deleteCalTag(e);y(`Removed the "${e}" tag from ${t} item${t===1?"":"s"}.`),this._eventTags().length===0&&(this._managingTags=!1)}catch(t){console.error("deleteCalTag failed:",t),y("Couldn't remove the tag, try again.")}}_assignLanes(e){const t=[...e].sort((r,a)=>r.colStart-a.colStart||a.span-r.span),i=[];for(const r of t){let a=!1;for(let s=0;s<i.length;s++)if(i[s]<=r.colStart){r.lane=s+1,i[s]=r.colStart+r.span,a=!0;break}a||(r.lane=i.length+1,i.push(r.colStart+r.span))}return t}_renderCalWeek(e){const t=new Date(this._displayWeekStart);t.setHours(0,0,0,0);const i=new Date(t);i.setDate(t.getDate()+6),i.setHours(23,59,59,999);const r=Array.from({length:7},(v,_)=>{const I=new Date(t);return I.setDate(t.getDate()+_),I}),a=(v,_)=>v.getFullYear()===_.getFullYear()&&v.getMonth()===_.getMonth()&&v.getDate()===_.getDate(),s=[];if(this._calFilters.trip)for(const v of this._circleTrips()){if(!v.start||!v.end)continue;const _=M(v.start),I=M(v.end);if(!_||!I||I<t||_>i)continue;const A=_<t?t:_,S=I>i?i:I,L=A.getDay()+2,U=Math.round((S-A)/(1440*60*1e3)),G=Math.max(1,U+1);s.push({cat:"trip",title:v.title||"Trip",colStart:L,span:G,ref:v})}for(const v of this._filteredEvents()){const _=M(v.date);if(!_||_<t||_>i||!this._tagVisible(v))continue;const I=this._eventCalCat(v);I!=="event"&&this._calFilters[I]&&s.push({cat:I,title:v.title||(I==="celebrate"?"Celebration":"Event"),colStart:_.getDay()+2,span:1,ref:v})}if(this._calFilters.event)for(const v of this._calendarActivities()){const _=M(v.day);!_||_<t||_>i||v.time&&String(v.time).trim()!==""||s.push({cat:"event",title:v.title||"Activity",colStart:_.getDay()+2,span:1,ref:v,src:"activity"})}if(this._calFilters.holiday)for(const v of this.holidays??[]){const _=M(v.date);_&&(_<t||_>i||s.push({cat:"holiday",title:v.title||"Holiday",colStart:_.getDay()+2,span:1,ref:v}))}const o=this._assignLanes(s).slice(0,60),d=[8,9,10,11,12,13,14,15,16,17,18,19],l=52,c=(v,_)=>{const I=v<12?"AM":"PM";return`${(v+11)%12+1}:${String(_).padStart(2,"0")} ${I}`},p=Array.from({length:7},()=>[]);if(this._calFilters.event)for(const v of this._calendarActivities()){if(!v||!v.day)continue;const _=M(v.day);if(!_||_<t||_>i)continue;const I=String(v.time??"").trim();if(!I)continue;const A=I.match(/^(\d{1,2}):(\d{2})/);if(!A)continue;const S=Number(A[1]),L=Number(A[2]);if(S<8||S>=20)continue;const U=(S-8)*l+L/60*l,G=Number.isFinite(v.durationMins)?v.durationMins:60,P=Math.max(24,G/60*l),F=S*60+L+G,B=Math.floor(F/60),Q=F%60,xe=`${c(S,L)} – ${c(B,Q)}`;p[_.getDay()].push({cat:"event",title:v.title||"Activity",top:U,height:P,timeLabel:xe,ref:v,src:"activity"})}const h=new Date;let u=-1,b=null;if(h>=t&&h<=i){const v=h.getHours(),_=h.getMinutes();v>=8&&v<20&&(u=h.getDay(),b=(v-8)*l+_/60*l)}const w=Math.max(1,Math.min(3,o.reduce((v,_)=>Math.max(v,_.lane),0)));return n`
+    `}_startTagRename(e){this._tagDeleting=null,this._tagRenameDraft=e,this._tagRenaming=e}async _commitTagRename(e){const t=String(this._tagRenameDraft??"").trim().slice(0,60);if(this._tagRenaming=null,!(!t||t===e))try{const i=await f.renameCalTag(e,t);y(`Renamed tag to "${t}" on ${i} item${i===1?"":"s"}.`)}catch(i){console.error("renameCalTag failed:",i),y("Couldn't rename the tag, try again.")}}async _doDeleteTag(e){this._tagDeleting=null;try{const t=await f.deleteCalTag(e);y(`Removed the "${e}" tag from ${t} item${t===1?"":"s"}.`),this._eventTags().length===0&&(this._managingTags=!1)}catch(t){console.error("deleteCalTag failed:",t),y("Couldn't remove the tag, try again.")}}_assignLanes(e){const t=[...e].sort((r,a)=>r.colStart-a.colStart||a.span-r.span),i=[];for(const r of t){let a=!1;for(let s=0;s<i.length;s++)if(i[s]<=r.colStart){r.lane=s+1,i[s]=r.colStart+r.span,a=!0;break}a||(r.lane=i.length+1,i.push(r.colStart+r.span))}return t}_renderCalWeek(e){const t=new Date(this._displayWeekStart);t.setHours(0,0,0,0);const i=new Date(t);i.setDate(t.getDate()+6),i.setHours(23,59,59,999);const r=Array.from({length:7},(v,_)=>{const I=new Date(t);return I.setDate(t.getDate()+_),I}),a=(v,_)=>v.getFullYear()===_.getFullYear()&&v.getMonth()===_.getMonth()&&v.getDate()===_.getDate(),s=[];if(this._calFilters.trip)for(const v of this._circleTrips()){if(!v.start||!v.end)continue;const _=M(v.start),I=M(v.end);if(!_||!I||I<t||_>i)continue;const P=_<t?t:_,A=I>i?i:I,L=P.getDay()+2,U=Math.round((A-P)/(1440*60*1e3)),G=Math.max(1,U+1);s.push({cat:"trip",title:v.title||"Trip",colStart:L,span:G,ref:v})}for(const v of this._filteredEvents()){const _=M(v.date);if(!_||_<t||_>i||!this._tagVisible(v))continue;const I=this._eventCalCat(v);I!=="event"&&this._calFilters[I]&&s.push({cat:I,title:v.title||(I==="celebrate"?"Celebration":"Event"),colStart:_.getDay()+2,span:1,ref:v})}if(this._calFilters.event)for(const v of this._calendarActivities()){const _=M(v.day);!_||_<t||_>i||v.time&&String(v.time).trim()!==""||s.push({cat:"event",title:v.title||"Activity",colStart:_.getDay()+2,span:1,ref:v,src:"activity"})}if(this._calFilters.holiday)for(const v of this.holidays??[]){const _=M(v.date);_&&(_<t||_>i||s.push({cat:"holiday",title:v.title||"Holiday",colStart:_.getDay()+2,span:1,ref:v}))}const n=this._assignLanes(s).slice(0,60),d=[8,9,10,11,12,13,14,15,16,17,18,19],l=52,c=(v,_)=>{const I=v<12?"AM":"PM";return`${(v+11)%12+1}:${String(_).padStart(2,"0")} ${I}`},p=Array.from({length:7},()=>[]);if(this._calFilters.event)for(const v of this._calendarActivities()){if(!v||!v.day)continue;const _=M(v.day);if(!_||_<t||_>i)continue;const I=String(v.time??"").trim();if(!I)continue;const P=I.match(/^(\d{1,2}):(\d{2})/);if(!P)continue;const A=Number(P[1]),L=Number(P[2]);if(A<8||A>=20)continue;const U=(A-8)*l+L/60*l,G=Number.isFinite(v.durationMins)?v.durationMins:60,S=Math.max(24,G/60*l),F=A*60+L+G,B=Math.floor(F/60),Q=F%60,xe=`${c(A,L)} – ${c(B,Q)}`;p[_.getDay()].push({cat:"event",title:v.title||"Activity",top:U,height:S,timeLabel:xe,ref:v,src:"activity"})}const h=new Date;let u=-1,b=null;if(h>=t&&h<=i){const v=h.getHours(),_=h.getMinutes();v>=8&&v<20&&(u=h.getDay(),b=(v-8)*l+_/60*l)}const w=Math.max(1,Math.min(3,n.reduce((v,_)=>Math.max(v,_.lane),0)));return o`
       <div class="cal-week">
         <div class="wk-head">
           <div class="gut"></div>
-          ${r.map(v=>{const _=a(v,e),I=v.toLocaleDateString("en-GB",{weekday:"short"});return n`<div class=${"wk-h"+(_?" today":"")}>
+          ${r.map(v=>{const _=a(v,e),I=v.toLocaleDateString("en-GB",{weekday:"short"});return o`<div class=${"wk-h"+(_?" today":"")}>
               <div class="dw">${I}</div>
               <div class="nm">${v.getDate()}</div>
             </div>`})}
@@ -12049,7 +12105,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           style="grid-template-rows: repeat(${w}, 23px);"
         >
           <div class="ad-lbl">All-day</div>
-          ${o.filter(v=>v.lane<=3).map(v=>n`<div
+          ${n.filter(v=>v.lane<=3).map(v=>o`<div
                 class=${"ad cat-"+v.cat}
                 style=${`grid-column:${v.colStart} / span ${v.span}; grid-row:${v.lane};`}
                 title=${v.title}
@@ -12058,56 +12114,56 @@ They'll lose access to shared trips, celebrations and any read-only child access
         </div>
         <div class="cal-tg">
           <div class="tg-gut">
-            ${d.map(v=>{const _=v<12?"AM":"PM",I=(v+11)%12+1;return n`<div class="tg-hr">${I} ${_}</div>`})}
+            ${d.map(v=>{const _=v<12?"AM":"PM",I=(v+11)%12+1;return o`<div class="tg-hr">${I} ${_}</div>`})}
           </div>
-          ${r.map((v,_)=>{const I=a(v,e),A=_===u&&b!=null;return n`<div class=${"tg-day"+(I?" today":"")}>
-              ${A?n`<div class="nowline" style=${`top:${b}px;`}></div>`:""}
-              ${p[_].map(S=>n`<div
-                  class=${"tev cat-"+S.cat}
-                  style=${`top:${S.top}px; height:${S.height}px;`}
-                  title=${S.title}
-                  @click=${()=>this._openItem(S)}
+          ${r.map((v,_)=>{const I=a(v,e),P=_===u&&b!=null;return o`<div class=${"tg-day"+(I?" today":"")}>
+              ${P?o`<div class="nowline" style=${`top:${b}px;`}></div>`:""}
+              ${p[_].map(A=>o`<div
+                  class=${"tev cat-"+A.cat}
+                  style=${`top:${A.top}px; height:${A.height}px;`}
+                  title=${A.title}
+                  @click=${()=>this._openItem(A)}
                 >
-                  <div class="tt">${S.title}</div>
-                  <div class="tm">${S.timeLabel}</div>
+                  <div class="tt">${A.title}</div>
+                  <div class="tm">${A.timeLabel}</div>
                 </div>`)}
             </div>`})}
         </div>
       </div>
-    `}_renderCalMonth(e){const t=this._displayMonth??e,i=t.getFullYear(),r=t.getMonth(),a=new Date(i,r,1).getDay(),s=new Date(i,r+1,0).getDate(),o=new Date(i,r,0).getDate(),d=[];for(let v=a-1;v>=0;v--){const _=o-v;d.push({real:new Date(i,r-1,_),muted:!0})}for(let v=1;v<=s;v++)d.push({real:new Date(i,r,v),muted:!1});let l=1;for(;d.length<42;)d.push({real:new Date(i,r+1,l),muted:!0}),l++;const c=[];for(let v=0;v<6;v++)c.push(d.slice(v*7,v*7+7));const p=(v,_)=>v.getFullYear()===_.getFullYear()&&v.getMonth()===_.getMonth()&&v.getDate()===_.getDate(),h=(v,_)=>Math.round((new Date(v.getFullYear(),v.getMonth(),v.getDate())-new Date(_.getFullYear(),_.getMonth(),_.getDate()))/(1440*60*1e3)),u=this._circleTrips(),b=this._filteredEvents(),w=this.holidays??[];return n`
+    `}_renderCalMonth(e){const t=this._displayMonth??e,i=t.getFullYear(),r=t.getMonth(),a=new Date(i,r,1).getDay(),s=new Date(i,r+1,0).getDate(),n=new Date(i,r,0).getDate(),d=[];for(let v=a-1;v>=0;v--){const _=n-v;d.push({real:new Date(i,r-1,_),muted:!0})}for(let v=1;v<=s;v++)d.push({real:new Date(i,r,v),muted:!1});let l=1;for(;d.length<42;)d.push({real:new Date(i,r+1,l),muted:!0}),l++;const c=[];for(let v=0;v<6;v++)c.push(d.slice(v*7,v*7+7));const p=(v,_)=>v.getFullYear()===_.getFullYear()&&v.getMonth()===_.getMonth()&&v.getDate()===_.getDate(),h=(v,_)=>Math.round((new Date(v.getFullYear(),v.getMonth(),v.getDate())-new Date(_.getFullYear(),_.getMonth(),_.getDate()))/(1440*60*1e3)),u=this._circleTrips(),b=this._filteredEvents(),w=this.holidays??[];return o`
       <div class="cal-month">
         <div class="m-dow">
           <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
         </div>
         <div class="m-grid">
-          ${c.map(v=>{const _=v[0].real,I=v[6].real,A=[];if(this._calFilters.trip)for(const P of u){if(!P.start||!P.end)continue;const F=M(P.start),B=M(P.end);if(!F||!B||B<_||F>I)continue;const Q=Math.max(0,h(F,_)),xe=Math.min(6,h(B,_));A.push({cat:"trip",title:P.title||"Trip",colStart:Q+1,span:xe-Q+1,ref:P})}for(const P of b){const F=M(P.date);if(!F||F<_||F>I||!this._tagVisible(P))continue;const B=this._eventCalCat(P);B!=="event"&&this._calFilters[B]&&A.push({cat:B,title:P.title||(B==="celebrate"?"Celebration":"Event"),colStart:h(F,_)+1,span:1,ref:P})}if(this._calFilters.event)for(const P of this._calendarActivities()){const F=M(P.day);!F||F<_||F>I||A.push({cat:"event",title:P.title||"Activity",colStart:h(F,_)+1,span:1,ref:P,src:"activity"})}if(this._calFilters.holiday)for(const P of w){const F=M(P.date);F&&(F<_||F>I||A.push({cat:"holiday",title:P.title||"Holiday",colStart:h(F,_)+1,span:1,ref:P}))}const S=this._assignLanes(A),L=S.filter(P=>P.lane<=3),U=S.filter(P=>P.lane>3),G=new Map;for(const P of U)for(let F=P.colStart;F<P.colStart+P.span;F++)G.set(F,(G.get(F)??0)+1);return n`<div class="wkrow">
+          ${c.map(v=>{const _=v[0].real,I=v[6].real,P=[];if(this._calFilters.trip)for(const S of u){if(!S.start||!S.end)continue;const F=M(S.start),B=M(S.end);if(!F||!B||B<_||F>I)continue;const Q=Math.max(0,h(F,_)),xe=Math.min(6,h(B,_));P.push({cat:"trip",title:S.title||"Trip",colStart:Q+1,span:xe-Q+1,ref:S})}for(const S of b){const F=M(S.date);if(!F||F<_||F>I||!this._tagVisible(S))continue;const B=this._eventCalCat(S);B!=="event"&&this._calFilters[B]&&P.push({cat:B,title:S.title||(B==="celebrate"?"Celebration":"Event"),colStart:h(F,_)+1,span:1,ref:S})}if(this._calFilters.event)for(const S of this._calendarActivities()){const F=M(S.day);!F||F<_||F>I||P.push({cat:"event",title:S.title||"Activity",colStart:h(F,_)+1,span:1,ref:S,src:"activity"})}if(this._calFilters.holiday)for(const S of w){const F=M(S.date);F&&(F<_||F>I||P.push({cat:"holiday",title:S.title||"Holiday",colStart:h(F,_)+1,span:1,ref:S}))}const A=this._assignLanes(P),L=A.filter(S=>S.lane<=3),U=A.filter(S=>S.lane>3),G=new Map;for(const S of U)for(let F=S.colStart;F<S.colStart+S.span;F++)G.set(F,(G.get(F)??0)+1);return o`<div class="wkrow">
               <div class="dnums">
-                ${v.map(P=>{const F=p(P.real,e),B=["dcell",P.muted?"muted":"",F?"today":""].filter(Boolean).join(" ");return n`<div class=${B}>
-                    <span class="dn">${P.real.getDate()}</span>
+                ${v.map(S=>{const F=p(S.real,e),B=["dcell",S.muted?"muted":"",F?"today":""].filter(Boolean).join(" ");return o`<div class=${B}>
+                    <span class="dn">${S.real.getDate()}</span>
                   </div>`})}
               </div>
               <div class="devents">
-                ${L.map(P=>n`<div
-                    class=${"ev cat-"+P.cat+(P.span>1?" span":"")}
-                    style=${`grid-column:${P.colStart} / span ${P.span}; grid-row:${P.lane};`}
-                    title=${P.title}
-                    @click=${()=>this._openItem(P)}
+                ${L.map(S=>o`<div
+                    class=${"ev cat-"+S.cat+(S.span>1?" span":"")}
+                    style=${`grid-column:${S.colStart} / span ${S.span}; grid-row:${S.lane};`}
+                    title=${S.title}
+                    @click=${()=>this._openItem(S)}
                   >
-                    ${P.span===1?n`<span class="ed"></span>`:""}${P.title}
+                    ${S.span===1?o`<span class="ed"></span>`:""}${S.title}
                   </div>`)}
-                ${Array.from(G.entries()).map(([P,F])=>n`<div
+                ${Array.from(G.entries()).map(([S,F])=>o`<div
                     class="evmore"
-                    style=${`grid-column:${P}; grid-row:3;`}
+                    style=${`grid-column:${S}; grid-row:3;`}
                   >+${F} more</div>`)}
               </div>
             </div>`})}
         </div>
       </div>
-    `}_renderCalYear(e){var i;const t=((i=this._displayMonth)==null?void 0:i.getFullYear())??e.getFullYear();return n`
+    `}_renderCalYear(e){var i;const t=((i=this._displayMonth)==null?void 0:i.getFullYear())??e.getFullYear();return o`
       <div class="cal-year">
         ${Array.from({length:12},(r,a)=>this._renderYearMonthCard(t,a,e))}
       </div>
-    `}_renderYearMonthCard(e,t,i){const r=i.getFullYear()===e&&i.getMonth()===t,a=new Date(e,t,1).toLocaleString("en-GB",{month:"long"}),s=new Date(e,t,1).getDay(),o=new Date(e,t+1,0).getDate(),d=[];for(let l=0;l<s;l++)d.push(null);for(let l=1;l<=o;l++)d.push(l);for(;d.length<42;)d.push(null);return n`
+    `}_renderYearMonthCard(e,t,i){const r=i.getFullYear()===e&&i.getMonth()===t,a=new Date(e,t,1).toLocaleString("en-GB",{month:"long"}),s=new Date(e,t,1).getDay(),n=new Date(e,t+1,0).getDate(),d=[];for(let l=0;l<s;l++)d.push(null);for(let l=1;l<=n;l++)d.push(l);for(;d.length<42;)d.push(null);return o`
       <button
         class=${"ym"+(r?" cur":"")}
         @click=${()=>{this._displayMonth=new Date(e,t,1),this._calendarView="month"}}
@@ -12117,13 +12173,13 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
         </div>
         <div class="ym-days">
-          ${d.map(l=>{if(l==null)return n`<div class="ym-d e">0</div>`;const c=new Date(e,t,l),p=i.getFullYear()===e&&i.getMonth()===t&&i.getDate()===l,h=p?null:this._dominantCategoryForDay(c);return n`<div class=${"ym-d"+(p?" today":"")}>
+          ${d.map(l=>{if(l==null)return o`<div class="ym-d e">0</div>`;const c=new Date(e,t,l),p=i.getFullYear()===e&&i.getMonth()===t&&i.getDate()===l,h=p?null:this._dominantCategoryForDay(c);return o`<div class=${"ym-d"+(p?" today":"")}>
               ${l}
-              ${h?n`<i class=${"yd cat-"+h}></i>`:""}
+              ${h?o`<i class=${"yd cat-"+h}></i>`:""}
             </div>`})}
         </div>
       </button>
-    `}_renderCalendarsSection(){const e=new Date,t=this._calendarView??"month";return n`
+    `}_renderCalendarsSection(){const e=new Date,t=this._calendarView??"month";return o`
       <section class="cal-section">
         <glass-panel padding="none" variant="strong" stretch>
           <div class="cal-ws">
@@ -12143,7 +12199,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
         </glass-panel>
       </section>
-    `}_renderCelebrationsSection(){const e=this._filteredEvents().filter(t=>this._isCelebrationEvent(t)&&this._tagVisible(t)).map(t=>{const{date:i}=ht(t),r=[t.calTag,t.subtitle].map(a=>String(a??"").trim()).filter(Boolean).join(" · ");return{e:t,title:t.title||"Celebration",sub:r,date:i?Z(i):t.date||""}}).filter(t=>t.date).sort((t,i)=>String(t.date).localeCompare(String(i.date)));return n`
+    `}_renderCelebrationsSection(){const e=this._filteredEvents().filter(t=>this._isCelebrationEvent(t)&&this._tagVisible(t)).map(t=>{const{date:i}=ht(t),r=[t.calTag,t.subtitle].map(a=>String(a??"").trim()).filter(Boolean).join(" · ");return{e:t,title:t.title||"Celebration",sub:r,date:i?Z(i):t.date||""}}).filter(t=>t.date).sort((t,i)=>String(t.date).localeCompare(String(i.date)));return o`
         <section>
           <div class="section-head">
             <h2>Celebrations</h2>
@@ -12152,7 +12208,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             </button>
           </div>
           <glass-panel padding="md" variant="strong">
-            ${e.length===0?n`<div class="cel-empty">No celebrations yet.</div>`:e.map(t=>n`<div
+            ${e.length===0?o`<div class="cel-empty">No celebrations yet.</div>`:e.map(t=>o`<div
                     class="ca-row ca-row--tap"
                     role="button"
                     tabindex="0"
@@ -12160,19 +12216,19 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     @keydown=${i=>{(i.key==="Enter"||i.key===" ")&&(i.preventDefault(),this._openEditEvent(t.e))}}
                   >
                     ${this._comingDateRail(t)}
-                    <div class="t">${t.title}${t.sub?n`<small>${t.sub}</small>`:""}</div>
+                    <div class="t">${t.title}${t.sub?o`<small>${t.sub}</small>`:""}</div>
                   </div>`)}
           </glass-panel>
         </section>
-    `}_renderTodayTab(){const e=this._childData(),t="",i=this._comingUp(),r=n`
+    `}_renderTodayTab(){const e=this._childData(),t="",i=this._comingUp(),r=o`
       <glass-panel padding="md" variant="strong" stretch class="fb-bottom-card">
         <div class="cal-head"><h3>Upcoming Activities</h3>
           <button class="link" @click=${()=>this._activeTab="activities"}>All activities</button></div>
-        ${i.length===0?n`<div class="ring-note" style="padding:8px 4px;">Nothing on the calendar yet. Plan something from the Activities tab.</div>`:i.map(h=>n`<div class="ca-row">
+        ${i.length===0?o`<div class="ring-note" style="padding:8px 4px;">Nothing on the calendar yet. Plan something from the Activities tab.</div>`:i.map(h=>o`<div class="ca-row">
                 ${this._comingDateRail(h)}
-                <div class="t">${h.title}${h.sub?n`<small>${h.sub}</small>`:""}</div>
+                <div class="t">${h.title}${h.sub?o`<small>${h.sub}</small>`:""}</div>
               </div>`)}
-      </glass-panel>`;if(!e.hasPP||!e.child)return n`
+      </glass-panel>`;if(!e.hasPP||!e.child)return o`
         ${this._renderTodayHeader(t)}
         ${this._renderNonParentBrief()}
         <section class="today-col">
@@ -12180,7 +12236,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           ${r}
         </section>
         ${this._renderCelebrationsSection()}
-      `;const a=e.milestones,s=this._activeMilestoneProgress(a,e.child.dateOfBirth),o=(e.insights||[]).slice(0,2),d=e.child.themeColorHex,l="--wm:url('/portal/assets/playgroundv2.jpg');"+(d?`--theme:${d};`:""),c=n`
+      `;const a=e.milestones,s=this._activeMilestoneProgress(a,e.child.dateOfBirth),n=(e.insights||[]).slice(0,2),d=e.child.themeColorHex,l="--wm:url('/portal/assets/playgroundv2.jpg');"+(d?`--theme:${d};`:""),c=o`
       <div class="home-child-card" style="${l}">
         <span class="child-photo">
           <member-chip
@@ -12198,19 +12254,19 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <div class="big">${s.done}/${s.total}</div>
           <div class="lbl">active milestones</div>
         </div>
-      </div>`,p=n`
+      </div>`,p=o`
       <glass-panel padding="md" variant="strong" stretch class="fb-bottom-card">
         <div class="cal-head"><h3>Growth insights</h3>
           <button class="link" @click=${()=>this._activeTab="children"}>More insights</button></div>
-        ${o.length===0?n`<div class="ring-note" style="padding:8px 4px;">Pebble surfaces patterns here as more of ${e.child.name}'s milestones are logged.</div>`:n`<div class="fb-insights-list">
-              ${o.map(h=>n`<insight-card
+        ${n.length===0?o`<div class="ring-note" style="padding:8px 4px;">Pebble surfaces patterns here as more of ${e.child.name}'s milestones are logged.</div>`:o`<div class="fb-insights-list">
+              ${n.map(h=>o`<insight-card
                   .type=${h.type}
                   .domain=${h.domain}
                   .title=${h.title}
                   .body=${h.body}
                 ></insight-card>`)}
             </div>`}
-      </glass-panel>`;return n`
+      </glass-panel>`;return o`
       ${this._renderTodayHeader(t)}
       ${e.readonly?this._renderNonParentBrief():this._renderFamilyBrief(e)}
 
@@ -12224,10 +12280,10 @@ They'll lose access to shared trips, celebrations and any read-only child access
           ${p}
         </div>
       </section>
-    `}_renderActivitiesTab(){var i,r;const e=this._liveImmediate().concat(this._liveExtended()),t=n`<div class="scope shared">
+    `}_renderActivitiesTab(){var i,r;const e=this._liveImmediate().concat(this._liveExtended()),t=o`<div class="scope shared">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c0-3 2.5-5 6-5s6 2 6 5M15 17c2 0 5 1 5 3" stroke-linecap="round"/></svg>
       Shared with connections
-    </div>`;return n`
+    </div>`;return o`
       ${this._renderTabHeader("Activities",((i=this.family)==null?void 0:i.name)??"Your family",t)}
       ${this._renderComingUpSection()}
       <trip-planner
@@ -12237,7 +12293,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         .members=${e}
         .currentUid=${((r=this.user)==null?void 0:r.uid)??""}
         @cancel=${()=>{this._plannerOpen=!1,this._plannerTrip=null}}
-        @edit-trip=${a=>{var o;const s=((o=a.detail)==null?void 0:o.trip)??this._plannerTrip;this._plannerOpen=!1,this._plannerTrip=null,s&&this._openEdit(s)}}
+        @edit-trip=${a=>{var n;const s=((n=a.detail)==null?void 0:n.trip)??this._plannerTrip;this._plannerOpen=!1,this._plannerTrip=null,s&&this._openEdit(s)}}
       ></trip-planner>
       <weekend-planner
         ?open=${this._weekendOpen}
@@ -12245,7 +12301,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       ></weekend-planner>
       ${this._renderCalendarsSection()}
       ${this._renderCelebrationsSection()}
-    `}_renderChildAccessSection(){var s,o;if(this.preview||!this.ppIsMember)return"";const e=this.incomingChildRequests??[],t=Array.isArray((s=this.ppFamily)==null?void 0:s.childViewers)?this.ppFamily.childViewers:[];if(e.length===0&&t.length===0)return"";const i=((o=this.ppFamily)==null?void 0:o.memberProfiles)??{},r=(d,l)=>{var c;return((c=i[d])==null?void 0:c.displayName)??l??`${String(d).charAt(0).toUpperCase()}${String(d).slice(1)}`},a=n`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" stroke-linecap="round"/></svg>`;return n`
+    `}_renderChildAccessSection(){var s,n;if(this.preview||!this.ppIsMember)return"";const e=this.incomingChildRequests??[],t=Array.isArray((s=this.ppFamily)==null?void 0:s.childViewers)?this.ppFamily.childViewers:[];if(e.length===0&&t.length===0)return"";const i=((n=this.ppFamily)==null?void 0:n.memberProfiles)??{},r=(d,l)=>{var c;return((c=i[d])==null?void 0:c.displayName)??l??`${String(d).charAt(0).toUpperCase()}${String(d).slice(1)}`},a=o`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-4 3-6 7-6s7 2 7 6" stroke-linecap="round"/></svg>`;return o`
       <section>
         <div class="section-head">
           <h2>Child-view access</h2>
@@ -12255,7 +12311,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           >
         </div>
         <glass-panel padding="md" variant="strong">
-          ${e.length===0?"":e.map(d=>n`<div class="set-row">
+          ${e.length===0?"":e.map(d=>o`<div class="set-row">
                   <span class="si" style="color:var(--ink-terracotta);">${a}</span>
                   <div class="sl">
                     <b>${r(d.uid??d.id,d.displayName)}</b>
@@ -12277,7 +12333,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                     </button>
                   </span>
                 </div>`)}
-          ${t.map(d=>n`<div class="set-row">
+          ${t.map(d=>o`<div class="set-row">
               <span class="si" style="color:var(--ink-teal);">${a}</span>
               <div class="sl">
                 <b>${r(d)}</b>
@@ -12290,14 +12346,14 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 Revoke
               </button>
             </div>`)}
-          ${t.length===0?"":n`<div class="ring-note">
+          ${t.length===0?"":o`<div class="ring-note">
                 Granted viewers see milestones &amp; growth insights
                 only. Never Pebble, the pediatrician summary, or any
                 editing. Revoke any time.
               </div>`}
         </glass-panel>
       </section>
-    `}_setTheme(e){this._themeLight=e;try{document.documentElement.classList.toggle("theme-light",e),localStorage.setItem("portalTheme",e?"light":"dark");const t=document.querySelector('meta[name="theme-color"]');t&&t.setAttribute("content",e?"#f2ede3":"#1f5c54")}catch{}}_renderCairnTab(){var t,i,r;if(this._wpkOpen)return this._renderWpkDetail();(t=this.user)==null||t.displayName,(i=this.user)==null||i.email;const e=((r=this.family)==null?void 0:r.name)??"Your family";return n`
+    `}_setTheme(e){this._themeLight=e;try{document.documentElement.classList.toggle("theme-light",e),localStorage.setItem("portalTheme",e?"light":"dark");const t=document.querySelector('meta[name="theme-color"]');t&&t.setAttribute("content",e?"#f2ede3":"#1f5c54")}catch{}}_renderCairnTab(){var t,i,r;if(this._wpkOpen)return this._renderWpkDetail();(t=this.user)==null||t.displayName,(i=this.user)==null||i.email;const e=((r=this.family)==null?void 0:r.name)??"Your family";return o`
       ${this._renderTabHeader("Settings","Who's in your circle, and what each level can see")}
 
       <section>
@@ -12330,7 +12386,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 <span class="si" style="color:var(--ink-green);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="7" rx="3" ry="1.4"/><ellipse cx="12" cy="12" rx="6" ry="2.4"/><ellipse cx="12" cy="17" rx="8" ry="3"/></svg>
                 </span>
-                <div class="sl"><b>Your family</b><span>Your household, including any children and their parents.</span></div>
+                <div class="sl"><b>Your family</b><span>Your household: children, caregivers, etc.</span></div>
                 <span class="set-pill" style="color:var(--ink-green);border-color:var(--ink-green);">Full access</span>
               </div>
               <div class="set-row">
@@ -12390,7 +12446,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             <div class="sl"><b>PebblePath Premium</b><span>Unlimited Pebble, summaries, and insights.</span></div>
             <span class="set-meta">Managed in the app</span>
           </div>
-          ${this.ppIsMember?n`<div class="set-row">
+          ${this.ppIsMember?o`<div class="set-row">
                 <span class="si">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 3l9 5-9 5-9-5 9-5z"></path>
@@ -12406,7 +12462,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           ${this._renderJoinAnotherFamilyRow()}
         </glass-panel>
       </section>
-    `}_renderJoinAnotherFamilyRow(){const e=this._joinAnotherCode??"",t=e.length===6&&!this._joinAnotherBusy;return n`
+    `}_renderJoinAnotherFamilyRow(){const e=this._joinAnotherCode??"",t=e.length===6&&!this._joinAnotherBusy;return o`
       <div class="set-row set-row-join-another">
         <span class="si"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/><circle cx="12" cy="12" r="9"/></svg></span>
         <div class="sl">
@@ -12444,17 +12500,17 @@ They'll lose access to shared trips, celebrations and any read-only child access
             ${this._joinAnotherBusy?"Joining…":"Join"}
           </button>
         </div>
-        ${this._joinAnotherError?n`<div class="join-error join-feedback">${this._joinAnotherError}</div>`:""}
-        ${this._joinAnotherSuccessName?n`<div class="join-success join-feedback">
+        ${this._joinAnotherError?o`<div class="join-error join-feedback">${this._joinAnotherError}</div>`:""}
+        ${this._joinAnotherSuccessName?o`<div class="join-success join-feedback">
               ✓ Joined ${this._joinAnotherSuccessName}.
             </div>`:""}
       </div>
-    `}_renderChildGate(){const e=this.myChildAccessRequest,t=this.children??[],i=t.length>0,r=t.length===1?`${t[0].name}'s`:"the children's",a=n`<button
+    `}_renderChildGate(){const e=this.myChildAccessRequest,t=this.children??[],i=t.length>0,r=t.length===1?`${t[0].name}'s`:"the children's",a=o`<button
       class="empty-cta ghost"
       @click=${()=>this._activeTab="activities"}
     >
       Back to Activities
-    </button>`;return i?(e==null?void 0:e.status)==="pending"?n`
+    </button>`;return i?(e==null?void 0:e.status)==="pending"?o`
         <div class="empty-title">Request sent</div>
         <div class="empty-sub">
           A parent on this family has been asked to share read-only
@@ -12470,21 +12526,21 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </button>
           ${a}
         </div>
-      `:(e==null?void 0:e.status)==="approved"?n`
+      `:(e==null?void 0:e.status)==="approved"?o`
         <div class="empty-title">Access approved</div>
         <div class="empty-sub">
           A parent shared read-only access with you. Loading ${r}
           view…
         </div>
         <div class="empty-actions">${a}</div>
-      `:n`
+      `:o`
       <div class="empty-title">This area is private to parents</div>
       <div class="empty-sub">
         Children's milestones &amp; growth insights are shared only
         with the parents by default. You can ask them to share a
         <strong>read-only</strong> view with you. They'll approve or
         decline, and you'll never get Pebble or editing access.
-        ${(e==null?void 0:e.status)==="declined"?n`<br /><span style="color:var(--text-tertiary);"
+        ${(e==null?void 0:e.status)==="declined"?o`<br /><span style="color:var(--text-tertiary);"
               >A parent declined a previous request.</span
             >`:""}
       </div>
@@ -12498,7 +12554,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         ${a}
       </div>
       ${this._renderParentClaimSection(t)}
-    `:n`
+    `:o`
         <div class="empty-title">This area is private to parents</div>
         <div class="empty-sub">
           Children's milestones, growth insights and Pebble are visible
@@ -12508,14 +12564,14 @@ They'll lose access to shared trips, celebrations and any read-only child access
           account.
         </div>
         <div class="empty-actions">${a}</div>
-      `}_renderParentClaimSection(e){return!Array.isArray(e)||e.length===0?"":this._claimedChildName?n`
+      `}_renderParentClaimSection(e){return!Array.isArray(e)||e.length===0?"":this._claimedChildName?o`
         <div class="claim-section">
           <div class="claim-sent">
             ✓ Claim sent for ${this._claimedChildName}. An existing
             parent will confirm you.
           </div>
         </div>
-      `:n`
+      `:o`
       <div class="claim-section">
         <div class="claim-title">
           Are you a parent or caregiver of one of them?
@@ -12525,7 +12581,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           the full child experience once approved.
         </div>
         <div class="claim-list">
-          ${e.map(t=>n`
+          ${e.map(t=>o`
               <button
                 class="claim-btn"
                 ?disabled=${this._claimingChildId!==null}
@@ -12537,13 +12593,13 @@ They'll lose access to shared trips, celebrations and any read-only child access
             `)}
         </div>
       </div>
-    `}_renderChildrenTab(){const e=this._childData(),t=n`<span class="scope-chip">
+    `}_renderChildrenTab(){const e=this._childData(),t=o`<span class="scope-chip">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 018 0v3" stroke-linecap="round" /></svg>
       Private to parents
-    </span>`;if(e.hasPP){const i=e.readonly?"Milestones & growth insights: read-only, shared by the parents":"Milestones and insights",r=e.readonly?n`<span class="scope-chip">
+    </span>`;if(e.hasPP){const i=e.readonly?"Milestones & growth insights: read-only, shared by the parents":"Milestones and insights",r=e.readonly?o`<span class="scope-chip">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3.2"/></svg>
             Shared with you · read-only
-          </span>`:t;return n`
+          </span>`:t;return o`
         ${this._renderTabHeader("Children",i,r)}
         <section>
           <child-overview
@@ -12560,7 +12616,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             @delete-report=${this._onDeleteReport}
           ></child-overview>
         </section>
-      `}return n`
+      `}return o`
       ${this._renderTabHeader("Children","Milestones and insights",t)}
       <section>
         <glass-panel padding="lg" variant="strong">
@@ -12575,7 +12631,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
         </glass-panel>
       </section>
-    `}_renderPebbleTab(){var i,r,a,s;if(!this._pebbleAvailable)return"";const e=this._childData();return(this.preview||this.ppIsMember||this.ppIsChildViewer)&&e.child?n`
+    `}_renderPebbleTab(){var i,r,a,s;if(!this._pebbleAvailable)return"";const e=this._childData();return(this.preview||this.ppIsMember||this.ppIsChildViewer)&&e.child?o`
         <child-pebble
           .child=${e.child}
           .messages=${e.pebbleMessages}
@@ -12586,7 +12642,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .quota=${this.pebbleQuota}
           @smart-upload=${()=>this._schoolImportOpen=!0}
         ></child-pebble>
-      `:n`
+      `:o`
       <family-pebble
         .messages=${this.planningMessages??[]}
         .prefill=${this._pebblePrefill}
@@ -12595,7 +12651,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         .quota=${this.pebbleQuota}
         @smart-upload=${()=>this._schoolImportOpen=!0}
       ></family-pebble>
-    `}_renderPebbleFab(){var a,s,o,d;if(this._activeTab==="pebble"||!this._pebbleAvailable)return"";const e=this._childData(),i=(this.preview||this.ppIsMember||this.ppIsChildViewer)&&e.child?n`<child-pebble
+    `}_renderPebbleFab(){var a,s,n,d;if(this._activeTab==="pebble"||!this._pebbleAvailable)return"";const e=this._childData(),i=(this.preview||this.ppIsMember||this.ppIsChildViewer)&&e.child?o`<child-pebble
             compact
             .child=${e.child}
             .messages=${e.pebbleMessages}
@@ -12605,15 +12661,15 @@ They'll lose access to shared trips, celebrations and any read-only child access
             .myUid=${((s=this.user)==null?void 0:s.uid)??""}
             .quota=${this.pebbleQuota}
             @smart-upload=${()=>this._schoolImportOpen=!0}
-          ></child-pebble>`:n`<family-pebble
+          ></child-pebble>`:o`<family-pebble
             compact
             .messages=${this.planningMessages??[]}
             .prefill=${this._pebblePrefill}
-            .memberProfiles=${((o=this.family)==null?void 0:o.memberProfiles)??{}}
+            .memberProfiles=${((n=this.family)==null?void 0:n.memberProfiles)??{}}
             .myUid=${((d=this.user)==null?void 0:d.uid)??""}
             .quota=${this.pebbleQuota}
             @smart-upload=${()=>this._schoolImportOpen=!0}
-          ></family-pebble>`,r=n`<pebble-icon></pebble-icon>`;return n`
+          ></family-pebble>`,r=o`<pebble-icon></pebble-icon>`;return o`
       <button
         class="pebble-fab"
         aria-label="Ask Pebble"
@@ -12622,7 +12678,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       >
         ${r}<span class="lbl">Ask Pebble</span>
       </button>
-      ${this._pebbleFabOpen?n`<div
+      ${this._pebbleFabOpen?o`<div
             class="pebble-fab-panel"
             role="dialog"
             aria-label="Pebble"
@@ -12639,7 +12695,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             </div>
             <div class="pebble-fab-body">${i}</div>
           </div>`:""}
-    `}render(){var r,a,s,o,d,l,c,p,h,u;const e=this._liveImmediate(),t=this._liveExtended(),i=e.concat(t);return n`
+    `}render(){var r,a,s,n,d,l,c,p,h,u;const e=this._liveImmediate(),t=this._liveExtended(),i=e.concat(t);return o`
       <div class="topbar">
         <div class="brand">
           <img
@@ -12679,14 +12735,14 @@ They'll lose access to shared trips, celebrations and any read-only child access
         </div>
       </div>
 
-      ${this.preview?n`<div class="preview-banner">
+      ${this.preview?o`<div class="preview-banner">
             <strong>Preview mode</strong>: viewing the dashboard with placeholder
             data. <a href="?">Back to sign-in</a>.
           </div>`:""}
 
       <main class=${this._activeTab==="pebble"?"pebble-full":""}>
         ${this._renderActiveTab()}
-        ${this._activeTab==="pebble"?"":n`<discover-pebblepath></discover-pebblepath>`}
+        ${this._activeTab==="pebble"?"":o`<discover-pebblepath></discover-pebblepath>`}
       </main>
 
       ${this._renderBottomNav()}
@@ -12699,7 +12755,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         .members=${e}
         .extendedMembers=${this._liveExtended()}
         .connectionMembers=${this._liveConnections()}
-        .currentUid=${((o=this.user)==null?void 0:o.uid)??""}
+        .currentUid=${((n=this.user)==null?void 0:n.uid)??""}
         .familyId=${((d=this.family)==null?void 0:d.id)??""}
         .busy=${this._formBusy}
         .formMode=${this._formMode}
@@ -12778,7 +12834,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         .pebbleUser=${this.pebbleUser}
         @cancel=${()=>this._profileOpen=!1}
       ></profile-sheet>
-    `}_renderFamilyBrief(e){const t=e.familyDailyCard??e.dailyCard;return t?this._briefCardTemplate(t,{spinning:this._refreshingFamilyBrief?"spinning":"",fresh:this._briefFreshLabel(t),onRefresh:()=>this._onRefreshFamilyBrief(),ariaLabel:"Refresh family brief",coordination:this._renderBriefCoordination()}):(this.preview||this.updateComplete.then(()=>this._ensureBriefForToday()),this._refreshingFamilyBrief?this._renderBriefPreparing():"")}_briefCardTemplate(e,{spinning:t,fresh:i,onRefresh:r,ariaLabel:a,coordination:s}){const o=Array.isArray(e.bullets)?e.bullets:[],c=this._themeLight?"/portal/assets/pebblepath-sandbar-empty.jpg":"/portal/assets/pebblepath-stillwater-empty.jpg";return n`
+    `}_renderFamilyBrief(e){const t=e.familyDailyCard??e.dailyCard;return t?this._briefCardTemplate(t,{spinning:this._refreshingFamilyBrief?"spinning":"",fresh:this._briefFreshLabel(t),onRefresh:()=>this._onRefreshFamilyBrief(),ariaLabel:"Refresh family brief",coordination:this._renderBriefCoordination()}):(this.preview||this.updateComplete.then(()=>this._ensureBriefForToday()),this._refreshingFamilyBrief?this._renderBriefPreparing():"")}_briefCardTemplate(e,{spinning:t,fresh:i,onRefresh:r,ariaLabel:a,coordination:s}){const n=Array.isArray(e.bullets)?e.bullets:[],c=this._themeLight?"/portal/assets/pebblepath-sandbar-empty.jpg":"/portal/assets/pebblepath-stillwater-empty.jpg";return o`
       <section class="family-brief ${this._themeLight?"":"fb-dark"}">
         <div class="fb-card">
           <div class="fb-bg" aria-hidden="true">
@@ -12792,7 +12848,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 <span>FAMILY BRIEF</span>
               </div>
               <div class="fb-fresh">
-                ${i?n`<span class="fb-fresh-time">${i}</span>`:""}
+                ${i?o`<span class="fb-fresh-time">${i}</span>`:""}
                 <button
                   class="fb-refresh ${t}"
                   title="Refresh brief"
@@ -12810,25 +12866,25 @@ They'll lose access to shared trips, celebrations and any read-only child access
               </div>
             </div>
             <h3 class="fb-title">${e.title}</h3>
-            ${o.length?n`<ul class="fb-bullets">
-                  ${o.map(p=>this._renderBriefBullet(p))}
-                </ul>`:n`<p class="fb-body">${e.body}</p>`}
+            ${n.length?o`<ul class="fb-bullets">
+                  ${n.map(p=>this._renderBriefBullet(p))}
+                </ul>`:o`<p class="fb-body">${e.body}</p>`}
             ${s}
           </div>
         </div>
       </section>
-    `}_renderNonParentBrief(){const e=this.nonParentDailyCard;return e?this._briefCardTemplate(e,{spinning:this._refreshingNonParentBrief?"spinning":"",fresh:this._briefFreshLabel(e),onRefresh:()=>this._onRefreshNonParentBrief(),ariaLabel:"Refresh family brief",coordination:""}):(this.preview||this.updateComplete.then(()=>this._ensureNonParentBriefForToday()),this._refreshingNonParentBrief?this._renderBriefPreparing():this._renderNonParentBriefPlaceholder())}_renderNonParentBriefPlaceholder(){return n`
+    `}_renderNonParentBrief(){const e=this.nonParentDailyCard;return e?this._briefCardTemplate(e,{spinning:this._refreshingNonParentBrief?"spinning":"",fresh:this._briefFreshLabel(e),onRefresh:()=>this._onRefreshNonParentBrief(),ariaLabel:"Refresh family brief",coordination:""}):(this.preview||this.updateComplete.then(()=>this._ensureNonParentBriefForToday()),this._refreshingNonParentBrief?this._renderBriefPreparing():this._renderNonParentBriefPlaceholder())}_renderNonParentBriefPlaceholder(){return o`
       <section class="family-brief">
         <div class="fb-prep-card">
           <span class="fb-tag-lite">FAMILY BRIEF</span>
           <span class="fb-prep-text">Your family brief will appear here each morning.</span>
         </div>
       </section>
-    `}async _onRefreshNonParentBrief(){if(!(this.preview||this._refreshingNonParentBrief)){this._refreshingNonParentBrief=!0;try{await f.refreshNonParentBrief()}catch(e){console.warn("[Portal] refreshNonParentBrief failed:",(e==null?void 0:e.message)??e)}finally{this._refreshingNonParentBrief=!1}}}_ensureNonParentBriefForToday(){this.preview||this._autoNonParentBriefAttempted||this._refreshingNonParentBrief||(this._autoNonParentBriefAttempted=!0,setTimeout(async()=>{if(!this.nonParentDailyCard){this._refreshingNonParentBrief=!0;try{await f.refreshNonParentBrief()}catch(e){console.warn("[Portal] auto-generate non-parent brief failed:",(e==null?void 0:e.message)??e)}finally{this._refreshingNonParentBrief=!1}}},1500))}_coordRoles(){const e=t=>{var i;return((i=t==null?void 0:t.toMillis)==null?void 0:i.call(t))??0};return(this.pebbleRhythms??[]).filter(t=>t.iconKey).sort((t,i)=>e(t.createdAt)-e(i.createdAt))}_roleActiveOverride(e){if(!e)return null;const t=Date.now(),i=r=>{var a;return((a=r==null?void 0:r.toMillis)==null?void 0:a.call(r))??0};return(this.pebbleLiveContext??[]).find(r=>r.kind==="handoff"&&r.relatedRhythmId===e&&!r.dismissedAt&&i(r.validFrom)<=t&&(r.validTo?i(r.validTo)>=t:!0))??null}_roleOwnerTodayUids(e){const t=this._roleActiveOverride(e.id),i=t?t.ownerUids:e.usualOwnerUids;return Array.isArray(i)?i:[]}_roleIsOverriddenToday(e){return!!this._roleActiveOverride(e.id)}_memberName(e){var t,i,r;return((r=(i=(t=this.ppFamily)==null?void 0:t.memberProfiles)==null?void 0:i[e])==null?void 0:r.displayName)??""}_memberNames(e){return e.map(t=>this._memberName(t)).filter(Boolean).join(" & ")}_hueForUid(e){let t=0;for(const i of String(e))t=(t*31+i.charCodeAt(0))%360;return t}_openRolesInWpk(){this._activeTab="cairn",this._wpkOpen=!0}_renderBriefCoordination(){if(!this.ppIsMember)return"";const e=this._briefCoordLine();return n`
+    `}async _onRefreshNonParentBrief(){if(!(this.preview||this._refreshingNonParentBrief)){this._refreshingNonParentBrief=!0;try{await f.refreshNonParentBrief()}catch(e){console.warn("[Portal] refreshNonParentBrief failed:",(e==null?void 0:e.message)??e)}finally{this._refreshingNonParentBrief=!1}}}_ensureNonParentBriefForToday(){this.preview||this._autoNonParentBriefAttempted||this._refreshingNonParentBrief||(this._autoNonParentBriefAttempted=!0,setTimeout(async()=>{if(!this.nonParentDailyCard){this._refreshingNonParentBrief=!0;try{await f.refreshNonParentBrief()}catch(e){console.warn("[Portal] auto-generate non-parent brief failed:",(e==null?void 0:e.message)??e)}finally{this._refreshingNonParentBrief=!1}}},1500))}_coordRoles(){const e=t=>{var i;return((i=t==null?void 0:t.toMillis)==null?void 0:i.call(t))??0};return(this.pebbleRhythms??[]).filter(t=>t.iconKey).sort((t,i)=>e(t.createdAt)-e(i.createdAt))}_roleActiveOverride(e){if(!e)return null;const t=Date.now(),i=r=>{var a;return((a=r==null?void 0:r.toMillis)==null?void 0:a.call(r))??0};return(this.pebbleLiveContext??[]).find(r=>r.kind==="handoff"&&r.relatedRhythmId===e&&!r.dismissedAt&&i(r.validFrom)<=t&&(r.validTo?i(r.validTo)>=t:!0))??null}_roleOwnerTodayUids(e){const t=this._roleActiveOverride(e.id),i=t?t.ownerUids:e.usualOwnerUids;return Array.isArray(i)?i:[]}_roleIsOverriddenToday(e){return!!this._roleActiveOverride(e.id)}_memberName(e){var t,i,r;return((r=(i=(t=this.ppFamily)==null?void 0:t.memberProfiles)==null?void 0:i[e])==null?void 0:r.displayName)??""}_memberNames(e){return e.map(t=>this._memberName(t)).filter(Boolean).join(" & ")}_hueForUid(e){let t=0;for(const i of String(e))t=(t*31+i.charCodeAt(0))%360;return t}_openRolesInWpk(){this._activeTab="cairn",this._wpkOpen=!0}_renderBriefCoordination(){if(!this.ppIsMember)return"";const e=this._briefCoordLine();return o`
       <div class="fb-coord">
         <div class="fb-coord-row">
-          ${e?n`<div class="fb-coord-faces">
-                  ${e.faceUids.map(t=>{var i,r,a;return n`<member-chip
+          ${e?o`<div class="fb-coord-faces">
+                  ${e.faceUids.map(t=>{var i,r,a;return o`<member-chip
                       .name=${this._memberName(t)}
                       .photo=${((a=(r=(i=this.ppFamily)==null?void 0:i.memberProfiles)==null?void 0:r[t])==null?void 0:a.profilePhotoURL)??""}
                       .hue=${this._hueForUid(t)}
@@ -12848,21 +12904,21 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </button>
         </div>
       </div>
-    `}_briefCoordLine(){var l;const e=this._coordRoles().filter(c=>this._roleIsOverriddenToday(c));if(!e.length)return null;if(e.length>1)return{faceUids:[...new Set(e.flatMap(p=>this._roleOwnerTodayUids(p)))].slice(0,2),lead:`Tonight: ${e.length} role swaps.`,rest:" Tap Daily roles & routines for who's on what."};const t=e[0],i=this._roleOwnerTodayUids(t),r=Array.isArray(t.usualOwnerUids)?t.usualOwnerUids:[],a=[...new Set([...r,...i])].slice(0,2),s=i.length===1&&i[0]===((l=this.user)==null?void 0:l.uid)?"you":this._memberNames(i)||"someone else",o=this._memberNames(r),d=(t.title??"this").toLowerCase();return{faceUids:a,lead:`Tonight: ${d} is on ${s}.`,rest:o?` Usually ${o}.`:""}}_wpkRoleRow(e){const t=this._roleOwnerTodayUids(e),i=Array.isArray(e.usualOwnerUids)?e.usualOwnerUids:[],r=this._roleIsOverriddenToday(e),a=this._memberNames(t),s=this._memberNames(i),o=r?`Today: ${a||"someone else"} · usually ${s||"—"}`:s?`Usually ${s}`:"Not set yet",d=(t.length?t:i).slice(0,2);return n`<div class="wpk-row wpk-role-row">
+    `}_briefCoordLine(){var l;const e=this._coordRoles().filter(c=>this._roleIsOverriddenToday(c));if(!e.length)return null;if(e.length>1)return{faceUids:[...new Set(e.flatMap(p=>this._roleOwnerTodayUids(p)))].slice(0,2),lead:`Tonight: ${e.length} role swaps.`,rest:" Tap Daily roles & routines for who's on what."};const t=e[0],i=this._roleOwnerTodayUids(t),r=Array.isArray(t.usualOwnerUids)?t.usualOwnerUids:[],a=[...new Set([...r,...i])].slice(0,2),s=i.length===1&&i[0]===((l=this.user)==null?void 0:l.uid)?"you":this._memberNames(i)||"someone else",n=this._memberNames(r),d=(t.title??"this").toLowerCase();return{faceUids:a,lead:`Tonight: ${d} is on ${s}.`,rest:n?` Usually ${n}.`:""}}_wpkRoleRow(e){const t=this._roleOwnerTodayUids(e),i=Array.isArray(e.usualOwnerUids)?e.usualOwnerUids:[],r=this._roleIsOverriddenToday(e),a=this._memberNames(t),s=this._memberNames(i),n=r?`Today: ${a||"someone else"} · usually ${s||"—"}`:s?`Usually ${s}`:"Not set yet",d=(t.length?t:i).slice(0,2);return o`<div class="wpk-row wpk-role-row">
       <span class="wpk-role-faces">
-        ${d.length?d.map(l=>{var c,p,h;return n`<member-chip
+        ${d.length?d.map(l=>{var c,p,h;return o`<member-chip
                 .name=${this._memberName(l)}
                 .photo=${((h=(p=(c=this.ppFamily)==null?void 0:c.memberProfiles)==null?void 0:p[l])==null?void 0:h.profilePhotoURL)??""}
                 .hue=${this._hueForUid(l)}
                 size="30"
-              ></member-chip>`}):n`<span class="wpk-role-unset">?</span>`}
+              ></member-chip>`}):o`<span class="wpk-role-unset">?</span>`}
       </span>
       <div class="wpk-body">
         <div class="wpk-primary">${e.title}</div>
-        <div class="wpk-secondary">${o}</div>
+        <div class="wpk-secondary">${n}</div>
       </div>
-      ${r?n`<span class="wpk-role-today">Today</span>`:""}
-    </div>`}_briefFreshLabel(e){var i,r;const t=((r=(i=e==null?void 0:e.generatedAt)==null?void 0:i.toMillis)==null?void 0:r.call(i))??(e!=null&&e.generatedAt?new Date(e.generatedAt).getTime():0);return t?new Date(t).toLocaleTimeString(void 0,{hour:"numeric",minute:"2-digit"}).toLowerCase():""}_splitBulletLead(e){const t=[". ",": "," — "," – "];for(const i of t){const r=e.indexOf(i);if(r>=0&&r<=32){const a=i===". "?e.slice(0,r+1):e.slice(0,r),s=e.slice(r+i.length);return s.trim()?{lead:a,rest:s}:{lead:null}}}return{lead:null}}_renderBriefBullet(e){const t=e&&typeof e.kind=="string"?e.kind:"other",i=e&&typeof e.text=="string"?e.text:"",r=this._briefTint(t),a=this._pebblePath(t),{lead:s,rest:o}=this._splitBulletLead(i);return n`<li class="fb-bullet">
+      ${r?o`<span class="wpk-role-today">Today</span>`:""}
+    </div>`}_briefFreshLabel(e){var i,r;const t=((r=(i=e==null?void 0:e.generatedAt)==null?void 0:i.toMillis)==null?void 0:r.call(i))??(e!=null&&e.generatedAt?new Date(e.generatedAt).getTime():0);return t?new Date(t).toLocaleTimeString(void 0,{hour:"numeric",minute:"2-digit"}).toLowerCase():""}_splitBulletLead(e){const t=[". ",": "," — "," – "];for(const i of t){const r=e.indexOf(i);if(r>=0&&r<=32){const a=i===". "?e.slice(0,r+1):e.slice(0,r),s=e.slice(r+i.length);return s.trim()?{lead:a,rest:s}:{lead:null}}}return{lead:null}}_renderBriefBullet(e){const t=e&&typeof e.kind=="string"?e.kind:"other",i=e&&typeof e.text=="string"?e.text:"",r=this._briefTint(t),a=this._pebblePath(t),{lead:s,rest:n}=this._splitBulletLead(i);return o`<li class="fb-bullet">
       <svg
         class="fb-peb-marker"
         viewBox=${a.vb}
@@ -12872,58 +12928,58 @@ They'll lose access to shared trips, celebrations and any read-only child access
         <path d=${a.d} fill=${r}></path>
       </svg>
       <span class="fb-text">
-        ${s?n`<span class="fb-lead">${s}</span> ${o}`:i}
+        ${s?o`<span class="fb-lead">${s}</span> ${n}`:i}
       </span>
-    </li>`}_briefTint(e){switch(e){case"plan":return"#3d9b8f";case"weather":return"#d4a843";case"packing":return"#8b7bb5";case"coordinate":return"#6b9ac4";case"action":return"#c67b5c";case"trip":return"#2d7a70";case"rhythm":return"#c98a8a";case"memory":return"#1f5c54";default:return"#8a8f98"}}_pebblePath(e){return{a:{vb:"0 0 100 70",d:"M 8 38 C 6 18, 26 6, 48 8 C 72 10, 94 18, 94 38 C 94 58, 72 66, 48 64 C 22 62, 10 58, 8 38 Z"},b:{vb:"0 0 80 90",d:"M 38 6 C 56 8, 70 24, 72 46 C 74 70, 58 84, 38 84 C 16 84, 6 66, 8 44 C 10 22, 22 4, 38 6 Z"},c:{vb:"0 0 90 80",d:"M 14 26 C 18 10, 38 4, 56 8 C 78 14, 86 32, 82 50 C 76 70, 54 78, 32 72 C 12 66, 10 42, 14 26 Z"},d:{vb:"0 0 70 60",d:"M 8 30 C 8 14, 22 6, 38 8 C 54 10, 64 22, 62 36 C 60 52, 44 56, 28 54 C 14 52, 8 44, 8 30 Z"},e:{vb:"0 0 110 75",d:"M 8 38 C 6 18, 30 8, 56 10 C 84 12, 104 22, 104 40 C 102 58, 80 68, 52 66 C 24 64, 10 56, 8 38 Z"},f:{vb:"0 0 95 75",d:"M 14 24 C 18 10, 40 6, 56 12 C 70 18, 80 18, 86 30 C 90 44, 80 56, 64 60 C 48 64, 28 60, 18 50 C 10 42, 10 32, 14 24 Z"},g:{vb:"0 0 80 80",d:"M 14 20 C 20 10, 36 6, 52 10 C 68 16, 76 30, 72 48 C 66 64, 50 72, 32 66 C 16 60, 8 44, 10 30 C 12 24, 12 22, 14 20 Z"}}[{plan:"e",weather:"a",packing:"c",coordinate:"g",action:"d",trip:"f",rhythm:"b",memory:"c",other:"a"}[e]??"a"]}_briefGlyph(e){const t={width:14,height:14,viewBox:"0 0 24 24"};switch(e){case"plan":return n`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
+    </li>`}_briefTint(e){switch(e){case"plan":return"#3d9b8f";case"weather":return"#d4a843";case"packing":return"#8b7bb5";case"coordinate":return"#6b9ac4";case"action":return"#c67b5c";case"trip":return"#2d7a70";case"rhythm":return"#c98a8a";case"memory":return"#1f5c54";default:return"#8a8f98"}}_pebblePath(e){return{a:{vb:"0 0 100 70",d:"M 8 38 C 6 18, 26 6, 48 8 C 72 10, 94 18, 94 38 C 94 58, 72 66, 48 64 C 22 62, 10 58, 8 38 Z"},b:{vb:"0 0 80 90",d:"M 38 6 C 56 8, 70 24, 72 46 C 74 70, 58 84, 38 84 C 16 84, 6 66, 8 44 C 10 22, 22 4, 38 6 Z"},c:{vb:"0 0 90 80",d:"M 14 26 C 18 10, 38 4, 56 8 C 78 14, 86 32, 82 50 C 76 70, 54 78, 32 72 C 12 66, 10 42, 14 26 Z"},d:{vb:"0 0 70 60",d:"M 8 30 C 8 14, 22 6, 38 8 C 54 10, 64 22, 62 36 C 60 52, 44 56, 28 54 C 14 52, 8 44, 8 30 Z"},e:{vb:"0 0 110 75",d:"M 8 38 C 6 18, 30 8, 56 10 C 84 12, 104 22, 104 40 C 102 58, 80 68, 52 66 C 24 64, 10 56, 8 38 Z"},f:{vb:"0 0 95 75",d:"M 14 24 C 18 10, 40 6, 56 12 C 70 18, 80 18, 86 30 C 90 44, 80 56, 64 60 C 48 64, 28 60, 18 50 C 10 42, 10 32, 14 24 Z"},g:{vb:"0 0 80 80",d:"M 14 20 C 20 10, 36 6, 52 10 C 68 16, 76 30, 72 48 C 66 64, 50 72, 32 66 C 16 60, 8 44, 10 30 C 12 24, 12 22, 14 20 Z"}}[{plan:"e",weather:"a",packing:"c",coordinate:"g",action:"d",trip:"f",rhythm:"b",memory:"c",other:"a"}[e]??"a"]}_briefGlyph(e){const t={width:14,height:14,viewBox:"0 0 24 24"};switch(e){case"plan":return o`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
           fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 3v5M12 16v5M3 12h5M16 12h5"></path>
           <path d="M6.5 6.5l2.5 2.5M15 15l2.5 2.5M17.5 6.5L15 9M9 15l-2.5 2.5"></path>
-        </svg>`;case"weather":return n`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
+        </svg>`;case"weather":return o`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
           fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="4"></circle>
           <path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"></path>
-        </svg>`;case"packing":return n`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
+        </svg>`;case"packing":return o`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
           fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
           <rect x="4" y="8" width="16" height="12" rx="2"></rect>
           <path d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path>
-        </svg>`;case"coordinate":return n`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
+        </svg>`;case"coordinate":return o`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
           fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
           <circle cx="9" cy="8" r="3"></circle>
           <path d="M3.5 20a5.5 5.5 0 0 1 11 0"></path>
           <circle cx="17" cy="9" r="2.4"></circle>
           <path d="M16 14.2a4.5 4.5 0 0 1 4.5 4.8"></path>
-        </svg>`;case"action":return n`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
+        </svg>`;case"action":return o`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
           fill="none" stroke="currentColor" stroke-width="2.4"
           stroke-linecap="round" stroke-linejoin="round">
           <path d="M5 12.5l4.5 4.5L19 7"></path>
-        </svg>`;case"trip":return n`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
+        </svg>`;case"trip":return o`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
           fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 4L3 11l6 2.5L21 4z"></path>
           <path d="M9 13.5V20l3.5-3.8"></path>
-        </svg>`;case"rhythm":return n`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
+        </svg>`;case"rhythm":return o`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
           fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="8"></circle>
           <path d="M12 8v4.5l3 1.8"></path>
-        </svg>`;case"memory":return n`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
+        </svg>`;case"memory":return o`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
           fill="currentColor" stroke="none">
           <path d="M12 20.5S4 15.5 4 9.8A3.8 3.8 0 0 1 12 7.4 3.8 3.8 0 0 1 20 9.8c0 5.7-8 10.7-8 10.7z"></path>
-        </svg>`;default:return n`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
+        </svg>`;default:return o`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
           fill="currentColor" stroke="none">
           <circle cx="12" cy="12" r="4"></circle>
-        </svg>`}}async _onRefreshFamilyBrief(){if(!(this.preview||this._refreshingFamilyBrief)){this._refreshingFamilyBrief=!0;try{await f.refreshFamilyBrief()}catch(e){console.warn("[Portal] refreshFamilyBrief failed:",(e==null?void 0:e.message)??e)}finally{this._refreshingFamilyBrief=!1}}}_ensureBriefForToday(){this.preview||this._autoBriefAttempted||this._refreshingFamilyBrief||(this._autoBriefAttempted=!0,setTimeout(async()=>{const e=this._childData();if(!(e.familyDailyCard||e.dailyCard)){this._refreshingFamilyBrief=!0;try{await f.refreshFamilyBrief()}catch(t){console.warn("[Portal] auto-generate brief failed:",(t==null?void 0:t.message)??t)}finally{this._refreshingFamilyBrief=!1}}},1500))}_renderBriefPreparing(){return n`
+        </svg>`}}async _onRefreshFamilyBrief(){if(!(this.preview||this._refreshingFamilyBrief)){this._refreshingFamilyBrief=!0;try{await f.refreshFamilyBrief()}catch(e){console.warn("[Portal] refreshFamilyBrief failed:",(e==null?void 0:e.message)??e)}finally{this._refreshingFamilyBrief=!1}}}_ensureBriefForToday(){this.preview||this._autoBriefAttempted||this._refreshingFamilyBrief||(this._autoBriefAttempted=!0,setTimeout(async()=>{const e=this._childData();if(!(e.familyDailyCard||e.dailyCard)){this._refreshingFamilyBrief=!0;try{await f.refreshFamilyBrief()}catch(t){console.warn("[Portal] auto-generate brief failed:",(t==null?void 0:t.message)??t)}finally{this._refreshingFamilyBrief=!1}}},1500))}_renderBriefPreparing(){return o`
       <section class="family-brief">
         <div class="fb-prep-card">
           <span class="fb-tag-lite">FAMILY BRIEF</span>
           <span class="fb-prep-text">Pebble is preparing today's brief…</span>
         </div>
       </section>
-    `}_nextUpcomingTrip(){const e=new Date,t=new Date(e.getFullYear(),e.getMonth(),e.getDate());let i=null,r=1/0;for(const a of this._circleTrips()){const s=M(a.start);!s||(M(a.end)??s)<t||s.getTime()<r&&(i=a,r=s.getTime())}return i}_fmtTripRange(e){const t=M(e.start);if(!t)return"";const i=M(e.end)??t,r={month:"short",day:"numeric"},a=t.toLocaleDateString(void 0,r);if(i.getTime()===t.getTime())return a;const o=t.getMonth()===i.getMonth()&&t.getFullYear()===i.getFullYear()?String(i.getDate()):i.toLocaleDateString(void 0,r);return`${a} – ${o}`}_renderNextTripCard(){const e=()=>{this._activeTab="activities"},t=this._nextUpcomingTrip();if(!t)return n`<button
+    `}_nextUpcomingTrip(){const e=new Date,t=new Date(e.getFullYear(),e.getMonth(),e.getDate());let i=null,r=1/0;for(const a of this._circleTrips()){const s=M(a.start);!s||(M(a.end)??s)<t||s.getTime()<r&&(i=a,r=s.getTime())}return i}_fmtTripRange(e){const t=M(e.start);if(!t)return"";const i=M(e.end)??t,r={month:"short",day:"numeric"},a=t.toLocaleDateString(void 0,r);if(i.getTime()===t.getTime())return a;const n=t.getMonth()===i.getMonth()&&t.getFullYear()===i.getFullYear()?String(i.getDate()):i.toLocaleDateString(void 0,r);return`${a} – ${n}`}_renderNextTripCard(){const e=()=>{this._activeTab="activities"},t=this._nextUpcomingTrip();if(!t)return o`<button
         class="next-trip empty"
         @click=${e}
         aria-label="Plan a trip in Activities"
@@ -12938,7 +12994,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           <div class="nt-empty-title">No upcoming trips</div>
           <div class="nt-empty-sub">Plan one in Activities →</div>
         </div>
-      </button>`;const i=t.previewImage&&String(t.previewImage).trim()||t.coverImage,r=i?`background-image: url("${i}"); background-position: center center; background-size: cover;`:`background: ${Bt(t)};`;return n`<button
+      </button>`;const i=t.previewImage&&String(t.previewImage).trim()||t.coverImage,r=i?`background-image: url("${i}"); background-position: center center; background-size: cover;`:`background: ${Bt(t)};`;return o`<button
       class="next-trip ${i?"has-image":""}"
       style=${r}
       @click=${e}
@@ -12952,7 +13008,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           ${this._fmtTripRange(t)}${t.location?` · ${t.location}`:""}
         </div>
       </div>
-    </button>`}_renderWpkDetail(){const e=this.pebbleAnchors??[],t=(this.pebbleRhythms??[]).filter(s=>!s.iconKey),i=this._coordRoles(),r=this.pebblePatterns??[],a=this.pebbleLiveContext??[];return n`
+    </button>`}_renderWpkDetail(){const e=this.pebbleAnchors??[],t=(this.pebbleRhythms??[]).filter(s=>!s.iconKey),i=this._coordRoles(),r=this.pebblePatterns??[],a=this.pebbleLiveContext??[];return o`
       <button class="wpk-back" @click=${()=>{this._wpkOpen=!1}}>
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
           stroke="currentColor" stroke-width="2.2"
@@ -12976,7 +13032,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
         </div>
         ${this._renderPackingTemplates()}
       </section>
-    `}_renderPackingTemplates(){const e=this._packingTemplates??[],t=i=>(Array.isArray(i.groups)?i.groups:[]).reduce((r,a)=>r+(Array.isArray(a.items)?a.items.length:0),0);return n`
+    `}_renderPackingTemplates(){const e=this._packingTemplates??[],t=i=>(Array.isArray(i.groups)?i.groups:[]).reduce((r,a)=>r+(Array.isArray(a.items)?a.items.length:0),0);return o`
       <div class="wpk-packing">
         <div class="section-head"><h3>My packing lists</h3></div>
         <glass-panel padding="md" variant="strong">
@@ -12984,11 +13040,11 @@ They'll lose access to shared trips, celebrations and any read-only child access
             Reusable lists Pebble draws from when you start a trip. Save one from
             any trip's Packing tab.
           </div>
-          ${e.length===0?n`<div class="wpk-empty">
+          ${e.length===0?o`<div class="wpk-empty">
                 No saved lists yet. Open a trip, build its packing list, then tap
                 "Save this list for future trips".
-              </div>`:n`<div class="wpk-rows">
-                ${e.map(i=>n`<div class="wpk-row">
+              </div>`:o`<div class="wpk-rows">
+                ${e.map(i=>o`<div class="wpk-row">
                     <span class="wpk-ico">
                       <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
                         stroke="currentColor" stroke-width="2"
@@ -13016,13 +13072,13 @@ They'll lose access to shared trips, celebrations and any read-only child access
               </div>`}
         </glass-panel>
       </div>
-    `}async _deletePackingTemplate(e){if(!(this.preview||!(e!=null&&e.id))&&window.confirm(`Delete "${e.name}"? This won't affect any trip's current list.`))try{await f.deletePackingTemplate(e.id)}catch(t){console.warn("[Portal] deletePackingTemplate failed:",(t==null?void 0:t.message)??t)}}_wpkGroup({label:e,subtitle:t,empty:i,items:r,row:a}){const s=this._wpkExpanded.has(e),o=s?r:r.slice(0,3);return n`
+    `}async _deletePackingTemplate(e){if(!(this.preview||!(e!=null&&e.id))&&window.confirm(`Delete "${e.name}"? This won't affect any trip's current list.`))try{await f.deletePackingTemplate(e.id)}catch(t){console.warn("[Portal] deletePackingTemplate failed:",(t==null?void 0:t.message)??t)}}_wpkGroup({label:e,subtitle:t,empty:i,items:r,row:a}){const s=this._wpkExpanded.has(e),n=s?r:r.slice(0,3);return o`
       <div>
         <div class="section-head"><h3>${e}</h3></div>
         <glass-panel padding="md" variant="strong" stretch>
           <div class="wpk-sub">${t}</div>
-          ${r.length===0?n`<div class="wpk-empty">${i}</div>`:n`<div class="wpk-rows">${o.map(a)}</div>`}
-          ${r.length>3?n`<button
+          ${r.length===0?o`<div class="wpk-empty">${i}</div>`:o`<div class="wpk-rows">${n.map(a)}</div>`}
+          ${r.length>3?o`<button
                 class="wpk-toggle"
                 @click=${()=>this._toggleWpk(e)}
               >
@@ -13030,44 +13086,44 @@ They'll lose access to shared trips, celebrations and any read-only child access
               </button>`:""}
         </glass-panel>
       </div>
-    `}_wpkRow({glyph:e,primary:t,secondary:i,scope:r,childId:a,hint:s}){return n`<div class="wpk-row">
+    `}_wpkRow({glyph:e,primary:t,secondary:i,scope:r,childId:a,hint:s}){return o`<div class="wpk-row">
       <span class="wpk-ico">${this._wpkGlyph(e)}</span>
       <div class="wpk-body">
         <div class="wpk-primary">${t}</div>
-        ${i?n`<div class="wpk-secondary">${i}</div>`:""}
+        ${i?o`<div class="wpk-secondary">${i}</div>`:""}
         <div class="wpk-tags">
           <span class="wpk-scope ${this._scopeClass(r)}"
             >${this._scopeLabel(r,a)}</span
           >
-          ${s?n`<span class="wpk-hint">${s}</span>`:""}
+          ${s?o`<span class="wpk-hint">${s}</span>`:""}
         </div>
       </div>
-    </div>`}_toggleWpk(e){this._wpkExpanded.has(e)?this._wpkExpanded.delete(e):this._wpkExpanded.add(e),this.requestUpdate()}_scopeClass(e){return e==="child"?"child":e==="member"?"member":"family"}_scopeLabel(e,t){if(e==="member")return"Private";if(e==="child"){const i=(this.ppChildren??[]).find(r=>r.id===t);return(i==null?void 0:i.name)??"Child"}return"Family"}_wpkCadence(e){let t;switch(e.cadence){case"daily":t="Daily";break;case"weekday":t="Weekdays";break;case"weekly":t=Array.isArray(e.daysOfWeek)&&e.daysOfWeek.length?e.daysOfWeek.map(r=>this._weekdayShort(r)).filter(Boolean).join(", "):"Weekly";break;case"monthly":t="Monthly";break;case"asNeeded":t="As needed";break;default:t=e.cadence||""}const i=e.timeOfDay?`${t} · ${e.timeOfDay}`:t;return e.termTimeOnly?`${i} · term-time only`:i}_weekdayShort(e){return["","Mon","Tue","Wed","Thu","Fri","Sat","Sun"][e]??""}_wpkRelDate(e){var s;const t=((s=e==null?void 0:e.toMillis)==null?void 0:s.call(e))??(e?new Date(e).getTime():0);if(!t)return"";const i=24*3600*1e3,r=o=>{const d=new Date(o);return d.setHours(0,0,0,0),d.getTime()},a=Math.round((r(t)-r(Date.now()))/i);return a===0?"Today":a===1?"Tomorrow":a===-1?"Yesterday":a>1?`In ${a} days`:`${-a} days ago`}_wpkGlyph(e){const t={width:16,height:16,viewBox:"0 0 24 24"};switch(e){case"rhythm":return n`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
+    </div>`}_toggleWpk(e){this._wpkExpanded.has(e)?this._wpkExpanded.delete(e):this._wpkExpanded.add(e),this.requestUpdate()}_scopeClass(e){return e==="child"?"child":e==="member"?"member":"family"}_scopeLabel(e,t){if(e==="member")return"Private";if(e==="child"){const i=(this.ppChildren??[]).find(r=>r.id===t);return(i==null?void 0:i.name)??"Child"}return"Family"}_wpkCadence(e){let t;switch(e.cadence){case"daily":t="Daily";break;case"weekday":t="Weekdays";break;case"weekly":t=Array.isArray(e.daysOfWeek)&&e.daysOfWeek.length?e.daysOfWeek.map(r=>this._weekdayShort(r)).filter(Boolean).join(", "):"Weekly";break;case"monthly":t="Monthly";break;case"asNeeded":t="As needed";break;default:t=e.cadence||""}const i=e.timeOfDay?`${t} · ${e.timeOfDay}`:t;return e.termTimeOnly?`${i} · term-time only`:i}_weekdayShort(e){return["","Mon","Tue","Wed","Thu","Fri","Sat","Sun"][e]??""}_wpkRelDate(e){var s;const t=((s=e==null?void 0:e.toMillis)==null?void 0:s.call(e))??(e?new Date(e).getTime():0);if(!t)return"";const i=24*3600*1e3,r=n=>{const d=new Date(n);return d.setHours(0,0,0,0),d.getTime()},a=Math.round((r(t)-r(Date.now()))/i);return a===0?"Today":a===1?"Tomorrow":a===-1?"Yesterday":a>1?`In ${a} days`:`${-a} days ago`}_wpkGlyph(e){const t={width:16,height:16,viewBox:"0 0 24 24"};switch(e){case"rhythm":return o`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
           fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
           <path d="M17 2l4 4-4 4"></path>
           <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
           <path d="M7 22l-4-4 4-4"></path>
           <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
-        </svg>`;case"pattern":return n`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
+        </svg>`;case"pattern":return o`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
           fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
           <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"></path>
           <circle cx="12" cy="12" r="3"></circle>
-        </svg>`;case"live":return n`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
+        </svg>`;case"live":return o`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
           fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="5" width="18" height="16" rx="2"></rect>
           <path d="M3 9h18M8 3v4M16 3v4"></path>
-        </svg>`;default:return n`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
+        </svg>`;default:return o`<svg viewBox=${t.viewBox} width=${t.width} height=${t.height}
           fill="none" stroke="currentColor" stroke-width="2"
           stroke-linecap="round" stroke-linejoin="round">
           <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"></path>
           <circle cx="12" cy="9" r="2.5"></circle>
-        </svg>`}}_childData(){if(this.preview)return{hasPP:!0,readonly:!1,children:Ni,child:Ut,milestones:Bi,insights:Li,reports:[{id:"mock-report-1",title:"Spring Term Progress Report",source:"Sunnydale Daycare",periodLabel:"Spring 2026",summary:"Felix has had a wonderful term. He is using longer sentences, takes turns well during group play, and shows strong fine-motor control with crayons and scissors. Staff note he sometimes needs a little extra reassurance at drop-off."}],dailyCard:Oi,familyDailyCard:Ui,pebbleMessages:ji,pebbleSessions:[]};const e=this.ppChildren??[],t=e.find(r=>r.id===this.selectedChildId)??e[0]??null;return{hasPP:!!((this.ppIsMember||this.ppIsChildViewer)&&t),readonly:!!(this.ppIsChildViewer&&!this.ppIsMember),children:e,child:t,milestones:this.childMilestones??[],insights:this.childInsights??[],reports:this.childReports??[],dailyCard:this.childDailyCard??null,familyDailyCard:this.familyDailyCard??null,pebbleMessages:this.childPebbleMessages??[],pebbleSessions:this.childPebbleSessions??[]}}_onSelectChild(e){this.preview||f.selectChild(e.detail)}_onAskPebble(e){this._pebblePrefill=e.detail??"",this._activeTab="pebble"}async _onUpdateReport(e){var r,a;if(this.preview)return;const t=(a=(r=this._childData())==null?void 0:r.child)==null?void 0:a.id,i=e.detail;if(!(!t||!(i!=null&&i.id)))try{await f.upsertDevelopmentReport(t,i)}catch(s){console.error("update report failed:",s),y(`Couldn't save: ${s.code??s.message}`,{duration:5e3})}}async _onDeleteReport(e){var r,a,s;if(this.preview)return;const t=(a=(r=this._childData())==null?void 0:r.child)==null?void 0:a.id,i=(s=e.detail)==null?void 0:s.id;if(!(!t||!i))try{await f.deleteDevelopmentReport(t,i),y("Report removed.")}catch(o){console.error("delete report failed:",o),y(`Couldn't delete: ${o.code??o.message}`,{duration:5e3})}}async _claimChildAsParent(e){if(!this.preview&&!(!(e!=null&&e.id)||this._claimingChildId)){this._claimingChildId=e.id;try{await f.requestToBeCoParent(e.id),this._claimedChildName=e.name??"your child"}catch(t){y(`Couldn't send the request: ${t.code??t.message}`,{duration:5e3})}finally{this._claimingChildId=null}}}async _requestChildAccess(){if(!this.preview)try{await f.requestChildAccess(),y("Request sent. A parent will be notified.")}catch(e){y(`Couldn't send request: ${e.code??e.message}`,{duration:5e3})}}async _withdrawChildAccess(){if(!this.preview)try{await f.withdrawChildAccessRequest(),y("Request withdrawn.")}catch(e){y(`Couldn't withdraw: ${e.code??e.message}`,{duration:4e3})}}async _approveChildAccess(e){try{await f.approveChildAccess(e),y("Access granted. Read-only Children view.")}catch(t){y(`Couldn't approve: ${t.code??t.message}`,{duration:5e3})}}async _declineChildAccess(e){try{await f.declineChildAccess(e),y("Request declined.")}catch(t){y(`Couldn't decline: ${t.code??t.message}`,{duration:4e3})}}async _revokeChildViewer(e){try{await f.revokeChildViewer(e),y("Read-only access revoked.")}catch(t){y(`Couldn't revoke: ${t.code??t.message}`,{duration:4e3})}}_ageShort(e){var s;if(!e||Number.isNaN(((s=e.getTime)==null?void 0:s.call(e))??NaN))return"";const t=new Date;let i=(t.getFullYear()-e.getFullYear())*12+(t.getMonth()-e.getMonth());t.getDate()<e.getDate()&&(i-=1),i=Math.max(0,i);const r=Math.floor(i/12),a=i%12;return r===0?`${a} mo`:`${r}y${a?` ${a}m`:""}`}_ageMonthsFor(e){var r;if(!e||Number.isNaN(((r=e.getTime)==null?void 0:r.call(e))??NaN))return 0;const t=new Date;let i=(t.getFullYear()-e.getFullYear())*12+(t.getMonth()-e.getMonth());return t.getDate()<e.getDate()&&(i-=1),Math.max(0,i)}_activeMilestoneProgress(e,t){const i=Array.isArray(e)?e:[],r=this._ageMonthsFor(t),a=i.filter(o=>{const d=o.ageRangeStartMonths??0;return(o.ageRangeEndMonths??d)>=r&&d<=r+12});return{done:a.filter(o=>o.status==="achieved").length,total:a.length}}_ageLong(e){var o;if(!e||Number.isNaN(((o=e.getTime)==null?void 0:o.call(e))??NaN))return"";const t=new Date;let i=(t.getFullYear()-e.getFullYear())*12+(t.getMonth()-e.getMonth());t.getDate()<e.getDate()&&(i-=1),i=Math.max(0,i);const r=Math.floor(i/12),a=i%12;if(r===0)return`${a} month${a===1?"":"s"}`;const s=a?`, ${a} month${a===1?"":"s"}`:"";return`${r} year${r===1?"":"s"}${s}`}_comingUp(){const e=[];for(const i of this._filteredTrips())i.start&&e.push({kind:"trip",title:i.title||"Trip",sub:i.location||i.lodgingHost||"",date:i.start,chip:this._fmtRangeShort(i.start,i.end)});for(const i of this._filteredEvents()){if(!i.date||!this._isCelebrationEvent(i))continue;const r=M(i.date);r&&e.push({kind:i.source==="school-import"?"external":"event",title:i.title||"Celebration",sub:"",date:i.date,chip:r.toLocaleDateString("en-GB",{day:"numeric",month:"short"})})}const t=new Date().toISOString().slice(0,10);for(const i of this.holidays??[]){if(!i.date||i.date<t)continue;const r=M(i.date);r&&e.push({kind:"holiday",title:i.title||"Public holiday",sub:"Public holiday",date:i.date,chip:r.toLocaleDateString("en-GB",{day:"numeric",month:"short"})})}for(const i of this._standaloneActivities()){if(!i.day||i.day<t)continue;const r=M(i.day);r&&e.push({kind:"event",title:i.title||"Activity",sub:i.calTag||"",date:i.day,chip:r.toLocaleDateString("en-GB",{day:"numeric",month:"short"})})}return e.sort((i,r)=>String(i.date).localeCompare(String(r.date))).slice(0,5)}_fmtRangeShort(e,t){const i=M(e),r=M(t);if(!i)return"";const a=i.toLocaleDateString("en-GB",{month:"short"});if(!r||i.getDate()===r.getDate()&&a===r.toLocaleDateString("en-GB",{month:"short"}))return`${i.getDate()} ${a}`;const s=r.toLocaleDateString("en-GB",{month:"short"});return a===s?`${i.getDate()}–${r.getDate()} ${a}`:`${i.getDate()} ${a} – ${r.getDate()} ${s}`}_tripGico(){return n`<span class="gico trip"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.62 3.05a1 1 0 0 0-1.12-.18L3.7 10.3c-.86.38-.83 1.62.05 1.95l6.06 2.27 2.27 6.06c.33.88 1.57.9 1.95.05L21.8 4.17a1 1 0 0 0-.18-1.12zM10.5 12.7l6.4-5.7-4.9 6.6-.1.1z"/></svg></span>`}_eventGico(){return n`<span class="gico event"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.1 6.7C10.4 5 9.2 3.7 7.8 3.3c-1-.3-1.9.1-2.2.9-.4 1 .2 2.1 1 2.7 1 .75 2.5 1.05 4.5 1.05z"/><path d="M12.9 6.7c.7-1.7 1.9-3 3.3-3.4 1-.3 1.9.1 2.2.9.4 1-.2 2.1-1 2.7-1 .75-2.5 1.05-4.5 1.05z"/><rect x="3" y="8" width="8.1" height="3.5" rx="1"/><rect x="12.9" y="8" width="8.1" height="3.5" rx="1"/><rect x="4.1" y="11.7" width="7" height="9.1" rx="1.4"/><rect x="12.9" y="11.7" width="7" height="9.1" rx="1.4"/></svg></span>`}_holidayGico(){return n`<span class="gico holiday"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 4V6M15 4H10.5M3 10V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V10H3Z"/><path d="M3 10V6C3 4.89543 3.89543 4 5 4H7"/><path d="M7 2V6"/><path d="M21 10V6C21 4.89543 20.1046 4 19 4H18.5"/></svg></span>`}_schoolGico(){return n`<span class="gico school"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-5 9 5-9 5-9-5z"/><path d="M7 12.5V17c0 1 2.5 2.5 5 2.5s5-1.5 5-2.5v-4.5M21 10v5"/></svg></span>`}_gicoFor(e){return e.kind==="trip"?this._tripGico():e.kind==="holiday"?this._holidayGico():e.kind==="external"?this._schoolGico():this._eventGico()}_comingDateRail(e){const t=M(e.date);if(!t)return n`<span class="ca-rail"></span>`;const i=new Date;i.setHours(0,0,0,0);const r=new Date(t);r.setHours(0,0,0,0);const a=Math.round((r-i)/864e5);if(a<=0)return n`<span class="ca-rail today">
+        </svg>`}}_childData(){if(this.preview)return{hasPP:!0,readonly:!1,children:Ni,child:Ut,milestones:Bi,insights:Li,reports:[{id:"mock-report-1",title:"Spring Term Progress Report",source:"Sunnydale Daycare",periodLabel:"Spring 2026",summary:"Felix has had a wonderful term. He is using longer sentences, takes turns well during group play, and shows strong fine-motor control with crayons and scissors. Staff note he sometimes needs a little extra reassurance at drop-off."}],dailyCard:Oi,familyDailyCard:Ui,pebbleMessages:ji,pebbleSessions:[]};const e=this.ppChildren??[],t=e.find(r=>r.id===this.selectedChildId)??e[0]??null;return{hasPP:!!((this.ppIsMember||this.ppIsChildViewer)&&t),readonly:!!(this.ppIsChildViewer&&!this.ppIsMember),children:e,child:t,milestones:this.childMilestones??[],insights:this.childInsights??[],reports:this.childReports??[],dailyCard:this.childDailyCard??null,familyDailyCard:this.familyDailyCard??null,pebbleMessages:this.childPebbleMessages??[],pebbleSessions:this.childPebbleSessions??[]}}_onSelectChild(e){this.preview||f.selectChild(e.detail)}_onAskPebble(e){this._pebblePrefill=e.detail??"",this._activeTab="pebble"}async _onUpdateReport(e){var r,a;if(this.preview)return;const t=(a=(r=this._childData())==null?void 0:r.child)==null?void 0:a.id,i=e.detail;if(!(!t||!(i!=null&&i.id)))try{await f.upsertDevelopmentReport(t,i)}catch(s){console.error("update report failed:",s),y(`Couldn't save: ${s.code??s.message}`,{duration:5e3})}}async _onDeleteReport(e){var r,a,s;if(this.preview)return;const t=(a=(r=this._childData())==null?void 0:r.child)==null?void 0:a.id,i=(s=e.detail)==null?void 0:s.id;if(!(!t||!i))try{await f.deleteDevelopmentReport(t,i),y("Report removed.")}catch(n){console.error("delete report failed:",n),y(`Couldn't delete: ${n.code??n.message}`,{duration:5e3})}}async _claimChildAsParent(e){if(!this.preview&&!(!(e!=null&&e.id)||this._claimingChildId)){this._claimingChildId=e.id;try{await f.requestToBeCoParent(e.id),this._claimedChildName=e.name??"your child"}catch(t){y(`Couldn't send the request: ${t.code??t.message}`,{duration:5e3})}finally{this._claimingChildId=null}}}async _requestChildAccess(){if(!this.preview)try{await f.requestChildAccess(),y("Request sent. A parent will be notified.")}catch(e){y(`Couldn't send request: ${e.code??e.message}`,{duration:5e3})}}async _withdrawChildAccess(){if(!this.preview)try{await f.withdrawChildAccessRequest(),y("Request withdrawn.")}catch(e){y(`Couldn't withdraw: ${e.code??e.message}`,{duration:4e3})}}async _approveChildAccess(e){try{await f.approveChildAccess(e),y("Access granted. Read-only Children view.")}catch(t){y(`Couldn't approve: ${t.code??t.message}`,{duration:5e3})}}async _declineChildAccess(e){try{await f.declineChildAccess(e),y("Request declined.")}catch(t){y(`Couldn't decline: ${t.code??t.message}`,{duration:4e3})}}async _revokeChildViewer(e){try{await f.revokeChildViewer(e),y("Read-only access revoked.")}catch(t){y(`Couldn't revoke: ${t.code??t.message}`,{duration:4e3})}}_ageShort(e){var s;if(!e||Number.isNaN(((s=e.getTime)==null?void 0:s.call(e))??NaN))return"";const t=new Date;let i=(t.getFullYear()-e.getFullYear())*12+(t.getMonth()-e.getMonth());t.getDate()<e.getDate()&&(i-=1),i=Math.max(0,i);const r=Math.floor(i/12),a=i%12;return r===0?`${a} mo`:`${r}y${a?` ${a}m`:""}`}_ageMonthsFor(e){var r;if(!e||Number.isNaN(((r=e.getTime)==null?void 0:r.call(e))??NaN))return 0;const t=new Date;let i=(t.getFullYear()-e.getFullYear())*12+(t.getMonth()-e.getMonth());return t.getDate()<e.getDate()&&(i-=1),Math.max(0,i)}_activeMilestoneProgress(e,t){const i=Array.isArray(e)?e:[],r=this._ageMonthsFor(t),a=i.filter(n=>{const d=n.ageRangeStartMonths??0;return(n.ageRangeEndMonths??d)>=r&&d<=r+12});return{done:a.filter(n=>n.status==="achieved").length,total:a.length}}_ageLong(e){var n;if(!e||Number.isNaN(((n=e.getTime)==null?void 0:n.call(e))??NaN))return"";const t=new Date;let i=(t.getFullYear()-e.getFullYear())*12+(t.getMonth()-e.getMonth());t.getDate()<e.getDate()&&(i-=1),i=Math.max(0,i);const r=Math.floor(i/12),a=i%12;if(r===0)return`${a} month${a===1?"":"s"}`;const s=a?`, ${a} month${a===1?"":"s"}`:"";return`${r} year${r===1?"":"s"}${s}`}_comingUp(){const e=[];for(const i of this._filteredTrips())i.start&&e.push({kind:"trip",title:i.title||"Trip",sub:i.location||i.lodgingHost||"",date:i.start,chip:this._fmtRangeShort(i.start,i.end)});for(const i of this._filteredEvents()){if(!i.date||!this._isCelebrationEvent(i))continue;const r=M(i.date);r&&e.push({kind:i.source==="school-import"?"external":"event",title:i.title||"Celebration",sub:"",date:i.date,chip:r.toLocaleDateString("en-GB",{day:"numeric",month:"short"})})}const t=new Date().toISOString().slice(0,10);for(const i of this.holidays??[]){if(!i.date||i.date<t)continue;const r=M(i.date);r&&e.push({kind:"holiday",title:i.title||"Public holiday",sub:"Public holiday",date:i.date,chip:r.toLocaleDateString("en-GB",{day:"numeric",month:"short"})})}for(const i of this._standaloneActivities()){if(!i.day||i.day<t)continue;const r=M(i.day);r&&e.push({kind:"event",title:i.title||"Activity",sub:i.calTag||"",date:i.day,chip:r.toLocaleDateString("en-GB",{day:"numeric",month:"short"})})}return e.sort((i,r)=>String(i.date).localeCompare(String(r.date))).slice(0,5)}_fmtRangeShort(e,t){const i=M(e),r=M(t);if(!i)return"";const a=i.toLocaleDateString("en-GB",{month:"short"});if(!r||i.getDate()===r.getDate()&&a===r.toLocaleDateString("en-GB",{month:"short"}))return`${i.getDate()} ${a}`;const s=r.toLocaleDateString("en-GB",{month:"short"});return a===s?`${i.getDate()}–${r.getDate()} ${a}`:`${i.getDate()} ${a} – ${r.getDate()} ${s}`}_tripGico(){return o`<span class="gico trip"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.62 3.05a1 1 0 0 0-1.12-.18L3.7 10.3c-.86.38-.83 1.62.05 1.95l6.06 2.27 2.27 6.06c.33.88 1.57.9 1.95.05L21.8 4.17a1 1 0 0 0-.18-1.12zM10.5 12.7l6.4-5.7-4.9 6.6-.1.1z"/></svg></span>`}_eventGico(){return o`<span class="gico event"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.1 6.7C10.4 5 9.2 3.7 7.8 3.3c-1-.3-1.9.1-2.2.9-.4 1 .2 2.1 1 2.7 1 .75 2.5 1.05 4.5 1.05z"/><path d="M12.9 6.7c.7-1.7 1.9-3 3.3-3.4 1-.3 1.9.1 2.2.9.4 1-.2 2.1-1 2.7-1 .75-2.5 1.05-4.5 1.05z"/><rect x="3" y="8" width="8.1" height="3.5" rx="1"/><rect x="12.9" y="8" width="8.1" height="3.5" rx="1"/><rect x="4.1" y="11.7" width="7" height="9.1" rx="1.4"/><rect x="12.9" y="11.7" width="7" height="9.1" rx="1.4"/></svg></span>`}_holidayGico(){return o`<span class="gico holiday"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 4V6M15 4H10.5M3 10V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V10H3Z"/><path d="M3 10V6C3 4.89543 3.89543 4 5 4H7"/><path d="M7 2V6"/><path d="M21 10V6C21 4.89543 20.1046 4 19 4H18.5"/></svg></span>`}_schoolGico(){return o`<span class="gico school"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-5 9 5-9 5-9-5z"/><path d="M7 12.5V17c0 1 2.5 2.5 5 2.5s5-1.5 5-2.5v-4.5M21 10v5"/></svg></span>`}_gicoFor(e){return e.kind==="trip"?this._tripGico():e.kind==="holiday"?this._holidayGico():e.kind==="external"?this._schoolGico():this._eventGico()}_comingDateRail(e){const t=M(e.date);if(!t)return o`<span class="ca-rail"></span>`;const i=new Date;i.setHours(0,0,0,0);const r=new Date(t);r.setHours(0,0,0,0);const a=Math.round((r-i)/864e5);if(a<=0)return o`<span class="ca-rail today">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>
         <span class="rk">${a<0?"Now":"Today"}</span>
-      </span>`;const s=t.toLocaleDateString("en-GB",a<=6?{weekday:"short"}:{month:"short"}).toUpperCase();return n`<span class="ca-rail">
+      </span>`;const s=t.toLocaleDateString("en-GB",a<=6?{weekday:"short"}:{month:"short"}).toUpperCase();return o`<span class="ca-rail">
       <span class="rk">${s}</span>
       <span class="rd">${t.getDate()}</span>
     </span>`}}$(lt,"properties",{user:{type:Object},pebbleUser:{type:Object},family:{type:Object},children:{type:Array},trips:{type:Array},events:{type:Array},activities:{type:Array},holidays:{type:Array},preview:{type:Boolean},ppFamily:{type:Object},ppIsMember:{type:Boolean},ppChildren:{type:Array},selectedChildId:{type:String},childMilestones:{type:Array},childInsights:{type:Array},childReports:{type:Array},childDailyCard:{type:Object},familyDailyCard:{type:Object},nonParentDailyCard:{type:Object},pebbleAnchors:{type:Array},pebbleRhythms:{type:Array},pebblePatterns:{type:Array},pebbleLiveContext:{type:Array},childPebbleMessages:{type:Array},childPebbleSessions:{type:Array},planningMessages:{type:Array},pebbleQuota:{type:Object},ppIsChildViewer:{type:Boolean},incomingChildRequests:{type:Array},myChildAccessRequest:{type:Object},_pebblePrefill:{state:!0},_plannerOpen:{state:!0},_plannerTrip:{state:!0},circle:{state:!0},_activeTab:{state:!0},_refreshingFamilyBrief:{state:!0},_refreshingNonParentBrief:{state:!0},_weekendOpen:{state:!0},_wpkOpen:{state:!0},_packingTemplates:{state:!0},_formOpen:{state:!0},_formTrip:{state:!0},_formBusy:{state:!0},_membersOpen:{state:!0},_eventFormOpen:{state:!0},_eventFormEvent:{state:!0},_eventFormBusy:{state:!0},_activityFormOpen:{state:!0},_activityFormActivity:{state:!0},_activityFormBusy:{state:!0},_displayMonth:{state:!0},_calendarView:{state:!0},_calFilters:{state:!0},_managingTags:{state:!0},_tagRenaming:{state:!0},_tagRenameDraft:{state:!0},_tagDeleting:{state:!0},_displayWeekStart:{state:!0},_allTripsOpen:{state:!0},_editingFamilyName:{state:!0},_importOpen:{state:!0},_schoolImportOpen:{state:!0},_profileOpen:{state:!0},_typePickerOpen:{state:!0},_formMode:{state:!0},_pebbleFabOpen:{state:!0},_themeLight:{state:!0},_dragOverTarget:{state:!0},_connectionMembers:{state:!0},_claimingChildId:{state:!0},_claimedChildName:{state:!0},_joinAnotherCode:{state:!0},_joinAnotherBusy:{state:!0},_joinAnotherError:{state:!0},_joinAnotherSuccessName:{state:!0}}),$(lt,"styles",E`
@@ -16431,11 +16487,11 @@ They'll lose access to shared trips, celebrations and any read-only child access
       font-size: 26px;
       line-height: 1.1;
     }
-  `);customElements.define("home-screen",lt);const kt="cairn:pendingLoginIntent";class dt extends D{constructor(){super(),this.user=null,this._mode="choose",this._code="",this._familyName="",this._busy=!1,this._error="",this._childName="",this._childDob="",this._childPhotoBlob=null,this._childPhotoPreview=null,this._parentPhotoBlob=null,this._parentPhotoPreview=null,this._flavor="welcome",this._wantsChild=!1,this._premature="",this._focusFlags=[],this._homeCity="",this._homeRegion="",this._homeCountry="United States",this._locating=!1;try{localStorage.getItem(kt)==="1"&&(this._flavor="recovery",localStorage.removeItem(kt))}catch{}}willUpdate(e){if(e.has("user")&&this.user&&!this._familyName){const t=(this.user.displayName??"").trim().split(/\s+/).slice(-1)[0];t&&t.length>1&&(this._familyName=`${t} Family`)}}_go(e){this._mode=e,this._error=""}_submitJoin(){const e=(this._code??"").trim().toUpperCase().replace(/\s+/g,"");if(!e){this._error="Paste the connect code you were sent.";return}const t=/^[A-Z0-9]{6}$/.test(e),i=/^CAIRN-[A-Z0-9]{3,6}$/.test(e);if(!t&&!i){this._error="Connect codes are 6 characters.";return}this._error="",this.dispatchEvent(new CustomEvent("join-code",{detail:{code:e},bubbles:!0,composed:!0}))}_goChildrenQuestion(){if(!(this._familyName??"").trim()){this._error="Give your family a name.";return}this._error="",this._go("children")}_goAddChild(){this._error="",this._go("addchild")}_goNoChildren(){if(!(this._familyName??"").trim()){this._error="Give your family a name.";return}this._error="",this._wantsChild=!1,this._go("location")}_goLocationFromChild(){const e=(this._familyName??"").trim(),t=(this._childName??"").trim();if(!e){this._error="Give your family a name.";return}if(!t){this._error="Add your child's name.";return}if(!this._childDob){this._error="Add your child's date of birth.";return}const i=new Date(`${this._childDob}T00:00:00`);if(Number.isNaN(i.getTime())){this._error="That date of birth doesn't look right.";return}this._error="",this._wantsChild=!0,this._go("location")}_setPremature(e){this._premature=this._premature===e?"":e}_toggleFocusFlag(e){const t=new Set(this._focusFlags);t.has(e)?t.delete(e):t.add(e),this._focusFlags=[...t]}async _useMyLocation(){if(!this._locating){if(!navigator.geolocation){y("Location is not available in this browser. Enter it manually.");return}this._locating=!0;try{const e=await new Promise((s,o)=>navigator.geolocation.getCurrentPosition(s,o,{timeout:1e4,maximumAge:6e5})),{latitude:t,longitude:i}=e.coords,a=await(await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${t}&longitude=${i}&localityLanguage=en`)).json();this._homeCity=a.city||a.locality||"",this._homeRegion=a.principalSubdivision||"",this._homeCountry=a.countryName||"United States",this._homeCity||y("Couldn't find your city. Enter it manually.")}catch(e){console.warn("geolocate failed:",e),y("Couldn't get your location. Enter it manually.")}finally{this._locating=!1}}}_skipLocation(){this._homeCity="",this._homeRegion="",this._error="",this._go("notifications")}_goNotificationsFromLocation(){this._error="",this._go("notifications")}async _finishOnboarding(){const e=(this._familyName??"").trim();if(!e){this._error="Give your family a name.",this._go("create");return}this._busy=!0,this._error="";try{let t;if(this._wantsChild){const i=(this._childName??"").trim(),r=new Date(`${this._childDob}T00:00:00`);if(!i||Number.isNaN(r.getTime())){this._busy=!1,this._error="Add your child's name and date of birth.",this._go("addchild");return}t=await f.createPebblePathFamily(e);const a=[...this._focusFlags];this._premature==="yes"&&a.push("Premature birth");const s=await f.createChild(t,{name:i,dateOfBirth:r,developmentalFlags:a});if(this._childPhotoBlob)try{await f.uploadChildAvatar(t,s,this._childPhotoBlob)}catch(o){console.warn("child avatar upload failed (non-fatal):",o),y("Family created. Couldn't save the photo, add it later.")}}else t=await f.createCairnOnlyFamily(e);if(await this._uploadParentPhotoIfAny(t),this._homeCity.trim())try{await f.setHomeLocation({city:this._homeCity,region:this._homeRegion,country:this._homeCountry},t)}catch(i){console.warn("home location save failed (non-fatal):",i)}y(`Welcome to ${e}.`)}catch(t){console.error("Onboarding create failed:",t),this._error=(t==null?void 0:t.code)==="permission-denied"?"Couldn't set up your family. Firestore rules may not be deployed yet.":`Couldn't set up your family: ${(t==null?void 0:t.message)??"try again"}`}finally{this._busy=!1}}_iconJoin(){return n`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+  `);customElements.define("home-screen",lt);const kt="cairn:pendingLoginIntent";class dt extends D{constructor(){super(),this.user=null,this._mode="choose",this._code="",this._familyName="",this._busy=!1,this._error="",this._childName="",this._childDob="",this._childPhotoBlob=null,this._childPhotoPreview=null,this._parentPhotoBlob=null,this._parentPhotoPreview=null,this._flavor="welcome",this._wantsChild=!1,this._premature="",this._focusFlags=[],this._homeCity="",this._homeRegion="",this._homeCountry="United States",this._locating=!1;try{localStorage.getItem(kt)==="1"&&(this._flavor="recovery",localStorage.removeItem(kt))}catch{}}willUpdate(e){if(e.has("user")&&this.user&&!this._familyName){const t=(this.user.displayName??"").trim().split(/\s+/).slice(-1)[0];t&&t.length>1&&(this._familyName=`${t} Family`)}}_go(e){this._mode=e,this._error=""}_submitJoin(){const e=(this._code??"").trim().toUpperCase().replace(/\s+/g,"");if(!e){this._error="Paste the connect code you were sent.";return}const t=/^[A-Z0-9]{6}$/.test(e),i=/^CAIRN-[A-Z0-9]{3,6}$/.test(e);if(!t&&!i){this._error="Connect codes are 6 characters.";return}this._error="",this.dispatchEvent(new CustomEvent("join-code",{detail:{code:e},bubbles:!0,composed:!0}))}_goChildrenQuestion(){if(!(this._familyName??"").trim()){this._error="Give your family a name.";return}this._error="",this._go("children")}_goAddChild(){this._error="",this._go("addchild")}_goNoChildren(){if(!(this._familyName??"").trim()){this._error="Give your family a name.";return}this._error="",this._wantsChild=!1,this._go("location")}_goLocationFromChild(){const e=(this._familyName??"").trim(),t=(this._childName??"").trim();if(!e){this._error="Give your family a name.";return}if(!t){this._error="Add your child's name.";return}if(!this._childDob){this._error="Add your child's date of birth.";return}const i=new Date(`${this._childDob}T00:00:00`);if(Number.isNaN(i.getTime())){this._error="That date of birth doesn't look right.";return}this._error="",this._wantsChild=!0,this._go("location")}_setPremature(e){this._premature=this._premature===e?"":e}_toggleFocusFlag(e){const t=new Set(this._focusFlags);t.has(e)?t.delete(e):t.add(e),this._focusFlags=[...t]}async _useMyLocation(){if(!this._locating){if(!navigator.geolocation){y("Location is not available in this browser. Enter it manually.");return}this._locating=!0;try{const e=await new Promise((s,n)=>navigator.geolocation.getCurrentPosition(s,n,{timeout:1e4,maximumAge:6e5})),{latitude:t,longitude:i}=e.coords,a=await(await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${t}&longitude=${i}&localityLanguage=en`)).json();this._homeCity=a.city||a.locality||"",this._homeRegion=a.principalSubdivision||"",this._homeCountry=a.countryName||"United States",this._homeCity||y("Couldn't find your city. Enter it manually.")}catch(e){console.warn("geolocate failed:",e),y("Couldn't get your location. Enter it manually.")}finally{this._locating=!1}}}_skipLocation(){this._homeCity="",this._homeRegion="",this._error="",this._go("notifications")}_goNotificationsFromLocation(){this._error="",this._go("notifications")}async _finishOnboarding(){const e=(this._familyName??"").trim();if(!e){this._error="Give your family a name.",this._go("create");return}this._busy=!0,this._error="";try{let t;if(this._wantsChild){const i=(this._childName??"").trim(),r=new Date(`${this._childDob}T00:00:00`);if(!i||Number.isNaN(r.getTime())){this._busy=!1,this._error="Add your child's name and date of birth.",this._go("addchild");return}t=await f.createPebblePathFamily(e);const a=[...this._focusFlags];this._premature==="yes"&&a.push("Premature birth");const s=await f.createChild(t,{name:i,dateOfBirth:r,developmentalFlags:a});if(this._childPhotoBlob)try{await f.uploadChildAvatar(t,s,this._childPhotoBlob)}catch(n){console.warn("child avatar upload failed (non-fatal):",n),y("Family created. Couldn't save the photo, add it later.")}}else t=await f.createCairnOnlyFamily(e);if(await this._uploadParentPhotoIfAny(t),this._homeCity.trim())try{await f.setHomeLocation({city:this._homeCity,region:this._homeRegion,country:this._homeCountry},t)}catch(i){console.warn("home location save failed (non-fatal):",i)}y(`Welcome to ${e}.`)}catch(t){console.error("Onboarding create failed:",t),this._error=(t==null?void 0:t.code)==="permission-denied"?"Couldn't set up your family. Firestore rules may not be deployed yet.":`Couldn't set up your family: ${(t==null?void 0:t.message)??"try again"}`}finally{this._busy=!1}}_iconJoin(){return o`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M16 11c1.66 0 3-1.34 3-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
-    </svg>`}_iconCreate(){return n`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    </svg>`}_iconCreate(){return o`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M12 2L4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4zm0 4.7l1.6 3.2 3.6.5-2.6 2.5.6 3.5L12 14.7l-3.2 1.7.6-3.5-2.6-2.5 3.6-.5L12 6.7z"/>
-    </svg>`}_iconPlus(){return n`<svg
+    </svg>`}_iconPlus(){return o`<svg
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -16444,9 +16500,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
       aria-hidden="true"
     >
       <path d="M12 5v14M5 12h14" />
-    </svg>`}_iconPerson(){return n`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    </svg>`}_iconPerson(){return o`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-    </svg>`}render(){return this._mode==="join"?this._renderJoin():this._mode==="create"?this._renderCreate():this._mode==="children"?this._renderChildren():this._mode==="addchild"?this._renderAddChild():this._mode==="location"?this._renderLocation():this._mode==="notifications"?this._renderNotifications():this._renderChoose()}_renderChoose(){const e=this._flavor==="recovery";return n`
+    </svg>`}render(){return this._mode==="join"?this._renderJoin():this._mode==="create"?this._renderCreate():this._mode==="children"?this._renderChildren():this._mode==="addchild"?this._renderAddChild():this._mode==="location"?this._renderLocation():this._mode==="notifications"?this._renderNotifications():this._renderChoose()}_renderChoose(){const e=this._flavor==="recovery";return o`
       <div class="wrap">
         <glass-panel padding="lg" variant="strong" lifted>
           <h1>${e?"We couldn't find a family on your account":"Set up your family"}</h1>
@@ -16469,7 +16525,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
         </glass-panel>
       </div>
-    `}_renderJoin(){return n`
+    `}_renderJoin(){return o`
       <div class="wrap">
         <glass-panel padding="lg" variant="strong" lifted>
           <button class="back" @click=${()=>this._go("choose")}>‹ Back</button>
@@ -16494,7 +16550,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 maxlength="14"
               />
             </div>
-            ${this._error?n`<div class="error">${this._error}</div>`:""}
+            ${this._error?o`<div class="error">${this._error}</div>`:""}
             <div class="actions">
               <glass-button variant="primary" @click=${this._submitJoin}>
                 Continue
@@ -16503,7 +16559,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
         </glass-panel>
       </div>
-    `}_renderCreate(){return n`
+    `}_renderCreate(){return o`
       <div class="wrap">
         <glass-panel padding="lg" variant="strong" lifted>
           <button class="back" @click=${()=>this._go("choose")}>‹ Back</button>
@@ -16525,7 +16581,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 maxlength="64"
               />
             </div>
-            ${this._error?n`<div class="error">${this._error}</div>`:""}
+            ${this._error?o`<div class="error">${this._error}</div>`:""}
             <div class="actions">
               <glass-button
                 variant="primary"
@@ -16537,7 +16593,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
         </glass-panel>
       </div>
-    `}_renderChildren(){return n`
+    `}_renderChildren(){return o`
       <div class="wrap">
         <glass-panel padding="lg" variant="strong" lifted>
           <button class="back" @click=${()=>this._go("create")}>‹ Back</button>
@@ -16575,14 +16631,14 @@ They'll lose access to shared trips, celebrations and any read-only child access
               </span>
             </button>
           </div>
-          ${this._error?n`<div class="error">${this._error}</div>`:""}
+          ${this._error?o`<div class="error">${this._error}</div>`:""}
         </glass-panel>
       </div>
-    `}_renderAvatarPicker({preview:e,inputId:t,onPick:i,onChange:r,ariaLabel:a}){return n`
+    `}_renderAvatarPicker({preview:e,inputId:t,onPick:i,onChange:r,ariaLabel:a}){return o`
       <div class="av-pick">
         <button type="button" @click=${i} aria-label=${a}>
           <span class="ring">
-            ${e?n`<img src=${e} alt="" />`:n`<svg
+            ${e?o`<img src=${e} alt="" />`:o`<svg
                   class="ph"
                   viewBox="0 0 24 24"
                   fill="currentColor"
@@ -16611,7 +16667,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           @change=${r}
         />
       </div>
-    `}async _uploadParentPhotoIfAny(e){if(!(!this._parentPhotoBlob||!e))try{await f.uploadUserAvatar(e,this._parentPhotoBlob)}catch(t){console.warn("parent avatar upload failed (non-fatal):",t),y("Family created. Couldn't save your photo, add it later.")}}_pickChildPhoto(){var e;(e=this.renderRoot.querySelector("#kid-photo-file"))==null||e.click()}_pickParentPhoto(){var e;(e=this.renderRoot.querySelector("#parent-photo-file"))==null||e.click()}async _onChildPhotoChosen(e){const t=await this._readPickedImage(e);t&&(this._childPhotoBlob=t,this._childPhotoPreview&&URL.revokeObjectURL(this._childPhotoPreview),this._childPhotoPreview=URL.createObjectURL(t))}async _onParentPhotoChosen(e){const t=await this._readPickedImage(e);t&&(this._parentPhotoBlob=t,this._parentPhotoPreview&&URL.revokeObjectURL(this._parentPhotoPreview),this._parentPhotoPreview=URL.createObjectURL(t))}async _readPickedImage(e){var i;const t=(i=e.target.files)==null?void 0:i[0];if(e.target.value="",!t)return null;if(!t.type.startsWith("image/"))return y("Pick an image file (JPG, PNG, etc.)."),null;if(t.size>15*1024*1024)return y("That photo is very large. Pick one under 15 MB."),null;try{return await this._processAvatarImage(t)}catch(r){return console.warn("photo processing failed:",r),y("Couldn't read that image. Try another."),null}}async _processAvatarImage(e){var l;let t;try{t=await createImageBitmap(e,{imageOrientation:"from-image"})}catch{t=await createImageBitmap(e)}const i=Math.min(t.width,t.height),r=(t.width-i)/2,a=(t.height-i)/2,s=512,o=document.createElement("canvas");return o.width=s,o.height=s,o.getContext("2d").drawImage(t,r,a,i,i,0,0,s,s),(l=t.close)==null||l.call(t),await new Promise((c,p)=>{o.toBlob(h=>h?c(h):p(new Error("toBlob returned null")),"image/jpeg",.85)})}_renderAddChild(){const e=(this._childName??"").trim()||"Your child",t=["Speech / language","Motor skills","Social interactions","Eating / feeding","Sleep","Sensory","General concern"],i=[{v:"yes",label:"Yes"},{v:"no",label:"No"},{v:"notsure",label:"Not sure"}];return n`
+    `}async _uploadParentPhotoIfAny(e){if(!(!this._parentPhotoBlob||!e))try{await f.uploadUserAvatar(e,this._parentPhotoBlob)}catch(t){console.warn("parent avatar upload failed (non-fatal):",t),y("Family created. Couldn't save your photo, add it later.")}}_pickChildPhoto(){var e;(e=this.renderRoot.querySelector("#kid-photo-file"))==null||e.click()}_pickParentPhoto(){var e;(e=this.renderRoot.querySelector("#parent-photo-file"))==null||e.click()}async _onChildPhotoChosen(e){const t=await this._readPickedImage(e);t&&(this._childPhotoBlob=t,this._childPhotoPreview&&URL.revokeObjectURL(this._childPhotoPreview),this._childPhotoPreview=URL.createObjectURL(t))}async _onParentPhotoChosen(e){const t=await this._readPickedImage(e);t&&(this._parentPhotoBlob=t,this._parentPhotoPreview&&URL.revokeObjectURL(this._parentPhotoPreview),this._parentPhotoPreview=URL.createObjectURL(t))}async _readPickedImage(e){var i;const t=(i=e.target.files)==null?void 0:i[0];if(e.target.value="",!t)return null;if(!t.type.startsWith("image/"))return y("Pick an image file (JPG, PNG, etc.)."),null;if(t.size>15*1024*1024)return y("That photo is very large. Pick one under 15 MB."),null;try{return await this._processAvatarImage(t)}catch(r){return console.warn("photo processing failed:",r),y("Couldn't read that image. Try another."),null}}async _processAvatarImage(e){var l;let t;try{t=await createImageBitmap(e,{imageOrientation:"from-image"})}catch{t=await createImageBitmap(e)}const i=Math.min(t.width,t.height),r=(t.width-i)/2,a=(t.height-i)/2,s=512,n=document.createElement("canvas");return n.width=s,n.height=s,n.getContext("2d").drawImage(t,r,a,i,i,0,0,s,s),(l=t.close)==null||l.call(t),await new Promise((c,p)=>{n.toBlob(h=>h?c(h):p(new Error("toBlob returned null")),"image/jpeg",.85)})}_renderAddChild(){const e=(this._childName??"").trim()||"Your child",t=["Speech / language","Motor skills","Social interactions","Eating / feeding","Sleep","Sensory","General concern"],i=[{v:"yes",label:"Yes"},{v:"no",label:"No"},{v:"notsure",label:"Not sure"}];return o`
       <div class="wrap">
         <glass-panel padding="lg" variant="strong" lifted>
           <button class="back" @click=${()=>this._go("children")}>‹ Back</button>
@@ -16642,7 +16698,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             <div>
               <label>Was your child born premature?</label>
               <div class="seg">
-                ${i.map(r=>n`
+                ${i.map(r=>o`
                     <button
                       type="button"
                       class=${this._premature===r.v?"active":""}
@@ -16656,7 +16712,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             <div>
               <label>Anything you'd like to focus on? (optional)</label>
               <div class="chips">
-                ${t.map(r=>n`
+                ${t.map(r=>o`
                     <button
                       type="button"
                       class="chip ${this._focusFlags.includes(r)?"on":""}"
@@ -16681,7 +16737,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 code. You'll get a prompt to confirm them as a parent.
               </p>
             </div>
-            ${this._error?n`<div class="error">${this._error}</div>`:""}
+            ${this._error?o`<div class="error">${this._error}</div>`:""}
             <div class="actions">
               <glass-button
                 variant="primary"
@@ -16694,7 +16750,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
         </glass-panel>
       </div>
-    `}_renderLocation(){return n`
+    `}_renderLocation(){return o`
       <div class="wrap">
         <glass-panel padding="lg" variant="strong" lifted>
           <button
@@ -16746,7 +16802,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
                 maxlength="80"
               />
             </div>
-            ${this._error?n`<div class="error">${this._error}</div>`:""}
+            ${this._error?o`<div class="error">${this._error}</div>`:""}
             <div class="actions">
               <glass-button variant="primary" @click=${this._goNotificationsFromLocation}>
                 Continue
@@ -16758,7 +16814,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
           </div>
         </glass-panel>
       </div>
-    `}_renderNotifications(){return n`
+    `}_renderNotifications(){return o`
       <div class="wrap">
         <glass-panel padding="lg" variant="strong" lifted>
           <button class="back" @click=${()=>this._go("location")}>‹ Back</button>
@@ -16785,7 +16841,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
             <a class="app-cta" href="https://pebblepath.ai" target="_blank" rel="noopener">
               Get the PebblePath app
             </a>
-            ${this._error?n`<div class="error">${this._error}</div>`:""}
+            ${this._error?o`<div class="error">${this._error}</div>`:""}
             <div class="actions">
               <glass-button
                 variant="primary"
@@ -17150,18 +17206,18 @@ They'll lose access to shared trips, celebrations and any read-only child access
     }
     /* P3-6b — .download-card / .app-store-cta / .alt styles removed
        with _renderDownload (the "get the iOS app" card). */
-  `);customElements.define("onboarding-wizard",dt);const le="cairn:pendingJoinCode",$t="cairn:pendingCreateFamily";class jt extends D{constructor(){super(),this.authUser=null,this.loading=!0;const e=new URLSearchParams(window.location.search);if(this.preview=e.has("preview"),this._resetMode=e.has("reset"),this._resetMode)try{localStorage.removeItem(le)}catch{}const t=e.get("join");if(t&&!this._resetMode)try{localStorage.setItem(le,t)}catch{}let i=null;if(!this._resetMode)try{i=localStorage.getItem(le)}catch{}this.joinCode=this._resetMode?null:t??i??null,this.pebbleUser=null,this.family=null,this.children=[],this.trips=[],this.events=[],this.activities=[],this.holidays=[],this.ppFamily=null,this.ppIsMember=!1,this.ppChildren=[],this.selectedChildId=null,this.childMilestones=[],this.childInsights=[],this.childReports=[],this.childDailyCard=null,this.familyDailyCard=null,this.nonParentDailyCard=null,this.pebbleAnchors=[],this.pebbleRhythms=[],this.pebblePatterns=[],this.pebbleLiveContext=[],this.childPebbleMessages=[],this.childPebbleSessions=[],this.planningMessages=[],this.ppIsChildViewer=!1,this.incomingChildRequests=[],this.myChildAccessRequest=null,this._unsubAuth=null,this._onDataChange=()=>{this.pebbleUser=f.state.user,this.family=f.state.family,this.children=f.state.children,this.trips=f.state.trips,this.events=f.state.events,this.activities=f.state.activities,this.holidays=f.state.holidays,this.ppFamily=f.state.ppFamily,this.ppIsMember=f.state.ppIsMember,this.ppChildren=f.state.ppChildren,this.selectedChildId=f.state.selectedChildId,this.childMilestones=f.state.childMilestones,this.childInsights=f.state.childInsights,this.childReports=f.state.childReports,this.childDailyCard=f.state.childDailyCard,this.familyDailyCard=f.state.familyDailyCard,this.nonParentDailyCard=f.state.nonParentDailyCard,this.pebbleAnchors=f.state.pebbleAnchors,this.pebbleRhythms=f.state.pebbleRhythms,this.pebblePatterns=f.state.pebblePatterns,this.pebbleLiveContext=f.state.pebbleLiveContext,this.childPebbleMessages=f.state.childPebbleMessages,this.childPebbleSessions=f.state.childPebbleSessions,this.planningMessages=f.state.planningMessages,this.ppIsChildViewer=f.state.ppIsChildViewer,this.incomingChildRequests=f.state.incomingChildRequests,this.myChildAccessRequest=f.state.myChildAccessRequest,this.userDocResolved=f.userDocResolved},this.userDocResolved=!1}_clearJoinState(){this.joinCode=null;try{localStorage.removeItem(le)}catch{}const e=new URL(window.location.href);e.searchParams.delete("join"),window.history.replaceState({},"",e.toString())}connectedCallback(){if(super.connectedCallback(),typeof document<"u"&&document.documentElement.style.setProperty("--pre-login-bg","url('/portal/assets/pebblepath-daybreak-empty.jpg')"),this.preview){this.loading=!1;return}f.addEventListener("change",this._onDataChange),this._unsubAuth=Et(e=>{if(this.authUser=e,this.loading=!1,e){if(!this._resetMode)try{const t=localStorage.getItem(le);t&&!this.joinCode&&(this.joinCode=t)}catch{}f.start(e.uid),this._consumePendingCreate()}else f.clearBriefCaches(),f.stop(),this.userDocResolved=!1})}async _consumePendingCreate(){let e=null;try{e=localStorage.getItem($t)}catch{}if(e){try{localStorage.removeItem($t)}catch{}try{await f.createCairnOnlyFamily(e),y(`Welcome to ${e}.`)}catch(t){console.error("Pending family create failed:",t),y((t==null?void 0:t.code)==="permission-denied"?"Couldn't create the family. Firestore rules may need a redeploy.":`Couldn't create the family: ${(t==null?void 0:t.message)??"try again"}`,{duration:5e3})}}}disconnectedCallback(){var e;super.disconnectedCallback(),(e=this._unsubAuth)==null||e.call(this),f.removeEventListener("change",this._onDataChange)}_composeViewer(){var i,r;const e=this.authUser,t=(i=this.pebbleUser)==null?void 0:i.displayName;return{uid:e.uid,displayName:t&&t.trim()||e.displayName||"You",email:e.email??((r=this.pebbleUser)==null?void 0:r.email)??"",photoURL:Rt(e,this.pebbleUser)}}_needsOnboarding(){var t,i;return!this.authUser||this.joinCode?!1:this._resetMode?!0:this.userDocResolved?!(((t=this.pebbleUser)==null?void 0:t.familyId)??((i=this.pebbleUser)==null?void 0:i.cairnFamilyId)??null):!1}updated(){this.setAttribute("data-route",this._currentRoute())}_currentRoute(){return this.loading?"loading":this.preview?"home":this.authUser?this.joinCode?"join":!this.userDocResolved&&!this._resetMode||this._needsOnboarding()?"wizard":"home":"register"}render(){return this.loading?n``:this.preview?n`<home-screen preview></home-screen>`:this.authUser?this.joinCode?n`
+  `);customElements.define("onboarding-wizard",dt);const le="cairn:pendingJoinCode",$t="cairn:pendingCreateFamily";class jt extends D{constructor(){super(),this.authUser=null,this.loading=!0;const e=new URLSearchParams(window.location.search);if(this.preview=e.has("preview"),this._resetMode=e.has("reset"),this._resetMode)try{localStorage.removeItem(le)}catch{}const t=e.get("join");if(t&&!this._resetMode)try{localStorage.setItem(le,t)}catch{}let i=null;if(!this._resetMode)try{i=localStorage.getItem(le)}catch{}this.joinCode=this._resetMode?null:t??i??null,this.pebbleUser=null,this.family=null,this.children=[],this.trips=[],this.events=[],this.activities=[],this.holidays=[],this.ppFamily=null,this.ppIsMember=!1,this.ppChildren=[],this.selectedChildId=null,this.childMilestones=[],this.childInsights=[],this.childReports=[],this.childDailyCard=null,this.familyDailyCard=null,this.nonParentDailyCard=null,this.pebbleAnchors=[],this.pebbleRhythms=[],this.pebblePatterns=[],this.pebbleLiveContext=[],this.childPebbleMessages=[],this.childPebbleSessions=[],this.planningMessages=[],this.ppIsChildViewer=!1,this.incomingChildRequests=[],this.myChildAccessRequest=null,this._unsubAuth=null,this._onDataChange=()=>{this.pebbleUser=f.state.user,this.family=f.state.family,this.children=f.state.children,this.trips=f.state.trips,this.events=f.state.events,this.activities=f.state.activities,this.holidays=f.state.holidays,this.ppFamily=f.state.ppFamily,this.ppIsMember=f.state.ppIsMember,this.ppChildren=f.state.ppChildren,this.selectedChildId=f.state.selectedChildId,this.childMilestones=f.state.childMilestones,this.childInsights=f.state.childInsights,this.childReports=f.state.childReports,this.childDailyCard=f.state.childDailyCard,this.familyDailyCard=f.state.familyDailyCard,this.nonParentDailyCard=f.state.nonParentDailyCard,this.pebbleAnchors=f.state.pebbleAnchors,this.pebbleRhythms=f.state.pebbleRhythms,this.pebblePatterns=f.state.pebblePatterns,this.pebbleLiveContext=f.state.pebbleLiveContext,this.childPebbleMessages=f.state.childPebbleMessages,this.childPebbleSessions=f.state.childPebbleSessions,this.planningMessages=f.state.planningMessages,this.ppIsChildViewer=f.state.ppIsChildViewer,this.incomingChildRequests=f.state.incomingChildRequests,this.myChildAccessRequest=f.state.myChildAccessRequest,this.userDocResolved=f.userDocResolved},this.userDocResolved=!1}_clearJoinState(){this.joinCode=null;try{localStorage.removeItem(le)}catch{}const e=new URL(window.location.href);e.searchParams.delete("join"),window.history.replaceState({},"",e.toString())}connectedCallback(){if(super.connectedCallback(),typeof document<"u"&&document.documentElement.style.setProperty("--pre-login-bg","url('/portal/assets/pebblepath-daybreak-empty.jpg')"),this.preview){this.loading=!1;return}f.addEventListener("change",this._onDataChange),this._unsubAuth=Et(e=>{if(this.authUser=e,this.loading=!1,e){if(!this._resetMode)try{const t=localStorage.getItem(le);t&&!this.joinCode&&(this.joinCode=t)}catch{}f.start(e.uid),this._consumePendingCreate()}else f.clearBriefCaches(),f.stop(),this.userDocResolved=!1})}async _consumePendingCreate(){let e=null;try{e=localStorage.getItem($t)}catch{}if(e){try{localStorage.removeItem($t)}catch{}try{await f.createCairnOnlyFamily(e),y(`Welcome to ${e}.`)}catch(t){console.error("Pending family create failed:",t),y((t==null?void 0:t.code)==="permission-denied"?"Couldn't create the family. Firestore rules may need a redeploy.":`Couldn't create the family: ${(t==null?void 0:t.message)??"try again"}`,{duration:5e3})}}}disconnectedCallback(){var e;super.disconnectedCallback(),(e=this._unsubAuth)==null||e.call(this),f.removeEventListener("change",this._onDataChange)}_composeViewer(){var i,r;const e=this.authUser,t=(i=this.pebbleUser)==null?void 0:i.displayName;return{uid:e.uid,displayName:t&&t.trim()||e.displayName||"You",email:e.email??((r=this.pebbleUser)==null?void 0:r.email)??"",photoURL:Rt(e,this.pebbleUser)}}_needsOnboarding(){var t,i;return!this.authUser||this.joinCode?!1:this._resetMode?!0:this.userDocResolved?!(((t=this.pebbleUser)==null?void 0:t.familyId)??((i=this.pebbleUser)==null?void 0:i.cairnFamilyId)??null):!1}updated(){this.setAttribute("data-route",this._currentRoute())}_currentRoute(){return this.loading?"loading":this.preview?"home":this.authUser?this.joinCode?"join":!this.userDocResolved&&!this._resetMode||this._needsOnboarding()?"wizard":"home":"register"}render(){return this.loading?o``:this.preview?o`<home-screen preview></home-screen>`:this.authUser?this.joinCode?o`
         <join-family-screen
           .code=${this.joinCode}
           @joined=${()=>this._clearJoinState()}
           @cancel=${()=>this._clearJoinState()}
         ></join-family-screen>
-      `:!this.userDocResolved&&!this._resetMode?n``:this._needsOnboarding()?n`
+      `:!this.userDocResolved&&!this._resetMode?o``:this._needsOnboarding()?o`
         <onboarding-wizard
           .user=${this.authUser}
           @join-code=${e=>{this.joinCode=e.detail.code;try{localStorage.setItem(le,e.detail.code)}catch{}}}
         ></onboarding-wizard>
-      `:n`
+      `:o`
       <home-screen
         .user=${this._composeViewer()}
         .pebbleUser=${this.pebbleUser}
@@ -17193,9 +17249,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
         .myChildAccessRequest=${this.myChildAccessRequest}
         .pebbleQuota=${f.pebbleQuota()}
       ></home-screen>
-    `:n`
+    `:o`
         <register-screen
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}$(jt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},activities:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childReports:{state:!0},childDailyCard:{state:!0},familyDailyCard:{state:!0},nonParentDailyCard:{state:!0},pebbleAnchors:{state:!0},pebbleRhythms:{state:!0},pebblePatterns:{state:!0},pebbleLiveContext:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},planningMessages:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",jt);
-//# sourceMappingURL=index-BiVOnYHe.js.map
+//# sourceMappingURL=index-BMfSSdnQ.js.map

@@ -6195,7 +6195,7 @@ export class HomeScreen extends LitElement {
                 <span class="si" style="color:var(--ink-green);">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="7" rx="3" ry="1.4"/><ellipse cx="12" cy="12" rx="6" ry="2.4"/><ellipse cx="12" cy="17" rx="8" ry="3"/></svg>
                 </span>
-                <div class="sl"><b>Your family</b><span>Your household, including any children and their parents.</span></div>
+                <div class="sl"><b>Your family</b><span>Your household: children, caregivers, etc.</span></div>
                 <span class="set-pill" style="color:var(--ink-green);border-color:var(--ink-green);">Full access</span>
               </div>
               <div class="set-row">
