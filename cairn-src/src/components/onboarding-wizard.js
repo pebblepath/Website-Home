@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { dataStore } from '../services/data.js';
 import { toast } from '../services/toast.js';
+import { logEvent, Ev } from '../services/analytics.js';
 import './glass-panel.js';
 import './glass-button.js';
 
@@ -661,6 +662,7 @@ export class OnboardingWizard extends LitElement {
           return;
         }
         fid = await dataStore.createPebblePathFamily(name);
+        logEvent(Ev.FAMILY_CREATED, { kind: 'pebblepath' });
         // Areas-of-focus + Premature → Child.developmentalFlags (drive
         // Pebble context + milestone seeding, same as iOS AddChild).
         const flags = [...this._focusFlags];
@@ -670,6 +672,7 @@ export class OnboardingWizard extends LitElement {
           dateOfBirth: dob,
           developmentalFlags: flags,
         });
+        logEvent(Ev.CHILD_ADDED);
         if (this._childPhotoBlob) {
           try {
             await dataStore.uploadChildAvatar(fid, childId, this._childPhotoBlob);
@@ -680,6 +683,7 @@ export class OnboardingWizard extends LitElement {
         }
       } else {
         fid = await dataStore.createCairnOnlyFamily(name);
+        logEvent(Ev.FAMILY_CREATED, { kind: 'no_children' });
       }
       await this._uploadParentPhotoIfAny(fid);
       // Optional home location (city-level; best-effort, never blocks).

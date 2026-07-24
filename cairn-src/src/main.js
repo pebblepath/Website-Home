@@ -18,3 +18,9 @@ import './components/sign-in-screen.js';
 import './components/register-screen.js';
 import './components/home-screen.js';
 import './components/app-shell.js';
+
+// Portal analytics (2026-07-24). Loads gtag, applies the shared consent
+// state from the marketing banner, and sends the first screen view.
+// No-ops on the ?preview mock route. See services/analytics.js.
+import { initAnalytics } from './services/analytics.js';
+initAnalytics();

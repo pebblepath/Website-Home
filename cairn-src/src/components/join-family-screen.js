@@ -5,6 +5,7 @@ import './glass-button.js';
 import './member-chip.js';
 import { dataStore } from '../services/data.js';
 import { toast } from '../services/toast.js';
+import { logEvent, Ev } from '../services/analytics.js';
 
 /**
  * Phase 3A.2: Cairn invite landing screen. Renders when the URL has
@@ -118,6 +119,8 @@ export class JoinFamilyScreen extends LitElement {
       // NEVER memberIds; mutual connection) as the superseded
       // joinFamilyAsCairn — a drop-in.
       const familyId = await dataStore.redeemConnectCode(this.code);
+      // Receive side of the invite growth loop (mirrors iOS).
+      logEvent(Ev.INVITE_REDEEMED);
       toast(`Welcome to ${this._family?.name ?? 'the family'}.`);
       this._joinedFamilyId = familyId;
       // P3-5c — the deferred web parent-prompt. The redeemer is now

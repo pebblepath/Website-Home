@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import './glass-panel.js';
 import { dataStore } from '../services/data.js';
+import { logEvent, Ev } from '../services/analytics.js';
 
 /**
  * Pebble inside Cairn — a family-activity advisor chat surface. Sibling
@@ -76,6 +77,8 @@ export class PebbleChat extends LitElement {
     this._followUps = [];
     this._messages = [...this._messages, { role: 'user', content: question }];
     this._loading = true;
+    // Count only — the question text itself is never sent to analytics.
+    logEvent(Ev.PEBBLE_QUESTION);
     // Tee up scroll-to-bottom after Lit renders the new message.
     this.updateComplete.then(() => this._scrollToBottom());
     try {

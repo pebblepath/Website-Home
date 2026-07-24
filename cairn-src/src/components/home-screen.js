@@ -1,4 +1,5 @@
 import { LitElement, html, css } from 'lit';
+import { screenView } from '../services/analytics.js';
 import './cairn-mark.js';
 import './glass-panel.js';
 import './glass-button.js';
@@ -3823,6 +3824,10 @@ export class HomeScreen extends LitElement {
     }
     if (changed.has('_activeTab')) {
       this._positionTabSlider({ animate: true });
+      // The Portal never changes its URL when you switch tabs, so GA4's
+      // automatic pageview would fire once on load and never again. Send
+      // one manually per tab (id only — no personal data).
+      if (!this.preview) screenView(this._activeTab);
       // Persist the active tab so a page reload restores it (see
       // _restoreActiveTab in the constructor). Skip in preview/mock mode.
       if (!this.preview) {
