@@ -3015,6 +3015,11 @@
   @media (max-width: 560px) {
     .cta-signup { margin-top: 20px; padding-top: 20px; }
     .signup-form { flex-direction: column; align-items: stretch; }
+    /* flex-basis is measured on the MAIN axis, which is now vertical: the
+       base `flex: 1 1 200px` was setting a 200px HEIGHT here, and
+       border-radius:999px turned that tall box into a giant circle.
+       Height goes back to auto; `align-items: stretch` handles the width. */
+    .signup-input { flex: 0 0 auto; }
   }
 </style>
   <script src="/assets/analytics.js?v=3" defer></script>
@@ -3612,7 +3617,16 @@
     .nb-left, .nb-right { position: static !important; left: auto !important; top: auto !important; width: auto !important; padding: 30px 24px !important; }
     .nb-left  { order: 1; background: linear-gradient(122deg, #F3ECDD 0%, #ECE2CF 58%, #E4D7BD 100%) !important; }
     .nb-right { order: 3; background: linear-gradient(152deg, #1F5C54 0%, #2D7A70 55%, #3D9B8F 100%) !important; }
-    .nb-peb { position: relative !important; left: auto !important; top: auto !important; order: 2; align-self: center; margin: -42px 0 !important; z-index: 2; }
+    .nb-peb { position: relative !important; left: auto !important; top: auto !important; order: 2; align-self: center; margin: -37px 0 !important; z-index: 2; }
+    /* The pebble straddles the seam on negative margins, so each block needs
+       clearance equal to half the icon (37) + its glow (9) + breathing room,
+       or it lands on the last/first row. The shared `padding: 30px 24px`
+       above was 16px short, so the icon sat on the copy. */
+    .nb-left  { padding-bottom: 58px !important; }
+    .nb-right { padding-top: 58px !important; }
+    /* 84px reads oversized against the 30px row rhythm on a phone. */
+    .nb-peb, .nb-peb img { width: 74px !important; height: 74px !important; }
+    .nb-peb img { border-radius: 20px !important; }
   }
 </style>
 <section class="nbv2 reveal" style="background:var(--pp-off-white); font-family:var(--font-body); padding:64px 32px; display:flex; justify-content:center;">
