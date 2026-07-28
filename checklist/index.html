@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>PebblePath — Launch &amp; GTM Timeline</title>
+<title>PebblePath Launch &amp; GTM Timeline</title>
 <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
@@ -223,9 +223,9 @@
   <div class="brand"><img src="../assets/favicon-32x32.png" alt=""><span>PebblePath</span></div>
   <header>
     <div>
-      <div class="eyebrow">Launch &amp; GTM · 19 Jul 2026</div>
+      <div class="eyebrow">Launch &amp; GTM · 24 Jul 2026</div>
       <h1>From submitted to a launch that compounds</h1>
-      <p class="lede">1.0 build 109 is <b>with Apple</b>, auto-release on approval. Phase 0 is effectively closed: the exposure risks are gone, the site is measurable, and the two things that were <b>silently broken all day</b> (GA4 and the signup form, both blocked by the CSP) are fixed and verified against real network traffic. What remains is the soft launch itself. Tick items as you go, progress saves in this browser.</p>
+      <p class="lede"><b>1.0 is live on the App Store</b>, approved 22 Jul after a same-day fix to a metadata-only rejection. <b>1.0.1 is submitted</b>, carrying the two things that make the soft launch measurable: the in-app review prompt and app analytics. The Portal is measured now too, and the privacy policy was rewritten first because it had promised exactly that. What is left is the launch itself: verify the paid path, pick the welcome-email vendor, then seed. Tick items as you go, progress saves in this browser.</p>
     </div>
     <div class="gauge-box">
       <div class="gauge" id="gauge"><div class="gauge-num"><div class="n" id="gnum">0<span>%</span></div></div></div>
@@ -234,8 +234,8 @@
   </header>
 
   <div class="stats">
-    <div class="stat teal"><div class="v">✓ Submitted</div><div class="k">1.0 build 109 · auto-release on approval</div></div>
-    <div class="stat accent"><div class="v">~24–48h</div><div class="k">Apple review. Phase 0 has to land inside this window</div></div>
+    <div class="stat teal"><div class="v">✓ Live</div><div class="k">1.0 on the App Store · 1.0.1 in review</div></div>
+    <div class="stat accent"><div class="v">~24-48h</div><div class="k">Apple review on 1.0.1. Everything else is unblocked</div></div>
     <div class="stat accent"><div class="v">22MB</div><div class="k">Hero video, uncompressed by choice. Heaviest asset</div></div>
     <div class="stat teal"><div class="v">GA4 + Kit</div><div class="k">Both verified transmitting after the CSP fix</div></div>
   </div>
@@ -361,12 +361,12 @@
     <!-- ===== PHASE 1 ===== -->
     <div class="phase-label"><span class="pn">Phase 1</span><span class="pw">Approval day · soft launch</span><span class="bar"></span></div>
 
-    <div class="node milestone">
-      <div class="dot">★</div>
-      <div class="card" data-id="p1-approved">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">Apple approves, 1.0 goes live</span><span class="pill p-gate">Gate</span></div>
-        <div class="d">Auto-release is on, so it publishes the moment it passes. If it bounces, check <code>demo@pebblepath.ai</code> first, a sign-in failure or the reviewer landing in an empty family is the most common cause and a same-day fix.</div>
-      </div>
+    <div class="node done">
+      <div class="dot">✓</div>
+      <div class="card" data-id="p1-approved" data-done="1">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Apple approves, 1.0 goes live</span><span class="pill p-ship">Shipped</span></div>
+        <div class="d"><b>Approved 22 Jul, live the same evening.</b> The 21 Jul bounce was Guideline 3.1.2, metadata only: the description carried a Privacy link but no Terms of Use link. Fixed in App Store Connect with no rebuild, resubmitted the same day. ASC quirk banked: the greyed <i>Resubmit</i> button is a dead end, the live control is <b>Update Review</b> on each item page, and the collateral-rejected subscription has to be updated separately or it holds the whole submission.</div>
+        </div>
     </div>
 
     <div class="node">
@@ -377,7 +377,33 @@
       </div>
     </div>
 
+    
     <div class="node">
+      <div class="dot">•</div>
+      <div class="card" data-id="p1-purchase">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Buy the subscription once, for real</span><span class="pill p-quick">15 min</span></div>
+        <div class="d">The only way to prove the paywall works in production rather than in the StoreKit sandbox. Buy it, confirm Premium unlocks, then cancel immediately in Settings, Subscriptions. A broken paywall found by the first real user costs far more than the 8.99.</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="dot">•</div>
+      <div class="card" data-id="p1-kit">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Kit housekeeping</span><span class="pill p-quick">5 min</span></div>
+        <div class="d">Delete the debug subscriber <code>thomas+kitdebug@pebblepath.ai</code>, and turn <b>off double opt-in</b>. Kit currently requires confirmation, so submissions land unconfirmed and never appear on the form card: every one of those is a person who asked to join the list and never made it, and who cannot be emailed to chase.</div>
+      </div>
+    </div>
+
+
+    <div class="node">
+      <div class="dot">•</div>
+      <div class="card" data-id="p1-welcome-email">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Welcome email, the last Day-1 blocker</span><span class="pill p-risk">Blocker</span></div>
+        <div class="d"><b>Needs a vendor decision before seeding starts.</b> Everyone who installs now uses the same login for the app and the Portal, so the welcome email has to carry both from day one. Pick between Cloudflare Email, SendGrid and Resend, then it gets built. The waitlist form is already handled by Kit, this is the transactional email on signup, which is a different job.</div>
+      </div>
+    </div>
+
+<div class="node">
       <div class="dot">3</div>
       <div class="card" data-id="p1-seed">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Seed outreach, install ask only</span><span class="pill p-now">The soft launch</span></div>
@@ -417,33 +443,61 @@
     <!-- ===== PHASE 3 ===== -->
     <div class="phase-label"><span class="pn">Phase 3</span><span class="pw">Week 2 · ship 1.0.1</span><span class="bar"></span></div>
 
-    <div class="node">
-      <div class="dot">7</div>
-      <div class="card" data-id="p3-review-prompt">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">In-app review prompt</span><span class="pill p-risk">Biggest single win</span></div>
-        <div class="d">There is <b>zero</b> <code>SKStoreReviewController</code> in the app. Reviews are the top ASO ranking input and the top listing conversion factor, and right now getting them is you asking people by hand, forever. Apple throttles to 3 prompts per user per year and handles it for you. Fire after a genuine win, a milestone marked or a good Pebble answer, never on launch or mid-task.</div>
-        <div class="meta"><span class="chip who">Claude writes, you build</span><span class="chip">~1h</span></div>
+    <div class="node done">
+      <div class="dot">✓</div>
+      <div class="card" data-id="p3-review-prompt" data-done="1">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">In-app review prompt</span><span class="pill p-ship">Shipped</span></div>
+        <div class="d"><b>Shipped in 1.0.1.</b> Gated the same way as the capture prompt: 5+ milestones achieved lifetime, account at least 3 days old, 120-day cooldown, 3 asks ever, and never while an error or the paywall is on screen. Fires at two earned moments, the milestone deck reaching "all caught up" after a real achieve, and a pediatrician PDF export (on the share sheet dismissing, not over it). <b>The prompt never appears in TestFlight or debug builds</b>, that is Apple, so the gate is what gets verified, not the popup.</div>
+        <div class="meta"><span class="chip">23 Jul</span><span class="chip">commit 8f38651</span></div>
       </div>
     </div>
 
-    <div class="node">
-      <div class="dot">8</div>
-      <div class="card" data-id="p3-analytics">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">App analytics, linked to the same GA4 property</span><span class="pill p-now">Gates the push</span></div>
-        <div class="d">FirebaseAnalytics is not linked in the Xcode target and there are no <code>logEvent</code> calls anywhere. Add the SPM product, then link Firebase to the <b>existing</b> property <code>G-9JQBCG8SVM</code> from Firebase Console, not a new one, or web and app split permanently and cross-platform funnels become impossible. Instrument <code>invite_sent</code> and <code>invite_redeemed</code> first, that is the growth loop and it is completely unmeasured. Also needs a privacy nutrition label revision, since it changes the declared collection profile.</div>
-        <div class="meta"><span class="chip who">Claude writes, you build</span><span class="chip">~half day</span></div>
+    <div class="node done">
+      <div class="dot">✓</div>
+      <div class="card" data-id="p3-analytics" data-done="1">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">App analytics, linked to the same GA4 property</span><span class="pill p-ship">Shipped</span></div>
+        <div class="d"><b>Shipped in 1.0.1.</b> FirebaseAnalytics linked, ad-identifier collection off (<code>GOOGLE_ANALYTICS_ADID_COLLECTION_ENABLED=false</code>), so no IDFA, no ATT prompt, and Tracking stays No on the privacy labels. One typed vocabulary in <code>AnalyticsService.swift</code>: <code>invite_sent</code> (with a placement param) and <code>invite_redeemed</code> first, then family_created, child_added, milestone_achieved, pebble_question, paywall_shown. Purchases are auto-collected, not double-logged. <b>The GA4 property question resolved itself</b>: Firebase was already linked to the property that holds the website stream, so web, Portal and app all land in one place.</div>
+        <div class="meta"><span class="chip">23 Jul</span><span class="chip">commit 08e9a50</span><span class="chip">verified on device DB</span></div>
       </div>
     </div>
 
-    <div class="node">
-      <div class="dot">9</div>
-      <div class="card" data-id="p3-invite-url">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">Swap the iOS invite share URL</span><span class="pill p-quick">One line</span></div>
-        <div class="d"><code>SettingsView</code> → <code>InviteCodeRow</code> still shares <code>pebblepath.ai</code> rather than the listing. Every invite sent between now and 1.0.1 sends people to the marketing site instead of straight to install. The website side is already fixed.</div>
+    <div class="node done">
+      <div class="dot">✓</div>
+      <div class="card" data-id="p3-invite-url" data-done="1">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">iOS invite share URL: investigated, left as is</span><span class="pill p-ship">Shipped</span></div>
+        <div class="d"><b>Closed: no change needed, the original item was a misdiagnosis.</b> The plan said the iOS invite share URL still pointed at pebblepath.ai instead of the App Store listing. It does point at pebblepath.ai, and it should. The link is <code>/join/?code=CODE</code>, a Universal Link that carries the invite code: with the app installed it opens straight into family setup with the code prefilled, without it the visitor gets the /join/ page which itself has the App Store button. Swapping it for the store URL would <b>drop the code</b> and strand the recipient.</div>
+        </div>
+    </div>
+
+    
+    <div class="node done">
+      <div class="dot">✓</div>
+      <div class="card" data-id="p3-privacy" data-done="1">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Privacy policy rewritten for analytics</span><span class="pill p-ship">Shipped</span></div>
+        <div class="d"><b>This was a genuine ship blocker, found by grepping the live policy rather than assuming.</b> The hosted policy promised, twice, that we did not run a usage-analytics SDK and that we would update the policy <i>before</i> adding one. Adding Firebase would have shipped a build contradicting its own privacy page, on a listing that sells partly on privacy. Both copies rewritten to describe the Firebase and GA4 analytics accurately, no IDFA, no ads, no cross-app tracking, counts and fixed labels only, consent-gated in the EEA, UK and Switzerland. Live before 1.0.1 goes out, which is what the policy promised.</div>
+        <div class="meta"><span class="chip">24 Jul</span><span class="chip">pebblepath.ai/privacy</span><span class="chip">live + verified</span></div>
       </div>
     </div>
 
-    <div class="node">
+    <div class="node done">
+      <div class="dot">✓</div>
+      <div class="card" data-id="p3-familycircle" data-done="1">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Family Circle redesign, both platforms</span><span class="pill p-ship">Shipped</span></div>
+        <div class="d">Cosmetic only, no behaviour touched. Frosted glass bands with teal and terracotta glows replacing the flat tints and dashed rings, a centre glow, frosted name pills, pebble watermarks, and a quieter view-all. Concept first in <code>design-sandbox/54</code>, then a hybrid picked from two directions, then ported to SwiftUI and to the Portal so the two stay in lockstep. Dark mode caught a real bug on the way: static deep-teal ink vanished against the dusk background.</div>
+        <div class="meta"><span class="chip">23-24 Jul</span><span class="chip">iOS 170a057</span><span class="chip">Portal 2d7adfe</span></div>
+      </div>
+    </div>
+
+    <div class="node done">
+      <div class="dot">✓</div>
+      <div class="card" data-id="p3-portal-analytics" data-done="1">
+        <div class="top"><input type="checkbox" class="cb"><span class="t">Portal analytics, the untracked surface</span><span class="pill p-ship">Shipped</span></div>
+        <div class="d">The Portal shipped with <b>no measurement at all</b>, so web-companion usage was invisible. Now on the same measurement ID as the marketing site, one domain one stream, so someone who reads the site then opens the Portal stays one user instead of two. Three things were specific to it: it honours the cookie choice already made on the marketing banner, it excludes the mock preview route so demo data cannot pollute the property, and because the app never changes its URL between tabs it sends a screen view per tab by hand. Without that last piece it would have recorded one hit per session and taught us nothing. No uid, email, names, codes or typed text in any event.</div>
+        <div class="meta"><span class="chip">24 Jul</span><span class="chip">Portal 2d7adfe</span><span class="chip">live + verified</span></div>
+      </div>
+    </div>
+
+<div class="node">
       <div class="dot">10</div>
       <div class="card" data-id="p3-ship">
         <div class="top"><input type="checkbox" class="cb"><span class="t">Submit 1.0.1</span><span class="pill p-gate">Gate</span></div>
@@ -495,8 +549,8 @@
     <div class="node later">
       <div class="dot">15</div>
       <div class="card" data-id="p5-aso">
-        <div class="top"><input type="checkbox" class="cb"><span class="t">ASO iteration</span><span class="pill p-later">Cheap to test</span></div>
-        <div class="d">Promotional text is editable <b>without</b> a review cycle, which makes it the right field for testing hooks and announcing features. Subtitle and keywords need a version, so batch those with releases. Watch which search terms convert once there is enough traffic to read.</div>
+        <div class="top"><input type="checkbox" class="cb"><span class="t">ASO: fix the brand-search rank</span><span class="pill p-now">Active</span></div>
+        <div class="d"><b>Searching the exact brand "PebblePath" returns us at #7 organically, with sponsored competitors above, measured 24 Jul.</b> That is a popularity problem, not a relevance one: the app name is an exact match, so relevance is already maxed. What is missing is the other half, zero ratings on a two-day-old listing. Ranked by impact per unit of effort: <b>1. Apple Search Ads brand defence</b>, the only same-day fix and pointed given competitors were buying slots above our own name, usually cents per tap on your own brand. <b>2. Ratings</b>, the biggest organic factor for a new app, which is exactly what the 1.0.1 review prompt plus individual manual asks are for, target about 10. <b>3. Install velocity</b> from the seed cohort. <b>4. The first three screenshots</b>, which are what appear inline in search results, so they have to work at thumbnail size. <b>5. Subtitle and keywords last</b>, the weakest levers, and the subtitle trades against brand voice. Not levers: renaming (bare "PebblePath" is still reserved by another developer) or stuffing the name, which Apple penalises. One discrepancy to reconcile: the keyword field was recorded as swapping <code>parenting</code> for <code>ai</code>, but the live field still shows <code>parenting</code> and no <code>ai</code>.</div>
       </div>
     </div>
 
@@ -512,11 +566,9 @@
 
   <!-- SHIPPED TODAY -->
   <div class="shipped">
-    <h2>Shipped today, 19 Jul</h2>
-    <p class="s">Before the strategy work started</p>
-    <div class="ship-grid">
-      <div class="ship"><span class="ck">✓</span><span class="ck-t">1.0 build 109 submitted to App Review <span>· auto-release on approval</span></span></div>
-      <div class="ship"><span class="ck">✓</span><span class="ck-t"><b>16 dead App Store links fixed</b> <span>· every download CTA sitewide was a permanent 404</span></span></div>
+    <h2>Shipped 22 to 24 Jul</h2>
+    <p class="s">Approval, the 1.0.1 batch, and the Portal</p>
+    <div class="ship-grid"><div class="ship"><span class="ck">✓</span><span class="ck-t"><b>1.0 approved and live</b> <span>· 3.1.2 metadata rejection fixed same day, no rebuild</span></span></div><div class="ship"><span class="ck">✓</span><span class="ck-t"><b>1.0.1 submitted</b> <span>· review prompt + analytics + invite surfacing</span></span></div><div class="ship"><span class="ck">✓</span><span class="ck-t"><b>App analytics, no IDFA</b> <span>· one property with the website, growth loop first</span></span></div><div class="ship"><span class="ck">✓</span><span class="ck-t"><b>Portal analytics</b> <span>· the surface that had none, consent-honouring</span></span></div><div class="ship"><span class="ck">✓</span><span class="ck-t"><b>Privacy policy rewritten</b> <span>· it had promised this would come first</span></span></div><div class="ship"><span class="ck">✓</span><span class="ck-t"><b>Family Circle redesigned</b> <span>· iOS and Portal in lockstep, cosmetic only</span></span></div><div class="ship"><span class="ck">✓</span><span class="ck-t"><b>Invite loop surfaced</b> <span>· out of Settings, onto home and onboarding</span></span></div><div class="ship"><span class="ck">✓</span><span class="ck-t"><b>ASO gap measured</b> <span>· brand search sits at #7, plan written</span></span></div></div>
       <div class="ship"><span class="ck">✓</span><span class="ck-t">GA4 live on all 11 marketing pages <span>· placement-tagged funnel events</span></span></div>
       <div class="ship"><span class="ck">✓</span><span class="ck-t">Edge-cache bug caught and fixed <span>· assets cache 4h, HTML 10min</span></span></div>
       <div class="ship"><span class="ck">✓</span><span class="ck-t">Beachhead and launch shape decided <span>· soft launch, whole-family wedge</span></span></div>
