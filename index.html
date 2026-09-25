@@ -4085,6 +4085,805 @@
 </section>
 
 
+<!-- ============================================================
+     PEBBLE POCKET TEASER (2026-09-25): Pebble, made physical, coming
+     December 2026. The Pocket is drawn from its own spec
+     (pebble-pocket/docs/screens.html: 42 x 50.8 mm case, black glass,
+     the Dusk face) and mirrors the iOS app's PocketHero (lanyard, bead,
+     case). The Home face uses the firmware's exact geometry
+     (pocket_face.h RenderHome, 410 x 502 panel). The face cycles Home,
+     Ask, Songs, Calm and Hello; the four feature buttons jump to a face.
+     Song tiles in assets/pocket/songs.webp are cropped from the Pocket's
+     own song art (song_art.py). Icons: Phosphor Icons v2.1.1 (MIT,
+     phosphoricons.com). GA4 events: pocket_teaser_view,
+     pocket_feature {feature}, pocket_notify_click (fixed labels only).
+     REVERT = delete from this banner to the matching END banner, plus
+     assets/pocket/.
+     ============================================================ -->
+<style>
+  .pocket { position: relative; padding: 88px 32px 8px; }
+  .pk-shell {
+    max-width: 1180px; margin: 0 auto; border-radius: 36px;
+    box-shadow: 0 34px 80px rgba(20, 62, 57, 0.26), 0 10px 26px rgba(20, 62, 57, 0.14);
+  }
+  .pk-card {
+    --mm: 6.6;
+    --cy: 50%;
+    position: relative; isolation: isolate; overflow: hidden;
+    clip-path: inset(0 round 36px);
+    border-radius: 36px;
+    padding: 68px 64px 60px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.8fr);
+    grid-template-areas: "copy stage" "feats stage" "foot stage";
+    grid-template-rows: auto auto 1fr;
+    column-gap: 40px;
+    color: #fff;
+    background:
+      radial-gradient(ellipse 42% 52% at 78% 50%, rgba(125, 212, 200, 0.14), transparent 70%),
+      radial-gradient(ellipse 60% 45% at 8% 10%, rgba(61, 155, 143, 0.50), transparent 65%),
+      radial-gradient(ellipse 45% 40% at 98% 6%, rgba(212, 168, 67, 0.16), transparent 65%),
+      radial-gradient(ellipse 80% 55% at 40% 112%, rgba(198, 123, 92, 0.30), transparent 65%),
+      linear-gradient(165deg, #1F5C54 0%, #143E39 55%, #0B1F1D 100%);
+  }
+  /* Film grain keeps the big dark gradient from banding. */
+  .pk-card::before {
+    content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    opacity: 0.22; mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  }
+  .pk-card::after {
+    content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; border-radius: inherit;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+  .pk-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+  /* ---------- Copy ---------- */
+  .pk-copy { grid-area: copy; position: relative; z-index: 1; }
+  .pk-pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 15px 8px 12px; border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(125, 212, 200, 0.30);
+    box-shadow: 0 0 28px rgba(125, 212, 200, 0.12);
+    font: 700 12px/1 'Inter', sans-serif; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #CFEFEA;
+  }
+  .pk-pill-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: #7DD4C8; flex: none;
+    animation: pk-beacon 2.4s ease-out infinite;
+  }
+  @keyframes pk-beacon {
+    0% { box-shadow: 0 0 0 0 rgba(125, 212, 200, 0.55); }
+    70%, 100% { box-shadow: 0 0 0 10px rgba(125, 212, 200, 0); }
+  }
+  .pk-title {
+    margin-top: 22px;
+    font: 900 64px/0.98 'Nunito', sans-serif; letter-spacing: -0.025em;
+    background: linear-gradient(180deg, #FFFFFF 35%, #C4ECE5 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .pk-tagline {
+    margin-top: 12px;
+    font: 700 24px/1.25 'Nunito', sans-serif; color: #7DD4C8;
+  }
+  .pk-lede {
+    margin-top: 16px; max-width: 31em;
+    font: 400 17px/1.6 'Inter', sans-serif; color: rgba(255, 255, 255, 0.76);
+  }
+  .pk-nots { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; list-style: none; }
+  .pk-nots li {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 12px 6px 9px; border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.10);
+    font: 600 13px/1 'Inter', sans-serif; color: rgba(255, 255, 255, 0.84);
+  }
+  .pk-nots svg { width: 14px; height: 14px; color: #7DD4C8; flex: none; }
+
+  /* ---------- Feature buttons (they drive the face) ---------- */
+  .pk-feats {
+    grid-area: feats; position: relative; z-index: 1;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 30px;
+  }
+  .pk-feat {
+    --acc: 125, 212, 200;
+    position: relative; display: flex; align-items: flex-start; gap: 14px;
+    padding: 16px 16px 18px 14px; border-radius: 20px;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    color: #fff; text-align: left; font: inherit; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.35s ease, border-color 0.35s ease, transform 0.25s ease, box-shadow 0.35s ease;
+  }
+  .pk-feat[data-feat="songs"] { --acc: 212, 168, 67; }
+  .pk-feat[data-feat="calm"]  { --acc: 111, 163, 214; }
+  .pk-feat[data-feat="hello"] { --acc: 227, 155, 124; }
+  .pk-feat:hover { background: rgba(255, 255, 255, 0.075); transform: translateY(-1px); }
+  .pk-feat:focus-visible { outline: 2px solid #7DD4C8; outline-offset: 3px; }
+  .pk-feat.is-on {
+    background: linear-gradient(135deg, rgba(var(--acc), 0.17), rgba(255, 255, 255, 0.05) 70%);
+    border-color: rgba(var(--acc), 0.46);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  }
+  .pk-ico {
+    width: 42px; height: 42px; border-radius: 50%; flex: none;
+    display: grid; place-items: center;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  }
+  .pk-ico svg { width: 21px; height: 21px; color: #fff; }
+  .pk-ico.ask   { background: radial-gradient(circle at 35% 30%, #7DD4C8, #2D7A70 75%); }
+  .pk-ico.ask svg { width: 25px; height: 25px; }
+  .pk-ico.songs { background: linear-gradient(140deg, #D4A843, #A8624A); }
+  .pk-ico.calm  { background: linear-gradient(180deg, #3F72AA, #1B355A); }
+  .pk-ico.hello { background: radial-gradient(circle at 35% 30%, #E39B7C, #A8624A 75%); }
+  .pk-feat-txt { display: flex; flex-direction: column; gap: 4px; padding-top: 1px; }
+  .pk-feat-name { font: 800 16px/1.2 'Nunito', sans-serif; }
+  .pk-feat-line { font: 400 13.5px/1.45 'Inter', sans-serif; color: rgba(255, 255, 255, 0.68); transition: color 0.35s ease; }
+  .pk-feat.is-on .pk-feat-line { color: rgba(255, 255, 255, 0.86); }
+  /* A thin timer line: how long this part of the demo has left. */
+  .pk-feat-bar {
+    position: absolute; left: 16px; right: 16px; bottom: 8px; height: 2px; border-radius: 2px;
+    background: rgba(255, 255, 255, 0.10); overflow: hidden; opacity: 0; transition: opacity 0.3s ease;
+  }
+  .pk-feat.is-on .pk-feat-bar { opacity: 1; }
+  .pk-feat-bar::after {
+    content: ''; position: absolute; inset: 0; border-radius: inherit;
+    background: rgb(var(--acc)); transform-origin: 0 50%; transform: scaleX(0);
+  }
+  .pk-feat.is-running .pk-feat-bar::after { animation: pk-fill var(--dur, 3s) linear forwards; }
+  @keyframes pk-fill { to { transform: scaleX(1); } }
+
+  /* ---------- Foot: the parent line + the call to action ---------- */
+  .pk-foot {
+    grid-area: foot; position: relative; z-index: 1; align-self: end;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 16px 24px; margin-top: 26px;
+  }
+  .pk-parent {
+    display: flex; align-items: center; gap: 12px; flex: 1 1 280px; max-width: 25em;
+    font: 400 13.5px/1.5 'Inter', sans-serif; color: rgba(255, 255, 255, 0.68);
+  }
+  .pk-parent img { width: 34px; height: 34px; border-radius: 9px; flex: none; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.32); }
+  .pk-cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 15px 24px; border-radius: 999px; flex: none;
+    background: #F2EDE3; color: #1F5C54; text-decoration: none;
+    font: 700 15px/1 'Inter', sans-serif;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.26), inset 0 -1px 0 rgba(31, 92, 84, 0.12);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .pk-cta:hover { background: #FFFFFF; transform: translateY(-1px); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.30); }
+  .pk-cta:focus-visible { outline: 2px solid #7DD4C8; outline-offset: 3px; }
+  .pk-cta svg { width: 16px; height: 16px; transition: transform 0.2s ease; }
+  .pk-cta:hover svg { transform: translateX(3px); }
+
+  /* ---------- Stage: the Pocket, hanging from its lanyard ---------- */
+  .pk-stage { grid-area: stage; position: relative; z-index: 1; margin: -68px 0 -60px; min-height: 560px; }
+  .pk-hang {
+    position: absolute; left: 50%; top: 0;
+    bottom: calc(100% - var(--cy) - 25.4px * var(--mm));
+    display: flex; flex-direction: column; align-items: center;
+    transform: translateX(-50%); transform-origin: 50% 0;
+    animation: pk-sway 6.5s ease-in-out infinite alternate;
+  }
+  @keyframes pk-sway {
+    from { transform: translateX(-50%) rotate(-1.1deg); }
+    to   { transform: translateX(-50%) rotate(1.1deg); }
+  }
+  .pk-cord {
+    flex: 1 1 auto; width: calc(1.15px * var(--mm)); border-radius: 99px;
+    background: linear-gradient(90deg, #2E3436 0%, #8A9294 38%, #5B6365 70%, #353B3D 100%);
+  }
+  .pk-loop { flex: none; display: block; width: calc(14px * var(--mm)); height: calc(13px * var(--mm)); margin-top: -1px; overflow: visible; }
+  .pk-devwrap { position: relative; flex: none; margin-top: calc(-2.1px * var(--mm)); }
+  /* The soft light and the slow ripples behind the Pocket. */
+  .pk-halo {
+    position: absolute; left: 50%; top: 50%; pointer-events: none;
+    width: calc(96px * var(--mm)); height: calc(96px * var(--mm));
+    transform: translate(-50%, -50%); border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(125, 212, 200, 0.28), rgba(125, 212, 200, 0.09) 52%, rgba(125, 212, 200, 0) 100%);
+  }
+  .pk-ring {
+    position: absolute; left: 50%; top: 50%; pointer-events: none;
+    width: calc(62px * var(--mm)); height: calc(62px * var(--mm));
+    margin: calc(-31px * var(--mm)) 0 0 calc(-31px * var(--mm));
+    border-radius: 50%; border: 1.5px solid rgba(125, 212, 200, 0.34);
+    opacity: 0; animation: pk-ripple 8.4s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+  }
+  .pk-ring.r2 { animation-delay: 2.8s; }
+  .pk-ring.r3 { animation-delay: 5.6s; }
+  @keyframes pk-ripple {
+    0% { transform: scale(0.62); opacity: 0; }
+    12% { opacity: 0.85; }
+    100% { transform: scale(1.75); opacity: 0; }
+  }
+
+  /* The case, the black glass and the face, to scale (--mm px per millimetre). */
+  .pk-dev {
+    position: relative;
+    width: calc(42px * var(--mm)); height: calc(50.8px * var(--mm));
+    border-radius: calc(13px * var(--mm));
+    background: linear-gradient(155deg, #3B4042 0%, #202425 42%, #111415 100%);
+    box-shadow:
+      0 44px 70px rgba(0, 0, 0, 0.42), 0 14px 26px rgba(0, 0, 0, 0.30),
+      inset 0 1.5px 0 rgba(255, 255, 255, 0.17), inset 1px 0 0 rgba(255, 255, 255, 0.06),
+      inset 0 -2px 1px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  }
+  .pk-hw { position: absolute; border-radius: 0 3px 3px 0; }
+  .pk-hw.boot {
+    right: calc(-0.8px * var(--mm)); top: calc(29% - 2px * var(--mm));
+    width: calc(1.1px * var(--mm)); height: calc(4px * var(--mm));
+    background: linear-gradient(90deg, #A8624A, #C67B5C 70%, #B26A4E);
+  }
+  .pk-hw.usb {
+    right: calc(-0.6px * var(--mm)); top: 38.5%;
+    width: calc(0.9px * var(--mm)); height: calc(11.5px * var(--mm));
+    background: linear-gradient(90deg, #17191A, #2C3032);
+  }
+  .pk-hw.pwr {
+    right: calc(-0.8px * var(--mm)); top: calc(71% - 2px * var(--mm));
+    width: calc(1.1px * var(--mm)); height: calc(4px * var(--mm));
+    background: linear-gradient(90deg, #1A1D1E, #3A3F41 70%, #2A2E30);
+  }
+  .pk-glass {
+    position: absolute; inset: calc(2.2px * var(--mm));
+    border-radius: calc(10.8px * var(--mm));
+    background: linear-gradient(162deg, #101414 0%, #030404 38%, #020303 100%);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+  .pk-face {
+    position: absolute; overflow: hidden;
+    left: calc(4.455px * var(--mm)); top: calc(5.145px * var(--mm));
+    width: calc(33.09px * var(--mm)); height: calc(40.51px * var(--mm));
+    border-radius: calc(9.2px * var(--mm));
+    background: #0B1F1D;
+    box-shadow: 0 0 calc(4px * var(--mm)) rgba(61, 155, 143, 0.30);
+  }
+  .pk-reflect {
+    position: absolute; inset: calc(2.2px * var(--mm)); z-index: 2; pointer-events: none;
+    border-radius: calc(10.8px * var(--mm));
+    background: linear-gradient(158deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0) 32%);
+  }
+  /* The panel is drawn at the watch's own 410 x 502 pixels, then scaled. */
+  .pk-panel {
+    position: absolute; left: 0; top: 0; width: 410px; height: 502px;
+    transform-origin: 0 0; transform: scale(calc(var(--mm) * 0.0807073));
+    font-family: 'Nunito', sans-serif; color: #fff;
+    background:
+      radial-gradient(ellipse 60% 45% at 15% 20%, rgba(61, 155, 143, 0.55), transparent 65%),
+      radial-gradient(ellipse 50% 40% at 90% 25%, rgba(212, 168, 67, 0.22), transparent 65%),
+      radial-gradient(ellipse 70% 50% at 50% 105%, rgba(198, 123, 92, 0.30), transparent 65%),
+      linear-gradient(165deg, #1F5C54 0%, #143E39 55%, #0B1F1D 100%);
+  }
+  .pk-scr { position: absolute; inset: 0; opacity: 0; transition: opacity 0.55s ease; }
+  .pk-scr.is-on { opacity: 1; }
+  .pk-scr:not(.is-on), .pk-scr:not(.is-on) * { animation-play-state: paused !important; }
+  .pk-col {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 20px;
+  }
+  .pk-home-glow { animation: pk-breathe 3.6s ease-in-out infinite alternate; }
+  @keyframes pk-breathe { from { opacity: 0.68; } to { opacity: 1; } }
+
+  /* Big round buttons, the watch's own */
+  .pk-big { width: 192px; height: 192px; border-radius: 50%; display: grid; place-items: center; position: relative; flex: none; }
+  .pk-big > svg { width: 96px; height: 96px; color: #fff; }
+  .pk-big.teal { background: radial-gradient(circle at 35% 30%, #7DD4C8, #2D7A70 72%); box-shadow: 0 20px 52px rgba(61, 155, 143, 0.45); }
+  .pk-big.terra { background: radial-gradient(circle at 35% 30%, #E39B7C, #A8624A 72%); box-shadow: 0 20px 52px rgba(198, 123, 92, 0.45); }
+  .pk-big.sand { background: radial-gradient(circle at 35% 30%, #F2EDE3, #C9BBA0 72%); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35); }
+  .pk-big.sand > svg { color: #1F5C54; }
+  .pk-big.xl { width: 232px; height: 232px; }
+  .pk-big.xl > svg { width: 116px; height: 116px; }
+  .pk-big.sm { width: 96px; height: 96px; }
+  .pk-big.sm > svg { width: 48px; height: 48px; }
+
+  /* Listening */
+  .pk-listen { position: relative; width: 264px; height: 264px; display: grid; place-items: center; }
+  .pk-listen > span {
+    position: absolute; inset: 0; border-radius: 50%;
+    border: 5px solid rgba(125, 212, 200, 0.55);
+    animation: pk-pulse 1.8s ease-out infinite;
+  }
+  .pk-listen > span + span { animation-delay: 0.9s; }
+  @keyframes pk-pulse { 0% { transform: scale(0.72); opacity: 1; } 100% { transform: scale(1.18); opacity: 0; } }
+  .pk-dots { display: flex; gap: 12px; }
+  .pk-dots i { width: 16px; height: 16px; border-radius: 50%; background: rgba(255, 255, 255, 0.7); animation: pk-blink 1.2s ease-in-out infinite; }
+  .pk-dots i:nth-child(2) { animation-delay: 0.2s; }
+  .pk-dots i:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pk-blink { 0%, 100% { opacity: 0.25; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-6px); } }
+
+  /* Pebble answers: the two words are the whole face */
+  .pk-answer { gap: 26px; }
+  .pk-word { font-weight: 800; font-size: 54px; line-height: 1; letter-spacing: -0.01em; }
+  .pk-word.fr { color: #D4A843; }
+  .pk-arrow { width: 52px; height: 52px; color: rgba(255, 255, 255, 0.45); }
+  .pk-answer .pk-big.sm { margin-top: 18px; }
+  .pk-scr.is-on .pk-in { animation: pk-in 0.6s cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+  .pk-scr.is-on .pk-in.d1 { animation-delay: 0.35s; }
+  .pk-scr.is-on .pk-in.d2 { animation-delay: 0.7s; }
+  .pk-scr.is-on .pk-in.d3 { animation-delay: 1.05s; }
+  @keyframes pk-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+  /* Songs: four tiles a parent picked, pictures and colours, no titles */
+  .pk-songs { position: absolute; left: 24px; top: 60px; width: 362px; height: 418px; }
+  .pk-songs img { display: block; width: 100%; height: 100%; }
+  .pk-songs::after {
+    content: ''; position: absolute; left: 0; top: 0; width: 171px; height: 199px;
+    border-radius: 44px; box-shadow: inset 0 0 0 6px rgba(255, 255, 255, 0.85);
+  }
+  .pk-scr.is-on .pk-songs { animation: pk-pop 0.6s cubic-bezier(0.2, 0.8, 0.3, 1.1) both; }
+  @keyframes pk-pop { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: none; } }
+
+  /* Calm: rain, a soft dusk scene (from the spec's rain face, at full size) */
+  .pk-rain {
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 90% 38% at 50% -6%, rgba(125, 212, 200, 0.20), transparent 70%),
+      linear-gradient(180deg, #213A4B 0%, #18303F 38%, #122735 62%, #0C1C26 100%);
+  }
+  .pk-cloud { position: absolute; border-radius: 50%; background: rgba(176, 206, 220, 0.24); filter: blur(18px); animation: pk-drift 26s ease-in-out infinite alternate; }
+  .pk-cloud.k1 { width: 340px; height: 108px; top: 20px; left: -68px; }
+  .pk-cloud.k2 { width: 300px; height: 96px; top: 80px; right: -80px; animation-duration: 32s; animation-direction: alternate-reverse; }
+  @keyframes pk-drift { to { transform: translateX(52px); } }
+  .pk-hills { position: absolute; left: 0; bottom: 88px; width: 100%; height: 180px; }
+  .pk-water {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 104px;
+    background: linear-gradient(180deg, rgba(92, 191, 176, 0.16), rgba(12, 28, 38, 0.2) 40%, #0A1820 100%);
+    box-shadow: inset 0 2px 0 rgba(200, 230, 240, 0.18);
+  }
+  .pk-layer { position: absolute; inset: -80px -80px 0; transform: rotate(9deg); }
+  .pk-drop {
+    position: absolute; top: -60px; border-radius: 4px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(205, 232, 242, 0.85));
+    animation: pk-fall linear infinite;
+  }
+  .pk-layer.far .pk-drop { width: 2px; height: 26px; opacity: 0.8; }
+  .pk-layer.near .pk-drop { width: 4px; height: 60px; }
+  @keyframes pk-fall { to { transform: translateY(660px); } }
+  .pk-rip {
+    position: absolute; width: 108px; height: 24px; border-radius: 50%;
+    border: 2px solid rgba(205, 232, 242, 0.45);
+    transform: translate(-50%, -50%) scale(0.08); opacity: 0;
+    animation: pk-rip 2.2s ease-out infinite;
+  }
+  @keyframes pk-rip { 0% { transform: translate(-50%, -50%) scale(0.08); opacity: 0.95; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 0; } }
+
+  /* Hello: hold the heart, the ring fills, it goes to who you picked */
+  .pk-hello { gap: 34px; }
+  .pk-hold { position: relative; width: 264px; height: 264px; display: grid; place-items: center; flex: none; }
+  .pk-prog { position: absolute; inset: 0; width: 264px; height: 264px; transform: rotate(-90deg); }
+  .pk-prog circle { fill: none; stroke-width: 12; }
+  .pk-prog .track { stroke: rgba(255, 255, 255, 0.14); }
+  .pk-prog .arc {
+    stroke: #E39B7C; stroke-linecap: round; stroke-dasharray: 754; stroke-dashoffset: 754;
+    transition: stroke-dashoffset 0s linear 0.6s;
+  }
+  .pk-scr.is-on .pk-prog .arc { stroke-dashoffset: 170; transition: stroke-dashoffset 2.3s linear 0.2s; }
+  .pk-faces { display: flex; gap: 20px; }
+  .pk-av {
+    width: 80px; height: 80px; border-radius: 50%; overflow: hidden; flex: none;
+    border: 4px solid rgba(255, 255, 255, 0.7); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    display: flex; align-items: flex-end; justify-content: center;
+  }
+  .pk-av.a1 { background: linear-gradient(140deg, #C98A8A, #8B7BB5); }
+  .pk-av.a2 { background: linear-gradient(140deg, #6B9AC4, #3D9B8F); }
+  .pk-av svg { width: 76%; height: 76%; color: rgba(242, 237, 227, 0.92); }
+  .pk-faces.lg .pk-av { width: 112px; height: 112px; }
+  .pk-check {
+    position: absolute; right: 4px; bottom: 4px; width: 62px; height: 62px; border-radius: 50%;
+    background: #7DD4C8; border: 6px solid #0B1F1D; display: grid; place-items: center;
+  }
+  .pk-check svg { width: 30px; height: 30px; color: #06100F; }
+  .pk-scr.is-on .pk-pop { animation: pk-pop 0.55s cubic-bezier(0.2, 0.8, 0.3, 1.2) both; }
+  .pk-scr.is-on .pk-pop.d1 { animation-delay: 0.18s; }
+
+  /* The CTA scrolls to the signup and gives it a soft glow. */
+  .cta-signup.pk-flash .signup-input { animation: pk-flash 1.8s ease-out 1; }
+  @keyframes pk-flash {
+    0% { box-shadow: 0 0 0 0 rgba(125, 212, 200, 0); }
+    25% { box-shadow: 0 0 0 6px rgba(125, 212, 200, 0.55); }
+    100% { box-shadow: 0 0 0 16px rgba(125, 212, 200, 0); }
+  }
+
+  /* Only move while on screen (the script adds .is-live). */
+  .pocket:not(.is-live) .pk-card *, .pocket:not(.is-live) .pk-card *::after { animation-play-state: paused !important; }
+
+  /* ---------- Tablet: stack, Pocket under the copy ---------- */
+  @media (max-width: 1023px) {
+    .pk-card {
+      --mm: 6;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "copy" "stage" "feats" "foot";
+      grid-template-rows: auto;
+      padding: 56px 44px 44px;
+    }
+    .pk-stage { --cy: 60%; margin: 6px 0 0; min-height: 0; height: calc(50.8px * var(--mm) + 190px); }
+    .pk-cord {
+      -webkit-mask-image: linear-gradient(to bottom, transparent, #000 48px);
+              mask-image: linear-gradient(to bottom, transparent, #000 48px);
+    }
+    .pk-feats { margin-top: 18px; }
+  }
+  /* ---------- Phone ---------- */
+  @media (max-width: 768px) {
+    .pocket { padding: 56px 16px 4px; }
+    .pk-shell, .pk-card { border-radius: 28px; }
+    .pk-card { --mm: 4.8; clip-path: inset(0 round 28px); padding: 40px 20px 26px; }
+    .pk-title { margin-top: 18px; font-size: 46px; }
+    .pk-tagline { font-size: 20px; }
+    .pk-lede { font-size: 15.5px; }
+    .pk-nots li { font-size: 12.5px; }
+    .pk-stage { --cy: 62%; height: calc(50.8px * var(--mm) + 150px); }
+    .pk-feats { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .pk-feat { padding: 14px 14px 16px 12px; }
+    .pk-foot { flex-direction: column; align-items: stretch; margin-top: 22px; }
+    .pk-parent { flex: none; max-width: none; }
+    .pk-cta { width: 100%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pk-hang, .pk-ring, .pk-pill-dot, .pk-home-glow, .pk-cloud, .pk-drop, .pk-rip,
+    .pk-listen > span, .pk-dots i, .pk-in, .pk-songs, .pk-pop { animation: none !important; }
+    .pk-ring { opacity: 0.18; }
+    .pk-ring.r2 { transform: scale(1.2); opacity: 0.12; }
+    .pk-ring.r3 { transform: scale(1.5); opacity: 0.07; }
+    .pk-scr, .pk-feat, .pk-prog .arc { transition: none !important; }
+    .pk-scr.is-on .pk-prog .arc { stroke-dashoffset: 170; }
+    .pk-feat:hover { transform: none; }
+    .pk-feat-bar { display: none; }
+  }
+</style>
+
+<section class="pocket reveal" id="pocket" aria-labelledby="pk-title">
+  <div class="pk-shell">
+    <div class="pk-card">
+
+      <svg class="pk-sprite" aria-hidden="true" focusable="false">
+        <symbol id="pk-i-stone" viewBox="0 0 24 24">
+          <ellipse cx="12" cy="21.5" rx="9.5" ry="1.8" stroke="currentColor" stroke-width="1" stroke-opacity="0.35" fill="none"/>
+          <path fill="currentColor" d="M4.5 13C4.5 8.8 7.8 7 12 7C16.2 7 19.5 8.8 19.5 13C19.5 17.2 16.2 19.5 12 19.5C7.8 19.5 4.5 17.2 4.5 13Z"/>
+          <path fill="#1F5C54" fill-opacity="0.22" d="M7.5 10.5C8 8.5 9.8 7.8 12 7.8C14.2 7.8 16 8.5 16 10.5C16 12 14.2 12.5 12 12.5C9.8 12.5 7.5 12 7.5 10.5Z"/>
+        </symbol>
+        <symbol id="pk-i-mic" viewBox="0 0 256 256"><path fill="currentColor" d="M80,128V64a48,48,0,0,1,96,0v64a48,48,0,0,1-96,0Zm128,0a8,8,0,0,0-16,0,64,64,0,0,1-128,0,8,8,0,0,0-16,0,80.11,80.11,0,0,0,72,79.6V240a8,8,0,0,0,16,0V207.6A80.11,80.11,0,0,0,208,128Z"/></symbol>
+        <symbol id="pk-i-note" viewBox="0 0 256 256"><path fill="currentColor" d="M210.3,56.34l-80-24A8,8,0,0,0,120,40V148.26A48,48,0,1,0,136,184V98.75l69.7,20.91A8,8,0,0,0,216,112V64A8,8,0,0,0,210.3,56.34Z"/></symbol>
+        <symbol id="pk-i-drop" viewBox="0 0 256 256"><path fill="currentColor" fill-rule="evenodd" d="M174,47.75a254.19,254.19,0,0,0-41.45-38.3,8,8,0,0,0-9.18,0A254.19,254.19,0,0,0,82,47.75C54.51,79.32,40,112.6,40,144a88,88,0,0,0,176,0C216,112.6,201.49,79.32,174,47.75Zm9.85,105.59a57.6,57.6,0,0,1-46.56,46.55A8.75,8.75,0,0,1,136,200a8,8,0,0,1-1.32-15.89c16.57-2.79,30.63-16.85,33.44-33.45a8,8,0,0,1,15.78,2.68Z"/></symbol>
+        <symbol id="pk-i-heart" viewBox="0 0 256 256"><path fill="currentColor" d="M240,102c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,228.66,16,172,16,102A62.07,62.07,0,0,1,78,40c20.65,0,38.73,8.88,50,23.89C139.27,48.88,157.35,40,178,40A62.07,62.07,0,0,1,240,102Z"/></symbol>
+        <symbol id="pk-i-replay" viewBox="0 0 256 256"><path fill="currentColor" d="M228,128a100,100,0,0,1-98.66,100H128a99.39,99.39,0,0,1-68.62-27.29,12,12,0,0,1,16.48-17.45,76,76,0,1,0-1.57-109c-.13.13-.25.25-.39.37L54.89,92H72a12,12,0,0,1,0,24H24a12,12,0,0,1-12-12V56a12,12,0,0,1,24,0V76.72L57.48,57.06A100,100,0,0,1,228,128Z"/></symbol>
+        <symbol id="pk-i-arrow-down" viewBox="0 0 256 256"><path fill="currentColor" d="M208.49,152.49l-72,72a12,12,0,0,1-17,0l-72-72a12,12,0,0,1,17-17L116,187V40a12,12,0,0,1,24,0V187l51.51-51.52a12,12,0,0,1,17,17Z"/></symbol>
+        <symbol id="pk-i-check" viewBox="0 0 256 256"><path fill="currentColor" d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></symbol>
+        <symbol id="pk-i-person" viewBox="0 0 24 24"><circle cx="12" cy="9.4" r="4.3" fill="currentColor"/><path fill="currentColor" d="M3.6 24C3.6 18.2 7.4 15.4 12 15.4C16.6 15.4 20.4 18.2 20.4 24Z"/></symbol>
+      </svg>
+
+      <div class="pk-copy">
+        <p class="pk-pill"><span class="pk-pill-dot" aria-hidden="true"></span>Coming December 2026</p>
+        <h2 class="pk-title" id="pk-title">Pebble Pocket</h2>
+        <p class="pk-tagline">Pebble, made for little hands.</p>
+        <p class="pk-lede">A small, calm companion your child can wear or set on the table. It does a few gentle things, and does them well.</p>
+        <ul class="pk-nots" aria-label="What it leaves out">
+          <li><svg viewBox="0 0 256 256" aria-hidden="true"><use href="#pk-i-check"/></svg>No camera</li>
+          <li><svg viewBox="0 0 256 256" aria-hidden="true"><use href="#pk-i-check"/></svg>No games</li>
+          <li><svg viewBox="0 0 256 256" aria-hidden="true"><use href="#pk-i-check"/></svg>No ads</li>
+        </ul>
+      </div>
+
+      <div class="pk-stage" aria-hidden="true">
+        <div class="pk-hang">
+          <span class="pk-cord"></span>
+          <svg class="pk-loop" viewBox="0 0 14 13">
+            <defs>
+              <linearGradient id="pk-cordg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#8A9294"/><stop offset="0.55" stop-color="#5B6365"/><stop offset="1" stop-color="#3A4143"/>
+              </linearGradient>
+              <linearGradient id="pk-beadg" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#D48B6C"/><stop offset="1" stop-color="#A8624A"/>
+              </linearGradient>
+            </defs>
+            <path d="M6.66 3.98Q6 7.45 2 12.97M7.34 3.98Q8 7.45 12 12.97" fill="none" stroke="url(#pk-cordg)" stroke-width="0.9" stroke-linecap="round"/>
+            <rect x="5.45" y="0.02" width="3.1" height="5.17" rx="1.55" fill="url(#pk-beadg)" stroke="rgba(255,255,255,0.18)" stroke-width="0.28"/>
+            <ellipse cx="6.35" cy="1.35" rx="0.55" ry="0.8" fill="#fff" fill-opacity="0.3"/>
+          </svg>
+          <div class="pk-devwrap">
+            <span class="pk-halo"></span>
+            <span class="pk-ring r1"></span><span class="pk-ring r2"></span><span class="pk-ring r3"></span>
+            <div class="pk-dev">
+              <span class="pk-hw boot"></span><span class="pk-hw usb"></span><span class="pk-hw pwr"></span>
+              <span class="pk-glass"></span>
+              <div class="pk-face">
+                <div class="pk-panel">
+
+                  <!-- Home: the stone and nothing else (firmware geometry) -->
+                  <div class="pk-scr is-on" data-scr="home">
+                    <svg viewBox="0 0 410 502" width="410" height="502">
+                      <defs>
+                        <radialGradient id="pk-glowg" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(205 235.5) scale(115 102.5)">
+                          <stop offset="0" stop-color="#7DD4C8" stop-opacity="0.35"/>
+                          <stop offset="0.2" stop-color="#7DD4C8" stop-opacity="0.224"/>
+                          <stop offset="0.4" stop-color="#7DD4C8" stop-opacity="0.126"/>
+                          <stop offset="0.6" stop-color="#7DD4C8" stop-opacity="0.056"/>
+                          <stop offset="0.8" stop-color="#7DD4C8" stop-opacity="0.014"/>
+                          <stop offset="1" stop-color="#7DD4C8" stop-opacity="0"/>
+                        </radialGradient>
+                      </defs>
+                      <ellipse class="pk-home-glow" cx="205" cy="235.5" rx="115" ry="102.5" fill="url(#pk-glowg)"/>
+                      <ellipse cx="205" cy="302" rx="95" ry="18" fill="none" stroke="#7DD4C8" stroke-opacity="0.2" stroke-width="2.5"/>
+                      <ellipse cx="205" cy="292" rx="65" ry="12" fill="none" stroke="#7DD4C8" stroke-opacity="0.35" stroke-width="2.5"/>
+                      <g transform="translate(85 87) scale(10)">
+                        <path fill="#7DD4C8" d="M4.5 13C4.5 8.8 7.8 7 12 7C16.2 7 19.5 8.8 19.5 13C19.5 17.2 16.2 19.5 12 19.5C7.8 19.5 4.5 17.2 4.5 13Z"/>
+                        <path fill="#fff" fill-opacity="0.33" d="M7.5 10.5C8 8.5 9.8 7.8 12 7.8C14.2 7.8 16 8.5 16 10.5C16 12 14.2 12.5 12 12.5C9.8 12.5 7.5 12 7.5 10.5Z"/>
+                      </g>
+                      <g style="color:#7DD4C8" opacity="0.34">
+                        <use href="#pk-i-note" x="49" y="394" width="80" height="80"/>
+                        <use href="#pk-i-drop" x="165" y="394" width="80" height="80"/>
+                        <use href="#pk-i-heart" x="281" y="394" width="80" height="80"/>
+                      </g>
+                    </svg>
+                  </div>
+
+                  <!-- Listening: the ring means it hears you -->
+                  <div class="pk-scr" data-scr="listen">
+                    <div class="pk-col">
+                      <div class="pk-listen"><span></span><span></span>
+                        <div class="pk-big teal"><svg viewBox="0 0 256 256"><use href="#pk-i-mic"/></svg></div>
+                      </div>
+                      <div class="pk-dots"><i></i><i></i><i></i></div>
+                    </div>
+                  </div>
+
+                  <!-- Pebble answers: the word pair, said out loud -->
+                  <div class="pk-scr" data-scr="answer">
+                    <div class="pk-col pk-answer">
+                      <div class="pk-word fr pk-in">papillon</div>
+                      <svg class="pk-arrow pk-in d1" viewBox="0 0 256 256"><use href="#pk-i-arrow-down"/></svg>
+                      <div class="pk-word pk-in d2">butterfly</div>
+                      <div class="pk-big sm sand pk-in d3"><svg viewBox="0 0 256 256"><use href="#pk-i-replay"/></svg></div>
+                    </div>
+                  </div>
+
+                  <!-- Songs: four tiles, pictures and colours, no titles -->
+                  <div class="pk-scr" data-scr="songs">
+                    <div class="pk-songs"><img src="assets/pocket/songs.webp" width="362" height="418" alt="" loading="lazy" decoding="async"></div>
+                  </div>
+
+                  <!-- Calm: rain -->
+                  <div class="pk-scr pk-rain" data-scr="calm">
+                    <span class="pk-cloud k1"></span><span class="pk-cloud k2"></span>
+                    <svg class="pk-hills" viewBox="0 0 205 90" preserveAspectRatio="none"><path d="M0 58 C 34 30, 70 34, 104 52 S 172 40, 205 30 V 90 H 0 Z" fill="#17343C" opacity="0.85"/><path d="M0 74 C 44 56, 86 60, 124 70 S 184 62, 205 56 V 90 H 0 Z" fill="#0F2A31"/></svg>
+                    <div class="pk-water"></div>
+                    <div class="pk-layer far"></div>
+                    <div class="pk-layer near"></div>
+                    <div class="pk-ripples"></div>
+                  </div>
+
+                  <!-- Hello: hold the heart, the ring fills -->
+                  <div class="pk-scr" data-scr="hello">
+                    <div class="pk-col pk-hello">
+                      <div class="pk-hold">
+                        <svg class="pk-prog" viewBox="0 0 264 264"><circle class="track" cx="132" cy="132" r="120"/><circle class="arc" cx="132" cy="132" r="120"/></svg>
+                        <div class="pk-big terra"><svg viewBox="0 0 256 256"><use href="#pk-i-heart"/></svg></div>
+                      </div>
+                      <div class="pk-faces">
+                        <span class="pk-av a1"><svg viewBox="0 0 24 24"><use href="#pk-i-person"/></svg></span>
+                        <span class="pk-av a2"><svg viewBox="0 0 24 24"><use href="#pk-i-person"/></svg></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Hello sent: a teal heart with a tick -->
+                  <div class="pk-scr" data-scr="sent">
+                    <div class="pk-col pk-hello">
+                      <div class="pk-big xl teal pk-pop"><svg viewBox="0 0 256 256"><use href="#pk-i-heart"/></svg><span class="pk-check"><svg viewBox="0 0 256 256"><use href="#pk-i-check"/></svg></span></div>
+                      <div class="pk-faces lg pk-pop d1">
+                        <span class="pk-av a1"><svg viewBox="0 0 24 24"><use href="#pk-i-person"/></svg></span>
+                        <span class="pk-av a2"><svg viewBox="0 0 24 24"><use href="#pk-i-person"/></svg></span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <span class="pk-reflect"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pk-feats" role="group" aria-label="What Pebble Pocket does">
+        <button type="button" class="pk-feat" data-feat="ask" aria-pressed="false">
+          <span class="pk-ico ask" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#pk-i-stone"/></svg></span>
+          <span class="pk-feat-txt"><span class="pk-feat-name">Ask Pebble</span><span class="pk-feat-line">Ask out loud. Pebble answers in two languages.</span></span>
+          <span class="pk-feat-bar" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="pk-feat" data-feat="songs" aria-pressed="false">
+          <span class="pk-ico songs" aria-hidden="true"><svg viewBox="0 0 256 256"><use href="#pk-i-note"/></svg></span>
+          <span class="pk-feat-txt"><span class="pk-feat-name">Songs</span><span class="pk-feat-line">Four favorites you pick, even without Wi-Fi.</span></span>
+          <span class="pk-feat-bar" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="pk-feat" data-feat="calm" aria-pressed="false">
+          <span class="pk-ico calm" aria-hidden="true"><svg viewBox="0 0 256 256"><use href="#pk-i-drop"/></svg></span>
+          <span class="pk-feat-txt"><span class="pk-feat-name">Calm</span><span class="pk-feat-line">Rain, tide, snow and seeds for big feelings.</span></span>
+          <span class="pk-feat-bar" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="pk-feat" data-feat="hello" aria-pressed="false">
+          <span class="pk-ico hello" aria-hidden="true"><svg viewBox="0 0 256 256"><use href="#pk-i-heart"/></svg></span>
+          <span class="pk-feat-txt"><span class="pk-feat-name">Hello</span><span class="pk-feat-line">Hold the heart to send Grandma a voice hello.</span></span>
+          <span class="pk-feat-bar" aria-hidden="true"></span>
+        </button>
+      </div>
+
+      <div class="pk-foot">
+        <p class="pk-parent"><img src="assets/app-icon.png" alt="" width="34" height="34" loading="lazy">You set it up in the PebblePath app: songs, languages, and who hears each hello.</p>
+        <a class="pk-cta" href="#download">Get launch news<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+/* Pebble Pocket teaser: plays the face like a short demo while the section
+   is on screen, lets the four feature buttons jump to a face, and sends the
+   CTA to the signup form. Respects prefers-reduced-motion (no autoplay). */
+(function () {
+  var root = document.getElementById('pocket');
+  if (!root) return;
+
+  var screens = root.querySelectorAll('.pk-scr');
+  var feats = root.querySelectorAll('.pk-feat');
+  var SEQ = [
+    { s: 'home',   ms: 3000, f: '' },
+    { s: 'listen', ms: 2000, f: 'ask' },
+    { s: 'answer', ms: 3300, f: 'ask', rep: true },
+    { s: 'songs',  ms: 3000, f: 'songs', rep: true },
+    { s: 'calm',   ms: 3800, f: 'calm', rep: true },
+    { s: 'hello',  ms: 2700, f: 'hello', rep: true },
+    { s: 'sent',   ms: 2300, f: 'hello' }
+  ];
+  var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var coarse = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+  var idx = 0, timer = null, live = false, lastFeat = null, seen = false;
+
+  function track(name, params) {
+    if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
+  }
+
+  function remaining(from, f) {
+    var t = 0;
+    for (var k = from; k < SEQ.length && SEQ[k].f === f; k++) t += SEQ[k].ms;
+    return t;
+  }
+
+  function show(n, restartBar) {
+    idx = n;
+    var step = SEQ[n], i;
+    for (i = 0; i < screens.length; i++) {
+      screens[i].classList.toggle('is-on', screens[i].getAttribute('data-scr') === step.s);
+    }
+    for (i = 0; i < feats.length; i++) {
+      var mine = feats[i].getAttribute('data-feat') === step.f;
+      feats[i].classList.toggle('is-on', mine);
+      feats[i].setAttribute('aria-pressed', mine ? 'true' : 'false');
+      if (!mine) feats[i].classList.remove('is-running');
+    }
+    if (step.f && (step.f !== lastFeat || restartBar) && live && !reduce) {
+      var cur = root.querySelector('.pk-feat[data-feat="' + step.f + '"]');
+      if (cur) {
+        cur.style.setProperty('--dur', remaining(n, step.f) + 'ms');
+        cur.classList.remove('is-running');
+        void cur.offsetWidth;
+        cur.classList.add('is-running');
+      }
+    }
+    lastFeat = step.f;
+  }
+
+  function schedule() {
+    clearTimeout(timer);
+    if (reduce || !live || document.hidden) return;
+    timer = setTimeout(function () {
+      show((idx + 1) % SEQ.length, false);
+      schedule();
+    }, SEQ[idx].ms);
+  }
+
+  for (var b = 0; b < feats.length; b++) {
+    feats[b].addEventListener('click', function () {
+      // Autoplay starts a feature at its first face; with reduced motion
+      // there is no autoplay, so jump to the face that shows it best.
+      var f = this.getAttribute('data-feat');
+      for (var k = 0; k < SEQ.length; k++) {
+        if (SEQ[k].f === f && (!reduce || SEQ[k].rep)) { show(k, true); break; }
+      }
+      schedule();
+      track('pocket_feature', { feature: f, page_path: window.location.pathname });
+    });
+  }
+
+  // Rain for the Calm face: two depths of drops and a few ripples, laid out
+  // the same way on every visit (seeded, not Math.random).
+  var seed = 20261201;
+  function rnd() {
+    seed = (seed + 0x6D2B79F5) | 0;
+    var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  }
+  function rain(layer, n, dmin, dmax) {
+    var el = root.querySelector('.pk-layer.' + layer);
+    if (!el) return;
+    var html = '';
+    for (var i = 0; i < n; i++) {
+      var d = dmin + rnd() * (dmax - dmin);
+      var left = Math.round(rnd() * 560);
+      if (reduce) {
+        html += '<i class="pk-drop" style="left:' + left + 'px;top:' + Math.round(30 + rnd() * 520) + 'px"></i>';
+      } else {
+        html += '<i class="pk-drop" style="left:' + left + 'px;animation-duration:' + d.toFixed(2) +
+                's;animation-delay:-' + (rnd() * d).toFixed(2) + 's"></i>';
+      }
+    }
+    el.innerHTML = html;
+  }
+  rain('far', 36, 0.95, 1.4);
+  rain('near', 16, 0.6, 0.85);
+  var rip = root.querySelector('.pk-ripples');
+  if (rip && !reduce) {
+    var r = '';
+    for (var j = 0; j < 7; j++) {
+      r += '<i class="pk-rip" style="left:' + Math.round(40 + rnd() * 330) + 'px;top:' +
+           Math.round(420 + rnd() * 66) + 'px;animation-duration:' + (1.9 + rnd() * 0.8).toFixed(2) +
+           's;animation-delay:-' + (rnd() * 2.2).toFixed(2) + 's"></i>';
+    }
+    rip.innerHTML = r;
+  }
+
+  // Play only while the section is on screen.
+  function setLive(v) {
+    live = v;
+    root.classList.toggle('is-live', v);
+    if (v) {
+      if (!seen) { seen = true; track('pocket_teaser_view', { page_path: window.location.pathname }); }
+      show(idx, true);
+      schedule();
+    } else {
+      clearTimeout(timer);
+    }
+  }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      for (var e = 0; e < entries.length; e++) setLive(entries[e].isIntersecting);
+    }, { threshold: 0.2 }).observe(root);
+  } else {
+    setLive(true);
+  }
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden && live) show(idx, true);
+    schedule();
+  });
+
+  // "Get launch news": glide to the signup form below and point at it.
+  var cta = root.querySelector('.pk-cta');
+  if (cta) {
+    cta.addEventListener('click', function (e) {
+      var target = document.getElementById('download');
+      if (!target) return;
+      e.preventDefault();
+      track('pocket_notify_click', { page_path: window.location.pathname });
+      target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+      setTimeout(function () {
+        var input = document.getElementById('pp-signup-email');
+        var box = target.querySelector('.cta-signup');
+        if (!coarse && input && input.offsetParent !== null) {
+          try { input.focus({ preventScroll: true }); } catch (err) { input.focus(); }
+        }
+        if (box) { box.classList.remove('pk-flash'); void box.offsetWidth; box.classList.add('pk-flash'); }
+      }, reduce ? 60 : 750);
+    });
+  }
+})();
+</script>
+<!-- ============================ END PEBBLE POCKET TEASER ============================ -->
+
+
 <!-- FOUNDERS — Atlassian-leadership-style: portraits over organic pebble-shape
      backdrops, no card chrome, hover shifts the backdrop color + rotation.
      Once cutout PNGs are available, drop them into <img> + remove the circular
