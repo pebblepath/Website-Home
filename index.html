@@ -2671,9 +2671,15 @@
   }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
-/* ===== THE PEBBLE BRAIN (Convergence) ===== */
-/* Background matches the Growing With You / .intelligence section so the
-   two dark-teal panels feel like sisters. */
+/* BRAIN:CSS:BEGIN */
+/* ===== THE PEBBLE BRAIN: "show the threads" (2026-09-26, source: design-sandbox/57-brain-threads) =====
+   Was: "THE PEBBLE BRAIN, proposed: "show the threads" =====
+   Same composition as today. What changes:
+   1. A plain line under the heading says what goes in and what comes out.
+   2. One thing at a time: a source lights up and shows what it actually said,
+      a thread draws from it into Pebble, and the line it became lands in the brief.
+   3. The brief is the same four lines as the hero's Family Brief, so the two connect.
+   Calmer than today: one moving dot at a time instead of seven. */
 .brain-sec{
   position:relative; overflow:hidden;
   background:
@@ -2681,11 +2687,7 @@
     radial-gradient(ellipse 45% 35% at 88% 30%,rgba(212,168,67,0.28),transparent 65%),
     radial-gradient(ellipse 60% 50% at 50% 100%,rgba(198,123,92,0.32),transparent 65%),
     linear-gradient(160deg,var(--teal-deep) 0%,var(--teal-dark) 50%,var(--teal) 100%);
-  /* Vertical padding matches .intelligence (Growing With You) so the two
-     sister teal panels feel balanced — 36px top, 36px bottom. Previously
-     was 36/64; the asymmetric bottom was a relic of the section's first
-     cut and made the brain band visibly taller than its sister. */
-  text-align:center; padding:36px 40px;
+  text-align:center; padding:36px 40px 40px;
 }
 .brain-sec::before{
   content:''; position:absolute; inset:0; pointer-events:none; opacity:0.5;
@@ -2695,159 +2697,136 @@
 .brain-sec > *{ position:relative; z-index:1; }
 .brain-sec .brain-inner{ max-width:1120px; margin:0 auto; }
 .brain-sec h2{
-  /* Harmonized 2026-05-21 to match .intelligence-text h2 — was 42px
-     with letter-spacing:-.6px which read visibly heavier than its
-     sister panel. Now 36px / line-height 1.2 / no letter-spacing,
-     same as Growing With You. Weight 800 unchanged. */
   font-family:'Nunito',sans-serif; font-weight:800; font-size:36px;
   line-height:1.2; color:#fff; margin:0;
 }
 .brain-sec .brain-sub{
-  font-size:17px; line-height:1.62; color:#CDE3DF; max-width:680px;
-  margin:18px auto 0;
+  font-size:17px; line-height:1.55; color:#CDE3DF; max-width:680px;
+  margin:10px auto 0;
 }
 .brain-sec .brain-converge{
-  position:relative; width:920px; height:510px; margin:34px auto 0;
+  position:relative; width:920px; height:540px; margin:18px auto 0;
 }
-.brain-sec .brain-lines{ position:absolute; inset:0; width:920px; height:510px; }
+.brain-sec .brain-lines{ position:absolute; inset:0; width:920px; height:540px; overflow:visible; }
+.brain-sec .brain-base{ stroke-width:1.7; fill:none; }
+/* The thread a source sends: drawn from the source into Pebble while it speaks. */
+.brain-sec .brain-hl{
+  fill:none; stroke:#C9F1EA; stroke-width:2.2; stroke-linecap:round;
+  stroke-dasharray:1 1; stroke-dashoffset:1; opacity:0;
+  filter:drop-shadow(0 0 4px rgba(125,212,200,.8));
+  transition:opacity .5s ease;
+}
+.brain-sec .brain-dot{ opacity:0; }
+
+/* A source: icon, label above it, and what it said above that. */
+.brain-sec .brain-src{ position:absolute; left:var(--x); top:var(--y); width:0; height:0; z-index:4; }
 .brain-sec .brain-ico{
-  position:absolute; width:54px; height:54px; transform:translate(-50%,-50%);
+  position:absolute; left:0; top:0; width:54px; height:54px; transform:translate(-50%,-50%);
   border-radius:50%; background:rgba(125,212,200,.15);
   border:1.6px solid rgba(125,212,200,.6);
-  display:flex; align-items:center; justify-content:center; z-index:4;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .4s ease, border-color .4s ease, box-shadow .4s ease, transform .4s ease;
 }
 .brain-sec .brain-ico svg{ width:25px; height:25px; }
 .brain-sec .brain-ilabel{
-  position:absolute; transform:translate(-50%,-50%); z-index:4;
+  position:absolute; left:0; top:-58px; transform:translate(-50%,-50%);
   font-size:15.5px; font-weight:600; color:#E4F2EF; white-space:nowrap;
+  transition:color .4s ease;
 }
+.brain-sec .brain-chip{
+  position:absolute; left:0; top:-92px; transform:translate(-50%,-50%) translateY(7px);
+  font-family:'Nunito',sans-serif; font-weight:700; font-size:14px; line-height:1;
+  color:#fff; white-space:nowrap; padding:8px 12px 8px;
+  border-radius:12px; background:rgba(10,44,40,.58);
+  border:1px solid rgba(160,230,220,.42); box-shadow:0 8px 18px rgba(0,0,0,.18);
+  opacity:0; transition:opacity .45s ease, transform .45s ease;
+}
+/* A small tail pointing down at the label. */
+.brain-sec .brain-chip::after{
+  content:''; position:absolute; left:50%; bottom:-5px; width:8px; height:8px;
+  background:rgba(10,44,40,.58); border-right:1px solid rgba(160,230,220,.42);
+  border-bottom:1px solid rgba(160,230,220,.42); transform:translateX(-50%) rotate(45deg);
+}
+.brain-sec .brain-src.is-on .brain-ico{
+  background:rgba(125,212,200,.32); border-color:#C9F1EA;
+  box-shadow:0 0 0 5px rgba(125,212,200,.12), 0 0 24px rgba(125,212,200,.55);
+  transform:translate(-50%,-50%) scale(1.08);
+}
+.brain-sec .brain-src.is-on .brain-ilabel{ color:#fff; }
+.brain-sec .brain-src.is-on .brain-chip{ opacity:1; transform:translate(-50%,-50%); }
+
+/* Pebble */
 .brain-sec .brain-orb{
-  position:absolute; left:460px; top:238px; width:166px; height:166px;
+  position:absolute; left:460px; top:250px; width:150px; height:150px;
   transform:translate(-50%,-50%); border-radius:50%; z-index:5;
   background:radial-gradient(circle at 38% 30%,#5EC4B4 0%,#3D9B8F 44%,#2D7A70 80%,#235F57 100%);
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   animation:brain-orbpulse 4.6s ease-in-out infinite;
 }
-/* 2026-05-21 — Pebble icon lifted 10 px so it reads "above" the
-   wordmark inside the orb. Transform-only shift keeps layout
-   intact (the orb-name stays at its original position). */
-.brain-sec .brain-orb svg{ transform:translateY(-10px); }
+.brain-sec .brain-orb svg{ transform:translateY(-8px); }
 .brain-sec .brain-orb-name{
-  font-family:'Fredoka',sans-serif; font-weight:600; font-size:17px;
-  color:#FFFFFF; margin-top:3px;
+  font-family:'Nunito',sans-serif; font-weight:800; font-size:16px;
+  color:#FFFFFF; margin-top:0; letter-spacing:.2px;
 }
+/* A soft flash when something arrives. */
+.brain-sec .brain-orb::after{
+  content:''; position:absolute; inset:0; border-radius:50%; pointer-events:none;
+  background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.42),rgba(255,255,255,0) 68%);
+  opacity:0;
+}
+.brain-sec .brain-orb.is-receiving::after{ animation:brain-receive .7s ease-out; }
+@keyframes brain-receive{ 0%{opacity:0} 25%{opacity:1} 100%{opacity:0} }
 @keyframes brain-orbpulse{
   0%,100%{ box-shadow:0 0 0 11px rgba(125,212,200,.10),0 0 0 26px rgba(125,212,200,.05),0 0 58px 5px rgba(125,212,200,.46); }
   50%{ box-shadow:0 0 0 15px rgba(125,212,200,.14),0 0 0 36px rgba(125,212,200,.07),0 0 84px 13px rgba(125,212,200,.64); }
 }
-.brain-sec .brain-brief{
-  position:absolute; left:460px; top:396px; transform:translateX(-50%);
-  width:620px; text-align:center; z-index:5;
-}
-.brain-sec .brain-bg-k{
-  font-family:'Nunito',sans-serif; font-weight:800; font-size:11px;
-  letter-spacing:2px; text-transform:uppercase; color:#7DD4C8; margin-bottom:10px;
-}
-.brain-sec .brain-bg-line{
-  font-family:'Nunito',sans-serif; font-weight:700; font-size:20px;
-  line-height:1.5; color:#fff; text-shadow:0 0 26px rgba(125,212,200,.5);
-}
-/* Bold inline highlights in the brief ("splash day", "Thomas is on
-   pickup") rendered in teal-glow against the dark-teal panel.
-   Terracotta was tried 2026-05-21 (warmer pop) but felt worse in
-   practice — the green-on-green of the teal-glow blends with the
-   panel mesh more harmoniously. Keep #7DD4C8 unless Thomas asks
-   to revisit. */
-.brain-sec .brain-bg-line b{ color:#7DD4C8; font-weight:800; }
 
-/* 2026-05-21 v2 — "live generation" pop-in for the brief line, on a
-   continuous loop driven by JS (see the brain-brief IIFE at the
-   bottom of <body>). Chunks default to opacity 0 + render INLINE
-   (not inline-block) so the trailing spaces inside each span render
-   as natural whitespace. opacity-only animation keeps inter-word
-   spacing pixel-perfect — inline-block + transform was breaking the
-   sentence's natural rhythm. Reduced-motion users get the message
-   rendered statically. */
-.brain-sec .brain-chunk{
-  opacity:0;
-  transition:opacity 0.7s ease-out;
+/* The brief: the hero's four lines, written one at a time. */
+.brain-sec .brain-card{
+  position:absolute; left:460px; top:382px; transform:translateX(-50%);
+  width:540px; text-align:left; z-index:5;
+  padding:13px 26px; border-radius:18px;
+  background:rgba(255,255,255,.075); border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 18px 40px rgba(0,0,0,.14);
 }
-.brain-sec .brain-chunk.is-shown{
-  opacity:1;
+.brain-sec .brain-list{ list-style:none; margin:0; padding:0; }
+.brain-sec .brain-line{
+  position:relative; display:flex; align-items:baseline; gap:12px;
+  font-family:'Nunito',sans-serif; font-size:16.5px; line-height:1.35; padding:5px 0;
 }
-.brain-line-aria{
-  position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);
+.brain-sec .brain-line .mk{ flex:0 0 14px; height:11px; align-self:center; transition:opacity .5s ease, transform .5s ease; }
+.brain-sec .brain-line .mk svg{ display:block; width:14px; height:11px; }
+.brain-sec .brain-line .tx{ color:rgba(226,243,239,.9); font-weight:600; transition:opacity .6s ease, transform .6s ease; }
+.brain-sec .brain-line .tx b{ color:#fff; font-weight:800; }
+/* An empty line waiting to be written. */
+.brain-sec .brain-line::after{
+  content:''; position:absolute; left:26px; top:50%; height:9px; width:var(--sk,68%);
+  border-radius:5px; background:rgba(255,255,255,.12); transform:translateY(-50%);
+  opacity:0; transition:opacity .5s ease;
 }
-@media (prefers-reduced-motion: reduce){
-  .brain-sec .brain-chunk{ opacity:1; transition:none; }
+/* JS turns the animation on; without it the brief simply shows in full. */
+.brain-sec .is-animated .brain-line .tx{ opacity:0; transform:translateY(4px); }
+.brain-sec .is-animated .brain-line .mk{ opacity:.25; transform:scale(.6); }
+.brain-sec .is-animated .brain-line::after{ opacity:1; }
+.brain-sec .is-animated .brain-line.is-shown .tx{ opacity:1; transform:none; }
+.brain-sec .is-animated .brain-line.is-shown .mk{ opacity:1; transform:none; }
+.brain-sec .is-animated .brain-line.is-shown::after{ opacity:0; }
+/* The line that just landed glows for a moment, so the eye links it to its source. */
+.brain-sec .brain-line::before{
+  content:''; position:absolute; left:-12px; right:-12px; top:1px; bottom:1px;
+  border-radius:9px; background:rgba(125,212,200,.2); opacity:0; pointer-events:none;
 }
+.brain-sec .brain-line.is-landing::before{ animation:brain-land 1.8s ease-out; }
+@keyframes brain-land{ 0%{opacity:0} 18%{opacity:1} 100%{opacity:0} }
+.brain-sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
 
-/* mobile fallback — scale the fixed-width composition to fit narrower viewports */
-/* Tablet — still uses the desktop converge SVG, just downscaled. */
+/* Tablet: the same composition, scaled (as today). */
 @media (max-width: 1000px){
-  .brain-sec{ padding:30px 24px 60px; }
+  .brain-sec{ padding:30px 24px 40px; }
   .brain-sec h2{ font-size:34px; }
-  .brain-sec .brain-converge{
-    transform:scale(0.72); transform-origin:top center;
-    margin-bottom:-142px;
-  }
+  .brain-sec .brain-converge{ transform:scale(0.72); transform-origin:top center; margin-bottom:-151px; }
 }
-
-/* 2026-05-21 — MOBILE BRAIN SECTION REDESIGN
-   Previously the 920×510 absolute-positioned SVG converge was scaled
-   to 50% (≤720px) and 38% (≤480px) via transform + negative margin to
-   compensate — but the input labels ("School email", "Daycare note"
-   etc.) became unreadable at that scale, and the layout felt cramped.
-   At ≤720px the visual collapses to a clean centered stack:
-     1. Heading + sub
-     2. Single Pebble orb (no input lines/labels — the "synthesize
-        from many inputs" metaphor is desktop-only)
-     3. Brief text below the orb
-   The .brain-lines / .brain-ico / .brain-ilabel elements are hidden;
-   .brain-orb + .brain-brief are repositioned from absolute → static
-   inside a flex-column .brain-converge. */
-@media (max-width: 720px){
-  .brain-sec{ padding:26px 18px 48px; }
-  .brain-sec h2{ font-size:28px; }
-  .brain-sec .brain-sub{ font-size:15px; }
-  .brain-sec .brain-converge{
-    width:100%; height:auto;
-    margin:32px auto 0;
-    transform:none;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:28px;
-  }
-  /* Desktop-only flow metaphor — hidden on mobile */
-  .brain-sec .brain-lines,
-  .brain-sec .brain-ico,
-  .brain-sec .brain-ilabel { display:none; }
-  /* Pebble orb — recenter as a static flex child instead of absolute */
-  .brain-sec .brain-orb{
-    position:static;
-    left:auto; top:auto;
-    transform:none;
-    width:130px; height:130px;
-  }
-  .brain-sec .brain-orb-name{ font-size:15px; }
-  /* Brief text — stack below orb, full-width with safe max */
-  .brain-sec .brain-brief{
-    position:static;
-    left:auto; top:auto;
-    transform:none;
-    width:100%;
-    max-width:480px;
-    padding:0 6px;
-  }
-  .brain-sec .brain-bg-k{ font-size:10.5px; margin-bottom:8px; }
-  .brain-sec .brain-bg-line{ font-size:17px; }
-}
-@media (max-width: 480px){
-  .brain-sec h2{ font-size:24px; }
-  .brain-sec .brain-orb{ width:114px; height:114px; }
-  .brain-sec .brain-bg-line{ font-size:16px; }
-}
+/* BRAIN:CSS:END */
 
   /* ============================================================
      HERO V2 — "Curved split" header (design_handoff_website_header)
@@ -3719,102 +3698,87 @@
   </div>
 </section>
 
-<!-- THE PEBBLE BRAIN -->
+<!-- BRAIN:HTML:BEGIN -->
 <section class="brain-sec reveal" id="brain">
   <div class="brain-inner">
     <h2>A hundred little things, simplified.</h2>
+    <p class="brain-sub">Emails, flyers, invites and quick notes go in. One calm brief comes out.</p>
+    <p class="brain-sr">Pebble puts together a school email, what it remembers about Felix, tomorrow's weather, a quick note, a calendar invite and a backpack flyer, and writes one brief for tomorrow.</p>
 
-    <div class="brain-converge">
-      <svg class="brain-lines" viewBox="0 0 920 510" fill="none">
+    <div class="brain-converge" data-brain>
+      <svg class="brain-lines" viewBox="0 0 920 540" fill="none" aria-hidden="true">
         <defs>
           <radialGradient id="brainDotG" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#E6FBF6"/><stop offset="100%" stop-color="#7DD4C8"/>
+            <stop offset="0%" stop-color="#F2FFFC"/><stop offset="100%" stop-color="#7DD4C8"/>
           </radialGradient>
-          <!-- 2026-05-21 v2 — Per-path linearGradients (replaces the
-               single radialGradient v1). The radial worked fine for
-               long lines but short lines (e.g. Calendar/Daycare at
-               ~169 px) only sampled the inner ~46% of the gradient
-               radius, so they appeared at near-full opacity their
-               entire length. Now each line gets its own gradient
-               sized exactly to its path: transparent at the icon
-               end (x1,y1), opaque at the Pebble center end (x2,y2 =
-               460,238). Result: every line, regardless of length,
-               fades from full opacity at center to transparent at
-               its icon end at the same visual rate. -->
-          <linearGradient id="brainLine1" x1="150" y1="150" x2="460" y2="238" gradientUnits="userSpaceOnUse">
-            <stop offset="0%"   stop-color="rgba(125,212,200,0)"/>
-            <stop offset="100%" stop-color="rgba(125,212,200,1)"/>
-          </linearGradient>
-          <linearGradient id="brainLine2" x1="360" y1="102" x2="460" y2="238" gradientUnits="userSpaceOnUse">
-            <stop offset="0%"   stop-color="rgba(125,212,200,0)"/>
-            <stop offset="100%" stop-color="rgba(125,212,200,1)"/>
-          </linearGradient>
-          <linearGradient id="brainLine3" x1="560" y1="102" x2="460" y2="238" gradientUnits="userSpaceOnUse">
-            <stop offset="0%"   stop-color="rgba(125,212,200,0)"/>
-            <stop offset="100%" stop-color="rgba(125,212,200,1)"/>
-          </linearGradient>
-          <linearGradient id="brainLine4" x1="770" y1="150" x2="460" y2="238" gradientUnits="userSpaceOnUse">
-            <stop offset="0%"   stop-color="rgba(125,212,200,0)"/>
-            <stop offset="100%" stop-color="rgba(125,212,200,1)"/>
-          </linearGradient>
-          <linearGradient id="brainLine5" x1="108" y1="286" x2="460" y2="238" gradientUnits="userSpaceOnUse">
-            <stop offset="0%"   stop-color="rgba(125,212,200,0)"/>
-            <stop offset="100%" stop-color="rgba(125,212,200,1)"/>
-          </linearGradient>
-          <linearGradient id="brainLine6" x1="812" y1="286" x2="460" y2="238" gradientUnits="userSpaceOnUse">
-            <stop offset="0%"   stop-color="rgba(125,212,200,0)"/>
-            <stop offset="100%" stop-color="rgba(125,212,200,1)"/>
-          </linearGradient>
+          <linearGradient id="brL-email" x1="179.5" y1="173.7" x2="388.0" y2="233.0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgba(125,212,200,.22)"/><stop offset="1" stop-color="rgba(125,212,200,.95)"/></linearGradient>
+          <linearGradient id="brL-weather" x1="378.4" y1="141.0" x2="415.5" y2="190.9" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgba(125,212,200,.22)"/><stop offset="1" stop-color="rgba(125,212,200,.95)"/></linearGradient>
+          <linearGradient id="brL-flyer" x1="541.6" y1="141.0" x2="504.5" y2="190.9" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgba(125,212,200,.22)"/><stop offset="1" stop-color="rgba(125,212,200,.95)"/></linearGradient>
+          <linearGradient id="brL-note" x1="740.5" y1="173.7" x2="532.0" y2="233.0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgba(125,212,200,.22)"/><stop offset="1" stop-color="rgba(125,212,200,.95)"/></linearGradient>
+          <linearGradient id="brL-memory" x1="130.4" y1="329.8" x2="388.6" y2="269.3" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgba(125,212,200,.22)"/><stop offset="1" stop-color="rgba(125,212,200,.95)"/></linearGradient>
+          <linearGradient id="brL-calendar" x1="789.6" y1="329.8" x2="531.4" y2="269.3" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgba(125,212,200,.22)"/><stop offset="1" stop-color="rgba(125,212,200,.95)"/></linearGradient>
         </defs>
-        <g stroke-width="1.7" fill="none">
-          <path id="brP1" d="M150 150 Q300 200 460 238" stroke="url(#brainLine1)"/>
-          <path id="brP2" d="M360 102 Q410 170 460 238" stroke="url(#brainLine2)"/>
-          <path id="brP3" d="M560 102 Q510 170 460 238" stroke="url(#brainLine3)"/>
-          <path id="brP4" d="M770 150 Q620 200 460 238" stroke="url(#brainLine4)"/>
-          <path id="brP5" d="M108 286 Q280 262 460 238" stroke="url(#brainLine5)"/>
-          <path id="brP6" d="M812 286 Q640 262 460 238" stroke="url(#brainLine6)"/>
+        <g class="brain-base-g">
+          <path class="brain-base" d="M179.5 173.7 Q281.4 206.5 388.0 233.0" stroke="url(#brL-email)"/>
+          <path class="brain-base" d="M378.4 141.0 Q397.0 166.0 415.5 190.9" stroke="url(#brL-weather)"/>
+          <path class="brain-base" d="M541.6 141.0 Q523.0 166.0 504.5 190.9" stroke="url(#brL-flyer)"/>
+          <path class="brain-base" d="M740.5 173.7 Q638.6 206.5 532.0 233.0" stroke="url(#brL-note)"/>
+          <path class="brain-base" d="M130.4 329.8 Q259.5 303.2 388.6 269.3" stroke="url(#brL-memory)"/>
+          <path class="brain-base" d="M789.6 329.8 Q660.5 303.2 531.4 269.3" stroke="url(#brL-calendar)"/>
         </g>
-        <path id="brPOut" d="M460 321 L460 381" stroke="rgba(125,212,200,.45)" stroke-width="2" stroke-dasharray="2 6"/>
+        <g class="brain-hl-g">
+          <path class="brain-hl" data-src="email"    pathLength="1" d="M179.5 173.7 Q281.4 206.5 388.0 233.0"/>
+          <path class="brain-hl" data-src="weather"  pathLength="1" d="M378.4 141.0 Q397.0 166.0 415.5 190.9"/>
+          <path class="brain-hl" data-src="flyer"    pathLength="1" d="M541.6 141.0 Q523.0 166.0 504.5 190.9"/>
+          <path class="brain-hl" data-src="note"     pathLength="1" d="M740.5 173.7 Q638.6 206.5 532.0 233.0"/>
+          <path class="brain-hl" data-src="memory"   pathLength="1" d="M130.4 329.8 Q259.5 303.2 388.6 269.3"/>
+          <path class="brain-hl" data-src="calendar" pathLength="1" d="M789.6 329.8 Q660.5 303.2 531.4 269.3"/>
+        </g>
+        <path class="brain-outpath" d="M460 331 L460 378" stroke="rgba(125,212,200,.45)" stroke-width="2" stroke-dasharray="2 6"/>
         <g>
-          <circle r="4.5" fill="url(#brainDotG)"><animateMotion dur="2.6s" repeatCount="indefinite"><mpath href="#brP1"/></animateMotion></circle>
-          <circle r="4.5" fill="url(#brainDotG)"><animateMotion dur="3.0s" begin="0.5s" repeatCount="indefinite"><mpath href="#brP2"/></animateMotion></circle>
-          <circle r="4.5" fill="url(#brainDotG)"><animateMotion dur="2.8s" begin="1.1s" repeatCount="indefinite"><mpath href="#brP3"/></animateMotion></circle>
-          <circle r="4.5" fill="url(#brainDotG)"><animateMotion dur="3.3s" begin="0.3s" repeatCount="indefinite"><mpath href="#brP4"/></animateMotion></circle>
-          <circle r="4.5" fill="url(#brainDotG)"><animateMotion dur="2.9s" begin="1.5s" repeatCount="indefinite"><mpath href="#brP5"/></animateMotion></circle>
-          <circle r="4.5" fill="url(#brainDotG)"><animateMotion dur="3.1s" begin="0.8s" repeatCount="indefinite"><mpath href="#brP6"/></animateMotion></circle>
-          <circle r="5" fill="url(#brainDotG)"><animateMotion dur="2.1s" begin="0.2s" repeatCount="indefinite"><mpath href="#brPOut"/></animateMotion></circle>
+          <circle class="brain-dot" data-src="email" r="4.5" fill="url(#brainDotG)"/>
+          <circle class="brain-dot" data-src="weather" r="4.5" fill="url(#brainDotG)"/>
+          <circle class="brain-dot" data-src="flyer" r="4.5" fill="url(#brainDotG)"/>
+          <circle class="brain-dot" data-src="note" r="4.5" fill="url(#brainDotG)"/>
+          <circle class="brain-dot" data-src="memory" r="4.5" fill="url(#brainDotG)"/>
+          <circle class="brain-dot" data-src="calendar" r="4.5" fill="url(#brainDotG)"/>
+          <circle class="brain-dot" data-src="out" r="5" fill="url(#brainDotG)"/>
         </g>
       </svg>
 
-      <div class="brain-ico" style="left:150px;top:150px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 8l9 6 9-6"/></svg></div>
-      <div class="brain-ilabel" style="left:150px;top:90px;">School email</div>
+      <div class="brain-src" data-src="email" style="--x:150px;--y:164px" aria-hidden="true">
+        <div class="brain-chip">&ldquo;Splash day! Bring a towel&rdquo;</div>
+        <div class="brain-ilabel">School email</div>
+        <div class="brain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 8l9 6 9-6"/></svg></div>
+      </div>
+      <div class="brain-src" data-src="weather" style="--x:360px;--y:116px" aria-hidden="true">
+        <div class="brain-chip">&ldquo;62&deg;F and breezy&rdquo;</div>
+        <div class="brain-ilabel">Tomorrow's weather</div>
+        <div class="brain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.6"/><path d="M12 2.4v2.6M12 19v2.6M2.4 12h2.6M19 12h2.6M5 5l1.85 1.85M17.15 17.15L19 19M19 5l-1.85 1.85M6.85 17.15L5 19"/></svg></div>
+      </div>
+      <div class="brain-src" data-src="flyer" style="--x:560px;--y:116px" aria-hidden="true">
+        <div class="brain-chip">&ldquo;Field-trip form due&rdquo;</div>
+        <div class="brain-ilabel">Backpack flyer</div>
+        <div class="brain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M8 22v-6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v6"/><path d="M8 10h8"/></svg></div>
+      </div>
+      <div class="brain-src" data-src="note" style="--x:770px;--y:164px" aria-hidden="true">
+        <div class="brain-chip">&ldquo;Packed Felix's lunch!&rdquo;</div>
+        <div class="brain-ilabel">A quick note</div>
+        <div class="brain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a8 8 0 01-11.5 7.2L4 20l1.3-4.5A8 8 0 1120 11.5z"/></svg></div>
+      </div>
+      <div class="brain-src" data-src="memory" style="--x:100px;--y:336px" aria-hidden="true">
+        <div class="brain-chip">&ldquo;Felix needs water shoes&rdquo;</div>
+        <div class="brain-ilabel">Pebble remembers</div>
+        <div class="brain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></div>
+      </div>
+      <div class="brain-src" data-src="calendar" style="--x:820px;--y:336px" aria-hidden="true">
+        <div class="brain-chip">&ldquo;Pickup 3:15, Thomas&rdquo;</div>
+        <div class="brain-ilabel">Calendar invite</div>
+        <div class="brain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg></div>
+      </div>
 
-      <div class="brain-ico" style="left:360px;top:102px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg></div>
-      <div class="brain-ilabel" style="left:360px;top:42px;">Calendar invite</div>
-
-      <div class="brain-ico" style="left:560px;top:102px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linejoin="round"><path d="M4 19V7l8-3 8 3v12M4 19h16M9 19v-5h6v5"/></svg></div>
-      <div class="brain-ilabel" style="left:560px;top:42px;">Daycare note</div>
-
-      <div class="brain-ico" style="left:770px;top:150px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.6"/><path d="M12 2.4v2.6M12 19v2.6M2.4 12h2.6M19 12h2.6M5 5l1.85 1.85M17.15 17.15L19 19M19 5l-1.85 1.85M6.85 17.15L5 19"/></svg></div>
-      <div class="brain-ilabel" style="left:770px;top:90px;">Tomorrow's weather</div>
-
-      <div class="brain-ico" style="left:108px;top:286px;">
-        <!-- 2026-05-21 — airplane (Lucide-style "send" paper-plane).
-             Replaces the previous suitcase glyph; airplane reads
-             more directly as travel/family-trip. -->
-        <svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7z"/><path d="M22 2 11 13"/></svg></div>
-      <div class="brain-ilabel" style="left:108px;top:226px;">Family trip</div>
-
-      <div class="brain-ico" style="left:812px;top:286px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a8 8 0 01-11.5 7.2L4 20l1.3-4.5A8 8 0 1120 11.5z"/></svg></div>
-      <div class="brain-ilabel" style="left:812px;top:226px;">A quick note</div>
-
-      <div class="brain-orb">
-        <svg width="54" height="54" viewBox="0 0 24 24" fill="none">
+      <div class="brain-orb" aria-hidden="true">
+        <svg width="50" height="50" viewBox="0 0 24 24" fill="none">
           <ellipse cx="12" cy="21.5" rx="9.5" ry="1.8" stroke="#fff" stroke-width="1" stroke-opacity="0.28"/>
           <ellipse cx="12" cy="20.5" rx="6.5" ry="1.2" stroke="#fff" stroke-width="1" stroke-opacity="0.45"/>
           <path fill="#fff" d="M4.5 13C4.5 8.8 7.8 7 12 7C16.2 7 19.5 8.8 19.5 13C19.5 17.2 16.2 19.5 12 19.5C7.8 19.5 4.5 17.2 4.5 13Z"/>
@@ -3823,23 +3787,18 @@
         <span class="brain-orb-name">Pebble</span>
       </div>
 
-      <div class="brain-brief">
-        <div class="brain-bg-k">Tomorrow, ready before you wake</div>
-        <div class="brain-bg-line">
-          <!-- 2026-05-21 v2 — Each phrase wrapped in a .brain-chunk that
-               JS toggles `.is-shown` on in a continuous loop (see the
-               brain-brief IIFE at the bottom of <body>). Chunks use
-               default inline display + opacity-only animation so
-               inter-word spacing renders cleanly. .brain-line-aria
-               carries the full sentence for screen readers so the
-               staggered reveal doesn't fragment the message. -->
-          <span class="brain-line-aria" aria-label="It's splash day. 62 degrees Fahrenheit. Felix needs water shoes and a towel. Lunch is covered, and Thomas is on pickup."></span>
-          <span class="brain-chunk" aria-hidden="true">It's </span><span class="brain-chunk" aria-hidden="true"><b>splash day</b>. </span><span class="brain-chunk" aria-hidden="true">62&deg;F. </span><span class="brain-chunk" aria-hidden="true">Felix needs </span><span class="brain-chunk" aria-hidden="true"><b>water shoes &amp; a towel</b>. </span><span class="brain-chunk" aria-hidden="true">Lunch is covered, and </span><span class="brain-chunk" aria-hidden="true"><b>Thomas is on pickup</b>.</span>
-        </div>
+      <div class="brain-card">
+        <ul class="brain-list">
+          <li class="brain-line" style="--sk:72%"><span class="mk" aria-hidden="true"><svg viewBox="0 0 110 75" preserveAspectRatio="none"><path d="M 8 38 C 6 18, 30 8, 56 10 C 84 12, 104 22, 104 40 C 102 58, 80 68, 52 66 C 24 64, 10 56, 8 38 Z" fill="#7DD4C8"/></svg></span><span class="tx"><b>Splash day.</b> Water shoes and a towel for Felix.</span></li>
+          <li class="brain-line" style="--sk:66%"><span class="mk" aria-hidden="true"><svg viewBox="0 0 100 70" preserveAspectRatio="none"><path d="M 8 38 C 6 18, 26 6, 48 8 C 72 10, 94 18, 94 38 C 94 58, 72 66, 48 64 C 22 62, 10 58, 8 38 Z" fill="#EACB72"/></svg></span><span class="tx"><b>62&deg;F and breezy.</b> A warm layer for the walk in.</span></li>
+          <li class="brain-line" style="--sk:70%"><span class="mk" aria-hidden="true"><svg viewBox="0 0 80 80" preserveAspectRatio="none"><path d="M 14 20 C 20 10, 36 6, 52 10 C 68 16, 76 30, 72 48 C 66 64, 50 72, 32 66 C 16 60, 8 44, 10 30 C 12 24, 12 22, 14 20 Z" fill="#A9C8EA"/></svg></span><span class="tx"><b>Lunch is covered.</b> Thomas is on pickup at 3:15.</span></li>
+          <li class="brain-line" style="--sk:74%"><span class="mk" aria-hidden="true"><svg viewBox="0 0 70 60" preserveAspectRatio="none"><path d="M 8 30 C 8 14, 22 6, 38 8 C 54 10, 64 22, 62 36 C 60 52, 44 56, 28 54 C 14 52, 8 44, 8 30 Z" fill="#EDA489"/></svg></span><span class="tx"><b>One thing left.</b> Sign the field-trip form tonight.</span></li>
+        </ul>
       </div>
     </div>
   </div>
 </section>
+<!-- BRAIN:HTML:END -->
 
 <!-- SCROLL-DRIVEN FEATURE SHOWCASE -->
 <section class="showcase-section" id="showcase">
@@ -6213,48 +6172,82 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
   setInterval(function () { if (v.paused && !document.hidden) tryPlay(); }, 1500);
 })();
 
-// Pebble Brain brief — continuous "live generation" pop-in loop.
-// Mirrors the always-on cadence of the SVG converge animation above
-// it (the dot animateMotion paths loop indefinitely too). Each
-// .brain-chunk fades in on a stagger, the whole sentence holds for
-// ~3.5 s, then everyone fades out together; pause; loop. Tuned slower
-// + calmer than the first cut per dogfood feedback. Respects
-// prefers-reduced-motion by rendering the message statically. Added
-// 2026-05-21.
+// BRAIN:JS:BEGIN
+// Brain threads (2026-09-26, source: design-sandbox/57-brain-threads). One source at a
+// time lights up and shows what it said, a thread draws into Pebble, and the line it
+// became lands in the brief. Starts when the section comes into view, stops (and
+// resets) when it leaves, loops while visible. Reduced motion: the full brief, still.
 (function () {
-  const chunks = Array.from(document.querySelectorAll('.brain-sec .brain-chunk'));
-  if (chunks.length === 0) return;
+  const root = document.querySelector('.brain-sec [data-brain]');
+  if (!root) return;
+  const lines = Array.from(root.querySelectorAll('.brain-line'));
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; // the full brief, still
 
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    chunks.forEach(c => c.classList.add('is-shown'));
-    return;
+  const pick = (sel) => { const m = {}; root.querySelectorAll(sel).forEach(el => { m[el.dataset.src] = el; }); return m; };
+  const srcs = pick('.brain-src'), hls = pick('.brain-hl'), dots = pick('.brain-dot');
+  const orb = root.querySelector('.brain-orb');
+  const outPath = root.querySelector('.brain-outpath');
+  const BEATS = [
+    { src: ['email', 'memory'], line: 0 },
+    { src: ['weather'],         line: 1 },
+    { src: ['note', 'calendar'], line: 2 },
+    { src: ['flyer'],           line: 3 },
+  ];
+  const T = { first: 500, fly: 650, flyDur: 1000, land: 1850, off: 2600, gap: 2900, hold: 4200, clear: 700, pause: 1000 };
+
+  root.classList.add('is-animated');
+  let timers = [], frames = [], running = false;
+  const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+  const ease = (t) => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+  function travel(path, dot, dur, draw) {
+    const L = path.getTotalLength(), t0 = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - t0) / dur), e = ease(t);
+      const p = path.getPointAtLength(e * L);
+      dot.setAttribute('cx', p.x); dot.setAttribute('cy', p.y);
+      dot.style.opacity = t < .1 ? t / .1 : t > .94 ? (1 - t) / .06 : 1;
+      if (draw) draw.style.strokeDashoffset = 1 - e;
+      if (t < 1) frames.push(requestAnimationFrame(step)); else dot.style.opacity = 0;
+    }
+    frames.push(requestAnimationFrame(step));
   }
-
-  const STAGGER  = 380;   // ms between successive chunk fade-ins
-  const FADE_IN  = 700;   // matches .brain-chunk transition (CSS)
-  const HOLD     = 3500;  // ms full sentence stays visible after last chunk lands
-  const FADE_OUT = 700;   // same transition runs in reverse
-  const PAUSE    = 1200;  // ms of darkness before the cycle restarts
-
-  let timers = [];
-  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
-
-  function cycle() {
-    clearTimers();
-    chunks.forEach(c => c.classList.remove('is-shown'));
-    chunks.forEach((c, i) => {
-      timers.push(setTimeout(() => c.classList.add('is-shown'), i * STAGGER));
+  function reset() {
+    lines.forEach(l => l.classList.remove('is-shown', 'is-landing'));
+    Object.values(srcs).forEach(s => s.classList.remove('is-on'));
+    Object.values(hls).forEach(h => { h.style.transition = 'none'; h.style.opacity = 0; h.style.strokeDashoffset = 1; void h.getBoundingClientRect(); h.style.transition = ''; });
+    Object.values(dots).forEach(d => { d.style.opacity = 0; });
+  }
+  function beat(b, t0) {
+    later(t0, () => b.src.forEach(k => srcs[k].classList.add('is-on')));
+    later(t0 + T.fly, () => b.src.forEach(k => { hls[k].style.opacity = 1; travel(hls[k], dots[k], T.flyDur, hls[k]); }));
+    later(t0 + T.fly + T.flyDur - 40, () => {
+      orb.classList.remove('is-receiving'); void orb.offsetWidth; orb.classList.add('is-receiving');
+      travel(outPath, dots.out, 420, null);
     });
-    const allShownAt = (chunks.length - 1) * STAGGER + FADE_IN;
-    const fadeOutAt  = allShownAt + HOLD;
-    timers.push(setTimeout(() => {
-      chunks.forEach(c => c.classList.remove('is-shown'));
-    }, fadeOutAt));
-    timers.push(setTimeout(cycle, fadeOutAt + FADE_OUT + PAUSE));
+    later(t0 + T.land, () => {
+      const l = lines[b.line];
+      l.classList.add('is-shown'); l.classList.remove('is-landing'); void l.offsetWidth; l.classList.add('is-landing');
+    });
+    later(t0 + T.off, () => b.src.forEach(k => { srcs[k].classList.remove('is-on'); hls[k].style.opacity = 0; }));
   }
+  function cycle() {
+    reset();
+    BEATS.forEach((b, i) => beat(b, T.first + i * T.gap));
+    const end = T.first + (BEATS.length - 1) * T.gap + T.off + T.hold;
+    later(end, () => lines.forEach(l => l.classList.remove('is-shown')));
+    later(end + T.clear + T.pause, cycle);
+  }
+  function start() { if (running) return; running = true; cycle(); }
+  function stop() { timers.forEach(clearTimeout); timers = []; frames.forEach(cancelAnimationFrame); frames = []; running = false; reset(); }
 
-  cycle();
+  new IntersectionObserver((es) => es.forEach(e => {
+    if (e.isIntersecting && e.intersectionRatio >= .35) start();
+    else if (!e.isIntersecting) stop();
+  }), { threshold: [0, .35] }).observe(root);
+
 })();
+// BRAIN:JS:END
 
 // Mobile carousel — sync pagination dots with native scroll-snap position
 (function () {
