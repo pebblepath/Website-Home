@@ -4156,10 +4156,10 @@
 
 /* ---------- phones + tablets (<1100): one card, the lists share slots ---------- */
 @media (max-width: 1099px) {
-  .tide { --nav: 68px; --scene: calc(100vh - var(--nav)); --pin: 75vh; }
+  .tide { --nav: 68px; --scene: calc(100vh - var(--nav)); --pin: 45vh; }   /* shorter on phones (Thomas, 2026-09-26) */
   /* Phones: the full screen height, so no strip of page shows under the scene when the toolbar
      slides away. (The content still has to fit the smaller height; the script checks.) */
-  @supports (height: 100lvh) { .tide { --scene: calc(100lvh - var(--nav)); --pin: 75svh; } }
+  @supports (height: 100lvh) { .tide { --scene: calc(100lvh - var(--nav)); --pin: 45svh; } }
   .tide-grid { left: 0; right: 0; margin-inline: auto; max-width: 640px; padding: 0 24px; grid-template-columns: minmax(0, 1fr); }
   .tide-today, .tide-pp { grid-column: 1; }
   .tide-peb { display: none; }
@@ -4297,6 +4297,11 @@
   function easeInOutSine(t) { return -(Math.cos(Math.PI * t) - 1) / 2; }
   function easeInOut(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
   function f1(v) { return v.toFixed(1); }
+  // Piecewise-linear through [p, value] keyframes (the eased progress smooths the corners).
+  function along(p, k) {
+    for (var i = 1; i < k.length; i++) if (p <= k[i][0]) return lerp(k[i - 1][1], k[i][1], (p - k[i - 1][0]) / ((k[i][0] - k[i - 1][0]) || 1));
+    return k[k.length - 1][1];
+  }
 
   // The live seam, M520 0 C 600 172, 430 345, 520 570, as an x offset for any y (0..570).
   var SEAM = (function () {
@@ -4329,6 +4334,7 @@
   var W = 0, H = 0, V = 0, wide = false, compLeft = 0, pinned = true;
   var todayItems = [], ppItems = [], slots = [];
   var glideDX = 0, pebRest = { x: 0, y: 0 }, pebStart = { x: 0, y: 0 };
+  var cTop = 0, cBot = 0;   // phones: where the lists start and end inside the scene
   var SEAM_X = 520, SLIVER = 22, DEEP = 62;
   var glints = [];
 
@@ -4365,6 +4371,8 @@
     todayItems = kids(colToday).map(box);
     ppItems = kids(colPP).map(box);
     slots = todayItems.map(function (it, i) { var o = ppItems[i]; return { y0: Math.min(it.y0, o.y0), y1: Math.max(it.y1, o.y1) }; });
+    cTop = slots.length ? slots[0].y0 : 0;
+    cBot = slots.length ? slots[slots.length - 1].y1 : H;
     if (wide) {
       // End state: the app icon and the list, centred together.
       var listTop = ppItems[0].y0, listBot = ppItems[ppItems.length - 1].y1;
@@ -4555,7 +4563,8 @@
         base = lerp(SEAM_X, -compLeft - 170, easeInOutSine(clamp((p - 0.10) / 0.54, 0, 1)));
         glide = easeInOut(clamp((p - 0.58) / 0.24, 0, 1));
       } else {
-        base = lerp(H - SLIVER, -90, easeInOutSine(clamp((p - 0.10) / 0.76, 0, 1)));
+        // Brisk across the empty sand below and above the lists, steady through the rows.
+        base = along(p, [[0, H - SLIVER], [0.08, H - SLIVER], [0.2, cBot + 16], [0.82, cTop - 30], [0.92, -90], [1, -90]]);
       }
     }
     draw(base, t);
