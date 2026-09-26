@@ -2371,6 +2371,8 @@
     vertical-align: middle;
   }
   footer .footer-linkedin svg { display: block; }
+  /* Phones only: "More from PebblePath" is hidden there, so its three pages live here. */
+  footer .footer-more { display: none; }
 
   /* RESPONSIVE — medium desktops / shorter laptops */
   @media (min-width: 769px) and (max-width: 1199px) {
@@ -2621,8 +2623,9 @@
     footer { padding: 12px 20px; }
     .explore-section { padding: 42px 20px 46px; }
     /* Phones end at the download card: "More from PebblePath" stays on wider screens only
-       (Thomas, 2026-09-25: too long a scroll on phones). */
+       (Thomas, 2026-09-25: too long a scroll on phones). Its three links move to the footer. */
     .explore-section { display: none; }
+    footer .footer-more { display: block; margin-bottom: 8px; font-size: 13px; }
     .explore-head { margin-bottom: 28px; }
     .explore-title { font-size: 23px; }
     .explore-grid { grid-template-columns: 1fr; gap: 14px; }
@@ -3265,9 +3268,11 @@
      pebbles at the edges. No brief card, no second sentence, no Portal button. Mock + the
      other options: design-sandbox/55-hero-rebuild/mobile-options/. */
   @media (max-width: 768px) {
-    .hero-v3 { min-height: 100vh; min-height: 100svh; }
+    /* A screen and a bit: about the height the browser's toolbar gives back as it hides,
+       so the hero still fills the screen once you start scrolling (Thomas: slightly taller). */
+    .hero-v3 { min-height: calc(100vh + 72px); min-height: calc(100svh + 72px); }
     .h3-inner {
-      min-height: 100vh; min-height: 100svh; box-sizing: border-box;
+      min-height: calc(100vh + 72px); min-height: calc(100svh + 72px); box-sizing: border-box;
       display: flex; flex-direction: column; justify-content: center; align-items: center;
       padding: 96px 28px 110px; text-align: center;
     }
@@ -3290,11 +3295,11 @@
     .h3-stage { position: absolute; inset: 0; margin: 0; z-index: 1; pointer-events: none; }
     .h3-brief { display: none; }
     .h3-peb.p4, .h3-peb.d3 { display: none !important; }
-    .h3-peb.p1 { left: auto; right: 22px; top: auto; bottom: 120px; width: 66px; }
-    .h3-peb.p2 { left: 30px; right: auto; top: auto; bottom: 64px; width: 44px; }
+    .h3-peb.p1 { left: auto; right: 22px; top: auto; bottom: 160px; width: 66px; }
+    .h3-peb.p2 { left: 30px; right: auto; top: auto; bottom: 104px; width: 44px; }
     .h3-peb.p3 { left: auto; right: 44px; top: 128px; bottom: auto; width: 30px; }
-    .h3-peb.d1 { left: auto; right: 26px; top: auto; bottom: 110px; width: 62px; }
-    .h3-peb.d2 { left: 34px; right: auto; top: auto; bottom: 60px; width: 36px; }
+    .h3-peb.d1 { left: auto; right: 26px; top: auto; bottom: 150px; width: 62px; }
+    .h3-peb.d2 { left: 34px; right: auto; top: auto; bottom: 100px; width: 36px; }
     .h3-peb.d5 { left: auto; right: 48px; top: 132px; bottom: auto; width: 26px; }
   }
 
@@ -4550,9 +4555,10 @@
      Pocket is drawn from its own spec (pebble-pocket/docs/screens.html:
      42 x 50.8 mm case, black glass, the Dusk face with the firmware's
      Home geometry) to match the app's PocketHero. The face plays a short
-     demo while on screen. Desktop: Pocket | copy | the four features as
-     rows, each row filling with its colour while its part of the demo
-     plays. Phone: no description, compact pills with one caption line
+     demo while on screen, in the same order as the four features
+     (Learn languages, Hello, Songs, Calm; Hello moved up to second by
+     Thomas, 2026-09-25). Desktop: Pocket | copy | the features as rows,
+     each row filling with its colour while its part of the demo plays. Phone: no description, compact pills with one caption line
      narrating the face (the lines come from the rows' .pk-feat-line, one
      source), everything centred. The site's ripples are gone, but the
      Pocket keeps its own continuous rings (Thomas, 2026-09-25: this
@@ -5117,9 +5123,9 @@
       <div class="pk-feats">
         <div class="pk-feat-row" role="group" aria-label="What Pebble Pocket does">
           <button type="button" class="pk-feat" data-feat="ask" aria-pressed="false"><span class="pk-ico ask" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#pk-i-stone"/></svg></span><span class="pk-feat-txt"><span class="pk-feat-name">Learn languages</span><span class="pk-sr">: </span><span class="pk-feat-line">Translate a word, then chat back and forth.</span></span></button>
+          <button type="button" class="pk-feat" data-feat="hello" aria-pressed="false"><span class="pk-ico hello" aria-hidden="true"><svg viewBox="0 0 256 256"><use href="#pk-i-heart"/></svg></span><span class="pk-feat-txt"><span class="pk-feat-name">Hello</span><span class="pk-sr">: </span><span class="pk-feat-line">Hold the heart to send Grandma a voice hello.</span></span></button>
           <button type="button" class="pk-feat" data-feat="songs" aria-pressed="false"><span class="pk-ico songs" aria-hidden="true"><svg viewBox="0 0 256 256"><use href="#pk-i-note"/></svg></span><span class="pk-feat-txt"><span class="pk-feat-name">Songs</span><span class="pk-sr">: </span><span class="pk-feat-line">Four favorites you pick, even without Wi-Fi.</span></span></button>
           <button type="button" class="pk-feat" data-feat="calm" aria-pressed="false"><span class="pk-ico calm" aria-hidden="true"><svg viewBox="0 0 256 256"><use href="#pk-i-drop"/></svg></span><span class="pk-feat-txt"><span class="pk-feat-name">Calm</span><span class="pk-sr">: </span><span class="pk-feat-line">Rain, tide, snow and seeds for big feelings.</span></span></button>
-          <button type="button" class="pk-feat" data-feat="hello" aria-pressed="false"><span class="pk-ico hello" aria-hidden="true"><svg viewBox="0 0 256 256"><use href="#pk-i-heart"/></svg></span><span class="pk-feat-txt"><span class="pk-feat-name">Hello</span><span class="pk-sr">: </span><span class="pk-feat-line">Hold the heart to send Grandma a voice hello.</span></span></button>
         </div>
         <p class="pk-caption" aria-hidden="true"><span class="pk-caption-text"></span></p>
       </div>
@@ -5151,10 +5157,10 @@
     { s: 'home',   ms: 3000, f: '' },
     { s: 'listen', ms: 2000, f: 'ask' },
     { s: 'answer', ms: 3300, f: 'ask', rep: true },
-    { s: 'songs',  ms: 3000, f: 'songs', rep: true },
-    { s: 'calm',   ms: 3800, f: 'calm', rep: true },
     { s: 'hello',  ms: 2700, f: 'hello', rep: true },
-    { s: 'sent',   ms: 2300, f: 'hello' }
+    { s: 'sent',   ms: 2300, f: 'hello' },
+    { s: 'songs',  ms: 3000, f: 'songs', rep: true },
+    { s: 'calm',   ms: 3800, f: 'calm', rep: true }
   ];
   var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   var idx = 0, timer = null, capTimer = null, live = false, lastFeat = null, seen = false;
@@ -5380,6 +5386,11 @@
 
 <!-- FOOTER -->
 <footer>
+  <p class="footer-more">
+    <a href="/brief/">One-page brief</a> &nbsp;&middot;&nbsp;
+    <a href="/memory-privacy/">Memory &amp; Privacy</a> &nbsp;&middot;&nbsp;
+    <a href="/wallpapers/">Wallpapers</a>
+  </p>
   <p>
     <a href="/privacy">Privacy</a> &nbsp;&middot;&nbsp;
     <a href="/terms">Terms</a> &nbsp;&middot;&nbsp;
