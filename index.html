@@ -2676,8 +2676,9 @@
    Was: "THE PEBBLE BRAIN, proposed: "show the threads" =====
    Same composition as today. What changes:
    1. A plain line under the heading says what goes in and what comes out.
-   2. One thing at a time: a source lights up and shows what it actually said,
-      a thread draws from it into Pebble, and the line it became lands in the brief.
+   2. One thing at a time: a source lights up, a thread draws from it into Pebble,
+      and the line it became lands in the brief. (Its words in a speech bubble were
+      removed 2026-09-26: too busy.)
    3. The brief is the same four lines as the hero's Family Brief, so the two connect.
    Calmer than today: one moving dot at a time instead of seven. */
 .brain-sec{
@@ -2718,7 +2719,7 @@
 }
 .brain-sec .brain-dot{ opacity:0; }
 
-/* A source: icon, label above it, and what it said above that. */
+/* A source: its icon with the label above it. */
 .brain-sec .brain-src{ position:absolute; left:var(--x); top:var(--y); width:0; height:0; z-index:4; }
 .brain-sec .brain-ico{
   position:absolute; left:0; top:0; width:54px; height:54px; transform:translate(-50%,-50%);
@@ -2733,27 +2734,12 @@
   font-size:15.5px; font-weight:600; color:#E4F2EF; white-space:nowrap;
   transition:color .4s ease;
 }
-.brain-sec .brain-chip{
-  position:absolute; left:0; top:-92px; transform:translate(-50%,-50%) translateY(7px);
-  font-family:'Nunito',sans-serif; font-weight:700; font-size:14px; line-height:1;
-  color:#fff; white-space:nowrap; padding:8px 12px 8px;
-  border-radius:12px; background:rgba(10,44,40,.58);
-  border:1px solid rgba(160,230,220,.42); box-shadow:0 8px 18px rgba(0,0,0,.18);
-  opacity:0; transition:opacity .45s ease, transform .45s ease;
-}
-/* A small tail pointing down at the label. */
-.brain-sec .brain-chip::after{
-  content:''; position:absolute; left:50%; bottom:-5px; width:8px; height:8px;
-  background:rgba(10,44,40,.58); border-right:1px solid rgba(160,230,220,.42);
-  border-bottom:1px solid rgba(160,230,220,.42); transform:translateX(-50%) rotate(45deg);
-}
 .brain-sec .brain-src.is-on .brain-ico{
   background:rgba(125,212,200,.32); border-color:#C9F1EA;
   box-shadow:0 0 0 5px rgba(125,212,200,.12), 0 0 24px rgba(125,212,200,.55);
   transform:translate(-50%,-50%) scale(1.08);
 }
 .brain-sec .brain-src.is-on .brain-ilabel{ color:#fff; }
-.brain-sec .brain-src.is-on .brain-chip{ opacity:1; transform:translate(-50%,-50%); }
 
 /* Pebble */
 .brain-sec .brain-orb{
@@ -3331,7 +3317,11 @@
       background: url("assets/tide/sand-ripples.png?v=1") 0 0 / 360px 360px;
       opacity: 0.85;
     }
+    /* Fingers leave marks in that sand (the canvas is drawn by the "Sand that remembers
+       fingers" script after the hero). Day only; it sits on the sand, under the scrim and copy. */
+    html[data-hero="day"] .h3-sand { display: block; position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   }
+  .h3-sand { display: none; }
   @keyframes h3-mfa {
     0%, 100% { transform: translate(0, 0) rotate(3.8deg); }
     12.5% { transform: translate(8.5px, -3.2px) rotate(7.7deg); }
@@ -3580,6 +3570,7 @@
      out of its template. ===== -->
 <section class="hero-v3" id="home">
   <div class="h3-plate" aria-hidden="true"></div>
+  <canvas class="h3-sand" aria-hidden="true"></canvas>
   <div class="h3-scrim" aria-hidden="true"></div>
   <div class="h3-inner">
     <div class="h3-copy">
@@ -3632,6 +3623,142 @@
     </div>
   </div>
 </section>
+<script>
+// Sand that remembers fingers (2026-09-26). Phones, day hero only: a finger (or a scroll with
+// a finger down) leaves a groove in the sand. It keeps a small height map: each touch carves
+// a round-bottomed trough and pushes a little ridge of sand up beside it, then the map is lit
+// from the top left like the ripples (a shaded floor, a lit far wall, grainy edges). The marks
+// settle back over about 20 seconds. Touch listeners are passive, so scrolling is untouched.
+(function () {
+  var hero = document.querySelector('.hero-v3');
+  var cv = hero && hero.querySelector('.h3-sand');
+  if (!cv || !cv.getContext || !window.requestAnimationFrame || !window.Float32Array) return;
+  var mq = window.matchMedia ? window.matchMedia('(max-width: 768px)') : { matches: false };
+  function on() { return mq.matches && document.documentElement.getAttribute('data-hero') === 'day'; }
+
+  var ctx = cv.getContext('2d');
+  var W = 0, HT = 0, H = null, G = null, act = null, img = null, px = null;   // act: rows that hold marks
+  var R = 10.5, DEPTH = 3.4, RIM = 1.25, RW = 6.5;           // the finger's trough and the pushed-up lip
+  var TAU_S = 7;                                             // settling: height halves every ~5 s
+  var LX = -0.5, LY = -0.72, LZ = 0.48;                      // light from the top left
+  (function () { var n = Math.sqrt(LX * LX + LY * LY + LZ * LZ); LX /= n; LY /= n; LZ /= n; })();
+  var dx0 = 1e9, dy0 = 1e9, dx1 = -1, dy1 = -1;              // dirty rectangle
+  var raf = 0, lastT = 0, row = 0, found = false, fingers = {}, down = 0;
+
+  function setup() {
+    var r = hero.getBoundingClientRect();
+    var w = Math.max(1, Math.round(r.width)), h = Math.max(1, Math.round(r.height));
+    if (w === W && h === HT && H) return;
+    W = w; HT = h; cv.width = W; cv.height = HT;
+    H = new Float32Array(W * HT); G = new Float32Array(W * HT); act = new Uint8Array(HT);
+    for (var i = 0; i < G.length; i++) G[i] = Math.random();
+    img = ctx.createImageData(W, HT); px = img.data;
+  }
+  function mark(x0, y0, x1, y1) {
+    if (x0 < dx0) dx0 = x0; if (y0 < dy0) dy0 = y0; if (x1 > dx1) dx1 = x1; if (y1 > dy1) dy1 = y1;
+  }
+  function stamp(cx, cy) {
+    var reach = R + RW, xa = Math.max(1, Math.floor(cx - reach)), xb = Math.min(W - 2, Math.ceil(cx + reach));
+    var ya = Math.max(1, Math.floor(cy - reach)), yb = Math.min(HT - 2, Math.ceil(cy + reach));
+    if (xa > xb || ya > yb) return;
+    for (var y = ya; y <= yb; y++) {
+      var dy = y - cy, o = y * W;
+      act[y] = 1;
+      for (var x = xa; x <= xb; x++) {
+        var dx = x - cx, d = Math.sqrt(dx * dx + dy * dy), i = o + x;
+        if (d <= R) {
+          var q = d / R, z = -DEPTH * (1 - q * q) * (0.9 + 0.2 * G[i]);
+          if (z < H[i]) H[i] = z;
+        } else if (d <= reach && H[i] > -0.1) {
+          var t = (d - R) / RW, rim = RIM * Math.sin(Math.PI * t) * (0.55 + 0.9 * G[i]);
+          if (rim > H[i]) H[i] = rim;
+        }
+      }
+    }
+    mark(xa - 1, ya - 1, xb + 1, yb + 1);
+    found = true;
+  }
+  function stroke(a, b) {
+    var dx = b[0] - a[0], dy = b[1] - a[1], n = Math.max(1, Math.ceil(Math.sqrt(dx * dx + dy * dy) / 2));
+    for (var k = 1; k <= n; k++) stamp(a[0] + dx * k / n, a[1] + dy * k / n);
+  }
+  function shade(x0, y0, x1, y1) {
+    x0 = Math.max(1, x0); y0 = Math.max(1, y0); x1 = Math.min(W - 2, x1); y1 = Math.min(HT - 2, y1);
+    if (x0 > x1 || y0 > y1) return;
+    for (var y = y0; y <= y1; y++) {
+      for (var x = x0; x <= x1; x++) {
+        var i = y * W + x, j = i * 4, h = H[i];
+        var gx = (H[i + 1] - H[i - 1]) * 0.5, gy = (H[i + W] - H[i - W]) * 0.5;
+        if (h === 0 && gx === 0 && gy === 0) { px[j + 3] = 0; continue; }
+        var nl = 1 / Math.sqrt(gx * gx + gy * gy + 1);
+        var lit = (-gx * LX - gy * LY + LZ) * nl - LZ;      // brighter where the surface faces the light
+        var s = lit * 1.35 - (h < 0 ? -h * 0.04 : 0);       // the trough floor is a little shaded
+        var a = Math.min(0.52, Math.abs(s) * (0.7 + 0.6 * G[i]));
+        if (s >= 0) { px[j] = 255; px[j + 1] = 251; px[j + 2] = 244; }
+        else { px[j] = 132; px[j + 1] = 92; px[j + 2] = 66; }
+        px[j + 3] = a * 255;
+      }
+    }
+    ctx.putImageData(img, 0, 0, x0, y0, x1 - x0 + 1, y1 - y0 + 1);
+  }
+  function frame(now) {
+    raf = 0;
+    var dt = lastT ? Math.min(0.05, (now - lastT) / 1000) : 0.016; lastT = now;
+    // Settle a band of rows each frame (a full pass about every third of a second),
+    // skipping rows without marks; a row that goes smooth is redrawn once more, then dropped.
+    var rows = Math.max(1, Math.ceil(HT / 20)), f = Math.exp(-(dt * 20) / TAU_S);
+    var end = Math.min(HT, row + rows), ya = -1, yb = -1;
+    for (var y = row; y < end; y++) {
+      if (!act[y]) continue;
+      var alive = false;
+      for (var i = y * W, e = i + W; i < e; i++) {
+        var v = H[i];
+        if (v !== 0) { v *= f; if (v > -0.03 && v < 0.03) v = 0; else alive = true; H[i] = v; }
+      }
+      if (alive) found = true; else act[y] = 0;
+      if (ya < 0) ya = y; yb = y;
+    }
+    if (ya >= 0) mark(0, ya - 1, W - 1, yb + 1);
+    row = end;
+    var restart = false;
+    if (row >= HT) { row = 0; restart = !found && !down; found = false; }
+    if (dx1 >= 0) { shade(dx0, dy0, dx1, dy1); dx0 = dy0 = 1e9; dx1 = dy1 = -1; }
+    if (restart) { ctx.clearRect(0, 0, W, HT); lastT = 0; return; }   // all smooth again: rest
+    raf = requestAnimationFrame(frame);
+  }
+  function wake() { if (!raf) raf = requestAnimationFrame(frame); }
+  function at(t) {
+    var r = hero.getBoundingClientRect();
+    return [t.clientX - r.left, t.clientY - r.top];
+  }
+  hero.addEventListener('touchstart', function (e) {
+    if (!on()) return;
+    setup();
+    for (var k = 0; k < e.changedTouches.length; k++) {
+      var t = e.changedTouches[k], p = at(t);
+      fingers[t.identifier] = p; down++;
+      stamp(p[0], p[1]);
+    }
+    wake();
+  }, { passive: true });
+  hero.addEventListener('touchmove', function (e) {
+    if (!H) return;
+    for (var k = 0; k < e.changedTouches.length; k++) {
+      var t = e.changedTouches[k], p = at(t), q = fingers[t.identifier];
+      if (q) { stroke(q, p); fingers[t.identifier] = p; }
+    }
+    wake();
+  }, { passive: true });
+  function lift(e) {
+    for (var k = 0; k < e.changedTouches.length; k++) {
+      if (fingers[e.changedTouches[k].identifier]) { delete fingers[e.changedTouches[k].identifier]; down = Math.max(0, down - 1); }
+    }
+  }
+  hero.addEventListener('touchend', lift, { passive: true });
+  hero.addEventListener('touchcancel', lift, { passive: true });
+  window.addEventListener('orientationchange', function () { H = null; W = HT = 0; ctx.clearRect(0, 0, cv.width, cv.height); });
+})();
+</script>
 
 <!-- BENEFITS -->
 <section class="benefits reveal" id="features">
@@ -3747,32 +3874,26 @@
       </svg>
 
       <div class="brain-src" data-src="email" style="--x:150px;--y:164px" aria-hidden="true">
-        <div class="brain-chip">&ldquo;Splash day! Bring a towel&rdquo;</div>
         <div class="brain-ilabel">School email</div>
         <div class="brain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 8l9 6 9-6"/></svg></div>
       </div>
       <div class="brain-src" data-src="weather" style="--x:360px;--y:116px" aria-hidden="true">
-        <div class="brain-chip">&ldquo;62&deg;F and breezy&rdquo;</div>
         <div class="brain-ilabel">Tomorrow's weather</div>
         <div class="brain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.6"/><path d="M12 2.4v2.6M12 19v2.6M2.4 12h2.6M19 12h2.6M5 5l1.85 1.85M17.15 17.15L19 19M19 5l-1.85 1.85M6.85 17.15L5 19"/></svg></div>
       </div>
       <div class="brain-src" data-src="flyer" style="--x:560px;--y:116px" aria-hidden="true">
-        <div class="brain-chip">&ldquo;Field-trip form due&rdquo;</div>
         <div class="brain-ilabel">Backpack flyer</div>
         <div class="brain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="M8 22v-6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v6"/><path d="M8 10h8"/></svg></div>
       </div>
       <div class="brain-src" data-src="note" style="--x:770px;--y:164px" aria-hidden="true">
-        <div class="brain-chip">&ldquo;Packed Felix's lunch!&rdquo;</div>
         <div class="brain-ilabel">A quick note</div>
         <div class="brain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11.5a8 8 0 01-11.5 7.2L4 20l1.3-4.5A8 8 0 1120 11.5z"/></svg></div>
       </div>
       <div class="brain-src" data-src="memory" style="--x:100px;--y:336px" aria-hidden="true">
-        <div class="brain-chip">&ldquo;Felix needs water shoes&rdquo;</div>
         <div class="brain-ilabel">Pebble remembers</div>
         <div class="brain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></div>
       </div>
       <div class="brain-src" data-src="calendar" style="--x:820px;--y:336px" aria-hidden="true">
-        <div class="brain-chip">&ldquo;Pickup 3:15, Thomas&rdquo;</div>
         <div class="brain-ilabel">Calendar invite</div>
         <div class="brain-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#7DD4C8" stroke-width="2"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg></div>
       </div>
@@ -4141,13 +4262,14 @@
 .tide-row .d { font-size: 14px; line-height: 1.3; margin-top: 1px; }
 .tide-ico { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-.tide-today .tide-eyebrow { font-weight: 700; color: #968B79; }
-.tide-today h3 { color: #6f6657; }
+.tide-today .tide-eyebrow { font-weight: 700; color: #877C6A; }
+.tide-today h3 { color: #615949; }
 .tide-today .tide-row { gap: 12px; border-top: 1px solid rgba(124,115,99,0.16); }
-.tide-today .tide-row .t { font-weight: 700; color: #645c50; }
-.tide-today .tide-row .d { color: #8d8475; }
+.tide-today .tide-row .t { font-weight: 700; color: #565044; }
+.tide-today .tide-row .d { color: #7B7264; }
 .tide-today .tide-ico { width: 30px; height: 30px; border-radius: 8px; background: rgba(124,115,99,0.08); }
-.tide-today > * { opacity: 0.9; }
+/* 2026-09-26: a touch more contrast on the old side (Thomas); the PebblePath side is unchanged. */
+.tide-today > * { opacity: 0.95; }
 
 .tide-pp .tide-eyebrow { font-weight: 800; color: #7DD4C8; }
 .tide-pp h3 { color: #fff; }
@@ -5148,7 +5270,7 @@
 
 <!-- ============================================================
      PEBBLE POCKET TEASER (2026-09-25; full-width band that evening):
-     Pebble, made physical, coming December 2026. A full-bleed dusk band
+     Pebble, made physical, coming 2027 (was December 2026 until 2026-09-26). A full-bleed dusk band
      after the founders (right under dark pricing it merged into it). The
      Pocket is drawn from its own spec (pebble-pocket/docs/screens.html:
      42 x 50.8 mm case, black glass, the Dusk face with the firmware's
@@ -5196,7 +5318,7 @@
     display: grid;
     grid-template-columns: 280px minmax(0, 1fr) minmax(0, 400px);
     grid-template-areas: "stage copy feats";
-    column-gap: 44px;
+    column-gap: 36px;
     align-items: center;
     color: #fff;
   }
@@ -5311,6 +5433,8 @@
     background: linear-gradient(90deg, #2E3436 0%, #8A9294 38%, #5B6365 70%, #353B3D 100%);
     transform-origin: 50% 0;
   }
+  /* On phones, a line under the Pocket invites a tap (iPhone shares the tilt only after one). */
+  .pk-tilt-hint { display: none; }
   /* The bead, the split cord and the Pocket: this part hinges at the bead. */
   .pk-bob { flex: none; display: flex; flex-direction: column; align-items: center; transform-origin: 50% 0; }
   .pk-loop { flex: none; display: block; width: calc(14px * var(--mm)); height: calc(13px * var(--mm)); margin-top: -1px; overflow: visible; }
@@ -5537,6 +5661,13 @@
       padding: 36px 20px; row-gap: 0;
     }
     .pk-stage { margin: 0 -20px; min-height: 0; height: calc(50.8px * var(--mm) + 110px); }
+    .pk-tilt-hint {
+      display: block; position: absolute; left: 50%; bottom: 3px; transform: translateX(-50%);
+      margin: 0; white-space: nowrap; pointer-events: none;
+      font: 600 12px/1.2 'Inter', sans-serif; color: rgba(255, 255, 255, 0.58);
+      opacity: 0; transition: opacity 0.5s ease;
+    }
+    .pk-tilt-hint.is-shown { opacity: 1; }
     .pk-cord {
       -webkit-mask-image: linear-gradient(to bottom, transparent, #000 36px);
               mask-image: linear-gradient(to bottom, transparent, #000 36px);
@@ -5595,10 +5726,10 @@
       </svg>
 
       <div class="pk-copy">
-        <p class="pk-pill"><span class="pk-pill-dot" aria-hidden="true"></span>Coming December 2026</p>
+        <p class="pk-pill"><span class="pk-pill-dot" aria-hidden="true"></span>Coming 2027</p>
         <h2 class="pk-title" id="pk-title">Pebble Pocket</h2>
         <p class="pk-tagline">Pebble, made for little hands.</p>
-        <p class="pk-lede">A small, calm companion your child can wear or set on the table. It does a few gentle things, and does them well.</p>
+        <p class="pk-lede">A small, calm companion your child can wear or set on the table. Less phone, more childhood.</p>
         <ul class="pk-nots" aria-label="What it leaves out">
           <li><svg viewBox="0 0 256 256" aria-hidden="true"><use href="#pk-i-check"/></svg>No camera</li>
           <li><svg viewBox="0 0 256 256" aria-hidden="true"><use href="#pk-i-check"/></svg>No games</li>
@@ -5728,6 +5859,7 @@
           </div>
           </div>
         </div>
+        <p class="pk-tilt-hint">Tap the Pocket, then tilt your phone</p>
       </div>
 
       <div class="pk-feats">
@@ -5885,28 +6017,36 @@
   }
 
   // Lanyard (2026-09-26): a small physics model in place of the CSS sway.
-  //  - Swing: a pendulum (period ~2 s, light damping) that follows a slow, uneven breeze.
+  //  - Swing: a pendulum (period ~2 s) that follows a slow, uneven breeze.
   //  - Bounce: the Pocket has weight. When the page starts moving it lags and the cord
   //    stretches a little; when the page stops it rises and settles. Steady scrolling does
   //    nothing (no acceleration), as with a real weight on a string.
   //  - A scroll jolt also feeds the swing it already has, so it never tilts one fixed way.
   //  - Hinge: the bead, split cord and Pocket pivot at the bead and lag the cord a beat.
+  //  - Phones and tablets: tilt the device and the Pocket keeps hanging towards the ground;
+  //    shake it and it swings and bounces. iPhone and iPad only share the tilt after the
+  //    person allows it, so a line under the Pocket invites a tap, and the tap asks.
+  //  - A tap or click on the Pocket nudges it (and, on iPhone, asks for the tilt).
   // Runs only while the band is on screen; reduced motion keeps the Pocket still.
   (function lanyard() {
+    var stage = root.querySelector('.pk-stage');
     var hang = root.querySelector('.pk-hang');
     var cord = hang && hang.querySelector('.pk-cord');
     var bob = hang && hang.querySelector('.pk-bob');
+    var hint = root.querySelector('.pk-tilt-hint');
     if (!hang || !cord || !bob || reduce || !window.requestAnimationFrame) return;
     root.classList.add('pk-physics');
 
-    var TAU = Math.PI * 2;
+    var TAU = Math.PI * 2, D2R = Math.PI / 180;
     var W1 = TAU / 2.0, Z1 = 0.2;                // the swing: ~2 s period, settles in a few swings
     var WP = TAU / 0.95, ZP = 0.28, CP = 1.3;    // the hinge at the bead
     var WY = TAU / 0.6, ZY = 0.3;                // the bounce on the cord
     // A scroll jolt, softly capped: tanh(acceleration / A0) runs from 0 to 1.
     var A0 = 12000, KICK = 38, LIFT = 900;       // px/s², deg/s² of swing, px/s² of bounce
+    var SHAKE = 70, SHAKE_LIFT = 700;            // the same for shaking the device (m/s², capped)
     var th = 0, om = 0, ph = 0, pv = 0, y = 0, yv = 0;
     var v = 0, vPrev = 0, acc = 0, lastSY = 0, lastT = 0, start = 0, raf = 0, cordLen = 1;
+    var tilt = 0, tiltTarget = 0, shakeX = 0, shakeY = 0, motionSeen = false;
 
     function clamp(x, lo, hi) { return x < lo ? lo : x > hi ? hi : x; }
     // The breeze: two slow waves at unrelated periods (11 s and 4.3 s), well below the swing's own.
@@ -5924,17 +6064,21 @@
       var aNow = (v - vPrev) / dt; vPrev = v;
       acc += (aNow - acc) * Math.min(1, dt / 0.05);          // and its change (px/s²)
       var jolt = Math.tanh(acc / A0);
+      tilt += (tiltTarget - tilt) * Math.min(1, dt / 0.12);  // the tilt, smoothed
+      var sx = Math.tanh(shakeX / 9), sv = Math.tanh(shakeY / 9);
+      shakeX *= Math.exp(-dt / 0.08); shakeY *= Math.exp(-dt / 0.08);
 
-      var kick = KICK * Math.abs(jolt) * (om >= 0 ? 1 : -1);
-      var alpha = -W1 * W1 * (th - breeze(t)) - 2 * Z1 * W1 * om + kick;
-      om += alpha * dt; th = clamp(th + om * dt, -9, 9);
+      var pump = KICK * Math.abs(jolt) + SHAKE * Math.abs(sx);
+      var alpha = -W1 * W1 * (th - breeze(t) - tilt) - 2 * Z1 * W1 * om + pump * (om >= 0 ? 1 : -1);
+      om += alpha * dt; th = clamp(th + om * dt, -32, 32);
 
       var palpha = -WP * WP * ph - 2 * ZP * WP * pv - alpha * CP;
-      pv += palpha * dt; ph = clamp(ph + pv * dt, -6, 6);
+      pv += palpha * dt; ph = clamp(ph + pv * dt, -8, 8);
 
-      // Scrolling down moves the page (and the top of the cord) up, so the Pocket lags below.
-      var ya = -WY * WY * y - 2 * ZY * WY * yv + LIFT * jolt;
-      yv += ya * dt; y = clamp(y + yv * dt, -10, 14);
+      // Scrolling down moves the page (and the top of the cord) up, so the Pocket lags below;
+      // lifting the phone does the same.
+      var ya = -WY * WY * y - 2 * ZY * WY * yv + LIFT * jolt + SHAKE_LIFT * sv;
+      yv += ya * dt; y = clamp(y + yv * dt, -12, 16);
 
       hang.style.transform = 'translateX(-50%) rotate(' + th.toFixed(3) + 'deg)';
       cord.style.transform = 'scaleY(' + (1 + y / cordLen).toFixed(4) + ')';
@@ -5965,6 +6109,76 @@
         run(r.bottom > -120 && r.top < window.innerHeight + 120);
       }
     });
+
+    // ----- Tilt and shake (touch devices) -----
+    var touch = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    var asks = typeof window.DeviceOrientationEvent !== 'undefined' &&
+               typeof window.DeviceOrientationEvent.requestPermission === 'function';
+    var asked = false;
+    function screenAngle() {
+      var a = (window.screen && window.screen.orientation && window.screen.orientation.angle);
+      if (typeof a !== 'number') a = typeof window.orientation === 'number' ? window.orientation : 0;
+      return a * D2R;
+    }
+    // A device-plane vector (x right, y up the screen) turned into the page's axes.
+    function toScreen(x, y2) {
+      var a = screenAngle(), c = Math.cos(a), s = Math.sin(a);
+      return [x * c - y2 * s, x * s + y2 * c];
+    }
+    function seen() {
+      if (motionSeen) return;
+      motionSeen = true;
+      if (hint) hint.classList.remove('is-shown');
+    }
+    function onOrient(e) {
+      if (e.beta == null || e.gamma == null) return;
+      seen();
+      // Gravity in the device's frame (W3C Z-X'-Y'' angles), then its angle across the screen.
+      var b = e.beta * D2R, g = e.gamma * D2R;
+      var s = toScreen(Math.sin(g) * Math.cos(b), -Math.sin(b));
+      var flat = Math.sqrt(s[0] * s[0] + s[1] * s[1]);        // 0 when the device lies flat
+      var down = Math.atan2(s[0], -s[1]) / D2R;               // + when "down" leans to the right
+      tiltTarget = clamp(-down, -26, 26) * clamp((flat - 0.2) / 0.3, 0, 1);
+    }
+    function onMotion(e) {
+      var a = e.acceleration;
+      if (!a || a.x == null || a.y == null) return;
+      seen();
+      var s = toScreen(a.x, a.y);
+      if (Math.abs(s[0]) > Math.abs(shakeX)) shakeX = s[0];
+      if (Math.abs(s[1]) > Math.abs(shakeY)) shakeY = s[1];
+    }
+    function listen() {
+      window.addEventListener('deviceorientation', onOrient, { passive: true });
+      window.addEventListener('devicemotion', onMotion, { passive: true });
+    }
+    function ask() {
+      if (!asks || asked || motionSeen) return;
+      asked = true;
+      var reqs = [window.DeviceOrientationEvent.requestPermission()];
+      if (window.DeviceMotionEvent && typeof window.DeviceMotionEvent.requestPermission === 'function') {
+        reqs.push(window.DeviceMotionEvent.requestPermission());
+      }
+      Promise.all(reqs).then(function () { if (hint) hint.classList.remove('is-shown'); },
+                              function () { if (hint) hint.classList.remove('is-shown'); });
+    }
+    if (touch) {
+      listen();
+      // iPhone and iPad share the tilt only after a tap; invite one if nothing arrives.
+      if (asks && hint) {
+        setTimeout(function () { if (!motionSeen && !asked) hint.classList.add('is-shown'); }, 1200);
+      }
+    }
+    // A tap on the Pocket nudges it away from the finger.
+    if (stage) {
+      stage.addEventListener('click', function (e) {
+        var dev = root.querySelector('.pk-dev');
+        var r = dev ? dev.getBoundingClientRect() : stage.getBoundingClientRect();
+        om += (e.clientX > r.left + r.width / 2 ? 1 : -1) * 24;
+        yv += 45;
+        if (touch) ask();
+      });
+    }
   })();
 
   // Play only while the section is on screen.
@@ -6270,8 +6484,8 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
 
 // BRAIN:JS:BEGIN
 // Brain threads (2026-09-26, source: design-sandbox/57-brain-threads). One source at a
-// time lights up and shows what it said, a thread draws into Pebble, and the line it
-// became lands in the brief. Starts when the section comes into view, stops (and
+// time lights up, a thread draws into Pebble, and the line it became lands in the
+// brief. Starts when the section comes into view, stops (and
 // resets) when it leaves, loops while visible. Reduced motion: the full brief, still.
 (function () {
   const root = document.querySelector('.brain-sec [data-brain]');
