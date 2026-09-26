@@ -4546,9 +4546,10 @@
      rows, each row filling with its colour while its part of the demo
      plays. Phone: no description, compact pills with one caption line
      narrating the face (the lines come from the rows' .pk-feat-line, one
-     source). The rings around the Pocket and the pill's pulse went with
-     the site's ripples, and the "set it up in the app" line went too
-     (Thomas, 2026-09-25). No CTA yet (Thomas: soon).
+     source), everything centred. The site's ripples are gone, but the
+     Pocket keeps its own continuous rings (Thomas, 2026-09-25: this
+     section only, on the device). The pill's pulse and the "set it up in
+     the app" line are gone. No CTA yet (Thomas: soon).
      Song tiles in assets/pocket/songs.webp are cropped from the Pocket's
      own song art. Icons: Phosphor Icons v2.1.1 (MIT, phosphoricons.com).
      GA4: pocket_teaser_view, pocket_feature {feature} (fixed labels).
@@ -4696,6 +4697,21 @@
     width: calc(96px * var(--mm)); height: calc(96px * var(--mm));
     transform: translate(-50%, -50%); border-radius: 50%;
     background: radial-gradient(closest-side, rgba(125, 212, 200, 0.28), rgba(125, 212, 200, 0.09) 52%, rgba(125, 212, 200, 0) 100%);
+  }
+  /* The Pocket's own rings, spreading from the device (the one ripple left on the site). */
+  .pk-ring {
+    position: absolute; left: 50%; top: 50%; pointer-events: none;
+    width: calc(62px * var(--mm)); height: calc(62px * var(--mm));
+    margin: calc(-31px * var(--mm)) 0 0 calc(-31px * var(--mm));
+    border-radius: 50%; border: 1.5px solid rgba(125, 212, 200, 0.34);
+    opacity: 0; animation: pk-ripple 8.4s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+  }
+  .pk-ring.r2 { animation-delay: 2.8s; }
+  .pk-ring.r3 { animation-delay: 5.6s; }
+  @keyframes pk-ripple {
+    0% { transform: scale(0.62); opacity: 0; }
+    12% { opacity: 0.85; }
+    100% { transform: scale(1.75); opacity: 0; }
   }
 
   /* The case, the black glass and the face, to scale (--mm px per millimetre). */
@@ -4917,11 +4933,18 @@
       overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
     }
     .pk-caption { display: flex; min-height: 44px; align-items: flex-start; font-size: 13.5px; }
+    /* Centred on phones: the eyebrow, title, tagline, chips and the caption. */
+    .pk-copy { text-align: center; }
+    .pk-nots { justify-content: center; }
+    .pk-caption { justify-content: center; text-align: center; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .pk-hang, .pk-home-glow, .pk-cloud, .pk-drop, .pk-rip,
+    .pk-hang, .pk-ring, .pk-home-glow, .pk-cloud, .pk-drop, .pk-rip,
     .pk-listen > span, .pk-dots i, .pk-in, .pk-songs, .pk-pop { animation: none !important; }
+    .pk-ring { opacity: 0.18; }
+    .pk-ring.r2 { transform: scale(1.2); opacity: 0.12; }
+    .pk-ring.r3 { transform: scale(1.5); opacity: 0.07; }
     .pk-scr, .pk-feat, .pk-caption, .pk-prog .arc { transition: none !important; }
     .pk-scr.is-on .pk-prog .arc { stroke-dashoffset: 170; }
     .pk-feat::before { display: none; }
@@ -4979,6 +5002,7 @@
           </svg>
           <div class="pk-devwrap">
             <span class="pk-halo"></span>
+            <span class="pk-ring r1"></span><span class="pk-ring r2"></span><span class="pk-ring r3"></span>
             <div class="pk-dev">
               <span class="pk-hw boot"></span><span class="pk-hw usb"></span><span class="pk-hw pwr"></span>
               <span class="pk-glass"></span>
