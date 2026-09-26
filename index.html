@@ -1703,39 +1703,43 @@
     gap: 18px;
     justify-content: center;
   }
-  /* Frosted-glass cards: translucent so the pebble video shows through,
-     with a moderate backdrop blur for that "frosted" feel without
-     completely obliterating the video texture. */
+  /* Frosted-glass cards over the Stillwater illustration. The frost sits on ::before and
+     frosts a teal backing (::after) instead of the illustration: its pale pebbles sat behind
+     the cards and glowed through the glass, right behind "$8.99" on phones (Thomas,
+     2026-09-26: plain frost, no glow). The backing is the illustration's own teal there. */
   .pricing-card {
-    background: rgba(255,255,255,0.74);
+    position: relative; isolation: isolate;
     color: var(--charcoal);
     border-radius: 18px;
     padding: 22px 22px 20px;
-    box-shadow:
-      0 12px 36px rgba(31,92,84,0.22),
-      0 0 0 1px rgba(255,255,255,0.45) inset;
+    box-shadow: 0 12px 36px rgba(31,92,84,0.22);
     display: flex; flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .pricing-card::before, .pricing-card::after {
+    content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  }
+  .pricing-card::after { z-index: -2; background: linear-gradient(180deg, #1D4843 0%, #28625A 100%); opacity: 0.92; }
+  .pricing-card::before {
+    z-index: -1;
+    background: rgba(255,255,255,0.74);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.45) inset;
     backdrop-filter: blur(14px) saturate(140%);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    transition: background 0.3s ease;
   }
   .pricing-card:hover {
-    background: rgba(255,255,255,0.85);
     transform: translateY(-3px);
-    box-shadow:
-      0 18px 48px rgba(31,92,84,0.30),
-      0 0 0 1px rgba(255,255,255,0.55) inset;
+    box-shadow: 0 18px 48px rgba(31,92,84,0.30);
+  }
+  .pricing-card:hover::before {
+    background: rgba(255,255,255,0.85);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.55) inset;
   }
   /* Premium card keeps the teal-accent ring as the upsell signal — same
      surface opacity as Free so neither card reads as "darker." */
-  .pricing-premium {
-    box-shadow:
-      0 14px 40px rgba(31,92,84,0.28),
-      0 0 0 2px var(--teal-light) inset;
-  }
-  .pricing-premium:hover {
-    background: rgba(255,255,255,0.85);
-  }
+  .pricing-premium { box-shadow: 0 14px 40px rgba(31,92,84,0.28); }
+  .pricing-premium::before, .pricing-premium:hover::before { box-shadow: 0 0 0 2px var(--teal-light) inset; }
   .pricing-eyebrow {
     font-size: 10px; font-weight: 700;
     text-transform: uppercase; letter-spacing: 1.5px;
@@ -3307,6 +3311,53 @@
     .h3-peb.d1 { left: auto; right: 26px; top: auto; bottom: 150px; width: 62px; }
     .h3-peb.d2 { left: 34px; right: auto; top: auto; bottom: 100px; width: 36px; }
     .h3-peb.d5 { left: auto; right: 48px; top: 132px; bottom: auto; width: 26px; }
+    /* A little more movement (Thomas, 2026-09-26): a wider looping drift with a soft roll,
+       day and dusk. Sampled from smooth loops, so the timing is linear between steps. */
+    .h3-peb.fa > img, .h3-peb.fa > svg { animation-name: h3-mfa; animation-timing-function: linear; }
+    .h3-peb.fb > img, .h3-peb.fb > svg { animation-name: h3-mfb; animation-timing-function: linear; }
+    .h3-peb.fc > img, .h3-peb.fc > svg, .h3-peb.d1 > svg { animation-name: h3-mfc; animation-timing-function: linear; }
+    /* Day only: sand in the light background, a fine grain and faint ripple marks. Dusk is unchanged. */
+    html[data-hero="day"] .h3-plate::before, html[data-hero="day"] .h3-plate::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+    }
+    html[data-hero="day"] .h3-plate::before {
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E") 0 0 / 220px 220px;
+      opacity: 0.55; mix-blend-mode: soft-light;
+    }
+    html[data-hero="day"] .h3-plate::after {
+      background: url("assets/tide/sand-ripples.png?v=1") 0 0 / 360px 360px;
+      opacity: 0.85;
+    }
+  }
+  @keyframes h3-mfa {
+    0%, 100% { transform: translate(0, 0) rotate(3.8deg); }
+    12.5% { transform: translate(8.5px, -3.2px) rotate(7.7deg); }
+    25% { transform: translate(12px, -11px) rotate(7deg); }
+    37.5% { transform: translate(8.5px, -18.8px) rotate(2.2deg); }
+    50% { transform: translate(0, -22px) rotate(-3.8deg); }
+    62.5% { transform: translate(-8.5px, -18.8px) rotate(-7.7deg); }
+    75% { transform: translate(-12px, -11px) rotate(-7deg); }
+    87.5% { transform: translate(-8.5px, -3.2px) rotate(-2.2deg); }
+  }
+  @keyframes h3-mfb {
+    0%, 100% { transform: translate(0, 0) rotate(-8.4deg); }
+    12.5% { transform: translate(-7.8px, -2.6px) rotate(-8.2deg); }
+    25% { transform: translate(-11px, -9px) rotate(-3.2deg); }
+    37.5% { transform: translate(-7.8px, -15.4px) rotate(3.6deg); }
+    50% { transform: translate(0, -18px) rotate(8.4deg); }
+    62.5% { transform: translate(7.8px, -15.4px) rotate(8.2deg); }
+    75% { transform: translate(11px, -9px) rotate(3.2deg); }
+    87.5% { transform: translate(7.8px, -2.6px) rotate(-3.6deg); }
+  }
+  @keyframes h3-mfc {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    12.5% { transform: translate(7px, -2.3px) rotate(3.5deg); }
+    25% { transform: translate(0, -8px) rotate(5deg); }
+    37.5% { transform: translate(-7px, -13.7px) rotate(3.5deg); }
+    50% { transform: translate(0, -16px) rotate(0deg); }
+    62.5% { transform: translate(7px, -13.7px) rotate(-3.5deg); }
+    75% { transform: translate(0, -8px) rotate(-5deg); }
+    87.5% { transform: translate(-7px, -2.3px) rotate(-3.5deg); }
   }
 
   /* ---------- 3. Pebble path (desktop scroll progress) ---------- */
