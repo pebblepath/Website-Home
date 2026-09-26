@@ -3260,13 +3260,23 @@
     .h3-peb.d5 { left: auto; right: 22px; top: auto; bottom: -30px; width: 24px; }
     .h3-peb.p5, .h3-peb.p6, .h3-peb.p7, .h3-peb.p8, .h3-peb.d4, .h3-peb.d6 { display: none !important; }
   }
+  /* Phones (Thomas, 2026-09-25: option B, the "welcome screen"): like the app's own first
+     screen. The wordmark, the line as a small tagline, one quiet App Store button and a few
+     pebbles at the edges. No brief card, no second sentence, no Portal button. Mock + the
+     other options: design-sandbox/55-hero-rebuild/mobile-options/. */
   @media (max-width: 768px) {
-    .h3-inner { padding: 92px 20px 52px; }
-    /* Phones: the headline, one sentence, one quiet App Store button, then the brief. */
-    .h3-wordmark.pp-wordmark, .h3-trust, .h3-sub-more, .h3-portal { display: none; }
-    .h3-title { font-size: 38px; }
-    .h3-sub { margin-top: 14px; font-size: 16px; }
-    .h3-ctas { margin-top: 20px; }
+    .hero-v3 { min-height: 100vh; min-height: 100svh; }
+    .h3-inner {
+      min-height: 100vh; min-height: 100svh; box-sizing: border-box;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      padding: 96px 28px 110px; text-align: center;
+    }
+    .h3-copy { position: relative; z-index: 2; }
+    .h3-wordmark.pp-wordmark { font-size: 58px; margin: 0 0 18px; }
+    .h3-sub, .h3-trust, .h3-portal { display: none; }
+    .h3-title { font-size: 25px; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em; }
+    .h3-title br { display: none; }
+    .h3-ctas { justify-content: center; margin-top: 28px; }
     .h3-badge {
       height: 42px; padding: 0 14px 0 12px; gap: 8px; border-radius: 10px; box-shadow: none;
       background: #FFFFFF; border-color: rgba(0, 0, 0, 0.85); color: #000000;
@@ -3276,18 +3286,16 @@
     .h3-badge svg { width: 19px; height: 19px; }
     .h3-badge-txt small { font-size: 8.5px; }
     .h3-badge-txt strong { font-size: 15.5px; }
-    .h3-stage { margin-top: 66px; }
-    .h3-brief { border-radius: 20px; }
-    .h3-brief-body { padding: 16px 16px 14px; gap: 10px; }
-    .h3-brief-title { font-size: 18px; }
-    .h3-brief-list li { font-size: 12.5px; gap: 10px; }
-    .h3-brief-list .mk { width: 10px; height: 8px; margin-top: 5px; }
-    .h3-brief-foot { padding-top: 9px; }
-    .h3-brief-foot span { font-size: 11px; padding: 5px 10px; }
-    .h3-peb.p1 { right: -6px; top: -44px; width: 50px; }
-    .h3-peb.p3 { left: 2px; top: -36px; width: 28px; }
-    .h3-peb.p4 { left: 45%; top: -40px; width: 18px; }
-    .h3-peb.d1 { left: -2px; top: -50px; width: 44px; }
+    /* The stage becomes a layer of pebbles around the edges; the brief card sits this one out. */
+    .h3-stage { position: absolute; inset: 0; margin: 0; z-index: 1; pointer-events: none; }
+    .h3-brief { display: none; }
+    .h3-peb.p4, .h3-peb.d3 { display: none !important; }
+    .h3-peb.p1 { left: auto; right: 22px; top: auto; bottom: 120px; width: 66px; }
+    .h3-peb.p2 { left: 30px; right: auto; top: auto; bottom: 64px; width: 44px; }
+    .h3-peb.p3 { left: auto; right: 44px; top: 128px; bottom: auto; width: 30px; }
+    .h3-peb.d1 { left: auto; right: 26px; top: auto; bottom: 110px; width: 62px; }
+    .h3-peb.d2 { left: 34px; right: auto; top: auto; bottom: 60px; width: 36px; }
+    .h3-peb.d5 { left: auto; right: 48px; top: 132px; bottom: auto; width: 26px; }
   }
 
   /* ---------- 3. Pebble path (desktop scroll progress) ---------- */
@@ -4551,7 +4559,9 @@
      section only, on the device). The pill's pulse and the "set it up in
      the app" line are gone. No CTA yet (Thomas: soon).
      Song tiles in assets/pocket/songs.webp are cropped from the Pocket's
-     own song art. Icons: Phosphor Icons v2.1.1 (MIT, phosphoricons.com).
+     own song art. The grandparents on the Hello screens are Pexels photos
+     (free licence) face-cropped to assets/pocket/grandma.jpg (31735289,
+     Everton Silva) and grandpa.jpg (7983622, Kampus Production). Icons: Phosphor Icons v2.1.1 (MIT, phosphoricons.com).
      GA4: pocket_teaser_view, pocket_feature {feature} (fixed labels).
      REVERT = delete from this banner to the matching END banner, plus
      assets/pocket/.
@@ -4877,7 +4887,7 @@
   }
   .pk-av.a1 { background: linear-gradient(140deg, #C98A8A, #8B7BB5); }
   .pk-av.a2 { background: linear-gradient(140deg, #6B9AC4, #3D9B8F); }
-  .pk-av svg { width: 76%; height: 76%; color: rgba(242, 237, 227, 0.92); }
+  .pk-av img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .pk-faces.lg .pk-av { width: 112px; height: 112px; }
   .pk-check {
     position: absolute; right: 4px; bottom: 4px; width: 62px; height: 62px; border-radius: 50%;
@@ -4968,7 +4978,6 @@
         <symbol id="pk-i-replay" viewBox="0 0 256 256"><path fill="currentColor" d="M228,128a100,100,0,0,1-98.66,100H128a99.39,99.39,0,0,1-68.62-27.29,12,12,0,0,1,16.48-17.45,76,76,0,1,0-1.57-109c-.13.13-.25.25-.39.37L54.89,92H72a12,12,0,0,1,0,24H24a12,12,0,0,1-12-12V56a12,12,0,0,1,24,0V76.72L57.48,57.06A100,100,0,0,1,228,128Z"/></symbol>
         <symbol id="pk-i-arrow-down" viewBox="0 0 256 256"><path fill="currentColor" d="M208.49,152.49l-72,72a12,12,0,0,1-17,0l-72-72a12,12,0,0,1,17-17L116,187V40a12,12,0,0,1,24,0V187l51.51-51.52a12,12,0,0,1,17,17Z"/></symbol>
         <symbol id="pk-i-check" viewBox="0 0 256 256"><path fill="currentColor" d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></symbol>
-        <symbol id="pk-i-person" viewBox="0 0 24 24"><circle cx="12" cy="9.4" r="4.3" fill="currentColor"/><path fill="currentColor" d="M3.6 24C3.6 18.2 7.4 15.4 12 15.4C16.6 15.4 20.4 18.2 20.4 24Z"/></symbol>
       </svg>
 
       <div class="pk-copy">
@@ -5080,8 +5089,8 @@
                         <div class="pk-big terra"><svg viewBox="0 0 256 256"><use href="#pk-i-heart"/></svg></div>
                       </div>
                       <div class="pk-faces">
-                        <span class="pk-av a1"><svg viewBox="0 0 24 24"><use href="#pk-i-person"/></svg></span>
-                        <span class="pk-av a2"><svg viewBox="0 0 24 24"><use href="#pk-i-person"/></svg></span>
+                        <span class="pk-av a1"><img src="assets/pocket/grandma.jpg?v=1" width="240" height="240" alt="" loading="lazy" decoding="async"></span>
+                        <span class="pk-av a2"><img src="assets/pocket/grandpa.jpg?v=1" width="240" height="240" alt="" loading="lazy" decoding="async"></span>
                       </div>
                     </div>
                   </div>
@@ -5091,8 +5100,8 @@
                     <div class="pk-col pk-hello">
                       <div class="pk-big xl teal pk-pop"><svg viewBox="0 0 256 256"><use href="#pk-i-heart"/></svg><span class="pk-check"><svg viewBox="0 0 256 256"><use href="#pk-i-check"/></svg></span></div>
                       <div class="pk-faces lg pk-pop d1">
-                        <span class="pk-av a1"><svg viewBox="0 0 24 24"><use href="#pk-i-person"/></svg></span>
-                        <span class="pk-av a2"><svg viewBox="0 0 24 24"><use href="#pk-i-person"/></svg></span>
+                        <span class="pk-av a1"><img src="assets/pocket/grandma.jpg?v=1" width="240" height="240" alt="" loading="lazy" decoding="async"></span>
+                        <span class="pk-av a2"><img src="assets/pocket/grandpa.jpg?v=1" width="240" height="240" alt="" loading="lazy" decoding="async"></span>
                       </div>
                     </div>
                   </div>
@@ -5107,7 +5116,7 @@
 
       <div class="pk-feats">
         <div class="pk-feat-row" role="group" aria-label="What Pebble Pocket does">
-          <button type="button" class="pk-feat" data-feat="ask" aria-pressed="false"><span class="pk-ico ask" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#pk-i-stone"/></svg></span><span class="pk-feat-txt"><span class="pk-feat-name">Ask Pebble</span><span class="pk-sr">: </span><span class="pk-feat-line">Ask out loud. Pebble answers in two languages.</span></span></button>
+          <button type="button" class="pk-feat" data-feat="ask" aria-pressed="false"><span class="pk-ico ask" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#pk-i-stone"/></svg></span><span class="pk-feat-txt"><span class="pk-feat-name">Learn languages</span><span class="pk-sr">: </span><span class="pk-feat-line">Translate a word, then chat back and forth.</span></span></button>
           <button type="button" class="pk-feat" data-feat="songs" aria-pressed="false"><span class="pk-ico songs" aria-hidden="true"><svg viewBox="0 0 256 256"><use href="#pk-i-note"/></svg></span><span class="pk-feat-txt"><span class="pk-feat-name">Songs</span><span class="pk-sr">: </span><span class="pk-feat-line">Four favorites you pick, even without Wi-Fi.</span></span></button>
           <button type="button" class="pk-feat" data-feat="calm" aria-pressed="false"><span class="pk-ico calm" aria-hidden="true"><svg viewBox="0 0 256 256"><use href="#pk-i-drop"/></svg></span><span class="pk-feat-txt"><span class="pk-feat-name">Calm</span><span class="pk-sr">: </span><span class="pk-feat-line">Rain, tide, snow and seeds for big feelings.</span></span></button>
           <button type="button" class="pk-feat" data-feat="hello" aria-pressed="false"><span class="pk-ico hello" aria-hidden="true"><svg viewBox="0 0 256 256"><use href="#pk-i-heart"/></svg></span><span class="pk-feat-txt"><span class="pk-feat-name">Hello</span><span class="pk-sr">: </span><span class="pk-feat-line">Hold the heart to send Grandma a voice hello.</span></span></button>
