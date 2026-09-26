@@ -2626,6 +2626,11 @@
        (Thomas, 2026-09-25: too long a scroll on phones). Its three links move to the footer. */
     .explore-section { display: none; }
     footer .footer-more { display: block; margin-bottom: 8px; font-size: 13px; }
+    /* Phones: a shorter page (Thomas, 2026-09-25). "For the whole family" and "A hundred
+       little things" stay on wider screens only (section.* so later rules can't undo it). */
+    section.benefits, section.brain-sec { display: none; }
+    /* The phone menu's jumps land below the fixed 60 px nav. */
+    html { scroll-padding-top: 64px; }
     .explore-head { margin-bottom: 28px; }
     .explore-title { font-size: 23px; }
     .explore-grid { grid-template-columns: 1fr; gap: 14px; }
@@ -3388,10 +3393,12 @@
 
 <!-- MOBILE MENU OVERLAY — sibling of nav, outside any containing-block trap -->
 <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-  <a href="#features">Features</a>
+  <!-- Phone-only menu, so every link points at a section phones show (2026-09-25:
+       #features is hidden on phones and #intelligence everywhere). -->
   <a href="#showcase">The App</a>
-  <a href="#intelligence">Insights</a>
+  <a href="#pricing">Pricing</a>
   <a href="#founders">Founders</a>
+  <a href="#pocket">Pebble Pocket</a>
   <a href="https://apps.apple.com/app/pebblepath-ai/id6764684381" class="mobile-menu-cta" target="_blank" rel="noopener">
     <svg viewBox="0 0 384 512" fill="currentColor" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zM248.6 84.7c33.5-39.8 30.4-76 29.4-89-29.6 1.7-63.8 20.1-83.3 42.7-21.5 24.2-34.1 54.1-31.4 87.6 32 2.5 61.1-13.9 85.3-41.3z"/></svg>
     Download
