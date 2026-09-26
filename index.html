@@ -5300,10 +5300,19 @@
     from { transform: translateX(-50%) rotate(-1.3deg); }
     to   { transform: translateX(-50%) rotate(1.3deg); }
   }
+  /* 2026-09-26: with JavaScript the lanyard is a small physics model instead of the loop above
+     (see "Lanyard" in the Pocket script): a slow, uneven breeze; the Pocket bounces on its cord
+     when the page starts or stops moving; and it hangs on a hinge at the bead, so it swings a
+     beat behind the cord. The CSS sway stays as the fallback. */
+  .pk-physics .pk-hang { animation: none; will-change: transform; }
+  .pk-physics .pk-cord, .pk-physics .pk-bob { will-change: transform; }
   .pk-cord {
     flex: 1 1 auto; width: calc(1.15px * var(--mm)); border-radius: 99px;
     background: linear-gradient(90deg, #2E3436 0%, #8A9294 38%, #5B6365 70%, #353B3D 100%);
+    transform-origin: 50% 0;
   }
+  /* The bead, the split cord and the Pocket: this part hinges at the bead. */
+  .pk-bob { flex: none; display: flex; flex-direction: column; align-items: center; transform-origin: 50% 0; }
   .pk-loop { flex: none; display: block; width: calc(14px * var(--mm)); height: calc(13px * var(--mm)); margin-top: -1px; overflow: visible; }
   .pk-devwrap { position: relative; flex: none; margin-top: calc(-2.1px * var(--mm)); }
   .pk-halo {
@@ -5431,11 +5440,13 @@
   .pk-scr.is-on .pk-in.d3 { animation-delay: 1.05s; }
   @keyframes pk-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 
-  .pk-songs { position: absolute; left: 24px; top: 60px; width: 362px; height: 418px; }
+  /* 2026-09-26: the grid is ~92% of its old size and centred on the face (it sat 24 px from the
+     sides and bottom but 60 px from the top, so the bottom tiles ran into the rounded corners). */
+  .pk-songs { position: absolute; left: 38px; top: 58px; width: 334px; height: 386px; }
   .pk-songs img { display: block; width: 100%; height: 100%; }
   .pk-songs::after {
-    content: ''; position: absolute; left: 0; top: 0; width: 171px; height: 199px;
-    border-radius: 44px; box-shadow: inset 0 0 0 6px rgba(255, 255, 255, 0.85);
+    content: ''; position: absolute; left: 0; top: 0; width: 47.24%; height: 47.61%;
+    border-radius: 40.6px; box-shadow: inset 0 0 0 5.5px rgba(255, 255, 255, 0.85);
   }
   .pk-scr.is-on .pk-songs { animation: pk-pop 0.6s cubic-bezier(0.2, 0.8, 0.3, 1.1) both; }
   @keyframes pk-pop { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: none; } }
@@ -5599,6 +5610,7 @@
       <div class="pk-stage" aria-hidden="true">
         <div class="pk-hang">
           <span class="pk-cord"></span>
+          <div class="pk-bob">
           <svg class="pk-loop" viewBox="0 0 14 13">
             <defs>
               <linearGradient id="pk-cordg" x1="0" y1="0" x2="0" y2="1">
@@ -5713,6 +5725,7 @@
               </div>
               <span class="pk-reflect"></span>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -5870,6 +5883,89 @@
     }
     rip.innerHTML = r;
   }
+
+  // Lanyard (2026-09-26): a small physics model in place of the CSS sway.
+  //  - Swing: a pendulum (period ~2 s, light damping) that follows a slow, uneven breeze.
+  //  - Bounce: the Pocket has weight. When the page starts moving it lags and the cord
+  //    stretches a little; when the page stops it rises and settles. Steady scrolling does
+  //    nothing (no acceleration), as with a real weight on a string.
+  //  - A scroll jolt also feeds the swing it already has, so it never tilts one fixed way.
+  //  - Hinge: the bead, split cord and Pocket pivot at the bead and lag the cord a beat.
+  // Runs only while the band is on screen; reduced motion keeps the Pocket still.
+  (function lanyard() {
+    var hang = root.querySelector('.pk-hang');
+    var cord = hang && hang.querySelector('.pk-cord');
+    var bob = hang && hang.querySelector('.pk-bob');
+    if (!hang || !cord || !bob || reduce || !window.requestAnimationFrame) return;
+    root.classList.add('pk-physics');
+
+    var TAU = Math.PI * 2;
+    var W1 = TAU / 2.0, Z1 = 0.2;                // the swing: ~2 s period, settles in a few swings
+    var WP = TAU / 0.95, ZP = 0.28, CP = 1.3;    // the hinge at the bead
+    var WY = TAU / 0.6, ZY = 0.3;                // the bounce on the cord
+    // A scroll jolt, softly capped: tanh(acceleration / A0) runs from 0 to 1.
+    var A0 = 12000, KICK = 38, LIFT = 900;       // px/s², deg/s² of swing, px/s² of bounce
+    var th = 0, om = 0, ph = 0, pv = 0, y = 0, yv = 0;
+    var v = 0, vPrev = 0, acc = 0, lastSY = 0, lastT = 0, start = 0, raf = 0, cordLen = 1;
+
+    function clamp(x, lo, hi) { return x < lo ? lo : x > hi ? hi : x; }
+    // The breeze: two slow waves at unrelated periods (11 s and 4.3 s), well below the swing's own.
+    function breeze(t) { return 1.05 * Math.sin(t * 0.571 + 0.4) + 0.42 * Math.sin(t * 1.46 + 1.9); }
+    function measure() { cordLen = Math.max(40, cord.offsetHeight || 1); }
+
+    function frame(now) {
+      raf = requestAnimationFrame(frame);
+      var dt = lastT ? Math.min(0.034, Math.max(0.001, (now - lastT) / 1000)) : 0.016;
+      lastT = now;
+      var t = (now - start) / 1000;
+      var sy = window.pageYOffset || document.documentElement.scrollTop || 0;
+      var vNow = (sy - lastSY) / dt; lastSY = sy;
+      v += (vNow - v) * Math.min(1, dt / 0.06);              // smoothed scroll speed (px/s)
+      var aNow = (v - vPrev) / dt; vPrev = v;
+      acc += (aNow - acc) * Math.min(1, dt / 0.05);          // and its change (px/s²)
+      var jolt = Math.tanh(acc / A0);
+
+      var kick = KICK * Math.abs(jolt) * (om >= 0 ? 1 : -1);
+      var alpha = -W1 * W1 * (th - breeze(t)) - 2 * Z1 * W1 * om + kick;
+      om += alpha * dt; th = clamp(th + om * dt, -9, 9);
+
+      var palpha = -WP * WP * ph - 2 * ZP * WP * pv - alpha * CP;
+      pv += palpha * dt; ph = clamp(ph + pv * dt, -6, 6);
+
+      // Scrolling down moves the page (and the top of the cord) up, so the Pocket lags below.
+      var ya = -WY * WY * y - 2 * ZY * WY * yv + LIFT * jolt;
+      yv += ya * dt; y = clamp(y + yv * dt, -10, 14);
+
+      hang.style.transform = 'translateX(-50%) rotate(' + th.toFixed(3) + 'deg)';
+      cord.style.transform = 'scaleY(' + (1 + y / cordLen).toFixed(4) + ')';
+      bob.style.transform = 'translateY(' + y.toFixed(2) + 'px) rotate(' + ph.toFixed(3) + 'deg)';
+    }
+    function run(on) {
+      if (on && !raf) {
+        measure();
+        lastT = 0; lastSY = window.pageYOffset || 0; v = vPrev = acc = 0;
+        if (!start) start = performance.now();
+        raf = requestAnimationFrame(frame);
+      } else if (!on && raf) {
+        cancelAnimationFrame(raf); raf = 0;
+      }
+    }
+    window.addEventListener('resize', measure, { passive: true });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) {
+        for (var e = 0; e < es.length; e++) run(es[e].isIntersecting && !document.hidden);
+      }, { rootMargin: '120px 0px' }).observe(root);
+    } else {
+      run(true);
+    }
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) run(false);
+      else {
+        var r = root.getBoundingClientRect();
+        run(r.bottom > -120 && r.top < window.innerHeight + 120);
+      }
+    });
+  })();
 
   // Play only while the section is on screen.
   function setLive(v) {
