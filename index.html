@@ -4061,6 +4061,551 @@
     .nb-peb img { border-radius: 20px !important; }
   }
 </style>
+<!-- ===== THE TIDE: BEGIN ===== -->
+<!-- "Parenting today vs. With PebblePath" as a scroll-linked tide (Thomas's pick, 2026-09-26).
+     Source + scripts: design-sandbox/56-comparison-workshop (tide.css, tide.js, build.py
+     tide_section(), site_integrate.py). The scene pins while the tide comes in.
+     REVERT = delete this block and lift the section out of <template id="nbv2-backup"> below. -->
+<style>
+/* ==========================================================================
+   The tide (Thomas's pick, 2026-09-26). "Parenting today" is washed away by a
+   scroll-linked tide while the scene holds centre stage (a short sticky pin),
+   leaving only PebblePath. Desktop: the seam slides left like a rising tide.
+   Phones: the tide rises from the bottom of the card. Copy, icons and type
+   match the live .nbv2 section.
+   ========================================================================== */
+.tide { position: relative; background: #FAF8F5; font-family: 'Inter', -apple-system, sans-serif;
+        --nav: 68px; --scene: 570px; --pin: 70vh; --pinTop: var(--nav); }
+.tide-track { position: relative; height: calc(var(--scene) + var(--pin)); }
+.tide-pin { position: sticky; top: var(--pinTop); }
+.tide-surface { position: relative; height: var(--scene); isolation: isolate; overflow: hidden; }
+
+/* sand */
+.tide-sand { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.tide-sand-tone { position: absolute; inset: 0;
+  background: radial-gradient(115% 85% at 16% 20%, rgba(255,251,241,0.6), transparent 56%),
+              linear-gradient(122deg, #F3ECDD 0%, #ECE2CF 58%, #E4D7BD 100%); }
+.tide-grain { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.55; mix-blend-mode: soft-light; }
+.tide-ripples { position: absolute; inset: 0; background-size: 450px 450px; opacity: 0.9; }
+
+/* water, foam, shimmer: one SVG redrawn per frame */
+.tide-sea { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+
+/* the two lists share grid rows: side by side on desktop, the same slots on phones */
+/* Centred without a transform: a transform would make the grid its own stacking context and
+   the PebblePath list could no longer sit above the water while the old list sits below it. */
+.tide-grid { position: absolute; top: 0; bottom: 0; height: max-content; margin-block: auto; display: grid; grid-template-rows: auto repeat(5, auto); }
+.tide-col { display: grid; grid-template-rows: subgrid; grid-row: 1 / span 6; position: relative; min-width: 0; }
+.tide-today { z-index: 1; }
+.tide-pp { z-index: 3; color: #fff; }
+
+.tide-eyebrow { font-size: 13px; letter-spacing: 2.4px; text-transform: uppercase; margin-bottom: 4px; }
+.tide-head h3 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 25px; margin: 0 0 18px; line-height: 1.14; }
+.tide-row { display: flex; align-items: center; padding: 12px 0; min-width: 0; }
+.tide-row .tx { min-width: 0; }
+.tide-row .t { font-family: 'Nunito', sans-serif; font-size: 16.5px; line-height: 1.15; }
+.tide-row .d { font-size: 14px; line-height: 1.3; margin-top: 1px; }
+.tide-ico { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+.tide-today .tide-eyebrow { font-weight: 700; color: #968B79; }
+.tide-today h3 { color: #6f6657; }
+.tide-today .tide-row { gap: 12px; border-top: 1px solid rgba(124,115,99,0.16); }
+.tide-today .tide-row .t { font-weight: 700; color: #645c50; }
+.tide-today .tide-row .d { color: #8d8475; }
+.tide-today .tide-ico { width: 30px; height: 30px; border-radius: 8px; background: rgba(124,115,99,0.08); }
+.tide-today > * { opacity: 0.9; }
+
+.tide-pp .tide-eyebrow { font-weight: 800; color: #7DD4C8; }
+.tide-pp h3 { color: #fff; }
+.tide-pp .tide-row { gap: 13px; border-top: 1px solid rgba(255,255,255,0.16); }
+.tide-pp .tide-row .t { font-weight: 800; color: #fff; }
+.tide-pp .tide-row .d { color: rgba(255,255,255,0.9); }
+.tide-pp .tide-ico { width: 36px; height: 36px; border-radius: 11px; background: rgba(255,255,255,0.15); }
+
+/* Invisible: covers the water along the right edge, so the site's pebble path can turn white over it. */
+.tide-darkzone { position: absolute; left: 0; right: 0; top: 0; height: 0; pointer-events: none; visibility: hidden; }
+
+/* the app icon, on the seam at first, then beside the list */
+.tide-peb { position: absolute; left: 0; top: 0; width: 84px; height: 84px; z-index: 4; pointer-events: none; }
+.tide-peb img { position: relative; width: 84px; height: 84px; border-radius: 22px; box-shadow: 0 12px 32px rgba(0,0,0,0.32); display: block; }
+.tide-peb-glow { position: absolute; inset: -9px; border-radius: 25px; background: radial-gradient(circle, rgba(125,212,200,0.6), transparent 70%); animation: tidePulse 3.2s ease-in-out infinite; }
+@keyframes tidePulse { 0%, 100% { opacity: .55; transform: scale(1); } 50% { opacity: .15; transform: scale(1.25); } }
+
+/* reduced motion on phones: a plain switch between the two lists */
+.tide-switch {
+  position: absolute; z-index: 5; left: 50%; bottom: 18px; transform: translateX(-50%);
+  display: none; align-items: center; gap: 7px; white-space: nowrap; font: 600 13px/1 'Inter', sans-serif;
+  padding: 9px 15px 9px 12px; border-radius: 999px; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  color: #fff; background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.34);
+}
+.tide-switch svg { width: 14px; height: 14px; flex: none; }
+.tide.rm-old .tide-switch { color: #1F5C54; background: rgba(255,255,255,0.6); border-color: rgba(31,92,84,0.22); }
+
+/* ---------- desktop (>=1100): full-bleed scene, as tall as the screen below the nav ---------- */
+@media (min-width: 1100px) {
+  .tide { --scene: clamp(570px, calc(100vh - var(--nav)), 860px); --pin: 70vh;
+          --pinTop: calc(var(--nav) + (100vh - var(--nav) - var(--scene)) / 2); }
+  @supports (height: 100svh) {
+    .tide { --scene: clamp(570px, calc(100svh - var(--nav)), 860px); --pin: 70svh;
+            --pinTop: calc(var(--nav) + (100svh - var(--nav) - var(--scene)) / 2); }
+  }
+  .tide-grid { left: calc(50% - 486px); width: 956px; grid-template-columns: 360px 192px 404px; }
+  .tide-today { grid-column: 1; }
+  .tide-pp { grid-column: 3; }
+}
+
+/* ---------- phones + tablets (<1100): one card, the lists share slots ---------- */
+@media (max-width: 1099px) {
+  .tide { --nav: 68px; --scene: calc(100vh - var(--nav)); --pin: 75vh; }
+  /* Phones: the full screen height, so no strip of page shows under the scene when the toolbar
+     slides away. (The content still has to fit the smaller height; the script checks.) */
+  @supports (height: 100lvh) { .tide { --scene: calc(100lvh - var(--nav)); --pin: 75svh; } }
+  .tide-grid { left: 0; right: 0; margin-inline: auto; max-width: 640px; padding: 0 24px; grid-template-columns: minmax(0, 1fr); }
+  .tide-today, .tide-pp { grid-column: 1; }
+  .tide-peb { display: none; }
+}
+@media (max-width: 768px) { .tide { --nav: 60px; } }
+
+/* too short for the pin (or reduced motion): the scene sizes to its content and scrolls normally */
+.tide.no-pin .tide-track { height: auto; }
+.tide.no-pin .tide-pin { position: relative; top: auto; }
+.tide.no-pin .tide-surface { height: auto; }
+.tide.no-pin .tide-grid { position: relative; top: auto; bottom: auto; height: auto; padding-top: 44px; padding-bottom: 48px; }
+@media (min-width: 1100px) {
+  .tide.no-pin .tide-surface { height: 570px; }
+  .tide.no-pin .tide-grid { position: absolute; top: 53px; bottom: auto; margin-block: 0; padding: 0; }
+}
+.tide.rm .tide-switch { display: inline-flex; }
+@media (min-width: 1100px) { .tide.rm .tide-switch { display: none; } }
+.tide.rm.no-pin .tide-grid { padding-bottom: 76px; }
+</style>
+
+<section class="tide" id="compare" data-assets="assets/tide/" data-v="1" aria-label="Parenting today, compared with PebblePath">
+  <div class="tide-track">
+    <div class="tide-pin">
+      <div class="tide-surface">
+        <div class="tide-sand" aria-hidden="true">
+          <div class="tide-sand-tone"></div>
+          <svg class="tide-grain" preserveAspectRatio="none"><filter id="tideGrain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#tideGrain)"/></svg>
+          <div class="tide-ripples" style="background-image:url('assets/tide/sand-ripples.png?v=1')"></div>
+        </div>
+        <svg class="tide-sea" aria-hidden="true" preserveAspectRatio="none">
+          <defs>
+            <path id="tideEdge" class="l-edge"/>
+            <path id="tideDeep" class="l-deep"/>
+            <clipPath id="tideSeaClip"><path class="c-sea"/></clipPath>
+            <clipPath id="tideLandClip"><path class="c-land"/></clipPath>
+            <mask id="tideDepth" maskUnits="userSpaceOnUse">
+              <path class="m-sea" fill="#fff" fill-opacity=".3"/>
+              <g fill="none" stroke="#fff" stroke-opacity=".3" stroke-linejoin="round"><use href="#tideDeep" stroke-width="14.7"/><use href="#tideDeep" stroke-width="29.4"/><use href="#tideDeep" stroke-width="44.2"/><use href="#tideDeep" stroke-width="58.9"/><use href="#tideDeep" stroke-width="73.6"/><use href="#tideDeep" stroke-width="88.3"/><use href="#tideDeep" stroke-width="103.1"/><use href="#tideDeep" stroke-width="117.8"/></g>
+              <path class="m-deep" fill="#fff"/>
+            </mask>
+            <mask id="tideShallows" maskUnits="userSpaceOnUse">
+              <g fill="none" stroke="#fff" stroke-opacity=".26" stroke-linejoin="round"><use href="#tideEdge" stroke-width="60"/><use href="#tideEdge" stroke-width="120"/><use href="#tideEdge" stroke-width="190"/><use href="#tideEdge" stroke-width="270"/></g>
+            </mask>
+            <pattern id="tideFoam" class="pat-foam" patternUnits="userSpaceOnUse" width="120" height="120"><image href="assets/tide/foam.png?v=1" width="120" height="120"/></pattern>
+            <pattern id="tideCaustA" class="pat-ca" patternUnits="userSpaceOnUse" width="460" height="460"><image href="assets/tide/caustics.png?v=1" width="460" height="460"/></pattern>
+            <pattern id="tideCaustB" class="pat-cb" patternUnits="userSpaceOnUse" width="300" height="300"><image href="assets/tide/caustics.png?v=1" width="300" height="300"/></pattern>
+          </defs>
+          <g clip-path="url(#tideLandClip)" fill="none" stroke-linejoin="round" stroke-linecap="round">
+            <g stroke="#6E5436"><use href="#tideEdge" class="u-wet" stroke-opacity=".028"/><use href="#tideEdge" class="u-wet" stroke-opacity=".032"/><use href="#tideEdge" class="u-wet" stroke-opacity=".036"/><use href="#tideEdge" class="u-wet" stroke-opacity=".042"/><use href="#tideEdge" class="u-wet" stroke-opacity=".05"/><use href="#tideEdge" class="u-wet" stroke-opacity=".058"/></g>
+            <use href="#tideEdge" class="u-film" stroke="#fff" stroke-opacity=".32" stroke-width="2"/>
+            <path class="p-hwm" stroke="#fff" stroke-opacity=".38" stroke-width="1.7" stroke-dasharray="0.1 6 0.1 11 0.1 4 0.1 15 0.1 8"/>
+          </g>
+          <image class="p-water" x="0" y="0" preserveAspectRatio="xMidYMid slice" mask="url(#tideDepth)" clip-path="url(#tideSeaClip)"/>
+          <g clip-path="url(#tideSeaClip)">
+            <g fill="none" stroke-linejoin="round"><use href="#tideEdge" stroke="#8FE0D4" stroke-opacity=".16" stroke-width="96"/><use href="#tideEdge" stroke="#E4F8F4" stroke-opacity=".2" stroke-width="24"/></g>
+            <rect class="p-ca" x="-40" y="-40" fill="url(#tideCaustA)" opacity=".065"/>
+            <rect class="p-cb" x="-40" y="-40" fill="url(#tideCaustB)" opacity=".36" mask="url(#tideShallows)"/>
+            <g class="p-glints"></g>
+            <path class="p-trail" fill="url(#tideFoam)" opacity=".3"/>
+            <path class="p-lace" fill="#fff" fill-opacity=".3"/>
+            <path class="p-lace2" fill="url(#tideFoam)"/>
+            <path class="p-bub" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-opacity=".4" stroke-dasharray="0.1 7 0.1 16 0.1 11 0.1 25 0.1 9 0.1 19 0.1 14 0.1 22"/>
+          </g>
+          <g fill="none" stroke="#fff" stroke-linejoin="round" stroke-linecap="round">
+            <use href="#tideEdge" stroke-opacity=".22" stroke-width="5"/>
+            <use href="#tideEdge" stroke-opacity=".92" stroke-width="1.5"/>
+          </g>
+        </svg>
+        <div class="tide-grid">
+          <div class="tide-col tide-today" role="group" aria-label="Parenting today">
+            <div class="tide-head"><div class="tide-eyebrow">Parenting today</div><h3>Piecing it together yourself</h3></div>
+            <div class="tide-row"><span class="tide-ico"><svg width="17" height="17" viewBox="0 0 48 48" style="filter:grayscale(.55); opacity:.85;"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34A21.99 21.99 0 0 0 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/></svg></span><div class="tx"><div class="t">Late-night Google searches</div><div class="d">Conflicting answers, none about your child.</div></div></div><div class="tide-row"><span class="tide-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="#8c857a"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.407-.667zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/></svg></span><div class="tx"><div class="t">ChatGPT with no memory</div><div class="d">Smart now, forgets your child by morning.</div></div></div><div class="tide-row"><span class="tide-ico"><svg width="17" height="17" viewBox="0 0 24 24" style="filter:grayscale(.5); opacity:.85;"><rect x="3" y="3" width="8" height="8" rx="2.4" fill="#E8705B"/><rect x="13" y="3" width="8" height="8" rx="2.4" fill="#4DB6AC"/><rect x="3" y="13" width="8" height="8" rx="2.4" fill="#E6B23E"/><rect x="13" y="13" width="8" height="8" rx="2.4" fill="#8B7BB5"/></svg></span><div class="tx"><div class="t">A patchwork of baby apps</div><div class="d">A different one for everything.</div></div></div><div class="tide-row"><span class="tide-ico"><svg width="17" height="17" viewBox="0 0 24 24" style="filter:grayscale(.5); opacity:.85;"><path d="M6 2.5h8L19.5 8v12.5a1 1 0 0 1-1 1h-12a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1z" fill="#0F9D58"/><path d="M14 2.5L19.5 8H15a1 1 0 0 1-1-1V2.5z" fill="#0B7C43"/><g fill="#fff"><rect x="8" y="11" width="8" height="1.4" rx="0.6"/><rect x="8" y="14" width="8" height="1.4" rx="0.6"/><rect x="8" y="17" width="8" height="1.4" rx="0.6"/></g></svg></span><div class="tx"><div class="t">DIY spreadsheets</div><div class="d">You build them, then forget to update them.</div></div></div><div class="tide-row"><span class="tide-ico"><svg width="18" height="18" viewBox="0 0 24 24" style="filter:grayscale(.5); opacity:.85;"><rect x="2.5" y="4" width="19" height="17" rx="3" fill="#fff" stroke="#DADCE0" stroke-width="0.8"/><rect x="2.5" y="4" width="19" height="4.4" rx="3" fill="#4285F4"/><rect x="2.5" y="6" width="19" height="2.4" fill="#4285F4"/><text x="12" y="17.4" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" font-weight="800" fill="#4285F4">31</text></svg></span><div class="tx"><div class="t">Calendars for every activity</div><div class="d">Scattered across reminders.</div></div></div>
+          </div>
+          <div class="tide-col tide-pp" role="group" aria-label="With PebblePath">
+            <div class="tide-head"><div class="tide-eyebrow">With PebblePath</div><h3>Calmly coordinated.</h3></div>
+            <div class="tide-row"><span class="tide-ico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="20.5" rx="7" ry="1.4" fill="#fff" opacity=".25"/><path fill="#fff" d="M4.5 13C4.5 8.8 7.8 7 12 7C16.2 7 19.5 8.8 19.5 13C19.5 17.2 16.2 19.5 12 19.5C7.8 19.5 4.5 17.2 4.5 13Z"/><path fill="#fff" fill-opacity="0.33" d="M7.5 10.5C8 8.5 9.8 7.8 12 7.8C14.2 7.8 16 8.5 16 10.5C16 12 14.2 12.5 12 12.5C9.8 12.5 7.5 12 7.5 10.5Z"/></svg></span><div class="tx"><div class="t">Pebble &amp; daily briefs</div><div class="d">Calm, expert answers, plus a daily brief each morning.</div></div></div><div class="tide-row"><span class="tide-ico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M3 19 Q10 19 14 11 Q18 5 21 3.5" stroke="#fff" stroke-width="1.7" stroke-linecap="round" opacity=".45" fill="none"/><circle cx="3" cy="19" r="2" fill="#fff" opacity=".55"/><circle cx="9.5" cy="17" r="2" fill="#fff" opacity=".72"/><circle cx="15" cy="9" r="2" fill="#fff" opacity=".88"/><circle cx="21" cy="3.5" r="2.3" fill="#fff"/></svg></span><div class="tx"><div class="t">Growth Pathways</div><div class="d">300 milestones connected across every domain.</div></div></div><div class="tide-row"><span class="tide-ico"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9.4 13.1a3 3 0 0 1 5-1.1l1 1"/><polyline points="15.5 10.6 15.5 13 13.1 13"/><path d="M14.6 15.4a3 3 0 0 1-5 1.1l-1-1"/><polyline points="8.5 17.9 8.5 15.5 10.9 15.5"/><circle cx="12" cy="12.5" r="8.2" opacity=".4"/></svg></span><div class="tx"><div class="t">Family Portal</div><div class="d">Parents, grandparents and caregivers, in sync.</div></div></div><div class="tide-row"><span class="tide-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h6l4.5 4.5V19.6a1.4 1.4 0 0 1-1.4 1.4H7a1.4 1.4 0 0 1-1.4-1.4V4.9A1.4 1.4 0 0 1 7 3.5z"/><path d="M13 3.6V8a1 1 0 0 0 1 1h4"/><line x1="9" y1="12.8" x2="15" y2="12.8"/><line x1="9" y1="15.6" x2="15" y2="15.6"/></svg></span><div class="tx"><div class="t">Pediatrician summaries</div><div class="d">Walk into every visit prepared.</div></div></div><div class="tide-row"><span class="tide-ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="8" y1="3" x2="8" y2="6.5"/><line x1="16" y1="3" x2="16" y2="6.5"/></svg></span><div class="tx"><div class="t">Activities &amp; planning</div><div class="d">Trips, weekends and birthdays in one place.</div></div></div>
+          </div>
+        </div>
+        <div class="tide-darkzone" aria-hidden="true"></div>
+        <div class="tide-peb" aria-hidden="true"><span class="tide-peb-glow"></span><img src="assets/app-icon.png" alt=""></div>
+        <button class="tide-switch" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><polyline points="4 4 4 9 9 9"/></svg><span>See the old way</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+/* ==========================================================================
+   The tide: engine. While the scene is pinned, scroll progress (0..1) drives
+   the waterline; everything else (lapping, swash run-up, foam, caustics,
+   glints) runs on time so the water stays alive when the page is still.
+     desktop  the seam slides left like a rising tide, the old rows sink, then
+              the PebblePath list and the app icon glide to the centre
+     phones   the tide rises from the bottom of the card; each old row turns
+              into its PebblePath counterpart as the water passes it
+   Text stays real DOM text. Only the water is SVG.
+   ========================================================================== */
+(function () {
+  'use strict';
+  var root = document.querySelector('.tide');
+  if (!root) return;
+  var qs = location.search;
+  var RM = /[?&]rm=1/.test(qs) || !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var WIDE = window.matchMedia ? matchMedia('(min-width: 1100px)') : null;
+  var ASSETS = root.getAttribute('data-assets') || 'assets/';
+  var VQ = root.getAttribute('data-v') ? '?v=' + root.getAttribute('data-v') : '';   // cache-busting for /assets/
+  var SVGNS = 'http://www.w3.org/2000/svg';
+
+  var track = root.querySelector('.tide-track');
+  var pin = root.querySelector('.tide-pin');
+  var surface = root.querySelector('.tide-surface');
+  var sea = root.querySelector('.tide-sea');
+  var colToday = root.querySelector('.tide-today');
+  var colPP = root.querySelector('.tide-pp');
+  var peb = root.querySelector('.tide-peb');
+  var sw = root.querySelector('.tide-switch');
+  var dz = root.querySelector('.tide-darkzone');
+  function q(s) { return sea.querySelector(s); }
+  var E = {
+    edge: q('.l-edge'), deep: q('.l-deep'), cSea: q('.c-sea'), cLand: q('.c-land'),
+    mSea: q('.m-sea'), mDeep: q('.m-deep'), masks: sea.querySelectorAll('mask'),
+    wet: sea.querySelectorAll('.u-wet'), film: q('.u-film'), hwm: q('.p-hwm'), water: q('.p-water'),
+    ca: q('.p-ca'), cb: q('.p-cb'), patFoam: q('.pat-foam'), patCa: q('.pat-ca'), patCb: q('.pat-cb'),
+    glints: q('.p-glints'), trail: q('.p-trail'), lace: q('.p-lace'), lace2: q('.p-lace2'), bub: q('.p-bub')
+  };
+
+  // A 100svh probe: a stable viewport height while the iOS toolbar comes and goes.
+  var probe = document.createElement('div');
+  probe.style.cssText = 'position:fixed;left:0;top:0;width:1px;height:100vh;height:100svh;visibility:hidden;pointer-events:none';
+  document.body.appendChild(probe);
+
+  /* ---------------- helpers ---------------- */
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function smooth(a, b, v) { var t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); }
+  function easeInOutSine(t) { return -(Math.cos(Math.PI * t) - 1) / 2; }
+  function easeInOut(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  function f1(v) { return v.toFixed(1); }
+
+  // The live seam, M520 0 C 600 172, 430 345, 520 570, as an x offset for any y (0..570).
+  var SEAM = (function () {
+    var ys = [], dx = [], i, t, m;
+    for (i = 0; i <= 600; i++) {
+      t = i / 600; m = 1 - t;
+      ys.push(3 * m * m * t * 172 + 3 * m * t * t * 345 + t * t * t * 570);
+      dx.push(m * m * m * 520 + 3 * m * m * t * 600 + 3 * m * t * t * 430 + t * t * t * 520 - 520);
+    }
+    return function (y) {
+      if (y <= 0) return dx[0];
+      if (y >= 570) return dx[dx.length - 1];
+      var lo = 0, hi = ys.length - 1, mid;
+      while (hi - lo > 1) { mid = (lo + hi) >> 1; if (ys[mid] < y) lo = mid; else hi = mid; }
+      return dx[lo] + (dx[hi] - dx[lo]) * ((y - ys[lo]) / ((ys[hi] - ys[lo]) || 1));
+    };
+  })();
+
+  // Small, slow movement along the waterline.
+  function wob(u, t) { return 2.6 * Math.sin(u / 64 + t * 0.62) + 1.5 * Math.sin(u / 27 - t * 1.05 + 1.7) + 0.7 * Math.sin(u / 11.5 + t * 1.7 + 0.4); }
+  // Swash: the water runs up the sand and slides back, every 6 s or so.
+  var SWASH = 9;
+  function swashPhase(t) { return t * 2 * Math.PI / 6.2; }
+  function swash(t) { var f = swashPhase(t); return SWASH * (0.82 * Math.sin(f) + 0.18 * Math.sin(2 * f + 0.6)); }
+  // Scalloped edge: rounded lobes toward the sand, small cusps between them.
+  var CUSP = 5.5;
+  function cusp(u, t) { return CUSP * (Math.abs(Math.sin(u / 29 + t * 0.05)) - 0.64); }
+
+  /* ---------------- layout ---------------- */
+  var W = 0, H = 0, V = 0, wide = false, compLeft = 0, pinned = true;
+  var todayItems = [], ppItems = [], slots = [];
+  var glideDX = 0, pebRest = { x: 0, y: 0 }, pebStart = { x: 0, y: 0 };
+  var SEAM_X = 520, SLIVER = 22, DEEP = 62;
+  var glints = [];
+
+  function kids(col) { return col ? [].slice.call(col.children) : []; }
+
+  function contentFits() {
+    // The pinned scene fills the screen below the nav. The content has to fit the smaller
+    // visible height (browser toolbars showing), or the pin would hide part of it.
+    var grid = root.querySelector('.tide-grid');
+    var nav = parseFloat(getComputedStyle(pin).top) || 0;
+    var visible = (probe.offsetHeight || window.innerHeight) - nav;
+    return grid.getBoundingClientRect().height + 40 <= Math.min(visible, surface.getBoundingClientRect().height);
+  }
+
+  function layout() {
+    wide = WIDE ? WIDE.matches : window.innerWidth >= 1100;
+    root.classList.toggle('rm', RM);
+    root.classList.remove('no-pin');
+    [colToday, colPP].forEach(function (c) { c.style.transform = ''; c.style.opacity = ''; });
+    [].forEach.call(root.querySelectorAll('.tide-col > *'), function (el) { el.style.transform = ''; el.style.filter = ''; el.style.opacity = ''; el._k = null; });
+    pinned = !RM && contentFits();
+    root.classList.toggle('no-pin', !pinned);
+
+    var r = surface.getBoundingClientRect();
+    W = r.width; H = r.height; V = probe.offsetHeight || window.innerHeight;
+    compLeft = (W - 1080) / 2;
+    sea.setAttribute('viewBox', '0 0 ' + f1(W) + ' ' + f1(H));
+    E.water.setAttribute('width', W); E.water.setAttribute('height', H);
+    E.water.setAttribute('href', ASSETS + (wide ? 'sea-wide.jpg' : 'sea-tall.jpg') + VQ);
+    [].forEach.call(E.masks, function (m) { m.setAttribute('x', -80); m.setAttribute('y', -80); m.setAttribute('width', W + 160); m.setAttribute('height', H + 160); });
+    [E.ca, E.cb].forEach(function (rc) { rc.setAttribute('width', W + 80); rc.setAttribute('height', H + 80); });
+
+    function box(el) { var b = el.getBoundingClientRect(); return { el: el, x0: b.left - r.left, x1: b.right - r.left, y0: b.top - r.top, y1: b.bottom - r.top }; }
+    todayItems = kids(colToday).map(box);
+    ppItems = kids(colPP).map(box);
+    slots = todayItems.map(function (it, i) { var o = ppItems[i]; return { y0: Math.min(it.y0, o.y0), y1: Math.max(it.y1, o.y1) }; });
+    if (wide) {
+      // End state: the app icon and the list, centred together.
+      var listTop = ppItems[0].y0, listBot = ppItems[ppItems.length - 1].y1;
+      glideDX = compLeft + 408 - ppItems[0].x0;
+      pebStart = { x: compLeft + 458, y: H / 2 - 42 };
+      pebRest = { x: pebStart.x + glideDX, y: (listTop + listBot) / 2 - 42 };
+    }
+    makeGlints();
+  }
+
+  // Sun glints: tiny sparkles that flash now and then. Only drawn where there is water.
+  function makeGlints() {
+    while (E.glints.firstChild) E.glints.removeChild(E.glints.firstChild);
+    glints = [];
+    var n = wide ? 46 : 24, seed = 7;
+    function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+    for (var i = 0; i < n; i++) {
+      var x = wide ? W * (0.08 + 0.92 * Math.pow(rnd(), 0.7)) : W * (0.05 + 0.9 * rnd());
+      var y = H * (0.06 + 0.88 * rnd());
+      var s = 0.65 + 0.7 * rnd();
+      var g = document.createElementNS(SVGNS, 'g');
+      g.setAttribute('transform', 'translate(' + f1(x) + ' ' + f1(y) + ') scale(' + s.toFixed(2) + ')');
+      g.setAttribute('opacity', '0');
+      g.innerHTML = '<circle r="2.6" fill="#fff" opacity=".35"/><ellipse rx="4.4" ry=".55" fill="#fff"/><ellipse rx=".55" ry="2.8" fill="#fff"/>';
+      E.glints.appendChild(g);
+      glints.push({ el: g, period: 2.8 + 4.2 * rnd(), phase: rnd() * 6.283, peak: 0.55 + 0.45 * rnd(), last: -1 });
+    }
+  }
+
+  /* ---------------- progress ---------------- */
+  var smoothP = null, lastNow = 0;
+  function rawProgress() {
+    if (!pinned) {
+      // No pin (too short a screen): the tide passes through as the section scrolls by.
+      var s = surface.getBoundingClientRect();
+      return clamp((0.62 * V - s.top) / Math.max(1, s.height), 0, 1);
+    }
+    var tr = track.getBoundingClientRect();
+    var top = parseFloat(getComputedStyle(pin).top) || 0;
+    var dist = tr.height - H;
+    return clamp((top - tr.top) / Math.max(1, dist), 0, 1);
+  }
+  function progress(now) {
+    var target = rawProgress();
+    var dt = lastNow ? Math.min(0.1, (now - lastNow) / 1000) : 0;
+    // Scroll arrives in steps (wheel ticks, momentum). The water eases after it instead.
+    smoothP = smoothP === null ? target : smoothP + (target - smoothP) * (1 - Math.exp(-dt * (wide ? 6 : 4.5)));
+    return smoothP;
+  }
+
+  /* ---------------- geometry ---------------- */
+  // (u along the waterline, v across it). v grows toward the sea: to the right on
+  // desktop, downward on phones (the sea sits below the sand there).
+  var U = [], VE = [], VH = [], LW = [];
+  function xy(u, v) { return wide ? f1(v) + ' ' + f1(u) : f1(u) + ' ' + f1(v); }
+  function line(vs, off) {
+    var s = '', i;
+    for (i = 0; i < U.length; i++) s += (i ? 'L' : 'M') + xy(U[i], vs[i] + off);
+    return s;
+  }
+  function lineArr(vs, offs, k) {
+    var s = '', i;
+    for (i = 0; i < U.length; i++) s += (i ? 'L' : 'M') + xy(U[i], vs[i] + offs[i] * k);
+    return s;
+  }
+  function region(vs, off, side) {
+    // side 1: the sea side, -1: the sand side
+    var s = line(vs, off), uMax = U[U.length - 1] + 40, uMin = -40;
+    var far = side > 0 ? (wide ? W : H) + 60 : -60;
+    return s + 'L' + xy(uMax, far) + 'L' + xy(uMin, far) + 'Z';
+  }
+  function ribbon(vs, a, b) {
+    // the band between offsets a[] and b[] (arrays), both measured into the sea
+    var s = '', i;
+    for (i = 0; i < U.length; i++) s += (i ? 'L' : 'M') + xy(U[i], vs[i] + a[i]);
+    for (i = U.length - 1; i >= 0; i--) s += 'L' + xy(U[i], vs[i] + b[i]);
+    return s + 'Z';
+  }
+  function setD(el, d) { if (el && el._d !== d) { el._d = d; el.setAttribute('d', d); } }
+  function setA(el, k, v) { if (el && el['_' + k] !== v) { el['_' + k] = v; el.setAttribute(k, v); } }
+
+  var A0 = [], A1 = [], A2 = [], A3 = [];
+  function shape(u) {
+    if (wide) return SEAM(u * 570 / H);
+    return 6 * Math.sin(Math.PI * clamp(u / W, 0, 1));
+  }
+
+  function draw(base, t) {
+    var len = wide ? H : W, step = wide ? 6 : 5, u, i = 0, sw = swash(t);
+    var adv = sw;                                   // + = run up onto the sand
+    U.length = VE.length = VH.length = LW.length = A0.length = A1.length = A2.length = A3.length = 0;
+    for (u = -12; u <= len + 12; u += step, i++) {
+      var sh = (wide ? compLeft : 0) + base + shape(u), cu = cusp(u, t);
+      U.push(u);
+      VE.push(sh + wob(u, t) - adv - cu);
+      VH.push(sh + 0.4 * wob(u, t) - (SWASH + 2.5) - cu * 1.2);  // the high-water mark of the last wave
+      var lw = 4.5 + 3.2 * (0.5 + 0.5 * Math.sin(u / 17 + t * 0.9)) + 2.4 * (0.5 + 0.5 * Math.sin(u / 6.1 - t * 1.3 + 1));
+      A0.push(0); A1.push(lw);
+      A2.push(lw + 1);
+      A3.push(lw + 12 + 16 * (0.5 + 0.5 * Math.sin(u / 41 - t * 0.45)));
+      LW.push(lw);
+    }
+    var edge = line(VE, 0);
+    setD(E.edge, edge);
+    setD(E.deep, line(VE, DEEP));
+    setD(E.cSea, region(VE, 0, 1));
+    setD(E.cLand, region(VE, 0, -1));
+    setD(E.mSea, region(VE, 0, 1));
+    setD(E.mDeep, region(VE, DEEP, 1));
+    setD(E.hwm, line(VH, 0));
+    setD(E.lace, ribbon(VE, A0, A1));
+    setD(E.lace2, E.lace._d);
+    setD(E.trail, ribbon(VE, A2, A3));
+    setD(E.bub, line(VE, 7));
+
+    // Wet sand: darkest at the water, fading to dry just past the high-water mark.
+    var gap = SWASH + 2.5 - adv + 2;                // how far the last wave reached above the water now
+    var widths = [gap + 30, gap + 22, gap + 15, gap + 9, gap + 5, gap + 2];
+    for (var k = 0; k < E.wet.length; k++) setA(E.wet[k], 'stroke-width', f1(2 * Math.max(2, widths[k])));
+    setA(E.film, 'transform', wide ? 'translate(-2.2 0)' : 'translate(0 -2.2)');
+
+    // Fresh foam as the water runs up, thinner as it slides back.
+    var fresh = 0.5 + 0.5 * Math.cos(swashPhase(t) - 1.2);
+    setA(E.lace, 'fill-opacity', (0.22 + 0.16 * fresh).toFixed(3));
+    setA(E.lace2, 'opacity', (0.72 + 0.26 * fresh).toFixed(3));
+    setA(E.trail, 'opacity', (0.22 + 0.16 * fresh).toFixed(3));
+    E.bub.style.strokeDashoffset = f1(-(t * 6) % 174);
+
+    // Light moving on the sea floor, and the foam drifting a little.
+    setA(E.patCa, 'patternTransform', 'translate(' + f1(t * 5.2 % 460) + ' ' + f1(t * 2.6 % 460) + ')');
+    setA(E.patCb, 'patternTransform', 'translate(' + f1(-t * 3.4 % 300) + ' ' + f1(t * 4.1 % 300) + ') rotate(18)');
+    setA(E.patFoam, 'patternTransform', 'translate(' + f1(t * 1.6 % 120) + ' ' + f1(t * 0.9 % 120) + ')');
+
+    for (k = 0; k < glints.length; k++) {
+      var gl = glints[k];
+      var o = RM ? (k % 5 === 0 ? 0.45 * gl.peak : 0) : gl.peak * Math.pow(Math.max(0, Math.sin(2 * Math.PI * t / gl.period + gl.phase)), 10);
+      var ov = o < 0.02 ? '0' : o.toFixed(2);
+      if (gl.last !== ov) { gl.last = ov; gl.el.setAttribute('opacity', ov); }
+    }
+  }
+
+  /* ---------------- text ---------------- */
+  function setItem(el, v, mode, baseA) {
+    var key = v.toFixed(3);
+    if (el._k === key) return;
+    el._k = key;
+    var a = 1 - v;
+    el.style.opacity = v >= 0.999 && baseA === 1 ? '' : (v * baseA).toFixed(3);
+    if (mode === 'x') el.style.transform = a > 0.001 ? 'translateX(' + (-8 * a).toFixed(2) + 'px)' : '';
+    else if (mode === 'sink') el.style.transform = a > 0.001 ? 'translateY(' + (6 * a).toFixed(2) + 'px)' : '';
+    else if (mode === 'rise') el.style.transform = a > 0.001 ? 'translateY(' + (8 * a).toFixed(2) + 'px)' : '';
+  }
+
+  function applyText(base, glide, t) {
+    var i;
+    if (wide) {
+      for (i = 0; i < todayItems.length; i++) {
+        var it = todayItems[i], yc = (it.y0 + it.y1) / 2, w = it.x1 - it.x0;
+        var xl = compLeft + base + shape(yc);
+        setItem(it.el, smooth(it.x0 + 0.3 * w, it.x0 + 0.62 * w, xl), 'x', 0.9);
+      }
+      var gx = glideDX * glide;
+      colPP.style.transform = gx ? 'translateX(' + gx.toFixed(2) + 'px)' : '';
+      var px = lerp(pebStart.x, pebRest.x, glide), py = lerp(pebStart.y, pebRest.y, glide) + (RM ? 0 : 1.2 * Math.sin(t * 1.1));
+      peb.style.transform = 'translate(' + px.toFixed(1) + 'px,' + py.toFixed(1) + 'px)';
+    } else {
+      var L = base + 5;
+      for (i = 0; i < slots.length; i++) {
+        var s = slots[i], h = s.y1 - s.y0;
+        setItem(todayItems[i].el, smooth(s.y0 + 0.2 * h, s.y0 + 0.72 * h, L), 'sink', 0.9);
+        setItem(ppItems[i].el, 1 - smooth(s.y0 - 30, s.y0 - 6, L), 'rise', 1);
+      }
+    }
+  }
+
+  /* ---------------- state + loop ---------------- */
+  var rmOld = false;
+  function frame(now) {
+    if (!W) layout();
+    if (!W) return;
+    var t = RM ? 0 : now / 1000;
+    var base, glide = 0;
+    if (RM) {
+      base = wide ? SEAM_X : (rmOld ? H - SLIVER : -90);
+    } else {
+      var p = progress(now);
+      if (wide) {
+        base = lerp(SEAM_X, -compLeft - 170, easeInOutSine(clamp((p - 0.10) / 0.54, 0, 1)));
+        glide = easeInOut(clamp((p - 0.58) / 0.24, 0, 1));
+      } else {
+        base = lerp(H - SLIVER, -90, easeInOutSine(clamp((p - 0.10) / 0.76, 0, 1)));
+      }
+    }
+    draw(base, t);
+    applyText(base, glide, t);
+    if (dz) {
+      // Desktop: the sea always runs along the right edge. Phones/tablets: only below the waterline.
+      var top = wide ? 0 : clamp(base + 5, 0, H);
+      dz.style.top = top.toFixed(0) + 'px';
+      dz.style.height = (H - top).toFixed(0) + 'px';
+    }
+    lastNow = now;
+  }
+
+  var raf = 0, inView = false;
+  function loop() {
+    raf = 0;
+    frame(performance.now());   // not the rAF timestamp: it can lag behind performance.now()
+    if (inView && !RM) raf = requestAnimationFrame(loop);
+  }
+  function kick() { if (!raf) raf = requestAnimationFrame(loop); }
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) {
+      inView = es[0].isIntersecting;
+      if (inView) kick();
+    }, { rootMargin: '120px 0px' }).observe(surface);
+  } else { inView = true; }
+  window.addEventListener('scroll', kick, { passive: true });
+  window.addEventListener('resize', function () { W = 0; smoothP = null; frame(performance.now()); kick(); });
+
+  if (sw) {
+    sw.addEventListener('click', function () {
+      rmOld = !rmOld;
+      root.classList.toggle('rm-old', rmOld);
+      sw.querySelector('span').textContent = rmOld ? 'Back to PebblePath' : 'See the old way';
+      sw.setAttribute('aria-pressed', rmOld ? 'true' : 'false');
+      frame(performance.now());
+    });
+  }
+
+  // Workshop hook for stills and clips: tideDebug.relayout().
+  window.tideDebug = { relayout: function () { W = 0; smoothP = null; frame(performance.now()); } };
+
+  function start() { W = 0; smoothP = null; frame(performance.now()); kick(); }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(start); else start();
+  window.addEventListener('load', start);
+})();
+</script>
+<!-- ===== THE TIDE: END ===== -->
+<template id="nbv2-backup">
 <section class="nbv2 reveal" style="background:var(--pp-off-white); font-family:var(--font-body); padding:64px 32px; display:flex; justify-content:center;">
   <div class="nb-surface" style="position:relative; width:1080px; max-width:100%; height:570px; border-radius:24px; overflow:hidden; box-shadow:0 18px 50px rgba(31,92,84,0.16); background:#F1E9DA;">
 
@@ -4124,6 +4669,7 @@
 
   </div>
 </section>
+</template>
 
 
 <!-- ============================================================
@@ -5920,9 +6466,9 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
   var SVGNS = 'http://www.w3.org/2000/svg';
   var clipLt = document.getElementById('pp-clip-lt');
   var clipDk = document.getElementById('pp-clip-dk');
-  // .nb-teal is the No-brainer section's teal side, full height at the right edge from 1100 px;
-  // below that the section stacks and .nb-right carries the teal.
-  var darkEls = [].slice.call(document.querySelectorAll('.brain-sec, .nb-teal, .nb-right, .pricing, .pocket, footer' +
+  // .tide-darkzone follows the water along the comparison scene's right edge (all of it on
+  // wide screens, below the waterline from 1024 to 1099 px).
+  var darkEls = [].slice.call(document.querySelectorAll('.brain-sec, .tide-darkzone, .pricing, .pocket, footer' +
     (document.documentElement.getAttribute('data-hero') === 'dusk' ? ', .hero-v3' : '')));
   var toneKey = '';
   function fillClip(clip, spans) {
