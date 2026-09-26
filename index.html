@@ -4240,11 +4240,15 @@
 .tide-sand-tone { position: absolute; inset: 0;
   background: radial-gradient(115% 85% at 16% 20%, rgba(255,251,241,0.6), transparent 56%),
               linear-gradient(122deg, #F3ECDD 0%, #ECE2CF 58%, #E4D7BD 100%); }
-.tide-grain { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.55; mix-blend-mode: soft-light; }
+.tide-sand { will-change: transform; }   /* its own layer: the sand never repaints with the water */
+/* The grain is a tiled noise image (rasterized once), not a live SVG filter (2026-09-26, speed). */
+.tide-grain { position: absolute; inset: 0; opacity: 0.55; mix-blend-mode: soft-light;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E") 0 0 / 320px 320px; }
 .tide-ripples { position: absolute; inset: 0; background-size: 450px 450px; opacity: 0.9; }
 
-/* water, foam, shimmer: one SVG redrawn per frame */
-.tide-sea { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+/* water, foam, shimmer, redrawn per frame (tide.js): the SVG in Chrome, Edge and Firefox,
+   the canvas in Safari and on iPhone (the script removes the other one) */
+.tide-sea, .tide-cv { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 
 /* the two lists share grid rows: side by side on desktop, the same slots on phones */
 /* Centred without a transform: a transform would make the grid its own stacking context and
@@ -4342,7 +4346,7 @@
       <div class="tide-surface">
         <div class="tide-sand" aria-hidden="true">
           <div class="tide-sand-tone"></div>
-          <svg class="tide-grain" preserveAspectRatio="none"><filter id="tideGrain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%" height="100%" filter="url(#tideGrain)"/></svg>
+          <div class="tide-grain"></div>
           <div class="tide-ripples" style="background-image:url('assets/tide/sand-ripples.png?v=1')"></div>
         </div>
         <svg class="tide-sea" aria-hidden="true" preserveAspectRatio="none">
@@ -4384,6 +4388,7 @@
             <use href="#tideEdge" stroke-opacity=".92" stroke-width="1.5"/>
           </g>
         </svg>
+        <canvas class="tide-cv" aria-hidden="true"></canvas>
         <div class="tide-grid">
           <div class="tide-col tide-today" role="group" aria-label="Parenting today">
             <div class="tide-head"><div class="tide-eyebrow">Parenting today</div><h3>Piecing it together yourself</h3></div>
@@ -4410,7 +4415,12 @@
               the PebblePath list and the app icon glide to the centre
      phones   the tide rises from the bottom of the card; each old row turns
               into its PebblePath counterpart as the water passes it
-   Text stays real DOM text. Only the water is SVG.
+   Text stays real DOM text. Only the water is drawn, two ways (2026-09-26), whichever the
+   browser's engine draws smoothly on fast scrolls (measured on an M5 Mac):
+     SVG     Chrome, Edge, Firefox: 60+ fps (in Safari the SVG masks ran at ~30 fps)
+     canvas  Safari and every iPhone browser (all WebKit): a steady 60 fps. Textures are
+             composited at 1x in offscreen canvases; lines at the screen's resolution.
+   Same geometry, textures and timings either way; ?tide=svg or ?tide=canvas forces one.
    ========================================================================== */
 (function () {
   'use strict';
@@ -4421,7 +4431,6 @@
   var WIDE = window.matchMedia ? matchMedia('(min-width: 1100px)') : null;
   var ASSETS = root.getAttribute('data-assets') || 'assets/';
   var VQ = root.getAttribute('data-v') ? '?v=' + root.getAttribute('data-v') : '';   // cache-busting for /assets/
-  var SVGNS = 'http://www.w3.org/2000/svg';
 
   var track = root.querySelector('.tide-track');
   var pin = root.querySelector('.tide-pin');
@@ -4432,14 +4441,46 @@
   var peb = root.querySelector('.tide-peb');
   var sw = root.querySelector('.tide-switch');
   var dz = root.querySelector('.tide-darkzone');
-  function q(s) { return sea.querySelector(s); }
-  var E = {
+  var TAU = Math.PI * 2;
+
+  // Which renderer. WebKit: Safari, and every browser on iPhone and iPad (iPadOS Safari reports a
+  // Mac user agent, which matches too). Blink and Gecko keep the SVG.
+  var UA = navigator.userAgent || '';
+  var WEBKIT = /AppleWebKit/.test(UA) && !/Chrome|Chromium|Edg|OPR|SamsungBrowser/.test(UA);
+  var FORCE = (qs.match(/[?&]tide=(svg|canvas)/) || [])[1];
+  var svgSea = sea, cv = root.querySelector('.tide-cv');
+  var ctx = (FORCE ? FORCE === 'canvas' : WEBKIT) && cv && cv.getContext ? cv.getContext('2d') : null;
+  var CAN = !!(ctx && typeof Path2D !== 'undefined');
+  if (CAN) { sea = cv; if (svgSea && svgSea.parentNode) svgSea.parentNode.removeChild(svgSea); }
+  else if (cv && cv.parentNode) cv.parentNode.removeChild(cv);
+  root.classList.toggle('tide-canvas', CAN);
+  function q(sel) { return sea.querySelector(sel); }
+  var E = CAN ? null : {
     edge: q('.l-edge'), deep: q('.l-deep'), cSea: q('.c-sea'), cLand: q('.c-land'),
     mSea: q('.m-sea'), mDeep: q('.m-deep'), masks: sea.querySelectorAll('mask'),
     wet: sea.querySelectorAll('.u-wet'), film: q('.u-film'), hwm: q('.p-hwm'), water: q('.p-water'),
     ca: q('.p-ca'), cb: q('.p-cb'), patFoam: q('.pat-foam'), patCa: q('.pat-ca'), patCb: q('.pat-cb'),
     glints: q('.p-glints'), trail: q('.p-trail'), lace: q('.p-lace'), lace2: q('.p-lace2'), bub: q('.p-bub')
   };
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  function buffer() { var c = document.createElement('canvas'); return [c, c.getContext('2d')]; }
+  var bufW = CAN ? buffer() : null, bufS = CAN ? buffer() : null, bufM = CAN ? buffer() : null;
+  var R = 1, W1 = 0, H1 = 0;
+  // Textures, loaded once; patterns are made when they arrive.
+  var IMG = {}, patA = null, patB = null, patF = null, cover = null, waterName = '';
+  function image(name) {
+    var im = IMG[name];
+    if (!im) {
+      im = IMG[name] = new Image();
+      im.onload = function () { im._ok = true; patA = patB = patF = null; cover = null; kick(); };
+      im.src = ASSETS + name + VQ;
+    }
+    return im._ok ? im : null;
+  }
+  var HAS_MATRIX = typeof DOMMatrix === 'function';
+  function place(pat, tx, ty, rot, sc) {
+    if (pat && HAS_MATRIX && pat.setTransform) pat.setTransform(new DOMMatrix().translate(tx, ty).rotate(rot).scale(sc));
+  }
 
   // A 100svh probe: a stable viewport height while the iOS toolbar comes and goes.
   var probe = document.createElement('div');
@@ -4493,6 +4534,12 @@
   var cTop = 0, cBot = 0;   // phones: where the lists start and end inside the scene
   var SEAM_X = 520, SLIVER = 22, DEEP = 62;
   var glints = [];
+  // The water's depth ramp and the shallows fade: stacked strokes, as in the SVG masks.
+  var RAMP = [], SHALLOW = [60, 120, 190, 270];
+  for (var ri = 1; ri <= 8; ri++) RAMP.push(2 * DEEP * (ri / 8) * 0.95);
+  var WET = [0.028, 0.032, 0.036, 0.042, 0.05, 0.058];
+  var HWM_DASH = [0.1, 6, 0.1, 11, 0.1, 4, 0.1, 15, 0.1, 8];
+  var BUB_DASH = [0.1, 7, 0.1, 16, 0.1, 11, 0.1, 25, 0.1, 9, 0.1, 19, 0.1, 14, 0.1, 22];
 
   function kids(col) { return col ? [].slice.call(col.children) : []; }
 
@@ -4517,11 +4564,21 @@
     var r = surface.getBoundingClientRect();
     W = r.width; H = r.height; V = probe.offsetHeight || window.innerHeight;
     compLeft = (W - 1080) / 2;
-    sea.setAttribute('viewBox', '0 0 ' + f1(W) + ' ' + f1(H));
-    E.water.setAttribute('width', W); E.water.setAttribute('height', H);
-    E.water.setAttribute('href', ASSETS + (wide ? 'sea-wide.jpg' : 'sea-tall.jpg') + VQ);
-    [].forEach.call(E.masks, function (m) { m.setAttribute('x', -80); m.setAttribute('y', -80); m.setAttribute('width', W + 160); m.setAttribute('height', H + 160); });
-    [E.ca, E.cb].forEach(function (rc) { rc.setAttribute('width', W + 80); rc.setAttribute('height', H + 80); });
+    if (CAN) {
+      // Lines at the screen's resolution (up to 2x on wide screens, 3x on phones); textures at 1x.
+      R = Math.min(window.devicePixelRatio || 1, wide ? 2 : 3);
+      sea.width = Math.max(1, Math.round(W * R)); sea.height = Math.max(1, Math.round(H * R));
+      W1 = Math.max(1, Math.ceil(W)); H1 = Math.max(1, Math.ceil(H));
+      [bufW, bufS, bufM].forEach(function (b) { b[0].width = W1; b[0].height = H1; });
+      waterName = wide ? 'sea-wide.jpg' : 'sea-tall.jpg';
+      cover = null;
+    } else {
+      sea.setAttribute('viewBox', '0 0 ' + f1(W) + ' ' + f1(H));
+      E.water.setAttribute('width', W); E.water.setAttribute('height', H);
+      E.water.setAttribute('href', ASSETS + (wide ? 'sea-wide.jpg' : 'sea-tall.jpg') + VQ);
+      [].forEach.call(E.masks, function (m) { m.setAttribute('x', -80); m.setAttribute('y', -80); m.setAttribute('width', W + 160); m.setAttribute('height', H + 160); });
+      [E.ca, E.cb].forEach(function (rc) { rc.setAttribute('width', W + 80); rc.setAttribute('height', H + 80); });
+    }
 
     function box(el) { var b = el.getBoundingClientRect(); return { el: el, x0: b.left - r.left, x1: b.right - r.left, y0: b.top - r.top, y1: b.bottom - r.top }; }
     todayItems = kids(colToday).map(box);
@@ -4541,7 +4598,7 @@
 
   // Sun glints: tiny sparkles that flash now and then. Only drawn where there is water.
   function makeGlints() {
-    while (E.glints.firstChild) E.glints.removeChild(E.glints.firstChild);
+    if (!CAN) while (E.glints.firstChild) E.glints.removeChild(E.glints.firstChild);
     glints = [];
     var n = wide ? 46 : 24, seed = 7;
     function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
@@ -4549,12 +4606,16 @@
       var x = wide ? W * (0.08 + 0.92 * Math.pow(rnd(), 0.7)) : W * (0.05 + 0.9 * rnd());
       var y = H * (0.06 + 0.88 * rnd());
       var s = 0.65 + 0.7 * rnd();
-      var g = document.createElementNS(SVGNS, 'g');
-      g.setAttribute('transform', 'translate(' + f1(x) + ' ' + f1(y) + ') scale(' + s.toFixed(2) + ')');
-      g.setAttribute('opacity', '0');
-      g.innerHTML = '<circle r="2.6" fill="#fff" opacity=".35"/><ellipse rx="4.4" ry=".55" fill="#fff"/><ellipse rx=".55" ry="2.8" fill="#fff"/>';
-      E.glints.appendChild(g);
-      glints.push({ el: g, period: 2.8 + 4.2 * rnd(), phase: rnd() * 6.283, peak: 0.55 + 0.45 * rnd(), last: -1 });
+      var gl = { x: x, y: y, s: s, period: 2.8 + 4.2 * rnd(), phase: rnd() * 6.283, peak: 0.55 + 0.45 * rnd(), last: -1 };
+      if (!CAN) {
+        var g = document.createElementNS(SVGNS, 'g');
+        g.setAttribute('transform', 'translate(' + f1(x) + ' ' + f1(y) + ') scale(' + s.toFixed(2) + ')');
+        g.setAttribute('opacity', '0');
+        g.innerHTML = '<circle r="2.6" fill="#fff" opacity=".35"/><ellipse rx="4.4" ry=".55" fill="#fff"/><ellipse rx=".55" ry="2.8" fill="#fff"/>';
+        E.glints.appendChild(g);
+        gl.el = g;
+      }
+      glints.push(gl);
     }
   }
 
@@ -4600,6 +4661,8 @@
     var far = side > 0 ? (wide ? W : H) + 60 : -60;
     return s + 'L' + xy(uMax, far) + 'L' + xy(uMin, far) + 'Z';
   }
+  function setD(el, d) { if (el && el._d !== d) { el._d = d; el.setAttribute('d', d); } }
+  function setA(el, k, v) { if (el && el['_' + k] !== v) { el['_' + k] = v; el.setAttribute(k, v); } }
   function ribbon(vs, a, b) {
     // the band between offsets a[] and b[] (arrays), both measured into the sea
     var s = '', i;
@@ -4607,8 +4670,6 @@
     for (i = U.length - 1; i >= 0; i--) s += 'L' + xy(U[i], vs[i] + b[i]);
     return s + 'Z';
   }
-  function setD(el, d) { if (el && el._d !== d) { el._d = d; el.setAttribute('d', d); } }
-  function setA(el, k, v) { if (el && el['_' + k] !== v) { el['_' + k] = v; el.setAttribute(k, v); } }
 
   var A0 = [], A1 = [], A2 = [], A3 = [];
   function shape(u) {
@@ -4631,43 +4692,154 @@
       A3.push(lw + 12 + 16 * (0.5 + 0.5 * Math.sin(u / 41 - t * 0.45)));
       LW.push(lw);
     }
-    var edge = line(VE, 0);
-    setD(E.edge, edge);
-    setD(E.deep, line(VE, DEEP));
-    setD(E.cSea, region(VE, 0, 1));
-    setD(E.cLand, region(VE, 0, -1));
-    setD(E.mSea, region(VE, 0, 1));
-    setD(E.mDeep, region(VE, DEEP, 1));
-    setD(E.hwm, line(VH, 0));
-    setD(E.lace, ribbon(VE, A0, A1));
-    setD(E.lace2, E.lace._d);
-    setD(E.trail, ribbon(VE, A2, A3));
-    setD(E.bub, line(VE, 7));
+    if (!CAN) {
+      var edge = line(VE, 0);
+      setD(E.edge, edge);
+      setD(E.deep, line(VE, DEEP));
+      setD(E.cSea, region(VE, 0, 1));
+      setD(E.cLand, region(VE, 0, -1));
+      setD(E.mSea, region(VE, 0, 1));
+      setD(E.mDeep, region(VE, DEEP, 1));
+      setD(E.hwm, line(VH, 0));
+      setD(E.lace, ribbon(VE, A0, A1));
+      setD(E.lace2, E.lace._d);
+      setD(E.trail, ribbon(VE, A2, A3));
+      setD(E.bub, line(VE, 7));
 
+      // Wet sand: darkest at the water, fading to dry just past the high-water mark.
+      var gap = SWASH + 2.5 - adv + 2;                // how far the last wave reached above the water now
+      var widths = [gap + 30, gap + 22, gap + 15, gap + 9, gap + 5, gap + 2];
+      for (var k = 0; k < E.wet.length; k++) setA(E.wet[k], 'stroke-width', f1(2 * Math.max(2, widths[k])));
+      setA(E.film, 'transform', wide ? 'translate(-2.2 0)' : 'translate(0 -2.2)');
+
+      // Fresh foam as the water runs up, thinner as it slides back.
+      var fresh = 0.5 + 0.5 * Math.cos(swashPhase(t) - 1.2);
+      setA(E.lace, 'fill-opacity', (0.22 + 0.16 * fresh).toFixed(3));
+      setA(E.lace2, 'opacity', (0.72 + 0.26 * fresh).toFixed(3));
+      setA(E.trail, 'opacity', (0.22 + 0.16 * fresh).toFixed(3));
+      E.bub.style.strokeDashoffset = f1(-(t * 6) % 174);
+
+      // Light moving on the sea floor, and the foam drifting a little.
+      setA(E.patCa, 'patternTransform', 'translate(' + f1(t * 5.2 % 460) + ' ' + f1(t * 2.6 % 460) + ')');
+      setA(E.patCb, 'patternTransform', 'translate(' + f1(-t * 3.4 % 300) + ' ' + f1(t * 4.1 % 300) + ') rotate(18)');
+      setA(E.patFoam, 'patternTransform', 'translate(' + f1(t * 1.6 % 120) + ' ' + f1(t * 0.9 % 120) + ')');
+
+      for (k = 0; k < glints.length; k++) {
+        var gl = glints[k];
+        var o = RM ? (k % 5 === 0 ? 0.45 * gl.peak : 0) : gl.peak * Math.pow(Math.max(0, Math.sin(2 * Math.PI * t / gl.period + gl.phase)), 10);
+        var ov = o < 0.02 ? '0' : o.toFixed(2);
+        if (gl.last !== ov) { gl.last = ov; gl.el.setAttribute('opacity', ov); }
+      }
+      return;
+    }
+    var P = {
+      edge: new Path2D(line(VE, 0)), deep: new Path2D(line(VE, DEEP)),
+      sea: new Path2D(region(VE, 0, 1)), land: new Path2D(region(VE, 0, -1)), deepSea: new Path2D(region(VE, DEEP, 1)),
+      hwm: new Path2D(line(VH, 0)), lace: new Path2D(ribbon(VE, A0, A1)), trail: new Path2D(ribbon(VE, A2, A3)),
+      bub: new Path2D(line(VE, 7))
+    };
     // Wet sand: darkest at the water, fading to dry just past the high-water mark.
     var gap = SWASH + 2.5 - adv + 2;                // how far the last wave reached above the water now
     var widths = [gap + 30, gap + 22, gap + 15, gap + 9, gap + 5, gap + 2];
-    for (var k = 0; k < E.wet.length; k++) setA(E.wet[k], 'stroke-width', f1(2 * Math.max(2, widths[k])));
-    setA(E.film, 'transform', wide ? 'translate(-2.2 0)' : 'translate(0 -2.2)');
-
     // Fresh foam as the water runs up, thinner as it slides back.
     var fresh = 0.5 + 0.5 * Math.cos(swashPhase(t) - 1.2);
-    setA(E.lace, 'fill-opacity', (0.22 + 0.16 * fresh).toFixed(3));
-    setA(E.lace2, 'opacity', (0.72 + 0.26 * fresh).toFixed(3));
-    setA(E.trail, 'opacity', (0.22 + 0.16 * fresh).toFixed(3));
-    E.bub.style.strokeDashoffset = f1(-(t * 6) % 174);
+    // The band along the waterline where the shallow caustics can show.
+    var vmin = Infinity, vmax = -Infinity;
+    for (i = 0; i < VE.length; i++) { if (VE[i] < vmin) vmin = VE[i]; if (VE[i] > vmax) vmax = VE[i]; }
+    paint(P, t, fresh, widths, vmin - 140, vmax + 140);
+  }
 
-    // Light moving on the sea floor, and the foam drifting a little.
-    setA(E.patCa, 'patternTransform', 'translate(' + f1(t * 5.2 % 460) + ' ' + f1(t * 2.6 % 460) + ')');
-    setA(E.patCb, 'patternTransform', 'translate(' + f1(-t * 3.4 % 300) + ' ' + f1(t * 4.1 % 300) + ') rotate(18)');
-    setA(E.patFoam, 'patternTransform', 'translate(' + f1(t * 1.6 % 120) + ' ' + f1(t * 0.9 % 120) + ')');
+  function paint(P, t, fresh, widths, b0, b1) {
+    var c = ctx, xW = bufW[1], xS = bufS[1], xM = bufM[1], k;
+    var water = image(waterName), caus = image('caustics.png'), foam = image('foam.png');
+    if (caus && !patA) { patA = xW.createPattern(caus, 'repeat'); patB = xS.createPattern(caus, 'repeat'); }
+    if (foam && !patF) patF = c.createPattern(foam, 'repeat');
 
+    // 1. The water, at 1x: the sea photo and the faint deep caustics, faded in over the first
+    //    DEEP px from the waterline (a 0.3 base plus stacked strokes, as the SVG mask did).
+    if (water) {
+      if (!cover) {
+        var sc = Math.max(W / water.naturalWidth, H / water.naturalHeight);
+        cover = { w: water.naturalWidth * sc, h: water.naturalHeight * sc };
+        cover.x = (W - cover.w) / 2; cover.y = (H - cover.h) / 2;
+      }
+      xW.globalCompositeOperation = 'source-over';
+      xW.clearRect(0, 0, W1, H1);
+      xW.drawImage(water, cover.x, cover.y, cover.w, cover.h);
+      if (patA) {
+        place(patA, t * 5.2 % 460, t * 2.6 % 460, 0, 460 / caus.naturalWidth);
+        xW.globalAlpha = 0.065; xW.fillStyle = patA; xW.fillRect(0, 0, W1, H1); xW.globalAlpha = 1;
+      }
+      xM.clearRect(0, 0, W1, H1);
+      xM.fillStyle = 'rgba(255,255,255,0.3)'; xM.fill(P.sea);
+      xM.strokeStyle = 'rgba(255,255,255,0.3)'; xM.lineJoin = 'round';
+      for (k = 0; k < RAMP.length; k++) { xM.lineWidth = RAMP[k]; xM.stroke(P.deep); }
+      xM.fillStyle = '#fff'; xM.fill(P.deepSea);
+      xW.globalCompositeOperation = 'destination-in'; xW.drawImage(bufM[0], 0, 0); xW.globalCompositeOperation = 'source-over';
+    }
+
+    // 2. The shallow caustics, at 1x, only in the band along the waterline, fading out from it.
+    var bx = 0, by = 0, bw = W1, bh = H1;
+    if (wide) { bx = Math.max(0, Math.floor(b0)); bw = Math.min(W1, Math.ceil(b1)) - bx; }
+    else { by = Math.max(0, Math.floor(b0)); bh = Math.min(H1, Math.ceil(b1)) - by; }
+    var shallow = !!patB && bw > 0 && bh > 0;
+    if (shallow) {
+      xS.globalCompositeOperation = 'source-over';
+      xS.clearRect(0, 0, W1, H1);
+      place(patB, -t * 3.4 % 300, t * 4.1 % 300, 18, 300 / caus.naturalWidth);
+      xS.fillStyle = patB; xS.fillRect(bx, by, bw, bh);
+      xM.clearRect(0, 0, W1, H1);
+      xM.strokeStyle = 'rgba(255,255,255,0.26)'; xM.lineJoin = 'round';
+      for (k = 0; k < SHALLOW.length; k++) { xM.lineWidth = SHALLOW[k]; xM.stroke(P.edge); }
+      xS.globalCompositeOperation = 'destination-in'; xS.drawImage(bufM[0], 0, 0); xS.globalCompositeOperation = 'source-over';
+    }
+
+    // 3. The screen: the sand side first (wet sand, a film of water, the last wave's mark).
+    c.setTransform(R, 0, 0, R, 0, 0);
+    c.clearRect(0, 0, W, H);
+    c.lineJoin = 'round'; c.lineCap = 'round';
+    c.save(); c.clip(P.land);
+    for (k = 0; k < WET.length; k++) {
+      c.strokeStyle = 'rgba(110,84,54,' + WET[k] + ')'; c.lineWidth = 2 * Math.max(2, widths[k]); c.stroke(P.edge);
+    }
+    c.translate(wide ? -2.2 : 0, wide ? 0 : -2.2);
+    c.strokeStyle = 'rgba(255,255,255,0.32)'; c.lineWidth = 2; c.stroke(P.edge);
+    c.setTransform(R, 0, 0, R, 0, 0);
+    c.setLineDash(HWM_DASH); c.strokeStyle = 'rgba(255,255,255,0.38)'; c.lineWidth = 1.7; c.stroke(P.hwm); c.setLineDash([]);
+    c.restore();
+
+    // 4. The sea side: the water, the glow along the edge, the shallows, glints, foam, bubbles.
+    c.save(); c.clip(P.sea);
+    if (water) c.drawImage(bufW[0], 0, 0, W1, H1);
+    c.strokeStyle = 'rgba(143,224,212,0.16)'; c.lineWidth = 96; c.stroke(P.edge);
+    c.strokeStyle = 'rgba(228,248,244,0.2)'; c.lineWidth = 24; c.stroke(P.edge);
+    if (shallow) { c.globalAlpha = 0.36; c.drawImage(bufS[0], 0, 0, W1, H1); c.globalAlpha = 1; }
+    c.fillStyle = '#fff';
     for (k = 0; k < glints.length; k++) {
       var gl = glints[k];
       var o = RM ? (k % 5 === 0 ? 0.45 * gl.peak : 0) : gl.peak * Math.pow(Math.max(0, Math.sin(2 * Math.PI * t / gl.period + gl.phase)), 10);
-      var ov = o < 0.02 ? '0' : o.toFixed(2);
-      if (gl.last !== ov) { gl.last = ov; gl.el.setAttribute('opacity', ov); }
+      if (o < 0.02) continue;
+      c.setTransform(R * gl.s, 0, 0, R * gl.s, R * gl.x, R * gl.y);
+      c.globalAlpha = 0.35 * o; c.beginPath(); c.arc(0, 0, 2.6, 0, TAU); c.fill();
+      c.globalAlpha = o; c.beginPath(); c.ellipse(0, 0, 4.4, 0.55, 0, 0, TAU); c.fill();
+      c.beginPath(); c.ellipse(0, 0, 0.55, 2.8, 0, 0, TAU); c.fill();
     }
+    c.setTransform(R, 0, 0, R, 0, 0);
+    var fo = 0.22 + 0.16 * fresh;
+    if (patF) {
+      place(patF, t * 1.6 % 120, t * 0.9 % 120, 0, 120 / foam.naturalWidth);
+      c.globalAlpha = fo; c.fillStyle = patF; c.fill(P.trail);
+    }
+    c.globalAlpha = fo; c.fillStyle = '#fff'; c.fill(P.lace);
+    if (patF) { c.globalAlpha = 0.72 + 0.26 * fresh; c.fillStyle = patF; c.fill(P.lace); }
+    c.globalAlpha = 0.4; c.strokeStyle = '#fff'; c.lineWidth = 2;
+    c.setLineDash(BUB_DASH); c.lineDashOffset = -(t * 6) % 174; c.stroke(P.bub); c.setLineDash([]); c.lineDashOffset = 0;
+    c.globalAlpha = 1;
+    c.restore();
+
+    // 5. The waterline itself.
+    c.strokeStyle = 'rgba(255,255,255,0.22)'; c.lineWidth = 5; c.stroke(P.edge);
+    c.strokeStyle = 'rgba(255,255,255,0.92)'; c.lineWidth = 1.5; c.stroke(P.edge);
   }
 
   /* ---------------- text ---------------- */
@@ -5433,8 +5605,10 @@
     background: linear-gradient(90deg, #2E3436 0%, #8A9294 38%, #5B6365 70%, #353B3D 100%);
     transform-origin: 50% 0;
   }
-  /* On phones, a line under the Pocket invites a tap (iPhone shares the tilt only after one). */
-  .pk-tilt-hint { display: none; }
+  /* Sideways drags on the Pocket swing it (the script); vertical ones still scroll the page. */
+  .pk-physics .pk-stage { touch-action: pan-y; }
+  .pk-physics .pk-dev { cursor: grab; }
+  .pk-physics .pk-dev:active { cursor: grabbing; }
   /* The bead, the split cord and the Pocket: this part hinges at the bead. */
   .pk-bob { flex: none; display: flex; flex-direction: column; align-items: center; transform-origin: 50% 0; }
   .pk-loop { flex: none; display: block; width: calc(14px * var(--mm)); height: calc(13px * var(--mm)); margin-top: -1px; overflow: visible; }
@@ -5661,13 +5835,6 @@
       padding: 36px 20px; row-gap: 0;
     }
     .pk-stage { margin: 0 -20px; min-height: 0; height: calc(50.8px * var(--mm) + 110px); }
-    .pk-tilt-hint {
-      display: block; position: absolute; left: 50%; bottom: 3px; transform: translateX(-50%);
-      margin: 0; white-space: nowrap; pointer-events: none;
-      font: 600 12px/1.2 'Inter', sans-serif; color: rgba(255, 255, 255, 0.58);
-      opacity: 0; transition: opacity 0.5s ease;
-    }
-    .pk-tilt-hint.is-shown { opacity: 1; }
     .pk-cord {
       -webkit-mask-image: linear-gradient(to bottom, transparent, #000 36px);
               mask-image: linear-gradient(to bottom, transparent, #000 36px);
@@ -5859,7 +6026,6 @@
           </div>
           </div>
         </div>
-        <p class="pk-tilt-hint">Tap the Pocket, then tilt your phone</p>
       </div>
 
       <div class="pk-feats">
@@ -6023,17 +6189,15 @@
   //    nothing (no acceleration), as with a real weight on a string.
   //  - A scroll jolt also feeds the swing it already has, so it never tilts one fixed way.
   //  - Hinge: the bead, split cord and Pocket pivot at the bead and lag the cord a beat.
-  //  - Phones and tablets: tilt the device and the Pocket keeps hanging towards the ground;
-  //    shake it and it swings and bounces. iPhone and iPad only share the tilt after the
-  //    person allows it, so a line under the Pocket invites a tap, and the tap asks.
-  //  - A tap or click on the Pocket nudges it (and, on iPhone, asks for the tilt).
+  //  - Android phones and tablets: tilt the device and the Pocket keeps hanging towards the
+  //    ground; shake it and it swings and bounces (iPhone would need a permission prompt: skipped).
+  //  - Drag the Pocket sideways to swing it; a tap or click nudges it.
   // Runs only while the band is on screen; reduced motion keeps the Pocket still.
   (function lanyard() {
     var stage = root.querySelector('.pk-stage');
     var hang = root.querySelector('.pk-hang');
     var cord = hang && hang.querySelector('.pk-cord');
     var bob = hang && hang.querySelector('.pk-bob');
-    var hint = root.querySelector('.pk-tilt-hint');
     if (!hang || !cord || !bob || reduce || !window.requestAnimationFrame) return;
     root.classList.add('pk-physics');
 
@@ -6046,7 +6210,7 @@
     var SHAKE = 70, SHAKE_LIFT = 700;            // the same for shaking the device (m/s², capped)
     var th = 0, om = 0, ph = 0, pv = 0, y = 0, yv = 0;
     var v = 0, vPrev = 0, acc = 0, lastSY = 0, lastT = 0, start = 0, raf = 0, cordLen = 1;
-    var tilt = 0, tiltTarget = 0, shakeX = 0, shakeY = 0, motionSeen = false;
+    var tilt = 0, tiltTarget = 0, shakeX = 0, shakeY = 0;
 
     function clamp(x, lo, hi) { return x < lo ? lo : x > hi ? hi : x; }
     // The breeze: two slow waves at unrelated periods (11 s and 4.3 s), well below the swing's own.
@@ -6110,11 +6274,12 @@
       }
     });
 
-    // ----- Tilt and shake (touch devices) -----
+    // ----- Tilt and shake, where the browser shares them freely (Android). -----
+    // iPhone and iPad only share motion after the person allows it in a system prompt; we don't
+    // ask (Thomas, 2026-09-26: "clunky"), so there the Pocket answers touch and scroll instead.
     var touch = window.matchMedia && window.matchMedia('(hover: none) and (pointer: coarse)').matches;
     var asks = typeof window.DeviceOrientationEvent !== 'undefined' &&
                typeof window.DeviceOrientationEvent.requestPermission === 'function';
-    var asked = false;
     function screenAngle() {
       var a = (window.screen && window.screen.orientation && window.screen.orientation.angle);
       if (typeof a !== 'number') a = typeof window.orientation === 'number' ? window.orientation : 0;
@@ -6125,14 +6290,8 @@
       var a = screenAngle(), c = Math.cos(a), s = Math.sin(a);
       return [x * c - y2 * s, x * s + y2 * c];
     }
-    function seen() {
-      if (motionSeen) return;
-      motionSeen = true;
-      if (hint) hint.classList.remove('is-shown');
-    }
     function onOrient(e) {
       if (e.beta == null || e.gamma == null) return;
-      seen();
       // Gravity in the device's frame (W3C Z-X'-Y'' angles), then its angle across the screen.
       var b = e.beta * D2R, g = e.gamma * D2R;
       var s = toScreen(Math.sin(g) * Math.cos(b), -Math.sin(b));
@@ -6143,40 +6302,40 @@
     function onMotion(e) {
       var a = e.acceleration;
       if (!a || a.x == null || a.y == null) return;
-      seen();
       var s = toScreen(a.x, a.y);
       if (Math.abs(s[0]) > Math.abs(shakeX)) shakeX = s[0];
       if (Math.abs(s[1]) > Math.abs(shakeY)) shakeY = s[1];
     }
-    function listen() {
+    if (touch && !asks) {
       window.addEventListener('deviceorientation', onOrient, { passive: true });
       window.addEventListener('devicemotion', onMotion, { passive: true });
     }
-    function ask() {
-      if (!asks || asked || motionSeen) return;
-      asked = true;
-      var reqs = [window.DeviceOrientationEvent.requestPermission()];
-      if (window.DeviceMotionEvent && typeof window.DeviceMotionEvent.requestPermission === 'function') {
-        reqs.push(window.DeviceMotionEvent.requestPermission());
-      }
-      Promise.all(reqs).then(function () { if (hint) hint.classList.remove('is-shown'); },
-                              function () { if (hint) hint.classList.remove('is-shown'); });
-    }
-    if (touch) {
-      listen();
-      // iPhone and iPad share the tilt only after a tap; invite one if nothing arrives.
-      if (asks && hint) {
-        setTimeout(function () { if (!motionSeen && !asked) hint.classList.add('is-shown'); }, 1200);
-      }
-    }
-    // A tap on the Pocket nudges it away from the finger.
+
+    // ----- Touch: drag the Pocket sideways to swing it; a tap nudges it. -----
+    // The finger's sideways speed pulls the swing along while it moves; let go and it swings
+    // on its own. Vertical drags still scroll the page (touch-action: pan-y on the stage).
     if (stage) {
+      var drag = null, dragged = 0;
+      stage.addEventListener('pointerdown', function (e) {
+        drag = { id: e.pointerId, x: e.clientX, t: performance.now() }; dragged = 0;
+      });
+      window.addEventListener('pointermove', function (e) {
+        if (!drag || e.pointerId !== drag.id) return;
+        var now = performance.now(), dx = e.clientX - drag.x, dt = Math.max(0.008, (now - drag.t) / 1000);
+        drag.x = e.clientX; drag.t = now; dragged += Math.abs(dx);
+        // Moving right swings the Pocket's bottom right, which is a negative angle here.
+        var want = clamp(-(dx / dt) * 0.055, -95, 95);
+        om += (want - om) * 0.35;
+      }, { passive: true });
+      function release(e) { if (drag && e.pointerId === drag.id) drag = null; }
+      window.addEventListener('pointerup', release, { passive: true });
+      window.addEventListener('pointercancel', release, { passive: true });
       stage.addEventListener('click', function (e) {
+        if (dragged > 6) return;                              // that was a drag, not a tap
         var dev = root.querySelector('.pk-dev');
         var r = dev ? dev.getBoundingClientRect() : stage.getBoundingClientRect();
         om += (e.clientX > r.left + r.width / 2 ? 1 : -1) * 24;
         yv += 45;
-        if (touch) ask();
       });
     }
   })();
