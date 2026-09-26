@@ -2620,6 +2620,9 @@
     .cta-final-content p { font-size: 13px; line-height: 1.55; margin-bottom: 20px; }
     footer { padding: 12px 20px; }
     .explore-section { padding: 42px 20px 46px; }
+    /* Phones end at the download card: "More from PebblePath" stays on wider screens only
+       (Thomas, 2026-09-25: too long a scroll on phones). */
+    .explore-section { display: none; }
     .explore-head { margin-bottom: 28px; }
     .explore-title { font-size: 23px; }
     .explore-grid { grid-template-columns: 1fr; gap: 14px; }
@@ -3026,17 +3029,17 @@
   <script src="/assets/analytics.js?v=3" defer></script>
 <!-- ============================================================
      HERO V3 + SIGNATURE TOUCHES (2026-09-25). Mockup + source:
-     design-sandbox/55-hero-rebuild. Four parts, each marked below:
+     design-sandbox/55-hero-rebuild. Three parts, each marked below:
      1. Hero mood by the visitor's local time: html[data-hero] is "day"
         (6:00 to 18:59, Daybreak) or "dusk" (Stillwater); ?hero=day or
         ?hero=dusk previews either one.
      2. HERO V3 "living brief": the real Home screen in a phone with the
-        Family Brief lifting out of it and writing itself, the app's own
-        welcome-screen pebbles drifting, rings on the water.
-     3. Pebble path: desktop scroll progress down the right edge.
-     4. Ripples: a ring where you tap, one per new brief line, a slow one
-        as each section heading arrives, and one at each path milestone.
-     5. Display type: bigger, tighter section headings on desktop.
+        Family Brief lifting out of it and writing itself, and the app's
+        own welcome-screen pebbles drifting.
+     3. Pebble path: desktop scroll progress down the right edge, teal
+        dots over light sections and plain white ones over dark sections.
+     Ripples and bigger section headings were tried the same day and
+     taken out again (Thomas: too busy, too big).
      The script for all of it sits at the end of <body> ("HERO V3 +
      SIGNATURE TOUCHES" script).
      ============================================================ -->
@@ -3076,11 +3079,11 @@
     grid-template-rows: minmax(0, 1fr);
   }
   .h3-copy { max-width: 620px; animation: h3-rise 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.05s both; }
-  .h3-wordmark.pp-wordmark { font-size: 44px; color: #1F5C54; text-shadow: none; margin: 0 0 18px; }
+  .h3-wordmark.pp-wordmark { font-size: 40px; color: #1F5C54; text-shadow: none; margin: 0 0 18px; }
   html[data-hero="dusk"] .h3-wordmark.pp-wordmark { color: #FFFFFF; text-shadow: 0 3px 14px rgba(0, 0, 0, 0.25); }
   .h3-title {
     margin: 0; font-family: 'Nunito', sans-serif; font-weight: 900;
-    font-size: clamp(56px, 5.6vw, 82px); line-height: 0.94; letter-spacing: -0.03em; color: #153E39;
+    font-size: clamp(50px, 5vw, 74px); line-height: 0.94; letter-spacing: -0.03em; color: #153E39;
   }
   html[data-hero="dusk"] .h3-title { color: #FFFFFF; }
   .h3-accent {
@@ -3117,13 +3120,8 @@
   }
   html[data-hero="dusk"] .h3-portal { background: rgba(255, 255, 255, 0.10); border-color: rgba(255, 255, 255, 0.40); color: #FFFFFF; }
   .h3-badge:hover, .h3-portal:hover { transform: translateY(-1px); }
-  /* Hover: a ripple fills the button from its centre. */
-  .h3-badge::after, .h3-portal::after {
-    content: ''; position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px 0 0 -6px;
-    border-radius: 50%; background: currentColor; opacity: 0; transform: scale(0); pointer-events: none; z-index: -1;
-  }
-  .h3-badge:hover::after, .h3-portal:hover::after { animation: h3-fillrip 0.9s ease-out; }
-  @keyframes h3-fillrip { 0% { transform: scale(0); opacity: 0.28; } 100% { transform: scale(34); opacity: 0; } }
+  .h3-portal:hover { background: rgba(255, 255, 255, 0.85); }
+  html[data-hero="dusk"] .h3-portal:hover { background: rgba(255, 255, 255, 0.18); }
   .h3-trust {
     list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 22px;
     font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; color: #4A5F5C;
@@ -3182,38 +3180,18 @@
   .h3-brief-list b { font-weight: 600; color: rgba(44, 62, 64, 0.86); }
   .h3-brief-list .mk { position: relative; flex: none; width: 12px; height: 10px; margin-top: 6px; }
   .h3-brief-list .mk svg { display: block; width: 100%; height: 100%; }
-  /* A new line lands with a small ring from its pebble. */
-  .h3-brief-list .mk i {
-    position: absolute; left: 50%; top: 50%; width: 30px; height: 30px; margin: -15px 0 0 -15px; box-sizing: border-box;
-    border-radius: 50%; border: 1.5px solid currentColor; opacity: 0; transform: scale(0.2); animation: 16s ease-out infinite;
-  }
   .h3-brief-list .b1 { animation-name: h3b1; } .h3-brief-list .b2 { animation-name: h3b2; }
   .h3-brief-list .b3 { animation-name: h3b3; } .h3-brief-list .b4 { animation-name: h3b4; }
-  .h3-brief-list .b1 .mk i { animation-name: h3r1; } .h3-brief-list .b2 .mk i { animation-name: h3r2; }
-  .h3-brief-list .b3 .mk i { animation-name: h3r3; } .h3-brief-list .b4 .mk i { animation-name: h3r4; }
   @keyframes h3b1 { 0%, 5% { opacity: 0; transform: translateY(6px); } 8%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
   @keyframes h3b2 { 0%, 10.5% { opacity: 0; transform: translateY(6px); } 13.5%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
   @keyframes h3b3 { 0%, 16% { opacity: 0; transform: translateY(6px); } 19%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
   @keyframes h3b4 { 0%, 21.5% { opacity: 0; transform: translateY(6px); } 24.5%, 93% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; transform: none; } }
-  @keyframes h3r1 { 0%, 5.5% { opacity: 0; transform: scale(0.2); } 6% { opacity: 0.9; } 11%, 100% { opacity: 0; transform: scale(1.7); } }
-  @keyframes h3r2 { 0%, 11% { opacity: 0; transform: scale(0.2); } 11.5% { opacity: 0.9; } 16.5%, 100% { opacity: 0; transform: scale(1.7); } }
-  @keyframes h3r3 { 0%, 16.5% { opacity: 0; transform: scale(0.2); } 17% { opacity: 0.9; } 22%, 100% { opacity: 0; transform: scale(1.7); } }
-  @keyframes h3r4 { 0%, 22% { opacity: 0; transform: scale(0.2); } 22.5% { opacity: 0.9; } 27.5%, 100% { opacity: 0; transform: scale(1.7); } }
   .h3-brief-foot { display: flex; justify-content: flex-end; padding-top: 11px; border-top: 1px solid rgba(44, 62, 64, 0.12); }
   .h3-brief-foot span {
     display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 999px;
     background: rgba(255, 255, 255, 0.55); border: 1px solid rgba(45, 122, 112, 0.30);
     font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 700; color: #2D7A70;
   }
-  /* Rings on the water, spreading from behind the brief. */
-  .h3-ring {
-    position: absolute; left: -268px; top: 278px; width: 960px; height: 280px; box-sizing: border-box;
-    border-radius: 50%; border: 1.5px solid rgba(255, 255, 255, 0.92); box-shadow: 0 0 0 1px rgba(61, 155, 143, 0.08);
-    opacity: 0; transform: scale(0.12); animation: h3-ring 9s cubic-bezier(0.2, 0.55, 0.35, 1) infinite; pointer-events: none;
-  }
-  html[data-hero="dusk"] .h3-ring { border-color: rgba(125, 212, 200, 0.5); box-shadow: none; }
-  .h3-ring.r2 { animation-delay: 3s; } .h3-ring.r3 { animation-delay: 6s; }
-  @keyframes h3-ring { 0% { transform: scale(0.12); opacity: 0; } 12% { opacity: 0.85; } 100% { transform: scale(1); opacity: 0; } }
   /* Pebbles in motion: the app's welcome-screen pebbles at three depths.
      The outer span takes the scroll parallax (--sy from the script), the inner one floats. */
   .h3-peb { position: absolute; display: block; transform: translate3d(0, calc(var(--sy, 0) * var(--dp, 0.1) * -1px), 0); }
@@ -3240,7 +3218,7 @@
   .h3-peb.d4 { left: 477px; top: 96px; width: 18px; --dp: 0.05; opacity: 0.85; } .h3-peb.d4 > svg { animation-duration: 7s; animation-delay: -4s; }
   .h3-peb.d5 { left: 453px; top: 642px; width: 28px; --dp: 0.16; } .h3-peb.d5 > img { animation-duration: 10s; animation-delay: -6s; }
   .h3-peb.d6 { left: -213px; top: 302px; width: 14px; --dp: 0.06; opacity: 0.6; } .h3-peb.d6 > img { animation-duration: 6s; animation-delay: -1s; }
-  .hero-v3.is-off *, .hero-v3.is-off *::after { animation-play-state: paused !important; }
+  .hero-v3.is-off * { animation-play-state: paused !important; }
   /* Narrower desktops: the mockup was drawn at 1440, where the right-hand pebbles clear the
      pebble path. Below that they drift onto it, so tuck them in (and drop the mote that
      otherwise lands on the subhead at 1024). */
@@ -3250,7 +3228,8 @@
     .h3-peb.p7, .h3-peb.d4 { display: none !important; }
   }
   @media (min-width: 1024px) and (max-width: 1279px) {
-    .h3-peb.p8 { display: none !important; }
+    .h3-peb.p8, .h3-peb.d6 { display: none !important; }   /* motes that land on the copy */
+    .h3-peb.p1 { left: -80px; }        /* clear of the trust row */
   }
 
   /* The nav over the light (day) hero: dark ink until it turns solid teal on scroll. */
@@ -3269,7 +3248,6 @@
     .h3-stage { width: auto; height: auto; scale: none; margin: 72px 0 0; }
     .h3-phone { display: none; }
     .h3-brief { position: relative; left: auto; top: auto; width: 100%; }
-    .h3-ring { left: 50%; top: 50%; width: 600px; height: 170px; margin: -85px 0 0 -300px; }
     .h3-peb { transform: none; }
     .h3-peb.p1 { left: auto; right: -8px; top: -54px; width: 58px; }
     .h3-peb.p2 { left: auto; right: 18px; top: auto; bottom: -32px; width: 42px; }
@@ -3284,15 +3262,20 @@
   }
   @media (max-width: 768px) {
     .h3-inner { padding: 92px 20px 52px; }
-    .h3-wordmark.pp-wordmark, .h3-trust, .h3-sub-more { display: none; }
-    .h3-title { font-size: 42px; }
-    .h3-sub { margin-top: 16px; font-size: 16px; }
-    .h3-ctas { margin-top: 22px; gap: 10px; flex-wrap: nowrap; }
-    .h3-badge { height: 50px; padding: 0 16px 0 14px; gap: 9px; border-radius: 12px; }
-    .h3-badge svg { width: 22px; height: 22px; }
-    .h3-badge-txt small { font-size: 9.5px; }
-    .h3-badge-txt strong { font-size: 18px; }
-    .h3-portal { height: 50px; padding: 0 18px; font-size: 14.5px; white-space: nowrap; }
+    /* Phones: the headline, one sentence, one quiet App Store button, then the brief. */
+    .h3-wordmark.pp-wordmark, .h3-trust, .h3-sub-more, .h3-portal { display: none; }
+    .h3-title { font-size: 38px; }
+    .h3-sub { margin-top: 14px; font-size: 16px; }
+    .h3-ctas { margin-top: 20px; }
+    .h3-badge {
+      height: 42px; padding: 0 14px 0 12px; gap: 8px; border-radius: 10px; box-shadow: none;
+      background: #FFFFFF; border-color: rgba(0, 0, 0, 0.85); color: #000000;
+    }
+    .h3-badge:hover { box-shadow: none; }
+    html[data-hero="dusk"] .h3-badge { background: #000000; border-color: rgba(255, 255, 255, 0.38); color: #FFFFFF; }
+    .h3-badge svg { width: 19px; height: 19px; }
+    .h3-badge-txt small { font-size: 8.5px; }
+    .h3-badge-txt strong { font-size: 15.5px; }
     .h3-stage { margin-top: 66px; }
     .h3-brief { border-radius: 20px; }
     .h3-brief-body { padding: 16px 16px 14px; gap: 10px; }
@@ -3301,7 +3284,6 @@
     .h3-brief-list .mk { width: 10px; height: 8px; margin-top: 5px; }
     .h3-brief-foot { padding-top: 9px; }
     .h3-brief-foot span { font-size: 11px; padding: 5px 10px; }
-    .h3-ring { width: 520px; height: 150px; margin: -75px 0 0 -260px; }
     .h3-peb.p1 { right: -6px; top: -44px; width: 50px; }
     .h3-peb.p3 { left: 2px; top: -36px; width: 28px; }
     .h3-peb.p4 { left: 45%; top: -40px; width: 18px; }
@@ -3317,6 +3299,9 @@
   .pp-svg { position: absolute; left: 0; top: 0; overflow: visible; }
   .pp-halo { fill: none; stroke: rgba(255, 255, 255, 0.62); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 0.1 8; }
   .pp-track { fill: none; stroke: rgba(31, 92, 84, 0.58); stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: 0.1 8; }
+  /* Over dark sections: plain white dots, the same size, no light halo. The script clips each
+     version of the path to the light and dark stretches behind it (#pp-clip-lt, #pp-clip-dk). */
+  .pp-track-dk { fill: none; stroke: rgba(255, 255, 255, 0.9); stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: 0.1 8; }
   .pp-ms {
     position: absolute; left: 0; top: 0; width: 44px; height: 44px; margin: -22px 0 0 -22px;
     display: grid; place-items: center; text-decoration: none; -webkit-tap-highlight-color: transparent;
@@ -3324,13 +3309,16 @@
   .pp-dot {
     width: 10px; height: 10px; box-sizing: border-box; border-radius: 50%;
     background: #FFFFFF; border: 2px solid #1F5C54; box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.45);
-    transition: background 0.3s ease, transform 0.3s ease;
+    transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   }
   .pp-ms.is-past .pp-dot { background: #3D9B8F; }
   .pp-ms.is-here .pp-dot { transform: scale(1.25); }
   .pp-ms:hover .pp-dot { transform: scale(1.4); }
   .pp-ms:focus-visible { outline: none; }
   .pp-ms:focus-visible .pp-dot { outline: 2px solid #3D9B8F; outline-offset: 3px; }
+  .pp-ms.on-dark .pp-dot { background: transparent; border-color: #FFFFFF; box-shadow: none; }
+  .pp-ms.on-dark.is-past .pp-dot { background: #FFFFFF; }
+  .pp-ms.on-dark:focus-visible .pp-dot { outline-color: #FFFFFF; }
   .pp-tip {
     position: absolute; right: 38px; top: 50%; transform: translate(6px, -50%); opacity: 0; pointer-events: none;
     height: 26px; padding: 0 11px; display: inline-flex; align-items: center; white-space: nowrap;
@@ -3339,54 +3327,19 @@
     font: 700 12px/1 'Inter', sans-serif; color: #1F5C54; transition: opacity 0.25s ease, transform 0.25s ease;
   }
   .pp-ms:hover .pp-tip, .pp-ms:focus-visible .pp-tip, .pp-ms.show-tip .pp-tip { opacity: 1; transform: translate(0, -50%); }
-  .pp-rip {
-    position: absolute; left: 50%; top: 50%; width: 8px; height: 8px; margin: -4px 0 0 -4px; box-sizing: border-box;
-    border-radius: 50%; border: 1.5px solid rgba(61, 155, 143, 0.85); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5);
-    opacity: 0; pointer-events: none;
-  }
-  .pp-ms.ping .pp-rip { animation: pp-ping 0.9s ease-out; }
-  @keyframes pp-ping { from { width: 8px; height: 8px; margin: -4px 0 0 -4px; opacity: 0.95; } to { width: 48px; height: 48px; margin: -24px 0 0 -24px; opacity: 0; } }
   .pp-peb {
     position: absolute; left: 0; top: 0; width: 20px; height: 16px; margin: -8px 0 0 -10px; pointer-events: none;
     filter: drop-shadow(0 2px 4px rgba(20, 62, 57, 0.35));
   }
   .pp-peb svg { display: block; width: 20px; height: 16px; }
-
-  /* ---------- 4. Ripples (the layer and rings are made by the script) ---------- */
-  .rpl-layer { position: absolute; left: 0; top: 0; width: 100%; height: 0; overflow: hidden; z-index: 96; pointer-events: none; }
-  .rpl {
-    position: absolute; width: 10px; height: 10px; margin: -5px 0 0 -5px; box-sizing: border-box; border-radius: 50%;
-    border: 1.5px solid rgba(61, 155, 143, 0.8); box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.45);
-    opacity: 0; animation: rpl-tap 0.75s cubic-bezier(0.2, 0.6, 0.35, 1) forwards;
-  }
-  .rpl.r2 { animation-delay: 0.12s; }
-  @keyframes rpl-tap { from { width: 10px; height: 10px; margin: -5px 0 0 -5px; opacity: 0.95; } to { width: 92px; height: 92px; margin: -46px 0 0 -46px; opacity: 0; } }
-  .rpl.wave {
-    border-color: rgba(61, 155, 143, 0.45); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
-    animation: rpl-wave 1.8s cubic-bezier(0.2, 0.6, 0.35, 1) forwards;
-  }
-  .rpl.wave.r2 { animation-delay: 0.3s; }
-  @keyframes rpl-wave { from { width: 24px; height: 8px; margin: -4px 0 0 -12px; opacity: 0.8; } to { width: 440px; height: 96px; margin: -48px 0 0 -220px; opacity: 0; } }
-
-  /* ---------- 5. Display type: bigger, tighter headings on desktop ---------- */
-  @media (min-width: 1024px) {
-    .benefits h2, .showcase-section h2.showcase-heading, .founders h2, .brain-sec h2 {
-      font-size: 50px; font-weight: 900; line-height: 1.04; letter-spacing: -0.025em;
-    }
-    .pricing h2 { font-size: 54px; font-weight: 900; line-height: 1.02; letter-spacing: -0.025em; }
-    .explore-title { font-size: 38px; letter-spacing: -0.02em; }
-  }
+  .pp-peb.on-dark { filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35)); }
+  .pp-peb.on-dark path { fill: #FFFFFF; stroke: none; }
 
   @media (prefers-reduced-motion: reduce) {
-    .h3-copy, .h3-stage, .h3-brief, .h3-peb > img, .h3-peb > svg, .h3-ring,
-    .h3-brief-list li, .h3-brief-list .mk i, .h3-badge:hover::after, .h3-portal:hover::after { animation: none !important; }
+    .h3-copy, .h3-stage, .h3-brief, .h3-peb > img, .h3-peb > svg, .h3-brief-list li { animation: none !important; }
     .h3-brief-list li { opacity: 1; transform: none; }
-    .h3-ring.r1 { opacity: 0.30; transform: scale(0.3); }
-    .h3-ring.r2 { opacity: 0.22; transform: scale(0.6); }
-    .h3-ring.r3 { opacity: 0.14; transform: scale(0.9); }
     .h3-peb { transform: none !important; }
     .pp-dot, .pp-tip { transition: none; }
-    .rpl { display: none; }
   }
 </style>
 </head>
@@ -3437,16 +3390,23 @@
      Positions come from the "HERO V3 + SIGNATURE TOUCHES" script. -->
 <nav class="pp-path" id="pp-path" aria-label="Page sections">
   <svg class="pp-svg" viewBox="0 0 26 380" width="26" height="380" aria-hidden="true" focusable="false">
-    <path class="pp-halo" d="M 13.0 0 C 24.7 45.6, 1.3 81.1, 13.0 126.7 C 1.3 172.3, 24.7 207.7, 13.0 253.3 C 24.7 298.9, 1.3 334.4, 13.0 380.0"></path>
-    <path class="pp-track" d="M 13.0 0 C 24.7 45.6, 1.3 81.1, 13.0 126.7 C 1.3 172.3, 24.7 207.7, 13.0 253.3 C 24.7 298.9, 1.3 334.4, 13.0 380.0"></path>
+    <defs>
+      <clipPath id="pp-clip-lt"><rect x="-30" y="-30" width="86" height="440"></rect></clipPath>
+      <clipPath id="pp-clip-dk"></clipPath>
+    </defs>
+    <g clip-path="url(#pp-clip-lt)">
+      <path class="pp-halo" d="M 13.0 0 C 24.7 45.6, 1.3 81.1, 13.0 126.7 C 1.3 172.3, 24.7 207.7, 13.0 253.3 C 24.7 298.9, 1.3 334.4, 13.0 380.0"></path>
+      <path class="pp-track" d="M 13.0 0 C 24.7 45.6, 1.3 81.1, 13.0 126.7 C 1.3 172.3, 24.7 207.7, 13.0 253.3 C 24.7 298.9, 1.3 334.4, 13.0 380.0"></path>
+    </g>
+    <path class="pp-track-dk" clip-path="url(#pp-clip-dk)" d="M 13.0 0 C 24.7 45.6, 1.3 81.1, 13.0 126.7 C 1.3 172.3, 24.7 207.7, 13.0 253.3 C 24.7 298.9, 1.3 334.4, 13.0 380.0"></path>
   </svg>
-  <a class="pp-ms" href="#home" data-sec="home"><span class="pp-dot"></span><i class="pp-rip"></i><span class="pp-tip">Home</span></a>
-  <a class="pp-ms" href="#features" data-sec="features"><span class="pp-dot"></span><i class="pp-rip"></i><span class="pp-tip">Family</span></a>
-  <a class="pp-ms" href="#brain" data-sec="brain"><span class="pp-dot"></span><i class="pp-rip"></i><span class="pp-tip">Pebble</span></a>
-  <a class="pp-ms" href="#showcase" data-sec="showcase"><span class="pp-dot"></span><i class="pp-rip"></i><span class="pp-tip">See it</span></a>
-  <a class="pp-ms" href="#pricing" data-sec="pricing"><span class="pp-dot"></span><i class="pp-rip"></i><span class="pp-tip">Join</span></a>
-  <a class="pp-ms" href="#founders" data-sec="founders"><span class="pp-dot"></span><i class="pp-rip"></i><span class="pp-tip">Founders</span></a>
-  <a class="pp-ms" href="#pocket" data-sec="pocket"><span class="pp-dot"></span><i class="pp-rip"></i><span class="pp-tip">Pocket</span></a>
+  <a class="pp-ms" href="#home" data-sec="home"><span class="pp-dot"></span><span class="pp-tip">Home</span></a>
+  <a class="pp-ms" href="#features" data-sec="features"><span class="pp-dot"></span><span class="pp-tip">Family</span></a>
+  <a class="pp-ms" href="#brain" data-sec="brain"><span class="pp-dot"></span><span class="pp-tip">Pebble</span></a>
+  <a class="pp-ms" href="#showcase" data-sec="showcase"><span class="pp-dot"></span><span class="pp-tip">See it</span></a>
+  <a class="pp-ms" href="#pricing" data-sec="pricing"><span class="pp-dot"></span><span class="pp-tip">Join</span></a>
+  <a class="pp-ms" href="#founders" data-sec="founders"><span class="pp-dot"></span><span class="pp-tip">Founders</span></a>
+  <a class="pp-ms" href="#pocket" data-sec="pocket"><span class="pp-dot"></span><span class="pp-tip">Pocket</span></a>
   <span class="pp-peb" aria-hidden="true"><svg viewBox="0 0 110 75" preserveAspectRatio="none"><path d="M 8 38 C 6 18, 30 8, 56 10 C 84 12, 104 22, 104 40 C 102 58, 80 68, 52 66 C 24 64, 10 56, 8 38 Z" fill="#1F5C54" stroke="#FFFFFF" stroke-width="5"></path></svg></span>
 </nav>
 
@@ -3565,7 +3525,6 @@
       </ul>
     </div>
     <div class="h3-stage" aria-hidden="true">
-      <span class="h3-ring r1"></span><span class="h3-ring r2"></span><span class="h3-ring r3"></span>
       <span class="h3-peb day p1 fa"><img src="assets/hero/peb-terracotta.png" width="177" height="133" alt="" loading="lazy" decoding="async"></span>
       <span class="h3-peb day p2 fb"><img src="assets/hero/peb-deepteal.png" width="131" height="99" alt="" loading="lazy" decoding="async"></span>
       <span class="h3-peb day p3 fc"><img src="assets/hero/peb-teal.png" width="90" height="63" alt="" loading="lazy" decoding="async"></span>
@@ -3588,10 +3547,10 @@
           <div class="h3-brief-head"><span class="h3-brief-tag"><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="21.5" rx="9.5" ry="1.8" fill="none" stroke="#2D7A70" stroke-width="1.2" stroke-opacity="0.35"></ellipse><path fill="#2D7A70" d="M4.5 13C4.5 8.8 7.8 7 12 7C16.2 7 19.5 8.8 19.5 13C19.5 17.2 16.2 19.5 12 19.5C7.8 19.5 4.5 17.2 4.5 13Z"></path><path fill="#FFFFFF" fill-opacity="0.35" d="M7.5 10.5C8 8.5 9.8 7.8 12 7.8C14.2 7.8 16 8.5 16 10.5C16 12 14.2 12.5 12 12.5C9.8 12.5 7.5 12 7.5 10.5Z"></path></svg>Family brief</span><span class="h3-brief-time">6:30 am</span></div>
           <div class="h3-brief-title">Tomorrow is splash day</div>
           <ul class="h3-brief-list">
-            <li class="b1"><span class="mk" style="color: #3D9B8F;"><svg viewBox="0 0 110 75" preserveAspectRatio="none" aria-hidden="true"><path d="M 8 38 C 6 18, 30 8, 56 10 C 84 12, 104 22, 104 40 C 102 58, 80 68, 52 66 C 24 64, 10 56, 8 38 Z" fill="#3D9B8F"></path></svg><i></i></span><span><b>Splash day.</b> Water shoes and a towel for Felix.</span></li>
-            <li class="b2"><span class="mk" style="color: #D4A843;"><svg viewBox="0 0 100 70" preserveAspectRatio="none" aria-hidden="true"><path d="M 8 38 C 6 18, 26 6, 48 8 C 72 10, 94 18, 94 38 C 94 58, 72 66, 48 64 C 22 62, 10 58, 8 38 Z" fill="#D4A843"></path></svg><i></i></span><span><b>62°F and breezy.</b> A warm layer for the walk in.</span></li>
-            <li class="b3"><span class="mk" style="color: #6B9AC4;"><svg viewBox="0 0 80 80" preserveAspectRatio="none" aria-hidden="true"><path d="M 14 20 C 20 10, 36 6, 52 10 C 68 16, 76 30, 72 48 C 66 64, 50 72, 32 66 C 16 60, 8 44, 10 30 C 12 24, 12 22, 14 20 Z" fill="#6B9AC4"></path></svg><i></i></span><span><b>Lunch is covered.</b> Thomas is on pickup at 3:15.</span></li>
-            <li class="b4"><span class="mk" style="color: #C67B5C;"><svg viewBox="0 0 70 60" preserveAspectRatio="none" aria-hidden="true"><path d="M 8 30 C 8 14, 22 6, 38 8 C 54 10, 64 22, 62 36 C 60 52, 44 56, 28 54 C 14 52, 8 44, 8 30 Z" fill="#C67B5C"></path></svg><i></i></span><span><b>One thing left.</b> Sign the field-trip form tonight.</span></li>
+            <li class="b1"><span class="mk" style="color: #3D9B8F;"><svg viewBox="0 0 110 75" preserveAspectRatio="none" aria-hidden="true"><path d="M 8 38 C 6 18, 30 8, 56 10 C 84 12, 104 22, 104 40 C 102 58, 80 68, 52 66 C 24 64, 10 56, 8 38 Z" fill="#3D9B8F"></path></svg></span><span><b>Splash day.</b> Water shoes and a towel for Felix.</span></li>
+            <li class="b2"><span class="mk" style="color: #D4A843;"><svg viewBox="0 0 100 70" preserveAspectRatio="none" aria-hidden="true"><path d="M 8 38 C 6 18, 26 6, 48 8 C 72 10, 94 18, 94 38 C 94 58, 72 66, 48 64 C 22 62, 10 58, 8 38 Z" fill="#D4A843"></path></svg></span><span><b>62°F and breezy.</b> A warm layer for the walk in.</span></li>
+            <li class="b3"><span class="mk" style="color: #6B9AC4;"><svg viewBox="0 0 80 80" preserveAspectRatio="none" aria-hidden="true"><path d="M 14 20 C 20 10, 36 6, 52 10 C 68 16, 76 30, 72 48 C 66 64, 50 72, 32 66 C 16 60, 8 44, 10 30 C 12 24, 12 22, 14 20 Z" fill="#6B9AC4"></path></svg></span><span><b>Lunch is covered.</b> Thomas is on pickup at 3:15.</span></li>
+            <li class="b4"><span class="mk" style="color: #C67B5C;"><svg viewBox="0 0 70 60" preserveAspectRatio="none" aria-hidden="true"><path d="M 8 30 C 8 14, 22 6, 38 8 C 54 10, 64 22, 62 36 C 60 52, 44 56, 28 54 C 14 52, 8 44, 8 30 Z" fill="#C67B5C"></path></svg></span><span><b>One thing left.</b> Sign the field-trip form tonight.</span></li>
           </ul>
           <div class="h3-brief-foot"><span>Today&#39;s roles &#8250;</span></div>
         </div>
@@ -4585,9 +4544,11 @@
      Home geometry) to match the app's PocketHero. The face plays a short
      demo while on screen. Desktop: Pocket | copy | the four features as
      rows, each row filling with its colour while its part of the demo
-     plays. Phone: compact pills with one caption line narrating the face
-     (the lines come from the rows' .pk-feat-line, one source; the home
-     line from .pk-parent). No CTA yet (Thomas, 2026-09-25: soon).
+     plays. Phone: no description, compact pills with one caption line
+     narrating the face (the lines come from the rows' .pk-feat-line, one
+     source). The rings around the Pocket and the pill's pulse went with
+     the site's ripples, and the "set it up in the app" line went too
+     (Thomas, 2026-09-25). No CTA yet (Thomas: soon).
      Song tiles in assets/pocket/songs.webp are cropped from the Pocket's
      own song art. Icons: Phosphor Icons v2.1.1 (MIT, phosphoricons.com).
      GA4: pocket_teaser_view, pocket_feature {feature} (fixed labels).
@@ -4640,17 +4601,10 @@
     font: 700 11px/1 'Inter', sans-serif; letter-spacing: 0.14em; text-transform: uppercase;
     color: #CFEFEA;
   }
-  .pk-pill-dot {
-    width: 7px; height: 7px; border-radius: 50%; background: #7DD4C8; flex: none;
-    animation: pk-beacon 2.4s ease-out infinite;
-  }
-  @keyframes pk-beacon {
-    0% { box-shadow: 0 0 0 0 rgba(125, 212, 200, 0.55); }
-    70%, 100% { box-shadow: 0 0 0 8px rgba(125, 212, 200, 0); }
-  }
+  .pk-pill-dot { width: 7px; height: 7px; border-radius: 50%; background: #7DD4C8; flex: none; }
   .pk-title {
     margin-top: 14px;
-    font: 900 40px/1 'Nunito', sans-serif; letter-spacing: -0.02em;
+    font: 900 36px/1 'Nunito', sans-serif; letter-spacing: -0.02em;
     background: linear-gradient(180deg, #FFFFFF 35%, #C4ECE5 100%);
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
@@ -4667,12 +4621,6 @@
     font: 600 12px/1 'Inter', sans-serif; color: rgba(255, 255, 255, 0.84);
   }
   .pk-nots svg { width: 12px; height: 12px; color: #7DD4C8; flex: none; }
-  /* The parent's side, under the chips (on phones the caption carries it instead). */
-  .pk-parent {
-    display: flex; align-items: center; gap: 12px; margin-top: 22px; max-width: 30em;
-    font: 400 14px/1.5 'Inter', sans-serif; color: rgba(255, 255, 255, 0.80);
-  }
-  .pk-parent img { width: 26px; height: 26px; border-radius: 7px; flex: none; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); }
 
   /* ---------- The four features: rows on desktop, pills + a caption on phones ---------- */
   .pk-feats { grid-area: feats; position: relative; z-index: 1; }
@@ -4722,7 +4670,6 @@
     transition: opacity 0.18s ease;
   }
   .pk-caption.is-out { opacity: 0; }
-  .pk-caption img { width: 22px; height: 22px; border-radius: 6px; flex: none; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); }
 
   /* ---------- Stage: the Pocket, hanging from its lanyard ---------- */
   /* The stage runs to the band's edges so the lanyard hangs from the top. */
@@ -4749,20 +4696,6 @@
     width: calc(96px * var(--mm)); height: calc(96px * var(--mm));
     transform: translate(-50%, -50%); border-radius: 50%;
     background: radial-gradient(closest-side, rgba(125, 212, 200, 0.28), rgba(125, 212, 200, 0.09) 52%, rgba(125, 212, 200, 0) 100%);
-  }
-  .pk-ring {
-    position: absolute; left: 50%; top: 50%; pointer-events: none;
-    width: calc(62px * var(--mm)); height: calc(62px * var(--mm));
-    margin: calc(-31px * var(--mm)) 0 0 calc(-31px * var(--mm));
-    border-radius: 50%; border: 1.5px solid rgba(125, 212, 200, 0.34);
-    opacity: 0; animation: pk-ripple 8.4s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
-  }
-  .pk-ring.r2 { animation-delay: 2.8s; }
-  .pk-ring.r3 { animation-delay: 5.6s; }
-  @keyframes pk-ripple {
-    0% { transform: scale(0.62); opacity: 0; }
-    12% { opacity: 0.85; }
-    100% { transform: scale(1.75); opacity: 0; }
   }
 
   /* The case, the black glass and the face, to scale (--mm px per millimetre). */
@@ -4968,9 +4901,8 @@
       -webkit-mask-image: linear-gradient(to bottom, transparent, #000 36px);
               mask-image: linear-gradient(to bottom, transparent, #000 36px);
     }
-    .pk-title { font-size: 34px; }
-    .pk-tagline { font-size: 17px; }
-    .pk-lede { font-size: 14.5px; }
+    .pk-title { font-size: 26px; }
+    .pk-tagline { font-size: 16px; }
     .pk-feats { margin-top: 6px; }
     .pk-feat-row { gap: 8px; }
     .pk-feat { align-items: center; gap: 9px; padding: 5px 14px 5px 5px; border-radius: 999px; }
@@ -4978,8 +4910,9 @@
     .pk-ico svg { width: 14px; height: 14px; }
     .pk-ico.ask svg { width: 17px; height: 17px; }
     .pk-feat-name { font: 700 14px/1 'Nunito', sans-serif; }
-    /* Hidden from sight only: screen readers still read every line and the parent's side. */
-    .pk-feat-line, .pk-parent {
+    /* Hidden from sight only (too long for phones): screen readers still read the
+       description and every feature line. */
+    .pk-lede, .pk-feat-line {
       position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
       overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
     }
@@ -4987,11 +4920,8 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .pk-hang, .pk-ring, .pk-pill-dot, .pk-home-glow, .pk-cloud, .pk-drop, .pk-rip,
+    .pk-hang, .pk-home-glow, .pk-cloud, .pk-drop, .pk-rip,
     .pk-listen > span, .pk-dots i, .pk-in, .pk-songs, .pk-pop { animation: none !important; }
-    .pk-ring { opacity: 0.18; }
-    .pk-ring.r2 { transform: scale(1.2); opacity: 0.12; }
-    .pk-ring.r3 { transform: scale(1.5); opacity: 0.07; }
     .pk-scr, .pk-feat, .pk-caption, .pk-prog .arc { transition: none !important; }
     .pk-scr.is-on .pk-prog .arc { stroke-dashoffset: 170; }
     .pk-feat::before { display: none; }
@@ -5026,9 +4956,9 @@
         <ul class="pk-nots" aria-label="What it leaves out">
           <li><svg viewBox="0 0 256 256" aria-hidden="true"><use href="#pk-i-check"/></svg>No camera</li>
           <li><svg viewBox="0 0 256 256" aria-hidden="true"><use href="#pk-i-check"/></svg>No games</li>
-          <li><svg viewBox="0 0 256 256" aria-hidden="true"><use href="#pk-i-check"/></svg>No ads</li>
+          <li><svg viewBox="0 0 256 256" aria-hidden="true"><use href="#pk-i-check"/></svg>No video</li>
         </ul>
-        <p class="pk-parent"><img src="assets/app-icon.png" alt="" width="26" height="26" loading="lazy"><span>You set it up in the PebblePath app: songs, languages, and who hears each hello.</span></p>
+
       </div>
 
       <div class="pk-stage" aria-hidden="true">
@@ -5049,7 +4979,6 @@
           </svg>
           <div class="pk-devwrap">
             <span class="pk-halo"></span>
-            <span class="pk-ring r1"></span><span class="pk-ring r2"></span><span class="pk-ring r3"></span>
             <div class="pk-dev">
               <span class="pk-hw boot"></span><span class="pk-hw usb"></span><span class="pk-hw pwr"></span>
               <span class="pk-glass"></span>
@@ -5159,7 +5088,7 @@
           <button type="button" class="pk-feat" data-feat="calm" aria-pressed="false"><span class="pk-ico calm" aria-hidden="true"><svg viewBox="0 0 256 256"><use href="#pk-i-drop"/></svg></span><span class="pk-feat-txt"><span class="pk-feat-name">Calm</span><span class="pk-sr">: </span><span class="pk-feat-line">Rain, tide, snow and seeds for big feelings.</span></span></button>
           <button type="button" class="pk-feat" data-feat="hello" aria-pressed="false"><span class="pk-ico hello" aria-hidden="true"><svg viewBox="0 0 256 256"><use href="#pk-i-heart"/></svg></span><span class="pk-feat-txt"><span class="pk-feat-name">Hello</span><span class="pk-sr">: </span><span class="pk-feat-line">Hold the heart to send Grandma a voice hello.</span></span></button>
         </div>
-        <p class="pk-caption" aria-hidden="true"><img src="assets/app-icon.png" alt="" width="22" height="22" loading="lazy"><span class="pk-caption-text">You set it up in the PebblePath app: songs, languages, and who hears each hello.</span></p>
+        <p class="pk-caption" aria-hidden="true"><span class="pk-caption-text"></span></p>
       </div>
 
     </div>
@@ -5170,8 +5099,8 @@
 /* Pebble Pocket teaser: plays the face like a short demo while the section
    is on screen, lets the four feature pills jump to a face, and keeps the
    caption line in step with it. Respects prefers-reduced-motion (no
-   autoplay). The caption lines are read from the rows' .pk-feat-line text
-   and the home line from .pk-parent. */
+   autoplay). The caption lines are read from the rows' .pk-feat-line text;
+   the Pocket's home face has no line. */
 (function () {
   var root = document.getElementById('pocket');
   if (!root) return;
@@ -5180,9 +5109,7 @@
   var feats = root.querySelectorAll('.pk-feat');
   var cap = root.querySelector('.pk-caption');
   var capText = root.querySelector('.pk-caption-text');
-  var capIcon = cap ? cap.querySelector('img') : null;
-  var home = root.querySelector('.pk-parent span');
-  var lines = { '': home ? home.textContent : '' };
+  var lines = { '': '' };
   for (var q = 0; q < feats.length; q++) {
     var ln = feats[q].querySelector('.pk-feat-line');
     lines[feats[q].getAttribute('data-feat')] = ln ? ln.textContent : '';
@@ -5216,7 +5143,6 @@
     clearTimeout(capTimer);
     function swap() {
       capText.textContent = text;
-      if (capIcon) capIcon.style.display = f ? 'none' : '';
       cap.classList.remove('is-out');
     }
     if (reduce) { swap(); return; }
@@ -5889,9 +5815,9 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
 </script>
 <script>
 /* HERO V3 + SIGNATURE TOUCHES (2026-09-25). Fits the hero stage to the
-   hero's height, moves the pebbles at three depths as you scroll, drives
-   the pebble path, and makes the ripples. Styles: the block of the same
-   name in <head>. */
+   hero's height, moves the pebbles at three depths as you scroll, and
+   drives the pebble path (white over dark sections). Styles: the block of
+   the same name in <head>. */
 (function () {
   var mm = function (q) { return window.matchMedia ? window.matchMedia(q) : { matches: false }; };
   var reduce = mm('(prefers-reduced-motion: reduce)').matches;
@@ -5917,7 +5843,7 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
   var path = document.getElementById('pp-path');
   var track = path && path.querySelector('.pp-track');
   var walker = path && path.querySelector('.pp-peb');
-  var ms = [], fr = [], L = 0, active = -1, scrolling = false, idleTimer = null;
+  var ms = [], fr = [], L = 0, walkerY = 0, scrolling = false, idleTimer = null;
   if (path && track && track.getTotalLength) {
     L = track.getTotalLength();
     var links = path.querySelectorAll('.pp-ms');
@@ -5931,11 +5857,83 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
   function place(node, f) {
     var p = track.getPointAtLength(Math.max(0, Math.min(1, f)) * L);
     node.style.transform = 'translate(' + p.x.toFixed(1) + 'px,' + p.y.toFixed(1) + 'px)';
+    return p;
+  }
+  // Tone: which stretches of the path sit over a dark section right now. The dark
+  // version of the dotted line is clipped to those, the teal one to the rest, and
+  // each milestone and the walking pebble turn white while they're over dark.
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var clipLt = document.getElementById('pp-clip-lt');
+  var clipDk = document.getElementById('pp-clip-dk');
+  // .nb-teal is the No-brainer section's teal side, full height at the right edge from 1100 px;
+  // below that the section stacks and .nb-right carries the teal.
+  var darkEls = [].slice.call(document.querySelectorAll('.brain-sec, .nb-teal, .nb-right, .pricing, .pocket, footer' +
+    (document.documentElement.getAttribute('data-hero') === 'dusk' ? ', .hero-v3' : '')));
+  var toneKey = '';
+  function fillClip(clip, spans) {
+    while (clip.firstChild) clip.removeChild(clip.firstChild);
+    for (var i = 0; i < spans.length; i++) {
+      var r = document.createElementNS(SVGNS, 'rect');
+      r.setAttribute('x', '-30');
+      r.setAttribute('width', '86');
+      r.setAttribute('y', spans[i][0].toFixed(1));
+      r.setAttribute('height', (spans[i][1] - spans[i][0]).toFixed(1));
+      clip.appendChild(r);
+    }
+  }
+  function overDark(y, spans) {
+    for (var i = 0; i < spans.length; i++) if (y >= spans[i][0] && y <= spans[i][1]) return true;
+    return false;
+  }
+  function tonePath() {
+    if (!clipLt || !clipDk) return;
+    var top = path.getBoundingClientRect().top, lo = -30, hi = 410, spans = [], i;
+    for (i = 0; i < darkEls.length; i++) {
+      var b = darkEls[i].getBoundingClientRect();
+      var a = Math.max(lo, b.top - top), z = Math.min(hi, b.bottom - top);
+      if (z > a && b.width > 0) spans.push([a, z]);
+    }
+    spans.sort(function (p, q) { return p[0] - q[0]; });
+    var dark = [];
+    for (i = 0; i < spans.length; i++) {
+      var last = dark[dark.length - 1];
+      if (last && spans[i][0] <= last[1]) last[1] = Math.max(last[1], spans[i][1]);
+      else dark.push([spans[i][0], spans[i][1]]);
+    }
+    var light = [], at = lo;
+    for (i = 0; i < dark.length; i++) { if (dark[i][0] > at) light.push([at, dark[i][0]]); at = Math.max(at, dark[i][1]); }
+    if (at < hi) light.push([at, hi]);
+    var key = dark.map(function (d) { return d[0].toFixed(0) + ':' + d[1].toFixed(0); }).join(',');
+    if (key !== toneKey) {
+      toneKey = key;
+      // Over dark the milestone rings are hollow, so leave a gap in the white dots
+      // around each one (otherwise a dot shows through the middle of the ring).
+      var holes = ms.map(function (m) { return [m.y - 7, m.y + 7]; });
+      var dots = [];
+      for (i = 0; i < dark.length; i++) {
+        var pieces = [[dark[i][0], dark[i][1]]];
+        for (var h = 0; h < holes.length; h++) {
+          var next = [];
+          for (var q = 0; q < pieces.length; q++) {
+            var pc = pieces[q];
+            if (holes[h][1] <= pc[0] || holes[h][0] >= pc[1]) { next.push(pc); continue; }
+            if (holes[h][0] > pc[0]) next.push([pc[0], holes[h][0]]);
+            if (holes[h][1] < pc[1]) next.push([holes[h][1], pc[1]]);
+          }
+          pieces = next;
+        }
+        dots = dots.concat(pieces);
+      }
+      fillClip(clipDk, dots);
+      fillClip(clipLt, light);
+    }
+    for (i = 0; i < ms.length; i++) ms[i].a.classList.toggle('on-dark', overDark(ms[i].y, dark));
+    walker.classList.toggle('on-dark', overDark(walkerY, dark));
   }
   function updatePath() {
     if (!ms.length || !desk.matches) return;
     var p = Math.max(0, Math.min(1, window.scrollY / docMax()));
-    place(walker, p);
+    walkerY = place(walker, p).y;
     var now = 0;
     for (var k = 0; k < fr.length; k++) if (p + 0.004 >= fr[k]) now = k;
     for (k = 0; k < ms.length; k++) {
@@ -5945,14 +5943,7 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
       if (k === now) ms[k].a.setAttribute('aria-current', 'location');
       else ms[k].a.removeAttribute('aria-current');
     }
-    if (now !== active) {
-      var first = active === -1;
-      active = now;
-      if (!first && !reduce) {       // a ripple at the milestone the pebble just reached
-        var a = ms[now].a;
-        a.classList.remove('ping'); void a.offsetWidth; a.classList.add('ping');
-      }
-    }
+    tonePath();
   }
   function layoutPath() {
     if (!ms.length || !desk.matches) return;
@@ -5962,7 +5953,8 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
       return Math.max(0, Math.min(1, (m.el.getBoundingClientRect().top + window.scrollY - vh * 0.35) / max));
     });
     for (var k = 1; k < fr.length; k++) if (fr[k] < fr[k - 1] + 0.03) fr[k] = Math.min(1, fr[k - 1] + 0.03);
-    for (k = 0; k < ms.length; k++) place(ms[k].a, fr[k]);
+    for (k = 0; k < ms.length; k++) ms[k].y = place(ms[k].a, fr[k]).y;
+    toneKey = '';                   // the milestones moved: redraw the dark clip's gaps
     updatePath();
   }
   ms.forEach(function (m, k) {
@@ -6002,51 +5994,6 @@ document.querySelectorAll('.mf-phone-inner').forEach(container => {
   setTimeout(layoutPath, 1200);     // late images and fonts move the sections
   setTimeout(layoutPath, 3500);
 
-  // ---- Ripples: where you tap, and as each section heading arrives -----
-  if (reduce) return;
-  var layer = document.createElement('div');
-  layer.className = 'rpl-layer';
-  layer.setAttribute('aria-hidden', 'true');
-  document.body.appendChild(layer);
-  function ripple(x, y, kind) {
-    layer.style.height = document.documentElement.scrollHeight + 'px';
-    for (var r = 0; r < 2; r++) {
-      var s = document.createElement('span');
-      s.className = 'rpl' + (kind ? ' ' + kind : '') + (r ? ' r2' : '');
-      s.style.left = x + 'px';
-      s.style.top = y + 'px';
-      s.addEventListener('animationend', function () { if (this.parentNode) this.parentNode.removeChild(this); });
-      layer.appendChild(s);
-    }
-  }
-  var TAPPABLE = 'a[href], button, [role="button"], summary, input[type="submit"]';
-  document.addEventListener('pointerdown', function (e) {
-    if (e.button) return;
-    var t = e.target && e.target.closest ? e.target.closest(TAPPABLE) : null;
-    if (t) ripple(e.pageX, e.pageY);
-  }, { passive: true });
-  document.addEventListener('keydown', function (e) {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-    var t = document.activeElement;
-    if (!t || !t.matches || !t.matches(TAPPABLE)) return;
-    var b = t.getBoundingClientRect();
-    ripple(b.left + b.width / 2 + window.scrollX, b.top + b.height / 2 + window.scrollY);
-  });
-  var heads = document.querySelectorAll('.benefits h2, .brain-sec h2, .showcase-heading, .pricing h2, .founders h2, .pk-title, .explore-title');
-  if ('IntersectionObserver' in window && heads.length) {
-    var seen = new IntersectionObserver(function (es) {
-      es.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        seen.unobserve(en.target);
-        var b;
-        try { var rg = document.createRange(); rg.selectNodeContents(en.target); b = rg.getBoundingClientRect(); } catch (err) {}
-        if (!b || !b.width) b = en.target.getBoundingClientRect();
-        var x = b.left + b.width / 2 + window.scrollX, y = b.top + b.height / 2 + window.scrollY;
-        setTimeout(function () { ripple(x, y, 'wave'); }, 250);
-      });
-    }, { threshold: 0.9 });
-    for (var h = 0; h < heads.length; h++) seen.observe(heads[h]);
-  }
 })();
 </script>
 </body>
