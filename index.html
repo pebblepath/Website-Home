@@ -3087,7 +3087,7 @@
     grid-template-rows: minmax(0, 1fr);
   }
   .h3-copy { max-width: 620px; animation: h3-rise 0.9s cubic-bezier(0.22, 0.61, 0.36, 1) 0.05s both; }
-  .h3-wordmark.pp-wordmark { font-size: 40px; color: #1F5C54; text-shadow: none; margin: 0 0 18px; }
+  .h3-wordmark.pp-wordmark { font-size: 36px; color: #1F5C54; text-shadow: none; margin: 0 0 18px; }
   html[data-hero="dusk"] .h3-wordmark.pp-wordmark { color: #FFFFFF; text-shadow: 0 3px 14px rgba(0, 0, 0, 0.25); }
   .h3-title {
     margin: 0; font-family: 'Nunito', sans-serif; font-weight: 900;
@@ -3282,7 +3282,7 @@
       padding: 96px 28px 110px; text-align: center;
     }
     .h3-copy { position: relative; z-index: 2; }
-    .h3-wordmark.pp-wordmark { font-size: 58px; margin: 0 0 18px; }
+    .h3-wordmark.pp-wordmark { font-size: 52px; margin: 0 0 18px; }
     .h3-sub, .h3-trust, .h3-portal { display: none; }
     .h3-title { font-size: 25px; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em; }
     .h3-title br { display: none; }
@@ -3539,7 +3539,6 @@
         <a href="/portal/" class="h3-portal">Open the Portal</a>
       </div>
       <ul class="h3-trust">
-        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Free to start</li>
         <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l7 3v5.5c0 4.4-3 8.2-7 9.5-4-1.3-7-5.1-7-9.5V6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 12l2.2 2.2L15.5 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Private by design</li>
         <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7.3 4.3 4.3 0 0 1 19.5 10c0 5.6-7.5 10-7.5 10z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>Made by parents</li>
       </ul>
@@ -4583,7 +4582,7 @@
   /* A full-bleed dusk band like the site's other sections; the content sits in .pk-card. */
   .pocket {
     position: relative; isolation: isolate; overflow: hidden; color: #fff;
-    margin-bottom: 36px;   /* room before the download card, which is dark too */
+    /* No bottom margin: the dark download card that followed was removed 2026-09-26, so the band now meets the next section directly. */
     background:
       radial-gradient(ellipse 42% 85% at 6% 0%, rgba(61, 155, 143, 0.50), transparent 65%),
       radial-gradient(ellipse 34% 60% at 100% 0%, rgba(212, 168, 67, 0.14), transparent 65%),
@@ -4928,7 +4927,6 @@
   }
   /* ---------- Phone: copy, then the Pocket, then compact pills + the caption ---------- */
   @media (max-width: 768px) {
-    .pocket { margin-bottom: 16px; }
     .pk-card {
       --mm: 3.9; --cy: 60%;
       grid-template-columns: minmax(0, 1fr);
@@ -5308,7 +5306,11 @@
 </script>
 <!-- ============================ END PEBBLE POCKET TEASER ============================ -->
 
-<!-- "EVERY PEBBLE MATTERS" CTA -->
+<!-- "EVERY PEBBLE MATTERS" CTA: removed 2026-09-26 (Thomas). Kept inert in this
+     <template> so its video and the Kit email form never load. The Kit script
+     below already exits when #pp-signup is missing. REVERT = lift the section
+     out of the template. -->
+<template id="cta-final-backup">
 <section class="cta-final reveal" id="download">
   <div class="cta-final-card">
     <video autoplay muted loop playsinline>
@@ -5339,6 +5341,7 @@
     </div>
   </div>
 </section>
+</template>
 
 <!-- EXPLORE LINKS -->
 <section class="explore-section">
