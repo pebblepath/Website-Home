@@ -12834,13 +12834,11 @@ They'll lose access to shared trips, celebrations and any read-only child access
         .pebbleUser=${this.pebbleUser}
         @cancel=${()=>this._profileOpen=!1}
       ></profile-sheet>
-    `}_renderFamilyBrief(e){const t=e.familyDailyCard??e.dailyCard;return t?this._briefCardTemplate(t,{spinning:this._refreshingFamilyBrief?"spinning":"",fresh:this._briefFreshLabel(t),onRefresh:()=>this._onRefreshFamilyBrief(),ariaLabel:"Refresh family brief",coordination:this._renderBriefCoordination()}):(this.preview||this.updateComplete.then(()=>this._ensureBriefForToday()),this._refreshingFamilyBrief?this._renderBriefPreparing():"")}_briefCardTemplate(e,{spinning:t,fresh:i,onRefresh:r,ariaLabel:a,coordination:s}){const o=Array.isArray(e.bullets)?e.bullets:[],c=this._themeLight?"/portal/assets/pebblepath-sandbar-empty.jpg":"/portal/assets/pebblepath-stillwater-empty.jpg";return n`
+    `}_renderFamilyBrief(e){const t=e.familyDailyCard??e.dailyCard;return t?this._briefCardTemplate(t,{spinning:this._refreshingFamilyBrief?"spinning":"",fresh:this._briefFreshLabel(t),onRefresh:()=>this._onRefreshFamilyBrief(),ariaLabel:"Refresh family brief",coordination:this._renderBriefCoordination()}):(this.preview||this.updateComplete.then(()=>this._ensureBriefForToday()),this._refreshingFamilyBrief?this._renderBriefPreparing():"")}_briefCardTemplate(e,{spinning:t,fresh:i,onRefresh:r,ariaLabel:a,coordination:s}){const o=Array.isArray(e.bullets)?e.bullets:[],c=this._themeLight?"/portal/assets/fb-art-sandbar.jpg":"/portal/assets/fb-art-stillwater.jpg";return n`
       <section class="family-brief ${this._themeLight?"":"fb-dark"}">
         <div class="fb-card">
           <div class="fb-bg" aria-hidden="true">
             <div class="fb-bg-photo" style="background-image:url('${c}');"></div>
-            <div class="fb-bg-frost"></div>
-            <div class="fb-bg-wash"></div>
           </div>
           <div class="fb-content">
             <div class="fb-head">
@@ -15738,13 +15736,23 @@ They'll lose access to shared trips, celebrations and any read-only child access
       font-size: 14px;
       color: var(--text-secondary);
     }
+    /* 2026-09-28 (Thomas: "the photo is quite blurry, could be more premium"):
+       a clean surface for the text and the art sharp on the right. The blur and
+       the two white layers over the photo are gone. The art is a panel cut from
+       the original artwork (design-sandbox/63-portal-brief-and-card/make_art.py)
+       with both right corners clear for the time and the roles pill. Phones get
+       the art as a strip across the top instead (see the 768 px rule below). */
     .fb-card {
       position: relative;
       min-height: 255px; /* 2026-05-28 — reduced 15% (was 300) per Thomas */
       border-radius: var(--radius-card);
       overflow: hidden;
-      border: 1.5px solid rgba(255, 255, 255, 0.6);
-      box-shadow: 0 8px 24px rgba(61, 155, 143, 0.25);
+      background: linear-gradient(90deg, #fffbf4 0%, #fcf4e6 40%, #f5e2c3 72%, #f2d5ab 100%);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        0 16px 36px rgba(31, 92, 84, 0.14),
+        0 3px 10px rgba(31, 92, 84, 0.08);
     }
     .fb-bg {
       position: absolute;
@@ -15753,28 +15761,15 @@ They'll lose access to shared trips, celebrations and any read-only child access
     }
     .fb-bg-photo {
       position: absolute;
-      inset: -10px; /* bleed past edges so blur doesn't show a seam */
-      background-position: center;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 50%;
+      background-position: 50% 50%;
       background-size: cover;
-      /* 2026-05-28 — blur reduced 30% (2.5 -> 1.75) per Thomas; applies to
-         both light (daybreak) and dark (Stillwater) since they share this
-         element. */
-      filter: blur(1.75px);
-    }
-    .fb-bg-frost {
-      position: absolute;
-      inset: 0;
-      background: rgba(255, 255, 255, 0.225);
-    }
-    .fb-bg-wash {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        135deg,
-        rgba(255, 249, 237, 0.74) 0%,
-        rgba(255, 246, 232, 0.42) 50%,
-        rgba(255, 244, 227, 0.1) 100%
-      );
+      /* fades in from the left, so the text side stays a clean surface */
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.5) 24%, #000 46%);
+      mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.5) 24%, #000 46%);
     }
     .fb-content {
       position: relative;
@@ -15882,24 +15877,21 @@ They'll lose access to shared trips, celebrations and any read-only child access
       line-height: 1.55;
       color: rgba(44, 62, 64, 0.66);
     }
-    /* 2026-05-28 — DARK treatment (Portal dark mode = no html.theme-light),
-       mirroring the iOS FamilyBriefHeroCard Stillwater treatment: moody
-       photo (chosen in JS) + black scrim instead of the cream wash + near
-       white text + bright teal-glow eyebrow + softer border, frost dropped. */
+    /* the text keeps to the clean left side, clear of the art */
+    .fb-title,
+    .fb-bullets,
+    .fb-body {
+      max-width: 58%;
+    }
+    /* 2026-05-28 — DARK treatment (Portal dark mode = no html.theme-light):
+       the Stillwater art (chosen in JS) on a deep teal surface, near white
+       text, bright teal-glow eyebrow, softer border. */
     .fb-dark .fb-card {
-      border-color: rgba(255, 255, 255, 0.22);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-    }
-    .fb-dark .fb-bg-frost {
-      display: none;
-    }
-    .fb-dark .fb-bg-wash {
-      background: linear-gradient(
-        135deg,
-        rgba(0, 0, 0, 0.55) 0%,
-        rgba(0, 0, 0, 0.32) 50%,
-        rgba(0, 0, 0, 0.12) 100%
-      );
+      background: linear-gradient(90deg, #11292a 0%, #143330 42%, #163934 72%, #163934 100%);
+      border-color: rgba(255, 255, 255, 0.14);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 16px 36px rgba(0, 0, 0, 0.28);
     }
     .fb-dark .fb-tag {
       color: #7dd4c8;
@@ -15932,7 +15924,9 @@ They'll lose access to shared trips, celebrations and any read-only child access
     .fb-coord {
       margin-top: 14px;
       padding-top: 13px;
-      border-top: 1px solid rgba(44, 62, 64, 0.12);
+      /* the divider fades out before the art (2026-09-28) */
+      background: linear-gradient(90deg, rgba(44, 62, 64, 0.12) 0%, rgba(44, 62, 64, 0.12) 50%, rgba(44, 62, 64, 0) 64%)
+        0 0 / 100% 1px no-repeat;
     }
     .fb-coord-row {
       display: flex;
@@ -15977,7 +15971,7 @@ They'll lose access to shared trips, celebrations and any read-only child access
       background: rgba(45, 122, 112, 0.22);
     }
     .fb-dark .fb-coord {
-      border-top-color: rgba(255, 255, 255, 0.16);
+      background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0) 64%);
     }
     .fb-dark .fb-coord-text {
       color: rgba(246, 244, 239, 0.9);
@@ -15991,6 +15985,36 @@ They'll lose access to shared trips, celebrations and any read-only child access
     }
     .fb-dark .fb-roles-link:hover {
       background: rgba(125, 212, 200, 0.28);
+    }
+    /* 2026-09-28 — phones: the card is too narrow for a side panel, so the art
+       becomes a strip across the top and the text takes the full width below. */
+    @media (max-width: 768px) {
+      .fb-bg-photo {
+        left: 0;
+        bottom: auto;
+        width: auto;
+        height: 118px;
+        background-position: 50% 12%;
+        -webkit-mask-image: linear-gradient(180deg, #000 52%, transparent 100%);
+        mask-image: linear-gradient(180deg, #000 52%, transparent 100%);
+      }
+      .fb-dark .fb-bg-photo {
+        background-position: 50% 30%;
+      }
+      .fb-content {
+        padding-top: 104px;
+      }
+      .fb-title,
+      .fb-bullets,
+      .fb-body {
+        max-width: none;
+      }
+      .fb-coord {
+        background-image: linear-gradient(90deg, rgba(44, 62, 64, 0.12), rgba(44, 62, 64, 0.12));
+      }
+      .fb-dark .fb-coord {
+        background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16));
+      }
     }
     /* What Pebble knows — "Daily roles & routines" panel role rows. */
     .wpk-role-row {
@@ -17254,4 +17278,4 @@ They'll lose access to shared trips, celebrations and any read-only child access
           .joinCode=${this.joinCode??""}
         ></register-screen>
       `}}$(Wt,"properties",{authUser:{state:!0},loading:{state:!0},preview:{state:!0},joinCode:{state:!0},pebbleUser:{state:!0},family:{state:!0},children:{state:!0},trips:{state:!0},events:{state:!0},activities:{state:!0},holidays:{state:!0},userDocResolved:{state:!0},ppFamily:{state:!0},ppIsMember:{state:!0},ppChildren:{state:!0},selectedChildId:{state:!0},childMilestones:{state:!0},childInsights:{state:!0},childReports:{state:!0},childDailyCard:{state:!0},familyDailyCard:{state:!0},nonParentDailyCard:{state:!0},pebbleAnchors:{state:!0},pebbleRhythms:{state:!0},pebblePatterns:{state:!0},pebbleLiveContext:{state:!0},childPebbleMessages:{state:!0},childPebbleSessions:{state:!0},planningMessages:{state:!0},ppIsChildViewer:{state:!0},incomingChildRequests:{state:!0},myChildAccessRequest:{state:!0}});customElements.define("cairn-app",Wt);Di();
-//# sourceMappingURL=index-DQwig6hh.js.map
+//# sourceMappingURL=index-DrNdlFDm.js.map
