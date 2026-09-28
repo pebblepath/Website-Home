@@ -4330,12 +4330,14 @@
 /* ---------- phones: a centred column (Thomas, 2026-09-28: "try centering the tide items on
    mobile only; keep the icons aligned vertically"). The headings centre; every row is the same
    width and centred as a block, so the icons keep one straight column (and the old and new
-   icons still sit on top of each other for the flip). Tablets keep the left-aligned layout. ---------- */
+   icons still sit on top of each other for the flip). Tablets keep the left-aligned layout.
+   Same day: the rows were 300 px with balanced wrapping, which left 2 or 3 words a line
+   (Thomas: "plenty of space"); now up to 340 px, wrapping normally, with no lone last word. ---------- */
 @media (max-width: 768px) {
   .tide-head { text-align: center; }
   .tide-eyebrow { padding-left: 2.4px; }   /* balances the letter-spacing after the last letter */
-  .tide-row { width: 100%; max-width: 300px; justify-self: center; box-sizing: border-box; }
-  .tide-row .d { text-wrap: balance; }
+  .tide-row { width: 100%; max-width: 340px; justify-self: center; box-sizing: border-box; }
+  .tide-row .d { text-wrap: pretty; }
 }
 
 /* too short for the pin (or reduced motion): the scene sizes to its content and scrolls normally */
